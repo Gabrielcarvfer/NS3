@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name tap-bridge)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/tap-bridge.cc
         model/tap-encode-decode.cc
         helper/tap-bridge-helper.cc
@@ -11,5 +11,5 @@ add_library(lib${name} SHARED
         helper/tap-bridge-helper.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

@@ -1,7 +1,7 @@
 NS3_common_includes()
 
 set(name stats)
-set_lib_name(${name})
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
 
 if (${SQLITE_ENABLED})
     set(SQLITE_SOURCES
@@ -11,7 +11,7 @@ if (${SQLITE_ENABLED})
 else()
     set(SQLITE_ENABLED )
 endif()
-add_library(lib${name} SHARED
+add_library(${lib${name}} SHARED
         ${SQLITE_SOURCES}
         helper/file-helper.cc
         helper/gnuplot-helper.cc
@@ -58,5 +58,5 @@ add_library(lib${name} SHARED
         )
 
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

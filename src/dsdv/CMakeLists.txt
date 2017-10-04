@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name dsdv)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/dsdv-packet.cc
         model/dsdv-packet.h
         model/dsdv-packet-queue.cc
@@ -15,6 +15,6 @@ add_library(lib${name} SHARED
         helper/dsdv-helper.h
         )
 
-set_test_name(${name})
-add_library(test${name}
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
         test/dsdv-testcase.cc)

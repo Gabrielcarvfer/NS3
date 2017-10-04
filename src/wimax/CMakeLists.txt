@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name wimax)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
 
         model/cid.cc
         model/cid-factory.cc
@@ -99,8 +99,8 @@ add_library(lib${name} SHARED
         )
 
 
-set_test_name(${name})
-add_library(test${name}
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
         test/wimax-tlv-test.cc
         test/mac-messages-test.cc
         test/wimax-service-flow-test.cc

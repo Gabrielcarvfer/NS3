@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name mesh)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/mesh-information-element-vector.cc
         model/mesh-point-device.cc
         model/mesh-l2-routing-protocol.cc
@@ -68,5 +68,5 @@ add_library(lib${name} SHARED
         helper/flame/flame-installer.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

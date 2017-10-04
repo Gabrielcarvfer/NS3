@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name topology-read)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/topology-reader.cc
         model/inet-topology-reader.cc
         model/orbis-topology-reader.cc
@@ -15,5 +15,5 @@ add_library(lib${name} SHARED
         helper/topology-reader-helper.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

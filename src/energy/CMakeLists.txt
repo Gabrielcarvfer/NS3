@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name energy)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/basic-energy-harvester.cc
         model/basic-energy-harvester.h
         model/basic-energy-source.cc
@@ -39,8 +39,8 @@ add_library(lib${name} SHARED
         helper/rv-battery-model-helper.h
         )
 
-set_test_name(${name})
-add_library(test${name}
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
             test/basic-energy-harvester-test.cc
             test/li-ion-energy-source-test.cc
         )

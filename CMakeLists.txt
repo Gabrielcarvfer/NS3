@@ -10,7 +10,7 @@ project(NS3 CXX)
 
 include(buildsupport/macros_and_definitions.cmake)
 
-set (NS3_VER 3.26)
+set(NS3_VER 3.26)
 
 set(NS3_TESTS ON)
 option(NS3_TESTS "Enable tests to be built" OFF)
@@ -23,6 +23,7 @@ option( NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 # Process options                     #
 #######################################
 process_options()
+
 
 #######################################
 # Add subdirectories                  #

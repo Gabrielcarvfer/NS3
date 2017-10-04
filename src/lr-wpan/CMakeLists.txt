@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name lr-wpan)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/lr-wpan-error-model.cc
         model/lr-wpan-interference-helper.cc
         model/lr-wpan-phy.cc
@@ -29,5 +29,5 @@ add_library(lib${name} SHARED
         helper/lr-wpan-helper.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )
