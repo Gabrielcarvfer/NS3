@@ -5,7 +5,6 @@ build/*.*
 .idea/*.*
 sim
 scratch/*.*
-*.pcap
 *.xml
 cmake-build-debug
 *.log
