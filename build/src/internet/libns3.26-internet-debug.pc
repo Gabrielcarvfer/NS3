@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.26
+
+Name: libns3-internet
+Description: ns-3 module ns3-internet
+Version: 3.26
+Libs: -L${libdir} -Wl,-Bdynamic -lns3.26-internet-debug
+Cflags: -I${includedir}
+Requires: libns3.26-bridge-debug libns3.26-mpi-debug libns3.26-traffic-control-debug libns3.26-network-debug libns3.26-core-debug

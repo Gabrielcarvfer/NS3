@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.26
+
+Name: libns3-wifi
+Description: ns-3 module ns3-wifi
+Version: 3.26
+Libs: -L${libdir} -Wl,-Bdynamic -lns3.26-wifi-debug -lgsl -lgslcblas -lm
+Cflags: -I${includedir} -DHAVE_GSL=1
+Requires: libns3.26-network-debug libns3.26-propagation-debug libns3.26-energy-debug libns3.26-spectrum-debug libns3.26-antenna-debug libns3.26-mobility-debug
