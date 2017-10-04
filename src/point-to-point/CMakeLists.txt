@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name point-to-point)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/point-to-point-net-device.cc
         model/point-to-point-channel.cc
         model/point-to-point-remote-channel.cc
@@ -15,5 +15,5 @@ add_library(lib${name} SHARED
         helper/point-to-point-helper.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

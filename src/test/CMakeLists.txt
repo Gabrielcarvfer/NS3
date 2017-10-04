@@ -1,11 +1,11 @@
 NS3_common_includes()
 
 set(name test)
-set_lib_name(${name})
-#add_library(lib${name} SHARED )
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+#add_library(${lib${name}} SHARED )
 
-set_test_name(${name})
-add_library(test${name}
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
         csma-system-test-suite.cc
         ns3tc/adaptive-red-queue-disc-test-suite.cc
         ns3tc/fq-codel-queue-disc-test-suite.cc

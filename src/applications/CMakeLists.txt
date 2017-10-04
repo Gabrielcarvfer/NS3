@@ -2,8 +2,8 @@ NS3_common_includes()
 
 
 set(name applications)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/application-packet-probe.cc
         model/application-packet-probe.h
         model/bulk-send-application.cc
@@ -38,8 +38,11 @@ add_library(lib${name} SHARED
         helper/udp-echo-helper.h
         )
 
-set_test_name(${name})
-add_library(test${name}
+#link to dependencies
+target_link_libraries(${lib${name}} ${libinternet} ${libconfig-store} ${libstats})
+
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
         test/udp-client-server-test.cc)
 
-target_link_libraries(test${name} ${libname})
+target_link_libraries(${test${name}} SHARED ${lib${name}})

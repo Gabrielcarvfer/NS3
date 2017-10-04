@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name spectrum)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/spectrum-model.cc
         model/spectrum-value.cc
         model/spectrum-converter.cc
@@ -66,5 +66,5 @@ add_library(lib${name} SHARED
         test/spectrum-test.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

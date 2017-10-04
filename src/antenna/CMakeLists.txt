@@ -1,7 +1,8 @@
 NS3_common_includes()
+
 set(name antenna)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/angles.cc
         model/angles.h
         model/antenna-model.cc
@@ -14,13 +15,13 @@ add_library(lib${name} SHARED
         model/parabolic-antenna-model.h
         )
 
-set_test_name(${name})
-add_library(test${name}
+#link to dependencies
+target_link_libraries(${lib${name}} ${libcore})
+
+set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+add_library(${test${name}} SHARED
         test/test-angles.cc
         test/test-cosine-antenna.cc
         test/test-degrees-radians.cc
         test/test-isotropic-antenna.cc
         test/test-parabolic-antenna.cc)
-
-#link to dependencies
-target_link_libraries(lib${name} libcore)
