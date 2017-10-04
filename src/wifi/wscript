@@ -90,6 +90,7 @@ def build(bld):
         'helper/nqos-wifi-mac-helper.cc',
         'helper/qos-wifi-mac-helper.cc',
         'helper/wifi-mac-helper.cc',
+        'model/ap-wifi-mac-beac.cc',
         ]
 
     obj_test = bld.create_ns3_module_test_library('wifi')
@@ -194,6 +195,7 @@ def build(bld):
         'helper/nqos-wifi-mac-helper.h',
         'helper/qos-wifi-mac-helper.h',
         'helper/wifi-mac-helper.h',
+        'model/ap-wifi-mac-beac.h',
         ]
 
     if bld.env['ENABLE_GSL']:
