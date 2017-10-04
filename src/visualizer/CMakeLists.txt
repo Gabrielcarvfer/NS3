@@ -2,11 +2,11 @@ NS3_common_includes()
 
 if (${visualizer_python_dependencies})
 set(name visualizer)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/dummy-file-for-static-builds.cc
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )
 endif()

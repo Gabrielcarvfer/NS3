@@ -80,6 +80,7 @@ def build(bld):
         'model/ht-operations.cc',
         'model/dsss-parameter-set.cc',
         'model/edca-parameter-set.cc',
+        'model/ap-wifi-mac-beac.cc',
         'helper/wifi-radio-energy-model-helper.cc',
         'helper/vht-wifi-mac-helper.cc',
         'helper/ht-wifi-mac-helper.cc',
@@ -90,7 +91,6 @@ def build(bld):
         'helper/nqos-wifi-mac-helper.cc',
         'helper/qos-wifi-mac-helper.cc',
         'helper/wifi-mac-helper.cc',
-        'model/ap-wifi-mac-beac.cc',
         ]
 
     obj_test = bld.create_ns3_module_test_library('wifi')
@@ -185,6 +185,7 @@ def build(bld):
         'model/ht-operations.h',
         'model/dsss-parameter-set.h',
         'model/edca-parameter-set.h',
+        'model/ap-wifi-mac-beac.h',
         'helper/wifi-radio-energy-model-helper.h',
         'helper/vht-wifi-mac-helper.h',
         'helper/ht-wifi-mac-helper.h',
@@ -195,7 +196,7 @@ def build(bld):
         'helper/nqos-wifi-mac-helper.h',
         'helper/qos-wifi-mac-helper.h',
         'helper/wifi-mac-helper.h',
-        'model/ap-wifi-mac-beac.h',
+
         ]
 
     if bld.env['ENABLE_GSL']:

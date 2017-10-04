@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name mobility)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/box.cc
         model/constant-acceleration-mobility-model.cc
         model/constant-position-mobility-model.cc
@@ -43,5 +43,5 @@ add_library(lib${name} SHARED
         helper/ns2-mobility-helper.h
         )
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )

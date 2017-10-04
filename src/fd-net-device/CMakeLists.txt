@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name fd-net-device)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
        model/fd-net-device.cc
        model/fd-net-device.h
        helper/creator-utils.cc
@@ -22,8 +22,8 @@ add_library(lib${name} SHARED
        #helper/tap-fd-net-device-helper.h
        )
 
-#set_test_name(${name})
-#add_library(test${name}        )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED        )
 
 #execute_process(COMMAND bindings/modulegen__gcc_ILP32.py)
 #execute_process(COMMAND bindings/modulegen__gcc_LP64.py)

@@ -29,7 +29,7 @@ macro(NS3_common_includes)
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #workaround for test building without calling process_options
-    if(OpENer_DEBUG)
+    if(${NS3_DEBUG})
         add_definitions(-std=c++11 -g)
         set(build_type "debug")
     else()
@@ -52,25 +52,11 @@ ENDMACRO()
 
 #process all options passed in main cmakeLists
 macro(process_options)
-    #process test switch
-    if( OpENer_EXAMPLES )
-        add_subdirectory(examples)
-    endif()
-
     #process debug switch
-    if(OpENer_DEBUG)
+    if(${NS3_DEBUG})
         add_definitions(-std=c++11 -g)
     else()
         add_definitions(-std=c++11 -O3)
     endif()
 endmacro()
 #----------------------------------------------
-
-#set library name
-macro(set_lib_name name)
-    set(lib${name} ns${NS3_VER}-${name}-${build_type})
-endmacro()
-
-macro(set_test_name name)
-    set(test${name} ns${NS3_VER}-test-${name}-${build_type})
-endmacro()

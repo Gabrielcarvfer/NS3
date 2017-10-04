@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name wifi)
-set_lib_name(${name})
-add_library(lib${name} SHARED
+set(lib${name} ns${NS3_VER}-${name}-${build_type})
+add_library(${lib${name}} SHARED
         model/wifi-information-element.cc
         model/wifi-information-element-vector.cc
         model/wifi-channel.cc
@@ -80,6 +80,7 @@ add_library(lib${name} SHARED
         model/ht-operations.cc
         model/dsss-parameter-set.cc
         model/edca-parameter-set.cc
+        model/ap-wifi-mac-beac.cc
         helper/wifi-radio-energy-model-helper.cc
         helper/vht-wifi-mac-helper.cc
         helper/ht-wifi-mac-helper.cc
@@ -167,6 +168,7 @@ add_library(lib${name} SHARED
         model/ht-operations.h
         model/dsss-parameter-set.h
         model/edca-parameter-set.h
+        model/ap-wifi-mac-beac.h
         helper/wifi-radio-energy-model-helper.h
         helper/vht-wifi-mac-helper.h
         helper/ht-wifi-mac-helper.h
@@ -180,5 +182,5 @@ add_library(lib${name} SHARED
         )
 
 
-#set_test_name(${name})
-#add_library(test${name} )
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED )
