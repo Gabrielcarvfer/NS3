@@ -20,7 +20,7 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#include <stdint.h>
+#include <cstdint>
 #include "ul-mac-messages.h"
 
 namespace ns3 {

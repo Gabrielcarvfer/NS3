@@ -23,7 +23,7 @@
 #ifndef IPV6_H
 #define IPV6_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/object.h"
 #include "ns3/socket.h"

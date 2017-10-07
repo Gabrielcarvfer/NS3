@@ -24,7 +24,7 @@
 #ifndef UCD_CHANNEL_ENCODINGS_H
 #define UCD_CHANNEL_ENCODINGS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 #include <list>
 
@@ -74,7 +74,7 @@ private:
 #ifndef OFDM_UCD_CHANNEL_ENCODINGS_H
 #define OFDM_UCD_CHANNEL_ENCODINGS_H
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 
@@ -114,7 +114,7 @@ private:
 #ifndef OFDM_UL_BURST_PROFILE_H
 #define OFDM_UL_BURST_PROFILE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 
 namespace ns3 {
@@ -181,7 +181,7 @@ private:
 #ifndef UCD_H
 #define UCD_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include <vector>
 
@@ -245,7 +245,7 @@ private:
 #ifndef OFDM_UL_MAP_IE_H
 #define OFDM_UL_MAP_IE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "cid.h"
 
@@ -306,7 +306,7 @@ private:
 #ifndef UL_MAP_H
 #define UL_MAP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include <vector>
 

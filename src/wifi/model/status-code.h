@@ -21,7 +21,7 @@
 #ifndef STATUS_CODE_H
 #define STATUS_CODE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "ns3/buffer.h"
 

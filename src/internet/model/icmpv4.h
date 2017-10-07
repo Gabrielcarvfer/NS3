@@ -24,7 +24,7 @@
 #include "ns3/header.h"
 #include "ns3/ptr.h"
 #include "ns3/ipv4-header.h"
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 

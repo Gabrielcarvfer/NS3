@@ -22,7 +22,7 @@
 #ifndef SIXLOWPAN_NET_DEVICE_H
 #define SIXLOWPAN_NET_DEVICE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <map>
 #include "ns3/traced-callback.h"

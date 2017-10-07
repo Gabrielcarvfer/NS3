@@ -21,7 +21,7 @@
 #ifndef INTERFERENCE_HELPER_H
 #define INTERFERENCE_HELPER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <list>
 #include "wifi-mode.h"

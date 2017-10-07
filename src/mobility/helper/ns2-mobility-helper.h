@@ -24,7 +24,7 @@
 #define NS2_MOBILITY_HELPER_H
 
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/ptr.h"
 #include "ns3/object.h"
 

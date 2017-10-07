@@ -21,7 +21,7 @@
 #ifndef QUEUE_DISC_CONTAINER_H
 #define QUEUE_DISC_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/queue-disc.h"
 

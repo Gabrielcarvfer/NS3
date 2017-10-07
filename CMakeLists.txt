@@ -31,6 +31,55 @@ option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_GSL ON)
 option(NS3_GSL "Build with GSL support" OFF)
 
+#Select libs to be built
+set(libs_to_build
+        antenna
+        aodv
+        applications
+        bridge
+        #brite
+        buildings
+        click
+        config-store
+        core
+        csma
+        csma-layout
+        dsdv
+        dsr
+        energy
+        fd-net-device
+        flow-monitor
+        internet
+        internet-apps
+        lr-wpan
+        lte
+        mesh
+        mobility
+        mpi
+        netanim
+        network
+        nix-vector-routing
+        olsr
+        #openflow
+        point-to-point
+        point-to-point-layout
+        propagation
+        sixlowpan
+        spectrum
+        stats
+        #tap-bridge
+        #test
+        topology-read
+        traffic-control
+        uan
+        virtual-net-device
+        #visualizer
+        wave
+        wifi
+        wimax
+        )
+
+
 #######################################
 # Process options                     #
 #######################################
@@ -42,7 +91,17 @@ process_options()
 #######################################
 NS3_common_includes()
 
-add_subdirectory( src )
+#Build NS3 3rd-party library support
+add_subdirectory(3rd-party)
+
+#Build NS3 library core
+add_subdirectory(src)
+
+#Build contribution libraries
+add_subdirectory(contrib)
+
+#Build scratch/simulation scripts
+add_subdirectory(scratch)
 
 
 

@@ -23,7 +23,7 @@
 
 #include <string>
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 
 #include "log-macros-enabled.h"

@@ -21,7 +21,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 #include "ptr.h"

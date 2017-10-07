@@ -36,7 +36,7 @@
 #include <list>
 #include <vector>
 #include <ns3/ptr.h>
-#include <stdint.h>
+#include <cstdint>
 #include <ns3/spectrum-value.h>
 #include <ns3/lte-harq-phy.h>
 

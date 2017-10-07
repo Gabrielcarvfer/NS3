@@ -30,15 +30,6 @@ set(common_includes ${CMAKE_HEADER_OUTPUT_DIRECTORY}/../)
 macro(NS3_common_includes)
     #HEADER_DIRECTORIES(${CMAKE_HEADER_OUTPUT_DIRECTORY})
     include_directories(${common_includes})
-
-    #workaround for test building without calling process_options
-    if(${NS3_DEBUG})
-        add_definitions(-std=c++11 -g)
-        set(build_type "debug")
-    else()
-        add_definitions(-std=c++11 -Os)
-        set(build_type "release")
-    endif()
 endmacro()
 
 MACRO(HEADER_DIRECTORIES return_list)
@@ -55,50 +46,63 @@ ENDMACRO()
 
 #process all options passed in main cmakeLists
 macro(process_options)
+    #Set common include folder
     set (common_includes ${common_includes} ${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    add_definitions(-std=c++11 -Wl,-z,defs)
+    add_definitions(-std=c++11)
 
 
     #find required dependencies
 
     #BoostC++
     find_package(Boost)
-    link_directories(${BOOST_LIBRARY_DIRS})
-    set (common_includes ${common_includes} ${BOOST_INCLUDE_DIR})
+    if(${BOOST_FOUND})
+        link_directories(${BOOST_LIBRARY_DIRS})
+        set (common_includes ${common_includes} ${BOOST_INCLUDE_DIR})
+    endif()
 
     #GTK2
     find_package(GTK2)
-    link_directories(${GTK2_LIBRARY_DIRS})
-    set (common_includes ${common_includes} ${GTK2_INCLUDE_DIRS})
-    add_definitions(${GTK2_DEFINITIONS})
+    if(${GTK2_FOUND})
+        link_directories(${GTK2_LIBRARY_DIRS})
+        set (common_includes ${common_includes} ${GTK2_INCLUDE_DIRS})
+        add_definitions(${GTK2_DEFINITIONS})
+    endif()
 
+    #LibXml2
     find_package(LibXml2)
-    link_directories(${LIBXML2_LIBRARY_DIRS})
-    set (common_includes ${common_includes} ${LIBXML2_INCLUDE_DIR})
-    add_definitions(${LIBXML2_DEFINITIONS})
+    if(${LIBXML2_FOUND})
+        link_directories(${LIBXML2_LIBRARY_DIRS})
+        set (common_includes ${common_includes} ${LIBXML2_INCLUDE_DIR})
+        add_definitions(${LIBXML2_DEFINITIONS})
+    endif()
 
+    #LibRT
     find_library(LIBRT rt)
-    add_definitions(-lrt)
+    if(${LIBRT_FOUND})
+        add_definitions(-lrt)
+        add_definitions(-DHAVE_RT)
+    endif()
 
     #process debug switch
     if(${NS3_DEBUG})
         add_definitions(-g)
+        set(build_type "debug")
     else()
         add_definitions(-O3)
+        set(build_type "release")
     endif()
 
     #Process core-config
-    #undef HAVE_UINT128_T */
-    add_definitions(-DHAVE___UINT128_T)
     set(INT64X64 128)
 
-    if(${INT64X64} EQUAL 128)
+    if(INT64X64 EQUAL 128)
+        add_definitions(-DHAVE___UINT128_T)
         add_definitions(-DINT64X64_USE_128)
-    elseif(${INT64X64} EQUAL DOUBLE)
+    elseif(INT64X64 EQUAL DOUBLE)
         add_definitions(-DINT64X64_USE_DOUBLE)
-    elseif(${INT64X64} EQUAL CAIRO)
+    elseif(INT64X64 EQUAL CAIRO)
         add_definitions(-DINT64X64_USE_CAIRO)
     else()
     endif()
@@ -111,8 +115,6 @@ macro(process_options)
     add_definitions(-DHAVE_STDLIB_H)
     add_definitions(-DHAVE_GETENV)
     add_definitions(-DHAVE_SIGNAL_H)
-    add_definitions(-DHAVE_PTHREAD_H)
-    add_definitions(-DHAVE_RT)
 
     #Process config-store-config
     add_definitions(-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages")
@@ -127,6 +129,7 @@ macro(process_options)
         set(THREADS_PREFER_PTHREAD_FLAG)
         find_library(LIBPTHREAD pthread)
         add_definitions(-lpthread)
+        add_definitions(-DHAVE_PTHREAD_H)
     endif()
 
     if(${NS3_MPI})
@@ -141,7 +144,13 @@ macro(process_options)
        link_directories(${GSL_LIBRARY})
     endif()
 
-
+    #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
+    set(ns3-libs )
+    foreach(libname ${libs_to_build})
+        #TODO: add 3rd-party library dependency check
+        set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
+        set(ns3-libs "${ns3-libs}" ${lib${libname}})
+    endforeach()
 
 endmacro()
 #----------------------------------------------
@@ -180,9 +189,7 @@ macro (build_lib name source_files header_files libraries_to_link)
     set(name core)
     add_library(${lib${name}} SHARED "${source_files}" "${header_files}")
     target_link_libraries(${lib${name}} ${libraries_to_link})
-
     write_module_header("${name}" "${header_files}")
-
 endmacro()
 
 macro (build_lib_test name source_files header_files)

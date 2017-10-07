@@ -22,7 +22,7 @@
 
 #include "attribute.h"
 #include "attribute-helper.h"
-#include <stdint.h>
+#include <cstdint>
 #include <limits>
 
 /**

@@ -22,7 +22,7 @@
 #ifndef WIFI_PHY_H
 #define WIFI_PHY_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 #include "ns3/callback.h"
 #include "ns3/event-id.h"

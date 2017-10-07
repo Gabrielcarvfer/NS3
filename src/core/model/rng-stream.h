@@ -20,7 +20,7 @@
 #ifndef RNGSTREAM_H
 #define RNGSTREAM_H
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * \file

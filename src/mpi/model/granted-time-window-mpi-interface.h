@@ -23,7 +23,7 @@
 #ifndef NS3_GRANTED_TIME_WINDOW_MPI_INTERFACE_H
 #define NS3_GRANTED_TIME_WINDOW_MPI_INTERFACE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 
 #include "ns3/nstime.h"

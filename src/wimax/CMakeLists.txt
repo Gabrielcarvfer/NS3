@@ -1,9 +1,8 @@
 NS3_common_includes()
 
 set(name wimax)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
 
+set(source_files
         model/cid.cc
         model/cid-factory.cc
         model/wimax-net-device.cc
@@ -52,6 +51,9 @@ add_library(${lib${name}} SHARED
         model/cs-parameters.cc
         model/wimax-mac-to-mac-header.cc
         helper/wimax-helper.cc
+        )
+
+set(header_files
         model/wimax-channel.h
         model/wimax-net-device.h
         model/bs-net-device.h
@@ -98,14 +100,17 @@ add_library(${lib${name}} SHARED
         helper/wimax-helper.h
         )
 
+set(libraries_to_link ${libnetwork} ${libinternet} ${libpropagation} ${libmobility})
 
-set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-add_library(${test${name}} SHARED
-        test/wimax-tlv-test.cc
-        test/mac-messages-test.cc
-        test/wimax-service-flow-test.cc
-        test/ss-mac-test.cc
-        test/phy-test.cc
-        test/qos-test.cc
-        test/wimax-fragmentation-test.cc
-        )
+build_lib(${name} "${source_files}" "${header_files}" "${libraries_to_link}")
+
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED
+#        test/wimax-tlv-test.cc
+#        test/mac-messages-test.cc
+#        test/wimax-service-flow-test.cc
+#        test/ss-mac-test.cc
+#        test/phy-test.cc
+#        test/qos-test.cc
+#        test/wimax-fragmentation-test.cc
+#        )

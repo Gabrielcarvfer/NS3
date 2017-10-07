@@ -22,7 +22,7 @@
 #ifndef GLOBAL_ROUTE_MANAGER_IMPL_H
 #define GLOBAL_ROUTE_MANAGER_IMPL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include <queue>
 #include <map>

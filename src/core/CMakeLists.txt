@@ -3,8 +3,89 @@ NS3_common_includes()
 #Set module name
 set (name core)
 
+#Set lib core link dependencies
+set(libraries_to_link)
+
+if (${GSL_FOUND})
+    set(libraries_to_link
+            ${libraries_to_link}
+            ${GSL_LIBRARIES}
+            )
+endif()
+
+#Check for dependencies and add sources accordingly
+if (${LIBRT_FOUND})
+    set(rt_sources
+            model/realtime-simulator-impl.cc
+            model/wall-clock-synchronizer.cc
+            )
+    set(rt_headers
+            model/realtime-simulator-impl.h
+            model/wall-clock-synchronizer.h
+            )
+    set(libraries_to_link
+            ${libraries_to_link}
+            ${LIBRT}
+            )
+endif()
+
+if (${WIN32})
+    set(osclock_sources
+            model/win32-system-wall-clock-ms.cc
+            )
+else()
+    set(osclock_sources
+            model/unix-system-wall-clock-ms.cc
+            )
+endif()
+
+if(${INT64X64} EQUAL 128)
+    set(int64x64_sources
+            model/int64x64-128.cc
+            )
+    set(int64x64_headers
+            model/int64x64-128.h
+            )
+elseif(${INT64X64} EQUAL DOUBLE)
+    set(int64x64_headers
+            model/int64x64-double.h
+            )
+elseif(${INT64X64} EQUAL CAIRO)
+    set(int64x64_sources
+            model/int64x64-cairo.cc
+            )
+    set(int64x64_headers
+            model/int64x64-cairo.h
+            model/cairo-wideint-private.h
+            )
+else()
+endif()
+
+if (LIBPTHREAD)
+    set(thread_sources
+            model/system-thread.cc
+            model/unix-fd-reader.cc
+            model/unix-system-mutex.cc
+            model/unix-system-condition.cc
+            )
+    set(thread_headers
+            model/unix-fd-reader.h
+            model/system-mutex.h
+            model/system-thread.h
+            model/system-condition.h
+            )
+    set(libraries_to_link
+        ${libraries_to_link}
+        ${LIBPTHREAD}
+        )
+endif()
+
 #Define core lib sources
 set(source_files
+        ${rt_sources}
+        ${osclock_sources}
+        ${int64x64_sources}
+        ${thread_sources}
         model/time.cc
         model/event-id.cc
         model/scheduler.cc
@@ -63,6 +144,9 @@ set(source_files
 
 #Define core lib headers
 set (header_files
+        ${rt_headers}
+        ${int64x64_headers}
+        ${thread_headers}
         model/nstime.h
         model/event-id.h
         model/event-impl.h
@@ -146,78 +230,6 @@ set (header_files
         model/build-profile.h
         model/des-metrics.h
         )
-
-#Check for dependencies and add sources accordingly
-#if (${LIBRT_FOUND})
-    set(source_files
-            ${source_files}
-            model/realtime-simulator-impl.cc
-            model/wall-clock-synchronizer.cc
-            )
-    set(header_files
-            ${header_files}
-            model/realtime-simulator-impl.h
-            model/wall-clock-synchronizer.h
-            )
-#endif()
-
-if (${WIN32})
-    set(source_files
-            ${source_files}
-            model/win32-system-wall-clock-ms.cc
-            )
-else()
-    set(source_files
-            ${source_files}
-            model/unix-system-wall-clock-ms.cc
-            )
-endif()
-
-if(${INT64X64} EQUAL 128)
-    set(source_files
-            ${source_files}
-            model/int64x64-128.cc)
-    set(header_files
-            ${header_files}
-            model/int64x64-128.h
-            )
-elseif(${INT64X64} EQUAL DOUBLE)
-    set(header_files
-            ${header_files}
-            model/int64x64-double.h
-            )
-elseif(${INT64X64} EQUAL CAIRO)
-    set(source_files
-            ${source_files}
-            model/int64x64-cairo.cc
-            )
-    set(header_files
-            ${header_files}
-            model/int64x64-cairo.h
-            model/cairo-wideint-private.h
-            )
-else()
-endif()
-
-#if (${LIBPTHREAD_FOUND})
-    set(source_files
-            ${source_files}
-            model/system-thread.cc
-            model/unix-fd-reader.cc
-            model/unix-system-mutex.cc
-            model/unix-system-condition.cc
-            )
-    set(header_files
-            ${header_files}
-            model/unix-fd-reader.h
-            model/system-mutex.h
-            model/system-thread.h
-            model/system-condition.h
-            )
-#endif()
-
-#Set lib core link dependencies
-set(libraries_to_link ${LIBPTHREAD} ${LIBRT} ${GSL_LIBRARIES})
 
 #Build core lib
 build_lib(${name} "${source_files}" "${header_files}" "${libraries_to_link}")

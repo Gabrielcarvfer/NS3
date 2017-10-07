@@ -25,7 +25,7 @@
 #include "empty.h"
 #include "default-deleter.h"
 #include "assert.h"
-#include <stdint.h>
+#include <cstdint>
 #include <limits>
 
 /**

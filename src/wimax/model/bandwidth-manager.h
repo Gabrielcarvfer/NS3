@@ -23,7 +23,7 @@
 #ifndef BANDWIDTH_MANAGER_H
 #define BANDWIDTH_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "wimax-net-device.h"
 #include "ul-job.h"
 #include "bs-uplink-scheduler.h"
