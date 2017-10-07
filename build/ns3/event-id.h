@@ -20,7 +20,7 @@
 #ifndef EVENT_ID_H
 #define EVENT_ID_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ptr.h"
 #include "event-impl.h"
 

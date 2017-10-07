@@ -18,7 +18,7 @@
  */
 
 #define __STDC_LIMIT_MACROS
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/test.h"
 #include "ns3/core-module.h"
 #include "ns3/tcp-header.h"

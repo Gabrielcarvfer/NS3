@@ -21,7 +21,7 @@
 #ifndef DSS_ERROR_RATE_MODEL_H
 #define DSS_ERROR_RATE_MODEL_H
 
-#include <stdint.h>
+#include <cstdint>
 #ifdef HAVE_GSL
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_integration.h>

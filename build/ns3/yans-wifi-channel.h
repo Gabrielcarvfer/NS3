@@ -22,7 +22,7 @@
 #define YANS_WIFI_CHANNEL_H
 
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/packet.h"
 #include "wifi-channel.h"
 #include "wifi-mode.h"

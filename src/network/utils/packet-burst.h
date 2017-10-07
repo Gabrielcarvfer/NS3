@@ -21,7 +21,7 @@
 #ifndef PACKET_BURST_H
 #define PACKET_BURST_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/object.h"
 

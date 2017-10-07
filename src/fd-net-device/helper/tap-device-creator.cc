@@ -18,7 +18,7 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 #include <iomanip>
 #include <sstream>

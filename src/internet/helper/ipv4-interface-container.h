@@ -21,7 +21,7 @@
 #ifndef IPV4_INTERFACE_CONTAINER_H
 #define IPV4_INTERFACE_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/ipv4.h"
 #include "ns3/ipv4-address.h"

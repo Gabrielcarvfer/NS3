@@ -21,7 +21,7 @@
 #ifndef IDEAL_WIFI_MANAGER_H
 #define IDEAL_WIFI_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/traced-value.h"
 #include "wifi-mode.h"

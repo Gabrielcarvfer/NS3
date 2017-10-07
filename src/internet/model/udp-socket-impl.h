@@ -20,7 +20,7 @@
 #ifndef UDP_SOCKET_IMPL_H
 #define UDP_SOCKET_IMPL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <queue>
 #include "ns3/callback.h"
 #include "ns3/traced-callback.h"

@@ -28,7 +28,7 @@
 #ifndef AODV_RTABLE_H
 #define AODV_RTABLE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 #include <map>
 #include <sys/types.h>

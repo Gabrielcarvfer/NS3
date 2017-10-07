@@ -18,7 +18,7 @@
  *         Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 #include "ipcs-classifier-record.h"
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/ipv4-address.h"
 #include "wimax-tlv.h"
 

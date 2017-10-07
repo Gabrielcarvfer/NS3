@@ -58,7 +58,7 @@
 #endif
 
 #if   HAVE_STDINT_H
-# include <stdint.h>
+# include <cstdint>
 #elif HAVE_INTTYPES_H
 # include <inttypes.h>
 #elif HAVE_SYS_INT_TYPES_H

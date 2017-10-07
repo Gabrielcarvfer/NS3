@@ -21,7 +21,7 @@
 #define IPV4_LIST_ROUTING_HELPER_H
 
 #include "ns3/ipv4-routing-helper.h"
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 
 namespace ns3 {

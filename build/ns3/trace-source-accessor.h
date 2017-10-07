@@ -20,7 +20,7 @@
 #ifndef TRACE_SOURCE_ACCESSOR_H
 #define TRACE_SOURCE_ACCESSOR_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "callback.h"
 #include "ptr.h"
 #include "simple-ref-count.h"

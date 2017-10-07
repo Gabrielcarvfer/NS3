@@ -21,7 +21,7 @@
 #ifndef WIMAX_PHY_H
 #define WIMAX_PHY_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/callback.h"
 #include "ns3/nstime.h"

@@ -21,7 +21,7 @@
 #ifndef CAPABILITY_INFORMATION_H
 #define CAPABILITY_INFORMATION_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 
 namespace ns3 {

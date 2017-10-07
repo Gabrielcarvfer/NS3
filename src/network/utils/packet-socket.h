@@ -21,7 +21,7 @@
 #ifndef PACKET_SOCKET_H
 #define PACKET_SOCKET_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <queue>
 #include "ns3/callback.h"
 #include "ns3/traced-callback.h"

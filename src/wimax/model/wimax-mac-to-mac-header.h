@@ -21,7 +21,7 @@
 #ifndef WIMAX_MAC_TO_MAC_HEADER_H
 #define WIMAX_MAC_TO_MAC_HEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {

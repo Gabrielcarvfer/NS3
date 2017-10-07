@@ -21,7 +21,7 @@
 #ifndef IPV6_END_POINT_H
 #define IPV6_END_POINT_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/ipv6-address.h"
 #include "ns3/callback.h"

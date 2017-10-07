@@ -23,7 +23,7 @@
 #ifndef DCD_CHANNEL_ENCODINGS_H
 #define DCD_CHANNEL_ENCODINGS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 #include <list>
 
@@ -73,7 +73,7 @@ private:
 #ifndef OFDM_DCD_CHANNEL_ENCODINGS_H
 #define OFDM_DCD_CHANNEL_ENCODINGS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/mac48-address.h"
 
 namespace ns3 {
@@ -131,7 +131,7 @@ private:
 #ifndef OFDM_DL_BURST_PROFILE_H
 #define OFDM_DL_BURST_PROFILE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 
 namespace ns3 {
@@ -201,7 +201,7 @@ private:
 #ifndef DCD_H
 #define DCD_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include <vector>
 
@@ -254,7 +254,7 @@ private:
 #ifndef OFDM_DL_MAP_IE_H
 #define OFDM_DL_MAP_IE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "cid.h"
 
 namespace ns3 {
@@ -302,7 +302,7 @@ private:
 #ifndef DL_MAP_H
 #define DL_MAP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/header.h"
 #include "ns3/mac48-address.h"

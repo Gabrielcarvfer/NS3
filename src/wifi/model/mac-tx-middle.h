@@ -23,7 +23,7 @@
 #ifndef MAC_TX_MIDDLE_H
 #define MAC_TX_MIDDLE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 #include "ns3/mac48-address.h"
 

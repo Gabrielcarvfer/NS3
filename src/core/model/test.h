@@ -26,7 +26,7 @@
 #include <vector>
 #include <list>
 #include <limits>
-#include <stdint.h>
+#include <cstdint>
 
 #include "non-copyable.h"
 #include "system-wall-clock-ms.h"

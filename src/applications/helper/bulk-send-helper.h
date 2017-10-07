@@ -23,7 +23,7 @@
 #ifndef BULK_SEND_HELPER_H
 #define BULK_SEND_HELPER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include "ns3/object-factory.h"
 #include "ns3/address.h"

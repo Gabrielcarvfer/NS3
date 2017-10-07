@@ -21,7 +21,7 @@
 #ifndef BURST_PROFILE_MANAGER_H
 #define BURST_PROFILE_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "cid.h"
 #include "wimax-phy.h"
 #include "wimax-net-device.h"

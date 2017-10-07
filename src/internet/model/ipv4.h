@@ -20,7 +20,7 @@
 #ifndef IPV4_H
 #define IPV4_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/object.h"
 #include "ns3/socket.h"
 #include "ns3/callback.h"

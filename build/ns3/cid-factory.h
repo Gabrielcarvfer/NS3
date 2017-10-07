@@ -24,7 +24,7 @@
 #ifndef CONNECTION_IDENTIFIER_FACTORY_H
 #define CONNECTION_IDENTIFIER_FACTORY_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "cid.h"
 
 namespace ns3 {

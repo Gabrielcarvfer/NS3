@@ -21,7 +21,7 @@
 #ifndef IPV4_ADDRESS_H
 #define IPV4_ADDRESS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "ns3/address.h"
 #include "ns3/attribute-helper.h"

@@ -23,7 +23,7 @@
 #ifndef CONNECTION_MANAGER_H
 #define CONNECTION_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "cid.h"
 #include "wimax-connection.h"
 #include "ns3/mac48-address.h"

@@ -21,7 +21,7 @@
 #define BYTE_TAG_LIST_H
 
 #define __STDC_LIMIT_MACROS
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/type-id.h"
 #include "tag-buffer.h"
 

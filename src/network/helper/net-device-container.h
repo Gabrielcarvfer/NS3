@@ -20,7 +20,7 @@
 #ifndef NET_DEVICE_CONTAINER_H
 #define NET_DEVICE_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/net-device.h"
 

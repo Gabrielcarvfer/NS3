@@ -22,7 +22,7 @@
 #define WIFI_MAC_TRAILER_H
 
 #include "ns3/trailer.h"
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 

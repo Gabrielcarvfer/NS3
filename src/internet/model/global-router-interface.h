@@ -22,7 +22,7 @@
 #ifndef GLOBAL_ROUTER_INTERFACE_H
 #define GLOBAL_ROUTER_INTERFACE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/object.h"
 #include "ns3/ptr.h"

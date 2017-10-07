@@ -29,7 +29,7 @@
 #include "ns3/object.h"
 #include "ns3/net-device.h"
 #include "address.h"
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/inet-socket-address.h"
 #include "ns3/inet6-socket-address.h"
 

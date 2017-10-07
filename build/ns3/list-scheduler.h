@@ -24,7 +24,7 @@
 #include "scheduler.h"
 #include <list>
 #include <utility>
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * \file

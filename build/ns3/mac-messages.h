@@ -30,7 +30,7 @@
 #ifndef MANAGEMENT_MESSAGE_TYPE_H
 #define MANAGEMENT_MESSAGE_TYPE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {
@@ -86,7 +86,7 @@ private:
 #ifndef RNG_RSP_H
 #define RNG_RSP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/mac48-address.h"
 #include "service-flow.h"
@@ -251,7 +251,7 @@ private:
 #ifndef DSA_REQ_H
 #define DSA_REQ_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/buffer.h"
 #include "cid.h"
@@ -334,7 +334,7 @@ private:
 #ifndef DSA_RSP_H
 #define DSA_RSP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/buffer.h"
 #include "cid.h"
@@ -421,7 +421,7 @@ private:
 #ifndef DSA_ACK_H
 #define DSA_ACK_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/buffer.h"
 
@@ -466,7 +466,7 @@ private:
 #ifndef RNG_REQ_H
 #define RNG_REQ_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/mac48-address.h"
 #include "service-flow.h"

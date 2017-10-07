@@ -2,20 +2,24 @@ NS3_common_includes()
 
 set(name config-store)
 
-set(GTK2_SOURCE_FILES
-        model/gtk-config-store.cc
-        model/model-node-creator.cc
-        model/model-typeid-creator.cc
-        model/display-functions.cc
-        )
+if(${GTK2_FOUND})
+    set(GTK2_SOURCE_FILES
+            model/gtk-config-store.cc
+            model/model-node-creator.cc
+            model/model-typeid-creator.cc
+            model/display-functions.cc
+            )
 
-set(GTK2_HEADER_FILES
-        model/gtk-config-store.h
-        )
+    set(GTK2_HEADER_FILES
+            model/gtk-config-store.h
+            )
+endif()
 
-set(XML2_SOURCE_FILES
-        model/xml-config.cc
-        )
+if(${XML2_FOUND})
+    set(XML2_SOURCE_FILES
+            model/xml-config.cc
+            )
+endif()
 
 set(source_files
         ${GTK2_SOURCE_FILES}

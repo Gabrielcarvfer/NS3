@@ -22,7 +22,7 @@
 #ifndef IPV6_FLOW_CLASSIFIER_H
 #define IPV6_FLOW_CLASSIFIER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 
 #include "ns3/ipv6-header.h"

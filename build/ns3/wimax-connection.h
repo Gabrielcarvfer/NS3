@@ -22,7 +22,7 @@
 #ifndef WIMAX_CONNECTION_H
 #define WIMAX_CONNECTION_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "cid.h"
 #include "wimax-mac-header.h"

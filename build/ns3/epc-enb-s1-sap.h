@@ -22,7 +22,7 @@
 #define EPC_ENB_S1_SAP_H
 
 #include <list>
-#include <stdint.h>
+#include <cstdint>
 #include <ns3/eps-bearer.h>
 #include <ns3/ipv4-address.h>
 

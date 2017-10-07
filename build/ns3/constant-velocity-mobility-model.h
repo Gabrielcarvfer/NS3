@@ -20,7 +20,7 @@
 #ifndef CONSTANT_VELOCITY_MOBILITY_MODEL_H
 #define CONSTANT_VELOCITY_MOBILITY_MODEL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/nstime.h"
 #include "mobility-model.h"
 #include "constant-velocity-helper.h"

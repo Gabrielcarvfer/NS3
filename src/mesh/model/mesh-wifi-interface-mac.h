@@ -22,7 +22,7 @@
 #ifndef MESH_WIFI_INTERFACE_MAC_H
 #define MESH_WIFI_INTERFACE_MAC_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 #include "ns3/mac48-address.h"
 #include "ns3/mgt-headers.h"

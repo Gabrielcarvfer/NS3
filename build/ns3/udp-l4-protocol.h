@@ -21,7 +21,7 @@
 #ifndef UDP_L4_PROTOCOL_H
 #define UDP_L4_PROTOCOL_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/packet.h"
 #include "ns3/ptr.h"
