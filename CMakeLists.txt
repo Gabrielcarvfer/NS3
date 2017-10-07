@@ -12,12 +12,24 @@ include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.26)
 
-set(NS3_TESTS ON)
+
 option(NS3_TESTS "Enable tests to be built" OFF)
+set(NS3_TESTS OFF)
 
+option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
-option( NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 
+
+set(NS3_PTHREAD ON)
+option(NS3_PTHREAD "Build with pthread support" OFF)
+
+
+set(NS3_MPI ON)
+option(NS3_MPI "Build with MPI support" OFF)
+
+
+set(NS3_GSL ON)
+option(NS3_GSL "Build with GSL support" OFF)
 
 #######################################
 # Process options                     #
@@ -32,7 +44,6 @@ NS3_common_includes()
 
 add_subdirectory( src )
 
-delete_header_temp_folder()
 
 
 

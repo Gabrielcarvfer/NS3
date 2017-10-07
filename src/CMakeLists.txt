@@ -1,46 +1,64 @@
 NS3_common_includes()
 
-add_subdirectory(antenna)
-add_subdirectory(aodv)
-add_subdirectory(applications)
-add_subdirectory(bridge)
-#add_subdirectory(brite)
-add_subdirectory(buildings)
-add_subdirectory(click)
-#add_subdirectory(config-store)
-add_subdirectory(core)
-add_subdirectory(csma)
-add_subdirectory(csma-layout)
-add_subdirectory(dsdv)
-add_subdirectory(dsr)
-add_subdirectory(energy)
-add_subdirectory(fd-net-device)
-add_subdirectory(flow-monitor)
-add_subdirectory(internet)
-add_subdirectory(internet-apps)
-add_subdirectory(lr-wpan)
-add_subdirectory(lte)
-add_subdirectory(mesh)
-add_subdirectory(mobility)
-add_subdirectory(mpi)
-add_subdirectory(netanim)
-add_subdirectory(network)
-add_subdirectory(nix-vector-routing)
-add_subdirectory(olsr)
-#add_subdirectory(openflow)
-add_subdirectory(point-to-point)
-add_subdirectory(point-to-point-layout)
-add_subdirectory(propagation)
-add_subdirectory(sixlowpan)
-add_subdirectory(spectrum)
-add_subdirectory(stats)
-#add_subdirectory(tap-bridge)
-add_subdirectory(test)
-add_subdirectory(topology-read)
-add_subdirectory(traffic-control)
-add_subdirectory(uan)
-add_subdirectory(virtual-net-device)
-add_subdirectory(visualizer)
-add_subdirectory(wave)
-add_subdirectory(wifi)
-add_subdirectory(wimax)
+
+set(libs_to_build
+        antenna
+        aodv
+        applications
+        bridge
+        #brite
+        buildings
+        click
+        config-store
+        core
+        csma
+        csma-layout
+        dsdv
+        dsr
+        energy
+        fd-net-device
+        flow-monitor
+        internet
+        internet-apps
+        lr-wpan
+        lte
+        mesh
+        mobility
+        mpi
+        netanim
+        network
+        nix-vector-routing
+        olsr
+        #openflow
+        point-to-point
+        point-to-point-layout
+        propagation
+        sixlowpan
+        spectrum
+        stats
+        #tap-bridge
+        #test
+        topology-read
+        traffic-control
+        uan
+        virtual-net-device
+        #visualizer
+        wave
+        wifi
+        wimax
+        )
+
+#Create library names to solve dependency problems with macros that will be called at each lib subdirectory
+set(ns3-libs )
+foreach(libname ${libs_to_build})
+    set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
+    set(ns3-libs "${ns3-libs}" ${lib${libname}})
+endforeach()
+
+#Process subdirectories
+foreach(libname ${libs_to_build})
+    add_subdirectory(${libname})
+endforeach()
+
+#Process simulation folder
+add_subdirectory(sim)

@@ -22,6 +22,8 @@ add_library(${lib${name}} SHARED
        #helper/tap-fd-net-device-helper.h
        )
 
+set(libraries_to_link ${libnetwork})
+
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED        )
 

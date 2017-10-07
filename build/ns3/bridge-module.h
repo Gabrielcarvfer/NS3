@@ -1,13 +1,13 @@
-
 #ifdef NS3_MODULE_COMPILATION
-# error "Do not include ns3 module aggregator headers from other modules; these are meant only for end user scripts."
-#endif
+            # error "Do not include ns3 module aggregator headers from other modules these are meant only for end user scripts."
+            #endif
 
-#ifndef NS3_MODULE_BRIDGE
-    
+            #ifndef NS3_MODULE_
 
-// Module headers:
-#include "bridge-channel.h"
-#include "bridge-helper.h"
-#include "bridge-net-device.h"
-#endif
+
+            // Module headers:
+                #include "bridge-channel.h"
+                #include "bridge-net-device.h"
+                #include "bridge-helper.h"
+            #endif
+            

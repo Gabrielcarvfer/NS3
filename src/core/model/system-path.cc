@@ -21,7 +21,7 @@
 #include "fatal-error.h"
 #include "assert.h"
 #include "log.h"
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include <cstdlib>
 #include <cerrno>
 #include <cstring>
