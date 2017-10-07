@@ -1,4 +1,3 @@
-include(GenerateExportHeader)
 #Fixed definitions
 unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
@@ -9,15 +8,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 #set(CMAKE_HEADER_DIRECTORY  ${PROJECT_SOURCE_DIR}/ns3)
-
-
-
-#Copy all header files to outputfolder/include/
-FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h)
-file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-#file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_DIRECTORY})
-
-#macros
 
 #delete ns3 temporary folder
 macro(delete_header_temp_folder)
@@ -46,6 +36,10 @@ ENDMACRO()
 
 #process all options passed in main cmakeLists
 macro(process_options)
+    #Copy all header files to outputfolder/include/
+    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h)
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
     #Set common include folder
     set (common_includes ${common_includes} ${CMAKE_OUTPUT_DIRECTORY})
 
@@ -56,33 +50,66 @@ macro(process_options)
     #find required dependencies
 
     #BoostC++
-    find_package(Boost)
-    if(${BOOST_FOUND})
-        link_directories(${BOOST_LIBRARY_DIRS})
-        set (common_includes ${common_includes} ${BOOST_INCLUDE_DIR})
+    if(${NS3_BOOST})
+        find_package(Boost)
+        if(${BOOST_FOUND})
+            link_directories(${BOOST_LIBRARY_DIRS})
+            set (common_includes ${common_includes} ${BOOST_INCLUDE_DIR})
+        endif()
     endif()
 
     #GTK2
-    find_package(GTK2)
-    if(${GTK2_FOUND})
-        link_directories(${GTK2_LIBRARY_DIRS})
-        set (common_includes ${common_includes} ${GTK2_INCLUDE_DIRS})
-        add_definitions(${GTK2_DEFINITIONS})
+    if(${NS3_GTK2})
+        find_package(GTK2)
+        if(${GTK2_FOUND})
+            link_directories(${GTK2_LIBRARY_DIRS})
+            set (common_includes ${common_includes} ${GTK2_INCLUDE_DIRS})
+            add_definitions(${GTK2_DEFINITIONS})
+        endif()
     endif()
 
     #LibXml2
-    find_package(LibXml2)
-    if(${LIBXML2_FOUND})
-        link_directories(${LIBXML2_LIBRARY_DIRS})
-        set (common_includes ${common_includes} ${LIBXML2_INCLUDE_DIR})
-        add_definitions(${LIBXML2_DEFINITIONS})
+    if(${NS3_LIBXML2})
+        find_package(LibXml2)
+        if(${LIBXML2_FOUND})
+            link_directories(${LIBXML2_LIBRARY_DIRS})
+            set (common_includes ${common_includes} ${LIBXML2_INCLUDE_DIR})
+            add_definitions(${LIBXML2_DEFINITIONS})
+        endif()
     endif()
 
     #LibRT
-    find_library(LIBRT rt)
-    if(${LIBRT_FOUND})
-        add_definitions(-lrt)
-        add_definitions(-DHAVE_RT)
+    if(${NS3_LIBRT})
+        find_library(LIBRT rt)
+        if(${LIBRT_FOUND})
+            add_definitions(-lrt)
+            add_definitions(-DHAVE_RT)
+        endif()
+    endif()
+
+    #if(${NS3_PTHREAD})
+        set(THREADS_PREFER_PTHREAD_FLAG)
+        find_package(THREADS REQUIRED)
+        if(${THREADS_FOUND})
+            include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
+            add_definitions(-DHAVE_PTHREAD_H)
+        endif()
+    #endif()
+
+    if(${NS3_MPI})
+        find_package(MPI)
+        if(${MPI_FOUND}})
+            set (common_includes ${common_includes} ${MPI_INCLUDE_PATH})
+            add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
+        endif()
+    endif()
+
+    if(${NS3_GSL})
+        find_package(GSL)
+        if(${GSL_FOUND})
+            set (common_includes ${common_includes} ${GSL_INCLUDE_DIRS})
+            link_directories(${GSL_LIBRARY})
+        endif()
     endif()
 
     #process debug switch
@@ -115,6 +142,7 @@ macro(process_options)
     add_definitions(-DHAVE_STDLIB_H)
     add_definitions(-DHAVE_GETENV)
     add_definitions(-DHAVE_SIGNAL_H)
+    add_definitions(-DNS3_LOG_ENABLE)
 
     #Process config-store-config
     add_definitions(-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages")
@@ -123,26 +151,6 @@ macro(process_options)
     add_definitions(-DHAVE_PYEXT)
     add_definitions(-DHAVE_PYTHON_H)
 
-
-    #Process optional dependencies
-    if(${NS3_PTHREAD})
-        set(THREADS_PREFER_PTHREAD_FLAG)
-        find_library(LIBPTHREAD pthread)
-        add_definitions(-lpthread)
-        add_definitions(-DHAVE_PTHREAD_H)
-    endif()
-
-    if(${NS3_MPI})
-        find_package(MPI)
-        set (common_includes ${common_includes} ${MPI_INCLUDE_PATH})
-        add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
-    endif()
-
-    if(${NS3_GSL})
-       find_package(GSL)
-       set (common_includes ${common_includes} ${GSL_INCLUDE_DIRS})
-       link_directories(${GSL_LIBRARY})
-    endif()
 
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
     set(ns3-libs )

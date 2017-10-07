@@ -2,7 +2,7 @@
 *.a
 *.o
 build/
-.idea/*.*
+.idea/
 cmake-build-debug
 *.log
 *.tr

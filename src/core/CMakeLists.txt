@@ -61,22 +61,44 @@ elseif(${INT64X64} EQUAL CAIRO)
 else()
 endif()
 
-if (LIBPTHREAD)
+if (${THREADS_FOUND})
+    if(WIN32)
+        set(thread_sources
+                model/win32-fd-reader.cc
+                )
+        set(thread_headers
+                model/win32-fd-reader.h
+                )
+        set(libraries_to_link
+                ${libraries_to_link}
+                wsock32
+                ws2_32
+                )
+    else()
+        set(thread_sources
+                model/unix-fd-reader.cc
+                )
+        set(thread_headers
+                model/unix-fd-reader.h
+                )
+    endif()
     set(thread_sources
+            ${thread_sources}
             model/system-thread.cc
-            model/unix-fd-reader.cc
             model/unix-system-mutex.cc
             model/unix-system-condition.cc
             )
+
     set(thread_headers
-            model/unix-fd-reader.h
+            ${thread_headers}
             model/system-mutex.h
             model/system-thread.h
             model/system-condition.h
             )
+
     set(libraries_to_link
         ${libraries_to_link}
-        ${LIBPTHREAD}
+        ${CMAKE_THREAD_LIBS_INIT}
         )
 endif()
 

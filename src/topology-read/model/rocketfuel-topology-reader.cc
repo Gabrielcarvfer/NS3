@@ -28,6 +28,29 @@
 #include "ns3/unused.h"
 #include "rocketfuel-topology-reader.h"
 
+
+
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+char* strsep(char** stringp, const char* delim)
+{
+    char* start = *stringp;
+    char* p;
+
+    p = (start != NULL) ? strpbrk(start, delim) : NULL;
+
+    if (p == NULL)
+    {
+        *stringp = NULL;
+    }
+    else
+    {
+        *p = '\0';
+        *stringp = p + 1;
+    }
+
+    return start;
+}
+#endif
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("RocketfuelTopologyReader");

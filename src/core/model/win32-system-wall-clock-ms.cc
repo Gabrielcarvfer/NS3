@@ -19,7 +19,7 @@
  */
 
 #include "system-wall-clock-ms.h"
-
+#include "log.h"
 #include <ctime>
 
 /**
@@ -31,7 +31,9 @@
 
 namespace ns3 {
 
-/**
+    NS_LOG_COMPONENT_DEFINE ("SystemWallClockMsPrivate");
+
+    /**
  * \ingroup system
  * \brief System-dependent implementation for SystemWallClockMs
  */
