@@ -12,21 +12,29 @@ include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.26)
 
-
-option(NS3_TESTS "Enable tests to be built" OFF)
 set(NS3_TESTS OFF)
+option(NS3_TESTS "Enable tests to be built" OFF)
 
-option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
+option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 
+#set(NS3_PTHREAD ON)
+#option(NS3_PTHREAD "Build with pthread support" OFF)
 
-set(NS3_PTHREAD ON)
-option(NS3_PTHREAD "Build with pthread support" OFF)
+set(NS3_BOOST ON)
+option(NS3_BOOST "Build with Boost support" OFF)
 
+set(NS3_GTK2 ON)
+option(NS3_GTK2 "Build with GTK2 support" OFF)
+
+set(NS3_LIBXML2 ON)
+option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
+
+set(NS3_LIBRT ON)
+option(NS3_LIBRT "Build with RT support" OFF)
 
 set(NS3_MPI ON)
 option(NS3_MPI "Build with MPI support" OFF)
-
 
 set(NS3_GSL ON)
 option(NS3_GSL "Build with GSL support" OFF)
@@ -98,10 +106,10 @@ add_subdirectory(3rd-party)
 add_subdirectory(src)
 
 #Build contribution libraries
-add_subdirectory(contrib)
+#add_subdirectory(contrib)
 
 #Build scratch/simulation scripts
-add_subdirectory(scratch)
+#add_subdirectory(scratch)
 
 
 

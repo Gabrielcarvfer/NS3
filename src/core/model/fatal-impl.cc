@@ -61,6 +61,42 @@ namespace FatalImpl {
  */
 namespace {
 
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+//TODO: build a workaround for Windows
+    int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
+            {
+            }
+    typedef unsigned sigset_t;
+    typedef unsigned uid_t;
+
+    union sigval {          /* Data passed with notification */
+        int     sival_int;         /* Integer value */
+        void   *sival_ptr;         /* Pointer value */
+    };
+
+    typedef struct {
+        int si_signo;
+        int si_code;
+        union sigval si_value;
+        int si_errno;
+        pid_t si_pid;
+        uid_t si_uid;
+        void *si_addr;
+        int si_status;
+        int si_band;
+    } siginfo_t;
+
+
+    struct sigaction
+    {
+        void     (*sa_handler)(int);
+        void     (*sa_sigaction)(int, siginfo_t *, void *);
+        sigset_t   sa_mask;
+        int        sa_flags;
+        void     (*sa_restorer)(void);
+    };
+#endif
+
 /**
  * \ingroup fatalimpl
  * \brief Static variable pointing to the list of output streams
@@ -158,6 +194,7 @@ FlushStreams (void)
    * streams even if one of the stream pointers is bad.
    * The SIGSEGV override should only be active for the
    * duration of this function. */
+
   struct sigaction hdl;
   hdl.sa_handler=sigHandler;
   sigaction (SIGSEGV, &hdl, 0);
