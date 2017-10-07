@@ -22,5 +22,8 @@ add_library(${lib${name}} SHARED
 
         )
 
+set(libraries_to_link ${libinternet})
+
+
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

@@ -21,7 +21,7 @@
 #define ATTRIBUTE_H
 
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include "ptr.h"
 #include "simple-ref-count.h"
 

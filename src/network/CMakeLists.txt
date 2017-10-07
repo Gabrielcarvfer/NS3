@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name network)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/address.cc
         model/application.cc
         model/buffer.cc
@@ -66,6 +66,9 @@ add_library(${lib${name}} SHARED
         helper/trace-helper.cc
         helper/delay-jitter-estimation.cc
         helper/simple-net-device-helper.cc
+        )
+
+set(header_files
         model/address.h
         model/application.h
         model/buffer.h
@@ -135,6 +138,11 @@ add_library(${lib${name}} SHARED
         helper/delay-jitter-estimation.h
         helper/simple-net-device-helper.h
         )
+
+
+set(libraries_to_link ${libcore} ${libstats})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

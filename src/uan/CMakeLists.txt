@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name uan)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/uan-channel.cc
         model/uan-phy-gen.cc
         model/uan-mac.cc
@@ -27,6 +27,9 @@ add_library(${lib${name}} SHARED
         model/acoustic-modem-energy-model.cc
         helper/uan-helper.cc
         helper/acoustic-modem-energy-model-helper.cc
+        )
+
+set(header_files
         model/uan-channel.h
         model/uan-phy.h
         model/uan-mac.h
@@ -52,6 +55,11 @@ add_library(${lib${name}} SHARED
         helper/acoustic-modem-energy-model-helper.h
         model/uan-mac-rc-gw.h
         )
+
+set(libraries_to_link ${libnetwork} ${libmobility} ${libenergy})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

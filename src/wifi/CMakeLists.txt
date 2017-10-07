@@ -1,8 +1,7 @@
 NS3_common_includes()
 
 set(name wifi)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+set(source_files
         model/wifi-information-element.cc
         model/wifi-information-element-vector.cc
         model/wifi-channel.cc
@@ -91,6 +90,9 @@ add_library(${lib${name}} SHARED
         helper/nqos-wifi-mac-helper.cc
         helper/qos-wifi-mac-helper.cc
         helper/wifi-mac-helper.cc
+        )
+
+set(header_files
         model/wifi-information-element.h
         model/wifi-information-element-vector.h
         model/wifi-net-device.h
@@ -181,6 +183,15 @@ add_library(${lib${name}} SHARED
         helper/wifi-mac-helper.h
         )
 
+set(libraries_to_link
+        ${libnetwork}
+        ${libpropagation}
+        ${libenergy}
+        ${libspectrum}
+        ${libantenna}
+        ${libmobility})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

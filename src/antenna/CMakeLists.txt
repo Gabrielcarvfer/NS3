@@ -1,27 +1,34 @@
 NS3_common_includes()
 
 set(name antenna)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/angles.cc
-        model/angles.h
         model/antenna-model.cc
-        model/antenna-model.h
-        model/cosine-antenna-model.cc
-        model/cosine-antenna-model.h
         model/isotropic-antenna-model.cc
-        model/isotropic-antenna-model.h
+        model/cosine-antenna-model.cc
         model/parabolic-antenna-model.cc
+        )
+
+set(header_files
+        model/angles.h
+        model/antenna-model.h
+        model/isotropic-antenna-model.h
+        model/cosine-antenna-model.h
         model/parabolic-antenna-model.h
         )
 
 #link to dependencies
-target_link_libraries(${lib${name}} ${libcore})
+set(libraries_to_link ${libcore})
 
-set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-add_library(${test${name}} SHARED
-        test/test-angles.cc
-        test/test-cosine-antenna.cc
-        test/test-degrees-radians.cc
-        test/test-isotropic-antenna.cc
-        test/test-parabolic-antenna.cc)
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+
+
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(${test${name}} SHARED
+#        test/test-angles.cc
+#        test/test-cosine-antenna.cc
+#        test/test-degrees-radians.cc
+#        test/test-isotropic-antenna.cc
+#        test/test-parabolic-antenna.cc)

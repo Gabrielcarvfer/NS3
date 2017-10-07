@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name lte)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/lte-common.cc
         model/lte-spectrum-phy.cc
         model/lte-spectrum-signal-parameters.cc
@@ -118,6 +118,9 @@ add_library(${lib${name}} SHARED
         model/lte-ffr-distributed-algorithm.cc
         model/lte-ue-power-control.cc
         #helper/emu-epc-helper.c
+        )
+
+set(header_files
         model/lte-common.h
         model/lte-spectrum-phy.h
         model/lte-spectrum-signal-parameters.h
@@ -235,5 +238,19 @@ add_library(${lib${name}} SHARED
         #helper/emu-epc-helper.h
         )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+set(libraries_to_link
+        ${libcore}
+        ${libnetwork}
+        ${libspectrum}
+        ${libstats}
+        ${libbuildings}
+        ${libvirtual-net-device}
+        ${libpoint-to-point}
+        ${libapplications}
+        ${libinternetcsma}
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+ #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

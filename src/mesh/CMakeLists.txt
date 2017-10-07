@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name mesh)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/mesh-information-element-vector.cc
         model/mesh-point-device.cc
         model/mesh-l2-routing-protocol.cc
@@ -36,6 +36,9 @@ add_library(${lib${name}} SHARED
         helper/mesh-stack-installer.cc
         helper/dot11s/dot11s-installer.cc
         helper/flame/flame-installer.cc
+        )
+
+set(header_files
         model/mesh-information-element-vector.h
         model/mesh-point-device.h
         model/mesh-l2-routing-protocol.h
@@ -67,6 +70,11 @@ add_library(${lib${name}} SHARED
         helper/dot11s/dot11s-installer.h
         helper/flame/flame-installer.h
         )
+
+set(libraries_to_link ${libinternet} ${libwifi})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

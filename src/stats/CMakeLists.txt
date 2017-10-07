@@ -6,12 +6,15 @@ set(lib${name} ns${NS3_VER}-${name}-${build_type})
 if (${SQLITE_ENABLED})
     set(SQLITE_SOURCES
             model/sqlite-data-output.cc
+            )
+    set(SQLITE_HEADERS
             model/sqlite-data-output.h
             )
 else()
     set(SQLITE_ENABLED )
 endif()
-add_library(${lib${name}} SHARED
+
+set(source_files
         ${SQLITE_SOURCES}
         helper/file-helper.cc
         helper/gnuplot-helper.cc
@@ -33,6 +36,10 @@ add_library(${lib${name}} SHARED
         model/file-aggregator.cc
         model/gnuplot-aggregator.cc
         model/get-wildcard-matches.cc
+        )
+
+set(header_files
+        ${SQLITE_HEADERS}
         helper/file-helper.h
         helper/gnuplot-helper.h
         model/data-calculator.h
@@ -56,6 +63,11 @@ add_library(${lib${name}} SHARED
         model/gnuplot-aggregator.h
         model/get-wildcard-matches.h
         )
+
+
+set(libraries_to_link ${libcore} )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
