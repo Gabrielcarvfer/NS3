@@ -1,7 +1,7 @@
 *.so
 *.a
 *.o
-build/*.*
+build/*
 .idea/*.*
 sim
 scratch/*.*
@@ -10,4 +10,4 @@ cmake-build-debug
 *.log
 *.tr
 *.pyc
- 
+src/sim/*.*

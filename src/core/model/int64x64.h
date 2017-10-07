@@ -20,7 +20,7 @@
 #ifndef INT64X64_H
 #define INT64X64_H
 
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 
 // Order is important here, as it determines which implementation
 // will generate doxygen API docs.  This order mimics the

@@ -21,7 +21,7 @@
 #ifndef SYSTEM_THREAD_H
 #define SYSTEM_THREAD_H
 
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include "callback.h"
 #ifdef HAVE_PTHREAD_H
 #include <pthread.h>

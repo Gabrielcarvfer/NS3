@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name lr-wpan)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/lr-wpan-error-model.cc
         model/lr-wpan-interference-helper.cc
         model/lr-wpan-phy.cc
@@ -15,6 +15,8 @@ add_library(${lib${name}} SHARED
         model/lr-wpan-spectrum-signal-parameters.cc
         model/lr-wpan-lqi-tag.cc
         helper/lr-wpan-helper.cc
+        )
+set(header_files
         model/lr-wpan-error-model.h
         model/lr-wpan-interference-helper.h
         model/lr-wpan-phy.h
@@ -28,6 +30,11 @@ add_library(${lib${name}} SHARED
         model/lr-wpan-lqi-tag.h
         helper/lr-wpan-helper.h
         )
+
+set(libraries_to_link ${libnetwork} ${libcore} ${libmobility} ${libspectrum} ${libpropagation})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )

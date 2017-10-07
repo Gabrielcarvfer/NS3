@@ -23,6 +23,8 @@ add_library(${lib${name}} SHARED
         helper/flow-monitor-helper.h
         )
 
+set(libraries_to_link ${libinternet} ${libconfigstore})
+
 set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 add_library(${test${name}} SHARED
         test/histogram-test-suite.cc

@@ -1,13 +1,13 @@
-
 #ifdef NS3_MODULE_COMPILATION
-# error "Do not include ns3 module aggregator headers from other modules; these are meant only for end user scripts."
-#endif
+            # error "Do not include ns3 module aggregator headers from other modules these are meant only for end user scripts."
+            #endif
 
-#ifndef NS3_MODULE_MPI
-    
+            #ifndef NS3_MODULE_
 
-// Module headers:
-#include "mpi-interface.h"
-#include "mpi-receiver.h"
-#include "parallel-communication-interface.h"
-#endif
+
+            // Module headers:
+                #include "mpi-receiver.h"
+                #include "mpi-interface.h"
+                #include "parallel-communication-interface.h"
+            #endif
+            

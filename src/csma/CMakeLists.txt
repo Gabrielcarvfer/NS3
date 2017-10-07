@@ -1,17 +1,26 @@
 NS3_common_includes()
 
 set(name csma)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/backoff.cc
-        model/backoff.h
         model/csma-channel.cc
-        model/csma-channel.h
         model/csma-net-device.cc
-        model/csma-net-device.h
         helper/csma-helper.cc
+        )
+
+set(header_files
+        model/backoff.h
+        model/csma-channel.h
+        model/csma-net-device.h
         helper/csma-helper.h
         )
+
+#Set lib csma link dependencies
+set(libraries_to_link ${libnetwork})
+
+#Build csma lib
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED)

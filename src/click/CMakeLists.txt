@@ -1,18 +1,29 @@
 NS3_common_includes()
 
 set(name click)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/ipv4-click-routing.cc
-        model/ipv4-click-routing.h
         model/ipv4-l3-click-protocol.cc
-        model/ipv4-l3-click-protocol.h
         helper/click-internet-stack-helper.cc
+        )
+
+set(header_files
+        model/ipv4-click-routing.h
+        model/ipv4-l3-click-protocol.h
         helper/click-internet-stack-helper.h
         )
 
-set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-add_library(${test${name}} SHARED
-        test/ipv4-click-routing-test.cc
+set(libraries_to_link
+        ${libcore}
+        ${libnetwork}
+        ${libinternet}
         )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+#add_library(test${name}
+#        test/ipv4-click-routing-test.cc
+#        )
 
