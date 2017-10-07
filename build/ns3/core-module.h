@@ -6,6 +6,11 @@
 
 
             // Module headers:
+                #include "int64x64-128.h"
+                #include "unix-fd-reader.h"
+                #include "system-mutex.h"
+                #include "system-thread.h"
+                #include "system-condition.h"
                 #include "nstime.h"
                 #include "event-id.h"
                 #include "event-impl.h"
@@ -88,12 +93,5 @@
                 #include "non-copyable.h"
                 #include "build-profile.h"
                 #include "des-metrics.h"
-                #include "realtime-simulator-impl.h"
-                #include "wall-clock-synchronizer.h"
-                #include "int64x64-128.h"
-                #include "unix-fd-reader.h"
-                #include "system-mutex.h"
-                #include "system-thread.h"
-                #include "system-condition.h"
             #endif
             

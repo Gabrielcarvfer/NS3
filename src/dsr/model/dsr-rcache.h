@@ -34,7 +34,7 @@
 #define DSR_RCACHE_H
 
 #include <map>
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 #include <sys/types.h>
 #include <iostream>

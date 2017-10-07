@@ -21,7 +21,7 @@
 #ifndef ERROR_RATE_MODEL_H
 #define ERROR_RATE_MODEL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "wifi-mode.h"
 #include "wifi-tx-vector.h"
 #include "ns3/object.h"

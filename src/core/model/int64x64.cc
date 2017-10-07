@@ -18,7 +18,7 @@
  */
 
 #include "int64x64.h"
-#include <stdint.h>
+#include <cstdint>
 #include <iostream>
 #include <iomanip>  // showpos
 #include <sstream>

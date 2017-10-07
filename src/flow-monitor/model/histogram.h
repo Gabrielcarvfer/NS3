@@ -22,7 +22,7 @@
 #define NS3_HISTOGRAM_H
 
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 
 namespace ns3 {

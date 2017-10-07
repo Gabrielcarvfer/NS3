@@ -20,7 +20,7 @@
 #ifndef NODE_CONTAINER_H
 #define NODE_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/node.h"
 

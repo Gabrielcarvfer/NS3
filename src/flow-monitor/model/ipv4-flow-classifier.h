@@ -21,7 +21,7 @@
 #ifndef IPV4_FLOW_CLASSIFIER_H
 #define IPV4_FLOW_CLASSIFIER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 
 #include "ns3/ipv4-header.h"

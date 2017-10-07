@@ -21,7 +21,7 @@
 #ifndef DCA_TXOP_H
 #define DCA_TXOP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/callback.h"
 #include "ns3/packet.h"
 #include "ns3/nstime.h"

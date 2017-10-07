@@ -21,7 +21,7 @@
 #ifndef EDCA_PARAMETER_SET_H
 #define EDCA_PARAMETER_SET_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "ns3/buffer.h"
 #include "ns3/wifi-information-element.h"

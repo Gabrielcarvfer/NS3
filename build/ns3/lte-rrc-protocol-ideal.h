@@ -22,7 +22,7 @@
 #ifndef LTE_RRC_PROTOCOL_IDEAL_H
 #define LTE_RRC_PROTOCOL_IDEAL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 
 #include <ns3/ptr.h>

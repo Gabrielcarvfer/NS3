@@ -21,7 +21,7 @@
 #ifndef IPV6_END_POINT_DEMUX_H
 #define IPV6_END_POINT_DEMUX_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/ipv6-address.h"
 #include "ipv6-interface.h"

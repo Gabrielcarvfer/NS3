@@ -20,7 +20,7 @@
 #ifndef TYPE_NAME_H
 #define TYPE_NAME_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 /**

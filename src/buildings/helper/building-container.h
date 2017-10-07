@@ -22,7 +22,7 @@
 #ifndef BUILDING_CONTAINER_H
 #define BUILDING_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include <ns3/building.h>
 

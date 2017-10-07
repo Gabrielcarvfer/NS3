@@ -21,7 +21,7 @@
 #ifndef NIST_ERROR_RATE_MODEL_H
 #define NIST_ERROR_RATE_MODEL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "wifi-mode.h"
 #include "error-rate-model.h"
 #include "dsss-error-rate-model.h"

@@ -21,7 +21,7 @@
 #ifndef SS_SERVICE_FLOW_MANAGER_H
 #define SS_SERVICE_FLOW_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/event-id.h"
 #include "mac-messages.h"
 #include "ns3/buffer.h"

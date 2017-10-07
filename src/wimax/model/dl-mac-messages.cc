@@ -21,7 +21,7 @@
  */
 
 
-#include <stdint.h>
+#include <cstdint>
 #include "dl-mac-messages.h"
 #include "ns3/address-utils.h"
 

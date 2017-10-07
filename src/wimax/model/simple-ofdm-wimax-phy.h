@@ -22,7 +22,7 @@
 #ifndef SIMPLE_OFDM_WIMAX_PHY_H
 #define SIMPLE_OFDM_WIMAX_PHY_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/callback.h"
 #include "ns3/nstime.h"

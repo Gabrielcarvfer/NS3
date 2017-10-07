@@ -23,7 +23,7 @@
 #ifndef SEND_PARAMS_H
 #define SEND_PARAMS_H
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 
@@ -56,7 +56,7 @@ private:
 #ifndef OFDM_SEND_PARAMS_H
 #define OFDM_SEND_PARAMS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/packet-burst.h"
 
 namespace ns3 {

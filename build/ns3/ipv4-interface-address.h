@@ -20,7 +20,7 @@
 #ifndef IPV4_INTERFACE_ADDRESS_H
 #define IPV4_INTERFACE_ADDRESS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "ns3/ipv4-address.h"
 

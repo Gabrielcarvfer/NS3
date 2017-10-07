@@ -21,7 +21,7 @@
 #ifndef UPLINK_SCHEDULER_H
 #define UPLINK_SCHEDULER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ul-mac-messages.h"
 #include "ns3/nstime.h"
 #include "wimax-phy.h"

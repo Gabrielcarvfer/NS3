@@ -22,7 +22,7 @@
 #define PTR_H
 
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
 #include "assert.h"
 
 /**

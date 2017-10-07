@@ -22,7 +22,7 @@
 #include "ns3/mac48-address.h"
 #include "ns3/nstime.h"
 #include "ns3/bridge-channel.h"
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <map>
 

@@ -21,7 +21,7 @@
 #ifndef SYSTEM_WALL_CLOCK_MS_H
 #define SYSTEM_WALL_CLOCK_MS_H
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * \file

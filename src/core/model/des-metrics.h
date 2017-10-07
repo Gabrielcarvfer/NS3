@@ -31,7 +31,7 @@
 #include "singleton.h"
 #include "system-mutex.h"
 
-#include <stdint.h>    // uint32_t
+#include <cstdint>    // uint32_t
 #include <fstream>
 #include <string>
 

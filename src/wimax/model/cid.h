@@ -24,7 +24,7 @@
 #ifndef CID_H
 #define CID_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 
 namespace ns3 {

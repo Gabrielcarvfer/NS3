@@ -28,7 +28,7 @@
 
 #include "object-factory.h"
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 /**

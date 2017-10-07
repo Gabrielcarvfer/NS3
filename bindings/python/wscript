@@ -193,7 +193,7 @@ def configure(conf):
 
     def test(t1, t2):
         test_program = '''
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 int main ()

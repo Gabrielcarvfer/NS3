@@ -22,7 +22,7 @@
 #define MAP_SCHEDULER_H
 
 #include "scheduler.h"
-#include <stdint.h>
+#include <cstdint>
 #include <map>
 #include <utility>
 

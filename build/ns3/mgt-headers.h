@@ -23,7 +23,7 @@
 #ifndef MGT_HEADERS_H
 #define MGT_HEADERS_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/header.h"
 #include "status-code.h"

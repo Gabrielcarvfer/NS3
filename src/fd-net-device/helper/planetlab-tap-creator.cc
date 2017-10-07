@@ -22,7 +22,7 @@
  */
 
 #include <unistd.h>
-#include <stdint.h>
+#include <cstdint>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>

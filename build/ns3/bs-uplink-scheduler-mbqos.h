@@ -23,7 +23,7 @@
 #ifndef UPLINK_SCHEDULER_MBQOS_H
 #define UPLINK_SCHEDULER_MBQOS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ul-mac-messages.h"
 #include "ns3/nstime.h"
 #include "wimax-phy.h"

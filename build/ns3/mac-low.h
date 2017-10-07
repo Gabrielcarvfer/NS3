@@ -23,7 +23,7 @@
 #define MAC_LOW_H
 
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include <map>
 

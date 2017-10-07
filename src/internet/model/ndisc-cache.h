@@ -21,7 +21,7 @@
 #ifndef NDISC_CACHE_H
 #define NDISC_CACHE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 
 #include "ns3/packet.h"

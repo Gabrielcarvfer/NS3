@@ -22,7 +22,7 @@
 #ifndef IPCS_CLASSIFIER_H
 #define IPCS_CLASSIFIER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ss-service-flow-manager.h"
 #include "ns3/ptr.h"

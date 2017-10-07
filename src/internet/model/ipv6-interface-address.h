@@ -21,7 +21,7 @@
 #ifndef IPV6_INTERFACE_ADDRESS_H
 #define IPV6_INTERFACE_ADDRESS_H 
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/ipv6-address.h"
 

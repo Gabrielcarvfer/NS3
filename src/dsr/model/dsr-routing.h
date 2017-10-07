@@ -35,7 +35,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include <cassert>
 #include <sys/types.h>
 

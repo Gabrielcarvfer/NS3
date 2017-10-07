@@ -22,7 +22,7 @@
 #ifndef WIFI_MODE_H
 #define WIFI_MODE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <ostream>

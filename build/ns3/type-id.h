@@ -28,7 +28,7 @@
 #include "deprecated.h"
 #include "hash.h"
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * \file

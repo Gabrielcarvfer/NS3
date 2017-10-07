@@ -20,7 +20,7 @@
 #ifndef RNG_SEED_MANAGER_H
 #define RNG_SEED_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 
 /**
  * \file

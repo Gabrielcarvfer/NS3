@@ -23,7 +23,7 @@
 #ifndef LTE_RRC_SAP_H
 #define LTE_RRC_SAP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 
 #include <ns3/ptr.h>

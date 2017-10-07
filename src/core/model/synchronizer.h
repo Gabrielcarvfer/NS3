@@ -19,7 +19,7 @@
 #ifndef SYNCHRONIZER_H
 #define SYNCHRONIZER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "nstime.h"
 #include "object.h"
 

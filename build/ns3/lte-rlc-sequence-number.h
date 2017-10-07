@@ -23,7 +23,7 @@
 
 #include <limits>
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
 
 // #include "ns3/lte-rlc.h"
 

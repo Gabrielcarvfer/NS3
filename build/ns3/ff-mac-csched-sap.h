@@ -21,7 +21,7 @@
 #ifndef FF_MAC_CSCHED_SAP_H
 #define FF_MAC_CSCHED_SAP_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 
 #include "ff-mac-common.h"

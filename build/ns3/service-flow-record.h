@@ -21,7 +21,7 @@
 #ifndef SERVICE_FLOW_RECORD_H
 #define SERVICE_FLOW_RECORD_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/nstime.h"
 #include "bs-uplink-scheduler.h"
 #include "bs-net-device.h"

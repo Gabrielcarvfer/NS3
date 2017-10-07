@@ -20,7 +20,7 @@
 #ifndef WAYPOINT_MOBILITY_MODEL_H
 #define WAYPOINT_MOBILITY_MODEL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <deque>
 #include "mobility-model.h"
 #include "ns3/vector.h"

@@ -21,7 +21,7 @@
 #ifndef TCP_OPTION_H
 #define TCP_OPTION_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/object.h"
 #include "ns3/buffer.h"
 #include "ns3/object-factory.h"

@@ -21,7 +21,7 @@
 #ifndef METRIC_REPORT_H
 #define METRIC_REPORT_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/buffer.h"
 #include "ns3/mesh-information-element-vector.h"
 

@@ -21,7 +21,7 @@
 #ifndef CANDIDATE_QUEUE_H
 #define CANDIDATE_QUEUE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/ipv4-address.h"
 

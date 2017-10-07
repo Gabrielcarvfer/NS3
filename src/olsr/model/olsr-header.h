@@ -21,7 +21,7 @@
 #ifndef OLSR_HEADER_H
 #define OLSR_HEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/header.h"
 #include "ns3/ipv4-address.h"

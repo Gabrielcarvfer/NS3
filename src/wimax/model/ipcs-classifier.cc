@@ -20,7 +20,7 @@
  */
 
 #include "ipcs-classifier.h"
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/log.h"
 #include "service-flow.h"
 #include "ns3/packet.h"
