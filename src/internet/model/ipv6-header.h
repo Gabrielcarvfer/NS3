@@ -102,18 +102,18 @@ public:
    * \brief Get the type identifier.
    * \return type identifier
    */
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
 
   /**
    * \brief Return the instance type identifier.
    * \return instance type ID
    */
-  virtual TypeId GetInstanceTypeId (void) const;
+  virtual TypeId GetInstanceTypeId () const;
 
   /**
    * \brief Constructor.
    */
-  Ipv6Header (void);
+  Ipv6Header ();
 
   /**
    * \brief Set the "Traffic class" field.
@@ -125,7 +125,7 @@ public:
    * \brief Get the "Traffic class" field.
    * \return the traffic value
    */
-  uint8_t GetTrafficClass (void) const;
+  uint8_t GetTrafficClass () const;
 
   /**
    * \brief Set DSCP Field
@@ -136,7 +136,7 @@ public:
   /**
    * \returns the DSCP field of this packet.
    */
-  DscpType GetDscp (void) const;
+  DscpType GetDscp () const;
 
   /**
    * \param dscp the dscp
@@ -154,7 +154,7 @@ public:
    * \brief Get the "Flow label" field.
    * \return the flow label value
    */
-  uint32_t GetFlowLabel (void) const;
+  uint32_t GetFlowLabel () const;
 
   /**
    * \brief Set the "Payload length" field.
@@ -166,7 +166,7 @@ public:
    * \brief Get the "Payload length" field.
    * \return the payload length
    */
-  uint16_t GetPayloadLength (void) const;
+  uint16_t GetPayloadLength () const;
 
   /**
    * \brief Set the "Next header" field.
@@ -178,7 +178,7 @@ public:
    * \brief Get the next header.
    * \return the next header number
    */
-  uint8_t GetNextHeader (void) const;
+  uint8_t GetNextHeader () const;
 
   /**
    * \brief Set the "Hop limit" field (TTL).
@@ -190,7 +190,7 @@ public:
    * \brief Get the "Hop limit" field (TTL).
    * \return the hop limit value
    */
-  uint8_t GetHopLimit (void) const;
+  uint8_t GetHopLimit () const;
 
   /**
    * \brief Set the "Source address" field.
@@ -202,7 +202,7 @@ public:
    * \brief Get the "Source address" field.
    * \return the source address
    */
-  Ipv6Address GetSourceAddress (void) const;
+  Ipv6Address GetSourceAddress () const;
 
   /**
    * \brief Set the "Destination address" field.
@@ -214,7 +214,7 @@ public:
    * \brief Get the "Destination address" field.
    * \return the destination address
    */
-  Ipv6Address GetDestinationAddress (void) const;
+  Ipv6Address GetDestinationAddress () const;
 
   /**
    * \brief Print some informations about the packet.
@@ -227,7 +227,7 @@ public:
    * \brief Get the serialized size of the packet.
    * \return size
    */
-  virtual uint32_t GetSerializedSize (void) const;
+  virtual uint32_t GetSerializedSize () const;
 
   /**
    * \brief Serialize the packet.

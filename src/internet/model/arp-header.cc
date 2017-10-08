@@ -59,13 +59,13 @@ bool
 ArpHeader::IsRequest (void) const
 {
   NS_LOG_FUNCTION (this);
-  return (m_type == ARP_TYPE_REQUEST) ? true : false;
+  return m_type == ARP_TYPE_REQUEST;
 }
 bool 
 ArpHeader::IsReply (void) const
 {
   NS_LOG_FUNCTION (this);
-  return (m_type == ARP_TYPE_REPLY) ? true : false;
+  return m_type == ARP_TYPE_REPLY;
 }
 Address 
 ArpHeader::GetSourceHardwareAddress (void)

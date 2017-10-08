@@ -8,6 +8,7 @@ cmake_minimum_required( VERSION 3.0 )
 #######################################
 project(NS3 CXX)
 
+
 include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.26)
@@ -15,8 +16,9 @@ set(NS3_VER 3.26)
 set(NS3_TESTS OFF)
 option(NS3_TESTS "Enable tests to be built" OFF)
 
-set(NS3_DEBUG ON)
+
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
+set(NS3_DEBUG ON)
 
 #set(NS3_PTHREAD ON)
 #option(NS3_PTHREAD "Build with pthread support" OFF)
@@ -39,51 +41,51 @@ option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_GSL ON)
 option(NS3_GSL "Build with GSL support" OFF)
 
-#Select libs to be built
+#Select libs to be built  (libs marked with # on the right are compiling on windows)
 set(libs_to_build
-        antenna
+        antenna #
         aodv
         applications
-        bridge
+        bridge #
         #brite
-        buildings
+        buildings #
         click
-        config-store
-        core
-        csma
+        config-store #
+        core #
+        csma #
         csma-layout
         dsdv
         dsr
-        energy
-        fd-net-device
+        energy #
+        fd-net-device #requires socket implementation
         flow-monitor
-        internet
+        internet #main block, couldnt identify the problem
         internet-apps
-        lr-wpan
+        lr-wpan #
         lte
         mesh
-        mobility
+        mobility #
         mpi
         netanim
-        network
+        network #
         nix-vector-routing
         olsr
         #openflow
-        point-to-point
+        point-to-point #
         point-to-point-layout
-        propagation
+        propagation #
         sixlowpan
-        spectrum
-        stats
+        spectrum #
+        stats #
         #tap-bridge
         #test
-        topology-read
-        traffic-control
+        topology-read #needs to swap posix regex to c++ regex
+        traffic-control #
         uan
-        virtual-net-device
+        virtual-net-device #
         #visualizer
         wave
-        wifi
+        wifi #
         wimax
         )
 

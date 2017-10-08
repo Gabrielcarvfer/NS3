@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <unistd.h>
+
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -25,13 +25,22 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/ioctl.h>
-#include <net/ethernet.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+//TODO: fix for Windows
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #include <windows.h>
+
+#else
+  #include <unistd.h>
+  #include <sys/socket.h>
+  #include <sys/un.h>
+  #include <sys/ioctl.h>
+  #include <net/ethernet.h>
+  #include <net/if.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+#endif
 
 #include "creator-utils.h"
 #include "encode-decode.h"

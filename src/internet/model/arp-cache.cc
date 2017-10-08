@@ -369,25 +369,25 @@ bool
 ArpCache::Entry::IsDead (void)
 {
   NS_LOG_FUNCTION (this);
-  return (m_state == DEAD) ? true : false;
+  return m_state == DEAD;
 }
 bool 
 ArpCache::Entry::IsAlive (void)
 {
   NS_LOG_FUNCTION (this);
-  return (m_state == ALIVE) ? true : false;
+  return m_state == ALIVE;
 }
 bool
 ArpCache::Entry::IsWaitReply (void)
 {
   NS_LOG_FUNCTION (this);
-  return (m_state == WAIT_REPLY) ? true : false;
+  return m_state == WAIT_REPLY;
 }
 bool
 ArpCache::Entry::IsPermanent (void)
 {
   NS_LOG_FUNCTION (this);
-  return (m_state == PERMANENT) ? true : false;
+  return m_state == PERMANENT;
 }
 
 
