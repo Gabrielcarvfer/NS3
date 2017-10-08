@@ -81,9 +81,9 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   Ipv4 ();
-  virtual ~Ipv4 ();
+  virtual ~Ipv4 () = 0;
 
   /**
    * \brief Register a new routing protocol to be used by this Ipv4 stack
@@ -101,7 +101,7 @@ public:
    * 
    * \returns smart pointer to Ipv4RoutingProtocol object, or null pointer if none
    */
-  virtual Ptr<Ipv4RoutingProtocol> GetRoutingProtocol (void) const = 0;
+  virtual Ptr<Ipv4RoutingProtocol> GetRoutingProtocol () const = 0;
 
   /**
    * \param device device to add to the list of Ipv4 interfaces
@@ -117,7 +117,7 @@ public:
   /**
    * \returns the number of interfaces added by the user.
    */
-  virtual uint32_t GetNInterfaces (void) const = 0;
+  virtual uint32_t GetNInterfaces () const = 0;
 
   /**
    * \brief Return the interface number of the interface that has been
@@ -425,7 +425,7 @@ public:
    *
    * \returns a smart pointer to the instantiated raw socket
    */
-  virtual Ptr<Socket> CreateRawSocket (void) = 0;
+  virtual Ptr<Socket> CreateRawSocket () = 0;
 
   /**
    * \brief Deletes a particular raw socket
@@ -449,7 +449,7 @@ private:
    * \brief Get the IP forwarding state
    * \returns true if IP is in forwarding state
    */
-  virtual bool GetIpForward (void) const = 0;
+  virtual bool GetIpForward () const = 0;
 
   /**
    * \brief Set or unset the Weak Es Model
@@ -464,7 +464,7 @@ private:
    * RFC1122 term for whether host accepts datagram with a dest. address on another interface
    * \returns true for Weak Es Model activated
    */
-  virtual bool GetWeakEsModel (void) const = 0;
+  virtual bool GetWeakEsModel () const = 0;
 };
 
 } // namespace ns3 

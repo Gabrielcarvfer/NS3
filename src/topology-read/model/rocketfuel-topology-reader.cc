@@ -22,7 +22,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <regex.h>
+#include <regex>
 
 #include "ns3/log.h"
 #include "ns3/unused.h"

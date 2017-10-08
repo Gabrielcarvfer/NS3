@@ -1,8 +1,9 @@
 NS3_common_includes()
 
 set(name wave)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+
+set(source_files
         model/wave-mac-low.cc
         model/ocb-wifi-mac.cc
         model/vendor-specific-action.cc
@@ -19,6 +20,9 @@ add_library(${lib${name}} SHARED
         helper/wave-helper.cc
         helper/wifi-80211p-helper.cc
         helper/wave-bsm-helper.cc
+        )
+
+set(header_files
         model/wave-mac-low.h
         model/ocb-wifi-mac.h
         model/vendor-specific-action.h
@@ -36,6 +40,11 @@ add_library(${lib${name}} SHARED
         helper/wifi-80211p-helper.h
         helper/wave-bsm-helper.h
         )
+
+set(libraries_to_link ${libcore} ${libpropagation} ${libwifi} ${libinternet})
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 #add_library(${test${name}} SHARED )
