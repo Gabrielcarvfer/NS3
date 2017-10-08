@@ -250,7 +250,61 @@ set(libraries_to_link
         ${libinternetcsma}
         )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/lte-test-downlink-sinr.cc
+        test/lte-test-uplink-sinr.cc
+        test/lte-test-link-adaptation.cc
+        test/lte-test-interference.cc
+        test/lte-test-ue-phy.cc
+        test/lte-test-rr-ff-mac-scheduler.cc
+        test/lte-test-pf-ff-mac-scheduler.cc
+        test/lte-test-fdmt-ff-mac-scheduler.cc
+        test/lte-test-tdmt-ff-mac-scheduler.cc
+        test/lte-test-tta-ff-mac-scheduler.cc
+        test/lte-test-fdbet-ff-mac-scheduler.cc
+        test/lte-test-tdbet-ff-mac-scheduler.cc
+        test/lte-test-fdtbfq-ff-mac-scheduler.cc
+        test/lte-test-tdtbfq-ff-mac-scheduler.cc
+        test/lte-test-pss-ff-mac-scheduler.cc
+        test/lte-test-cqa-ff-mac-scheduler.cc
+        test/lte-test-earfcn.cc
+        test/lte-test-spectrum-value-helper.cc
+        test/lte-test-pathloss-model.cc
+        test/lte-test-entities.cc
+        test/lte-simple-helper.cc
+        test/lte-simple-net-device.cc
+        test/test-lte-rlc-header.cc
+        test/lte-test-rlc-um-transmitter.cc
+        test/lte-test-rlc-am-transmitter.cc
+        test/lte-test-rlc-um-e2e.cc
+        test/lte-test-rlc-am-e2e.cc
+        test/epc-test-gtpu.cc
+        test/test-epc-tft-classifier.cc
+        test/epc-test-s1u-downlink.cc
+        test/epc-test-s1u-uplink.cc
+        test/test-lte-epc-e2e-data.cc
+        test/test-lte-antenna.cc
+        test/lte-test-phy-error-model.cc
+        test/lte-test-mimo.cc
+        test/lte-test-harq.cc
+        test/test-lte-rrc.cc
+        test/test-lte-x2-handover.cc
+        test/test-lte-x2-handover-measures.cc
+        test/test-asn1-encoding.cc
+        test/lte-test-ue-measurements.cc
+        test/lte-test-cell-selection.cc
+        test/test-lte-handover-delay.cc
+        test/test-lte-handover-target.cc
+        test/lte-test-deactivate-bearer.cc
+        test/lte-ffr-simple.cc
+        test/lte-test-downlink-power-control.cc
+        test/lte-test-uplink-power-control.cc
+        test/lte-test-frequency-reuse.cc
+        test/lte-test-interference-fr.cc
+        test/lte-test-cqi-generation.cc
+        test/lte-simple-spectrum-phy.cc
+        )
 
- #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+

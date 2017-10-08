@@ -36,6 +36,5 @@
                 #include "waveform-generator-helper.h"
                 #include "spectrum-analyzer-helper.h"
                 #include "tv-spectrum-transmitter-helper.h"
-                #include "spectrum-test.h"
             #endif
             

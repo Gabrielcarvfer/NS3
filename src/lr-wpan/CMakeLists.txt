@@ -16,6 +16,7 @@ set(source_files
         model/lr-wpan-lqi-tag.cc
         helper/lr-wpan-helper.cc
         )
+
 set(header_files
         model/lr-wpan-error-model.h
         model/lr-wpan-interference-helper.h
@@ -33,8 +34,18 @@ set(header_files
 
 set(libraries_to_link ${libnetwork} ${libcore} ${libmobility} ${libspectrum} ${libpropagation})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/lr-wpan-ack-test.cc
+        test/lr-wpan-cca-test.cc
+        test/lr-wpan-collision-test.cc
+        test/lr-wpan-ed-test.cc
+        test/lr-wpan-error-model-test.cc
+        test/lr-wpan-packet-test.cc
+        test/lr-wpan-pd-plme-sap-test.cc
+        test/lr-wpan-spectrum-value-helper-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+

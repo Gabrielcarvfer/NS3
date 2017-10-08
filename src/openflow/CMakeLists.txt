@@ -1,8 +1,8 @@
 NS3_common_includes()
 
 set(name openflow)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         model/box.cc
         model/constant-acceleration-mobility-model.cc
         model/constant-position-mobility-model.cc
@@ -22,6 +22,9 @@ add_library(${lib${name}} SHARED
         model/waypoint-mobility-model.cc
         helper/mobility-helper.cc
         helper/ns2-mobility-helper.cc
+        )
+
+set(header_files
         model/box.h
         model/constant-acceleration-mobility-model.h
         model/constant-position-mobility-model.h
@@ -43,5 +46,11 @@ add_library(${lib${name}} SHARED
         helper/ns2-mobility-helper.h
         )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+set(libraries_to_link ${libinternet} ${boost})
+
+set(test_sources
+        test/openflow-switch-test-suite.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+

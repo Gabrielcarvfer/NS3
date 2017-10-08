@@ -66,12 +66,18 @@ set(header_files
         helper/waveform-generator-helper.h
         helper/spectrum-analyzer-helper.h
         helper/tv-spectrum-transmitter-helper.h
-        test/spectrum-test.h
         )
 
 set(libraries_to_link ${libpropagation} ${libantenna})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/spectrum-test.h
+        test/spectrum-interference-test.cc
+        test/spectrum-value-test.cc
+        test/spectrum-ideal-phy-test.cc
+        test/spectrum-waveform-generator-test.cc
+        test/tv-helper-distribution-test.cc
+        test/tv-spectrum-transmitter-test.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

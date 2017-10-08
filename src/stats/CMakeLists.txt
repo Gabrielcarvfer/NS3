@@ -67,7 +67,13 @@ set(header_files
 
 set(libraries_to_link ${libcore} )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/basic-data-calculators-test-suite.cc
+        test/average-test-suite.cc
+        test/double-probe-test-suite.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})

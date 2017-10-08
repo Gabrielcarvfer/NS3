@@ -32,9 +32,11 @@ set(libraries_to_link
         ${libcore}
         )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/red-queue-disc-test-suite.cc
+        test/codel-queue-disc-test-suite.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
-
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

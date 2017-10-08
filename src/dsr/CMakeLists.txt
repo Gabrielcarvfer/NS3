@@ -37,8 +37,10 @@ set(header_files
 
 set(libraries_to_link ${libinternet} ${libwifi})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/dsr-test-suite.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#            test/dsr-test-suite.cc)
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+
