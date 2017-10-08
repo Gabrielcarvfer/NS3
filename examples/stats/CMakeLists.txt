@@ -1,0 +1,9 @@
+NS3_common_includes()
+
+set(name wifi-example-sim)
+set(source_files ${name}.cc wifi-example-apps.cc)
+set(header_files wifi-example-apps.h)
+set(libraries_to_link ${libstats} ${libinternet} ${libmobility} ${libwifi})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+
