@@ -6,6 +6,7 @@
 
 
             // Module headers:
+                #include "gtk-config-store.h"
                 #include "file-config.h"
                 #include "config-store.h"
             #endif

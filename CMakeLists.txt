@@ -16,6 +16,8 @@ set(NS3_VER 3.26)
 set(NS3_TESTS OFF)
 option(NS3_TESTS "Enable tests to be built" OFF)
 
+set(NS3_EXAMPLES OFF)
+option(NS3_EXAMPLES "Enable examples to be built" OFF)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -106,6 +108,11 @@ add_subdirectory(3rd-party)
 
 #Build NS3 library core
 add_subdirectory(src)
+
+#Build NS library examples
+if(${NS3_EXAMPLES})
+    add_subdirectory(examples)
+endif()
 
 #Build contribution libraries
 add_subdirectory(contrib)
