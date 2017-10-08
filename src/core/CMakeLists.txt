@@ -58,11 +58,11 @@ elseif(${INT64X64} EQUAL CAIRO)
             model/int64x64-cairo.h
             model/cairo-wideint-private.h
             )
-else()
 endif()
 
 if (${THREADS_FOUND})
-    if(WIN32)
+
+    if(${WIN32})
         set(thread_sources
                 model/win32-fd-reader.cc
                 )
