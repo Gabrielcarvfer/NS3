@@ -30,8 +30,13 @@ set(header_files
 
 set(libraries_to_link ${libnetwork} ${libmobility} )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/propagation-loss-model-test-suite.cc
+        test/okumura-hata-test-suite.cc
+        test/itu-r-1411-los-test-suite.cc
+        test/kun-2600-mhz-test-suite.cc
+        test/itu-r-1411-nlos-over-rooftop-test-suite.cc
+        )
 
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

@@ -228,8 +228,63 @@ set(libraries_to_link
         ${libmpi}
         ${libtraffic-control}
         )
-add_definitions(-std=c++11)
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+set(test_sources
+        test/global-route-manager-impl-test-suite.cc
+        test/ipv4-address-generator-test-suite.cc
+        test/ipv4-address-helper-test-suite.cc
+        test/ipv4-list-routing-test-suite.cc
+        test/ipv4-packet-info-tag-test-suite.cc
+        test/ipv4-raw-test.cc
+        test/ipv4-header-test.cc
+        test/ipv4-fragmentation-test.cc
+        test/ipv4-forwarding-test.cc
+        test/error-channel.cc
+        test/ipv4-test.cc
+        test/ipv4-static-routing-test-suite.cc
+        test/ipv4-global-routing-test-suite.cc
+        test/ipv6-extension-header-test-suite.cc
+        test/ipv6-list-routing-test-suite.cc
+        test/ipv6-packet-info-tag-test-suite.cc
+        test/ipv6-test.cc
+        test/ipv6-raw-test.cc
+        test/tcp-test.cc
+        test/tcp-timestamp-test.cc
+        test/tcp-wscaling-test.cc
+        test/tcp-option-test.cc
+        test/tcp-header-test.cc
+        test/tcp-general-test.cc
+        test/tcp-error-model.cc
+        test/tcp-slow-start-test.cc
+        test/tcp-cong-avoid-test.cc
+        test/tcp-fast-retr-test.cc
+        test/tcp-rto-test.cc
+        test/tcp-highspeed-test.cc
+        test/tcp-hybla-test.cc
+        test/tcp-vegas-test.cc
+        test/tcp-scalable-test.cc
+        test/tcp-veno-test.cc
+        test/tcp-bic-test.cc
+        test/tcp-yeah-test.cc
+        test/tcp-illinois-test.cc
+        test/tcp-htcp-test.cc
+        test/tcp-zero-window-test.cc
+        test/tcp-pkts-acked-test.cc
+        test/tcp-rtt-estimation.cc
+        test/tcp-bytes-in-flight-test.cc
+        test/udp-test.cc
+        test/ipv6-address-generator-test-suite.cc
+        test/ipv6-dual-stack-test-suite.cc
+        test/ipv6-fragmentation-test.cc
+        test/ipv6-forwarding-test.cc
+        test/ipv6-ripng-test.cc
+        test/ipv6-address-helper-test-suite.cc
+        test/rtt-test.cc
+        test/tcp-endpoint-bug2211.cc
+        test/tcp-datasentcb-test.cc
+        test/ipv4-rip-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+

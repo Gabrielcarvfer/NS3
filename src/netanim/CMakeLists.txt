@@ -21,9 +21,11 @@ set(libraries_to_link
         ${libenergy}
         )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/netanim-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
 
-#set(test${libname} ns${libNS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

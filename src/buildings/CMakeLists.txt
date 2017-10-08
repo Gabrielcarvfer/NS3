@@ -32,15 +32,16 @@ set(header_files
 
 set(libraries_to_link ${libmobility} ${libpropagation} ${config-store})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/building-position-allocator-test.cc
+        test/buildings-helper-test.cc
+        test/buildings-pathloss-test.cc
+        test/buildings-pathloss-test.h
+        test/buildings-shadowing-test.cc
+        test/buildings-shadowing-test.h
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/building-position-allocator-test.cc
-#        test/buildings-helper-test.cc
-#        test/buildings-pathloss-test.cc
-#        test/buildings-pathloss-test.h
-#        test/buildings-shadowing-test.cc
-#        test/buildings-shadowing-test.h
-#        )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+
 

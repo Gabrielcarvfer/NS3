@@ -191,7 +191,16 @@ set(libraries_to_link
         ${libantenna}
         ${libmobility})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+set(test_sources
+        test/block-ack-test-suite.cc
+        test/dcf-manager-test.cc
+        test/tx-duration-test.cc
+        test/power-rate-adaptation-test.cc
+        test/wifi-test.cc
+        test/spectrum-wifi-phy-test.cc
+        test/wifi-aggregation-test.cc
+        test/wifi-error-rate-models-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

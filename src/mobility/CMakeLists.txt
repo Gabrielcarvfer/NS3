@@ -23,6 +23,7 @@ set(source_files
         helper/mobility-helper.cc
         helper/ns2-mobility-helper.cc
         )
+
 set(header_files
         model/box.h
         model/constant-acceleration-mobility-model.h
@@ -47,7 +48,15 @@ set(header_files
 
 set(libraries_to_link ${libnetwork})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/mobility-test-suite.cc
+        test/mobility-trace-test-suite.cc
+        test/ns2-mobility-helper-test-suite.cc
+        test/steady-state-random-waypoint-mobility-model-test.cc
+        test/waypoint-mobility-model-test.cc
+        test/geo-to-cartesian-test.cc
+        test/rand-cart-around-geo-test.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+

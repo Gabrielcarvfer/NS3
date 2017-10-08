@@ -16,7 +16,7 @@ set(header_files
 
 set(libraries_to_link ${libinternet} ${libpoint-to-point} ${mobility})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})

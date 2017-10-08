@@ -21,14 +21,16 @@ set(header_files
 #link to dependencies
 set(libraries_to_link ${libcore})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/test-angles.cc
+        test/test-cosine-antenna.cc
+        test/test-degrees-radians.cc
+        test/test-isotropic-antenna.cc
+        test/test-parabolic-antenna.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" ${test_sources})
 
 
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/test-angles.cc
-#        test/test-cosine-antenna.cc
-#        test/test-degrees-radians.cc
-#        test/test-isotropic-antenna.cc
-#        test/test-parabolic-antenna.cc)
+

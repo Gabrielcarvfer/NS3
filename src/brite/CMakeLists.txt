@@ -1,14 +1,20 @@
 NS3_common_includes()
 
 set(name brite)
-set(lib${name} ns${NS3_VER}-${name}-${build_type})
-add_library(${lib${name}} SHARED
+
+set(source_files
         helper/brite-topology-helper.cc
+        )
+
+set(header_files
         helper/brite-topology-helper.h
         )
 
-set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-add_library(${test${name}} SHARED
+#link to dependencies
+set(libraries_to_link ${libnetwork} ${libcore} ${libinternet} ${libpoint-to-point} ${LIBBRITE})
+
+set(test_sources
         test/brite-test-topology.cc
         )
 
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
