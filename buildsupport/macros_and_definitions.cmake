@@ -7,6 +7,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
+add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #set(CMAKE_HEADER_DIRECTORY  ${PROJECT_SOURCE_DIR}/ns3)
 
 #delete ns3 temporary folder
@@ -89,7 +90,7 @@ macro(process_options)
 
     #if(${NS3_PTHREAD})
         set(THREADS_PREFER_PTHREAD_FLAG)
-        find_package(THREADS REQUIRED)
+        find_package(Threads REQUIRED)
         if(${THREADS_FOUND})
             include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
             add_definitions(-DHAVE_PTHREAD_H)
@@ -116,9 +117,11 @@ macro(process_options)
     if(${NS3_DEBUG})
         add_definitions(-g)
         set(build_type "debug")
+        set (CMAKE_SKIP_RULE_DEPENDENCY TRUE)
     else()
         add_definitions(-O3)
         set(build_type "release")
+        set (CMAKE_SKIP_RULE_DEPENDENCY FALSE)
     endif()
 
     #Process core-config
@@ -209,7 +212,7 @@ macro (build_lib name source_files header_files libraries_to_link test_sources)
         set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 
         #Create shared library containing tests of the module
-        add_library(${test${name}} SHARED ${test_sources})
+        add_library(${test${name}} SHARED "${test_sources}")
 
         #Link test library to the module library
         target_link_libraries(${test${name}} ${lib${name}})

@@ -118,10 +118,14 @@ set(source_files
         helper/rip-helper.cc
         )
 
-set(header_files
+set(private_header_files
         model/tcp-option-winscale.h
         model/tcp-option-ts.h
         model/tcp-option-rfc793.h
+        )
+
+set(header_files
+        ${private_header_files}
         model/udp-header.h
         model/tcp-header.h
         model/tcp-option.h
@@ -287,4 +291,4 @@ set(test_sources
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-
+file(COPY ${private_header_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/private)
