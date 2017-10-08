@@ -48,11 +48,9 @@ set(libraries_to_link
         ${libstats}
         )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/udp-client-server-test.cc
+        )
 
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/udp-client-server-test.cc)
-
-#target_link_libraries(${test${name}} ${lib${name}})

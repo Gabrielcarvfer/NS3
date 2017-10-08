@@ -102,15 +102,24 @@ set(header_files
 
 set(libraries_to_link ${libnetwork} ${libinternet} ${libpropagation} ${libmobility})
 
-build_lib(${name} "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/wimax-tlv-test.cc
+        test/mac-messages-test.cc
+        test/wimax-service-flow-test.cc
+        test/ss-mac-test.cc
+        test/phy-test.cc
+        test/qos-test.cc
+        test/wimax-fragmentation-test.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/wimax-tlv-test.cc
-#        test/mac-messages-test.cc
-#        test/wimax-service-flow-test.cc
-#        test/ss-mac-test.cc
-#        test/phy-test.cc
-#        test/qos-test.cc
-#        test/wimax-fragmentation-test.cc
-#        )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+
+
+
+
+
+
+
+
+

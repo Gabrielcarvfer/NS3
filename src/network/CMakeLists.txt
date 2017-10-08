@@ -139,10 +139,20 @@ set(header_files
         helper/simple-net-device-helper.h
         )
 
-
 set(libraries_to_link ${libcore} ${libstats})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/buffer-test.cc
+        test/drop-tail-queue-test-suite.cc
+        test/error-model-test-suite.cc
+        test/ipv6-address-test-suite.cc
+        test/packetbb-test-suite.cc
+        test/packet-test-suite.cc
+        test/packet-metadata-test.cc
+        test/pcap-file-test-suite.cc
+        test/sequence-number-test-suite.cc
+        test/packet-socket-apps-test-suite.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+

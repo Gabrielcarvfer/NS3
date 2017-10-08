@@ -44,11 +44,12 @@ set(header_files
 
 set(libraries_to_link ${libnetwork})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/basic-energy-harvester-test.cc
+        test/li-ion-energy-source-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#            test/basic-energy-harvester-test.cc
-#            test/li-ion-energy-source-test.cc
-#        )
+

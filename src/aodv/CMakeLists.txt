@@ -27,14 +27,13 @@ set(header_files
 #link to dependencies
 set(libraries_to_link ${libinternet} ${libwifi} )
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/aodv-id-cache-test-suite.cc
+        test/aodv-regression.cc
+        test/aodv-regression.h
+        test/aodv-test-suite.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/aodv-id-cache-test-suite.cc
-#        test/aodv-regression.cc
-#        test/aodv-regression.h
-#        test/aodv-test-suite.cc)
-#
-#target_link_libraries(${test${name}} SHARED ${lib${name}})

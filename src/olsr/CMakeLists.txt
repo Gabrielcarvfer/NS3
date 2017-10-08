@@ -19,8 +19,15 @@ set(header_files
 
 set(libraries_to_link ${libinternet})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/bug780-test.cc
+        test/hello-regression-test.cc
+        test/olsr-header-test-suite.cc
+        test/regression-test-suite.cc
+        test/olsr-routing-protocol-test-suite.cc
+        test/tc-regression-test.cc
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

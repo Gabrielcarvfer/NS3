@@ -73,8 +73,19 @@ set(header_files
 
 set(libraries_to_link ${libinternet} ${libwifi})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/mesh-information-element-vector-test-suite.cc
+        test/dot11s/dot11s-test-suite.cc
+        test/dot11s/pmp-regression.cc
+        test/dot11s/hwmp-reactive-regression.cc
+        test/dot11s/hwmp-proactive-regression.cc
+        test/dot11s/hwmp-simplest-regression.cc
+        test/dot11s/hwmp-target-flags-regression.cc
+        test/dot11s/regression.cc
+        test/flame/flame-test-suite.cc
+        test/flame/flame-regression.cc
+        test/flame/regression.cc
+        )
 
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

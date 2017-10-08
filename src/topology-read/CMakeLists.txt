@@ -17,10 +17,12 @@ set(header_files
         model/rocketfuel-topology-reader.h
         helper/topology-reader-helper.h
         )
+
 set(libraries_to_link ${libnetwork})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/rocketfuel-topology-reader-test-suite.cc
+        )
 
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED )

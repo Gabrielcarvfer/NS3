@@ -18,4 +18,7 @@ set(header_files
 #link to dependencies
 set(libraries_to_link ${libnetwork})
 
-build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        )
+
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

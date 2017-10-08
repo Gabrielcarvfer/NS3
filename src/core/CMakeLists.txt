@@ -253,35 +253,35 @@ set (header_files
         model/des-metrics.h
         )
 
-#Build core lib
-build_lib(${name} "${source_files}" "${header_files}" "${libraries_to_link}")
+set(test_sources
+        test/attribute-test-suite.cc
+        test/build-profile-test-suite.cc
+        test/callback-test-suite.cc
+        test/command-line-test-suite.cc
+        test/config-test-suite.cc
+        test/event-garbage-collector-test-suite.cc
+        test/global-value-test-suite.cc
+        test/hash-test-suite.cc
+        test/int64x64-test-suite.cc
+        test/many-uniform-random-variables-one-get-value-call-test-suite.cc
+        test/names-test-suite.cc
+        test/object-test-suite.cc
+        test/one-uniform-random-variable-many-get-value-calls-test-suite.cc
+        test/ptr-test-suite.cc
+        test/random-variable-stream-test-suite.cc
+        test/rng-test-suite.cc
+        test/sample-test-suite.cc
+        test/simulator-test-suite.cc
+        test/threaded-test-suite.cc
+        test/time-test-suite.cc
+        test/timer-test-suite.cc
+        test/traced-callback-test-suite.cc
+        test/type-id-test-suite.cc
+        test/watchdog-test-suite.cc
+        )
 
-#set(test${name} ns${NS3_VER}-${name}-test-${build_type})
-#add_library(${test${name}} SHARED
-#        test/attribute-test-suite.cc
-#        test/build-profile-test-suite.cc
-#        test/callback-test-suite.cc
-#        test/command-line-test-suite.cc
-#        test/config-test-suite.cc
-#        test/event-garbage-collector-test-suite.cc
-#        test/global-value-test-suite.cc
-#        test/hash-test-suite.cc
-#        test/int64x64-test-suite.cc
-#        test/many-uniform-random-variables-one-get-value-call-test-suite.cc
-#        test/names-test-suite.cc
-#        test/object-test-suite.cc
-#        test/one-uniform-random-variable-many-get-value-calls-test-suite.cc
-#        test/ptr-test-suite.cc
-#        test/random-variable-stream-test-suite.cc
-#        test/rng-test-suite.cc
-#        test/sample-test-suite.cc
-#        test/simulator-test-suite.cc
-#        test/threaded-test-suite.cc
-#        test/time-test-suite.cc
-#        test/timer-test-suite.cc
-#        test/traced-callback-test-suite.cc
-#        test/type-id-test-suite.cc
-#        test/watchdog-test-suite.cc
-#        )
-#
-#
+#Build core lib
+build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+
+
