@@ -108,10 +108,10 @@ add_subdirectory(3rd-party)
 add_subdirectory(src)
 
 #Build contribution libraries
-#add_subdirectory(contrib)
+add_subdirectory(contrib)
 
 #Build scratch/simulation scripts
-#add_subdirectory(scratch)
+add_subdirectory(scratch)
 
 
 
