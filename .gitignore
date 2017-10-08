@@ -7,7 +7,6 @@ cmake-build-debug
 *.log
 *.tr
 *.pyc
-3rd-party
 scratch/shared/
 scratch/wif*
 scratch/run*

@@ -18,8 +18,12 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include <netinet/in.h>
-#include <sys/socket.h>
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+  #include <winsock.h>
+#else
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+#endif
 #include <sys/types.h>
 #include "ns3/inet6-socket-address.h"
 #include "ns3/node.h"
