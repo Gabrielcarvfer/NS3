@@ -1,7 +1,14 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+
+#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+    #include <winsock.h>
+#else
+    #include <netinet/in.h>
+    #include <sys/socket.h>
+    #include <sys/types.h>
+#endif
+
+
 #include "ipv4-raw-socket-impl.h"
 #include "ipv4-l3-protocol.h"
 #include "icmpv4.h"

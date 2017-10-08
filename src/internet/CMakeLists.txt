@@ -228,7 +228,7 @@ set(libraries_to_link
         ${libmpi}
         ${libtraffic-control}
         )
-
+add_definitions(-std=c++11)
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 #set(test${name} ns${NS3_VER}-${name}-test-${build_type})
