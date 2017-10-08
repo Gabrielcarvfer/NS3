@@ -65,6 +65,7 @@ namespace {
 //TODO: build a workaround for Windows
     int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
             {
+              return 0;
             }
     typedef unsigned sigset_t;
     typedef unsigned uid_t;

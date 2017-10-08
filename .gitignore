@@ -1,7 +1,7 @@
 *.so
 *.a
 *.o
-build/
+build
 .idea/
 cmake-build-debug
 *.log
