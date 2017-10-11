@@ -8,19 +8,22 @@ cmake_minimum_required( VERSION 3.0 )
 #######################################
 project(NS3 CXX)
 
-
+set(CMAKE_CXX_COMPILER="ccache g++")
 include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.26)
 
-set(NS3_TESTS OFF)
 option(NS3_TESTS "Enable tests to be built" OFF)
+set(NS3_TESTS OFF)
 
-set(NS3_EXAMPLES OFF)
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
+set(NS3_EXAMPLES ON)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
+
+option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
+set(NS3_PYTHON ON)
 
 #set(NS3_PTHREAD ON)
 #option(NS3_PTHREAD "Build with pthread support" OFF)
@@ -101,7 +104,6 @@ process_options()
 #######################################
 # Add subdirectories                  #
 #######################################
-NS3_common_includes()
 
 #Build NS3 3rd-party library support
 add_subdirectory(3rd-party)

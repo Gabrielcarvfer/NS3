@@ -18,21 +18,23 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *          Mirko Banchi <mk.banchi@gmail.com>
+ *
+ * Modified by: Gabriel Ferreira <gabrielcarvfer@gmail.com>
  */
 
-#ifndef AP_WIFI_MAC_H
-#define AP_WIFI_MAC_H
+#ifndef AP_WIFI_MAC_BEAC_H
+#define AP_WIFI_MAC_BEAC_H
 
-#include "regular-wifi-mac.h"
-#include "capability-information.h"
-#include "ht-capabilities.h"
-#include "ht-operations.h"
-#include "vht-capabilities.h"
-#include "amsdu-subframe-header.h"
-#include "supported-rates.h"
-#include "dsss-parameter-set.h"
-#include "erp-information.h"
-#include "edca-parameter-set.h"
+#include "ns3/regular-wifi-mac.h"
+#include "ns3/capability-information.h"
+#include "ns3/ht-capabilities.h"
+#include "ns3/ht-operations.h"
+#include "ns3/vht-capabilities.h"
+#include "ns3/amsdu-subframe-header.h"
+#include "ns3/supported-rates.h"
+#include "ns3/dsss-parameter-set.h"
+#include "ns3/erp-information.h"
+#include "ns3/edca-parameter-set.h"
 #include "ns3/random-variable-stream.h"
 
 namespace ns3 {

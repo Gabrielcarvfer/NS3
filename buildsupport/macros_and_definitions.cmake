@@ -8,45 +8,19 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
-#set(CMAKE_HEADER_DIRECTORY  ${PROJECT_SOURCE_DIR}/ns3)
-
-#delete ns3 temporary folder
-macro(delete_header_temp_folder)
-    file (REMOVE_RECURSE ${CMAKE_HEADER_DIRECTORY})
-endmacro()
-
-set(common_includes ${CMAKE_HEADER_OUTPUT_DIRECTORY}/../)
-
-#fetch all .hpp files with full path and set as ${includes}
-macro(NS3_common_includes)
-    #HEADER_DIRECTORIES(${CMAKE_HEADER_OUTPUT_DIRECTORY})
-    include_directories(${common_includes})
-endmacro()
-
-MACRO(HEADER_DIRECTORIES return_list)
-    FILE(GLOB_RECURSE new_list ${PROJECT_SOURCE_DIR}/*.hpp)
-    SET(dir_list "")
-    FOREACH(file_path ${new_list})
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
-        SET(dir_list ${dir_list} ${dir_path})
-    ENDFOREACH()
-    LIST(REMOVE_DUPLICATES dir_list)
-    SET(${return_list} ${dir_list})
-ENDMACRO()
-#-------------------------------------------------------------
 
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
-    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h)
+    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
     #Set common include folder
-    set (common_includes ${common_includes} ${CMAKE_OUTPUT_DIRECTORY})
+    include_directories( ${CMAKE_OUTPUT_DIRECTORY})
+    include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    add_definitions(-std=c++11)
-
+    add_definitions(-std=c++11 -fPIC)
 
     #find required dependencies
 
@@ -55,7 +29,7 @@ macro(process_options)
         find_package(Boost)
         if(${BOOST_FOUND})
             link_directories(${BOOST_LIBRARY_DIRS})
-            set (common_includes ${common_includes} ${BOOST_INCLUDE_DIR})
+            include_directories( ${BOOST_INCLUDE_DIR})
         endif()
     endif()
 
@@ -64,7 +38,7 @@ macro(process_options)
         find_package(GTK2)
         if(${GTK2_FOUND})
             link_directories(${GTK2_LIBRARY_DIRS})
-            set (common_includes ${common_includes} ${GTK2_INCLUDE_DIRS})
+            include_directories( ${GTK2_INCLUDE_DIRS})
             add_definitions(${GTK2_DEFINITIONS})
         endif()
     endif()
@@ -74,7 +48,7 @@ macro(process_options)
         find_package(LibXml2)
         if(${LIBXML2_FOUND})
             link_directories(${LIBXML2_LIBRARY_DIRS})
-            set (common_includes ${common_includes} ${LIBXML2_INCLUDE_DIR})
+            include_directories( ${LIBXML2_INCLUDE_DIR})
             add_definitions(${LIBXML2_DEFINITIONS})
         endif()
     endif()
@@ -100,7 +74,7 @@ macro(process_options)
     if(${NS3_MPI})
         find_package(MPI)
         if(${MPI_FOUND}})
-            set (common_includes ${common_includes} ${MPI_INCLUDE_PATH})
+            include_directories( ${MPI_INCLUDE_PATH})
             add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
         endif()
     endif()
@@ -108,7 +82,7 @@ macro(process_options)
     if(${NS3_GSL})
         find_package(GSL)
         if(${GSL_FOUND})
-            set (common_includes ${common_includes} ${GSL_INCLUDE_DIRS})
+            include_directories( ${GSL_INCLUDE_DIRS})
             link_directories(${GSL_LIBRARY})
         endif()
     endif()
@@ -167,31 +141,30 @@ endmacro()
 #----------------------------------------------
 macro (write_module_header name header_files)
     string(TOUPPER ${name} uppercase_name)
-    string(REPLACE "-" "_" ${uppercase_name} final_name)
+    string(REPLACE "-" "_" final_name ${uppercase_name} )
     #Common module_header
-    set(contents
-            "#ifdef NS3_MODULE_COMPILATION
-            # error \"Do not include ns3 module aggregator headers from other modules; these are meant only for end user scripts.\"
-            #endif
-
-            #ifndef NS3_MODULE_${final_name}
-
-
-            // Module headers:")
+    set(contents "#ifdef NS3_MODULE_COMPILATION ")
+    set(contents ${contents} "
+    error \"Do not include ns3 module aggregator headers from other modules; these are meant only for end user scripts.\" ")
+    set(contents ${contents} "
+#endif ")
+    set(contents ${contents} "
+#ifndef NS3_MODULE_")
+    set(contents ${contents} ${final_name})
+    set(contents ${contents} "
+    // Module headers: ")
 
     #Write each header listed to the contents variable
     foreach(header ${header_files})
         get_filename_component(head ${header} NAME)
         set(contents
                 "${contents}
-                #include \"${head}\"")
+    #include \"${head}\"")
     endforeach()
 
     #Common module footer
-    set(contents
-            "${contents}
-            #endif
-            ")
+    set(contents ${contents} "
+#endif ")
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${name}-module.h ${contents})
 endmacro()
 
@@ -220,6 +193,22 @@ macro (build_lib name source_files header_files libraries_to_link test_sources)
             target_link_libraries(${test${name}} ${lib${name}})
         endif()
     endif()
+
+    #Build pybindings  if requested
+    if(${NS3_PYTHON})
+        set(arch gcc_ILP32)
+        add_custom_command(
+                OUTPUT
+                ${PROJECT_SOURCE_DIR}/src/${name}/bindings/modulegen_${arch}.py
+                COMMAND
+                ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py
+                ${PROJECT_SOURCE_DIR}/src/${name}/bindings/
+                ${PROJECT_SOURCE_DIR}/src/${name}/
+                ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${name}-module.h
+                modulegen_${arch}.py
+                ${CMAKE_CXX_FLAGS}
+                )
+    endif()
 endmacro()
 
 macro (build_example name source_files header_files libraries_to_link)
@@ -234,3 +223,6 @@ macro (build_example name source_files header_files libraries_to_link)
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples
             )
 endmacro()
+
+#Add contributions macros
+include(buildsupport/contributions.cmake)

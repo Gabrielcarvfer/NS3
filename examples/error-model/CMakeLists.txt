@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name simple-error-model)
 set(source_files ${name}.cc)
