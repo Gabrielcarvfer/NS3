@@ -151,21 +151,26 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt4 REQUIRED QtGui)
-include(${QT_USE_FILE})
-add_definitions(-DNS3_LOG_ENABLE ${QT_DEFINITIONS})
-include_directories(${QT_INCLUDES} ${CMAKE_BINARY_DIR} qtpropertybrowser/src)
 
-if(WIN32)
-    add_executable(netanim
-            WIN32
-            ${source_files}
-            ${resource_files}
-            )
+if(NOT ${Qt4_FOUND})
+    message(WARNING You need Qt4 installed to build NetAnim)
 else()
-    add_executable(netanim
-            ${source_files}
-            ${resource_files}
-            )
-endif()
+    include(${QT_USE_FILE})
+    add_definitions(-DNS3_LOG_ENABLE ${QT_DEFINITIONS})
+    include_directories(${QT_INCLUDES} ${CMAKE_BINARY_DIR} qtpropertybrowser/src)
 
-target_link_libraries(netanim ${libcore} Qt4::QtGui)
+    if(WIN32)
+        add_executable(netanim
+                WIN32
+                ${source_files}
+                ${resource_files}
+                )
+    else()
+        add_executable(netanim
+                ${source_files}
+                ${resource_files}
+                )
+    endif()
+
+    target_link_libraries(netanim ${libcore} Qt4::QtGui)
+endif()
