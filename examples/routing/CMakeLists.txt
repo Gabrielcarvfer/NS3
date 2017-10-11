@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name dynamic-global-routing)
 set(source_files ${name}.cc)

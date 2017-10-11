@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name stats)
 set(lib${name} ns${NS3_VER}-${name}-${build_type})

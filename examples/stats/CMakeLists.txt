@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name wifi-example-sim)
 set(source_files ${name}.cc wifi-example-apps.cc)

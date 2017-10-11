@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name spectrum)
 

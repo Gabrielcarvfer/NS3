@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(examples_to_build
         energy
