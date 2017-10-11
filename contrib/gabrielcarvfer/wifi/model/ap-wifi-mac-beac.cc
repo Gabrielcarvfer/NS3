@@ -18,6 +18,8 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *          Mirko Banchi <mk.banchi@gmail.com>
+ *
+ * Modified by: Gabriel Ferreira <gabrielcarvfer@gmail.com>
  */
 
 #include "ap-wifi-mac-beac.h"
@@ -27,14 +29,14 @@
 #include "ns3/string.h"
 #include "ns3/pointer.h"
 #include "ns3/boolean.h"
-#include "wifi-phy.h"
-#include "dcf-manager.h"
-#include "mac-rx-middle.h"
-#include "mac-tx-middle.h"
-#include "mgt-headers.h"
-#include "mac-low.h"
-#include "amsdu-subframe-header.h"
-#include "msdu-aggregator.h"
+#include "ns3/wifi-phy.h"
+#include "ns3/dcf-manager.h"
+#include "ns3/mac-rx-middle.h"
+#include "ns3/mac-tx-middle.h"
+#include "ns3/mgt-headers.h"
+#include "ns3/mac-low.h"
+#include "ns3/amsdu-subframe-header.h"
+#include "ns3/msdu-aggregator.h"
 
 namespace ns3 {
 

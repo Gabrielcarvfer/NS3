@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 add_executable(scratch-simulator scratch-simulator.cc)
 

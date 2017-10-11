@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name socket-bound-static-routing)
 set(source_files ${name}.cc)

@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name hello-simulator)
 set(source_files ${name}.cc)
