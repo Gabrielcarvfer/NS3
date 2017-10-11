@@ -4,8 +4,8 @@ macro(process_contribution contribution_list)
 
     #Create handles to build libraries
     foreach(libname ${contribution_list})
-        set(lib${libname} ns${NS3_VER}-contrib-${libname}-${build_type})
-        set(ns3-contrib-libs "${ns3-contrib-libs}" ${lib${libname}})
+        list(APPEND lib${libname} ns${NS3_VER}-contrib-${libname}-${build_type})
+        list(APPEND ns3-contrib-libs ${lib${libname}})
     endforeach()
 
     #Add contribution folders to be built
@@ -62,8 +62,8 @@ macro (build_contrib_lib contrib_name components)
 
     #Create a lib handler for each component of the contrib library and add their respective subfolder
     foreach(libname ${components})
-        set(lib${contrib_name}-${libname} "ns${NS3_VER}-contrib-${contrib_name}-${libname}-${build_type}")
-        set(${contrib_name}-contrib-libs ${${contrib_name}-contrib-libs} ${lib${contrib_name}-${libname}})
+        list(APPEND lib${contrib_name}-${libname} "ns${NS3_VER}-contrib-${contrib_name}-${libname}-${build_type}")
+        list(APPEND ${contrib_name}-contrib-libs ${lib${contrib_name}-${libname}})
         #Set NS3 or 3rd-party libraries to link
         set(${contrib_name}_libraries_to_link)
         add_subdirectory(${libname})
@@ -73,7 +73,7 @@ macro (build_contrib_lib contrib_name components)
     #   we need to create a list of target_objects to those components
     set(component_target_objects)
     foreach(component ${${contrib_name}-contrib-libs})
-        set(component_target_objects ${component_target_objects} $<TARGET_OBJECTS:${component}>)
+        list(APPEND component_target_objects $<TARGET_OBJECTS:${component}>)
     endforeach()
 
     #Create the contrib library with their components

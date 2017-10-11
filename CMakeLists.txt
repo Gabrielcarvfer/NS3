@@ -13,17 +13,20 @@ include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.26)
 
+option(NS3_LOG "Enable logging to be built" ON)
+set(NS3_LOG ON)
+
 option(NS3_TESTS "Enable tests to be built" OFF)
 set(NS3_TESTS OFF)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES ON)
+set(NS3_EXAMPLES OFF)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
-set(NS3_PYTHON ON)
+set(NS3_PYTHON OFF)
 
 #set(NS3_PTHREAD ON)
 #option(NS3_PTHREAD "Build with pthread support" OFF)
