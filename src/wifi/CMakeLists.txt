@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name wifi)
 set(source_files
@@ -79,7 +78,6 @@ set(source_files
         model/ht-operations.cc
         model/dsss-parameter-set.cc
         model/edca-parameter-set.cc
-        model/ap-wifi-mac-beac.cc
         helper/wifi-radio-energy-model-helper.cc
         helper/vht-wifi-mac-helper.cc
         helper/ht-wifi-mac-helper.cc
@@ -170,7 +168,6 @@ set(header_files
         model/ht-operations.h
         model/dsss-parameter-set.h
         model/edca-parameter-set.h
-        model/ap-wifi-mac-beac.h
         helper/wifi-radio-energy-model-helper.h
         helper/vht-wifi-mac-helper.h
         helper/ht-wifi-mac-helper.h

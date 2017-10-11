@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 if (${visualizer_python_dependencies})
 set(name visualizer)

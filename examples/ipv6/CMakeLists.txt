@@ -1,4 +1,3 @@
-NS3_common_includes()
 
 set(name fragmentation-ipv6)
 set(source_files ${name}.cc)

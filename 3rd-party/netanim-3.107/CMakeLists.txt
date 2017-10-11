@@ -1,6 +1,3 @@
-NS3_common_includes()
-
-
 set(source_files
         main.cpp
         fatal-error.cpp
