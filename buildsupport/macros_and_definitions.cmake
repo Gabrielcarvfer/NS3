@@ -27,7 +27,9 @@ macro(process_options)
     #BoostC++
     if(${NS3_BOOST})
         find_package(Boost)
-        if(${BOOST_FOUND})
+        if(NOT ${BOOST_FOUND})
+            message(FATAL_ERROR BoostC++ not found)
+        else()
             link_directories(${BOOST_LIBRARY_DIRS})
             include_directories( ${BOOST_INCLUDE_DIR})
         endif()
@@ -36,7 +38,9 @@ macro(process_options)
     #GTK2
     if(${NS3_GTK2})
         find_package(GTK2)
-        if(${GTK2_FOUND})
+        if(NOT ${GTK2_FOUND})
+            message(FATAL_ERROR LibGTK2 not found)
+        else()
             link_directories(${GTK2_LIBRARY_DIRS})
             include_directories( ${GTK2_INCLUDE_DIRS})
             add_definitions(${GTK2_DEFINITIONS})
@@ -46,7 +50,9 @@ macro(process_options)
     #LibXml2
     if(${NS3_LIBXML2})
         find_package(LibXml2)
-        if(${LIBXML2_FOUND})
+        if(NOT ${LIBXML2_FOUND})
+            message(FATAL_ERROR LibXML2 not found)
+        else()
             link_directories(${LIBXML2_LIBRARY_DIRS})
             include_directories( ${LIBXML2_INCLUDE_DIR})
             add_definitions(${LIBXML2_DEFINITIONS})
@@ -56,7 +62,9 @@ macro(process_options)
     #LibRT
     if(${NS3_LIBRT})
         find_library(LIBRT rt)
-        if(${LIBRT_FOUND})
+        if(NOT ${LIBRT_FOUND})
+            message(FATAL_ERROR LibRT not found)
+        else()
             add_definitions(-lrt)
             add_definitions(-DHAVE_RT)
         endif()
@@ -65,7 +73,9 @@ macro(process_options)
     #if(${NS3_PTHREAD})
         set(THREADS_PREFER_PTHREAD_FLAG)
         find_package(Threads REQUIRED)
-        if(${THREADS_FOUND})
+        if(NOT ${THREADS_FOUND})
+            message(FATAL_ERROR Thread library not found)
+        else()
             include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
             add_definitions(-DHAVE_PTHREAD_H)
         endif()
@@ -73,7 +83,9 @@ macro(process_options)
 
     if(${NS3_MPI})
         find_package(MPI)
-        if(${MPI_FOUND}})
+        if(NOT ${MPI_FOUND})
+            message(FATAL_ERROR "MPI not found")
+        else()
             include_directories( ${MPI_INCLUDE_PATH})
             add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
         endif()
@@ -81,7 +93,9 @@ macro(process_options)
 
     if(${NS3_GSL})
         find_package(GSL)
-        if(${GSL_FOUND})
+        if(NOT ${GSL_FOUND})
+            message(FATAL_ERROR GSL not found)
+        else()
             include_directories( ${GSL_INCLUDE_DIRS})
             link_directories(${GSL_LIBRARY})
         endif()
@@ -91,11 +105,11 @@ macro(process_options)
     if(${NS3_DEBUG})
         add_definitions(-g)
         set(build_type "debug")
-        set (CMAKE_SKIP_RULE_DEPENDENCY TRUE)
+        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
     else()
         add_definitions(-O3)
         set(build_type "release")
-        set (CMAKE_SKIP_RULE_DEPENDENCY FALSE)
+        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
     endif()
 
     #Process core-config
@@ -110,16 +124,24 @@ macro(process_options)
         add_definitions(-DINT64X64_USE_CAIRO)
     else()
     endif()
-    add_definitions(-DHAVE_STDINT_H)
-    add_definitions(-DHAVE_INTTYPES_H)
-    #undef HAVE_SYS_INT_TYPES_H */
-    add_definitions(-DHAVE_SYS_TYPES_H)
-    add_definitions(-DHAVE_SYS_STAT_H)
-    add_definitions(-DHAVE_DIRENT_H)
-    add_definitions(-DHAVE_STDLIB_H)
-    add_definitions(-DHAVE_GETENV)
-    add_definitions(-DHAVE_SIGNAL_H)
-    add_definitions(-DNS3_LOG_ENABLE)
+
+    #Include header and function checker macros
+    include(buildsupport/check_dependencies.cmake)
+
+    #Check for required headers and functions, set flags if they're found or warn if they're not found
+    check_include("stdint.h"   "HAVE_STDINT_H"   )
+    check_include("inttypes.h" "HAVE_INTTYPES_H" )
+    check_include("types.h"    "HAVE_SYS_TYPES_H")
+    check_include("stat.h"     "HAVE_SYS_STAT_H" )
+    check_include("dirent.h"   "HAVE_DIRENT_H"   )
+    check_include("stdlib.h"   "HAVE_STDLIB_H"   )
+    check_include("signal.h"   "HAVE_SIGNAL_H"   )
+    check_function("getenv"    "HAVE_GETENV"     )
+
+    #Enable NS3 logging if requested
+    if(${NS3_LOG})
+        add_definitions(-DNS3_LOG_ENABLE)
+    endif()
 
     #Process config-store-config
     add_definitions(-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages")
@@ -133,8 +155,8 @@ macro(process_options)
     set(ns3-libs )
     foreach(libname ${libs_to_build})
         #TODO: add 3rd-party library dependency check
-        set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
-        set(ns3-libs "${ns3-libs}" ${lib${libname}})
+        list(APPEND lib${libname} ns${NS3_VER}-${libname}-${build_type})
+        list(APPEND ns3-libs ${lib${libname}})
     endforeach()
 
 endmacro()
@@ -143,27 +165,27 @@ macro (write_module_header name header_files)
     string(TOUPPER ${name} uppercase_name)
     string(REPLACE "-" "_" final_name ${uppercase_name} )
     #Common module_header
-    set(contents "#ifdef NS3_MODULE_COMPILATION ")
-    set(contents ${contents} "
+    list(APPEND contents "#ifdef NS3_MODULE_COMPILATION ")
+    list(APPEND contents  "
     error \"Do not include ns3 module aggregator headers from other modules; these are meant only for end user scripts.\" ")
-    set(contents ${contents} "
+    list(APPEND contents  "
 #endif ")
-    set(contents ${contents} "
+    list(APPEND contents "
 #ifndef NS3_MODULE_")
-    set(contents ${contents} ${final_name})
-    set(contents ${contents} "
+    list(APPEND contents ${final_name})
+    list(APPEND contents "
     // Module headers: ")
 
     #Write each header listed to the contents variable
     foreach(header ${header_files})
         get_filename_component(head ${header} NAME)
-        set(contents
-                "${contents}
+        list(APPEND contents
+                "
     #include \"${head}\"")
     endforeach()
 
     #Common module footer
-    set(contents ${contents} "
+    list(APPEND contents "
 #endif ")
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${name}-module.h ${contents})
 endmacro()
@@ -184,7 +206,7 @@ macro (build_lib name source_files header_files libraries_to_link test_sources)
         list(LENGTH test_sources test_source_len)
         if (${test_source_len} GREATER 0)
             #Create name of output library test of module
-            set(test${name} ns${NS3_VER}-${name}-test-${build_type})
+            list(APPEND test${name} ns${NS3_VER}-${name}-test-${build_type})
 
             #Create shared library containing tests of the module
             add_library(${test${name}} SHARED "${test_sources}")
