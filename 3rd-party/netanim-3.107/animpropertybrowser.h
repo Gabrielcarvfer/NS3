@@ -68,9 +68,11 @@ private:
   QtProperty * m_nodeSizeProperty;
   QtProperty * m_fileEditProperty;
   QtProperty * m_ipv4AddressGroupProperty;
+  QtProperty * m_ipv6AddressGroupProperty;
   QtProperty * m_macAddressGroupProperty;
   QtProperty * m_nodePositionGroupProperty;
   QtPropertyVector_t m_ipv4AddressVectorProperty;
+  QtPropertyVector_t m_ipv6AddressVectorProperty;
   QtPropertyVector_t m_macAddressVectorProperty;
   QtProperty * m_showNodeTrajectoryProperty;
 
@@ -97,6 +99,8 @@ private:
   FilePathManager * m_filePathManager;
   QtGroupPropertyManager * m_nodePositionManager;
   QtGroupPropertyManager * m_ipv4AddressManager;
+  QtGroupPropertyManager * m_ipv6AddressManager;
+
   QtGroupPropertyManager * m_macAddressManager;
   QtStringPropertyManager * m_staticStringManager;
   QtBoolPropertyManager * m_boolManager;

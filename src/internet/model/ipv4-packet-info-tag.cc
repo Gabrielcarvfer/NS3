@@ -19,7 +19,7 @@
  */
 
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv4-address.h"
 #include "ipv4-packet-info-tag.h"
 #include "ns3/log.h"

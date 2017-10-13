@@ -23,7 +23,7 @@
 
 #include <string>
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
 #include <map>
 
 #include "log-macros-enabled.h"
@@ -81,13 +81,6 @@
  */
 /** @{ */
 
-#ifndef M_PI
-#define M_PI           3.14159265358979323846
-#endif
-
-#ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923
-#endif
 
 namespace ns3 {
 
@@ -218,6 +211,39 @@ void LogComponentDisableAll (enum LogLevel level);
  */
 #define NS_LOG_COMPONENT_DEFINE_MASK(name, mask)                \
   static ns3::LogComponent g_log = ns3::LogComponent (name, __FILE__, mask)
+
+/**
+ * Declare a reference to a Log component.
+ *
+ * This macro should be used in the declaration of template classes
+ * to allow their methods (defined in an header file) to make use of
+ * the NS_LOG_* macros. This macro should be used in the private
+ * section to prevent subclasses from using the same log component
+ * as the base class.
+ */
+#define NS_LOG_TEMPLATE_DECLARE  LogComponent & g_log
+
+/**
+ * Initialize a reference to a Log component.
+ *
+ * This macro should be used in the constructor of template classes
+ * to allow their methods (defined in an header file) to make use of
+ * the NS_LOG_* macros.
+ *
+ * \param [in] name The log component name.
+ */
+#define NS_LOG_TEMPLATE_DEFINE(name)  g_log (GetLogComponent (name))
+
+/**
+ * Declare and initialize a reference to a Log component.
+ *
+ * This macro should be used in static template methods to allow their
+ * methods (defined in an header file) to make use of the NS_LOG_* macros.
+ *
+ * \param [in] name The log component name.
+ */
+#define NS_LOG_STATIC_TEMPLATE_DEFINE(name) \
+    static LogComponent & NS_UNUSED_GLOBAL (g_log) = GetLogComponent (name)
 
 /**
  * Use \ref NS_LOG to output a message of level LOG_ERROR.
@@ -416,7 +442,14 @@ private:
 
 };  // class LogComponent
 
-  
+/**
+ * Get the LogComponent registered with the given name.
+ *
+ * \param [in] name The name of the LogComponent.
+ * \return a reference to the requested LogComponent
+ */
+LogComponent & GetLogComponent (const std::string name);
+
 /**
  * Insert `, ` when streaming function arguments.
  */

@@ -21,7 +21,7 @@
 #ifndef RADVD_HELPER_H
 #define RADVD_HELPER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 #include <map>
 

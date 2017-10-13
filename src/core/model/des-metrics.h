@@ -31,7 +31,7 @@
 #include "singleton.h"
 #include "system-mutex.h"
 
-#include <cstdint>    // uint32_t
+#include <stdint.h>    // uint32_t
 #include <fstream>
 #include <string>
 
@@ -156,7 +156,7 @@ private:
   static std::string m_outputDir;
   
   bool m_initialized;    //!< Have we been initialized.
-  std::ofstream m_os;    //!< The output json trace file stream.
+  std::ofstream m_os;    //!< The output JSON trace file stream.
   char m_separator;      //!< The separator between event records.
 
   /** Mutex to control access to the output file. */

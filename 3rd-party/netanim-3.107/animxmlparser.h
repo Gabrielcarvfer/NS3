@@ -45,7 +45,9 @@ enum ParsedElementType
   XML_CREATE_NODE_COUNTER,
   XML_NODECOUNTER_UPDATE,
   XML_PACKET_TX_REF,
-  XML_WPACKET_RX_REF
+  XML_WPACKET_RX_REF,
+  XML_IP,
+  XML_IPV6
 };
 
 struct ParsedElement
@@ -72,6 +74,11 @@ struct ParsedElement
   qreal node_width;
   qreal node_height;
   bool visible;
+
+  // Ip
+  QVector <QString> ipAddresses;
+  QVector <QString> ipv6Addresses;
+
 
   // Link
 
@@ -205,6 +212,8 @@ private:
   ParsedElement parseNodeCounterUpdate ();
   ParsedElement parsePacketTxRef ();
   ParsedElement parseWPacketRxRef ();
+  ParsedElement parseIpv4 ();
+  ParsedElement parseIpv6 ();
   void parseGeneric (ParsedElement &);
 
   void searchForVersion ();

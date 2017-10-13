@@ -312,6 +312,18 @@ Animxmlparser::doParse ()
           AnimResourceManager::getInstance ()->add (parsedElement.resourceId, parsedElement.resourcePath);
           break;
         }
+        case XML_IP:
+        {
+          AnimIpEvent * ev = new AnimIpEvent (parsedElement.nodeId, parsedElement.ipAddresses);
+          pAnimatorMode->addAnimEvent (0, ev);
+          break;
+        }
+        case XML_IPV6:
+        {
+          AnimIpv6Event * ev = new AnimIpv6Event (parsedElement.nodeId, parsedElement.ipv6Addresses);
+          pAnimatorMode->addAnimEvent (0, ev);
+          break;
+        }
         case XML_CREATE_NODE_COUNTER:
         {
             AnimCreateNodeCounterEvent * ev = 0;
@@ -431,6 +443,14 @@ Animxmlparser::parseNext ()
       if (m_reader->name () == "node")
         {
           parsedElement = parseNode ();
+        }
+      if (m_reader->name () == "ip")
+        {
+          parsedElement = parseIpv4 ();
+        }
+      if (m_reader->name () == "ipv6")
+        {
+          parsedElement = parseIpv6 ();
         }
       if (m_reader->name () == "packet")
         {
@@ -572,7 +592,7 @@ Animxmlparser::parseNonP2pLink ()
   ParsedElement parsedElement;
   parsedElement.type = XML_NONP2P_LINK;
   parsedElement.link_fromId = m_reader->attributes ().value ("id").toString ().toUInt ();
-  parsedElement.fromNodeDescription = m_reader->attributes ().value ("ipv4Address").toString ();
+  parsedElement.fromNodeDescription = m_reader->attributes ().value ("ipAddress").toString ();
   return parsedElement;
 }
 
@@ -755,6 +775,34 @@ Animxmlparser::parseGeneric (ParsedElement & parsedElement)
     {
       parsedElement.meta_info = "null";
     }
+}
+
+ParsedElement
+Animxmlparser::parseIpv4 ()
+{
+  ParsedElement parsedElement;
+  parsedElement.type = XML_IP;
+  parsedElement.nodeId = m_reader->attributes ().value ("n").toString ().toUInt ();
+  while (m_reader->readNextStartElement ())
+  {
+      QString address = m_reader->name ().toString ();
+      parsedElement.ipAddresses.push_back(m_reader->readElementText ());
+  }
+  return parsedElement;
+}
+
+ParsedElement
+Animxmlparser::parseIpv6 ()
+{
+  ParsedElement parsedElement;
+  parsedElement.type = XML_IPV6;
+  parsedElement.nodeId = m_reader->attributes ().value ("n").toString ().toUInt ();
+  while (m_reader->readNextStartElement ())
+  {
+      QString address = m_reader->name ().toString ();
+      parsedElement.ipv6Addresses.push_back(m_reader->readElementText ());
+  }
+  return parsedElement;
 }
 
 ParsedElement

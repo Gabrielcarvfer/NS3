@@ -18,7 +18,7 @@
  *          Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/node.h"
 #include "ns3/simulator.h"
 #include "ns3/packet.h"

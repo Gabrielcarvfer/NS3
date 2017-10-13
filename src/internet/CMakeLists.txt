@@ -5,6 +5,10 @@ set(source_files
         model/ip-l4-protocol.cc
         model/udp-header.cc
         model/tcp-header.cc
+        model/tcp-option.cc
+        model/tcp-ledbat.cc
+        model/tcp-option-sack.cc
+        model/tcp-option-sack-permitted.cc
         model/ipv4-interface.cc
         model/ipv4-l3-protocol.cc
         model/ipv4-end-point.cc
@@ -128,6 +132,10 @@ set(header_files
         model/udp-header.h
         model/tcp-header.h
         model/tcp-option.h
+        model/tcp-ledbat.h
+        model/tcp-option-sack.h
+        model/tcp-option-sack-permitted.h
+        model/global-routing.h
         model/icmpv4.h
         model/icmpv6-header.h
         # used by routing
@@ -242,7 +250,6 @@ set(test_sources
         test/ipv4-header-test.cc
         test/ipv4-fragmentation-test.cc
         test/ipv4-forwarding-test.cc
-        test/error-channel.cc
         test/ipv4-test.cc
         test/ipv4-static-routing-test-suite.cc
         test/ipv4-global-routing-test-suite.cc

@@ -20,12 +20,8 @@
  */
 
 #include "ht-capabilities.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
 
 namespace ns3 {
-
-NS_LOG_COMPONENT_DEFINE ("HtCapabilities");
 
 HtCapabilities::HtCapabilities ()
   : m_ldpc (0),
@@ -183,7 +179,7 @@ HtCapabilities::SetTxRxMcsSetUnequal (uint8_t txrxmcssetunequal)
 void
 HtCapabilities::SetTxMaxNSpatialStreams (uint8_t maxtxspatialstreams)
 {
-  m_txMaxNSpatialStreams = maxtxspatialstreams;
+  m_txMaxNSpatialStreams = maxtxspatialstreams - 1; //0 for 1 SS, 1 for 2 SSs, etc
 }
 
 void
@@ -240,6 +236,12 @@ HtCapabilities::GetMaxAmpduLength (void) const
   return m_maxAmpduLength;
 }
 
+uint8_t
+HtCapabilities::GetMinMpduStartSpace (void) const
+{
+  return m_minMpduStartSpace;
+}
+
 uint8_t*
 HtCapabilities::GetRxMcsBitmask ()
 {
@@ -262,15 +264,15 @@ uint8_t
 HtCapabilities::GetRxHighestSupportedAntennas (void) const
 {
   for (uint8_t nRx = 2; nRx <= 4; nRx++)
-  {
-    for (uint8_t mcs = (nRx - 1) * 8; mcs <= ((7 * nRx) + (nRx - 1)); mcs++)
     {
-      if (IsSupportedMcs (mcs) == false)
+      for (uint8_t mcs = (nRx - 1) * 8; mcs <= ((7 * nRx) + (nRx - 1)); mcs++)
         {
-          return (nRx - 1);
+          if (IsSupportedMcs (mcs) == false)
+            {
+              return (nRx - 1);
+            }
         }
     }
-  }
   return 4;
 }
 
@@ -296,7 +298,7 @@ HtCapabilities::GetTxRxMcsSetUnequal (void) const
 uint8_t
 HtCapabilities::GetTxMaxNSpatialStreams (void) const
 {
-  return m_txMaxNSpatialStreams;
+  return m_txMaxNSpatialStreams; //0 for 1 SS, 1 for 2 SSs, etc
 }
 
 uint8_t
@@ -592,17 +594,36 @@ HtCapabilities::DeserializeInformationField (Buffer::Iterator start,
 
 ATTRIBUTE_HELPER_CPP (HtCapabilities);
 
+/**
+ * output stream output operator
+ *
+ * \param os output stream
+ * \param htcapabilities
+ *
+ * \returns output stream
+ */
 std::ostream &
 operator << (std::ostream &os, const HtCapabilities &htcapabilities)
 {
-  os <<  bool (htcapabilities.GetLdpc ())
+  os << bool (htcapabilities.GetLdpc ())
      << "|" << bool (htcapabilities.GetSupportedChannelWidth ())
      << "|" << bool (htcapabilities.GetGreenfield ())
-     << "|" << bool (htcapabilities.GetShortGuardInterval20 ());
-
+     << "|" << bool (htcapabilities.GetShortGuardInterval20 ()) << "|";
+  for (uint32_t k = 0; k < MAX_SUPPORTED_MCS; k++)
+    {
+      os << htcapabilities.IsSupportedMcs (k) << " ";
+    }
   return os;
 }
 
+/**
+ * input stream input operator
+ *
+ * \param is input stream
+ * \param htcapabilities
+ *
+ * \returns input stream
+ */
 std::istream &operator >> (std::istream &is, HtCapabilities &htcapabilities)
 {
   bool c1, c2, c3, c4;

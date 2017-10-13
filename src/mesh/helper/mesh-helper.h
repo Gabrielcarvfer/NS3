@@ -51,6 +51,7 @@ public:
   /**
    * \brief Set the helper to the default values for the MAC type,  remote
    * station manager and channel policy.
+   * \returns the default MeshHelper
    */
   static MeshHelper Default ();
 
@@ -117,6 +118,7 @@ public:
                            std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * Set PHY standard
+   * \param standard the wifi phy standard
    */
   void SetStandard (enum WifiPhyStandard standard);
   /// \todo SetMeshId 
@@ -135,8 +137,9 @@ public:
 
   /**
    * \brief set the channel policy
+   * \param policy the channel policy
    */
-  void SetSpreadInterfaceChannels (ChannelPolicy);
+  void SetSpreadInterfaceChannels (ChannelPolicy policy);
   /**
    * \brief Set a number of interfaces in a mesh network
    * \param nInterfaces is the number of interfaces
@@ -184,13 +187,17 @@ public:
 
   /**
    * \brief Print statistics.
+   *
+   * \param device the net device
+   * \param os the output stream
    */
-  void Report (const ns3::Ptr<ns3::NetDevice>&, std::ostream&);
+  void Report (const ns3::Ptr<ns3::NetDevice>& device, std::ostream& os);
 
   /**
    * \brief Reset statistics.
+   * \param device the net device
    */
-  void ResetStats (const ns3::Ptr<ns3::NetDevice>&);
+  void ResetStats (const ns3::Ptr<ns3::NetDevice>& device);
   /**
    * Assign a fixed random variable stream number to the random variables
    * used by this model.  Return the number of streams (possibly zero) that
@@ -206,18 +213,21 @@ public:
 
 private:
   /**
+   * \param phyHelper
+   * \param node
+   * \param channelId
    * \returns a WifiNetDevice with ready-to-use interface
    */
   Ptr<WifiNetDevice> CreateInterface (const WifiPhyHelper &phyHelper, Ptr<Node> node, uint16_t channelId) const;
-  uint32_t m_nInterfaces;
-  ChannelPolicy m_spreadChannelPolicy;
-  Ptr<MeshStack> m_stack;
-  ObjectFactory m_stackFactory;
+  uint32_t m_nInterfaces; ///< number of interfaces
+  ChannelPolicy m_spreadChannelPolicy; ///< spread channel policy
+  Ptr<MeshStack> m_stack; ///< stack
+  ObjectFactory m_stackFactory; ///< stack factory
 
   // Interface factory
-  ObjectFactory m_mac;
-  ObjectFactory m_stationManager;
-  enum WifiPhyStandard m_standard;
+  ObjectFactory m_mac; ///< the MAC
+  ObjectFactory m_stationManager; ///< the station manager
+  enum WifiPhyStandard m_standard; ///< phy standard
 
 };
 } // namespace ns3

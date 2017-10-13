@@ -28,6 +28,7 @@ set(source_files
         utils/data-rate.cc
         utils/drop-tail-queue.cc
         utils/dynamic-queue-limits.cc
+        utils/error-channel.cc
         utils/error-model.cc
         utils/ethernet-header.cc
         utils/ethernet-trailer.cc
@@ -39,6 +40,7 @@ set(source_files
         utils/mac16-address.cc
         utils/mac48-address.cc
         utils/mac64-address.cc
+        utils/net-device-queue-interface.cc
         utils/llc-snap-header.cc
         utils/output-stream-wrapper.cc
         utils/packetbb.cc
@@ -49,6 +51,7 @@ set(source_files
         utils/pcap-file.cc
         utils/pcap-file-wrapper.cc
         utils/queue.cc
+        utils/queue-item.cc
         utils/queue-limits.cc
         utils/radiotap-header.cc
         utils/simple-channel.cc
@@ -92,6 +95,7 @@ set(header_files
         utils/ascii-file.h
         utils/ascii-test.h
         utils/crc32.h
+        utils/error-channel.h
         utils/data-rate.h
         utils/drop-tail-queue.h
         utils/dynamic-queue-limits.h
@@ -107,6 +111,7 @@ set(header_files
         utils/mac16-address.h
         utils/mac48-address.h
         utils/mac64-address.h
+        utils/net-device-queue-interface.h
         utils/output-stream-wrapper.h
         utils/packetbb.h
         utils/packet-burst.h
@@ -117,6 +122,7 @@ set(header_files
         utils/pcap-file-wrapper.h
         utils/generic-phy.h
         utils/queue.h
+        utils/queue-item.h
         utils/queue-limits.h
         utils/radiotap-header.h
         utils/sequence-number.h

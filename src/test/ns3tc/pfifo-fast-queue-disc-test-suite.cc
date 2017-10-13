@@ -18,6 +18,7 @@
  */
 
 #include "ns3/test.h"
+#include "ns3/simulator.h"
 #include "ns3/pfifo-fast-queue-disc.h"
 #include "ns3/drop-tail-queue.h"
 #include "ns3/ipv4-queue-disc-item.h"
@@ -78,7 +79,7 @@ PfifoFastQueueDiscTosPrioritization::DoRun (void)
   Ptr<PfifoFastQueueDisc> queueDisc = CreateObject<PfifoFastQueueDisc> ();
   for (uint16_t i = 0; i < 3; i++)
     {
-      Ptr<DropTailQueue> queue = CreateObject<DropTailQueue> ();
+      Ptr<DropTailQueue<QueueDiscItem> > queue = CreateObject<DropTailQueue<QueueDiscItem> > ();
       bool ok = queue->SetAttributeFailSafe ("MaxPackets", UintegerValue (1000));
       NS_TEST_ASSERT_MSG_EQ (ok, true, "unable to set attribute");
       queueDisc->AddInternalQueue (queue);
@@ -104,6 +105,7 @@ PfifoFastQueueDiscTosPrioritization::DoRun (void)
   TestTosValue (queueDisc, 0x1a, 1);  // MMC+MT+MD       -> Int. Bulk (4)   -> 1
   TestTosValue (queueDisc, 0x1c, 1);  // MR+MT+MD        -> Int. Bulk (4)   -> 1
   TestTosValue (queueDisc, 0x1e, 1);  // MMC+MR+MT+MD    -> Int. Bulk (4)   -> 1
+  Simulator::Destroy ();
 }
 
 /**
@@ -154,7 +156,7 @@ PfifoFastQueueDiscDscpPrioritization::DoRun (void)
   Ptr<PfifoFastQueueDisc> queueDisc = CreateObject<PfifoFastQueueDisc> ();
   for (uint16_t i = 0; i < 3; i++)
     {
-      Ptr<DropTailQueue> queue = CreateObject<DropTailQueue> ();
+      Ptr<DropTailQueue<QueueDiscItem> > queue = CreateObject<DropTailQueue<QueueDiscItem> > ();
       bool ok = queue->SetAttributeFailSafe ("MaxPackets", UintegerValue (1000));
       NS_TEST_ASSERT_MSG_EQ (ok, true, "unable to set attribute");
       queueDisc->AddInternalQueue (queue);
@@ -185,6 +187,7 @@ PfifoFastQueueDiscDscpPrioritization::DoRun (void)
   TestDscpValue (queueDisc, Ipv4Header::DSCP_CS5, 1);     // Best Effort (0) -> 1
   TestDscpValue (queueDisc, Ipv4Header::DSCP_CS6, 1);     // Best Effort (0) -> 1
   TestDscpValue (queueDisc, Ipv4Header::DSCP_CS7, 1);     // Best Effort (0) -> 1
+  Simulator::Destroy ();
 }
 
 /**
@@ -230,9 +233,9 @@ void
 PfifoFastQueueDiscOverflow::DoRun (void)
 {
   Ptr<PfifoFastQueueDisc> queueDisc = CreateObjectWithAttributes<PfifoFastQueueDisc> ("Limit", UintegerValue (6));
-  Ptr<DropTailQueue> band0 = CreateObjectWithAttributes<DropTailQueue> ("MaxPackets", UintegerValue (6));
-  Ptr<DropTailQueue> band1 = CreateObjectWithAttributes<DropTailQueue> ("MaxPackets", UintegerValue (6));
-  Ptr<DropTailQueue> band2 = CreateObjectWithAttributes<DropTailQueue> ("MaxPackets", UintegerValue (6));
+  Ptr<DropTailQueue<QueueDiscItem> > band0 = CreateObjectWithAttributes<DropTailQueue<QueueDiscItem> > ("MaxPackets", UintegerValue (6));
+  Ptr<DropTailQueue<QueueDiscItem> > band1 = CreateObjectWithAttributes<DropTailQueue<QueueDiscItem> > ("MaxPackets", UintegerValue (6));
+  Ptr<DropTailQueue<QueueDiscItem> > band2 = CreateObjectWithAttributes<DropTailQueue<QueueDiscItem> > ("MaxPackets", UintegerValue (6));
   queueDisc->AddInternalQueue (band0);
   queueDisc->AddInternalQueue (band1);
   queueDisc->AddInternalQueue (band2);
@@ -257,6 +260,7 @@ PfifoFastQueueDiscOverflow::DoRun (void)
   NS_TEST_ASSERT_MSG_EQ (queueDisc->GetInternalQueue (1)->GetNPackets (), 2, "unexpected queue depth");
   NS_TEST_ASSERT_MSG_EQ (queueDisc->GetInternalQueue (2)->GetNPackets (), 2, "unexpected queue depth");
   NS_TEST_ASSERT_MSG_EQ (queueDisc->QueueDisc::GetNPackets (), 6, "unexpected queue depth");
+  Simulator::Destroy ();
 }
 
 /**
@@ -289,7 +293,7 @@ PfifoFastQueueDiscNoPriority::DoRun (void)
   Ptr<PfifoFastQueueDisc> queueDisc = CreateObject<PfifoFastQueueDisc> ();
   for (uint16_t i = 0; i < 3; i++)
     {
-      Ptr<DropTailQueue> queue = CreateObject<DropTailQueue> ();
+      Ptr<DropTailQueue<QueueDiscItem> > queue = CreateObject<DropTailQueue<QueueDiscItem> > ();
       bool ok = queue->SetAttributeFailSafe ("MaxPackets", UintegerValue (1000));
       NS_TEST_ASSERT_MSG_EQ (ok, true, "unable to set attribute");
       queueDisc->AddInternalQueue (queue);
@@ -319,6 +323,7 @@ PfifoFastQueueDiscNoPriority::DoRun (void)
   queueDisc->Enqueue (item);
   NS_TEST_ASSERT_MSG_EQ (queueDisc->GetInternalQueue (1)->GetNPackets (), 3, "unexpected queue depth");
   delete[] buf;
+  Simulator::Destroy ();
 }
 
 class PfifoFastQueueDiscTestSuite : public TestSuite

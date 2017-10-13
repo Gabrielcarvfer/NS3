@@ -169,7 +169,7 @@ public:
    * \brief Get IPv6 group.
    * \return Ipv6Address of the multicast group
    */
-  Ipv6Address GetGroup () const;
+  Ipv6Address GetGroup (void) const;
 
   /**
    * \brief Set origin address.
@@ -181,7 +181,7 @@ public:
    * \brief Get source address.
    * \return Ipv6Address of the origin address
    */
-  Ipv6Address GetOrigin () const;
+  Ipv6Address GetOrigin (void) const;
 
   /**
    * \brief Set parent for this route.
@@ -193,7 +193,7 @@ public:
    * \brief Get parent for this route.
    * \return Parent (input interface) for this route
    */
-  uint32_t GetParent () const;
+  uint32_t GetParent (void) const;
 
   /**
    * \brief set output TTL for this route.

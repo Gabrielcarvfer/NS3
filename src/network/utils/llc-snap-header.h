@@ -21,7 +21,7 @@
 #ifndef LLC_SNAP_HEADER_H
 #define LLC_SNAP_HEADER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include "ns3/header.h"
 

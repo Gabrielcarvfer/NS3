@@ -17,7 +17,7 @@
 #ifndef NSC_TCP_L4_PROTOCOL_H
 #define NSC_TCP_L4_PROTOCOL_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "ns3/packet.h"
 #include "ns3/ipv4-address.h"
@@ -37,6 +37,7 @@ class Ipv4Interface;
 class NscTcpSocketImpl;
 class Ipv4EndPoint;
 class NscInterfaceImpl;
+class NetDevice;
 
 /**
  * \ingroup nsctcp
@@ -99,26 +100,30 @@ public:
   Ipv4EndPoint *Allocate (Ipv4Address address);
   /**
    * \brief Allocate an IPv4 Endpoint
+   * \param boundNetDevice Bound NetDevice (if any)
    * \param port port to use
    * \return the Endpoint
    */
-  Ipv4EndPoint *Allocate (uint16_t port);
+  Ipv4EndPoint *Allocate (Ptr<NetDevice> boundNetDevice, uint16_t port);
   /**
    * \brief Allocate an IPv4 Endpoint
+   * \param boundNetDevice Bound NetDevice (if any)
    * \param address address to use
    * \param port port to use
    * \return the Endpoint
    */
-  Ipv4EndPoint *Allocate (Ipv4Address address, uint16_t port);
+  Ipv4EndPoint *Allocate (Ptr<NetDevice> boundNetDevice, Ipv4Address address, uint16_t port);
   /**
    * \brief Allocate an IPv4 Endpoint
+   * \param boundNetDevice Bound NetDevice (if any)
    * \param localAddress local address to use
    * \param localPort local port to use
    * \param peerAddress remote address to use
    * \param peerPort remote port to use
    * \return the Endpoint
    */
-  Ipv4EndPoint *Allocate (Ipv4Address localAddress, uint16_t localPort,
+  Ipv4EndPoint *Allocate (Ptr<NetDevice> boundNetDevice,
+                          Ipv4Address localAddress, uint16_t localPort,
                           Ipv4Address peerAddress, uint16_t peerPort);
 
 
@@ -200,7 +205,15 @@ private:
    * \brief Provide a "soft" interrupt to NSC
    */
   void SoftInterrupt (void);
+  /**
+   * \brief NscInterfaceImpl friend class.
+   * \relates NscInterfaceImpl
+   */
   friend class NscInterfaceImpl;
+  /**
+   * \brief NscTcpSocketImpl friend class.
+   * \relates NscTcpSocketImpl
+   */
   friend class NscTcpSocketImpl;
 
   Ptr<Node> m_node; //!< the node this stack is associated with

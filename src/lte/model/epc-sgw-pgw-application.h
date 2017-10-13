@@ -47,11 +47,15 @@ namespace ns3 {
  */
 class EpcSgwPgwApplication : public Application
 {
+  /// allow MemberEpcS11SapSgw<EpcSgwPgwApplication> class friend access
   friend class MemberEpcS11SapSgw<EpcSgwPgwApplication>;
 
 public:
 
-  // inherited from Object
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
   virtual void DoDispose ();
 
@@ -98,6 +102,7 @@ public:
    * Send a packet to the internet via the Gi interface of the SGW/PGW
    * 
    * \param packet 
+   * \param teid the Tunnel Enpoint Identifier
    */
   void SendToTunDevice (Ptr<Packet> packet, uint32_t teid);
 
@@ -153,10 +158,26 @@ public:
 private:
 
   // S11 SAP SGW methods
+  /**
+   * Create session request function
+   * \param msg EpcS11SapSgw::CreateSessionRequestMessage
+   */
   void DoCreateSessionRequest (EpcS11SapSgw::CreateSessionRequestMessage msg);
+  /**
+   * Modify bearer request function
+   * \param msg EpcS11SapSgw::ModifyBearerRequestMessage
+   */
   void DoModifyBearerRequest (EpcS11SapSgw::ModifyBearerRequestMessage msg);  
 
+  /**
+   * Delete bearer command function
+   * \param req EpcS11SapSgw::DeleteBearerCommandMessage
+   */
   void DoDeleteBearerCommand (EpcS11SapSgw::DeleteBearerCommandMessage req);
+  /**
+   * Delete bearer response function
+   * \param req EpcS11SapSgw::DeleteBearerResponseMessage
+   */
   void DoDeleteBearerResponse (EpcS11SapSgw::DeleteBearerResponseMessage req);
 
 
@@ -178,7 +199,7 @@ public:
 
     /** 
      * \brief Function, deletes contexts of bearer on SGW and PGW side
-     * \param bearerId, the Bearer Id whose contexts to be removed
+     * \param bearerId the Bearer Id whose contexts to be removed
      */
     void RemoveBearer (uint8_t bearerId);
 
@@ -219,10 +240,10 @@ public:
 
 
   private:
-    EpcTftClassifier m_tftClassifier;
-    Ipv4Address m_enbAddr;
-    Ipv4Address m_ueAddr;
-    std::map<uint8_t, uint32_t> m_teidByBearerIdMap;
+    EpcTftClassifier m_tftClassifier; ///< TFT classifier
+    Ipv4Address m_enbAddr; ///< ENB address
+    Ipv4Address m_ueAddr; ///< UE address
+    std::map<uint8_t, uint32_t> m_teidByBearerIdMap; ///< TEID By bearer ID Map
   };
 
 
@@ -252,6 +273,9 @@ public:
    */
   uint16_t m_gtpuUdpPort;
 
+  /**
+   * TEID count
+   */
   uint32_t m_teidCount;
 
   /**
@@ -266,13 +290,14 @@ public:
    */
   EpcS11SapSgw* m_s11SapSgw;
 
+  /// EnbInfo structure
   struct EnbInfo
   {
-    Ipv4Address enbAddr;
-    Ipv4Address sgwAddr;    
+    Ipv4Address enbAddr; ///< eNB address
+    Ipv4Address sgwAddr; ///< SGW address
   };
 
-  std::map<uint16_t, EnbInfo> m_enbInfoByCellId;
+  std::map<uint16_t, EnbInfo> m_enbInfoByCellId; ///< eNB info by cell ID
 };
 
 } //namespace ns3

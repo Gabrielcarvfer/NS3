@@ -35,7 +35,9 @@ struct {
 class AnimNode: public ResizeableItem
 {
 public:
-  typedef QVector <QString> Ipv4Vector_t;
+  typedef QSet <QString> Ipv4Set_t;
+  typedef QSet <QString> Ipv6Set_t;
+
   typedef QVector <QString> MacVector_t;
   typedef std::map <uint32_t, uint32_t> CounterIdValueUint32_t;
   typedef std::map <uint32_t, double> CounterIdValueDouble_t;
@@ -62,7 +64,8 @@ public:
   uint32_t getNodeSysId ();
   qreal getWidth ();
   int getResourceId ();
-  Ipv4Vector_t getIpv4Addresses ();
+  Ipv4Set_t getIpv4Addresses ();
+  Ipv6Set_t getIpv6Addresses ();
   MacVector_t getMacAddresses ();
   void setWidth (qreal width);
   void setHeight (qreal height);
@@ -71,6 +74,7 @@ public:
   void setPos (qreal x, qreal y);
   void setShowNodeTrajectory (bool showNodeTrajectory);
   void addIpv4Address (QString ip);
+  void addIpv6Address (QString ip);
   void addMacAddress (QString mac);
   bool hasIpv4 (QString ip);
   bool hasMac (QString mac);
@@ -92,7 +96,8 @@ private:
   qreal m_y;
   bool m_showNodeId;
   bool m_showNodeSysId;
-  Ipv4Vector_t m_ipv4Vector;
+  Ipv4Set_t m_ipv4Set;
+  Ipv6Set_t m_ipv6Set;
   MacVector_t m_macVector;
   int m_resourceId;
   bool m_showNodeTrajectory;
@@ -123,6 +128,7 @@ public:
   QPointF getMaxPoint ();
   void systemReset ();
   void addIpv4Address (uint32_t nodeId, QString ip);
+  void addIpv6Address (uint32_t nodeId, QString ip);
   void addMacAddress (uint32_t nodeId, QString mac);
   void setSize (qreal width, qreal height);
   void showNodeId (bool show);

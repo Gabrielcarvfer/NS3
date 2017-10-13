@@ -20,7 +20,7 @@
 #ifndef ARP_CACHE_H
 #define ARP_CACHE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 #include "ns3/simulator.h"
 #include "ns3/callback.h"
@@ -70,7 +70,7 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId ();
+  static TypeId GetTypeId (void);
   class Entry;
   ArpCache ();
   ~ArpCache ();
@@ -86,12 +86,12 @@ public:
    * \brief Returns the NetDevice that this ARP cache is associated with
    * \return The NetDevice that this ARP cache is associated with
    */
-  Ptr<NetDevice> GetDevice () const;
+  Ptr<NetDevice> GetDevice (void) const;
   /**
    * \brief Returns the Ipv4Interface that this ARP cache is associated with
    * \return the Ipv4Interface that this ARP cache is associated with
    */
-  Ptr<Ipv4Interface> GetInterface () const;
+  Ptr<Ipv4Interface> GetInterface (void) const;
 
   /**
    * \brief Set the time the entry will be in ALIVE state (unless refreshed)
@@ -113,17 +113,17 @@ public:
    * \brief Get the time the entry will be in ALIVE state (unless refreshed)
    * \returns the Alive state timeout
    */
-  Time GetAliveTimeout () const;
+  Time GetAliveTimeout (void) const;
   /**
    * \brief Get the time the entry will be in DEAD state before being removed
    * \returns the Dead state timeout
    */
-  Time GetDeadTimeout () const;
+  Time GetDeadTimeout (void) const;
   /**
    * \brief Get the time the entry will be in WAIT_REPLY state
    * \returns the WAIT_REPLY state timeout
    */
-  Time GetWaitReplyTimeout () const;
+  Time GetWaitReplyTimeout (void) const;
 
   /**
    * This callback is set when the ArpCache is set up and allows
@@ -139,7 +139,7 @@ public:
    * in the future, unless a timer is already running for the cache,
    * in which case this method does nothing.
    */
-  void StartWaitReplyTimer ();
+  void StartWaitReplyTimer (void);
   /**
    * \brief Do lookup in the ARP cache against an IP address
    * \param destination The destination IPv4 address to lookup the MAC address
@@ -156,6 +156,8 @@ public:
   std::list<ArpCache::Entry *> LookupInverse (Address destination);
   /**
    * \brief Add an Ipv4Address to this ARP cache
+   * \param to the destination address of the ARP entry.
+   * \returns A pointer to a new ARP Entry.
    */
   ArpCache::Entry *Add (Ipv4Address to);
   /**
@@ -166,7 +168,7 @@ public:
   /**
    * \brief Clear the ArpCache of all entries
    */
-  void Flush ();
+  void Flush (void);
 
   /**
    * \brief Print the ARP cache entries
@@ -194,7 +196,7 @@ public:
     /**
      * \brief Changes the state of this entry to dead
      */
-    void MarkDead ();
+    void MarkDead (void);
     /**
      * \param macAddress
      */
@@ -208,7 +210,7 @@ public:
      *
      * The entry must have a valid MacAddress.
      */
-    void MarkPermanent ();
+    void MarkPermanent (void);
     /**
      * \param waiting
      * \return 
@@ -217,31 +219,37 @@ public:
     /**
      * \return True if the state of this entry is dead; false otherwise.
      */
-    bool IsDead ();
+    bool IsDead (void);
     /**
      * \return True if the state of this entry is alive; false otherwise.
      */
-    bool IsAlive ();
+    bool IsAlive (void);
     /**
      * \return True if the state of this entry is wait_reply; false otherwise.
      */
-    bool IsWaitReply ();
+    bool IsWaitReply (void);
     /**
      * \return True if the state of this entry is permanent; false otherwise.
      */
-    bool IsPermanent ();
+    bool IsPermanent (void); 
     /**
      * \return The MacAddress of this entry
      */
-    Address GetMacAddress () const;
+    Address GetMacAddress (void) const;
     /**
      * \return The Ipv4Address for this entry
      */
-    Ipv4Address GetIpv4Address () const;
+    Ipv4Address GetIpv4Address (void) const;
+    /**
+     * \param macAddress The MacAddress for this entry
+     * \deprecated This (misspelled) method will go away in future versions of ns-3, in favor of the correctly spelled version.
+     */
+    NS_DEPRECATED
+    void SetMacAddresss (Address macAddress);
     /**
      * \param macAddress The MacAddress for this entry
      */
-    void SetMacAddresss (Address macAddress);
+    void SetMacAddress (Address macAddress);
     /**
      * \param destination The Ipv4Address for this entry
      */
@@ -252,34 +260,34 @@ public:
      * This function returns true if the time elapsed strictly exceeds
      * the timeout value (i.e., is not less than or equal to the timeout).
      */
-    bool IsExpired () const;
+    bool IsExpired (void) const;
     /**
      * \returns 0 is no packet is pending, the next packet to send if 
      *            packets are pending.
      */
-    Ipv4PayloadHeaderPair DequeuePending ();
+    Ipv4PayloadHeaderPair DequeuePending (void);
     /**
      * \brief Clear the pending packet list
      */
-    void ClearPendingPacket ();
+    void ClearPendingPacket (void);
     /**
      * \returns number of retries that have been sent for an ArpRequest
      *  in WaitReply state.
      */
-    uint32_t GetRetries () const;
+    uint32_t GetRetries (void) const;
     /**
      * \brief Increment the counter of number of retries for an entry
      */
-    void IncrementRetries ();
+    void IncrementRetries (void);
     /**
      * \brief Zero the counter of number of retries for an entry
      */
-    void ClearRetries ();
+    void ClearRetries (void);
 
     /**
      * \brief Update the entry when seeing a packet
      */
-    void UpdateSeen ();
+    void UpdateSeen (void);
 
 private:
     /**
@@ -296,7 +304,7 @@ private:
      * \brief Returns the entry timeout
      * \returns the entry timeout
      */
-    Time GetTimeout () const;
+    Time GetTimeout (void) const;
 
     ArpCache *m_arp; //!< pointer to the ARP cache owning the entry
     ArpCacheEntryState_e m_state; //!< state of the entry
@@ -317,7 +325,7 @@ private:
    */
   typedef sgi::hash_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash>::iterator CacheI;
 
-  virtual void DoDispose ();
+  virtual void DoDispose (void);
 
   Ptr<NetDevice> m_device; //!< NetDevice associated with the cache
   Ptr<Ipv4Interface> m_interface; //!< Ipv4Interface associated with the cache
@@ -333,7 +341,7 @@ private:
    * ArpCache wants to check whether it must retry any Arp requests.
    * If there are no Arp requests pending, this event is not scheduled.
    */
-  void HandleWaitReplyTimeout ();
+  void HandleWaitReplyTimeout (void);
   uint32_t m_pendingQueueSize; //!< number of packets waiting for a resolution
   Cache m_arpCache; //!< the ARP cache
   TracedCallback<Ptr<const Packet> > m_dropTrace; //!< trace for packets dropped by the ARP cache queue

@@ -21,7 +21,7 @@
 #ifndef TCP_OPTION_H
 #define TCP_OPTION_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/object.h"
 #include "ns3/buffer.h"
 #include "ns3/object-factory.h"
@@ -43,9 +43,9 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId ();
+  static TypeId GetTypeId (void);
 
-  virtual TypeId GetInstanceTypeId () const;
+  virtual TypeId GetInstanceTypeId (void) const;
 
   /**
    * The option Kind, as defined in the respective RFCs.
@@ -54,12 +54,14 @@ public:
   {
     // Remember to extend IsKindKnown() with new value, when adding values here
     //
-    END = 0,      //!< END
-    NOP = 1,      //!< NOP
-    MSS = 2,      //!< MSS
-    WINSCALE = 3, //!< WINSCALE
-    TS = 8,       //!< TS
-    UNKNOWN = 255 //!< not a standardized value; for unknown recv'd options
+    END = 0,                    //!< END
+    NOP = 1,                    //!< NOP
+    MSS = 2,                    //!< MSS
+    WINSCALE = 3,               //!< WINSCALE
+    SACKPERMITTED = 4,          //!< SACKPERMITTED
+    SACK = 5,                   //!< SACK
+    TS = 8,                     //!< TS
+    UNKNOWN = 255               //!< not a standardized value; for unknown recv'd options
   };
 
   /**
@@ -84,7 +86,7 @@ public:
    * \brief Get the `kind' (as in \RFC{793}) of this option
    * \return the Option Kind
    */
-  virtual uint8_t GetKind () const = 0;
+  virtual uint8_t GetKind (void) const = 0;
   /**
    * \brief Returns number of bytes required for Option
    * serialization.
@@ -92,7 +94,7 @@ public:
    * \returns number of bytes required for Option
    * serialization
    */
-  virtual uint32_t GetSerializedSize () const = 0;
+  virtual uint32_t GetSerializedSize (void) const = 0;
 
   /**
    * \brief Creates an option
@@ -127,15 +129,15 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId ();
-  virtual TypeId GetInstanceTypeId () const;
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
 
   virtual void Print (std::ostream &os) const;
   virtual void Serialize (Buffer::Iterator start) const;
   virtual uint32_t Deserialize (Buffer::Iterator start);
 
-  virtual uint8_t GetKind () const;
-  virtual uint32_t GetSerializedSize () const;
+  virtual uint8_t GetKind (void) const;
+  virtual uint32_t GetSerializedSize (void) const;
 
 private:
   uint8_t m_kind; //!< The unknown option kind

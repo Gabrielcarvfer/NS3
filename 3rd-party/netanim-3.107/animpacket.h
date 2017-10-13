@@ -197,6 +197,25 @@ struct Ipv4Info
 };
 
 
+
+struct Ipv6Info
+{
+  Ipv6Info ()
+  {
+
+  }
+  QString toString ()
+  {
+    return  " Ipv6";
+  }
+  QString toShortString ()
+  {
+    return "IPv6";
+  }
+
+};
+
+
 struct IcmpInfo
 {
   IcmpInfo ()
@@ -367,7 +386,8 @@ public:
     ETHERNET= 1 << 7,
     PPP= 1 << 8,
     ICMP= 1 << 9,
-    ARP= 1 << 10
+    ARP= 1 << 10,
+    IPV6 = 1 << 11
   } FilterType_t;
   enum { Type = ANIMPACKET_TYPE };
   int type () const
@@ -422,6 +442,7 @@ private:
   static EthernetInfo parseEthernet (QString metaInfo, bool & result);
   static WifiMacInfo parseWifi (QString metaInfo, bool & result);
   static Ipv4Info parseIpv4 (QString metaInfo, bool & result);
+  static Ipv6Info parseIpv6 (QString metaInfo, bool & result);
   static IcmpInfo parseIcmp (QString metaInfo, bool & result);
   static UdpInfo parseUdp (QString metaInfo, bool & result);
   static TcpInfo parseTcp (QString metaInfo, bool & result);

@@ -20,7 +20,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "buffer.h"
 #include "header.h"
 #include "trailer.h"
@@ -87,6 +87,7 @@ public:
      */
     void GetTag (Tag &tag) const;
 private:
+    /// Friend class
     friend class ByteTagIterator;
     /**
      * \brief Constructor
@@ -111,6 +112,7 @@ private:
    */
   Item Next (void);
 private:
+  /// Friend class
   friend class Packet;
   /**
    * Copy Constructor
@@ -149,6 +151,7 @@ public:
      */
     void GetTag (Tag &tag) const;
 private:
+    /// Friend class
     friend class PacketTagIterator;
     /**
      * Constructor
@@ -166,6 +169,7 @@ private:
    */
   Item Next (void);
 private:
+  /// Friend class
   friend class Packet;
   /**
    * Constructor

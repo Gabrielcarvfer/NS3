@@ -40,7 +40,7 @@ public:
   /**
    * \brief Enable checksum calculation for this header.
    */
-  void EnableChecksum ();
+  void EnableChecksum (void);
   /**
    * \param size the size of the payload in bytes
    */
@@ -122,19 +122,19 @@ public:
   /**
    * This packet is not the last packet of a fragmented ipv4 packet.
    */
-  void SetMoreFragments ();
+  void SetMoreFragments (void);
   /**
    * This packet is the last packet of a fragmented ipv4 packet.
    */
-  void SetLastFragment ();
+  void SetLastFragment (void);
   /**
    * Don't fragment this packet: if you need to anyway, drop it.
    */
-  void SetDontFragment ();
+  void SetDontFragment (void);
   /**
    * If you need to fragment this packet, you can do it.
    */
-  void SetMayFragment ();
+  void SetMayFragment (void);
   /**
    * The offset is measured in bytes for the packet start.
    * Mind that IPv4 "fragment offset" field is 13 bits long and is measured in 8-bytes words.
@@ -161,19 +161,19 @@ public:
   /**
    * \returns the size of the payload in bytes
    */
-  uint16_t GetPayloadSize () const;
+  uint16_t GetPayloadSize (void) const;
   /**
    * \returns the identification field of this packet.
    */
-  uint16_t GetIdentification () const;
+  uint16_t GetIdentification (void) const;
   /**
    * \returns the TOS field of this packet.
    */
-  uint8_t GetTos () const;
+  uint8_t GetTos (void) const;
   /**
    * \returns the DSCP field of this packet.
    */
-  DscpType GetDscp () const;
+  DscpType GetDscp (void) const;
   /**
    * \param dscp the dscp
    * \returns std::string of DSCPType
@@ -182,7 +182,7 @@ public:
   /**
    * \returns the ECN field of this packet.
    */
-  EcnType GetEcn () const;
+  EcnType GetEcn (void) const;
   /**
    * \param ecn the ECNType
    * \returns std::string of ECNType
@@ -191,31 +191,31 @@ public:
   /**
    * \returns true if this is the last fragment of a packet, false otherwise.
    */
-  bool IsLastFragment () const;
+  bool IsLastFragment (void) const;
   /**
    * \returns true if this is this packet can be fragmented.
    */
-  bool IsDontFragment () const;
+  bool IsDontFragment (void) const;
   /**
    * \returns the offset of this fragment measured in bytes from the start.
    */
-  uint16_t GetFragmentOffset () const;
+  uint16_t GetFragmentOffset (void) const;
   /**
    * \returns the TTL field of this packet
    */
-  uint8_t GetTtl () const;
+  uint8_t GetTtl (void) const;
   /**
    * \returns the protocol field of this packet
    */
-  uint8_t GetProtocol () const;
+  uint8_t GetProtocol (void) const;
   /**
    * \returns the source address of this packet
    */
-  Ipv4Address GetSource () const;
+  Ipv4Address GetSource (void) const;
   /**
    * \returns the destination address of this packet
    */
-  Ipv4Address GetDestination () const;
+  Ipv4Address GetDestination (void) const;
 
   /**
    * \returns true if the ipv4 checksum is correct, false otherwise.
@@ -223,16 +223,16 @@ public:
    * If Ipv4Header::EnableChecksums has not been called prior to
    * deserializing this header, this method will always return true.
    */
-  bool IsChecksumOk () const;
+  bool IsChecksumOk (void) const;
 
   /**
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId ();
-  virtual TypeId GetInstanceTypeId () const;
+  static TypeId GetTypeId (void);
+  virtual TypeId GetInstanceTypeId (void) const;
   virtual void Print (std::ostream &os) const;
-  virtual uint32_t GetSerializedSize () const;
+  virtual uint32_t GetSerializedSize (void) const;
   virtual void Serialize (Buffer::Iterator start) const;
   virtual uint32_t Deserialize (Buffer::Iterator start);
 private:

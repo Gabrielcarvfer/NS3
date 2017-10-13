@@ -19,7 +19,7 @@
  */
 #ifndef CRC32_H
 #define CRC32_H
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

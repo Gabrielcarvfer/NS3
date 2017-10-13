@@ -24,17 +24,20 @@
 #ifndef CID_H
 #define CID_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <ostream>
 
 namespace ns3 {
 
 /**
  * \ingroup wimax
+ * \class Cid
+ * \brief Cid class
  */
 class Cid
 {
 public:
+  /// Type enumeration
   enum Type
   {
     BROADCAST = 1,
@@ -46,8 +49,13 @@ public:
     PADDING
   };
 
-  // Create a cid of unknown type
+  /// Create a cid of unknown type
   Cid (void);
+  /**
+   * Constructor
+   *
+   * \param cid
+   */
   Cid (uint16_t cid);
   ~Cid (void);
   /**
@@ -84,9 +92,11 @@ public:
   static Cid InitialRanging (void);
 
 private:
+  /// allow CidFactory class friend access
   friend class CidFactory;
+  /// equality operator
   friend bool operator == (const Cid &lhs, const Cid &rhs);
-  uint16_t m_identifier;
+  uint16_t m_identifier; ///< identiifier
 };
 
 bool operator == (const Cid &lhs, const Cid &rhs);

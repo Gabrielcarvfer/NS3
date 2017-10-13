@@ -24,7 +24,7 @@
 #include <list>
 #include <map>
 #include <vector>
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv4-address.h"
 #include "ns3/ptr.h"
 #include "ns3/net-device.h"
@@ -51,7 +51,6 @@ class Socket;
 class Ipv4RawSocketImpl;
 class IpL4Protocol;
 class Icmpv4L4Protocol;
-
 
 /**
  * \ingroup ipv4
@@ -270,6 +269,10 @@ protected:
    */
   virtual void NotifyNewAggregate ();
 private:
+  /**
+   * \brief Ipv4L3ProtocolTestCase test case.
+   * \relates Ipv4L3ProtocolTestCase
+   */
   friend class ::Ipv4L3ProtocolTestCase;
 
   /**

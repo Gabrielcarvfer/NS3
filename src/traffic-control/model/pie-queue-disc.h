@@ -28,8 +28,6 @@
 #ifndef PIE_QUEUE_DISC_H
 #define PIE_QUEUE_DISC_H
 
-#include <queue>
-#include "ns3/packet.h"
 #include "ns3/queue-disc.h"
 #include "ns3/nstime.h"
 #include "ns3/boolean.h"
@@ -70,15 +68,6 @@ public:
   virtual ~PieQueueDisc ();
 
   /**
-   * \brief Stats
-   */
-  typedef struct
-  {
-    uint32_t unforcedDrop;      //!< Early probability drops: proactive
-    uint32_t forcedDrop;        //!< Drops due to queue limit: reactive
-  } Stats;
-
-  /**
    * \brief Burst types
    */
   enum BurstStateT
@@ -89,18 +78,28 @@ public:
   };
 
   /**
-   * \brief Set the operating mode of this queue.
+   * \brief Enumeration of the modes supported in the class.
    *
-   * \param mode The operating mode of this queue.
    */
-  void SetMode (Queue::QueueMode mode);
+  enum QueueDiscMode
+  {
+    QUEUE_DISC_MODE_PACKETS,     /**< Use number of packets for maximum queue disc size */
+    QUEUE_DISC_MODE_BYTES,       /**< Use number of bytes for maximum queue disc size */
+  };
 
   /**
-   * \brief Get the encapsulation mode of this queue.
+   * \brief Set the operating mode of this queue disc.
    *
-   * \returns The encapsulation mode of this queue.
+   * \param mode The operating mode of this queue disc.
    */
-  Queue::QueueMode GetMode (void);
+  void SetMode (QueueDiscMode mode);
+
+  /**
+   * \brief Get the operating mode of this queue disc.
+   *
+   * \returns The operating mode of this queue disc.
+   */
+  QueueDiscMode GetMode (void);
 
   /**
    * \brief Get the current value of the queue in bytes or packets.
@@ -117,16 +116,11 @@ public:
   void SetQueueLimit (uint32_t lim);
 
   /**
-   * \brief Get queue delay
+   * \brief Get queue delay.
+   *
+   * \returns The current queue delay.
    */
   Time GetQueueDelay (void);
-
-  /**
-   * \brief Get PIE statistics after running.
-   *
-   * \returns The drop statistics.
-   */
-  Stats GetStats ();
 
   /**
    * Assign a fixed random variable stream number to the random variables
@@ -137,6 +131,10 @@ public:
    * \return the number of stream indices assigned by this model
    */
   int64_t AssignStreams (int64_t stream);
+
+  // Reasons for dropping packets
+  static constexpr const char* UNFORCED_DROP = "Unforced drop";  //!< Early probability drops: proactive
+  static constexpr const char* FORCED_DROP = "Forced drop";      //!< Drops due to queue limit: reactive
 
 protected:
   /**
@@ -170,10 +168,8 @@ private:
    */
   void CalculateP ();
 
-  Stats m_stats;                                //!< PIE statistics
-
   // ** Variables supplied by user
-  Queue::QueueMode m_mode;                      //!< Mode (bytes or packets)
+  QueueDiscMode m_mode;                         //!< Mode (bytes or packets)
   uint32_t m_queueLimit;                        //!< Queue limit in bytes / packets
   Time m_sUpdate;                               //!< Start time of the update timer
   Time m_tUpdate;                               //!< Time period after which CalculateP () is called

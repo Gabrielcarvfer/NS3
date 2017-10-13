@@ -29,7 +29,7 @@ set(header_files
         helper/buildings-helper.h
         )
 
-set(libraries_to_link ${libmobility} ${libpropagation} ${config-store})
+set(libraries_to_link ${libmobility} ${libpropagation} ${libconfig-store})
 
 set(test_sources
         test/building-position-allocator-test.cc

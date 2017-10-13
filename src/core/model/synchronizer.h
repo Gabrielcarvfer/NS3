@@ -19,7 +19,7 @@
 #ifndef SYNCHRONIZER_H
 #define SYNCHRONIZER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "nstime.h"
 #include "object.h"
 
@@ -125,7 +125,7 @@ public:
 
   /**
    * @brief Wait until the real time is in sync with the specified simulation
-   * time or until the synchronizer is Sigalled.
+   * time or until the synchronizer is Signalled.
    *
    * This is where the real work of synchronization is done.  The @c tsCurrent
    * argument is the simulation time.  The job of Synchronize is to

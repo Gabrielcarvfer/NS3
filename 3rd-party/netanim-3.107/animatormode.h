@@ -219,7 +219,7 @@ private:
   void displayPacket (qreal t);
   void dispatchEvents ();
   void setSimulationCompleted ();
-  void purgeWiredPackets ();
+  void purgeWiredPackets (bool sysReset = false);
   void purgeWirelessPackets ();
   void purgeAnimatedNodes ();
   void fastForward (qreal t);

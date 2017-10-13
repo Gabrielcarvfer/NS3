@@ -117,6 +117,19 @@ set(source_files
         model/lte-ffr-distributed-algorithm.cc
         model/lte-ue-power-control.cc
         #helper/emu-epc-helper.c
+
+        #Added in ns3.27
+        model/component-carrier.cc
+        model/component-carrier-enb.cc
+        model/component-carrier-ue.cc
+        model/lte-ccm-mac-sap.cc
+        model/lte-ccm-rrc-sap.cc
+        model/lte-enb-component-carrier-manager.cc
+        model/lte-ue-ccm-rrc-sap.cc
+        model/lte-ue-component-carrier-manager.cc
+        model/no-op-component-carrier-manager.cc
+        model/simple-ue-component-carrier-manager.cc
+        helper/cc-helper.cc
         )
 
 set(header_files
@@ -235,6 +248,19 @@ set(header_files
         model/lte-ffr-distributed-algorithm.h
         model/lte-ue-power-control.h
         #helper/emu-epc-helper.h
+
+        #Added in ns3.27
+        model/component-carrier.h
+        model/component-carrier-enb.h
+        model/component-carrier-ue.h
+        model/lte-ccm-mac-sap.h
+        model/lte-ccm-rrc-sap.h
+        model/lte-enb-component-carrier-manager.h
+        model/lte-ue-ccm-rrc-sap.h
+        model/lte-ue-component-carrier-manager.h
+        model/no-op-component-carrier-manager.h
+        model/simple-ue-component-carrier-manager.h
+        helper/cc-helper.h
         )
 
 set(libraries_to_link

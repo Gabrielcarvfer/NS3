@@ -21,7 +21,7 @@
  */
 
 #include "bs-link-manager.h"
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/node.h"
 #include "ns3/packet.h"
 #include "ns3/simulator.h"

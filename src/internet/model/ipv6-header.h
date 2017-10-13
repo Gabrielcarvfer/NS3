@@ -102,18 +102,18 @@ public:
    * \brief Get the type identifier.
    * \return type identifier
    */
-  static TypeId GetTypeId ();
+  static TypeId GetTypeId (void);
 
   /**
    * \brief Return the instance type identifier.
    * \return instance type ID
    */
-  virtual TypeId GetInstanceTypeId () const;
+  virtual TypeId GetInstanceTypeId (void) const;
 
   /**
    * \brief Constructor.
    */
-  Ipv6Header ();
+  Ipv6Header (void);
 
   /**
    * \brief Set the "Traffic class" field.
@@ -125,7 +125,7 @@ public:
    * \brief Get the "Traffic class" field.
    * \return the traffic value
    */
-  uint8_t GetTrafficClass () const;
+  uint8_t GetTrafficClass (void) const;
 
   /**
    * \brief Set DSCP Field
@@ -136,13 +136,43 @@ public:
   /**
    * \returns the DSCP field of this packet.
    */
-  DscpType GetDscp () const;
+  DscpType GetDscp (void) const;
 
   /**
    * \param dscp the dscp
    * \returns std::string of DSCPType
    */
   std::string DscpTypeToString (DscpType dscp) const;
+
+  /**
+   * \enum EcnType
+   * \brief ECN field bits
+   */
+  enum EcnType
+   {
+     // Prefixed with "ECN" to avoid name clash
+     ECN_NotECT = 0x00,
+     ECN_ECT1 = 0x01,
+     ECN_ECT0 = 0x02,
+     ECN_CE = 0x03
+   };
+
+  /**
+   * \brief Set ECN field bits
+   * \param ecn ECN field bits
+   */
+  void SetEcn (EcnType ecn);
+
+  /**
+   * \return the ECN field bits of this packet.
+   */
+  EcnType GetEcn (void) const;
+
+  /**
+   * \param ecn the ECNType
+   * \return std::string of ECNType
+   */
+  std::string EcnTypeToString (EcnType ecn) const;
 
   /**
    * \brief Set the "Flow label" field.
@@ -154,7 +184,7 @@ public:
    * \brief Get the "Flow label" field.
    * \return the flow label value
    */
-  uint32_t GetFlowLabel () const;
+  uint32_t GetFlowLabel (void) const;
 
   /**
    * \brief Set the "Payload length" field.
@@ -166,7 +196,7 @@ public:
    * \brief Get the "Payload length" field.
    * \return the payload length
    */
-  uint16_t GetPayloadLength () const;
+  uint16_t GetPayloadLength (void) const;
 
   /**
    * \brief Set the "Next header" field.
@@ -178,7 +208,7 @@ public:
    * \brief Get the next header.
    * \return the next header number
    */
-  uint8_t GetNextHeader () const;
+  uint8_t GetNextHeader (void) const;
 
   /**
    * \brief Set the "Hop limit" field (TTL).
@@ -190,7 +220,7 @@ public:
    * \brief Get the "Hop limit" field (TTL).
    * \return the hop limit value
    */
-  uint8_t GetHopLimit () const;
+  uint8_t GetHopLimit (void) const;
 
   /**
    * \brief Set the "Source address" field.
@@ -202,7 +232,7 @@ public:
    * \brief Get the "Source address" field.
    * \return the source address
    */
-  Ipv6Address GetSourceAddress () const;
+  Ipv6Address GetSourceAddress (void) const;
 
   /**
    * \brief Set the "Destination address" field.
@@ -214,7 +244,7 @@ public:
    * \brief Get the "Destination address" field.
    * \return the destination address
    */
-  Ipv6Address GetDestinationAddress () const;
+  Ipv6Address GetDestinationAddress (void) const;
 
   /**
    * \brief Print some informations about the packet.
@@ -227,7 +257,7 @@ public:
    * \brief Get the serialized size of the packet.
    * \return size
    */
-  virtual uint32_t GetSerializedSize () const;
+  virtual uint32_t GetSerializedSize (void) const;
 
   /**
    * \brief Serialize the packet.

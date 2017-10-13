@@ -64,6 +64,7 @@
 #include "ns3/abort.h"
 #include "red-queue-disc.h"
 #include "ns3/drop-tail-queue.h"
+#include "ns3/net-device-queue-interface.h"
 
 namespace ns3 {
 
@@ -79,10 +80,10 @@ TypeId RedQueueDisc::GetTypeId (void)
     .AddConstructor<RedQueueDisc> ()
     .AddAttribute ("Mode",
                    "Determines unit for QueueLimit",
-                   EnumValue (Queue::QUEUE_MODE_PACKETS),
+                   EnumValue (QUEUE_DISC_MODE_PACKETS),
                    MakeEnumAccessor (&RedQueueDisc::SetMode),
-                   MakeEnumChecker (Queue::QUEUE_MODE_BYTES, "QUEUE_MODE_BYTES",
-                                    Queue::QUEUE_MODE_PACKETS, "QUEUE_MODE_PACKETS"))
+                   MakeEnumChecker (QUEUE_DISC_MODE_BYTES, "QUEUE_DISC_MODE_BYTES",
+                                    QUEUE_DISC_MODE_PACKETS, "QUEUE_DISC_MODE_PACKETS"))
     .AddAttribute ("MeanPktSize",
                    "Average of packet size",
                    UintegerValue (500),
@@ -112,6 +113,16 @@ TypeId RedQueueDisc::GetTypeId (void)
                    "True to adapt m_curMaxP",
                    BooleanValue (false),
                    MakeBooleanAccessor (&RedQueueDisc::m_isAdaptMaxP),
+                   MakeBooleanChecker ())
+    .AddAttribute ("FengAdaptive",
+                   "True to enable Feng's Adaptive RED",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&RedQueueDisc::m_isFengAdaptive),
+                   MakeBooleanChecker ())
+    .AddAttribute ("NLRED",
+                   "True to enable Nonlinear RED",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&RedQueueDisc::m_isNonlinear),
                    MakeBooleanChecker ())
     .AddAttribute ("MinTh",
                    "Minimum average length threshold in packets/bytes",
@@ -168,6 +179,16 @@ TypeId RedQueueDisc::GetTypeId (void)
                    DoubleValue (0.9),
                    MakeDoubleAccessor (&RedQueueDisc::SetAredBeta),
                    MakeDoubleChecker <double> (0, 1))
+    .AddAttribute ("FengAlpha",
+                   "Decrement parameter for m_curMaxP in Feng's Adaptive RED",
+                   DoubleValue (3.0),
+                   MakeDoubleAccessor (&RedQueueDisc::SetFengAdaptiveA),
+                   MakeDoubleChecker <double> ())
+    .AddAttribute ("FengBeta",
+                   "Increment parameter for m_curMaxP in Feng's Adaptive RED",
+                   DoubleValue (2.0),
+                   MakeDoubleAccessor (&RedQueueDisc::SetFengAdaptiveB),
+                   MakeDoubleChecker <double> ())
     .AddAttribute ("LastSet",
                    "Store the last time m_curMaxP was updated",
                    TimeValue (Seconds (0.0)),
@@ -193,6 +214,16 @@ TypeId RedQueueDisc::GetTypeId (void)
                    TimeValue (MilliSeconds (20)),
                    MakeTimeAccessor (&RedQueueDisc::m_linkDelay),
                    MakeTimeChecker ())
+    .AddAttribute ("UseEcn",
+                   "True to use ECN (packets are marked instead of being dropped)",
+                   BooleanValue (false),
+                   MakeBooleanAccessor (&RedQueueDisc::m_useEcn),
+                   MakeBooleanChecker ())
+    .AddAttribute ("UseHardDrop",
+                   "True to always drop packets above max threshold",
+                   BooleanValue (true),
+                   MakeBooleanAccessor (&RedQueueDisc::m_useHardDrop),
+                   MakeBooleanChecker ())
   ;
 
   return tid;
@@ -219,13 +250,13 @@ RedQueueDisc::DoDispose (void)
 }
 
 void
-RedQueueDisc::SetMode (Queue::QueueMode mode)
+RedQueueDisc::SetMode (QueueDiscMode mode)
 {
   NS_LOG_FUNCTION (this << mode);
   m_mode = mode;
 }
 
-Queue::QueueMode
+RedQueueDisc::QueueDiscMode
 RedQueueDisc::GetMode (void)
 {
   NS_LOG_FUNCTION (this);
@@ -271,6 +302,44 @@ RedQueueDisc::GetAredBeta (void)
 }
 
 void
+RedQueueDisc::SetFengAdaptiveA (double a)
+{
+  NS_LOG_FUNCTION (this << a);
+  m_a = a;
+
+  if (m_a != 3)
+    {
+      NS_LOG_WARN ("Alpha value does not follow the recommendations!");
+    }
+}
+
+double
+RedQueueDisc::GetFengAdaptiveA (void)
+{
+  NS_LOG_FUNCTION (this);
+  return m_a;
+}
+
+void
+RedQueueDisc::SetFengAdaptiveB (double b)
+{
+  NS_LOG_FUNCTION (this << b);
+  m_b = b;
+
+  if (m_b != 2)
+    {
+      NS_LOG_WARN ("Beta value does not follow the recommendations!");
+    }
+}
+
+double
+RedQueueDisc::GetFengAdaptiveB (void)
+{
+  NS_LOG_FUNCTION (this);
+  return m_b;
+}
+
+void
 RedQueueDisc::SetQueueLimit (uint32_t lim)
 {
   NS_LOG_FUNCTION (this << lim);
@@ -284,13 +353,6 @@ RedQueueDisc::SetTh (double minTh, double maxTh)
   NS_ASSERT (minTh <= maxTh);
   m_minTh = minTh;
   m_maxTh = maxTh;
-}
-
-RedQueueDisc::Stats
-RedQueueDisc::GetStats ()
-{
-  NS_LOG_FUNCTION (this);
-  return m_stats;
 }
 
 int64_t 
@@ -308,12 +370,12 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
 
   uint32_t nQueued = 0;
 
-  if (GetMode () == Queue::QUEUE_MODE_BYTES)
+  if (GetMode () == QUEUE_DISC_MODE_BYTES)
     {
       NS_LOG_DEBUG ("Enqueue in bytes mode");
       nQueued = GetInternalQueue (0)->GetNBytes ();
     }
-  else if (GetMode () == Queue::QUEUE_MODE_PACKETS)
+  else if (GetMode () == QUEUE_DISC_MODE_PACKETS)
     {
       NS_LOG_DEBUG ("Enqueue in packets mode");
       nQueued = GetInternalQueue (0)->GetNPackets ();
@@ -346,7 +408,7 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
   NS_LOG_DEBUG ("\t packetsInQueue  " << GetInternalQueue (0)->GetNPackets () << "\tQavg " << m_qAvg);
 
   m_count++;
-  m_countBytes += item->GetPacketSize ();
+  m_countBytes += item->GetSize ();
 
   uint32_t dropType = DTYPE_NONE;
   if (m_qAvg >= m_minTh && nQueued > 1)
@@ -361,12 +423,12 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
         {
           /* 
            * The average queue size has just crossed the
-           * threshold from below to above "minthresh", or
-           * from above "minthresh" with an empty queue to
-           * above "minthresh" with a nonempty queue.
+           * threshold from below to above m_minTh, or
+           * from above m_minTh with an empty queue to
+           * above m_minTh with a nonempty queue.
            */
           m_count = 1;
-          m_countBytes = item->GetPacketSize ();
+          m_countBytes = item->GetSize ();
           m_old = 1;
         }
       else if (DropEarly (item, nQueued))
@@ -382,38 +444,36 @@ RedQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
       m_old = 0;
     }
 
-  if ((GetMode () == Queue::QUEUE_MODE_PACKETS && nQueued >= m_queueLimit) ||
-      (GetMode () == Queue::QUEUE_MODE_BYTES && nQueued + item->GetPacketSize() > m_queueLimit))
-    {
-      NS_LOG_DEBUG ("\t Dropping due to Queue Full " << nQueued);
-      dropType = DTYPE_FORCED;
-      m_stats.qLimDrop++;
-    }
-
   if (dropType == DTYPE_UNFORCED)
     {
-      NS_LOG_DEBUG ("\t Dropping due to Prob Mark " << m_qAvg);
-      m_stats.unforcedDrop++;
-      Drop (item);
-      return false;
+      if (!m_useEcn || !Mark (item, UNFORCED_MARK))
+        {
+          NS_LOG_DEBUG ("\t Dropping due to Prob Mark " << m_qAvg);
+          DropBeforeEnqueue (item, UNFORCED_DROP);
+          return false;
+        }
+      NS_LOG_DEBUG ("\t Marking due to Prob Mark " << m_qAvg);
     }
   else if (dropType == DTYPE_FORCED)
     {
-      NS_LOG_DEBUG ("\t Dropping due to Hard Mark " << m_qAvg);
-      m_stats.forcedDrop++;
-      Drop (item);
-      if (m_isNs1Compat)
+      if (m_useHardDrop || !m_useEcn || !Mark (item, FORCED_MARK))
         {
-          m_count = 0;
-          m_countBytes = 0;
+          NS_LOG_DEBUG ("\t Dropping due to Hard Mark " << m_qAvg);
+          DropBeforeEnqueue (item, FORCED_DROP);
+          if (m_isNs1Compat)
+            {
+              m_count = 0;
+              m_countBytes = 0;
+            }
+          return false;
         }
-      return false;
+      NS_LOG_DEBUG ("\t Marking due to Hard Mark " << m_qAvg);
     }
 
   bool retval = GetInternalQueue (0)->Enqueue (item);
 
-  // If Queue::Enqueue fails, QueueDisc::Drop is called by the internal queue
-  // because QueueDisc::AddInternalQueue sets the drop callback
+  // If Queue::Enqueue fails, QueueDisc::DropBeforeEnqueue is called by the
+  // internal queue because QueueDisc::AddInternalQueue sets the trace callback
 
   NS_LOG_LOGIC ("Number packets " << GetInternalQueue (0)->GetNPackets ());
   NS_LOG_LOGIC ("Number bytes " << GetInternalQueue (0)->GetNBytes ());
@@ -447,6 +507,12 @@ RedQueueDisc::InitializeParams (void)
       m_isAdaptMaxP = true;
     }
 
+  if (m_isFengAdaptive)
+    {
+      // Initialize m_fengStatus
+      m_fengStatus = Above;
+    }
+
   if (m_minTh == 0 && m_maxTh == 0)
     {
       m_minTh = 5.0;
@@ -458,7 +524,7 @@ RedQueueDisc::InitializeParams (void)
         {
           m_minTh = targetqueue / 2.0;
         }
-      if (GetMode () == Queue::QUEUE_MODE_BYTES)
+      if (GetMode () == QUEUE_DISC_MODE_BYTES)
         {
           m_minTh = m_minTh * m_meanPktSize;
         }
@@ -468,9 +534,6 @@ RedQueueDisc::InitializeParams (void)
     }
 
   NS_ASSERT (m_minTh <= m_maxTh);
-  m_stats.forcedDrop = 0;
-  m_stats.unforcedDrop = 0;
-  m_stats.qLimDrop = 0;
 
   m_qAvg = 0.0;
   m_count = 0;
@@ -548,10 +611,37 @@ RedQueueDisc::InitializeParams (void)
                              << m_vC << "; m_vD " <<  m_vD);
 }
 
+// Updating m_curMaxP, following the pseudocode
+// from: A Self-Configuring RED Gateway, INFOCOMM '99.
+// They recommend m_a = 3, and m_b = 2.
+void
+RedQueueDisc::UpdateMaxPFeng (double newAve)
+{
+  NS_LOG_FUNCTION (this << newAve);
+
+  if (m_minTh < newAve && newAve < m_maxTh)
+    {
+      m_fengStatus = Between;
+    }
+  else if (newAve < m_minTh && m_fengStatus != Below)
+    {
+      m_fengStatus = Below;
+      m_curMaxP = m_curMaxP / m_a;
+    }
+  else if (newAve > m_maxTh && m_fengStatus != Above)
+    {
+      m_fengStatus = Above;
+      m_curMaxP = m_curMaxP * m_b;
+    }
+}
+
 // Update m_curMaxP to keep the average queue length within the target range.
 void
-RedQueueDisc::UpdateMaxP (double newAve, Time now)
+RedQueueDisc::UpdateMaxP (double newAve)
 {
+  NS_LOG_FUNCTION (this << newAve);
+
+  Time now = Simulator::Now ();
   double m_part = 0.4 * (m_maxTh - m_minTh);
   // AIMD rule to keep target Q~1/2(m_minTh + m_maxTh)
   if (newAve < m_minTh + m_part && m_curMaxP > m_bottom)
@@ -582,10 +672,14 @@ RedQueueDisc::Estimator (uint32_t nQueued, uint32_t m, double qAvg, double qW)
   double newAve = qAvg * pow(1.0-qW, m);
   newAve += qW * nQueued;
 
-  Time now = Simulator::Now();
+  Time now = Simulator::Now ();
   if (m_isAdaptMaxP && now > m_lastSet + m_interval)
     {
-      UpdateMaxP(newAve, now);
+      UpdateMaxP (newAve);
+    }
+  else if (m_isFengAdaptive)
+    {
+      UpdateMaxPFeng (newAve);  // Update m_curMaxP in MIMD fashion.
     }
 
   return newAve;
@@ -596,8 +690,9 @@ uint32_t
 RedQueueDisc::DropEarly (Ptr<QueueDiscItem> item, uint32_t qSize)
 {
   NS_LOG_FUNCTION (this << item << qSize);
-  m_vProb1 = CalculatePNew (m_qAvg, m_maxTh, m_isGentle, m_vA, m_vB, m_vC, m_vD, m_curMaxP);
-  m_vProb = ModifyP (m_vProb1, m_count, m_countBytes, m_meanPktSize, m_isWait, item->GetPacketSize ());
+
+  double prob1 = CalculatePNew ();
+  m_vProb = ModifyP (prob1, item->GetSize ());
 
   // Drop probability is computed, pick random number and act
   if (m_cautious == 1)
@@ -654,23 +749,22 @@ RedQueueDisc::DropEarly (Ptr<QueueDiscItem> item, uint32_t qSize)
 
 // Returns a probability using these function parameters for the DropEarly funtion
 double
-RedQueueDisc::CalculatePNew (double qAvg, double maxTh, bool isGentle, double vA,
-                         double vB, double vC, double vD, double maxP)
+RedQueueDisc::CalculatePNew (void)
 {
-  NS_LOG_FUNCTION (this << qAvg << maxTh << isGentle << vA << vB << vC << vD << maxP);
+  NS_LOG_FUNCTION (this);
   double p;
 
-  if (isGentle && qAvg >= maxTh)
+  if (m_isGentle && m_qAvg >= m_maxTh)
     {
-      // p ranges from maxP to 1 as the average queue
-      // Size ranges from maxTh to twice maxTh
-      p = vC * qAvg + vD;
+      // p ranges from m_curMaxP to 1 as the average queue
+      // size ranges from m_maxTh to twice m_maxTh
+      p = m_vC * m_qAvg + m_vD;
     }
-  else if (!isGentle && qAvg >= maxTh)
+  else if (!m_isGentle && m_qAvg >= m_maxTh)
     {
       /* 
-       * OLD: p continues to range linearly above max_p as
-       * the average queue size ranges above th_max.
+       * OLD: p continues to range linearly above m_curMaxP as
+       * the average queue size ranges above m_maxTh.
        * NEW: p is set to 1.0
        */
       p = 1.0;
@@ -678,11 +772,17 @@ RedQueueDisc::CalculatePNew (double qAvg, double maxTh, bool isGentle, double vA
   else
     {
       /*
-       * p ranges from 0 to max_p as the average queue size ranges from
-       * th_min to th_max
+       * p ranges from 0 to m_curMaxP as the average queue size ranges from
+       * m_minTh to m_maxTh
        */
-      p = vA * qAvg + vB;
-      p *= maxP;
+      p = m_vA * m_qAvg + m_vB;
+
+      if (m_isNonlinear)
+        {
+          p *= p * 1.5;
+        }
+
+      p *= m_curMaxP;
     }
 
   if (p > 1.0)
@@ -695,18 +795,17 @@ RedQueueDisc::CalculatePNew (double qAvg, double maxTh, bool isGentle, double vA
 
 // Returns a probability using these function parameters for the DropEarly funtion
 double 
-RedQueueDisc::ModifyP (double p, uint32_t count, uint32_t countBytes,
-                   uint32_t meanPktSize, bool isWait, uint32_t size)
+RedQueueDisc::ModifyP (double p, uint32_t size)
 {
-  NS_LOG_FUNCTION (this << p << count << countBytes << meanPktSize << isWait << size);
-  double count1 = (double) count;
+  NS_LOG_FUNCTION (this << p << size);
+  double count1 = (double) m_count;
 
-  if (GetMode () == Queue::QUEUE_MODE_BYTES)
+  if (GetMode () == QUEUE_DISC_MODE_BYTES)
     {
-      count1 = (double) (countBytes / meanPktSize);
+      count1 = (double) (m_countBytes / m_meanPktSize);
     }
 
-  if (isWait)
+  if (m_isWait)
     {
       if (count1 * p < 1.0)
         {
@@ -733,9 +832,9 @@ RedQueueDisc::ModifyP (double p, uint32_t count, uint32_t countBytes,
         }
     }
 
-  if ((GetMode () == Queue::QUEUE_MODE_BYTES) && (p < 1.0))
+  if ((GetMode () == QUEUE_DISC_MODE_BYTES) && (p < 1.0))
     {
-      p = (p * size) / meanPktSize;
+      p = (p * size) / m_meanPktSize;
     }
 
   if (p > 1.0)
@@ -750,11 +849,11 @@ uint32_t
 RedQueueDisc::GetQueueSize (void)
 {
   NS_LOG_FUNCTION (this);
-  if (GetMode () == Queue::QUEUE_MODE_BYTES)
+  if (GetMode () == QUEUE_DISC_MODE_BYTES)
     {
       return GetInternalQueue (0)->GetNBytes ();
     }
-  else if (GetMode () == Queue::QUEUE_MODE_PACKETS)
+  else if (GetMode () == QUEUE_DISC_MODE_PACKETS)
     {
       return GetInternalQueue (0)->GetNPackets ();
     }
@@ -780,7 +879,7 @@ RedQueueDisc::DoDequeue (void)
   else
     {
       m_idle = 0;
-      Ptr<QueueDiscItem> item = StaticCast<QueueDiscItem> (GetInternalQueue (0)->Dequeue ());
+      Ptr<QueueDiscItem> item = GetInternalQueue (0)->Dequeue ();
 
       NS_LOG_LOGIC ("Popped " << item);
 
@@ -801,7 +900,7 @@ RedQueueDisc::DoPeek (void) const
       return 0;
     }
 
-  Ptr<const QueueDiscItem> item = StaticCast<const QueueDiscItem> (GetInternalQueue (0)->Peek ());
+  Ptr<const QueueDiscItem> item = GetInternalQueue (0)->Peek ();
 
   NS_LOG_LOGIC ("Number packets " << GetInternalQueue (0)->GetNPackets ());
   NS_LOG_LOGIC ("Number bytes " << GetInternalQueue (0)->GetNBytes ());
@@ -828,8 +927,8 @@ RedQueueDisc::CheckConfig (void)
   if (GetNInternalQueues () == 0)
     {
       // create a DropTail queue
-      Ptr<Queue> queue = CreateObjectWithAttributes<DropTailQueue> ("Mode", EnumValue (m_mode));
-      if (m_mode == Queue::QUEUE_MODE_PACKETS)
+      Ptr<InternalQueue> queue = CreateObjectWithAttributes<DropTailQueue<QueueDiscItem> > ("Mode", EnumValue (m_mode));
+      if (m_mode == QUEUE_DISC_MODE_PACKETS)
         {
           queue->SetMaxPackets (m_queueLimit);
         }
@@ -846,17 +945,23 @@ RedQueueDisc::CheckConfig (void)
       return false;
     }
 
-  if (GetInternalQueue (0)->GetMode () != m_mode)
+  if ((GetInternalQueue (0)->GetMode () == QueueBase::QUEUE_MODE_PACKETS && m_mode == QUEUE_DISC_MODE_BYTES) ||
+      (GetInternalQueue (0)->GetMode () == QueueBase::QUEUE_MODE_BYTES && m_mode == QUEUE_DISC_MODE_PACKETS))
     {
       NS_LOG_ERROR ("The mode of the provided queue does not match the mode set on the RedQueueDisc");
       return false;
     }
 
-  if ((m_mode ==  Queue::QUEUE_MODE_PACKETS && GetInternalQueue (0)->GetMaxPackets () < m_queueLimit) ||
-      (m_mode ==  Queue::QUEUE_MODE_BYTES && GetInternalQueue (0)->GetMaxBytes () < m_queueLimit))
+  if ((m_mode ==  QUEUE_DISC_MODE_PACKETS && GetInternalQueue (0)->GetMaxPackets () != m_queueLimit) ||
+      (m_mode ==  QUEUE_DISC_MODE_BYTES && GetInternalQueue (0)->GetMaxBytes () != m_queueLimit))
     {
-      NS_LOG_ERROR ("The size of the internal queue is less than the queue disc limit");
+      NS_LOG_ERROR ("The size of the internal queue differs from the queue disc limit");
       return false;
+    }
+
+  if ((m_isARED || m_isAdaptMaxP) && m_isFengAdaptive)
+    {
+      NS_LOG_ERROR ("m_isAdaptMaxP and m_isFengAdaptive cannot be simultaneously true");
     }
 
   return true;

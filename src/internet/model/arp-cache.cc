@@ -318,10 +318,10 @@ ArpCache::Entry *
 ArpCache::Lookup (Ipv4Address to)
 {
   NS_LOG_FUNCTION (this << to);
-  if (m_arpCache.find (to) != m_arpCache.end ()) 
+  CacheI it = m_arpCache.find (to);
+  if (it != m_arpCache.end ())
     {
-      ArpCache::Entry *entry = m_arpCache[to];
-      return entry;
+      return it->second;
     }
   return 0;
 }
@@ -369,25 +369,25 @@ bool
 ArpCache::Entry::IsDead (void)
 {
   NS_LOG_FUNCTION (this);
-  return m_state == DEAD;
+  return (m_state == DEAD) ? true : false;
 }
 bool 
 ArpCache::Entry::IsAlive (void)
 {
   NS_LOG_FUNCTION (this);
-  return m_state == ALIVE;
+  return (m_state == ALIVE) ? true : false;
 }
 bool
 ArpCache::Entry::IsWaitReply (void)
 {
   NS_LOG_FUNCTION (this);
-  return m_state == WAIT_REPLY;
+  return (m_state == WAIT_REPLY) ? true : false;
 }
 bool
 ArpCache::Entry::IsPermanent (void)
 {
   NS_LOG_FUNCTION (this);
-  return m_state == PERMANENT;
+  return (m_state == PERMANENT) ? true : false;
 }
 
 
@@ -458,6 +458,12 @@ ArpCache::Entry::GetMacAddress (void) const
 }
 void 
 ArpCache::Entry::SetMacAddresss (Address macAddress)
+{
+  NS_LOG_FUNCTION (this);
+  m_macAddress = macAddress;
+}
+void 
+ArpCache::Entry::SetMacAddress (Address macAddress)
 {
   NS_LOG_FUNCTION (this);
   m_macAddress = macAddress;

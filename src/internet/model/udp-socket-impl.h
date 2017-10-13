@@ -20,7 +20,7 @@
 #ifndef UDP_SOCKET_IMPL_H
 #define UDP_SOCKET_IMPL_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <queue>
 #include "ns3/callback.h"
 #include "ns3/traced-callback.h"
@@ -132,6 +132,10 @@ private:
   virtual bool GetMtuDiscover (void) const;
 
 
+  /**
+   * \brief UdpSocketFactory friend class.
+   * \relates UdpSocketFactory
+   */
   friend class UdpSocketFactory;
   // invoked by Udp class
 

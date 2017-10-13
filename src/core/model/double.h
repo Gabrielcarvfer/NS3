@@ -22,13 +22,13 @@
 
 #include "attribute.h"
 #include "attribute-helper.h"
-#include <cstdint>
+#include <stdint.h>
 #include <limits>
 
 /**
  * \file
  * \ingroup attribute_Double
- * Double attribute value declarations and template implementations.
+ * ns3::DoubleValue attribute value declarations and template implementations.
  */
 
 namespace ns3 {

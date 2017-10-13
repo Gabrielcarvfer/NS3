@@ -22,13 +22,13 @@
 #define CALENDAR_SCHEDULER_H
 
 #include "scheduler.h"
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 
 /**
  * \file
  * \ingroup scheduler
- * Declaration of ns3::CalendarScheduler class.
+ * ns3::CalendarScheduler class declaration.
  */
 
 namespace ns3 {

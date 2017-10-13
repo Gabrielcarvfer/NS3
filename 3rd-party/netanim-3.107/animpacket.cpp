@@ -122,6 +122,9 @@ AnimPacket::getMeta (QString metaInfo, int filter, bool & result, bool shortStri
   IcmpInfo icmpInfo = parseIcmp (metaInfoString, icmpResult);
   bool ipv4Result = false;
   Ipv4Info ipv4Info = parseIpv4 (metaInfoString, ipv4Result);
+  bool ipv6Result = false;
+  Ipv6Info ipv6Info = parseIpv6 (metaInfoString, ipv6Result);
+
   bool wifiResult = false;
   WifiMacInfo wifiMacInfo = parseWifi (metaInfoString, wifiResult);
   bool pppResult = false;
@@ -141,6 +144,7 @@ AnimPacket::getMeta (QString metaInfo, int filter, bool & result, bool shortStri
                          udpInfo.toShortString () +
                          icmpInfo.toShortString () +
                          ipv4Info.toShortString () +
+                         ipv6Info.toShortString () +
                          arpInfo.toShortString () +
                          wifiMacInfo.toShortString () +
                          pppInfo.toShortString () +
@@ -155,6 +159,7 @@ AnimPacket::getMeta (QString metaInfo, int filter, bool & result, bool shortStri
                          udpInfo.toString () +
                          icmpInfo.toString () +
                          ipv4Info.toString () +
+                         ipv6Info.toString () +
                          arpInfo.toString () +
                          wifiMacInfo.toString () +
                          pppInfo.toString () +
@@ -185,6 +190,9 @@ AnimPacket::getMeta (QString metaInfo, int filter, bool & result, bool shortStri
       if (filter & AnimPacket::IPV4)
         if (ipv4Result)
           finalString += (shortString)?ipv4Info.toShortString ():ipv4Info.toString ();
+      if (filter & AnimPacket::IPV6)
+        if (ipv6Result)
+          finalString += (shortString)?ipv6Info.toShortString ():ipv6Info.toString ();
       if (filter & AnimPacket::ARP)
         if (arpResult)
           finalString += (shortString)?arpInfo.toShortString ():arpInfo.toString ();
@@ -475,6 +483,21 @@ AnimPacket::parseUdp (QString metaInfo, bool & result)
   udpInfo.DPort = GET_DATA (rx.cap (3));
   result = true;
   return udpInfo;
+}
+
+Ipv6Info
+AnimPacket::parseIpv6 (QString metaInfo, bool & result)
+{
+  Ipv6Info ipv6Info;
+  QRegExp rx ("ns3::Ipv6Header");
+  int pos = 0;
+  if ((pos = rx.indexIn (metaInfo)) == -1)
+    {
+      result = false;
+      return ipv6Info;
+    }
+  result = true;
+  return ipv6Info;
 }
 
 Ipv4Info

@@ -2,6 +2,7 @@
 set(name tap-bridge)
 
 set(source_files
+        model/tap-creator.cc
         model/tap-bridge.cc
         model/tap-encode-decode.cc
         helper/tap-bridge-helper.cc

@@ -31,6 +31,7 @@ namespace ns3 {
  */
 class BlockAckAgreement
 {
+  /// Provide access to MacLow class
   friend class MacLow;
 
 
@@ -169,7 +170,7 @@ protected:
   uint16_t m_startingSeq;    //!< Starting squence control
   uint16_t m_winEnd;         //!< Ending sequence number
   uint8_t m_htSupported;     //!< Flag whether HT is supported
-  EventId m_inactivityEvent;
+  EventId m_inactivityEvent; //!< inactivity event
 };
 
 } //namespace ns3
