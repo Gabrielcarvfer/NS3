@@ -21,7 +21,10 @@
 
 #include "ns3/log.h"
 #include "ns3/string.h"
+#include "ns3/queue.h"
 #include "fq-codel-queue-disc.h"
+#include "codel-queue-disc.h"
+#include "ns3/net-device-queue-interface.h"
 
 namespace ns3 {
 
@@ -125,8 +128,7 @@ TypeId FqCoDelQueueDisc::GetTypeId (void)
 }
 
 FqCoDelQueueDisc::FqCoDelQueueDisc ()
-  : m_quantum (0),
-    m_overlimitDroppedPackets (0)
+  : m_quantum (0)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -159,7 +161,7 @@ FqCoDelQueueDisc::DoEnqueue (Ptr<QueueDiscItem> item)
   if (ret == PacketFilter::PF_NO_MATCH)
     {
       NS_LOG_ERROR ("No filter has been able to classify this packet, drop it.");
-      Drop (item);
+      DropBeforeEnqueue (item, UNCLASSIFIED_DROP);
       return false;
     }
 
@@ -277,7 +279,7 @@ FqCoDelQueueDisc::DoDequeue (void)
         }
     } while (item == 0);
 
-  flow->IncreaseDeficit (-item->GetPacketSize ());
+  flow->IncreaseDeficit (-item->GetSize ());
 
   return item;
 }
@@ -351,7 +353,7 @@ FqCoDelQueueDisc::InitializeParams (void)
   m_flowFactory.SetTypeId ("ns3::FqCoDelFlow");
 
   m_queueDiscFactory.SetTypeId ("ns3::CoDelQueueDisc");
-  m_queueDiscFactory.Set ("Mode", EnumValue (Queue::QUEUE_MODE_PACKETS));
+  m_queueDiscFactory.Set ("Mode", EnumValue (CoDelQueueDisc::QUEUE_DISC_MODE_PACKETS));
   m_queueDiscFactory.Set ("MaxPackets", UintegerValue (m_limit + 1));
   m_queueDiscFactory.Set ("Interval", StringValue (m_interval));
   m_queueDiscFactory.Set ("Target", StringValue (m_target));
@@ -380,15 +382,14 @@ FqCoDelQueueDisc::FqCoDelDrop (void)
   /* Our goal is to drop half of this fat flow backlog */
   uint32_t len = 0, count = 0, threshold = maxBacklog >> 1;
   qd = GetQueueDiscClass (index)->GetQueueDisc ();
-  Ptr<QueueItem> item;
+  Ptr<QueueDiscItem> item;
 
   do
     {
-      item = qd->GetInternalQueue (0)->Remove ();
-      len += item->GetPacketSize ();
+      item = qd->GetInternalQueue (0)->Dequeue ();
+      DropAfterDequeue (item, OVERLIMIT_DROP);
+      len += item->GetSize ();
     } while (++count < m_dropBatchSize && len < threshold);
-
-  m_overlimitDroppedPackets += count;
 
   return index;
 }

@@ -26,8 +26,8 @@
  *   |      |
  *   n1     n2
  *
- * In this example, an HT station sends TCP packets to the access point. 
- * We report the total throughput received during a window of 100ms. 
+ * In this example, an HT station sends TCP packets to the access point.
+ * We report the total throughput received during a window of 100ms.
  * The user can specify the application data rate and choose the variant
  * of TCP i.e. congestion control algorithm to use.
  */
@@ -36,8 +36,6 @@
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/network-module.h"
-#include "ns3/point-to-point-module.h"
 #include "ns3/wifi-module.h"
 
 NS_LOG_COMPONENT_DEFINE ("wifi-tcp");
@@ -51,18 +49,18 @@ void
 CalculateThroughput ()
 {
   Time now = Simulator::Now ();                                         /* Return the simulator's virtual time. */
-  double cur = (sink->GetTotalRx() - lastTotalRx) * (double) 8/1e5;     /* Convert Application RX Packets to MBits. */
+  double cur = (sink->GetTotalRx () - lastTotalRx) * (double) 8 / 1e5;     /* Convert Application RX Packets to MBits. */
   std::cout << now.GetSeconds () << "s: \t" << cur << " Mbit/s" << std::endl;
   lastTotalRx = sink->GetTotalRx ();
   Simulator::Schedule (MilliSeconds (100), &CalculateThroughput);
 }
 
 int
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
   uint32_t payloadSize = 1472;                       /* Transport layer payload size in bytes. */
   std::string dataRate = "100Mbps";                  /* Application layer datarate. */
-  std::string tcpVariant = "ns3::TcpNewReno";        /* TCP variant type. */
+  std::string tcpVariant = "TcpNewReno";             /* TCP variant type. */
   std::string phyRate = "HtMcs7";                    /* Physical layer bitrate. */
   double simulationTime = 10;                        /* Simulation time in seconds. */
   bool pcapTracing = false;                          /* PCAP Tracing is enabled or not. */
@@ -71,15 +69,34 @@ main(int argc, char *argv[])
   CommandLine cmd;
   cmd.AddValue ("payloadSize", "Payload size in bytes", payloadSize);
   cmd.AddValue ("dataRate", "Application data ate", dataRate);
-  cmd.AddValue ("tcpVariant", "Transport protocol to use: TcpTahoe, TcpReno, TcpNewReno, TcpWestwood, TcpWestwoodPlus ", tcpVariant);
+  cmd.AddValue ("tcpVariant", "Transport protocol to use: TcpNewReno, "
+                "TcpHybla, TcpHighSpeed, TcpHtcp, TcpVegas, TcpScalable, TcpVeno, "
+                "TcpBic, TcpYeah, TcpIllinois, TcpWestwood, TcpWestwoodPlus, TcpLedbat ", tcpVariant);
   cmd.AddValue ("phyRate", "Physical layer bitrate", phyRate);
   cmd.AddValue ("simulationTime", "Simulation time in seconds", simulationTime);
   cmd.AddValue ("pcap", "Enable/disable PCAP Tracing", pcapTracing);
   cmd.Parse (argc, argv);
 
+  tcpVariant = std::string ("ns3::") + tcpVariant;
+
   /* No fragmentation and no RTS/CTS */
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("999999"));
   Config::SetDefault ("ns3::WifiRemoteStationManager::RtsCtsThreshold", StringValue ("999999"));
+
+  // Select TCP variant
+  if (tcpVariant.compare ("ns3::TcpWestwoodPlus") == 0)
+    { 
+      // TcpWestwoodPlus is not an actual TypeId name; we need TcpWestwood here
+      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpWestwood::GetTypeId ()));
+      // the default protocol type in ns3::TcpWestwood is WESTWOOD
+      Config::SetDefault ("ns3::TcpWestwood::ProtocolType", EnumValue (TcpWestwood::WESTWOODPLUS));
+    }
+  else
+    {
+      TypeId tcpTid;
+      NS_ABORT_MSG_UNLESS (TypeId::LookupByNameFailSafe (tcpVariant, &tcpTid), "TypeId " << tcpVariant << " not found");
+      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TypeId::LookupByName (tcpVariant)));
+    }
 
   /* Configure TCP Options */
   Config::SetDefault ("ns3::TcpSocket::SegmentSize", UintegerValue (payloadSize));
@@ -89,7 +106,7 @@ main(int argc, char *argv[])
   wifiHelper.SetStandard (WIFI_PHY_STANDARD_80211n_5GHZ);
 
   /* Set up Legacy Channel */
-  YansWifiChannelHelper wifiChannel ;
+  YansWifiChannelHelper wifiChannel;
   wifiChannel.SetPropagationDelay ("ns3::ConstantSpeedPropagationDelayModel");
   wifiChannel.AddPropagationLoss ("ns3::FriisPropagationLossModel", "Frequency", DoubleValue (5e9));
 
@@ -117,14 +134,14 @@ main(int argc, char *argv[])
   /* Configure AP */
   Ssid ssid = Ssid ("network");
   wifiMac.SetType ("ns3::ApWifiMac",
-                    "Ssid", SsidValue (ssid));
+                   "Ssid", SsidValue (ssid));
 
   NetDeviceContainer apDevice;
   apDevice = wifiHelper.Install (wifiPhy, wifiMac, apWifiNode);
 
   /* Configure STA */
   wifiMac.SetType ("ns3::StaWifiMac",
-                    "Ssid", SsidValue (ssid));
+                   "Ssid", SsidValue (ssid));
 
   NetDeviceContainer staDevices;
   staDevices = wifiHelper.Install (wifiPhy, wifiMac, staWifiNode);
@@ -185,12 +202,12 @@ main(int argc, char *argv[])
   Simulator::Run ();
   Simulator::Destroy ();
 
-  double averageThroughput = ((sink->GetTotalRx() * 8) / (1e6  * simulationTime));
+  double averageThroughput = ((sink->GetTotalRx () * 8) / (1e6  * simulationTime));
   if (averageThroughput < 50)
     {
       NS_LOG_ERROR ("Obtained throughput is not in the expected boundaries!");
       exit (1);
     }
-  std::cout << "\nAverage throughtput: " << averageThroughput << " Mbit/s" << std::endl;
+  std::cout << "\nAverage throughput: " << averageThroughput << " Mbit/s" << std::endl;
   return 0;
 }

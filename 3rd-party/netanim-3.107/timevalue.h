@@ -25,7 +25,7 @@
 #include <sstream>
 #include <stdint.h>
 #include <stdio.h>
-#include "ns3/core-module.h"
+#include "ns3/log.h"
 #include <QtGlobal>
 
 

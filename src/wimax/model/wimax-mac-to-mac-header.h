@@ -21,7 +21,7 @@
 #ifndef WIMAX_MAC_TO_MAC_HEADER_H
 #define WIMAX_MAC_TO_MAC_HEADER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/header.h"
 
 namespace ns3 {
@@ -37,17 +37,30 @@ class WimaxMacToMacHeader : public Header
 public:
   WimaxMacToMacHeader ();
   ~WimaxMacToMacHeader ();
+  /**
+   * Constructor
+   *
+   * \param len length
+   */
   WimaxMacToMacHeader (uint32_t len);
 
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
   virtual TypeId GetInstanceTypeId (void) const;
   uint32_t GetSerializedSize (void) const;
   void Serialize (Buffer::Iterator start) const;
   uint32_t Deserialize (Buffer::Iterator start);
+  /**
+   * Get size of length field
+   * \returns the size of length field
+   */
   uint8_t GetSizeOfLen (void) const;
   virtual void Print (std::ostream &os) const;
 private:
-  uint32_t m_len;
+  uint32_t m_len; ///< length
 };
 };
 #endif

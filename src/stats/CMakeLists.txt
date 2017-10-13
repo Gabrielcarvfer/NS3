@@ -10,7 +10,7 @@ if (${SQLITE_ENABLED})
             model/sqlite-data-output.h
             )
 else()
-    set(SQLITE_ENABLED )
+    set(SQLITE_SOURCEs )
 endif()
 
 set(source_files
@@ -39,6 +39,7 @@ set(source_files
 
 set(header_files
         ${SQLITE_HEADERS}
+        model/stats.h
         helper/file-helper.h
         helper/gnuplot-helper.h
         model/data-calculator.h

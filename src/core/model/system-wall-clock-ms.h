@@ -21,12 +21,12 @@
 #ifndef SYSTEM_WALL_CLOCK_MS_H
 #define SYSTEM_WALL_CLOCK_MS_H
 
-#include <cstdint>
+#include <stdint.h>
 
 /**
  * \file
  * \ingroup system
- * System-independent wall clock class ns3::SystemWallClockMs declaration.
+ * ns3::SystemWallClockMs declaration.
  */
 
 namespace ns3 {

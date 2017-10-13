@@ -69,6 +69,7 @@ private:
   QCheckBox * m_aodvFilterCb;
   QCheckBox * m_olsrFilterCb;
   QCheckBox * m_ipv4FilterCb;
+  QCheckBox * m_ipv6FilterCb;
   QCheckBox * m_icmpFilterCb;
   QLineEdit * m_regexFilterEdit;
   QLabel * m_regexFilterLabel;

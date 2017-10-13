@@ -1,6 +1,5 @@
 set(source_files
         main.cpp
-        fatal-error.cpp
         logqt.cpp
         resizeableitem.cpp
         animnode.cpp
@@ -77,7 +76,10 @@ set(header_files
         flowmonstatsscene.h
         textbubble.h
         qtpropertybrowser/src/QtVariantPropertyManager
+        qtpropertybrowser/src/QtVariantProperty
         qtpropertybrowser/src/qtvariantproperty.h
+        qtpropertybrowser/src/QtVariantEditorFactory
+        qtpropertybrowser/src/QtTreePropertyBrowser
         qtpropertybrowser/src/qttreepropertybrowser.h
         qtpropertybrowser/src/QtTimePropertyManager
         qtpropertybrowser/src/QtTimeEditFactory
@@ -102,6 +104,7 @@ set(header_files
         qtpropertybrowser/src/QtKeySequenceEditorFactory
         qtpropertybrowser/src/QtIntPropertyManager
         qtpropertybrowser/src/QtGroupPropertyManager
+        qtpropertybrowser/src/QtGroupBoxPropertyBrowser
         qtpropertybrowser/src/qtgroupboxpropertybrowser.h
         qtpropertybrowser/src/QtFontPropertyManager
         qtpropertybrowser/src/QtFontEditorFactory
@@ -122,6 +125,7 @@ set(header_files
         qtpropertybrowser/src/QtCheckBoxFactory
         qtpropertybrowser/src/QtCharPropertyManager
         qtpropertybrowser/src/QtCharEditorFactory
+        qtpropertybrowser/src/QtButtonPropertyBrowser
         qtpropertybrowser/src/qtbuttonpropertybrowser.h
         qtpropertybrowser/src/QtBrowserItem
         qtpropertybrowser/src/QtBoolPropertyManager

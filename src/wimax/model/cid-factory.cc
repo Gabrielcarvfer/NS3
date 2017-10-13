@@ -21,7 +21,7 @@
  */
 
 
-#include <cstdint>
+#include <stdint.h>
 #include "cid-factory.h"
 #include "ns3/uinteger.h"
 

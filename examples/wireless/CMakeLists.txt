@@ -104,21 +104,21 @@ build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_lin
 set(name ht-wifi-network)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link ${libcore} ${internet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
+set(libraries_to_link ${libcore} ${libinternet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 
 set(name vht-wifi-network)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link ${libcore} ${internet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
+set(libraries_to_link ${libcore} ${libinternet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 
 set(name wifi-timing-attributes)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link ${libcore} ${internet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
+set(libraries_to_link ${libcore} ${libinternet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 
@@ -167,7 +167,7 @@ build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_lin
 set(name 80211n-mimo)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link ${libcore} ${internet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
+set(libraries_to_link ${libcore} ${libinternet} ${libmobility} ${libwifi} ${libapplications} ${libpropagation})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 

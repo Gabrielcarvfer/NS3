@@ -21,7 +21,7 @@
 #ifndef METRIC_REPORT_H
 #define METRIC_REPORT_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/buffer.h"
 #include "ns3/mesh-information-element-vector.h"
 
@@ -35,8 +35,21 @@ class IeLinkMetricReport : public WifiInformationElement
 {
 public:
   IeLinkMetricReport ();
+  /**
+   * Constructor
+   *
+   * \param metric the metric
+   */
   IeLinkMetricReport (uint32_t metric);
+  /**
+   * Set metric value
+   * \param metric the metric
+   */
   void SetMetric (uint32_t metric);
+  /**
+   * Get metric value
+   * \returns the metric
+   */
   uint32_t GetMetric ();
 
   // Inherited from WifiInformationElement
@@ -47,9 +60,30 @@ public:
   virtual uint8_t GetInformationFieldSize () const;
 
 private:
-  uint32_t m_metric;
+  uint32_t m_metric; ///< metric
+  /**
+   * equality operator
+   *
+   * \param a lhs
+   * \param b lhs
+   * \returns true if equal
+   */
   friend bool operator== (const IeLinkMetricReport & a, const IeLinkMetricReport & b);
+  /**
+   * greater than operator
+   *
+   * \param a lhs
+   * \param b lhs
+   * \returns true if equal
+   */
   friend bool operator>  (const IeLinkMetricReport & a, const IeLinkMetricReport & b);
+  /**
+   * less than operator
+   *
+   * \param a lhs
+   * \param b lhs
+   * \returns true if equal
+   */
   friend bool operator<  (const IeLinkMetricReport & a, const IeLinkMetricReport & b);
 };
 

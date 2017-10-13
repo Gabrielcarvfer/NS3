@@ -25,7 +25,7 @@
 
 #include <string>
 #include <fstream>
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

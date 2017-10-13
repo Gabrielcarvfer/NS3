@@ -31,7 +31,9 @@
 /**
  * \file
  * \ingroup fatalimpl
- * \brief Implementation of RegisterStream(), UnregisterStream(), and FlushStreams(); see Implementation note!
+ * \brief ns3::FatalImpl::RegisterStream(), ns3::FatalImpl::UnregisterStream(),
+ * and ns3::FatalImpl::FlushStreams() implementations;
+ * see Implementation note!
  *
  * \note Implementation.
  *
@@ -56,47 +58,10 @@ namespace FatalImpl {
 
 /**
  * \ingroup fatalimpl
- * Anonymous namespace for fatal streams memory implementation
+ * Unnamed namespace for fatal streams memory implementation
  * and signal handler.
  */
 namespace {
-
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-//TODO: build a workaround for Windows
-    int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact)
-            {
-              return 0;
-            }
-    typedef unsigned sigset_t;
-    typedef unsigned uid_t;
-
-    union sigval {          /* Data passed with notification */
-        int     sival_int;         /* Integer value */
-        void   *sival_ptr;         /* Pointer value */
-    };
-
-    typedef struct {
-        int si_signo;
-        int si_code;
-        union sigval si_value;
-        int si_errno;
-        pid_t si_pid;
-        uid_t si_uid;
-        void *si_addr;
-        int si_status;
-        int si_band;
-    } siginfo_t;
-
-
-    struct sigaction
-    {
-        void     (*sa_handler)(int);
-        void     (*sa_sigaction)(int, siginfo_t *, void *);
-        sigset_t   sa_mask;
-        int        sa_flags;
-        void     (*sa_restorer)(void);
-    };
-#endif
 
 /**
  * \ingroup fatalimpl
@@ -129,7 +94,7 @@ std::list<std::ostream*> *GetStreamList (void)
   return *pstreams;
 }
 
-}  // anonymous namespace
+}  // unnamed namespace
 
 void
 RegisterStream (std::ostream* stream)
@@ -157,7 +122,7 @@ UnregisterStream (std::ostream* stream)
 
 /**
  * \ingroup fatalimpl
- * Anonymous namespace for fatal streams signal hander.
+ * Unnamed namespace for fatal streams signal hander.
  *
  * This is private to the fatal implementation.
  */
@@ -178,7 +143,7 @@ void sigHandler (int sig)
   FlushStreams ();
   std::abort ();
 }
-}  // anonymous namespace
+}  // unnamed namespace
 
 void 
 FlushStreams (void)
@@ -195,7 +160,6 @@ FlushStreams (void)
    * streams even if one of the stream pointers is bad.
    * The SIGSEGV override should only be active for the
    * duration of this function. */
-
   struct sigaction hdl;
   hdl.sa_handler=sigHandler;
   sigaction (SIGSEGV, &hdl, 0);

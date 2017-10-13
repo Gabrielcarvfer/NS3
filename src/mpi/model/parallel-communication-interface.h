@@ -22,7 +22,7 @@
 #ifndef NS3_PARALLEL_COMMUNICATION_INTERFACE_H
 #define NS3_PARALLEL_COMMUNICATION_INTERFACE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 
 #include <ns3/object.h>

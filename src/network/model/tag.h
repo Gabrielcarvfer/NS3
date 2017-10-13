@@ -22,7 +22,7 @@
 
 #include "ns3/object-base.h"
 #include "tag-buffer.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

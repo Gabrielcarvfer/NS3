@@ -43,7 +43,9 @@ public:
     UPDATE_LINK_EVENT,
     WIRED_PACKET_UPDATE_EVENT,
     UPDATE_NODE_COUNTER_EVENT,
-    CREATE_NODE_COUNTER_EVENT
+    CREATE_NODE_COUNTER_EVENT,
+    IP_EVENT,
+    IPV6_EVENT
   } AnimEventType_h;
   AnimEventType_h m_type;
   AnimEvent (AnimEventType_h type): m_type (type)
@@ -97,6 +99,32 @@ public:
   NodeCounterType_t m_counterType;
 
 
+};
+
+class AnimIpEvent: public AnimEvent
+{
+public:
+  AnimIpEvent (uint32_t nodeId,  QVector<QString> ipv4Addresses):
+      AnimEvent (IP_EVENT),
+      m_nodeId (nodeId),
+      m_ipv4Addresses (ipv4Addresses)
+  {
+  }
+  uint32_t m_nodeId;
+  QVector<QString> m_ipv4Addresses;
+};
+
+class AnimIpv6Event: public AnimEvent
+{
+public:
+  AnimIpv6Event (uint32_t nodeId,  QVector<QString> ipv6Addresses):
+      AnimEvent (IPV6_EVENT),
+      m_nodeId (nodeId),
+      m_ipv6Addresses (ipv6Addresses)
+  {
+  }
+  uint32_t m_nodeId;
+  QVector<QString> m_ipv6Addresses;
 };
 
 class AnimNodeCounterUpdateEvent: public AnimEvent

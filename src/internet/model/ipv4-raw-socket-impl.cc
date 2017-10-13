@@ -1,14 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-    #include <winsock.h>
-#else
-    #include <netinet/in.h>
-    #include <sys/socket.h>
-    #include <sys/types.h>
-#endif
-
-
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include "ipv4-raw-socket-impl.h"
 #include "ipv4-l3-protocol.h"
 #include "icmpv4.h"
@@ -257,6 +250,63 @@ Ipv4RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags,
       tag.SetTtl (GetIpTtl ());
       p->AddPacketTag (tag);
     }
+
+  bool subnetDirectedBroadcast = false;
+  if (m_boundnetdevice)
+    {
+      uint32_t iif = ipv4->GetInterfaceForDevice (m_boundnetdevice);
+      for (uint32_t j = 0; j < ipv4->GetNAddresses (iif); j++)
+        {
+          Ipv4InterfaceAddress ifAddr = ipv4->GetAddress (iif, j);
+          if (dst.IsSubnetDirectedBroadcast (ifAddr.GetMask ()))
+            {
+              subnetDirectedBroadcast = true;
+            }
+        }
+    }
+
+  if (dst.IsBroadcast () || subnetDirectedBroadcast)
+    {
+      Ptr <NetDevice> boundNetDevice = m_boundnetdevice;
+      if (ipv4->GetNInterfaces () == 1)
+        {
+          boundNetDevice = ipv4->GetNetDevice (0);
+        }
+      if (boundNetDevice == 0)
+        {
+          NS_LOG_DEBUG ("dropped because no outgoing route.");
+          return -1;
+        }
+
+      Ipv4Header header;
+      uint32_t pktSize = p->GetSize ();
+      if (!m_iphdrincl)
+        {
+          header.SetDestination (dst);
+          header.SetProtocol (m_protocol);
+          Ptr<Ipv4Route> route = Create <Ipv4Route> ();
+          route->SetSource (src);
+          route->SetDestination (dst);
+          route->SetOutputDevice (boundNetDevice);
+          ipv4->Send (p, route->GetSource (), dst, m_protocol, route);
+        }
+      else
+        {
+          p->RemoveHeader (header);
+          dst = header.GetDestination ();
+          src = header.GetSource ();
+          pktSize += header.GetSerializedSize ();
+          Ptr<Ipv4Route> route = Create <Ipv4Route> ();
+          route->SetSource (src);
+          route->SetDestination (dst);
+          route->SetOutputDevice (boundNetDevice);
+          ipv4->SendWithHeader (p, header, route);
+        }
+      NotifyDataSent (pktSize);
+      NotifySend (GetTxAvailable ());
+      return pktSize;
+    }
+
 
   if (ipv4->GetRoutingProtocol ())
     {

@@ -43,25 +43,44 @@ public:
   /// Route lookup result, return type of LookupXXX methods
   struct LookupResult
   {
-    Mac48Address retransmitter;
-    uint32_t ifIndex;
-    uint32_t metric;
-    uint32_t seqnum;
-    Time lifetime;
+    Mac48Address retransmitter; ///< retransmitter
+    uint32_t ifIndex; ///< IF index
+    uint32_t metric; ///< metric
+    uint32_t seqnum; ///< sequence number
+    Time lifetime; ///< lifetime
+    /**
+     * Lookup result function
+     *
+     * \param r the result address
+     * \param i the interface
+     * \param m the metric
+     * \param s the sequence number
+     * \param l the lifetime
+     */
     LookupResult (Mac48Address r = Mac48Address::GetBroadcast (),
                   uint32_t i = INTERFACE_ANY,
                   uint32_t m = MAX_METRIC,
                   uint32_t s = 0,
                   Time l = Seconds (0.0));
-    /// True for valid route
+    /**
+     * \returns True for valid route
+     */
     bool IsValid () const;
-    /// Compare route lookup results, used by tests
+    /**
+     * Compare route lookup results, used by tests
+     * \param o the lookup result to compare
+     * \returns true if equal
+     */
     bool operator== (const LookupResult & o) const;
   };
   /// Path precursor = {MAC, interface ID}
   typedef std::vector<std::pair<uint32_t, Mac48Address> > PrecursorList;
 
 public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId ();
   HwmpRtable ();
   ~HwmpRtable ();
@@ -104,36 +123,41 @@ public:
   LookupResult LookupProactiveExpired ();
   //\}
 
-  /// When peer link with a given MAC-address fails - it returns list of unreachable destination addresses
+  /**
+   * When peer link with a given MAC-address fails - it returns list of unreachable destination addresses
+   * \param peerAddress the peer address
+   * \returns the list of unreachable destinations
+   */
   std::vector<HwmpProtocol::FailedDestination> GetUnreachableDestinations (Mac48Address peerAddress);
 
 private:
   /// Route found in reactive mode
   struct Precursor
   {
-    Mac48Address address;
-    uint32_t interface;
-    Time whenExpire;
+    Mac48Address address; ///< address
+    uint32_t interface; ///< interface
+    Time whenExpire; ///< expire time
   };
+  /// Route found in reactive mode
   struct ReactiveRoute
   {
-    Mac48Address retransmitter;
-    uint32_t interface;
-    uint32_t metric;
-    Time whenExpire;
-    uint32_t seqnum;
-    std::vector<Precursor> precursors;
+    Mac48Address retransmitter; ///< transmitter
+    uint32_t interface; ///< interface
+    uint32_t metric; ///< metric
+    Time whenExpire; ///< expire time
+    uint32_t seqnum; ///< sequence number
+    std::vector<Precursor> precursors; ///< precursors
   };
-  /// Route fond in proactive mode
+  /// Route found in proactive mode
   struct ProactiveRoute
   {
-    Mac48Address root;
-    Mac48Address retransmitter;
-    uint32_t interface;
-    uint32_t metric;
-    Time whenExpire;
-    uint32_t seqnum;
-    std::vector<Precursor> precursors;
+    Mac48Address root; ///< root
+    Mac48Address retransmitter; ///< retransmitter
+    uint32_t interface; ///< interface
+    uint32_t metric; ///< metric
+    Time whenExpire; ///< expire time
+    uint32_t seqnum; ///< sequence number
+    std::vector<Precursor> precursors; ///< precursors
   };
 
   /// List of routes

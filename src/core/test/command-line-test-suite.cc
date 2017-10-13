@@ -29,11 +29,28 @@
 #include <cstdarg>
 #include <sstream>
 
-using namespace ns3;
+/**
+ * \file
+ * \ingroup core-tests
+ * \ingroup commandline
+ * \ingroup commandline-tests
+ * CommandLine test suite.
+ */
 
-/*************************************************************************//**
+/**
+ * \ingroup core-tests
+ * \defgroup commandline-tests CommandLine test suite
+ */
+
+namespace ns3 {
+
+  namespace tests {
+    
+
+/**
+ * \ingroup commandline-tests
  * A test base class that drives Command Line parsing
- ****************************************************************************/
+ */
 class CommandLineTestCaseBase : public TestCase
 {
 public:
@@ -99,9 +116,10 @@ CommandLineTestCaseBase::Parse (CommandLine &cmd, int n, ...)
   delete [] argv;
 }
 
-/*************************************************************************//**
+/**
+ * \ingroup commandline-tests
  * Test boolean Command Line processing
- ****************************************************************************/
+ */
 class CommandLineBooleanTestCase : public CommandLineTestCaseBase
 {
 public:
@@ -147,9 +165,10 @@ CommandLineBooleanTestCase::DoRun (void)
   NS_TEST_ASSERT_MSG_EQ (myBool, true, "Command parser did not correctly set a boolean value to true, given \"true\" argument");
 }
 
-/*************************************************************************//**
+/**
+ * \ingroup commandline-tests
  * Test int Command Line processing
- ****************************************************************************/
+ */
 class CommandLineIntTestCase : public CommandLineTestCaseBase
 {
 public:
@@ -185,9 +204,10 @@ CommandLineIntTestCase::DoRun (void)
   NS_TEST_ASSERT_MSG_EQ (myInt32, +2, "Command parser did not correctly set an integer value to +2");
 }
 
-/*************************************************************************//**
+/**
+ * \ingroup commandline-tests
  * Test unsigned int Command Line processing
- ****************************************************************************/
+ */
 class CommandLineUnsignedIntTestCase : public CommandLineTestCaseBase
 {
 public:
@@ -220,9 +240,10 @@ CommandLineUnsignedIntTestCase::DoRun (void)
   NS_TEST_ASSERT_MSG_EQ (myUint32, 9, "Command parser did not correctly set an unsigned integer value to 9");
 }
 
-/*************************************************************************//**
+/**
+ * \ingroup commandline-tests
  * Test string Command Line processing
- ****************************************************************************/
+ */
 class CommandLineStringTestCase : public CommandLineTestCaseBase
 {
 public:
@@ -255,9 +276,76 @@ CommandLineStringTestCase::DoRun (void)
   NS_TEST_ASSERT_MSG_EQ (myStr, "XX", "Command parser did not correctly set an string value to \"XX\"");
 }
 
-/*************************************************************************//**
+/**
+ * \ingroup commandline-tests
+ * Test order of argument parsing
+ */
+class CommandLineOrderTestCase : public CommandLineTestCaseBase
+{
+public:
+  CommandLineOrderTestCase ();              /**< Constructor */
+  virtual ~CommandLineOrderTestCase () {}   /**< Destructor */
+
+private:
+  virtual void DoRun (void);                 /**< Run the test */
+
+};
+
+CommandLineOrderTestCase::CommandLineOrderTestCase ()
+  : CommandLineTestCaseBase ("order")
+{
+}
+
+void
+CommandLineOrderTestCase::DoRun (void)
+{
+  CommandLine cmd;
+  uint32_t myUint32 = 0;
+
+  cmd.AddValue ("my-uint32", "help", myUint32);
+
+  Parse (cmd, 2, "--my-uint32=1", "--my-uint32=2");
+
+  NS_TEST_ASSERT_MSG_EQ (myUint32, 2, "Command parser did not correctly set an unsigned integer value to 2");
+}
+
+/**
+ * \ingroup commandline-tests
+ * Test ignoring invalid arguments
+ */
+class CommandLineInvalidTestCase : public CommandLineTestCaseBase
+{
+public:
+  CommandLineInvalidTestCase ();              /**< Constructor */
+  virtual ~CommandLineInvalidTestCase () {}   /**< Destructor */
+
+private:
+  virtual void DoRun (void);                 /**< Run the test */
+
+};
+
+CommandLineInvalidTestCase::CommandLineInvalidTestCase ()
+  : CommandLineTestCaseBase ("invalid")
+{
+}
+
+void
+CommandLineInvalidTestCase::DoRun (void)
+{
+  CommandLine cmd;
+  uint32_t myUint32 = 0;
+
+  cmd.AddValue ("my-uint32", "help", myUint32);
+
+  Parse (cmd, 2, "quack", "--my-uint32=5");
+
+  NS_TEST_ASSERT_MSG_EQ (myUint32, 5, "Command parser did not correctly set an unsigned integer value to 5");
+}
+
+/**
+ * \ingroup commandline-tests
  * The Test Suite that glues all of the Test Cases together.
- ****************************************************************************/
+ */
 class CommandLineTestSuite : public TestSuite
 {
 public:
@@ -265,12 +353,24 @@ public:
 };
 
 CommandLineTestSuite::CommandLineTestSuite ()
-  : TestSuite ("command-line", UNIT)
+  : TestSuite ("command-line")
 {
-  AddTestCase (new CommandLineBooleanTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineIntTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineUnsignedIntTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineStringTestCase, TestCase::QUICK);
+  AddTestCase (new CommandLineBooleanTestCase);
+  AddTestCase (new CommandLineIntTestCase);
+  AddTestCase (new CommandLineUnsignedIntTestCase);
+  AddTestCase (new CommandLineStringTestCase);
+  AddTestCase (new CommandLineOrderTestCase);
+  AddTestCase (new CommandLineInvalidTestCase);
 }
 
-static CommandLineTestSuite CommandLineTestSuite; /**< Test instance */
+/**
+ * \ingroup commandline-tests
+ * CommandLineTestSuite instance variable.
+ */
+static CommandLineTestSuite g_commandLineTestSuite;
+
+
+  }  // namespace tests
+
+}  // namespace ns3
+    

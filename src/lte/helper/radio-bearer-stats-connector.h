@@ -40,9 +40,9 @@ class RadioBearerStatsCalculator;
  * \ingroup lte
  *
  * This class is very useful when user needs to collect
- * statistics from PDCD and RLC. It automatically connects
+ * statistics from PDCP and RLC. It automatically connects
  * RadioBearerStatsCalculator to appropriate trace sinks.
- * Usually user do not use this class. All he/she needs to
+ * Usually user does not use this class. All he/she needs
  * to do is to call: LteHelper::EnablePdcpTraces() and/or
  * LteHelper::EnableRlcTraces().
  */
@@ -278,6 +278,10 @@ private:
 
   /**
    * Less than operator for CellIdRnti, because it is used as key in map
+   *
+   * \param a the lhs operand
+   * \param b the rhs operand
+   * \returns true if less than
    */
   friend bool operator < (const CellIdRnti &a, const CellIdRnti &b);
 

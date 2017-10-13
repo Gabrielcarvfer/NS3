@@ -101,6 +101,16 @@ macro(process_options)
         endif()
     endif()
 
+    #if(${NS3_GNUPLOT})
+    #    find_package(Gnuplot-ios)
+    #    if(NOT ${GNUPLOT_FOUND})
+    #        message(FATAL_ERROR GNUPLOT not found)
+    #    else()
+    #        include_directories(${GNUPLOT_INCLUDE_DIRS})
+    #        link_directories(${GNUPLOT_LIBRARY})
+    #    endif()
+    #endif()
+
     #process debug switch
     if(${NS3_DEBUG})
         add_definitions(-g)
@@ -191,28 +201,35 @@ macro (write_module_header name header_files)
 endmacro()
 
 
-macro (build_lib name source_files header_files libraries_to_link test_sources)
+macro (build_lib libname source_files header_files libraries_to_link test_sources)
     #Create shared library with sources and headers
-    add_library(${lib${name}} SHARED "${source_files}" "${header_files}")
+    add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${lib${name}} ${libraries_to_link})
+    target_link_libraries(${lib${libname}} ${libraries_to_link})
 
     #Write a module header that includes all headers from that module
-    write_module_header("${name}" "${header_files}")
+    write_module_header("${libname}" "${header_files}")
 
     #Build tests if requested
     if(${NS3_TESTS})
         list(LENGTH test_sources test_source_len)
         if (${test_source_len} GREATER 0)
-            #Create name of output library test of module
-            list(APPEND test${name} ns${NS3_VER}-${name}-test-${build_type})
+            #Create libname of output library test of module
+            list(APPEND test${libname} ns${NS3_VER}-${libname}-test-${build_type})
 
             #Create shared library containing tests of the module
-            add_library(${test${name}} SHARED "${test_sources}")
+            add_library(${test${libname}} SHARED "${test_sources}")
 
             #Link test library to the module library
-            target_link_libraries(${test${name}} ${lib${name}})
+            target_link_libraries(${test${libname}} ${lib${libname}})
+        endif()
+    endif()
+
+    #Build lib examples if requested
+    if(${NS3_EXAMPLES})
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/examples)
+            add_subdirectory(examples)
         endif()
     endif()
 
@@ -221,12 +238,12 @@ macro (build_lib name source_files header_files libraries_to_link test_sources)
         set(arch gcc_ILP32)
         add_custom_command(
                 OUTPUT
-                ${PROJECT_SOURCE_DIR}/src/${name}/bindings/modulegen_${arch}.py
+                ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/modulegen_${arch}.py
                 COMMAND
                 ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py
-                ${PROJECT_SOURCE_DIR}/src/${name}/bindings/
-                ${PROJECT_SOURCE_DIR}/src/${name}/
-                ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${name}-module.h
+                ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/
+                ${PROJECT_SOURCE_DIR}/src/${libname}/
+                ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${libname}-module.h
                 modulegen_${arch}.py
                 ${CMAKE_CXX_FLAGS}
                 )
@@ -242,7 +259,20 @@ macro (build_example name source_files header_files libraries_to_link)
 
     set_target_properties( ${name}
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
+            )
+endmacro()
+
+macro (build_lib_example name source_files header_files libraries_to_link)
+    #Create shared library with sources and headers
+    add_executable(${name} "${source_files}" "${header_files}")
+
+    #Link the shared library with the libraries passed
+    target_link_libraries(${name} ${libraries_to_link})
+
+    set_target_properties( ${name}
+            PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}
             )
 endmacro()
 

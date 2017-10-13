@@ -21,7 +21,7 @@
 #ifndef IPV4_END_POINT_H
 #define IPV4_END_POINT_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv4-address.h"
 #include "ns3/callback.h"
 #include "ns3/net-device.h"

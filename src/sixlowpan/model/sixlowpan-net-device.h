@@ -22,7 +22,7 @@
 #ifndef SIXLOWPAN_NET_DEVICE_H
 #define SIXLOWPAN_NET_DEVICE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include <map>
 #include "ns3/traced-callback.h"
@@ -420,6 +420,7 @@ public:
 
     /**
      * \brief Get a list of the current stored fragments.
+     * \returns The current stored fragments.
      */
     std::list< Ptr<Packet> > GetFraments () const;
 

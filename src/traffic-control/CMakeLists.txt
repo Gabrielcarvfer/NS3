@@ -11,6 +11,10 @@ set(source_files
         model/pie-queue-disc.cc
         helper/traffic-control-helper.cc
         helper/queue-disc-container.cc
+
+
+        #Added in ns3.27
+        model/mq-queue-disc.cc
         )
 
 set(header_files
@@ -24,6 +28,10 @@ set(header_files
         model/pie-queue-disc.h
         helper/traffic-control-helper.h
         helper/queue-disc-container.h
+
+        #Added in ns3.27
+        model/mq-queue-disc.h
+
         )
 
 set(libraries_to_link

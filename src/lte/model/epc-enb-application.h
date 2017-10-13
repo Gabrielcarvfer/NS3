@@ -49,12 +49,17 @@ class EpcEnbS1SapProvider;
 class EpcEnbApplication : public Application
 {
 
+  /// allow MemberEpcEnbS1SapProvider<EpcEnbApplication> class friend access
   friend class MemberEpcEnbS1SapProvider<EpcEnbApplication>;
+  /// allow MemberEpcS1apSapEnb<EpcEnbApplication> class friend access
   friend class MemberEpcS1apSapEnb<EpcEnbApplication>;
 
 
-  // inherited from Object
 public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
 protected:
   void DoDispose (void);
@@ -124,16 +129,39 @@ public:
   void RecvFromS1uSocket (Ptr<Socket> socket);
 
 
+  /**
+   * EPS flow ID structure
+   */
   struct EpsFlowId_t
   {
-    uint16_t  m_rnti;
-    uint8_t   m_bid;
+    uint16_t  m_rnti; ///< RNTI
+    uint8_t   m_bid; ///< Bid, the EPS Bearer IDentifier
 
   public:
     EpsFlowId_t ();
+    /**
+     * Constructor
+     *
+     * \param a RNTI
+     * \param b bid
+     */
     EpsFlowId_t (const uint16_t a, const uint8_t b);
 
+    /**
+     * Comparison operator
+     *
+     * \param a first application
+     * \param b second application
+     * \returns true is the applications are "equal"
+     */
     friend bool operator == (const EpsFlowId_t &a, const EpsFlowId_t &b);
+    /**
+     * Less than operator
+     *
+     * \param a first application
+     * \param b second application
+     * \returns true is the applications are "equal"
+     */
     friend bool operator < (const EpsFlowId_t &a, const EpsFlowId_t &b);
   };
 
@@ -141,12 +169,38 @@ public:
 private:
 
   // ENB S1 SAP provider methods
+  /**
+   * Initial UE message function
+   * \param imsi the IMSI
+   * \param rnti the RNTI
+   */
   void DoInitialUeMessage (uint64_t imsi, uint16_t rnti);
+  /**
+   * Path switch request function
+   * \param params PathSwitchRequestParameters
+   */
   void DoPathSwitchRequest (EpcEnbS1SapProvider::PathSwitchRequestParameters params);
+  /**
+   * UE Context Release function
+   * \param rnti the RNTI
+   */
   void DoUeContextRelease (uint16_t rnti);
   
   // S1-AP SAP ENB methods
+  /**
+   * Initial Context Setup Request 
+   * \param mmeUeS1Id the MME UE S1 ID
+   * \param enbUeS1Id the ENB UE S1 ID
+   * \param erabToBeSetupList the ERAB setup list
+   */
   void DoInitialContextSetupRequest (uint64_t mmeUeS1Id, uint16_t enbUeS1Id, std::list<EpcS1apSapEnb::ErabToBeSetupItem> erabToBeSetupList);
+  /**
+   * Path Switch Request Acknowledge 
+   * \param mmeUeS1Id the MME UE S1 ID
+   * \param enbUeS1Id the ENB UE S1 ID
+   * \param cgi the CGI
+   * \param erabToBeSwitchedInUplinkList the ERAB switched in uplink list
+   */
   void DoPathSwitchRequestAcknowledge (uint64_t enbUeS1Id, uint64_t mmeUeS1Id, uint16_t cgi, std::list<EpcS1apSapEnb::ErabSwitchedInUplinkItem> erabToBeSwitchedInUplinkList);
 
   /** 
@@ -162,6 +216,7 @@ private:
    * Send a packet to the UE via the LTE radio interface of the eNB
    * 
    * \param packet t
+   * \param rnti maps to enbUeS1Id
    * \param bid the EPS Bearer IDentifier
    */
   void SendToLteSocket (Ptr<Packet> packet, uint16_t rnti, uint8_t bid);
@@ -176,13 +231,12 @@ private:
   void SendToS1uSocket (Ptr<Packet> packet, uint32_t teid);
 
 
-  
   /** 
    * internal method used for the actual setup of the S1 Bearer
    * 
-   * \param teid 
-   * \param rnti 
-   * \param bid 
+   * \param teid the Tunnel Endpoint IDentifier
+   * \param rnti maps to enbUeS1Id
+   * \param bid the S1-U Bearer IDentifier
    */
   void SetupS1Bearer (uint32_t teid, uint16_t rnti, uint8_t bid);
 
@@ -251,7 +305,7 @@ private:
    */
   std::map<uint64_t, uint16_t> m_imsiRntiMap;
 
-  uint16_t m_cellId;
+  uint16_t m_cellId; ///< cell ID
 
 };
 

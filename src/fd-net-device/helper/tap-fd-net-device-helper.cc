@@ -204,7 +204,7 @@ TapFdNetDeviceHelper::CreateFileDescriptor (void) const
       // -I<IPv6-address> The IP v6 address to assign to the new tap device;
       // -n<network-IPv4-mask> The network IPv4 mask to assign to the new tap device;
       // -N<network-IPv6-mask> The network IPv6 mask to assign to the new tap device;
-      // -t Set teh IFF_TAP flag
+      // -t Set the IFF_TAP flag
       // -h Set the IFF_NO_PI flag
       // -p<path> the path to the unix socket described above.
       //
@@ -279,8 +279,9 @@ TapFdNetDeviceHelper::CreateFileDescriptor (void) const
       // If the execlp successfully completes, it never returns.  If it returns it failed or the OS is
       // broken.  In either case, we bail.
       //
-      NS_FATAL_ERROR ("TapFdNetDeviceHelper::CreateFileDescriptor(): Back from execlp(), errno = " << ::strerror (errno));
-    }
+      NS_FATAL_ERROR ("TapFdNetDeviceHelper::CreateFileDescriptor(): Back from execlp(), status = " <<
+                      status << ", errno = " << ::strerror (errno));
+      }
   else
     {
       NS_LOG_DEBUG ("Parent process");

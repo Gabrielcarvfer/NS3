@@ -26,7 +26,6 @@
 #include "ns3/simulator.h"
 #include "ns3/attribute-construction-list.h"
 #include "ns3/enum.h"
-//#include "ns3/config-store-config.h"
 #ifdef HAVE_LIBXML2
 #include "xml-config.h"
 #endif

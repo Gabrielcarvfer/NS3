@@ -44,6 +44,7 @@ AnimPropertyBroswer::AnimPropertyBroswer ():
   m_nodeSizeProperty (0),
   m_fileEditProperty (0),
   m_ipv4AddressGroupProperty (0),
+  m_ipv6AddressGroupProperty (0),
   m_macAddressGroupProperty (0),
   m_nodePositionGroupProperty (0),
   m_showNodeTrajectoryProperty (0),
@@ -62,6 +63,7 @@ AnimPropertyBroswer::AnimPropertyBroswer ():
   m_filePathManager (0),
   m_nodePositionManager (0),
   m_ipv4AddressManager (0),
+  m_ipv6AddressManager (0),
   m_macAddressManager (0),
   m_staticStringManager (0),
   m_boolManager (0),
@@ -162,6 +164,8 @@ AnimPropertyBroswer::reset ()
     delete m_nodePositionManager;
   if (m_ipv4AddressManager)
     delete m_ipv4AddressManager;
+  if (m_ipv6AddressManager)
+    delete m_ipv6AddressManager;
   if (m_macAddressManager)
     delete m_macAddressManager;
   if (m_staticStringManager)
@@ -177,6 +181,7 @@ AnimPropertyBroswer::reset ()
   m_filePathManager = 0;
   m_nodePositionManager = 0;
   m_ipv4AddressManager = 0;
+  m_ipv6AddressManager = 0;
   m_macAddressManager = 0;
   m_staticStringManager = 0;
   m_boolManager = 0;
@@ -211,6 +216,7 @@ AnimPropertyBroswer::setupManagers ()
   m_filePathManager = new FilePathManager;
   m_nodePositionManager = new QtGroupPropertyManager;
   m_ipv4AddressManager = new QtGroupPropertyManager;
+  m_ipv6AddressManager = new QtGroupPropertyManager;
   m_macAddressManager = new QtGroupPropertyManager;
   m_staticStringManager = new QtStringPropertyManager;
   m_boolManager = new QtBoolPropertyManager;
@@ -349,9 +355,11 @@ AnimPropertyBroswer::setupNodeProperties ()
 
    // IPv4 and Mac
    m_ipv4AddressGroupProperty = m_ipv4AddressManager->addProperty ("Ipv4 Addresses");
+   m_ipv6AddressGroupProperty = m_ipv6AddressManager->addProperty ("Ipv6 Addresses");
+
    m_macAddressGroupProperty = m_macAddressManager->addProperty ("Mac Addresses");
-   AnimNode::Ipv4Vector_t ipv4Addresses = animNode->getIpv4Addresses ();
-   for (AnimNode::Ipv4Vector_t::const_iterator i = ipv4Addresses.begin ();
+   AnimNode::Ipv4Set_t ipv4Addresses = animNode->getIpv4Addresses ();
+   for (AnimNode::Ipv4Set_t::const_iterator i = ipv4Addresses.begin ();
         i != ipv4Addresses.end ();
         ++i)
      {
@@ -359,6 +367,18 @@ AnimPropertyBroswer::setupNodeProperties ()
        m_ipv4AddressGroupProperty->addSubProperty (property);
        m_ipv4AddressVectorProperty.push_back (property);
      }
+
+   AnimNode::Ipv6Set_t ipv6Addresses = animNode->getIpv6Addresses ();
+   for (AnimNode::Ipv6Set_t::const_iterator i = ipv6Addresses.begin ();
+        i != ipv6Addresses.end ();
+        ++i)
+     {
+       QtProperty * property = m_staticStringManager->addProperty (*i);
+       m_ipv6AddressGroupProperty->addSubProperty (property);
+       m_ipv6AddressVectorProperty.push_back (property);
+     }
+
+
    AnimNode::MacVector_t macAddresses = animNode->getMacAddresses ();
    for (AnimNode::MacVector_t::const_iterator i = macAddresses.begin ();
         i != macAddresses.end ();
@@ -369,6 +389,7 @@ AnimPropertyBroswer::setupNodeProperties ()
       m_macAddressVectorProperty.push_back (property);
     }
    m_nodeBrowser->addProperty (m_ipv4AddressGroupProperty);
+   m_nodeBrowser->addProperty (m_ipv6AddressGroupProperty);
    m_nodeBrowser->addProperty (m_macAddressGroupProperty);
 
    AnimNodeMgr::CounterIdName_t doubleCounterNames = AnimNodeMgr::getInstance ()->getDoubleCounterNames ();
@@ -603,7 +624,7 @@ AnimPropertyBroswer::nodeIdSelectorSlot (QString newIndex)
 
 
    // IPv4 and Mac
-   AnimNode::Ipv4Vector_t ipv4Addresses = animNode->getIpv4Addresses ();
+   AnimNode::Ipv4Set_t ipv4Addresses = animNode->getIpv4Addresses ();
    for (AnimPropertyBroswer::QtPropertyVector_t::const_iterator i = m_ipv4AddressVectorProperty.begin ();
         i != m_ipv4AddressVectorProperty.end ();
         ++i)
@@ -612,13 +633,30 @@ AnimPropertyBroswer::nodeIdSelectorSlot (QString newIndex)
        m_ipv4AddressGroupProperty->removeSubProperty (property);
      }
    m_ipv4AddressVectorProperty.clear ();
-   for (AnimNode::Ipv4Vector_t::const_iterator i = ipv4Addresses.begin ();
+   for (AnimNode::Ipv4Set_t::const_iterator i = ipv4Addresses.begin ();
         i != ipv4Addresses.end ();
         ++i)
      {
        QtProperty * property = m_staticStringManager->addProperty (*i);
        m_ipv4AddressGroupProperty->addSubProperty (property);
        m_ipv4AddressVectorProperty.push_back (property);
+     }
+   AnimNode::Ipv6Set_t ipv6Addresses = animNode->getIpv6Addresses ();
+   for (AnimPropertyBroswer::QtPropertyVector_t::const_iterator i = m_ipv6AddressVectorProperty.begin ();
+        i != m_ipv6AddressVectorProperty.end ();
+        ++i)
+     {
+       QtProperty * property = *i;
+       m_ipv6AddressGroupProperty->removeSubProperty (property);
+     }
+   m_ipv6AddressVectorProperty.clear ();
+   for (AnimNode::Ipv6Set_t::const_iterator i = ipv6Addresses.begin ();
+        i != ipv6Addresses.end ();
+        ++i)
+     {
+       QtProperty * property = m_staticStringManager->addProperty (*i);
+       m_ipv6AddressGroupProperty->addSubProperty (property);
+       m_ipv6AddressVectorProperty.push_back (property);
      }
    AnimNode::MacVector_t macAddresses = animNode->getMacAddresses ();
 

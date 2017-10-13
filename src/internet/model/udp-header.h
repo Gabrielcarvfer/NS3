@@ -21,7 +21,7 @@
 #ifndef UDP_HEADER_H
 #define UDP_HEADER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include "ns3/header.h"
 #include "ns3/ipv4-address.h"

@@ -36,7 +36,8 @@
 /**
  * \file
  * \ingroup highprec
- * Declaration of the cairo_x functions which implement high precision arithmetic.
+ * \c cairo_x function declarations, which provide the fallback
+ * high precision arithmetic implementation.
  */
 
 // Adapt to ns-3 environment
@@ -58,7 +59,7 @@
 #endif
 
 #if   HAVE_STDINT_H
-# include <cstdint>
+# include <stdint.h>
 #elif HAVE_INTTYPES_H
 # include <inttypes.h>
 #elif HAVE_SYS_INT_TYPES_H

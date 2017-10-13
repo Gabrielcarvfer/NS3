@@ -17,7 +17,7 @@
  */
 
 #include <unistd.h>
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include <cstring> // for strerror
 #include <iostream>

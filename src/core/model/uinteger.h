@@ -22,13 +22,13 @@
 
 #include "attribute.h"
 #include "attribute-helper.h"
-#include <cstdint>
+#include <stdint.h>
 #include <limits>
 
 /**
  * \file
  * \ingroup attribute_Uinteger
- * Unsigned integer attribute value declarations and template implementations.
+ * ns3::UintegerValue attribute value declarations and template implementations.
  */
 
 namespace ns3 {

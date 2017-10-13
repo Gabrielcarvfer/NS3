@@ -4,10 +4,8 @@ set(name test)
 set(test${name} ns${NS3_VER}-${name}-${build_type})
 add_library(${test${name}} SHARED
         csma-system-test-suite.cc
-        ns3tc/adaptive-red-queue-disc-test-suite.cc
         ns3tc/fq-codel-queue-disc-test-suite.cc
         ns3tc/pfifo-fast-queue-disc-test-suite.cc
-        ns3tc/pie-queue-disc-test-suite.cc
         ns3tcp/ns3tcp-cwnd-test-suite.cc
         ns3tcp/ns3tcp-interop-test-suite.cc
         ns3tcp/ns3tcp-loss-test-suite.cc

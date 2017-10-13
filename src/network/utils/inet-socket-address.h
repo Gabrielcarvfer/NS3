@@ -23,7 +23,7 @@
 
 #include "ns3/address.h"
 #include "ipv4-address.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 
@@ -117,6 +117,7 @@ public:
 private:
   /**
    * \brief Convert to an Address type
+   * \return the Address corresponding to this object.
    */
   Address ConvertTo (void) const;
 

@@ -130,11 +130,17 @@ void BulkSendApplication::StartApplication (void) // Called at time specified by
 
       if (Inet6SocketAddress::IsMatchingType (m_peer))
         {
-          m_socket->Bind6 ();
+          if (m_socket->Bind6 () == -1)
+            {
+              NS_FATAL_ERROR ("Failed to bind socket");
+            }
         }
       else if (InetSocketAddress::IsMatchingType (m_peer))
         {
-          m_socket->Bind ();
+          if (m_socket->Bind () == -1)
+            {
+              NS_FATAL_ERROR ("Failed to bind socket");
+            }
         }
 
       m_socket->Connect (m_peer);
@@ -188,11 +194,11 @@ void BulkSendApplication::SendData (void)
 
       NS_LOG_LOGIC ("sending packet at " << Simulator::Now ());
       Ptr<Packet> packet = Create<Packet> (toSend);
-      m_txTrace (packet);
       int actual = m_socket->Send (packet);
       if (actual > 0)
         {
           m_totBytes += actual;
+          m_txTrace (packet);
         }
       // We exit this loop when actual < toSend as the send side
       // buffer is full. The "DataSent" callback will pop when

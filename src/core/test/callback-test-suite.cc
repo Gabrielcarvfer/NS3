@@ -18,7 +18,7 @@
 
 #include "ns3/test.h"
 #include "ns3/callback.h"
-#include <cstdint>
+#include <stdint.h>
 
 using namespace ns3;
 

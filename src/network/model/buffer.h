@@ -20,7 +20,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include <ostream>
 #include "ns3/assert.h"
@@ -382,6 +382,7 @@ public:
     uint32_t GetRemainingSize (void) const;
 
 private:
+    /// Friend class
     friend class Buffer;
     /**
      * Constructor - initializes the iterator to point to the buffer start

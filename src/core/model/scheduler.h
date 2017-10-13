@@ -21,7 +21,7 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "object.h"
 
 /**

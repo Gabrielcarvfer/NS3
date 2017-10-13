@@ -21,7 +21,7 @@
 #ifndef RADVD_PREFIX_H
 #define RADVD_PREFIX_H 
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "ns3/ipv6-address.h"
 #include "ns3/simple-ref-count.h"

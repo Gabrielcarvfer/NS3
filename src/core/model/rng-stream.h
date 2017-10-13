@@ -20,19 +20,19 @@
 #ifndef RNGSTREAM_H
 #define RNGSTREAM_H
 #include <string>
-#include <cstdint>
+#include <stdint.h>
 
 /**
  * \file
  * \ingroup rngimpl
- * Declaration of class RngStream.
+ * ns3::RngStream declaration.
  */
 
 namespace ns3 {
 
 /**
  * \ingroup randomvariable
- * \defgroup rngimpl RNG Implementation.
+ * \defgroup rngimpl RNG Implementation
  */
   
 /**

@@ -26,7 +26,7 @@
 #include "ns3/energy-source.h"
 #include "ns3/object.h"
 #include <vector>
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

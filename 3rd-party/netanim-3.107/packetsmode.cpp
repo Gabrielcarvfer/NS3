@@ -111,6 +111,7 @@ PacketsMode::PacketsMode ():
   m_wifiFilterCb = new QCheckBox ("Wifi");
   m_pppFilterCb = new QCheckBox ("Ppp");
   m_ipv4FilterCb = new QCheckBox ("Ipv4");
+  m_ipv6FilterCb = new QCheckBox ("Ipv6");
   m_arpFilterCb = new QCheckBox ("Arp");
   m_tcpFilterCb = new QCheckBox ("Tcp");
   m_udpFilterCb = new QCheckBox ("Udp");
@@ -138,6 +139,7 @@ PacketsMode::PacketsMode ():
   m_filterToolBar->addWidget (m_tcpFilterCb);
   m_filterToolBar->addWidget (m_udpFilterCb);
   m_filterToolBar->addWidget (m_ipv4FilterCb);
+  m_filterToolBar->addWidget (m_ipv6FilterCb);
   m_filterToolBar->addWidget (m_icmpFilterCb);
   m_filterToolBar->addWidget (m_wifiFilterCb);
   m_filterToolBar->addWidget (m_ethernetFilterCb);
@@ -175,6 +177,7 @@ PacketsMode::PacketsMode ():
   connect (m_tcpFilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
   connect (m_udpFilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
   connect (m_ipv4FilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
+  connect (m_ipv6FilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
   connect (m_icmpFilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
   connect (m_wifiFilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
   connect (m_ethernetFilterCb, SIGNAL(clicked()), this, SLOT(filterClickedSlot()));
@@ -386,6 +389,7 @@ PacketsMode::filterClickedSlot ()
   ft |= m_udpFilterCb->isChecked () ? AnimPacket::UDP: AnimPacket::ALL;
   ft |= m_icmpFilterCb->isChecked () ? AnimPacket::ICMP: AnimPacket::ALL;
   ft |= m_ipv4FilterCb->isChecked () ? AnimPacket::IPV4: AnimPacket::ALL;
+  ft |= m_ipv6FilterCb->isChecked () ? AnimPacket::IPV6: AnimPacket::ALL;
   ft |= m_pppFilterCb->isChecked () ? AnimPacket::PPP: AnimPacket::ALL;
   ft |= m_ethernetFilterCb->isChecked () ? AnimPacket::ETHERNET: AnimPacket::ALL;
   PacketsScene::getInstance ()->setFilter (ft);

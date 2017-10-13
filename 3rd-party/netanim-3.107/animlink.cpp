@@ -48,7 +48,15 @@ AnimLink::AnimLink (uint32_t fromId, uint32_t toId,
       QStringList parts = (*m_pointADescription).split ('~');
       if (parts.count () == 2)
         {
-          AnimNodeMgr::getInstance ()->addIpv4Address (fromId, parts.at (0));
+          if (!parts.at (0).contains (":"))
+            {
+              AnimNodeMgr::getInstance ()->addIpv4Address (fromId, parts.at (0));
+            }
+          else
+            {
+              AnimNodeMgr::getInstance ()->addIpv6Address (fromId, parts.at (0));
+            }
+
           AnimNodeMgr::getInstance ()->addMacAddress (fromId, parts.at (1));
         }
 
@@ -59,7 +67,14 @@ AnimLink::AnimLink (uint32_t fromId, uint32_t toId,
       QStringList parts = (*m_pointBDescription).split ('~');
       if (parts.count () == 2)
         {
-          AnimNodeMgr::getInstance ()->addIpv4Address (toId, parts.at (0));
+          if (!parts.at (0).contains (":"))
+            {
+              AnimNodeMgr::getInstance ()->addIpv4Address (toId, parts.at (0));
+            }
+          else
+            {
+              AnimNodeMgr::getInstance ()->addIpv6Address (toId, parts.at (0));
+            }
           AnimNodeMgr::getInstance ()->addMacAddress (toId, parts.at (1));
         }
     }

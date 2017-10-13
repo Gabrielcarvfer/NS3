@@ -22,14 +22,14 @@
 #define MAP_SCHEDULER_H
 
 #include "scheduler.h"
-#include <cstdint>
+#include <stdint.h>
 #include <map>
 #include <utility>
 
 /**
  * \file
  * \ingroup scheduler
- * Declaration of ns3::MapScheduler class.
+ * ns3::MapScheduler declaration.
  */
 
 namespace ns3 {

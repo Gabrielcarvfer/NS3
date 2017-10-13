@@ -75,7 +75,7 @@ set(source_files
         model/wifi-tx-current-model.cc
         model/vht-capabilities.cc
         model/erp-information.cc
-        model/ht-operations.cc
+        #model/ht-operations.cc renamed in ns3.27
         model/dsss-parameter-set.cc
         model/edca-parameter-set.cc
         helper/wifi-radio-energy-model-helper.cc
@@ -88,6 +88,16 @@ set(source_files
         helper/nqos-wifi-mac-helper.cc
         helper/qos-wifi-mac-helper.cc
         helper/wifi-mac-helper.cc
+
+        #added in ns3.27
+        model/dcf-state.cc
+        model/frame-capture-model.cc
+        model/he-capabilities.cc
+        model/ht-operation.cc
+        model/rrpaa-wifi-manager.cc
+        model/simple-frame-capture-model.cc
+        model/vht-operation.cc
+        model/wifi-utils.cc
         )
 
 set(header_files
@@ -165,7 +175,7 @@ set(header_files
         model/wifi-tx-current-model.h
         model/vht-capabilities.h
         model/erp-information.h
-        model/ht-operations.h
+        #model/ht-operations.h #renamed in ns3.27
         model/dsss-parameter-set.h
         model/edca-parameter-set.h
         helper/wifi-radio-energy-model-helper.h
@@ -178,6 +188,16 @@ set(header_files
         helper/nqos-wifi-mac-helper.h
         helper/qos-wifi-mac-helper.h
         helper/wifi-mac-helper.h
+
+        #added in ns3.27
+        model/dcf-state.h
+        model/frame-capture-model.h
+        model/he-capabilities.h
+        model/ht-operation.h
+        model/rrpaa-wifi-manager.h
+        model/simple-frame-capture-model.h
+        model/vht-operation.h
+        model/wifi-utils.h
         )
 
 set(libraries_to_link
@@ -201,3 +221,4 @@ set(test_sources
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+

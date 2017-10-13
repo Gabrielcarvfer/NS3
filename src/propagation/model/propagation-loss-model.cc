@@ -30,7 +30,6 @@
 #include "ns3/pointer.h"
 #include <cmath>
 
-
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("PropagationLossModel");
@@ -512,7 +511,7 @@ LogDistancePropagationLossModel::DoCalcRxPower (double txPowerDbm,
   double distance = a->GetDistanceFrom (b);
   if (distance <= m_referenceDistance)
     {
-      return txPowerDbm;
+      return txPowerDbm - m_referenceLoss;
     }
   /**
    * The formula is:

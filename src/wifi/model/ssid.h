@@ -21,10 +21,7 @@
 #ifndef SSID_H
 #define SSID_H
 
-#include <cstdint>
-#include "ns3/buffer.h"
-#include "ns3/attribute-helper.h"
-#include "ns3/wifi-information-element.h"
+#include "wifi-information-element.h"
 
 namespace ns3 {
 
@@ -78,9 +75,34 @@ public:
    */
   char* PeekString (void) const;
 
+  /**
+   * Get the ElementID.
+   *
+   * \returns the element ID
+   */
   WifiInformationElementId ElementId () const;
+
+  /**
+   * Get the information field size.
+   *
+   * \returns the information field size
+   */
   uint8_t GetInformationFieldSize () const;
+
+  /**
+   * Get the information field size.
+   *
+   * \param start the information field iterator
+   */
   void SerializeInformationField (Buffer::Iterator start) const;
+
+  /**
+   * Get the information field size.
+   *
+   * \param start the information field iterator
+   * \param length the size of the information field
+   * \returns the size of the field read
+   */
   uint8_t DeserializeInformationField (Buffer::Iterator start,
                                        uint8_t length);
 
