@@ -22,7 +22,6 @@
 #include "ns3/double.h"
 #include "ns3/pointer.h"
 #include "ns3/string.h"
-#include "ns3/log.h"
 #include "gauss-markov-mobility-model.h"
 #include "position-allocator.h"
 

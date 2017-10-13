@@ -21,7 +21,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <string>
 #include <vector>
 #include "ptr.h"
@@ -133,7 +133,7 @@ private:
      */
     AggregateIterator (Ptr<const Object> object);
     Ptr<const Object> m_object;                    //!< Parent Object.
-    uint32_t m_current;                            //!< Current position in parent's aggegrates.
+    uint32_t m_current;                            //!< Current position in parent's aggregates.
   };
 
   /** Constructor. */
@@ -141,9 +141,6 @@ private:
   /** Destructor. */
   virtual ~Object ();
 
-  /**
-   * Implement the GetInstanceTypeId method defined in ObjectBase.
-   */
   virtual TypeId GetInstanceTypeId (void) const;
 
   /**

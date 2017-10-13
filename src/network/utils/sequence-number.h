@@ -23,7 +23,7 @@
 
 #include <limits>
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

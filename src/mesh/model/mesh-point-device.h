@@ -49,7 +49,10 @@ class Node;
 class MeshPointDevice : public NetDevice
 {
 public:
-  /// Object type ID for NS3 object system
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId ();
   /// C-tor create empty (without interfaces and protocols) mesh point
   MeshPointDevice ();
@@ -60,6 +63,7 @@ public:
   //\{
   /**
    * \brief Attach new interface to the station. Interface must support 48-bit MAC address and SendFrom method.
+   * \param port the port used
    *
    * \attention Only MeshPointDevice can have IP address, but not individual interfaces.
    */
@@ -123,10 +127,27 @@ public:
   //\}
 
 private:
-  /// Receive packet from interface
+  /**
+   * Receive packet from interface
+   *
+   * \param device the device to receive from
+   * \param packet the received packet
+   * \param protocol the protocol
+   * \param source the source address
+   * \param destination the destination address
+   * \param packetType the packet type
+   */
   void ReceiveFromDevice (Ptr<NetDevice> device, Ptr<const Packet> packet, uint16_t protocol,
                           Address const &source, Address const &destination, PacketType packetType);
-  /// Forward packet down to interfaces
+  /**
+   * Forward packet down to interfaces
+   *
+   * \param incomingPort the incoming port
+   * \param packet the packet to forward
+   * \param protocol the protocol
+   * \param src the source MAC address
+   * \param dst the destination MAC address
+   */
   void Forward (Ptr<NetDevice> incomingPort, Ptr<const Packet> packet,
                 uint16_t protocol, const Mac48Address src,
                 const Mac48Address dst);
@@ -165,20 +186,21 @@ private:
   /// Current routing protocol, used mainly by GetRoutingProtocol
   Ptr<MeshL2RoutingProtocol> m_routingProtocol;
 
-  ///\name Device statistics counters
-  ///\{
+  /// statistics counters
   struct Statistics
   {
-    uint32_t unicastData;
-    uint32_t unicastDataBytes;
-    uint32_t broadcastData;
-    uint32_t broadcastDataBytes;
+    uint32_t unicastData; ///< unicast data
+    uint32_t unicastDataBytes; ///< unicast data bytes
+    uint32_t broadcastData; ///< broadcast data
+    uint32_t broadcastDataBytes; ///< broadcast data bytes
 
+    /// constructor
     Statistics ();
   };
   /// Counters
-  Statistics m_rxStats, m_txStats, m_fwdStats;
-  ///\}
+  Statistics m_rxStats; ///< receive statistics
+  Statistics m_txStats; ///< transmit statistics
+  Statistics m_fwdStats; ///< forward statistics
 };
 } // namespace ns3
 #endif

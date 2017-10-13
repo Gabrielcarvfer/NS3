@@ -18,19 +18,14 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *          Mirko Banchi <mk.banchi@gmail.com>
- *
- * Modified by: Gabriel Ferreira <gabrielcarvfer@gmail.com>
  */
 
-#ifndef AP_WIFI_MAC_BEAC_H
-#define AP_WIFI_MAC_BEAC_H
+#ifndef AP_WIFI_MAC_H
+#define AP_WIFI_MAC_H
 
 #include "ns3/regular-wifi-mac.h"
 #include "ns3/capability-information.h"
-#include "ns3/ht-capabilities.h"
-#include "ns3/ht-operations.h"
-#include "ns3/vht-capabilities.h"
-#include "ns3/amsdu-subframe-header.h"
+#include "ns3/ht-operation.h"
 #include "ns3/supported-rates.h"
 #include "ns3/dsss-parameter-set.h"
 #include "ns3/erp-information.h"
@@ -49,6 +44,10 @@ namespace ns3 {
 class ApWifiMacBeac : public RegularWifiMac
 {
 public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
 
   ApWifiMacBeac ();
@@ -57,12 +56,12 @@ public:
   /**
    * \param stationManager the station manager attached to this MAC.
    */
-  virtual void SetWifiRemoteStationManager (Ptr<WifiRemoteStationManager> stationManager);
+  void SetWifiRemoteStationManager (const Ptr<WifiRemoteStationManager> stationManager);
 
   /**
    * \param linkUp the callback to invoke when the link becomes up.
    */
-  virtual void SetLinkUpCallback (Callback<void> linkUp);
+  void SetLinkUpCallback (Callback<void> linkUp);
 
   /**
    * \param packet the packet to send.
@@ -72,7 +71,7 @@ public:
    * dequeued as soon as the channel access function determines that
    * access is granted to this MAC.
    */
-  virtual void Enqueue (Ptr<const Packet> packet, Mac48Address to);
+  void Enqueue (Ptr<const Packet> packet, Mac48Address to);
 
   /**
    * \param packet the packet to send.
@@ -85,38 +84,38 @@ public:
    * this device to operate in a bridged mode, forwarding received
    * frames without altering the source address.
    */
-  virtual void Enqueue (Ptr<const Packet> packet, Mac48Address to, Mac48Address from);
+  void Enqueue (Ptr<const Packet> packet, Mac48Address to, Mac48Address from);
 
-  virtual bool SupportsSendFrom (void) const;
+  bool SupportsSendFrom (void) const;
 
   /**
    * \param address the current address of this MAC layer.
    */
-  virtual void SetAddress (Mac48Address address);
+  void SetAddress (Mac48Address address);
   /**
    * \param interval the interval between two beacon transmissions.
    */
   void SetBeaconInterval (Time interval);
-   /**
-   * \param interval the max interval between two beacon transmissions.
-   */
-  void SetMaxBeaconInterval (Time interval);
-   /**
-   * \param interval the min interval between two beacon transmissions.
-   */
-  void SetMinBeaconInterval (Time interval);
+    /**
+  * \param interval the maximal interval between two beacon transmissions.
+  */
+    void SetMaxBeaconInterval (Time interval);
+    /**
+  * \param interval the minimal interval between two beacon transmissions.
+  */
+    void SetMinBeaconInterval (Time interval);
   /**
    * \return the interval between two beacon transmissions.
    */
   Time GetBeaconInterval (void) const;
     /**
-   * \return the max interval between two beacon transmissions.
+   * \return the maximal interval between two beacon transmissions.
    */
-  Time GetMaxBeaconInterval (void) const;
+    Time GetMaxBeaconInterval (void) const;
     /**
-   * \return the min interval between two beacon transmissions.
+   * \return the minimal interval between two beacon transmissions.
    */
-  Time GetMinBeaconInterval (void) const;
+    Time GetMinBeaconInterval (void) const;
   /**
    * Start beacon transmission immediately.
    */
@@ -126,14 +125,30 @@ public:
    * Typically, true is returned only when there is no non-erp stations associated
    * to the AP, and that short slot time is supported by the AP and by all other
    * ERP stations that are associated to the AP. Otherwise, false is returned.
+   *
+   * \returns whether short slot time should be enabled or not in the BSS.
    */
   bool GetShortSlotTimeEnabled (void) const;
   /**
    * Determine whether short preamble should be enabled or not in the BSS.
-   * Typically, true is returned only when the AP and all associated 
+   * Typically, true is returned only when the AP and all associated
    * stations support short PLCP preamble.
+   *
+   * \returns whether short preamble should be enabled or not in the BSS.
    */
   bool GetShortPreambleEnabled (void) const;
+  /**
+   * Determine whether non-Greenfield HT stations are present or not.
+   *
+   * \returns whether non-Greenfield HT stations are present or not.
+   */
+  bool IsNonGfHtStasPresent (void) const;
+  /**
+   * Determine the VHT operational channel width (in MHz).
+   *
+   * \returns the VHT operational channel width (in MHz).
+   */
+  uint8_t GetVhtOperationalChannelWidth (void) const;
 
   /**
    * Assign a fixed random variable stream number to the random variables
@@ -148,7 +163,7 @@ public:
 
 
 private:
-  virtual void Receive (Ptr<Packet> packet, const WifiMacHeader *hdr);
+  void Receive (Ptr<Packet> packet, const WifiMacHeader *hdr);
   /**
    * The packet we sent was successfully received by the receiver
    * (i.e. we received an ACK from the receiver).  If the packet
@@ -157,7 +172,7 @@ private:
    *
    * \param hdr the header of the packet that we successfully sent
    */
-  virtual void TxOk (const WifiMacHeader &hdr);
+  void TxOk (const WifiMacHeader &hdr);
   /**
    * The packet we sent was successfully received by the receiver
    * (i.e. we did not receive an ACK from the receiver).  If the packet
@@ -166,7 +181,7 @@ private:
    *
    * \param hdr the header of the packet that we failed to sent
    */
-  virtual void TxFailed (const WifiMacHeader &hdr);
+  void TxFailed (const WifiMacHeader &hdr);
 
   /**
    * This method is called to de-aggregate an A-MSDU and forward the
@@ -177,8 +192,8 @@ private:
    * \param aggregatedPacket the Packet containing the A-MSDU.
    * \param hdr a pointer to the MAC header for \c aggregatedPacket.
    */
-  virtual void DeaggregateAmsduAndForward (Ptr<Packet> aggregatedPacket,
-                                           const WifiMacHeader *hdr);
+  void DeaggregateAmsduAndForward (Ptr<Packet> aggregatedPacket,
+                                   const WifiMacHeader *hdr);
   /**
    * Forward the packet down to DCF/EDCAF (enqueue the packet). This method
    * is a wrapper for ForwardDown with traffic id.
@@ -235,11 +250,17 @@ private:
    */
   EdcaParameterSet GetEdcaParameterSet (void) const;
   /**
-   * Return the HT operations of the current AP.
+   * Return the HT operation of the current AP.
    *
-   * \return the HT operations that we support
+   * \return the HT operation that we support
    */
-  HtOperations GetHtOperations (void) const;
+  HtOperation GetHtOperation (void) const;
+  /**
+   * Return the VHT operation of the current AP.
+   *
+   * \return the VHT operation that we support
+   */
+  VhtOperation GetVhtOperation (void) const;
   /**
    * Return an instance of SupportedRates that contains all rates that we support
    * including HT rates.
@@ -268,20 +289,27 @@ private:
   /**
    * Return whether protection for non-ERP stations is used in the BSS.
    *
-   * \return true if protection for non-ERP stations is used in the BSS, 
+   * \return true if protection for non-ERP stations is used in the BSS,
    *         false otherwise
    */
   bool GetUseNonErpProtection (void) const;
+  /**
+   * Return whether RIFS is allowed in the BSS.
+   *
+   * \return true if RIFS is allowed in the BSS,
+   *         false otherwise
+   */
+  bool GetRifsMode (void) const;
 
-  virtual void DoDispose (void);
-  virtual void DoInitialize (void);
+  void DoDispose (void);
+  void DoInitialize (void);
 
   Ptr<DcaTxop> m_beaconDca;                  //!< Dedicated DcaTxop for beacons
   Time m_beaconInterval;                     //!< Interval between beacons
-  Time m_minBeaconInterval;
-  Time m_maxBeaconInterval;
-  unsigned m_activeNetwork;
-  unsigned m_activeNetworkPrevious;
+    Time m_minBeaconInterval;
+    Time m_maxBeaconInterval;
+    unsigned m_activeNetwork;
+    unsigned m_activeNetworkPrevious;
   bool m_enableBeaconGeneration;             //!< Flag whether beacons are being generated
   EventId m_beaconEvent;                     //!< Event to generate one beacon
   Ptr<UniformRandomVariable> m_beaconJitter; //!< UniformRandomVariable used to randomize the time of the first beacon
@@ -290,6 +318,7 @@ private:
   std::list<Mac48Address> m_nonErpStations;  //!< List of all non-ERP stations currently associated to the AP
   std::list<Mac48Address> m_nonHtStations;   //!< List of all non-HT stations currently associated to the AP
   bool m_enableNonErpProtection;             //!< Flag whether protection mechanism is used or not when non-ERP STAs are present within the BSS
+  bool m_disableRifs;                        //!< Flag whether to force RIFS to be disabled within the BSS If non-HT STAs are detected
 };
 
 } //namespace ns3

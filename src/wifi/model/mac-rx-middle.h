@@ -22,10 +22,8 @@
 #define MAC_RX_MIDDLE_H
 
 #include <map>
-#include <utility>
-#include "ns3/callback.h"
-#include "ns3/mac48-address.h"
 #include "ns3/packet.h"
+#include "ns3/simple-ref-count.h"
 
 namespace ns3 {
 
@@ -37,7 +35,7 @@ class OriginatorRxStatus;
  *
  * This class handles duplicate detection and recomposition of fragments.
  */
-class MacRxMiddle
+class MacRxMiddle : public SimpleRefCount<MacRxMiddle>
 {
 public:
   /**
@@ -55,10 +53,17 @@ public:
    */
   void SetForwardCallback (ForwardUpCallback callback);
 
+  /**
+   * Receive a packet.
+   *
+   * \param packet the packet
+   * \param hdr MAC header
+   */
   void Receive (Ptr<Packet> packet, const WifiMacHeader *hdr);
 
 
 private:
+  /// allow MacRxMiddleTest associated class access
   friend class MacRxMiddleTest;
   /**
    * Look up for OriginatorRxStatus associated with the sender address
@@ -116,9 +121,9 @@ private:
    */
   typedef std::map <std::pair<Mac48Address, uint8_t>, OriginatorRxStatus *, std::less<std::pair<Mac48Address,uint8_t> > >::iterator QosOriginatorsI;
 
-  Originators m_originatorStatus;
-  QosOriginators m_qosOriginatorStatus;
-  ForwardUpCallback m_callback;
+  Originators m_originatorStatus; ///< originator status
+  QosOriginators m_qosOriginatorStatus; ///< QOS originator status
+  ForwardUpCallback m_callback; ///< forward up callback
 };
 
 } //namespace ns3

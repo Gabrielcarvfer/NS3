@@ -20,14 +20,13 @@
 #ifndef IPV4_H
 #define IPV4_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/object.h"
 #include "ns3/socket.h"
 #include "ns3/callback.h"
 #include "ns3/ipv4-address.h"
 #include "ipv4-route.h"
 #include "ipv4-interface-address.h"
-#include "ipv4-header.h"
 
 namespace ns3 {
 
@@ -81,9 +80,9 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId ();
+  static TypeId GetTypeId (void);
   Ipv4 ();
-  virtual ~Ipv4 () = 0;
+  virtual ~Ipv4 ();
 
   /**
    * \brief Register a new routing protocol to be used by this Ipv4 stack
@@ -101,7 +100,7 @@ public:
    * 
    * \returns smart pointer to Ipv4RoutingProtocol object, or null pointer if none
    */
-  virtual Ptr<Ipv4RoutingProtocol> GetRoutingProtocol () const = 0;
+  virtual Ptr<Ipv4RoutingProtocol> GetRoutingProtocol (void) const = 0;
 
   /**
    * \param device device to add to the list of Ipv4 interfaces
@@ -117,14 +116,14 @@ public:
   /**
    * \returns the number of interfaces added by the user.
    */
-  virtual uint32_t GetNInterfaces () const = 0;
+  virtual uint32_t GetNInterfaces (void) const = 0;
 
   /**
    * \brief Return the interface number of the interface that has been
    *        assigned the specified IP address.
    *
    * \param address The IP address being searched for
-   * \returns The interface number of the Ipv4 interface with the given
+   * \returns The interface number of the Ipv4 interface with the given 
    *          address or -1 if not found.
    *
    * Each IP interface has one or more IP addresses associated with it.
@@ -213,7 +212,7 @@ public:
    * an acceptable address for local delivery on the host.  The address
    * may be a unicast, multicast, or broadcast address.  This method will
    * return true if address is an exact match of a unicast address on
-   * one of the host's interfaces (see below), if address corresponds to
+   * one of the host's interfaces (see below), if address corresponds to 
    * a multicast group that the host has joined (and the incoming device
    * is acceptable), or if address corresponds to a broadcast address.
    *
@@ -224,18 +223,18 @@ public:
   virtual bool IsDestinationAddress (Ipv4Address address, uint32_t iif) const = 0;
 
   /**
-   * \brief Return the interface number of first interface found that
+   * \brief Return the interface number of first interface found that 
    *  has an Ipv4 address within the prefix specified by the input
    *  address and mask parameters
    *
    * \param address The IP address assigned to the interface of interest.
    * \param mask The IP prefix to use in the mask
-   * \returns The interface number of the Ipv4 interface with the given
+   * \returns The interface number of the Ipv4 interface with the given 
    *          address or -1 if not found.
    *
    * Each IP interface has one or more IP addresses associated with it.
    * This method searches the list of interfaces for the first one found
-   * that holds an address that is included within the prefix
+   * that holds an address that is included within the prefix 
    * formed by the input address and mask parameters.  The value -1 is
    * returned if no match is found.
    */
@@ -270,9 +269,9 @@ public:
   /**
    * Because addresses can be removed, the addressIndex is not guaranteed
    * to be static across calls to this method.
-   *
+   * 
    * \param interface Interface number of an Ipv4 interface
-   * \param addressIndex index of Ipv4InterfaceAddress
+   * \param addressIndex index of Ipv4InterfaceAddress 
    * \returns the Ipv4InterfaceAddress associated to the interface and addressIndex
    */
   virtual Ipv4InterfaceAddress GetAddress (uint32_t interface, uint32_t addressIndex) const = 0;
@@ -282,9 +281,9 @@ public:
    * for all higher indices will decrement by one after this method is called;
    * so, for example, to remove 5 addresses from an interface i, one could
    * call RemoveAddress (i, 0); 5 times.
-   *
+   * 
    * \param interface Interface number of an Ipv4 interface
-   * \param addressIndex index of Ipv4InterfaceAddress to remove
+   * \param addressIndex index of Ipv4InterfaceAddress to remove 
    * \returns true if the operation succeeded
    */
   virtual bool RemoveAddress (uint32_t interface, uint32_t addressIndex) = 0;
@@ -299,8 +298,8 @@ public:
   virtual bool RemoveAddress (uint32_t interface, Ipv4Address address) = 0;
 
   /**
-   * \brief Return the first primary source address with scope less than
-   * or equal to the requested scope, to use in sending a packet to
+   * \brief Return the first primary source address with scope less than 
+   * or equal to the requested scope, to use in sending a packet to 
    * destination dst out of the specified device.
    *
    * This method mirrors the behavior of Linux inet_select_addr() and is
@@ -314,38 +313,38 @@ public:
    * subnet matches that of dst and whose scope is less than or equal to
    * the requested scope.  If a primary address does not match the
    * subnet of dst but otherwise matches the scope, it is returned.
-   * If no such address on the device is found, the other devices are
+   * If no such address on the device is found, the other devices are 
    * searched in order of their interface index, but not considering dst
-   * as a factor in the search.  Because a loopback interface is typically
-   * the first one configured on a node, it will be the first alternate
+   * as a factor in the search.  Because a loopback interface is typically 
+   * the first one configured on a node, it will be the first alternate 
    * device to be tried.  Addresses scoped at LINK scope are not returned
    * in this phase.
-   *
+   * 
    * If no device pointer is provided, the same logic as above applies, only
    * that there is no preferred device that is consulted first.  This means
    * that if the device pointer is null, input parameter dst will be ignored.
-   *
-   * If there are no possible addresses to return, a warning log message
+   * 
+   * If there are no possible addresses to return, a warning log message 
    * is issued and the all-zeroes address is returned.
    *
    * \param device output NetDevice (optionally provided, only to constrain the search)
-   * \param dst Destination address to match, if device is provided
+   * \param dst Destination address to match, if device is provided 
    * \param scope Scope of returned address must be less than or equal to this
    * \returns the first primary Ipv4Address that meets the search criteria
    */
-  virtual Ipv4Address SelectSourceAddress (Ptr<const NetDevice> device,
+  virtual Ipv4Address SelectSourceAddress (Ptr<const NetDevice> device, 
                                            Ipv4Address dst, Ipv4InterfaceAddress::InterfaceAddressScope_e scope) = 0;
 
   /**
    * \param interface The interface number of an Ipv4 interface
-   * \param metric routing metric (cost) associated to the underlying
+   * \param metric routing metric (cost) associated to the underlying 
    *          Ipv4 interface
    */
   virtual void SetMetric (uint32_t interface, uint16_t metric) = 0;
 
   /**
    * \param interface The interface number of an Ipv4 interface
-   * \returns routing metric (cost) associated to the underlying
+   * \returns routing metric (cost) associated to the underlying 
    *          Ipv4 interface
    */
   virtual uint16_t GetMetric (uint32_t interface) const = 0;
@@ -366,7 +365,7 @@ public:
 
   /**
    * \param interface Interface number of Ipv4 interface
-   *
+   * 
    * Set the interface into the "up" state. In this state, it is
    * considered valid during Ipv4 forwarding.
    */
@@ -389,7 +388,7 @@ public:
   /**
    * \param interface Interface number of Ipv4 interface
    * \param val Value to set the forwarding flag
-   *
+   * 
    * If set to true, IP forwarding is enabled for input datagrams on this device
    */
   virtual void SetForwarding (uint32_t interface, bool val) = 0;
@@ -425,7 +424,7 @@ public:
    *
    * \returns a smart pointer to the instantiated raw socket
    */
-  virtual Ptr<Socket> CreateRawSocket () = 0;
+  virtual Ptr<Socket> CreateRawSocket (void) = 0;
 
   /**
    * \brief Deletes a particular raw socket
@@ -449,7 +448,7 @@ private:
    * \brief Get the IP forwarding state
    * \returns true if IP is in forwarding state
    */
-  virtual bool GetIpForward () const = 0;
+  virtual bool GetIpForward (void) const = 0;
 
   /**
    * \brief Set or unset the Weak Es Model
@@ -464,7 +463,7 @@ private:
    * RFC1122 term for whether host accepts datagram with a dest. address on another interface
    * \returns true for Weak Es Model activated
    */
-  virtual bool GetWeakEsModel () const = 0;
+  virtual bool GetWeakEsModel (void) const = 0;
 };
 
 } // namespace ns3 

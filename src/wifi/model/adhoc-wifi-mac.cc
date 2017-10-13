@@ -21,18 +21,8 @@
  */
 
 #include "adhoc-wifi-mac.h"
-#include "ns3/pointer.h"
 #include "ns3/log.h"
-#include "ns3/string.h"
-#include "ns3/boolean.h"
-#include "ns3/trace-source-accessor.h"
 #include "mac-low.h"
-#include "dcf-manager.h"
-#include "mac-rx-middle.h"
-#include "mac-tx-middle.h"
-#include "msdu-aggregator.h"
-#include "amsdu-subframe-header.h"
-#include "mgt-headers.h"
 
 namespace ns3 {
 
@@ -85,14 +75,21 @@ AdhocWifiMac::Enqueue (Ptr<const Packet> packet, Mac48Address to)
     {
       //In ad hoc mode, we assume that every destination supports all
       //the rates we support.
-      if (m_htSupported || m_vhtSupported)
+      if (m_htSupported || m_vhtSupported || m_heSupported)
         {
           m_stationManager->AddAllSupportedMcs (to);
+        }
+      if (m_htSupported)
+        {
           m_stationManager->AddStationHtCapabilities (to, GetHtCapabilities());
         }
       if (m_vhtSupported)
         {
           m_stationManager->AddStationVhtCapabilities (to, GetVhtCapabilities());
+        }
+      if (m_heSupported)
+        {
+          m_stationManager->AddStationHeCapabilities (to, GetHeCapabilities());
         }
       m_stationManager->AddAllSupportedModes (to);
       m_stationManager->RecordDisassociated (to);
@@ -136,7 +133,7 @@ AdhocWifiMac::Enqueue (Ptr<const Packet> packet, Mac48Address to)
       hdr.SetTypeData ();
     }
 
-  if (m_htSupported || m_vhtSupported)
+  if (m_htSupported || m_vhtSupported || m_heSupported)
     {
       hdr.SetNoOrder ();
     }
@@ -181,14 +178,22 @@ AdhocWifiMac::Receive (Ptr<Packet> packet, const WifiMacHeader *hdr)
     {
       //In ad hoc mode, we assume that every destination supports all
       //the rates we support.
-      if (m_htSupported || m_vhtSupported)
+      if (m_htSupported || m_vhtSupported || m_heSupported)
         {
           m_stationManager->AddAllSupportedMcs (from);
+          m_stationManager->AddStationHtCapabilities (from, GetHtCapabilities());
+        }
+      if (m_htSupported)
+        {
           m_stationManager->AddStationHtCapabilities (from, GetHtCapabilities());
         }
       if (m_vhtSupported)
         {
           m_stationManager->AddStationVhtCapabilities (from, GetVhtCapabilities());
+        }
+      if (m_heSupported)
+        {
+          m_stationManager->AddStationHeCapabilities (from, GetHeCapabilities());
         }
       m_stationManager->AddAllSupportedModes (from);
       m_stationManager->RecordDisassociated (from);

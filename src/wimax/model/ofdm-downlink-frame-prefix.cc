@@ -18,8 +18,8 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <cstdint>
-#include <cstdint>
+#include <stdint.h>
+#include <stdint.h>
 #include "ofdm-downlink-frame-prefix.h"
 #include "ns3/address-utils.h"
 

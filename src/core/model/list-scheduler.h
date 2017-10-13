@@ -24,12 +24,12 @@
 #include "scheduler.h"
 #include <list>
 #include <utility>
-#include <cstdint>
+#include <stdint.h>
 
 /**
  * \file
  * \ingroup scheduler
- * Declaration of ns3::ListScheduler class.
+ * ns3::ListScheduler declaration.
  */
 
 namespace ns3 {

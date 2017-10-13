@@ -459,6 +459,28 @@ private:
 
 };
 
+/**
+ * \brief The simplest error model, corrupts even packets and does not corrupt odd ones.
+ */
+class BinaryErrorModel : public ErrorModel
+{
+public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
+  static TypeId GetTypeId (void);
+
+  BinaryErrorModel ();
+  virtual ~BinaryErrorModel ();
+
+private:
+  virtual bool DoCorrupt (Ptr<Packet> p);
+  virtual void DoReset (void);
+
+  uint8_t m_counter; //!< internal state counter.
+
+};
 
 } // namespace ns3
 #endif

@@ -21,7 +21,7 @@
 #ifndef UNIX_FD_READER_H
 #define UNIX_FD_READER_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "callback.h"
 #include "system-thread.h"

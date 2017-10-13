@@ -20,7 +20,7 @@
 #ifndef EVENT_IMPL_H
 #define EVENT_IMPL_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "simple-ref-count.h"
 
 /**

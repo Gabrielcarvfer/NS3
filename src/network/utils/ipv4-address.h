@@ -21,7 +21,7 @@
 #ifndef IPV4_ADDRESS_H
 #define IPV4_ADDRESS_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <ostream>
 #include "ns3/address.h"
 #include "ns3/attribute-helper.h"
@@ -204,6 +204,7 @@ private:
 
   /**
    * \brief Convert to an Address type
+   * \return the Address corresponding to this object.
    */
   Address ConvertTo (void) const;
 
@@ -294,6 +295,7 @@ public:
   void Set (uint32_t mask);
   /**
    * \brief Return the inverse mask in host order. 
+   * \return The inverse mask
    */
   uint32_t GetInverse (void) const;
   /**

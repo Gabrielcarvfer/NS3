@@ -76,7 +76,25 @@ InterfaceStatsScene::add (uint32_t nodeId, QString pointADescription, uint32_t o
   showInfoWidget (false);
   QStringList parts = pointADescription.split ('~');
   //qDebug (pointADescription);
-  QString IP = parts.at (0);
+  QString IP = "\n";
+  AnimNode::Ipv4Set_t ipv4Addresses = AnimNodeMgr::getInstance ()->getNode (nodeId)->getIpv4Addresses ();
+  for (AnimNode::Ipv4Set_t::const_iterator i = ipv4Addresses.begin ();
+       i != ipv4Addresses.end ();
+       ++i)
+    {
+        IP += "\t" + *i + "\n";
+    }
+
+
+  QString IPv6 = "\n";
+  AnimNode::Ipv6Set_t ipv6Addresses = AnimNodeMgr::getInstance ()->getNode (nodeId)->getIpv6Addresses ();
+  for (AnimNode::Ipv6Set_t::const_iterator i = ipv6Addresses.begin ();
+       i != ipv6Addresses.end ();
+       ++i)
+    {
+        IPv6 += "\t" + *i + "\n";
+    }
+
   //qDebug (IP);
   QString MAC = parts.at (1);
   QString otherIP = "";
@@ -91,14 +109,15 @@ InterfaceStatsScene::add (uint32_t nodeId, QString pointADescription, uint32_t o
 
   QString title = "Node:" + QString::number (nodeId);
   QString content = "IP:" + IP ;
-  content += "\nMAC:" + MAC ;
+  content += "IPv6:" + IPv6;
+  content += "\nMAC:\n" + MAC ;
 
   if (pointBDescription != "")
     {
-      content += "\nOther Node:" + QString::number (otherNodeId) ;
-      content += "\nOther IP:" + otherIP;
-      content += "\nOther MAC:" + otherMAC;
-      content += "\nInfo:" + linkDescription;
+      content += "\n\nOther Node:" + QString::number (otherNodeId) ;
+      content += "\nOther Node IP:" + otherIP;
+      content += "\nOther Node MAC:\n" + otherMAC;
+      content += "\nInfo:\n" + linkDescription;
     }
   TextBubble * tb = new TextBubble (title, content);
   QGraphicsProxyWidget * pw = addWidget (tb);

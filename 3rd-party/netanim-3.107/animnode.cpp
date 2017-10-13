@@ -354,7 +354,7 @@ void AnimNode::paint (QPainter *painter, const QStyleOptionGraphicsItem *option,
       bottomLeft = QPointF (-1, 1);
       painter->save ();
       painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing | QPainter::HighQualityAntialiasing | QPainter::NonCosmeticDefaultPen, true);      painter->scale (0.5, 1);
-      painter->drawPixmap (bottomLeft.x (), bottomLeft.y (), 1, 1, m_batteryPixmap);
+      painter->drawPixmap (bottomLeft.x (), bottomLeft.y (), 5, 5, m_batteryPixmap);
 
       painter->restore ();
     }
@@ -371,10 +371,16 @@ void AnimNode::mouseMoveEvent (QGraphicsSceneMouseEvent *event)
     }
 }
 
-AnimNode::Ipv4Vector_t
+AnimNode::Ipv4Set_t
 AnimNode::getIpv4Addresses ()
 {
-  return m_ipv4Vector;
+  return m_ipv4Set;
+}
+
+AnimNode::Ipv6Set_t
+AnimNode::getIpv6Addresses ()
+{
+  return m_ipv6Set;
 }
 
 AnimNode::MacVector_t
@@ -386,7 +392,13 @@ AnimNode::getMacAddresses ()
 void
 AnimNode::addIpv4Address (QString ip)
 {
-  m_ipv4Vector.push_back (ip);
+  m_ipv4Set.insert (ip);
+}
+
+void
+AnimNode::addIpv6Address (QString ip)
+{
+  m_ipv6Set.insert (ip);
 }
 
 void
@@ -404,8 +416,8 @@ AnimNode::hasIpv4 (QString ip)
     {
       if (quads.at (3) == "255")
         return true;
-      for (Ipv4Vector_t::const_iterator i = m_ipv4Vector.begin ();
-          i != m_ipv4Vector.end ();
+      for (Ipv4Set_t::const_iterator i = m_ipv4Set.begin ();
+          i != m_ipv4Set.end ();
           ++i)
         {
           if (*i == ip)
@@ -549,6 +561,12 @@ void
 AnimNodeMgr::addIpv4Address (uint32_t nodeId, QString ip)
 {
   getNode (nodeId)->addIpv4Address (ip);
+}
+
+void
+AnimNodeMgr::addIpv6Address (uint32_t nodeId, QString ip)
+{
+  getNode (nodeId)->addIpv6Address (ip);
 }
 
 void

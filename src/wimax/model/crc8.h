@@ -20,7 +20,7 @@
  */
 #ifndef CRC8_H
 #define CRC8_H
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

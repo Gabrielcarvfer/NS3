@@ -19,8 +19,8 @@
 
 #ifndef COMMON_H
 #define COMMON_H
-#include <cstdint>
-#include <cmath>
+#include <stdint.h>
+#include <math.h>
 
 #include <QWidget>
 
@@ -69,8 +69,8 @@
 #include <QRegExp>
 
 
-#include "ns3/core-module.h"
-#include "fatal-error.h"
+#include "ns3/log.h"
+#include "ns3/fatal-error.h"
 
 // Utilities to support porting to Qt5
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))

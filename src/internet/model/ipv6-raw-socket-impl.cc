@@ -18,12 +18,8 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-  #include <winsock.h>
-#else
-  #include <netinet/in.h>
-  #include <sys/socket.h>
-#endif
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <sys/types.h>
 #include "ns3/inet6-socket-address.h"
 #include "ns3/node.h"
@@ -249,7 +245,7 @@ int Ipv6RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, const Address& toA
       hdr.SetDestinationAddress (dst);
       SocketErrno err = ERROR_NOTERROR;
       Ptr<Ipv6Route> route = 0;
-      Ptr<NetDevice> oif (0); /*specify non-zero if bound to a source address */
+      Ptr<NetDevice> oif = m_boundnetdevice; //specify non-zero if bound to a specific device
 
       if (!m_src.IsAny ())
         {

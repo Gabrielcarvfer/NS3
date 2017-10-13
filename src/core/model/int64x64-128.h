@@ -22,7 +22,7 @@
 #if !defined(INT64X64_128_H) && defined (INT64X64_USE_128) && !defined(PYTHON_SCAN)
 #define INT64X64_128_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <cmath>  // pow
 
 #if defined(HAVE___UINT128_T) && !defined(HAVE_UINT128_T)
@@ -245,7 +245,7 @@ public:
   /**
    * Compute the inverse of an integer value.
    *
-   * Ordinary division by an integer would be limited to 64 bits of precsion.
+   * Ordinary division by an integer would be limited to 64 bits of precision.
    * Instead, we multiply by the 128-bit inverse of the divisor.
    * This function computes the inverse to 128-bit precision.
    * MulByInvert() then completes the division.

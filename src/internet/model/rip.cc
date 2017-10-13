@@ -144,9 +144,9 @@ void Rip::DoInitialize ()
               Ptr<Node> theNode = GetObject<Node> ();
               Ptr<Socket> socket = Socket::CreateSocket (theNode, tid);
               InetSocketAddress local = InetSocketAddress (address.GetLocal (), RIP_PORT);
+              socket->BindToNetDevice (m_ipv4->GetNetDevice (i));
               int ret = socket->Bind (local);
               NS_ASSERT_MSG (ret == 0, "Bind unsuccessful");
-              socket->BindToNetDevice (m_ipv4->GetNetDevice (i));
               socket->SetIpRecvTtl (true);
               m_sendSocketList[socket] = i;
             }
@@ -343,8 +343,8 @@ void Rip::NotifyInterfaceUp (uint32_t i)
           Ptr<Node> theNode = GetObject<Node> ();
           Ptr<Socket> socket = Socket::CreateSocket (theNode, tid);
           InetSocketAddress local = InetSocketAddress (address.GetLocal (), RIP_PORT);
-          socket->Bind (local);
           socket->BindToNetDevice (m_ipv4->GetNetDevice (i));
+          socket->Bind (local);
           socket->SetIpRecvTtl (true);
           m_sendSocketList[socket] = i;
         }
@@ -482,15 +482,15 @@ void Rip::SetIpv4 (Ptr<Ipv4> ipv4)
     }
 }
 
-void Rip::PrintRoutingTable (Ptr<OutputStreamWrapper> stream) const
+void Rip::PrintRoutingTable (Ptr<OutputStreamWrapper> stream, Time::Unit unit) const
 {
   NS_LOG_FUNCTION (this << stream);
 
   std::ostream* os = stream->GetStream ();
 
   *os << "Node: " << m_ipv4->GetObject<Node> ()->GetId ()
-      << ", Time: " << Now().As (Time::S)
-      << ", Local time: " << GetObject<Node> ()->GetLocalTime ().As (Time::S)
+      << ", Time: " << Now().As (unit)
+      << ", Local time: " << GetObject<Node> ()->GetLocalTime ().As (unit)
       << ", IPv4 RIP table" << std::endl;
 
   if (!m_routes.empty ())

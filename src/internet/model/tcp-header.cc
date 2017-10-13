@@ -18,7 +18,7 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include <iostream>
 #include "tcp-header.h"
 #include "tcp-option.h"
@@ -460,7 +460,7 @@ TcpHeader::CalculateHeaderLength () const
 }
 
 bool
-TcpHeader::AppendOption (Ptr<TcpOption> option)
+TcpHeader::AppendOption (Ptr<const TcpOption> option)
 {
   if (m_optionsLen + option->GetSerializedSize () <= m_maxOptionsLen)
     {
@@ -485,8 +485,14 @@ TcpHeader::AppendOption (Ptr<TcpOption> option)
   return false;
 }
 
-Ptr<TcpOption>
-TcpHeader::GetOption (uint8_t kind) const
+const TcpHeader::TcpOptionList&
+TcpHeader::GetOptionList () const
+{
+  return m_options;
+}
+
+Ptr<const TcpOption>
+TcpHeader::GetOption(uint8_t kind) const
 {
   TcpOptionList::const_iterator i;
 

@@ -44,10 +44,18 @@ public:
   /// Route lookup result, return type of LookupXXX methods
   struct LookupResult
   {
-    Mac48Address retransmitter;
-    uint32_t ifIndex;
-    uint8_t  cost;
-    uint16_t seqnum;
+    Mac48Address retransmitter; ///< retransmitter
+    uint32_t ifIndex; ///< IF index
+    uint8_t  cost; ///< cost
+    uint16_t seqnum; ///< sequence number
+    /**
+     * Constructor
+     *
+     * \param r retransmitter MAC address
+     * \param i interfce index
+     * \param c cost
+     * \param s sequence number
+     */
     LookupResult (Mac48Address r = Mac48Address::GetBroadcast (),
                   uint32_t i = INTERFACE_ANY,
                   uint8_t  c = MAX_COST,
@@ -58,18 +66,37 @@ public:
         seqnum (s)
     {
     }
-    /// True for valid route
+    /**
+     * \returns True for valid route
+     */
     bool IsValid () const;
-    /// Compare route lookup results, used by tests
+    /**
+     * Compare route lookup results, used by tests
+     *
+     * \param o the object to compare
+     * \returns true if equal
+     */
     bool operator== (const LookupResult & o) const;
   };
 public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId ();
   FlameRtable ();
   ~FlameRtable ();
   void DoDispose ();
 
-  /// Add path
+  /**
+   * Add path
+   *
+   * \param destination the destination address
+   * \param retransmitter the retransmitter address
+   * \param interface the interface
+   * \param cost the cost
+   * \param seqnum the sequence number
+   */
   void AddPath (
     const Mac48Address destination,
     const Mac48Address retransmitter,
@@ -79,21 +106,29 @@ public:
     );
   /**
    * \brief Lookup path to destination
+   * \param destination
    * \return Broadcast if not found
    */
   LookupResult Lookup (Mac48Address destination);
 private:
-  FlameRtable& operator= (const FlameRtable &);
+  /**
+   * assignment operator
+   *
+   * \param table the flame table to assign
+   * \returns the assigned value
+   */
+  FlameRtable& operator= (const FlameRtable & table);
+  /// type conversion operator
   FlameRtable (const FlameRtable &);
 
   /// Routing table entry
   struct Route
   {
-    Mac48Address retransmitter;
-    uint32_t interface;
-    uint32_t cost;
-    Time whenExpire;
-    uint32_t seqnum;
+    Mac48Address retransmitter; ///< retransmitter
+    uint32_t interface; ///< interface
+    uint32_t cost; ///< cost
+    Time whenExpire; ///< expire when?
+    uint32_t seqnum; ///< sequence number
   };
   /// Lifetime parameter
   Time m_lifetime;

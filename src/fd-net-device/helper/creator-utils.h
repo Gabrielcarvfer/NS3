@@ -27,11 +27,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-  #include <winsock.h>
-#else
-  #include <sys/socket.h>
-#endif
+#include <sys/socket.h>
 
 namespace ns3 {
 

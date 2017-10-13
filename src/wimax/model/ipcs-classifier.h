@@ -22,7 +22,7 @@
 #ifndef IPCS_CLASSIFIER_H
 #define IPCS_CLASSIFIER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include "ss-service-flow-manager.h"
 #include "ns3/ptr.h"
@@ -37,6 +37,10 @@ class SsServiceFlowManager;
 class IpcsClassifier : public Object
 {
 public:
+  /**
+   * \brief Get the type ID.
+   * \return the object TypeId
+   */
   static TypeId GetTypeId (void);
   IpcsClassifier (void);
   ~IpcsClassifier (void);

@@ -19,7 +19,7 @@
  * S. da Fonseca - wimaxgroup@lrc.ic.unicamp.br
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include "ul-job.h"
 
 namespace ns3 {
@@ -125,6 +125,12 @@ UlJob::SetSize (uint32_t size)
   m_size = size;
 }
 
+/**
+ * \brief equality operator
+ * \param a first ULJob
+ * \param b second ULJob
+ * \returns true if equal
+ */
 bool operator == (const UlJob &a, const UlJob &b)
 {
   UlJob A = a;

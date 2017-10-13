@@ -21,7 +21,7 @@
 #ifndef IPV6_ADDRESS_H
 #define IPV6_ADDRESS_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <cstring>
 
 #include <ostream>

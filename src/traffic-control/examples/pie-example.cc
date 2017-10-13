@@ -192,7 +192,7 @@ main (int argc, char *argv[])
 
   // PIE params
   NS_LOG_INFO ("Set PIE params");
-  Config::SetDefault ("ns3::PieQueueDisc::Mode", StringValue ("QUEUE_MODE_PACKETS"));
+  Config::SetDefault ("ns3::PieQueueDisc::Mode", StringValue ("QUEUE_DISC_MODE_PACKETS"));
   Config::SetDefault ("ns3::PieQueueDisc::MeanPktSize", UintegerValue (meanPktSize));
   Config::SetDefault ("ns3::PieQueueDisc::DequeueThreshold", UintegerValue (10000));
   Config::SetDefault ("ns3::PieQueueDisc::QueueDelayReference", TimeValue (Seconds (0.02)));
@@ -304,12 +304,12 @@ main (int argc, char *argv[])
   Simulator::Stop (Seconds (sink_stop_time));
   Simulator::Run ();
 
-  PieQueueDisc::Stats st = StaticCast<PieQueueDisc> (queueDiscs.Get (0))->GetStats ();
+  QueueDisc::Stats st = queueDiscs.Get (0)->GetStats ();
 
-  if (st.forcedDrop != 0)
+  if (st.GetNDroppedPackets (PieQueueDisc::FORCED_DROP) != 0)
     {
       std::cout << "There should be no drops due to queue full." << std::endl;
-      exit (-1);
+      exit (1);
     }
 
   if (flowMonitor)
@@ -323,8 +323,10 @@ main (int argc, char *argv[])
   if (printPieStats)
     {
       std::cout << "*** PIE stats from Node 2 queue ***" << std::endl;
-      std::cout << "\t " << st.unforcedDrop << " drops due to prob mark" << std::endl;
-      std::cout << "\t " << st.forcedDrop << " drops due to queue limits" << std::endl;
+      std::cout << "\t " << st.GetNDroppedPackets (PieQueueDisc::UNFORCED_DROP)
+                << " drops due to prob mark" << std::endl;
+      std::cout << "\t " << st.GetNDroppedPackets (PieQueueDisc::FORCED_DROP)
+                << " drops due to queue limits" << std::endl;
     }
 
   Simulator::Destroy ();

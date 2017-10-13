@@ -36,37 +36,9 @@
 #include "ns3/trace-source-accessor.h"
 #include "ns3/uinteger.h"
 
-
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-#include <winsock.h>
-#include <io.h>
-#include <windows.h>
-#include <ctime>
-BOOLEAN nanosleep(timespec *ns, void*){
-    /* Declarations */
-    HANDLE timer;	/* Timer handle */
-    LARGE_INTEGER li;	/* Time defintion */
-    /* Create timer */
-    if(!(timer = CreateWaitableTimer(NULL, TRUE, NULL)))
-        return FALSE;
-    /* Set timer properties */
-    li.QuadPart = -ns->tv_nsec;
-    if(!SetWaitableTimer(timer, &li, 0, NULL, NULL, FALSE)){
-        CloseHandle(timer);
-        return FALSE;
-    }
-    /* Start & wait for timer */
-    WaitForSingleObject(timer, INFINITE);
-    /* Clean resources */
-    CloseHandle(timer);
-    /* Slept without problems */
-    return TRUE;
-}
-#else
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <net/ethernet.h>
-#endif
 
 namespace ns3 {
 
@@ -337,7 +309,7 @@ FdNetDevice::ReceiveCallback (uint8_t *buf, ssize_t len)
       struct timespec time = {
         0, 100000000L
       };                                        // 100 ms
-      nanosleep (&time, nullptr);
+      nanosleep (&time, NULL);
     }
   else
     {

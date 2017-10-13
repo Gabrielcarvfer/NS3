@@ -33,18 +33,12 @@
 #include <sys/types.h>
 #include <dirent.h>
 #endif
-
 #if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
 /** Do we have a \c makedir function? */
 #define HAVE_MKDIR_H
-    #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-      #include <windows.h>
-    #else
-      #include <sys/types.h>
-      #include <sys/stat.h>
-    #endif
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
-
 #include <sstream>
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
@@ -59,15 +53,11 @@
 #include <unistd.h>
 #endif
 
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-#include <ctime>
-#endif
-
 /**
  * \def SYSTEM_PATH_SEP
  * System-specific path separator used between directory names.
  */
-#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+#if defined (__win32__)
 #define SYSTEM_PATH_SEP "\\"
 #else
 #define SYSTEM_PATH_SEP "/"
@@ -76,7 +66,7 @@
 /**
  * \file
  * \ingroup systempath
- * System-independent file and directory functions implementation.
+ * ns3::SystemPath implementation.
  */
 
 namespace ns3 {
@@ -144,8 +134,9 @@ std::string FindSelfDirectory (void)
   }
 #elif defined (__win32__)
   {
-    /// \todo untested. it should work if code is compiled with
-    /// LPTSTR = char *
+    /** \todo untested. it should work if code is compiled with
+     *  LPTSTR = char *
+     */
     DWORD size = 1024;
     LPTSTR lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
     DWORD status = GetModuleFilename (0, lpFilename, size);
@@ -266,7 +257,7 @@ std::list<std::string> ReadFiles (std::string path)
     }
   closedir (dp);
 #elif defined (HAVE_FIND_FIRST_FILE)
-  /// \todo untested
+  /** \todo untested */
   HANDLE hFind;
   WIN32_FIND_DATA fileData;
   
@@ -344,24 +335,16 @@ MakeDirectories (std::string path)
     {
       std::string tmp = Join (elements.begin (), i);
 #if defined(HAVE_MKDIR_H)
-  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-    if (CreateDirectory(tmp.c_str(),NULL) == 0)
-  #else
-    if (mkdir (tmp.c_str (), S_IRWXU))
-  #endif
-    {
-      NS_LOG_ERROR ("failed creating directory " << tmp);
-    }
+      if (mkdir (tmp.c_str (), S_IRWXU))
+        {
+          NS_LOG_ERROR ("failed creating directory " << tmp);
+        }
 #endif
     }
 
   // Make the final directory.  Is this redundant with last iteration above?
 #if defined(HAVE_MKDIR_H)
-  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-    if (CreateDirectory(path.c_str(),NULL) == 0)
-  #else
-    if (mkdir (path.c_str (), S_IRWXU))
-  #endif
+  if (mkdir (path.c_str (), S_IRWXU))
     {
       NS_LOG_ERROR ("failed creating directory " << path);
     }

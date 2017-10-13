@@ -20,7 +20,7 @@
 #ifndef IPV6_LIST_ROUTING_HELPER_H
 #define IPV6_LIST_ROUTING_HELPER_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include <list>
 

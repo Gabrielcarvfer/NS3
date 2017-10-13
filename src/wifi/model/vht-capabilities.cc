@@ -20,10 +20,6 @@
  */
 
 #include "vht-capabilities.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-
-NS_LOG_COMPONENT_DEFINE ("VhtCapabilities");
 
 namespace ns3 {
 
@@ -53,6 +49,11 @@ VhtCapabilities::VhtCapabilities ()
 {
   m_rxMcsMap.resize (8,0);
   m_txMcsMap.resize (8,0);
+  for (uint8_t i = 0; i < 8; i++) //set to 3 by default, i.e. #spatial streams not supported. 0 means supported up to MCS 7, not what we want to imply at this stage.
+    {
+      m_rxMcsMap[i] = 3;
+      m_txMcsMap[i] = 3;
+    }
 }
 
 WifiInformationElementId
@@ -451,6 +452,14 @@ VhtCapabilities::GetTxHighestSupportedLgiDataRate () const
 
 ATTRIBUTE_HELPER_CPP (VhtCapabilities);
 
+/**
+ * output stream output operator
+ *
+ * \param os output stream
+ * \param VhtCapabilities
+ *
+ * \returns output stream
+ */
 std::ostream &
 operator << (std::ostream &os, const VhtCapabilities &VhtCapabilities)
 {
@@ -459,6 +468,14 @@ operator << (std::ostream &os, const VhtCapabilities &VhtCapabilities)
   return os;
 }
 
+/**
+ * input stream input operator
+ *
+ * \param is input stream
+ * \param VhtCapabilities
+ *
+ * \returns input stream
+ */
 std::istream &operator >> (std::istream &is,VhtCapabilities &VhtCapabilities)
 {
   uint32_t c1;

@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include "burst-profile-manager.h"
 #include "bs-net-device.h"
 #include "ss-net-device.h"

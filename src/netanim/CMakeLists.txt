@@ -18,6 +18,9 @@ set(libraries_to_link
         ${liblte}
         ${libuan}
         ${libenergy}
+        #Added in NS3.27
+        ${liblr-wpan}
+        ${libwave}
         )
 
 set(test_sources

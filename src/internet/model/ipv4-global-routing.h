@@ -21,7 +21,7 @@
 #define IPV4_GLOBAL_ROUTING_H
 
 #include <list>
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv4-address.h"
 #include "ns3/ipv4-header.h"
 #include "ns3/ptr.h"
@@ -98,7 +98,7 @@ public:
   virtual void NotifyAddAddress (uint32_t interface, Ipv4InterfaceAddress address);
   virtual void NotifyRemoveAddress (uint32_t interface, Ipv4InterfaceAddress address);
   virtual void SetIpv4 (Ptr<Ipv4> ipv4);
-  virtual void PrintRoutingTable (Ptr<OutputStreamWrapper> stream) const;
+  virtual void PrintRoutingTable (Ptr<OutputStreamWrapper> stream, Time::Unit unit = Time::S) const;
 
   /**
    * \brief Add a host route to the global routing table.

@@ -19,7 +19,7 @@
  */
 
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv6-address.h"
 #include "ipv6-packet-info-tag.h"
 

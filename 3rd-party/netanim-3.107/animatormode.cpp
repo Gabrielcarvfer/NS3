@@ -524,7 +524,7 @@ AnimatorMode::systemReset ()
   m_backgroundExists = false;
   m_state = SYSTEM_RESET_IN_PROGRESS;
   clickResetSlot ();
-  purgeWiredPackets ();
+  purgeWiredPackets (true);
   purgeWirelessPackets ();
   setControlDefaults ();
   AnimatorView::getInstance ()->systemReset ();
@@ -1179,14 +1179,15 @@ AnimatorMode::removeWiredPacket (AnimPacket *animPacket)
 
 
 void
-AnimatorMode::purgeWiredPackets ()
+AnimatorMode::purgeWiredPackets (bool systemReset)
 {
   for (std::map <AnimPacket *, AnimPacket *>::const_iterator i = m_wiredPacketsToAnimate.begin ();
        i != m_wiredPacketsToAnimate.end ();
        ++i)
     {
       AnimPacket * animPacket = i->first;
-      AnimatorScene::getInstance ()->removeWiredPacket (animPacket);
+      if (!systemReset)
+        AnimatorScene::getInstance ()->removeWiredPacket (animPacket);
       //delete animPacket;
       animPacket = 0;
     }
@@ -1406,6 +1407,28 @@ AnimatorMode::dispatchEvents ()
                 AnimNodeMgr::getInstance ()->addNodeCounterDouble (createEvent->m_counterId, createEvent->m_counterName);
               else if (createEvent->m_counterType == AnimCreateNodeCounterEvent::UINT32_COUNTER)
                 AnimNodeMgr::getInstance ()->addNodeCounterUint32 (createEvent->m_counterId, createEvent->m_counterName);
+              break;
+            }
+            case AnimEvent::IP_EVENT:
+            {
+              AnimIpEvent * ipEvent = static_cast<AnimIpEvent *> (j->second);
+              for (QVector<QString>::const_iterator i = ipEvent->m_ipv4Addresses.begin ();
+                   i != ipEvent->m_ipv4Addresses.end ();
+                   ++i)
+                {
+                  AnimNodeMgr::getInstance ()->getNode (ipEvent->m_nodeId)->addIpv4Address (*i);
+                }
+              break;
+            }
+            case AnimEvent::IPV6_EVENT:
+            {
+              AnimIpv6Event * ipv6Event = static_cast<AnimIpv6Event *> (j->second);
+              for (QVector<QString>::const_iterator i = ipv6Event->m_ipv6Addresses.begin ();
+                 i != ipv6Event->m_ipv6Addresses.end ();
+                 ++i)
+                {
+                  AnimNodeMgr::getInstance ()->getNode (ipv6Event->m_nodeId)->addIpv6Address (*i);
+                }
               break;
             }
             case AnimEvent::UPDATE_NODE_COUNTER_EVENT:
