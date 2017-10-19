@@ -34,12 +34,18 @@
 #include <dirent.h>
 #endif
 #if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
-/** Do we have a \c makedir function? */
-#define HAVE_MKDIR_H
-#include <sys/types.h>
-#include <sys/stat.h>
+  /** Do we have a \c makedir function? */
+  #define HAVE_MKDIR_H
+  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+    #include <windows.h>
+  #else
+    #include <sys/types.h>
+    #include <sys/stat.h>
+  #endif
 #endif
 #include <sstream>
+#include <ctime>
+
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif /* __APPLE__ */
@@ -335,7 +341,11 @@ MakeDirectories (std::string path)
     {
       std::string tmp = Join (elements.begin (), i);
 #if defined(HAVE_MKDIR_H)
-      if (mkdir (tmp.c_str (), S_IRWXU))
+  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+      if (CreateDirectory(tmp.c_str(),NULL) == 0)
+  #else
+        if (mkdir (tmp.c_str (), S_IRWXU))
+  #endif
         {
           NS_LOG_ERROR ("failed creating directory " << tmp);
         }
@@ -344,7 +354,11 @@ MakeDirectories (std::string path)
 
   // Make the final directory.  Is this redundant with last iteration above?
 #if defined(HAVE_MKDIR_H)
-  if (mkdir (path.c_str (), S_IRWXU))
+  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+    if (CreateDirectory(path.c_str(),NULL) == 0)
+  #else
+      if (mkdir (path.c_str (), S_IRWXU))
+  #endif
     {
       NS_LOG_ERROR ("failed creating directory " << path);
     }
