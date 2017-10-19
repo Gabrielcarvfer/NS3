@@ -1,3 +1,15 @@
+if (WIN32)
+    #If using MSYS2
+    set(MSYS2_PATH "E:\\msys64\\mingw64")
+    set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
+    set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
+    set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
+    set(QT_RCC_EXECUTABLE "${MSYS2_PATH}\\bin\\rcc.exe")
+    set(QT_UIC_EXECUTABLE "${MSYS2_PATH}\\bin\\uic.exe")
+    set(QT_MOC_EXECUTABLE "${MSYS2_PATH}\\bin\\moc.exe")
+    set(QT_MKSPECS_DIR    "${MSYS2_PATH}\\share\\qt4\\mkspecs")
+endif()
+
 #Fixed definitions
 unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
@@ -43,7 +55,7 @@ macro(process_options)
         else()
             link_directories(${GTK2_LIBRARY_DIRS})
             include_directories( ${GTK2_INCLUDE_DIRS})
-            add_definitions(${GTK2_DEFINITIONS})
+            add_definitions(${GTK2_CFLAGS_OTHER})
         endif()
     endif()
 
@@ -84,7 +96,7 @@ macro(process_options)
     if(${NS3_MPI})
         find_package(MPI)
         if(NOT ${MPI_FOUND})
-            message(FATAL_ERROR "MPI not found")
+            #message(FATAL_ERROR "MPI not found")
         else()
             include_directories( ${MPI_INCLUDE_PATH})
             add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
@@ -110,6 +122,7 @@ macro(process_options)
     #        link_directories(${GNUPLOT_LIBRARY})
     #    endif()
     #endif()
+
 
     #process debug switch
     if(${NS3_DEBUG})
