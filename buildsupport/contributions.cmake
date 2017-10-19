@@ -2,6 +2,7 @@ macro(process_contribution contribution_list)
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
     set(ns3-contrib-libs)
 
+
     #Create handles to build libraries
     foreach(libname ${contribution_list})
         list(APPEND lib${libname} ns${NS3_VER}-contrib-${libname}-${build_type})
@@ -84,6 +85,7 @@ macro (build_contrib_lib contrib_name components)
 
     #Write a module header that includes all headers from that module
     FILE(GLOB_RECURSE header_files ${PROJECT_SOURCE_DIR}/contrib/${contrib_name}/*.h)
-    write_module_header("contrib-${contrib_name}" "${header_files}")
+    file(COPY ${header_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${contrib_name}/)
+    write_module_header("contrib-${contrib_name}" "${header_files}" "${contrib_name}")
 endmacro()
 

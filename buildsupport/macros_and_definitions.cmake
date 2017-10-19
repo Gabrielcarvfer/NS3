@@ -24,11 +24,12 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
-    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/*.h) #just copying every single header into ns3 include folder
+    #just copying every single header in src to include folder
+        #contribution headers are copied somewhere else
+    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h)
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
     #Set common include folder
-    include_directories( ${CMAKE_OUTPUT_DIRECTORY})
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
@@ -184,7 +185,7 @@ macro(process_options)
 
 endmacro()
 #----------------------------------------------
-macro (write_module_header name header_files)
+macro (write_module_header name header_files contrib_name)
     string(TOUPPER ${name} uppercase_name)
     string(REPLACE "-" "_" final_name ${uppercase_name} )
     #Common module_header
@@ -199,9 +200,20 @@ macro (write_module_header name header_files)
     list(APPEND contents "
     // Module headers: ")
 
+    #check if contrib
+    string(LENGTH "${contrib_name}" CONTRIB_LEN)
+
     #Write each header listed to the contents variable
     foreach(header ${header_files})
+        #Get file name
         get_filename_component(head ${header} NAME)
+
+        #append contrib path if contrib
+        if(${CONTRIB_LEN} GREATER 0)
+            set(head "${contrib_name}/${head}")
+        endif()
+
+        #append path of header to contents of the module include
         list(APPEND contents
                 "
     #include \"${head}\"")
@@ -222,7 +234,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     target_link_libraries(${lib${libname}} ${libraries_to_link})
 
     #Write a module header that includes all headers from that module
-    write_module_header("${libname}" "${header_files}")
+    write_module_header("${libname}" "${header_files}" "")
 
     #Build tests if requested
     if(${NS3_TESTS})
