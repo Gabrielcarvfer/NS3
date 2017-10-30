@@ -182,6 +182,9 @@ macro(process_options)
         list(APPEND ns3-libs ${lib${libname}})
     endforeach()
 
+	#Dump definitions for later use
+    get_directory_property( ADDED_DEFINITIONS COMPILE_DEFINITIONS )
+    file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/ns3-definitions "${ADDED_DEFINITIONS}")
 endmacro()
 #----------------------------------------------
 macro (write_module_header name header_files)
