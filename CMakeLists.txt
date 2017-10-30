@@ -13,21 +13,14 @@ include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.27)
 
-set(NS3_LOG ON)
 option(NS3_LOG "Enable logging to be built" ON)
 
+option(NS3_TESTS "Enable tests to be built" ON)
 
+option(NS3_EXAMPLES "Enable examples to be built" ON)
 
-option(NS3_TESTS "Enable tests to be built" OFF)
-set(NS3_TESTS OFF)
-
-
-option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES OFF)
-
-option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
+option(NS3_DEBUG "Build NS3-lib in debug mode" ON)
 set(NS3_DEBUG ON)
-
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
 set(NS3_PYTHON OFF)
@@ -39,7 +32,7 @@ option(NS3_BOOST "Build with Boost support" OFF)
 set(NS3_BOOST ON)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
-set(NS3_GTK2 ON)
+set(NS3_GTK2 OFF)
 
 option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
 set(NS3_LIBXML2 ON)
