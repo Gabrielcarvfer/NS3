@@ -41,13 +41,22 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
     #        )
 endmacro()
 
+macro (build_single_file_contrib_examples examples)
+
+    foreach(example ${examples})
+        set(source_files examples/${example}.cc)
+        set(header_files )
+        set(libraries_to_link ${lib${contrib_name}})
+        build_contrib_example("${example}" "${contrib_name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+    endforeach()
+endmacro()
+
 macro (build_contrib_example name contrib source_files header_files libraries_to_link)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} "${libraries_to_link}")
-
     set_target_properties( ${name}
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/contrib/${contrib}/examples
