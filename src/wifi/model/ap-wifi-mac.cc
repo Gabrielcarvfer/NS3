@@ -65,6 +65,18 @@ namespace ns3 {
                                MakeBooleanAccessor (&ApWifiMac::SetBeaconGeneration,
                                                     &ApWifiMac::GetBeaconGeneration),
                                MakeBooleanChecker ())
+                .AddAttribute ("MaxBeaconInterval",
+                               "MaxDelay between two beacons",
+                               TimeValue (MicroSeconds (102400)),
+                               MakeTimeAccessor (&ApWifiMac::GetMaxBeaconInterval,
+                                                 &ApWifiMac::SetMaxBeaconInterval),
+                               MakeTimeChecker ())
+                .AddAttribute ("MinBeaconInterval",
+                               "MinDelay between two beacons",
+                               TimeValue (MicroSeconds (102400)),
+                               MakeTimeAccessor (&ApWifiMac::GetMinBeaconInterval,
+                                                 &ApWifiMac::SetMinBeaconInterval),
+                               MakeTimeChecker ())
                 .AddAttribute ("EnableNonErpProtection", "Whether or not protection mechanism should be used when non-ERP STAs are present within the BSS."
                                        "This parameter is only used when ERP is supported by the AP.",
                                BooleanValue (true),
@@ -88,8 +100,16 @@ namespace ns3 {
         m_beaconDca->SetMinCw (0);
         m_beaconDca->SetMaxCw (0);
         m_beaconDca->SetLow (m_low);
+        m_low->SetRegisterSampleCallback(MakeCallback(&ApWifiMac::RegisterSample, this));
+        scan_interval = 10;
+        m_low->ap = true;
+        average_sta_distance_deviation = 0.0;
+        average_sta_distance = 0.0;
+        min_known_distance = 10000000.0;
+
         m_beaconDca->SetManager (m_dcfManager);
         m_beaconDca->SetTxMiddle (m_txMiddle);
+        //samples = std::map<Mac48Address, STA_samples>();
 
         //Let the lower layers know that we are acting as an AP.
         SetTypeOfStation (AP);
@@ -101,6 +121,12 @@ namespace ns3 {
         m_staList.clear ();
         m_nonErpStations.clear ();
         m_nonHtStations.clear ();
+        m_staAtRange.clear();
+        samples.clear();
+        Simulator::Cancel(m_motilityIntervalEvent);
+        Simulator::Cancel(m_beaconEvent);
+
+
     }
 
     void
@@ -153,6 +179,21 @@ namespace ns3 {
         return m_beaconInterval;
     }
 
+    Time
+    ApWifiMac::GetMaxBeaconInterval (void) const
+    {
+        NS_LOG_FUNCTION (this);
+        return m_maxBeaconInterval;
+    }
+
+    Time
+    ApWifiMac::GetMinBeaconInterval (void) const
+    {
+        NS_LOG_FUNCTION (this);
+        return m_minBeaconInterval;
+    }
+    
+
     void
     ApWifiMac::SetWifiRemoteStationManager (const Ptr<WifiRemoteStationManager> stationManager)
     {
@@ -183,7 +224,28 @@ namespace ns3 {
         }
         m_beaconInterval = interval;
     }
+    void
+    ApWifiMac::SetMaxBeaconInterval (Time interval)
+    {
+        NS_LOG_FUNCTION (this << interval);
+        if ((interval.GetMicroSeconds () % 1024) != 0)
+        {
+            NS_LOG_WARN ("beacon interval should be multiple of 1024us (802.11 time unit), see IEEE Std. 802.11-2012");
+        }
+        m_maxBeaconInterval = interval;
+    }
 
+    void
+    ApWifiMac::SetMinBeaconInterval (Time interval)
+    {
+        NS_LOG_FUNCTION (this << interval);
+        if ((interval.GetMicroSeconds () % 1024) != 0)
+        {
+            NS_LOG_WARN ("beacon interval should be multiple of 1024us (802.11 time unit), see IEEE Std. 802.11-2012");
+        }
+        m_minBeaconInterval = interval;
+    }
+    
     void
     ApWifiMac::StartBeaconing (void)
     {
@@ -695,8 +757,8 @@ namespace ns3 {
         WifiMacHeader hdr;
         hdr.SetBeacon ();
         hdr.SetAddr1 (Mac48Address::GetBroadcast ());
-        hdr.SetAddr2 (GetAddress ());
-        hdr.SetAddr3 (GetAddress ());
+        hdr.SetAddr2 (this->GetAddress ());
+        hdr.SetAddr3 (this->GetAddress ());
         hdr.SetDsNotFrom ();
         hdr.SetDsNotTo ();
         hdr.SetNoOrder ();
@@ -738,6 +800,12 @@ namespace ns3 {
 
         //The beacon has it's own special queue, so we load it in there
         m_beaconDca->Queue (packet, hdr);
+        if (m_low->GetAddress() != Mac48Address("00:00:00:00:00:0c"))
+            std::cout << this->GetAddress() << "BeaconInterval: "<< m_beaconInterval<< std::endl;
+
+        m_activeNetwork = false;
+        double tempInterval = m_beaconInterval.GetInteger()*2;
+        m_beaconInterval = tempInterval < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInterval) : m_maxBeaconInterval;
         m_beaconEvent = Simulator::Schedule (m_beaconInterval, &ApWifiMac::SendOneBeacon, this);
 
         //If a STA that does not support Short Slot Time associates,
@@ -1145,6 +1213,8 @@ namespace ns3 {
             }
         }
         RegularWifiMac::DoInitialize ();
+        m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility,this);
+
     }
 
     bool
@@ -1175,6 +1245,274 @@ namespace ns3 {
             m_stationManager->SetRifsPermitted (false);
         }
         return rifsMode;
+    }
+
+
+
+    //Stuff for RSSI distance measurement
+    double calculate_distance_RSSI(double rssi, double txpower)
+    {
+        //double dist = (10, (txpower - rssi) / (10 * 2));
+        double dist = pow(10.0, (-20*log10(2400.0+(5000.0/1000.0)) - rssi + 27.55)/20);
+        //if (std::isless(dist, 0.0001) || std::isgreater(dist, 1000))
+        //    dist = 0.0;
+
+        return dist;
+    }
+
+
+    void ApWifiMac::RegisterSample(Mac48Address from, double rssi, double txpower, Time timestamp)
+    {
+        //Collect STAs at range
+        if (m_staAtRange.find(from) == m_staAtRange.end())
+        {
+            m_staAtRange.emplace(from, true);
+        }
+
+        //Create STA info structure
+        if (samples.find(from) == samples.end())
+        {
+            samples.emplace(from, STA_samples());
+        }
+
+        //Measure distance based on RSSI
+        if (m_low->GetAddress() == Mac48Address("00:00:00:00:00:0c"))
+            txpower = 0.0;
+        else
+            txpower =1.0;
+        distance_sample sample = distance_sample(rssi, txpower, timestamp);
+        (samples.at(from)).distance_samples.emplace_front(sample);
+
+        if (max_known_distance < sample.distance)
+            max_known_distance = sample.distance;
+        //std::cout << "distance " << sample.distance << " saved " << samples.at(from).distance_samples.begin()->distance<<std::endl;
+
+        //if (samples.at(from).distance_samples.size() >=10) {
+        //    //Cancel previous motility run and register new one to execute now
+        //    Motility();
+        //    Simulator::Cancel(m_beaconEvent);
+        //    m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility, this);
+        //}
+    }
+    double calculateSD(std::list<double> samples, double average)
+    {
+        double standardDeviation = 0.0;
+
+        for(auto sample : samples)
+            standardDeviation += pow(sample - average, 2);
+
+        standardDeviation = sqrt(standardDeviation / samples.size());
+        return standardDeviation;
+    }
+    bool ApWifiMac::Motility()
+    {
+        m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility, this);
+
+        //Skip execution if there are no collected samples
+        if (samples.empty())
+        {
+            return false;
+        }
+
+        bool moved = false;
+        average_sta_distance = 0.0;
+
+        //For each station at range process collected samples
+        for (auto sta: m_staAtRange)
+        {
+            samples.at(sta.first).moving = false;
+            distance_samples_list * distance_samp = &samples.at(sta.first).distance_samples;
+            distance_registry_list * distance_reg = &samples.at(sta.first).distance_registry;
+            speed_registry_list * speed_reg = &samples.at(sta.first).speed_registry;
+            
+            //Analyze  measurements and calculate average distance plus standard error
+            if (!distance_samp->empty())
+            {
+                //Calculate average speed and standard error
+                distance_reg->emplace_front(distance_samp);
+                speed_reg->emplace_front(samples.at(sta.first).distance_registry);
+                distance_samp->clear();
+
+                double diff = std::abs(distance_reg->begin()->average_distance - std::next(distance_reg->begin())->average_distance);
+                samples.at(sta.first).moving = diff > std::max(speed_reg->begin()->standard_deviation, std::next(speed_reg->begin())->standard_deviation);
+            }
+            //If there are no collected samples in the interval, estimate movement
+            /*else
+            {
+                distance_registry reg = distance_registry(
+                (distance_reg->begin()->average_distance+speed_reg->begin()->average_speed*scan_interval)/scan_interval,
+                distance_reg->begin()->standard_deviation,
+                MilliSeconds(scan_interval));
+                distance_reg->emplace_front(reg);
+                speed_reg->emplace_front(samples.at(sta.first).distance_registry);
+                samples.at(sta.first).moving =
+                        std::abs(speed_reg->begin()->average_speed)
+                        > std::abs(speed_reg->begin()->standard_deviation);
+
+            }*/
+
+            //Calculate average STA distance
+            average_sta_distance += distance_reg->begin()->average_distance;
+            if (distance_reg->begin()->standard_deviation > average_sta_distance_deviation)
+                average_sta_distance_deviation = distance_reg->begin()->standard_deviation;
+
+            if (distance_reg->size() < 2)
+                continue;
+
+            //Clean old registries to free memory and improve simulation speed
+            //for (auto it : *distance_reg)
+            //    std::cout << "dist " << it.average_distance<<std::endl;
+            if (distance_reg->size() > 2)
+            {
+                auto it = distance_reg->begin();
+                std::advance(it, 2);
+                distance_reg->erase(it, distance_reg->end());
+            }
+            if (speed_reg->size() > 2)
+            {
+                auto it = speed_reg->begin();
+                std::advance(it, 2);
+                speed_reg->erase(it, speed_reg->end());
+            }
+
+        }
+
+        average_sta_distance /= this->samples.size();
+
+        Mac48Address approachSta, movAwaySta;
+        bool changedApproach = false, changedMoving = false;
+
+        //For each station, find Stas approaching or moving away from AP
+        for (auto sta: m_staAtRange)
+        {
+            if(samples.at(sta.first).moving)
+            {
+                distance_registry_list * distance_reg = &samples.at(sta.first).distance_registry;
+                speed_registry_list * speed_reg = &samples.at(sta.first).speed_registry;
+                
+                double distance = distance_reg->begin()->average_distance;
+                double speed =  speed_reg->begin()->average_speed;
+
+                double diffdistance = distance - std::next(distance_reg->begin())->average_distance;
+
+                double error = std::max(distance_reg->begin()->standard_deviation, std::next(distance_reg->begin())->standard_deviation);
+                bool registered = false;
+
+                for (auto registeredSta: m_staList)
+                {
+                    registered = sta.first == registeredSta;
+                    if (registered)
+                        break;
+                }
+
+                //std::cout << "distance " << distance << "  diffdistance " << diffdistance << std::endl;
+                //STA moving away from AP
+                if ((diffdistance - error ) > 0.0
+                    && distance >= (average_sta_distance+max_known_distance)/2
+                    && distance <= max_known_distance
+                    && speed > 0.0
+                    && registered)
+                {
+                    if (!changedMoving)
+                    {
+                        movAwaySta = sta.first;
+                        changedMoving = true;
+                    }
+                    else
+                    {
+                        if (distance_reg->begin()->average_distance
+                                > samples.at(movAwaySta).distance_registry.begin()->average_distance)
+                            movAwaySta = sta.first;
+                    }
+                }
+
+                //STA approaching the AP
+                if ((diffdistance + error ) < 0.0
+                    && distance >= average_sta_distance
+                    && speed <= 0.0
+                    && !registered)
+                {
+                    if (!changedApproach)
+                    {
+                        approachSta = sta.first;
+                        changedApproach = true;
+                    }
+                    else
+                    {
+                        if (distance_reg->begin()->average_distance
+                            < samples.at(approachSta).distance_registry.begin()->average_distance)
+                            approachSta = sta.first;
+                    }
+                }
+            }
+        }
+
+        if (changedApproach | changedMoving)
+        {
+            m_activeNetwork = true;
+            m_beaconInterval = NanoSeconds(m_beaconInterval.GetInteger()/2);
+            m_beaconInterval = m_beaconInterval > m_minBeaconInterval ? m_beaconInterval : m_minBeaconInterval;
+
+            //Cancel previous beacon and register new one
+            Time t = Simulator::GetDelayLeft(m_beaconEvent);
+            Simulator::Cancel(m_beaconEvent);
+            m_beaconEvent = Simulator::Schedule(m_beaconInterval.GetInteger() < t.GetInteger()?
+                    m_beaconInterval : t, &ApWifiMac::SendOneBeacon, this);
+        }
+
+
+    }
+
+    distance_sample::distance_sample(double rssi, double txpower, Time timestamp)
+    {
+        this->distance = calculate_distance_RSSI(rssi, txpower);
+        this->timestamp = timestamp;
+        if (txpower > 0.0)
+        std::cout<< "rssi" << rssi << std::endl;
+    }
+    distance_registry::distance_registry(double average_distance, double standard_deviation, Time measurement_interval)
+    {
+        this->average_distance = average_distance;
+        this->standard_deviation = standard_deviation;
+        this->measurement_interval = measurement_interval;
+    }
+
+    distance_registry::distance_registry(distance_samples_list *distance_samples) {
+        std::list<double> distances_list;
+        double distance_sum = 0.0;
+        unsigned num_samples = 0;
+        average_distance = 0;
+        standard_deviation = 0;
+        measurement_interval = Time(NanoSeconds(1));
+
+        for (auto sample: *distance_samples) {
+            distances_list.emplace_front(sample.distance);
+            distance_sum += sample.distance;
+            num_samples++;
+        }
+
+        if (!distance_samples->empty()) {
+            average_distance = distance_sum / num_samples;
+            standard_deviation = calculateSD(distances_list, average_distance);
+            measurement_interval = distance_samples->begin()->timestamp - distance_samples->end()->timestamp;
+            //std::cout << "average distance "<<this->average_distance << "    standard error  "<< standard_deviation<<std::endl;
+
+        }
+    }
+
+    speed_registry::speed_registry(distance_registry_list registries)
+    {
+        distance_registry current_registry = *registries.begin();
+        distance_registry previous_registry = *(std::next(registries.begin()));
+
+        measurement_interval = current_registry.measurement_interval - previous_registry.measurement_interval;
+        average_speed = (current_registry.average_distance - previous_registry.average_distance)/this->measurement_interval.GetSeconds();
+        standard_deviation = current_registry.standard_deviation > previous_registry.standard_deviation
+                                   ? current_registry.standard_deviation : previous_registry.standard_deviation;
+        if (std::isnan(average_speed) || std::isinf(average_speed) || average_speed < 0.0001)
+            average_speed = 0.0;
+        //std::cout << "average speed "<<this->average_speed<<std::endl;
+
     }
 
 } //namespace ns3

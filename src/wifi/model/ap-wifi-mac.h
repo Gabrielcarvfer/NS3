@@ -33,7 +33,46 @@
 #include "ns3/random-variable-stream.h"
 
 namespace ns3 {
+    typedef Callback<void, Mac48Address, double, double, Time> registerSampleCallback;
 
+
+    class distance_sample{
+    public:
+        distance_sample(double rssi, double txpower, Time timestamp);
+        double distance;
+        Time timestamp;
+    };
+    typedef std::list<distance_sample> distance_samples_list;
+
+    class distance_registry{
+    public:
+        explicit distance_registry(distance_samples_list * distance_samples);
+        distance_registry(double average_distance, double standard_deviation, Time measurement_interval);
+        double average_distance;
+        double standard_deviation;
+        Time measurement_interval;
+    };
+    typedef std::list<distance_registry> distance_registry_list;
+
+    class speed_registry{
+    public:
+        explicit speed_registry(distance_registry_list registries);
+        double average_speed;
+        double standard_deviation;
+        Time measurement_interval;
+    };
+    typedef std::list<speed_registry> speed_registry_list;
+
+    class STA_samples{
+    public:
+        distance_samples_list distance_samples;
+        distance_registry_list distance_registry;
+        speed_registry_list speed_registry;
+        Time lastSeenTimestamp;
+        bool moving;
+    };
+
+    typedef std::map<Mac48Address, STA_samples> STA_samples_list;
 /**
  * \brief Wi-Fi AP state machine
  * \ingroup wifi
@@ -299,6 +338,50 @@ private:
   std::list<Mac48Address> m_nonHtStations;   //!< List of all non-HT stations currently associated to the AP
   bool m_enableNonErpProtection;             //!< Flag whether protection mechanism is used or not when non-ERP STAs are present within the BSS
   bool m_disableRifs;                        //!< Flag whether to force RIFS to be disabled within the BSS If non-HT STAs are detected
+
+
+
+    Time m_minBeaconInterval;
+    Time m_maxBeaconInterval;
+    bool m_activeNetwork;
+    bool m_activeNetworkPrevious;
+    std::map<Mac48Address, bool> m_staAtRange;
+
+
+
+//Stuff for RSSI based distance measurement
+    //double calculate_distance_RSSI(double txpower, double rssi);
+
+    //Stuff for network motility
+    bool Motility();
+    bool moved;
+    uint scan_interval;
+    EventId m_motilityIntervalEvent;
+    double average_sta_distance;
+    double average_sta_distance_deviation;
+    double max_known_distance;
+    double min_known_distance;
+
+    public:
+    /**
+       * \return the maximal interval between two beacon transmissions.
+       */
+    Time GetMaxBeaconInterval (void) const;
+    /**
+   * \return the minimal interval between two beacon transmissions.
+   */
+    Time GetMinBeaconInterval (void) const;
+    /**
+      * \param interval the maximal interval between two beacon transmissions.
+      */
+    void SetMaxBeaconInterval (Time interval);
+    /**
+  * \param interval the minimal interval between two beacon transmissions.
+  */
+    void SetMinBeaconInterval (Time interval);
+
+    STA_samples_list samples; //Map addressed by mac address containing a list of rssi and txpower
+    void RegisterSample(Mac48Address from, double rssi, double txpower, Time timestamp);
 };
 
 } //namespace ns3

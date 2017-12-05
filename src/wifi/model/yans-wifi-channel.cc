@@ -118,6 +118,7 @@ void
 YansWifiChannel::Receive (Ptr<YansWifiPhy> phy, Ptr<Packet> packet, double rxPowerDbm, Time duration)
 {
   NS_LOG_FUNCTION (phy << packet << rxPowerDbm << duration.GetSeconds ());
+  packet->rxPowerDbm = rxPowerDbm + phy->GetRxGain ();
   phy->StartReceivePreambleAndHeader (packet, DbmToW (rxPowerDbm + phy->GetRxGain ()), duration);
 }
 

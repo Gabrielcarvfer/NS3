@@ -60,18 +60,18 @@ set(libs_to_build
         core #
         csma #
         csma-layout
-        #dsdv
-        #dsr
+        dsdv
+        dsr
         energy #
-        #fd-net-device #requires socket implementation
-        #flow-monitor
+        fd-net-device #requires socket implementation
+        flow-monitor
         internet #main block, couldnt identify the problem
         internet-apps
-        #lr-wpan #
-        #lte
-        #mesh
+        lr-wpan #
+        lte
+        mesh
         mobility #
-        #mpi
+        mpi
         netanim
         network #
         nix-vector-routing

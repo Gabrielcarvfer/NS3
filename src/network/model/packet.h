@@ -732,6 +732,8 @@ private:
   Ptr<NixVector> m_nixVector; //!< the packet's Nix vector
 
   static uint32_t m_globalUid; //!< Global counter of packets Uid
+public:
+    double rxPowerDbm; //Just to circumvent NS3 implementation to get RSSI
 };
 
 /**

@@ -12,3 +12,11 @@ scratch/wif*
 scratch/run*
 contrib/hanyassasa97
 src/wifi/*
+contrib/gabrielcarvfer/vasisht2016_chronos/CMakeLists.txt
+contrib/gabrielcarvfer/CMakeLists.txt
+contrib/gabrielcarvfer/vasisht2016_chronos/CMakeLists.txt
+contrib/gabrielcarvfer/vasisht2016_chronos/examples/wif-ap2.cc
+contrib/gabrielcarvfer/vasisht2016_chronos/examples/wif-ap2_mod.cc
+contrib/gabrielcarvfer/vasisht2016_chronos/model/ap-wifi-mac-chronos.cc
+contrib/gabrielcarvfer/vasisht2016_chronos/model/ap-wifi-mac-chronos.h
+contrib/gabrielcarvfer/vasisht2016_chronos/model/sta-wifi-mac-chronos.h

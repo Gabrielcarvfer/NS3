@@ -32,6 +32,7 @@
 #include "mpdu-aggregator.h"
 #include "msdu-aggregator.h"
 
+
 class TwoLevelAggregationTest;
 class AmpduAggregationTest;
 
@@ -42,6 +43,8 @@ class EdcaTxopN;
 class DcfManager;
 class WifiMacQueueItem;
 class WifiMacQueue;
+    class ApWifiMac;
+    typedef Callback<void, Mac48Address, double, double, Time> registerSampleCallback;
 
 /**
  * \brief control how a packet is transmitted.
@@ -1177,6 +1180,13 @@ private:
   Ptr<WifiMacQueue> m_aggregateQueue[8]; //!< Queues per TID used for MPDU aggregation
   std::vector<Item> m_txPackets[8];      //!< Contain temporary items to be sent with the next A-MPDU transmission for a given TID, once RTS/CTS exchange has succeeded.
   WifiTxVector m_currentTxVector;        //!< TXVECTOR used for the current packet transmission
+
+
+    registerSampleCallback m_registerSampleCallback; //!< Callback to register sample
+
+public:
+    void SetRegisterSampleCallback (registerSampleCallback callback);
+    bool ap;
 };
 
 } //namespace ns3

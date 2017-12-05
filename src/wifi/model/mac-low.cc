@@ -819,6 +819,11 @@ MacLow::ReceiveOk (Ptr<Packet> packet, double rxSnr, WifiTxVector txVector, bool
   packet->RemoveHeader (hdr);
   m_lastReceivedHdr = hdr;
 
+    if (ap)
+    {
+
+      m_registerSampleCallback(hdr.GetAddr2(), packet->rxPowerDbm, txVector.GetTxPowerLevel(), Simulator::Now());
+    }
   bool isPrevNavZero = IsNavZero ();
   NS_LOG_DEBUG ("duration/id=" << hdr.GetDuration ());
   NotifyNav (packet, hdr, txVector.GetPreambleType ());
@@ -3098,4 +3103,10 @@ MacLow::AddWifiMacTrailer (Ptr<Packet> packet)
   packet->AddTrailer (fcs);
 }
 
+
+    void
+    MacLow::SetRegisterSampleCallback (registerSampleCallback callback)
+    {
+      m_registerSampleCallback = callback;
+    }
 } //namespace ns3

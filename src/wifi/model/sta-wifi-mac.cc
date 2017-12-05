@@ -98,6 +98,7 @@ StaWifiMac::StaWifiMac ()
   //Let the lower layers know that we are acting as a non-AP STA in
   //an infrastructure BSS.
   SetTypeOfStation (STA);
+  this->m_low->ap = false;
 }
 
 StaWifiMac::~StaWifiMac ()
