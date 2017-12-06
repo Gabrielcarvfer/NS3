@@ -106,6 +106,7 @@ namespace ns3 {
         average_sta_distance_deviation = 0.0;
         average_sta_distance = 0.0;
         min_known_distance = 10000000.0;
+        max_known_distance = 0.0;
 
         m_beaconDca->SetManager (m_dcfManager);
         m_beaconDca->SetTxMiddle (m_txMiddle);
@@ -800,8 +801,8 @@ namespace ns3 {
 
         //The beacon has it's own special queue, so we load it in there
         m_beaconDca->Queue (packet, hdr);
-        if (m_low->GetAddress() != Mac48Address("00:00:00:00:00:0c"))
-            std::cout << this->GetAddress() << "BeaconInterval: "<< m_beaconInterval<< std::endl;
+
+        std::cout << this->GetAddress() << "BeaconInterval: "<< m_beaconInterval<< std::endl;
 
         m_activeNetwork = false;
         double tempInterval = m_beaconInterval.GetInteger()*2;
@@ -1276,10 +1277,6 @@ namespace ns3 {
         }
 
         //Measure distance based on RSSI
-        if (m_low->GetAddress() == Mac48Address("00:00:00:00:00:0c"))
-            txpower = 0.0;
-        else
-            txpower =1.0;
         distance_sample sample = distance_sample(rssi, txpower, timestamp);
         (samples.at(from)).distance_samples.emplace_front(sample);
 
@@ -1408,10 +1405,9 @@ namespace ns3 {
                 //std::cout << "distance " << distance << "  diffdistance " << diffdistance << std::endl;
                 //STA moving away from AP
                 if ((diffdistance - error ) > 0.0
-                    && distance >= (average_sta_distance+max_known_distance)/2
-                    && distance <= max_known_distance
-                    && speed > 0.0
-                    && registered)
+                    && distance >= max_known_distance*0.75
+                    //&& registered
+                    )
                 {
                     if (!changedMoving)
                     {
@@ -1427,11 +1423,14 @@ namespace ns3 {
                 }
 
                 //STA approaching the AP
-                if ((diffdistance + error ) < 0.0
-                    && distance >= average_sta_distance
-                    && speed <= 0.0
-                    && !registered)
+                if (!registered
+                    && (diffdistance + error ) < 0.0
+                    && distance >= max_known_distance*0.75)
+                    //&& distance >= average_sta_distance
+                    //&& distance >= (max_known_distance+average_sta_distance)/2
+                    //&& speed <= 0.0)
                 {
+                    //std::cout << "distance " << distance << " avg_dist " << average_sta_distance << " maxDist"<<max_known_distance<< std::endl;
                     if (!changedApproach)
                     {
                         approachSta = sta.first;
@@ -1467,8 +1466,8 @@ namespace ns3 {
     {
         this->distance = calculate_distance_RSSI(rssi, txpower);
         this->timestamp = timestamp;
-        if (txpower > 0.0)
-        std::cout<< "rssi" << rssi << std::endl;
+        //if (txpower > 0.0)
+        //std::cout<< "rssi" << rssi << std::endl;
     }
     distance_registry::distance_registry(double average_distance, double standard_deviation, Time measurement_interval)
     {

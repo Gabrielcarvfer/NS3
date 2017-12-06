@@ -16,8 +16,8 @@ set(examples
 
 foreach(example ${examples})
     set(name ${example})
-    set(source_files wifi/examples/${name}.cc)
-    set(header_files)
+    set(source_files wifi/examples/${name}.cc wifi/examples/shared.cc)
+    set(header_files wifi/examples/shared.h)
     set(libraries_to_link
             #${lib${contrib_name}}
             ${libwifi}
