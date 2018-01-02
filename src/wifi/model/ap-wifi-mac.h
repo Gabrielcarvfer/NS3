@@ -384,6 +384,8 @@ private:
 
     STA_samples_list samples; //Map addressed by mac address containing a list of rssi and txpower
     void RegisterSample(Mac48Address from, double rssi, double txpower, Time timestamp);
+        bool dynamicBeaconEnabled;
+        double interest_radius;
 };
 
 } //namespace ns3

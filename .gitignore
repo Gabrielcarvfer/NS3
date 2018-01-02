@@ -10,6 +10,4 @@ cmake-build-debug
 scratch/shared/
 scratch/wif*
 scratch/run*
-contrib/hanyassasa97
-contrib/gabrielcarvfer/vasisht2016_chronos/*
-contrib/gabrielcarvfer/wifi/model/*
+cmake

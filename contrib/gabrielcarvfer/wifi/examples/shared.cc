@@ -47,19 +47,16 @@ bool enable_log()
     //LogComponentEnable("YansWifiPhy", LOG_LEVEL_ALL);
 }
 
-void setup_mobility(NodeContainer * nodes, std::string mobilityModel, std::string x, std::string y, bool sta)
+void setup_mobility(NodeContainer * nodes, std::string mobilityModel, double x, double y, double maxRho)
 {
     MobilityHelper mobility;
-    std::string str;
-    if (sta)
-        str = "ns3::UniformRandomVariable[Min=0|Max=5]";
-    else
-        str = "ns3::UniformRandomVariable[Min=0|Max=60]";
+    std::stringstream ss;
+    ss << "ns3::UniformRandomVariable[Min=0|Max="<<maxRho<<"]";
 
     mobility.SetPositionAllocator ("ns3::RandomDiscPositionAllocator",
-                                   "X", StringValue (x),
-                                   "Y", StringValue (y),
-                                   "Rho", StringValue (str.c_str()));
+                                   "X", StringValue (std::to_string(x)),
+                                   "Y", StringValue (std::to_string(y)),
+                                   "Rho", StringValue (ss.str()));
     mobility.SetMobilityModel(mobilityModel);
     mobility.Install(*nodes);
 }
@@ -81,21 +78,20 @@ void setup_print_position_and_battery()
     //PrintCellInfo(energySourceContainer, &clientApps);
 }
 
-void setup_netanim(std::string outputFolder, std::string output_anim_file, int simulationDuration, NodeContainer * wifiApNodes)
+void setup_netanim(int simulationDuration, NodeContainer * wifiApNodes, AnimationInterface * anim)
 {
-    AnimationInterface anim(outputFolder+output_anim_file);
-    anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
-    anim.SetMobilityPollInterval(Seconds(0.1));
-    anim.EnablePacketMetadata(true);
+    anim->SetMaxPktsPerTraceFile(0xFFFFFFFF);
+    anim->SetMobilityPollInterval(Seconds(0.1));
+    anim->EnablePacketMetadata(true);
     //anim.EnableIpv4RouteTracking (outputFolder+"routingtable-wireless.xml", Seconds (0), Seconds (simulationDuration), Seconds (0.25));
-    anim.EnableWifiMacCounters (Seconds (0), Seconds (simulationDuration));
-    anim.EnableWifiPhyCounters (Seconds (0), Seconds (simulationDuration));
+    anim->EnableWifiMacCounters (Seconds (0), Seconds (simulationDuration));
+    anim->EnableWifiPhyCounters (Seconds (0), Seconds (simulationDuration));
 
 
     for (uint32_t i = 0; i < wifiApNodes->GetN (); ++i)
     {
-        anim.UpdateNodeDescription (wifiApNodes->Get (i), "AP"); // Optional
-        anim.UpdateNodeColor (wifiApNodes->Get (i), 0, 255, 0); // Optional
+        //anim->UpdateNodeDescription (wifiApNodes->Get (i), "AP"); // Optional
+        anim->UpdateNodeColor (wifiApNodes->Get (i), 0, 255, 0); // Optional
     }
 }
 

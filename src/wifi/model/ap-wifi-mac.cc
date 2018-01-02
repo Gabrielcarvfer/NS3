@@ -87,6 +87,18 @@ namespace ns3 {
                                BooleanValue (true),
                                MakeBooleanAccessor (&ApWifiMac::m_disableRifs),
                                MakeBooleanChecker ())
+                .AddAttribute ("EnableDynamicBeacon", "If set as true, the beacon interval is adjusted based on STA distances",
+                               BooleanValue(true),
+                               MakeBooleanAccessor(&ApWifiMac::dynamicBeaconEnabled),
+                               MakeBooleanChecker())
+                .AddAttribute ("ScanInterval", "Interval between motility scans (ms)",
+                               UintegerValue(10),
+                               MakeUintegerAccessor(&ApWifiMac::scan_interval),
+                               MakeUintegerChecker<uint>())
+                .AddAttribute ("InterestRadius", "Percentile of radius that is going to be checked for movement",
+                               DoubleValue(0.75),
+                               MakeDoubleAccessor(&ApWifiMac::interest_radius),
+                               MakeDoubleChecker<double>())
         ;
         return tid;
     }
@@ -752,62 +764,58 @@ namespace ns3 {
     }
 
     void
-    ApWifiMac::SendOneBeacon (void)
-    {
+    ApWifiMac::SendOneBeacon (void) {
         NS_LOG_FUNCTION (this);
         WifiMacHeader hdr;
-        hdr.SetBeacon ();
-        hdr.SetAddr1 (Mac48Address::GetBroadcast ());
-        hdr.SetAddr2 (this->GetAddress ());
-        hdr.SetAddr3 (this->GetAddress ());
-        hdr.SetDsNotFrom ();
-        hdr.SetDsNotTo ();
-        hdr.SetNoOrder ();
-        Ptr<Packet> packet = Create<Packet> ();
+        hdr.SetBeacon();
+        hdr.SetAddr1(Mac48Address::GetBroadcast());
+        hdr.SetAddr2(this->GetAddress());
+        hdr.SetAddr3(this->GetAddress());
+        hdr.SetDsNotFrom();
+        hdr.SetDsNotTo();
+        hdr.SetNoOrder();
+        Ptr<Packet> packet = Create<Packet>();
         MgtBeaconHeader beacon;
-        beacon.SetSsid (GetSsid ());
-        beacon.SetSupportedRates (GetSupportedRates ());
-        beacon.SetBeaconIntervalUs (m_beaconInterval.GetMicroSeconds ());
-        beacon.SetCapabilities (GetCapabilities ());
-        m_stationManager->SetShortPreambleEnabled (GetShortPreambleEnabled ());
-        m_stationManager->SetShortSlotTimeEnabled (GetShortSlotTimeEnabled ());
-        if (m_dsssSupported)
-        {
-            beacon.SetDsssParameterSet (GetDsssParameterSet ());
+        beacon.SetSsid(GetSsid());
+        beacon.SetSupportedRates(GetSupportedRates());
+        beacon.SetBeaconIntervalUs(m_beaconInterval.GetMicroSeconds());
+        beacon.SetCapabilities(GetCapabilities());
+        m_stationManager->SetShortPreambleEnabled(GetShortPreambleEnabled());
+        m_stationManager->SetShortSlotTimeEnabled(GetShortSlotTimeEnabled());
+        if (m_dsssSupported) {
+            beacon.SetDsssParameterSet(GetDsssParameterSet());
         }
-        if (m_erpSupported)
-        {
-            beacon.SetErpInformation (GetErpInformation ());
+        if (m_erpSupported) {
+            beacon.SetErpInformation(GetErpInformation());
         }
-        if (m_qosSupported)
-        {
-            beacon.SetEdcaParameterSet (GetEdcaParameterSet ());
+        if (m_qosSupported) {
+            beacon.SetEdcaParameterSet(GetEdcaParameterSet());
         }
-        if (m_htSupported || m_vhtSupported)
-        {
-            beacon.SetHtCapabilities (GetHtCapabilities ());
-            beacon.SetHtOperation (GetHtOperation ());
+        if (m_htSupported || m_vhtSupported) {
+            beacon.SetHtCapabilities(GetHtCapabilities());
+            beacon.SetHtOperation(GetHtOperation());
         }
-        if (m_vhtSupported || m_heSupported)
-        {
-            beacon.SetVhtCapabilities (GetVhtCapabilities ());
-            beacon.SetVhtOperation (GetVhtOperation ());
+        if (m_vhtSupported || m_heSupported) {
+            beacon.SetVhtCapabilities(GetVhtCapabilities());
+            beacon.SetVhtOperation(GetVhtOperation());
         }
-        if (m_heSupported)
-        {
-            beacon.SetHeCapabilities (GetHeCapabilities ());
+        if (m_heSupported) {
+            beacon.SetHeCapabilities(GetHeCapabilities());
         }
-        packet->AddHeader (beacon);
+        packet->AddHeader(beacon);
 
         //The beacon has it's own special queue, so we load it in there
-        m_beaconDca->Queue (packet, hdr);
+        m_beaconDca->Queue(packet, hdr);
 
-        std::cout << this->GetAddress() << "BeaconInterval: "<< m_beaconInterval<< std::endl;
+        //std::cout << Simulator::Now()<< " " <<this->GetAddress() << " BeaconInterval: "<< m_beaconInterval<< std::endl;
+        if (dynamicBeaconEnabled)
+        {
+            m_activeNetwork = false;
+            double tempInterval = m_beaconInterval.GetInteger() * 2;
+            m_beaconInterval = tempInterval < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInterval) : m_maxBeaconInterval;
+        }
+        m_beaconEvent = Simulator::Schedule(m_beaconInterval, &ApWifiMac::SendOneBeacon, this);
 
-        m_activeNetwork = false;
-        double tempInterval = m_beaconInterval.GetInteger()*2;
-        m_beaconInterval = tempInterval < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInterval) : m_maxBeaconInterval;
-        m_beaconEvent = Simulator::Schedule (m_beaconInterval, &ApWifiMac::SendOneBeacon, this);
 
         //If a STA that does not support Short Slot Time associates,
         //the AP shall use long slot time beginning at the first Beacon
@@ -1194,27 +1202,26 @@ namespace ns3 {
     }
 
     void
-    ApWifiMac::DoInitialize (void)
-    {
+    ApWifiMac::DoInitialize (void) {
         NS_LOG_FUNCTION (this);
-        m_beaconDca->Initialize ();
-        m_beaconEvent.Cancel ();
-        if (m_enableBeaconGeneration)
-        {
-            if (m_enableBeaconJitter)
-            {
-                int64_t jitter = m_beaconJitter->GetValue (0, m_beaconInterval.GetMicroSeconds ());
-                NS_LOG_DEBUG ("Scheduling initial beacon for access point " << GetAddress () << " at time " << jitter << " microseconds");
-                m_beaconEvent = Simulator::Schedule (MicroSeconds (jitter), &ApWifiMac::SendOneBeacon, this);
-            }
-            else
-            {
-                NS_LOG_DEBUG ("Scheduling initial beacon for access point " << GetAddress () << " at time 0");
-                m_beaconEvent = Simulator::ScheduleNow (&ApWifiMac::SendOneBeacon, this);
+        m_beaconDca->Initialize();
+        m_beaconEvent.Cancel();
+        if (m_enableBeaconGeneration) {
+            if (m_enableBeaconJitter) {
+                int64_t jitter = m_beaconJitter->GetValue(0, m_beaconInterval.GetMicroSeconds());
+                NS_LOG_DEBUG ("Scheduling initial beacon for access point " << GetAddress() << " at time " << jitter
+                                                                            << " microseconds");
+                m_beaconEvent = Simulator::Schedule(MicroSeconds(jitter), &ApWifiMac::SendOneBeacon, this);
+            } else {
+                NS_LOG_DEBUG ("Scheduling initial beacon for access point " << GetAddress() << " at time 0");
+                m_beaconEvent = Simulator::ScheduleNow(&ApWifiMac::SendOneBeacon, this);
             }
         }
-        RegularWifiMac::DoInitialize ();
-        m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility,this);
+        RegularWifiMac::DoInitialize();
+        if (dynamicBeaconEnabled)
+        {
+            m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility, this);
+        }
 
     }
 
@@ -1250,7 +1257,7 @@ namespace ns3 {
 
 
 
-    //Stuff for RSSI distance measurement
+//Stuff for RSSI distance measurement
     double calculate_distance_RSSI(double rssi, double txpower)
     {
         //double dist = (10, (txpower - rssi) / (10 * 2));
@@ -1278,12 +1285,16 @@ namespace ns3 {
 
         //Measure distance based on RSSI
         distance_sample sample = distance_sample(rssi, txpower, timestamp);
-        (samples.at(from)).distance_samples.emplace_front(sample);
 
-        if (max_known_distance < sample.distance)
-            max_known_distance = sample.distance;
-        //std::cout << "distance " << sample.distance << " saved " << samples.at(from).distance_samples.begin()->distance<<std::endl;
+        if (sample.distance < 350.0)
+        {
+            (samples.at(from)).distance_samples.emplace_front(sample);
 
+            if (max_known_distance < sample.distance)
+                max_known_distance = sample.distance;
+
+            //std::cout << GetAddress() << " : distance " << sample.distance << " max " << max_known_distance<< std::endl;
+        }
         //if (samples.at(from).distance_samples.size() >=10) {
         //    //Cancel previous motility run and register new one to execute now
         //    Motility();
@@ -1405,7 +1416,7 @@ namespace ns3 {
                 //std::cout << "distance " << distance << "  diffdistance " << diffdistance << std::endl;
                 //STA moving away from AP
                 if ((diffdistance - error ) > 0.0
-                    && distance >= max_known_distance*0.75
+                    && distance >= max_known_distance*interest_radius
                     //&& registered
                     )
                 {
@@ -1425,7 +1436,7 @@ namespace ns3 {
                 //STA approaching the AP
                 if (!registered
                     && (diffdistance + error ) < 0.0
-                    && distance >= max_known_distance*0.75)
+                    && distance >= max_known_distance*interest_radius)
                     //&& distance >= average_sta_distance
                     //&& distance >= (max_known_distance+average_sta_distance)/2
                     //&& speed <= 0.0)
@@ -1513,5 +1524,6 @@ namespace ns3 {
         //std::cout << "average speed "<<this->average_speed<<std::endl;
 
     }
+
 
 } //namespace ns3

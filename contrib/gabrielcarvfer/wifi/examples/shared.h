@@ -10,8 +10,6 @@
 #include <ns3/bs-net-device.h>
 #include <ns3/csma-module.h>
 #include <ns3/uan-module.h>
-
-
 #include <ns3/wifi-module.h>
 #include <ns3/core-module.h>
 #include <ns3/mobility-module.h>
@@ -42,6 +40,7 @@ SubscriberStationNetDevice s;\
 CsmaNetDevice c;\
 UanNetDevice u\
 
+
 static void
 PrintCellInfo (EnergySourceContainer esCon, ApplicationContainer *clientApps);
 
@@ -49,13 +48,12 @@ double watthToJoule(double watth);
 
 bool enable_log();
 
-void setup_mobility(NodeContainer * nodes, std::string mobilityModel, std::string x, std::string y, bool sta);
+void setup_mobility(NodeContainer * nodes, std::string mobilityModel, double x, double y, double maxRho);
 
 void setup_print_position_and_battery();
-void setup_netanim(std::string outputFolder,
-                   std::string output_anim_file,
-                   int simulationDuration,
-                   NodeContainer * wifiApNodes);
+void setup_netanim(int simulationDuration,
+                   NodeContainer * wifiApNodes,
+                   AnimationInterface * anim);
 static void changeNetwork(Ptr<Node> station, Ptr<Node> ap1, Ptr<Node> ap2);
 
 #endif //Shared.cc
