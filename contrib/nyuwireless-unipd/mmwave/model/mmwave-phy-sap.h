@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -31,8 +35,8 @@
 #define SRC_MMWAVE_MODEL_MMWAVE_PHY_SAP_H_
 
 #include <ns3/packet-burst.h>
-#include <ns3/mmwave-phy-mac-common.h>
-#include <ns3/mmwave-mac-sched-sap.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy-mac-common.h>
+#include <ns3/nyuwireless-unipd/mmwave-mac-sched-sap.h>
 
 namespace ns3 {
 
@@ -129,6 +133,11 @@ public:
    * \param subframeNo subframe number
    */
 	virtual void SubframeIndication (SfnSf) = 0;
+
+	/**
+	 * When PHY connects to a new eNB, update the configuration parameters
+	 */
+	virtual void SetConfigurationParameters(Ptr<MmWavePhyMacCommon> params) = 0;
 
 	//virtual void NotifyHarqDeliveryFailure (uint8_t harqId) = 0;
 };

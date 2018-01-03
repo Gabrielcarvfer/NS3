@@ -2,111 +2,113 @@
 set(name mmwave)
 
 set(source_files
+        helper/core-network-stats-calculator.cc
+        helper/mc-stats-calculator.cc
+		helper/mmwave-bearer-stats-calculator.cc
+		helper/mmwave-bearer-stats-connector.cc
         helper/mmwave-helper.cc
         helper/mmwave-phy-rx-trace.cc
         helper/mmwave-point-to-point-epc-helper.cc
-        helper/mmwave-bearer-stats-calculator.cc
-        helper/mmwave-bearer-stats-connector.cc
-        model/mmwave-net-device.cc
-        model/mmwave-enb-net-device.cc
-        model/mmwave-ue-net-device.cc
-        model/mmwave-phy.cc
-        model/mmwave-enb-phy.cc
-        model/mmwave-ue-phy.cc
-        model/mmwave-spectrum-phy.cc
-        model/mmwave-spectrum-value-helper.cc
-        model/mmwave-beamforming.cc
-        model/mmwave-interference.cc
-        model/mmwave-chunk-processor.cc
-        model/mmwave-mac.cc
-        model/mmwave-mac-scheduler.cc
-        model/mmwave-control-messages.cc
-        model/mmwave-spectrum-signal-parameters.cc
-        model/mmwave-radio-bearer-tag.cc
-        model/mmwave-amc.cc
-        model/mmwave-phy-mac-common.cc
-        model/mmwave-mac-sched-sap.cc
-        model/mmwave-mac-csched-sap.cc
-        model/mmwave-phy-sap.cc
-        model/mmwave-mi-error-model.cc
-        model/mmwave-enb-mac.cc
-        model/mmwave-ue-mac.cc
-        model/mmwave-rrc-protocol-ideal.cc
-        model/mmwave-channel-matrix.cc
-	    model/buildings-obstacle-propagation-loss-model.cc
-        model/mmwave-mac-pdu-header.cc
-        model/mmwave-mac-pdu-tag.cc
-        model/mmwave-harq-phy.cc
-        model/mmwave-flex-tti-mac-scheduler.cc
-        model/mmwave-flex-tti-maxweight-mac-scheduler.cc
-        model/mmwave-flex-tti-maxrate-mac-scheduler.cc
-        model/mmwave-flex-tti-pf-mac-scheduler.cc
-        model/mmwave-propagation-loss-model.cc
-        model/antenna-array-model.cc
-        model/mmwave-channel-raytracing.cc
-        #model/mmwave-enb-cmac-sap.cc
-        #model/mmwave-enb-rrc.cc
-        #model/mmwave-mac-sap.cc
-        #model/mmwave-rrc-sap.cc
-        #model/mmwave-rlc.cc
-        #model/mmwave-rlc-sap.cc
-        model/mmwave-3gpp-propagation-loss-model.cc
-        model/mmwave-3gpp-channel.cc
-        model/mmwave-3gpp-buildings-propagation-loss-model.cc
+		model/antenna-array-model.cc
+		model/buildings-obstacle-propagation-loss-model.cc
+		model/mc-ue-net-device.cc
+		model/mmwave-3gpp-buildings-propagation-loss-model.cc
+		model/mmwave-3gpp-channel.cc
+		model/mmwave-3gpp-propagation-loss-model.cc
+		model/mmwave-amc.cc
+		model/mmwave-beamforming.cc
+		model/mmwave-channel-matrix.cc
+		model/mmwave-channel-raytracing.cc
+		model/mmwave-chunk-processor.cc
+		model/mmwave-control-messages.cc
+		model/mmwave-enb-mac.cc
+		model/mmwave-enb-net-device.cc
+		model/mmwave-enb-phy.cc
+		model/mmwave-flex-tti-mac-scheduler.cc
+		model/mmwave-flex-tti-maxrate-mac-scheduler.cc
+		model/mmwave-flex-tti-maxweight-mac-scheduler.cc
+		model/mmwave-flex-tti-pf-mac-scheduler.cc
+		model/mmwave-harq-phy.cc
+		model/mmwave-interference.cc
+		model/mmwave-los-tracker.cc
+		model/mmwave-lte-rrc-protocol-real.cc
+		model/mmwave-mac-csched-sap.cc
+		model/mmwave-mac-pdu-header.cc
+		model/mmwave-mac-pdu-tag.cc
+		model/mmwave-mac-sched-sap.cc
+		model/mmwave-mac-scheduler.cc
+		model/mmwave-mac.cc
+		model/mmwave-mi-error-model.cc
+		model/mmwave-net-device.cc
+		model/mmwave-phy-mac-common.cc
+		model/mmwave-phy-sap.cc
+		model/mmwave-phy.cc
+		model/mmwave-propagation-loss-model.cc
+		model/mmwave-radio-bearer-tag.cc
+		model/mmwave-rr-mac-scheduler.cc
+		model/mmwave-rrc-protocol-ideal.cc
+		model/mmwave-spectrum-phy.cc
+		model/mmwave-spectrum-signal-parameters.cc
+		model/mmwave-spectrum-value-helper.cc
+		model/mmwave-ue-mac.cc
+		model/mmwave-ue-net-device.cc
+		model/mmwave-ue-phy.cc
+		model/mmwave.cc
         )
 
 set(header_files
-        helper/mmwave-helper.h
-        helper/mmwave-phy-rx-trace.h
-        helper/mmwave-point-to-point-epc-helper.h
-        helper/mmwave-bearer-stats-calculator.h
-        helper/mmwave-bearer-stats-connector.h
-        model/mmwave-net-device.h
-        model/mmwave-enb-net-device.h
-        model/mmwave-ue-net-device.h
-        model/mmwave-phy.h
-        model/mmwave-enb-phy.h
-        model/mmwave-ue-phy.h
-        model/mmwave-spectrum-phy.h
-        model/mmwave-spectrum-value-helper.h
-        model/mmwave-beamforming.h
-        model/mmwave-interference.h
-        model/mmwave-chunk-processor.h
-        model/mmwave-mac.h
-        model/mmwave-phy-mac-common.h
-        model/mmwave-mac-scheduler.h
-        model/mmwave-control-messages.h
-        model/mmwave-spectrum-signal-parameters.h
-        model/mmwave-radio-bearer-tag.h
+        helper/core-network-stats-calculator.h
+        helper/mc-stats-calculator.h
+		helper/mmwave-bearer-stats-calculator.h
+		helper/mmwave-bearer-stats-connector.h
+		helper/mmwave-helper.h
+		helper/mmwave-phy-rx-trace.h
+		helper/mmwave-point-to-point-epc-helper.h
+        model/antenna-array-model.h
+        model/buildings-obstacle-propagation-loss-model.h
+		model/mc-ue-net-device.h
+		model/mmwave-3gpp-buildings-propagation-loss-model.h
+        model/mmwave-3gpp-channel.h
+        model/mmwave-3gpp-propagation-loss-model.h
         model/mmwave-amc.h
-        model/mmwave-mac-sched-sap.h
-        model/mmwave-mac-csched-sap.h
-        model/mmwave-phy-sap.h
-        model/mmwave-mi-error-model.h
-        model/mmwave-enb-mac.h
-        model/mmwave-ue-mac.h
-        model/mmwave-rrc-protocol-ideal.h
+        model/mmwave-beamforming.h
         model/mmwave-channel-matrix.h
-	    model/buildings-obstacle-propagation-loss-model.h
+        model/mmwave-channel-raytracing.h
+        model/mmwave-chunk-processor.h
+        model/mmwave-control-messages.h
+        model/mmwave-enb-mac.h
+        model/mmwave-enb-net-device.h
+        model/mmwave-enb-phy.h
+        model/mmwave-flex-tti-mac-scheduler.h
+        model/mmwave-flex-tti-maxrate-mac-scheduler.h
+        model/mmwave-flex-tti-maxweight-mac-scheduler.h
+        model/mmwave-flex-tti-pf-mac-scheduler.h
+        model/mmwave-harq-phy.h
+        model/mmwave-interference.h
+		model/mmwave-los-tracker.h
+		model/mmwave-lte-rrc-protocol-real.h
+        model/mmwave-mac-csched-sap.h
         model/mmwave-mac-pdu-header.h
         model/mmwave-mac-pdu-tag.h
-        model/mmwave-harq-phy.h
-        model/mmwave-flex-tti-mac-scheduler.h
-        model/mmwave-flex-tti-maxweight-mac-scheduler.h
-        model/mmwave-flex-tti-maxrate-mac-scheduler.h
-        model/mmwave-flex-tti-pf-mac-scheduler.h
+        model/mmwave-mac-sched-sap.h
+        model/mmwave-mac-scheduler.h
+        model/mmwave-mac.h
+        model/mmwave-mi-error-model.h
+        model/mmwave-net-device.h
+        model/mmwave-phy-mac-common.h
+        model/mmwave-phy-sap.h
+        model/mmwave-phy.h
         model/mmwave-propagation-loss-model.h
-        model/antenna-array-model.h
-        model/mmwave-channel-raytracing.h
-        #model/mmwave-enb-cmac-sap.h
-        #model/mmwave-enb-rrc.h
-        #model/mmwave-mac-sap.h
-        #model/mmwave-rrc-sap.h
-        #model/mmwave-rlc.h
-        #model/mmwave-rlc-sap.h
-        model/mmwave-3gpp-propagation-loss-model.h
-        model/mmwave-3gpp-channel.h
-        model/mmwave-3gpp-buildings-propagation-loss-model.h
+        model/mmwave-radio-bearer-tag.h
+        model/mmwave-rr-mac-scheduler.h
+        model/mmwave-rrc-protocol-ideal.h
+        model/mmwave-spectrum-phy.h
+        model/mmwave-spectrum-signal-parameters.h
+        model/mmwave-spectrum-value-helper.h
+        model/mmwave-ue-mac.h
+        model/mmwave-ue-net-device.h
+        model/mmwave-ue-phy.h
+        model/mmwave.h
 
         )
 
@@ -135,8 +137,8 @@ build_contrib_lib_component("${name}"
         )
 
 set(examples
-		mmwave-3gpp-channel-example
-		mmwave-3gpp-channel-test
+		#dce-example-mptcp-mmwave
+		mc-twoenbs
 		mmwave-amc-test
 		mmwave-amc-test2
 		mmwave-epc-amc-test
@@ -146,8 +148,6 @@ set(examples
 		mmwave-simple-epc
 		mmwave-tcp-building-example
 		mmwave-tcp-example
-		mmwave-tcp-multi-ue
-		mmwave-tcp-multiflow
 		mmwave-tcp-raytracing-example
 		mmwave-tdma
 		)

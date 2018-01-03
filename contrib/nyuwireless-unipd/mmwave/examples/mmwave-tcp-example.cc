@@ -27,9 +27,9 @@
 
 
 #include "ns3/point-to-point-module.h"
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-helper.h"
 #include "ns3/epc-helper.h"
-#include "ns3/mmwave-point-to-point-epc-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-point-to-point-epc-helper.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/ipv4-global-routing-helper.h"
@@ -168,10 +168,13 @@ CwndChange (Ptr<OutputStreamWrapper> stream, uint32_t oldCwnd, uint32_t newCwnd)
 int
 main (int argc, char *argv[])
 {
+	std::cout<<"arquivo"<<argv[0]<<std::endl;
 
 	//LogComponentEnable ("TcpSocketBase", LOG_LEVEL_INFO);
 	//LogComponentEnable ("PacketSink", LOG_LEVEL_INFO);
 	Config::SetDefault ("ns3::LteRlcUm::MaxTxBufferSize", UintegerValue (1024 * 1024));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ResourceBlockNum", UintegerValue(1));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ChunkPerRB", UintegerValue(72));
 	double stopTime = 5.9;
 	double simStopTime = 7.00;
 	Ipv4Address remoteHostAddr;

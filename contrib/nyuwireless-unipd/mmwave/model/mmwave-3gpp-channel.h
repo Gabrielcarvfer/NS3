@@ -37,10 +37,10 @@
 #include <ns3/angles.h>
 #include <ns3/net-device-container.h>
 #include <ns3/random-variable-stream.h>
-#include "mmwave-phy-mac-common.h"
-#include "mmwave-3gpp-propagation-loss-model.h"
-#include "mmwave-3gpp-buildings-propagation-loss-model.h"
-#include <ns3/antenna-array-model.h>
+#include "ns3/nyuwireless-unipd/mmwave-phy-mac-common.h"
+#include "ns3/nyuwireless-unipd/mmwave-3gpp-propagation-loss-model.h"
+#include <ns3/nyuwireless-unipd/antenna-array-model.h>
+#include "ns3/nyuwireless-unipd/mmwave-3gpp-buildings-propagation-loss-model.h"
 
 #define AOA_INDEX 0
 #define ZOA_INDEX 1
@@ -55,6 +55,7 @@
 
 namespace ns3{
 
+//class MmWave3gppBuildingsPropagationLossModel;
 
 typedef std::vector<double> doubleVector_t;
 typedef std::vector<doubleVector_t> double2DVector_t;
@@ -360,6 +361,8 @@ private:
 	bool m_portraitMode; //true (portrait mode); false (landscape mode).
 	std::string m_scenario;
 	double m_blockerSpeed;
+	bool m_forceInitialBfComputation;
+
 };
 
 

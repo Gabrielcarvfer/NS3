@@ -30,14 +30,14 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/config-store.h"
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-helper.h"
 #include <ns3/buildings-helper.h>
 #include "ns3/global-route-manager.h"
 #include "ns3/ipv4-global-routing-helper.h"
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/log.h"
-#include "ns3/mmwave-propagation-loss-model.h"
+#include "ns3/nyuwireless-unipd/mmwave-propagation-loss-model.h"
 
 using namespace ns3;
 
@@ -133,6 +133,8 @@ main (int argc, char *argv[])
 	Config::SetDefault ("ns3::MmWaveFlexTtiMacScheduler::HarqEnabled", BooleanValue(harqEnabled));
 	Config::SetDefault ("ns3::MmWaveFlexTtiMacScheduler::DlSchedOnly", BooleanValue(false));
 	Config::SetDefault ("ns3::MmWaveFlexTtiMacScheduler::UlSchedOnly", BooleanValue(true));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ResourceBlockNum", UintegerValue(1));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ChunkPerRB", UintegerValue(72));
 	Config::SetDefault ("ns3::MmWaveBeamforming::LongTermUpdatePeriod", TimeValue (Seconds (2*simTime)));
 	Config::SetDefault ("ns3::LteEnbRrc::SystemInformationPeriodicity", TimeValue (MilliSeconds (1.0)));
 	Config::SetDefault ("ns3::MmWaveBeamforming::SmallScaleFading", BooleanValue (smallScale));

@@ -1,6 +1,7 @@
  /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
  /*
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -20,6 +21,9 @@
  *        	 Sourjya Dutta <sdutta@nyu.edu>
  *        	 Russell Ford <russell.ford@nyu.edu>
  *        	 Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *			Dual Connectivity and Handover functionalities
  */
 
 
@@ -86,7 +90,11 @@ public:
 
 	void SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig);
 	Ptr<MmWavePhyMacCommon> GetConfigurationParameters (void) const;
-
+	
+	// hack to allow MmWaveEnbPhy to compute SINR even without pilots
+	Ptr<SpectrumValue> CalcRxPowerSpectralDensity(Ptr<const SpectrumValue> txPsd,
+	                                                   Ptr<const MobilityModel> a,
+	                                                   Ptr<const MobilityModel> b) const;
 
 private:
 

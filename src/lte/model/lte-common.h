@@ -195,7 +195,6 @@ struct PhyTransmissionStatParameters
   uint16_t m_size;    ///< Size of transport block
   uint8_t  m_rv;      ///< the redundancy version (HARQ)
   uint8_t  m_ndi;     ///< new data indicator flag
-  uint8_t  m_ccId;    ///< component carrier id
   
   /**
    *  TracedCallback signature.

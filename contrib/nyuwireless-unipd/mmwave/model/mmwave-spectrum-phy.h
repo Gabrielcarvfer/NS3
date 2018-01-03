@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
@@ -46,7 +50,7 @@
 #include <ns3/packet-burst.h>
 #include "mmwave-spectrum-signal-parameters.h"
 #include "ns3/random-variable-stream.h"
-#include "ns3/mmwave-beamforming.h"
+#include "ns3/nyuwireless-unipd/mmwave-beamforming.h"
 #include "mmwave-interference.h"
 #include "mmwave-control-messages.h"
 #include "mmwave-harq-phy.h"
@@ -104,6 +108,9 @@ public:
 
 	static TypeId GetTypeId(void);
 	virtual void DoDispose();
+
+	void Reset();
+	void ResetSpectrumModel();
 
 	void SetDevice(Ptr<NetDevice> d);
 	Ptr<NetDevice> GetDevice () const;
@@ -193,6 +200,11 @@ private:
 	Ptr<MmWaveHarqPhy> m_harqPhyModule;
 
 	bool m_isEnb;
+
+	EventId m_endTxEvent;
+	EventId m_endRxDataEvent;
+  	EventId m_endRxDlCtrlEvent;
+  	std::string m_fileName;
 
 };
 

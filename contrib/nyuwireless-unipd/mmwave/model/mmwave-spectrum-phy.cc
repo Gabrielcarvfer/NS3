@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -37,13 +41,14 @@
 #include <ns3/antenna-model.h>
 #include "mmwave-spectrum-phy.h"
 #include "mmwave-phy-mac-common.h"
-#include <ns3/mmwave-enb-net-device.h>
-#include <ns3/mmwave-ue-net-device.h>
-#include <ns3/mmwave-ue-phy.h>
+#include <ns3/nyuwireless-unipd/mmwave-enb-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mc-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-phy.h>
 #include "mmwave-radio-bearer-tag.h"
 #include <stdio.h>
 #include <ns3/double.h>
-#include <ns3/mmwave-mi-error-model.h>
+#include <ns3/nyuwireless-unipd/mmwave-mi-error-model.h>
 #include "mmwave-mac-pdu-tag.h"
 
 namespace ns3 {
@@ -118,6 +123,12 @@ MmWaveSpectrumPhy::GetTypeId(void)
 						 BooleanValue (true),
 						 MakeBooleanAccessor (&MmWaveSpectrumPhy::m_dataErrorModelEnabled),
 						 MakeBooleanChecker ())
+
+		.AddAttribute ("FileName",
+						"file name",
+						 StringValue ("no"),
+						 MakeStringAccessor (&MmWaveSpectrumPhy::m_fileName),
+						 MakeStringChecker ())
 		;
 
 	return tid;
@@ -126,6 +137,28 @@ void
 MmWaveSpectrumPhy::DoDispose()
 {
 
+}
+
+void 
+MmWaveSpectrumPhy::Reset ()
+{
+  NS_LOG_FUNCTION (this);
+  m_cellId = 0;
+  m_state = IDLE;
+  m_endTxEvent.Cancel ();
+  m_endRxDataEvent.Cancel ();
+  m_endRxDlCtrlEvent.Cancel ();
+  m_rxControlMessageList.clear ();
+  m_expectedTbs.clear ();
+  m_rxPacketBurstList.clear ();
+  //m_txPacketBurst = 0;
+  //m_rxSpectrumModel = 0;
+}
+
+void
+MmWaveSpectrumPhy::ResetSpectrumModel()
+{
+	m_rxSpectrumModel = 0;
 }
 
 void
@@ -304,9 +337,15 @@ MmWaveSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> params)
 		bool isAllocated = true;
 		Ptr<MmWaveUeNetDevice> ueRx = 0;
 		ueRx = DynamicCast<MmWaveUeNetDevice> (GetDevice ());
+		Ptr<McUeNetDevice> rxMcUe = 0;
+		rxMcUe = DynamicCast<McUeNetDevice> (GetDevice ());
 
 		if ((ueRx!=0) && (ueRx->GetPhy ()->IsReceptionEnabled () == false))
-		{
+		{	// if the first cast is 0 (the device is MC) then this if will not be executed
+			isAllocated = false;
+		} 
+		else if ((rxMcUe != 0) && (rxMcUe->GetMmWavePhy()->IsReceptionEnabled() == false))
+		{	// this is executed if the device is MC and is transmitting
 			isAllocated = false;
 		}
 
@@ -358,9 +397,13 @@ MmWaveSpectrumPhy::StartRxData (Ptr<MmwaveSpectrumSignalParametersDataFrame> par
 				DynamicCast<MmWaveEnbNetDevice> (GetDevice ());
 	Ptr<MmWaveUeNetDevice> ueRx =
 				DynamicCast<MmWaveUeNetDevice> (GetDevice ());
+	Ptr<McUeNetDevice> rxMcUe =
+				DynamicCast<McUeNetDevice> (GetDevice ());
+
 	switch(m_state)
 	{
 	case TX:
+		NS_LOG_INFO(this << " m_cellId");
 		NS_FATAL_ERROR("Cannot receive while transmitting");
 		break;
 	case RX_CTRL:
@@ -379,7 +422,7 @@ MmWaveSpectrumPhy::StartRxData (Ptr<MmwaveSpectrumSignalParametersDataFrame> par
 				m_firstRxDuration = params->duration;
 				NS_LOG_LOGIC (this << " scheduling EndRx with delay " << params->duration.GetSeconds () << "s");
 
-				Simulator::Schedule (params->duration, &MmWaveSpectrumPhy::EndRxData, this);
+				m_endRxDataEvent = Simulator::Schedule (params->duration, &MmWaveSpectrumPhy::EndRxData, this);
 			}
 			else
 			{
@@ -458,7 +501,9 @@ MmWaveSpectrumPhy::StartRxCtrl (Ptr<SpectrumSignalParameters> params)
 				{
 					Ptr<MmWaveUeNetDevice> ueRx =
 									DynamicCast<MmWaveUeNetDevice> (GetDevice ());
-					if (ueRx)
+					Ptr<McUeNetDevice> rxMcUe =
+									DynamicCast<McUeNetDevice> (GetDevice ());				
+					if (ueRx || rxMcUe)
 					{
 						NS_FATAL_ERROR ("UE already receiving control data from serving cell");
 					}
@@ -475,7 +520,7 @@ MmWaveSpectrumPhy::StartRxCtrl (Ptr<SpectrumSignalParameters> params)
 					NS_LOG_LOGIC (this << " scheduling EndRx with delay " << params->duration);
 					// store the DCIs
 					m_rxControlMessageList = dlCtrlRxParams->ctrlMsgList;
-					Simulator::Schedule (params->duration, &MmWaveSpectrumPhy::EndRxCtrl, this);
+					m_endRxDlCtrlEvent = Simulator::Schedule (params->duration, &MmWaveSpectrumPhy::EndRxCtrl, this);
 					ChangeState (RX_CTRL);
 				}
 				else
@@ -511,6 +556,7 @@ MmWaveSpectrumPhy::EndRxData ()
 
 	Ptr<MmWaveEnbNetDevice> enbRx = DynamicCast<MmWaveEnbNetDevice> (GetDevice ());
 	Ptr<MmWaveUeNetDevice> ueRx = DynamicCast<MmWaveUeNetDevice> (GetDevice ());
+	Ptr<McUeNetDevice> rxMcUe = DynamicCast<McUeNetDevice> (GetDevice ());
 
 	NS_ASSERT(m_state = RX_DATA);
 	ExpectedTbMap_t::iterator itTb = m_expectedTbs.begin ();
@@ -537,7 +583,7 @@ MmWaveSpectrumPhy::EndRxData ()
 				}
 			}
 
-			TbStats_t tbStats = MmWaveMiErrorModel::GetTbDecodificationStats (m_sinrPerceived,
+			MmWaveTbStats_t tbStats = MmWaveMiErrorModel::GetTbDecodificationStats (m_sinrPerceived,
 					itTb->second.rbBitmap, itTb->second.size, itTb->second.mcs, harqInfoList);
 			itTb->second.tbler = tbStats.tbler;
 			itTb->second.mi = tbStats.miTotal;
@@ -587,6 +633,7 @@ MmWaveSpectrumPhy::EndRxData ()
 
 				RxPacketTraceParams traceParams;
 				traceParams.m_tbSize = itTb->second.size;
+				traceParams.m_cellId = 0;
 				traceParams.m_frameNum = pduTag.GetSfn ().m_frameNum;
 				traceParams.m_sfNum = pduTag.GetSfn ().m_sfNum;
 				traceParams.m_slotNum = pduTag.GetSfn ().m_slotNum;
@@ -604,11 +651,46 @@ MmWaveSpectrumPhy::EndRxData ()
 				{
 					traceParams.m_cellId = enbRx->GetCellId();
 					m_rxPacketTraceEnb (traceParams);
+					 /*FILE* log_file;
+
+					char* fname = (char*)malloc(sizeof(char) * 255);
+
+					memset(fname, 0, sizeof(char) * 255);
+
+					sprintf(fname, "%s-sinr-%llu.txt", m_fileName.c_str(), traceParams.m_cellId);
+
+					log_file = fopen(fname, "a");
+
+					fprintf(log_file, "%lld \t  %f\n", Now().GetMicroSeconds (), 10*log10(traceParams.m_sinr));
+
+					fflush(log_file);
+
+					fclose(log_file);
+
+					if(fname)
+
+					free(fname);
+
+					fname = 0;*/
 				}
 				else if (ueRx)
 				{
+
 					traceParams.m_cellId = ueRx->GetTargetEnb()->GetCellId();
 					m_rxPacketTraceUe (traceParams);
+				}
+				else if (rxMcUe)
+				{
+					Ptr<McUeNetDevice> mcUe = DynamicCast<McUeNetDevice>(ueRx);
+					if(mcUe != 0)
+					{
+						Ptr<MmWaveEnbNetDevice> mmWaveEnb = mcUe->GetMmWaveTargetEnb();
+						if (mmWaveEnb != 0)
+						{
+							traceParams.m_cellId = mmWaveEnb->GetCellId();	
+						} 
+					}
+					m_rxPacketTraceUe (traceParams); // TODO consider a different trace for MC UE
 				}
 
 				// send HARQ feedback (if not already done for this TB)
@@ -774,10 +856,10 @@ MmWaveSpectrumPhy::StartTxDataFrames (Ptr<PacketBurst> pb, std::list<Ptr<MmWaveC
 		//NS_LOG_DEBUG ("ctrlMsgList.size () == " << txParams->ctrlMsgList.size ());
 
 		/* This section is used for trace */
-		Ptr<MmWaveEnbNetDevice> enbTx =
-					DynamicCast<MmWaveEnbNetDevice> (GetDevice ());
-		Ptr<MmWaveUeNetDevice> ueTx =
-					DynamicCast<MmWaveUeNetDevice> (GetDevice ());
+//		Ptr<MmWaveEnbNetDevice> enbTx =
+//					DynamicCast<MmWaveEnbNetDevice> (GetDevice ());
+//		Ptr<MmWaveUeNetDevice> ueTx =
+//					DynamicCast<MmWaveUeNetDevice> (GetDevice ());
 //		if (enbTx)
 //		{
 //			EnbPhyPacketCountParameter traceParam;
@@ -799,7 +881,7 @@ MmWaveSpectrumPhy::StartTxDataFrames (Ptr<PacketBurst> pb, std::list<Ptr<MmWaveC
 
 		m_channel->StartTx (txParams);
 
-		Simulator::Schedule (duration, &MmWaveSpectrumPhy::EndTx, this);
+		m_endTxEvent = Simulator::Schedule (duration, &MmWaveSpectrumPhy::EndTx, this);
 	}
 	break;
 	default:
@@ -837,7 +919,8 @@ MmWaveSpectrumPhy::StartTxDlControlFrames (std::list<Ptr<MmWaveControlMessage> >
 		txParams->ctrlMsgList = ctrlMsgList;
 		txParams->txAntenna = m_antenna;
 		m_channel->StartTx (txParams);
-		Simulator::Schedule (duration, &MmWaveSpectrumPhy::EndTx, this);
+		m_endTxEvent = Simulator::Schedule (duration, &MmWaveSpectrumPhy::EndTx, this);
+		//NS_LOG_UNCOND("Tx to cellId " << txParams->cellId << " m_cellID " << m_cellId);
 	}
 	}
 	return false;

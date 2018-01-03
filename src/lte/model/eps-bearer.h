@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -16,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 
@@ -23,7 +27,7 @@
 #define EPS_BEARER
 
 #include <ns3/uinteger.h>
-
+ 
 namespace ns3 {
 
 /**
@@ -33,7 +37,7 @@ namespace ns3 {
 struct GbrQosInformation
 {
   /** 
-   * Default constructor, initializes member variables to zero or equivalent
+   * Default constructor, inizializes member variables to zero or equivalent
    */
   GbrQosInformation ();
 
@@ -51,12 +55,12 @@ struct GbrQosInformation
 struct AllocationRetentionPriority
 {
   /** 
-   * Default constructor, initializes member variables to zero or equivalent
+   * Default constructor, inizializes member variables to zero or equivalent
    */
   AllocationRetentionPriority ();
-  uint8_t priorityLevel;     ///< 1-15; 1 = highest
-  bool preemptionCapability; ///< true if bearer can preempt others
-  bool preemptionVulnerability; ///< true if bearer can be preempted by others
+  uint8_t priorityLevel;     // /< 1-15; 1 = highest
+  bool preemptionCapability; // /< true if bearer can preempt others
+  bool preemptionVulnerability; // true if bearer can be preempted by others
 };
 
 /**
@@ -85,13 +89,14 @@ struct EpsBearer
     NGBR_VOICE_VIDEO_GAMING = 7,
     NGBR_VIDEO_TCP_PREMIUM  = 8,
     NGBR_VIDEO_TCP_DEFAULT  = 9,
-  } qci; ///< Qos class indicator
+		GBR_ULTRA_LOW_LAT				= 99,
+  } qci;
 
-  GbrQosInformation gbrQosInfo; ///< GBR QOS information
-  AllocationRetentionPriority arp; ///< allocation retention priority
+  GbrQosInformation gbrQosInfo;
+  AllocationRetentionPriority arp;
 
   /**
-   * Default constructor. QCI will be initialized to NGBR_VIDEO_TCP_DEFAULT
+   * Deault constructor. QCI will be initialized to NGBR_VIDEO_TCP_DEFAULT
    * 
    */
   EpsBearer ();
@@ -103,12 +108,6 @@ struct EpsBearer
    */
   EpsBearer (Qci x);
 
-  /**
-   *
-   * @param x the QoS Class Indicator
-   * @param y the GbrQosInformation
-   *
-   */
   EpsBearer (Qci x, GbrQosInformation y);
 
   /**

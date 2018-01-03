@@ -34,8 +34,9 @@
 //#include "mmwave-mac-scheduler.h"
 #include <ns3/lte-common.h>
 #include <ns3/boolean.h>
+#include <ns3/nyuwireless-unipd/mmwave-mac-pdu-header.h>
 
-namespace ns3 {
+ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("MmWaveRrMacScheduler");
 
@@ -140,7 +141,7 @@ MmWaveRrMacScheduler::GetTypeId (void)
 {
 	static TypeId tid = TypeId ("ns3::MmWaveRrMacScheduler")
 	    .SetParent<MmWaveMacScheduler> ()
-		.AddConstructor<MmWaveRrMacScheduler> ()
+		//.AddConstructor<MmWaveRrMacScheduler> ()
     .AddAttribute ("CqiTimerThreshold",
                    "The number of TTIs a CQI is valid (default 1000 - 1 sec.)",
                    UintegerValue (100),
@@ -287,9 +288,9 @@ MmWaveRrMacScheduler::DoSchedUlCqiInfoReq (const struct MmWaveMacSchedSapProvide
 {
   NS_LOG_FUNCTION (this);
 
-	unsigned frameNum = params.m_sfnSf >> 16;
-	unsigned subframeNum = (params.m_sfnSf >> 8) & 0xFF;
-	unsigned slotNum = params.m_sfnSf & 0xFF;
+	unsigned frameNum = params.m_sfnSf.m_frameNum;
+	unsigned subframeNum = params.m_sfnSf.m_sfNum;
+	unsigned slotNum = params.m_sfnSf.m_slotNum;
 
   switch (params.m_ulCqi.m_type)
     {
@@ -297,7 +298,7 @@ MmWaveRrMacScheduler::DoSchedUlCqiInfoReq (const struct MmWaveMacSchedSapProvide
       {
         std::map <uint32_t, std::vector <uint16_t> >::iterator itMap;
         std::map <uint16_t, std::vector <double> >::iterator itCqi;
-        itMap = m_allocationMaps.find (params.m_sfnSf);
+        itMap = m_allocationMaps.find (params.m_sfnSf.Encode());
         if (itMap == m_allocationMaps.end ())
           {
             NS_LOG_INFO (this << " Does not find info on allocation, size : " << m_allocationMaps.size ());
@@ -575,7 +576,7 @@ MmWaveRrMacScheduler::DoSchedDlTriggerReq (const struct MmWaveMacSchedSapProvide
 			//			            retx.push_back (m_dlHarqInfoList.at (i).m_harqStatus.at (1) == DlInfoListElement_s::NACK);
 			//			          }
 			//			        if (retx.at (0) || retx.at (1))
-			if(m_dlHarqInfoList.at (i).m_harqStatus.at (0) == DlHarqInfo::NACK)
+			if(m_dlHarqInfoList.at (i).m_harqStatus == DlHarqInfo::NACK)
 			{
 				// retrieve HARQ process information
 				uint16_t rnti = m_dlHarqInfoList.at (i).m_rnti;
@@ -1467,12 +1468,12 @@ MmWaveRrMacScheduler::DoSchedUlTriggerReq (const struct MmWaveMacSchedSapProvide
 void
 MmWaveRrMacScheduler::DoSchedTriggerReq (const struct MmWaveMacSchedSapProvider::SchedTriggerReqParameters& params)
 {
-	uint16_t frameNum = params.m_snfSf >> 16;
-	uint8_t	 sfNum = (params.m_snfSf & 0xff00)>>8;
+	uint16_t frameNum = params.m_snfSf.m_frameNum;
+	uint8_t	 sfNum = params.m_snfSf.m_sfNum;
 	NS_LOG_INFO ("Scheduling frame "<< (unsigned)frameNum << " subframe " << (unsigned)sfNum );
 
 	MmWaveMacSchedSapUser::SchedConfigIndParameters ret;
-	ret.m_sfn = params.m_snfSf;
+	ret.m_sfnSf = params.m_snfSf;
 	//	std::map<uint16_t,SchedInfo>& schedInfoMap = ret.m_schedInfoMap;
 
 	unsigned ulFrameNum;

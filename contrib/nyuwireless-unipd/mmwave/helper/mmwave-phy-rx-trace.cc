@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -68,36 +72,12 @@ MmWavePhyRxTrace::ReportCurrentCellRsrpSinrCallback (Ptr<MmWavePhyRxTrace> phySt
 																uint64_t imsi, SpectrumValue& sinr, SpectrumValue& power)
 {
 	NS_LOG_INFO ("UE"<<imsi<<"->Generate RsrpSinrTrace");
-	phyStats->ReportInterferenceTrace (imsi, sinr);
-	//phyStats->ReportPowerTrace (imsi, power);
-}
-
-void
-MmWavePhyRxTrace::UlSinrTraceCallback (Ptr<MmWavePhyRxTrace> phyStats, std::string path,
-																uint64_t imsi, SpectrumValue& sinr, SpectrumValue& power)
-{
-	NS_LOG_INFO ("UE"<<imsi<<"->Generate UlSinrTrace");
-	uint64_t slot_count = Now().GetMicroSeconds ()/125;
-	uint32_t rb_count = 1;
-	FILE* log_file;
-	char fname[255];
-	sprintf(fname, "UE_%llu_UL_SINR_dB.txt", (long long unsigned ) imsi);
-	log_file = fopen(fname, "a");
-	Values::iterator it = sinr.ValuesBegin();
-	while(it!=sinr.ValuesEnd())
-	{
-		//fprintf(log_file, "%d\t%d\t%f\t \n", slot_count/2, rb_count, 10*log10(*it));
-		fprintf(log_file, "%llu\t%llu\t%d\t%f\t \n",(long long unsigned )slot_count/8+1, (long long unsigned )slot_count%8+1, rb_count, 10*log10(*it));
-		rb_count++;
-		it++;
-	}
-	fflush(log_file);
-	fclose(log_file);
 	//phyStats->ReportInterferenceTrace (imsi, sinr);
-	//phyStats->ReportPowerTrace (imsi, power);
 }
 
-void
+
+
+/*void
 MmWavePhyRxTrace::ReportInterferenceTrace (uint64_t imsi, SpectrumValue& sinr)
 {
 	uint64_t slot_count = Now().GetMicroSeconds ()/125;
@@ -116,51 +96,32 @@ MmWavePhyRxTrace::ReportInterferenceTrace (uint64_t imsi, SpectrumValue& sinr)
 	}
 	fflush(log_file);
 	fclose(log_file);
-}
+}*/
 
-void
-MmWavePhyRxTrace::ReportPowerTrace (uint64_t imsi, SpectrumValue& power)
-{
 
-	uint32_t slot_count = Now().GetMicroSeconds ()/125;
-	uint32_t rb_count = 1;
-	FILE* log_file;
-	char fname[255];
-	printf (fname, "UE_%llu_ReceivedPower_dB.txt", (long long unsigned) imsi);
-	log_file = fopen(fname, "a");
-	Values::iterator it = power.ValuesBegin();
-	while(it!=power.ValuesEnd())
-	{
-		fprintf(log_file, "%llu\t%llu\t%d\t%f\t \n",(long long unsigned) slot_count/8+1,(long long unsigned) slot_count%8+1, rb_count, 10*log10(*it));
-		rb_count++;
-		it++;
-	}
-	fflush(log_file);
-	fclose(log_file);
-}
 
 void
 MmWavePhyRxTrace::ReportPacketCountUeCallback (Ptr<MmWavePhyRxTrace> phyStats, std::string path,
 			UePhyPacketCountParameter param)
 {
-	phyStats->ReportPacketCountUe (param);
+	//phyStats->ReportPacketCountUe (param);
 }
 void
 MmWavePhyRxTrace::ReportPacketCountEnbCallback (Ptr<MmWavePhyRxTrace> phyStats, std::string path,
 		EnbPhyPacketCountParameter param)
 {
-	phyStats->ReportPacketCountEnb (param);
+	//phyStats->ReportPacketCountEnb (param);
 }
 
 void
 MmWavePhyRxTrace::ReportDownLinkTBSize (Ptr<MmWavePhyRxTrace> phyStats, std::string path,
 		uint64_t imsi, uint64_t tbSize)
 {
-	phyStats->ReportDLTbSize (imsi, tbSize);
+	//phyStats->ReportDLTbSize (imsi, tbSize);
 }
 
 
-
+/*
 void
 MmWavePhyRxTrace::ReportPacketCountUe (UePhyPacketCountParameter param)
 {
@@ -210,12 +171,12 @@ MmWavePhyRxTrace::ReportDLTbSize (uint64_t imsi, uint64_t tbSize)
 	sprintf (fname,"UE_%llu_Tb_Size.txt", (long long unsigned) imsi);
 	log_file = fopen (fname, "a");
 
-	fprintf (log_file, "%llu \t %llu\n", (long long unsigned )Now().GetMicroSeconds (), (long long unsigned )tbSize);
+	fprintf (log_file, "%llu \t %llu\n", Now().GetMicroSeconds (), tbSize);
 	fprintf (log_file, "%lld \t %llu \n",(long long int) Now().GetMicroSeconds (), (long long unsigned) tbSize);
 	fflush(log_file);
 	fclose(log_file);
 }
-
+*/
 void
 MmWavePhyRxTrace::RxPacketTraceUeCallback (Ptr<MmWavePhyRxTrace> phyStats, std::string path, RxPacketTraceParams params)
 {
@@ -223,7 +184,6 @@ MmWavePhyRxTrace::RxPacketTraceUeCallback (Ptr<MmWavePhyRxTrace> phyStats, std::
 	{
 		m_rxPacketTraceFilename = "RxPacketTrace.txt";
 		m_rxPacketTraceFile.open(m_rxPacketTraceFilename.c_str ());
-		m_rxPacketTraceFile << "\tframe\tsubF\t1stSym\tsymbol#\tcellId\trnti\ttbSize\tmcs\trv\tSINR(dB)\tcorrupt\tTBler" << std::endl;
 		if (!m_rxPacketTraceFile.is_open())
 		{
 			NS_FATAL_ERROR ("Could not open tracefile");
@@ -232,14 +192,14 @@ MmWavePhyRxTrace::RxPacketTraceUeCallback (Ptr<MmWavePhyRxTrace> phyStats, std::
 	m_rxPacketTraceFile << "DL\t" << params.m_frameNum << "\t" << (unsigned)params.m_sfNum << "\t" << (unsigned)params.m_symStart
 			<< "\t" << (unsigned)params.m_numSym << "\t" << params.m_cellId
 			<< "\t" << params.m_rnti << "\t" << params.m_tbSize << "\t" << (unsigned)params.m_mcs << "\t" << (unsigned)params.m_rv << "\t"
-			<< 10*log10(params.m_sinr) << "\t\t" << params.m_corrupt <<"\t" << params.m_tbler << std::endl;
+			<< 10*std::log10(params.m_sinr) << "\t" << " \t" << params.m_corrupt << "\t" <<  params.m_tbler << std::endl;
 
 	if (params.m_corrupt)
 	{
 		NS_LOG_DEBUG ("DL TB error\t" << params.m_frameNum << "\t" << (unsigned)params.m_sfNum << "\t" << (unsigned)params.m_symStart
 		    << "\t" << (unsigned)params.m_numSym
 				<< "\t" << params.m_rnti << "\t" << params.m_tbSize << "\t" << (unsigned)params.m_mcs << "\t" << (unsigned)params.m_rv << "\t"
-				<< params.m_sinr << "\t" << params.m_tbler << "\t" << params.m_corrupt);
+				<< 10*std::log10(params.m_sinr) << "\t" << params.m_tbler << "\t" << params.m_corrupt);
 	}
 }
 void
@@ -250,7 +210,6 @@ MmWavePhyRxTrace::RxPacketTraceEnbCallback (Ptr<MmWavePhyRxTrace> phyStats, std:
 		m_rxPacketTraceFilename = "RxPacketTrace.txt";
 		m_rxPacketTraceFile.open(m_rxPacketTraceFilename.c_str ());
 		m_rxPacketTraceFile << "\tframe\tsubF\t1stSym\tsymbol#\tcellId\trnti\ttbSize\tmcs\trv\tSINR(dB)\tcorrupt\tTBler" << std::endl;
-
 		if (!m_rxPacketTraceFile.is_open())
 		{
 			NS_FATAL_ERROR ("Could not open tracefile");
@@ -259,14 +218,14 @@ MmWavePhyRxTrace::RxPacketTraceEnbCallback (Ptr<MmWavePhyRxTrace> phyStats, std:
 	m_rxPacketTraceFile << "UL\t" << params.m_frameNum << "\t" << (unsigned)params.m_sfNum << "\t" << (unsigned)params.m_symStart
 				<< "\t" << (unsigned)params.m_numSym << "\t" << params.m_cellId
 				<< "\t" << params.m_rnti << "\t" << params.m_tbSize << "\t" << (unsigned)params.m_mcs << "\t" << (unsigned)params.m_rv << "\t"
-				<< 10*log10(params.m_sinr) << "\t\t" << params.m_corrupt <<" \t" << params.m_tbler << std::endl;
+				<< 10*std::log10(params.m_sinr) << " \t" << params.m_corrupt << "\t" << params.m_tbler << std::endl;
 
 		if (params.m_corrupt)
 		{
 			NS_LOG_DEBUG ("UL TB error\t" << params.m_frameNum << "\t" << (unsigned)params.m_sfNum << "\t" << (unsigned)params.m_symStart
 			    << "\t" << (unsigned)params.m_numSym
 					<< "\t" << params.m_rnti << "\t" << params.m_tbSize << "\t" << (unsigned)params.m_mcs << "\t" << (unsigned)params.m_rv << "\t"
-					<< params.m_sinr << "\t" << params.m_tbler << "\t" << params.m_corrupt << "\t" << params.m_sinrMin);
+					<< 10*std::log10(params.m_sinr) << "\t" << params.m_tbler << "\t" << params.m_corrupt << "\t" << params.m_sinrMin);
 		}
 }
 

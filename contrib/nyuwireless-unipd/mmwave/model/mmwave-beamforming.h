@@ -1,6 +1,7 @@
  /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
  /*
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -20,6 +21,10 @@
  *        	 Sourjya Dutta <sdutta@nyu.edu>
  *        	 Russell Ford <russell.ford@nyu.edu>
  *        	 Menglei Zhang <menglei@nyu.edu>
+ *
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *			Dual Connectivity and Handover functionalities
  */
 
 
@@ -39,8 +44,9 @@
 #include <ns3/spectrum-signal-parameters.h>
 #include <ns3/mobility-model.h>
 #include <ns3/spectrum-propagation-loss-model.h>
-#include <ns3/mmwave-phy-mac-common.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy-mac-common.h>
 #include <ns3/random-variable-stream.h>
+#include <ns3/nyuwireless-unipd/antenna-array-model.h>
 
 
 
@@ -54,6 +60,7 @@ typedef std::vector<complexVector_t> complex2DVector_t;
 typedef std::vector<complex2DVector_t> complex3DVector_t;
 typedef std::vector<uint32_t> allocatedUeImsiVector_t;
 typedef std::pair<Ptr<NetDevice>, Ptr<NetDevice> > key_t;
+typedef std::pair<Ptr<AntennaArrayModel>, Ptr<AntennaArrayModel> > antennaPair;
 
 /**
 * \store Spatial Signature and small scale fading matrices
@@ -105,6 +112,18 @@ public:
 
 	void UpdateMatrices (bool update);
 
+	// hack to allow MmWaveEnbPhy to compute SINR even without pilots
+	Ptr<SpectrumValue> CalcRxPowerSpectralDensity(Ptr<const SpectrumValue> txPsd,
+	                                                   Ptr<const MobilityModel> a,
+	                                                   Ptr<const MobilityModel> b) const;
+
+	/**
+	* \breif Set the beamforming vector of connected enbs and ues
+	* \param ueDevice a pointer to ueNetDevice
+	* \param enbDevice a pointer to enbNetDevice
+	*/
+	void SetBeamformingVector (Ptr<NetDevice> ueDevice, Ptr<NetDevice> enbDevice);
+
 private:
 	/**
 	* \breif Get complex number from a string
@@ -144,12 +163,7 @@ private:
 	Ptr<SpectrumValue> DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
 	                                                   Ptr<const MobilityModel> a,
 	                                                   Ptr<const MobilityModel> b) const;
-	/**
-	* \breif Set the beamforming vector of connected enbs and ues
-	* \param ueDevice a pointer to ueNetDevice
-	* \param enbDevice a pointer to enbNetDevice
-	*/
-	void SetBeamformingVector (Ptr<NetDevice> ueDevice, Ptr<NetDevice> enbDevice);
+	
 	/**
 	* \breif Store the channel matrix to channelMatrixMap
 	* \param ueDevice a pointer to ueNetDevice
@@ -178,6 +192,11 @@ private:
 	*         power in the same units used for the txPsd parameter.
 	*/
 	Ptr<SpectrumValue> GetChannelGainVector (Ptr<const SpectrumValue> txPsd, Ptr<BeamformingParams> bfParams, double speed) const;
+
+	/**
+	 * \brief Get the pair of Ptr<AntennaArrayModel> of UE and eNB, given the NetDevices
+	 */
+	antennaPair GetUeEnbAntennaPair (Ptr<NetDevice> ueDevice, Ptr<NetDevice> enbDevice) const;
 
 	/**
 	* \a map to store channel matrix

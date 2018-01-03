@@ -132,8 +132,7 @@ EpcMme::DoInitialUeMessage (uint64_t mmeUeS1Id, uint16_t enbUeS1Id, uint64_t ims
   it->second->cellId = gci;
   EpcS11SapSgw::CreateSessionRequestMessage msg;
   msg.imsi = imsi;
-  msg.uli.gci = gci;
-  msg.teid = 0;
+  msg. uli.gci = gci;
   for (std::list<BearerInfo>::iterator bit = it->second->bearersToBeActivated.begin ();
        bit != it->second->bearersToBeActivated.end ();
        ++bit)

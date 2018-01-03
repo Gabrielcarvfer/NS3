@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,10 +24,13 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
-#include <ns3/mmwave-phy-mac-common.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy-mac-common.h>
 #include <ns3/log.h>
 #include <ns3/uinteger.h>
 #include <ns3/double.h>
@@ -129,9 +133,9 @@ MmWavePhyMacCommon::GetTypeId (void)
 							 MakeUintegerChecker<uint32_t> ())
 			.AddAttribute ("WbCqiPeriod",
 							 "Microseconds between wideband DL-CQI reports",
-							 UintegerValue (500),
-							 MakeUintegerAccessor (&MmWavePhyMacCommon::m_wbCqiPeriodUs),
-							 MakeUintegerChecker<uint32_t> ())
+							 DoubleValue (500.0),
+							 MakeDoubleAccessor (&MmWavePhyMacCommon::m_wbCqiPeriodUs),
+							 MakeDoubleChecker<double> ())
 		 .AddAttribute ("GuardPeriod",
 							 "Guard period for UL to DL slot transition in microseconds",
 							 DoubleValue (4.16),
@@ -182,7 +186,7 @@ MmWavePhyMacCommon::MmWavePhyMacCommon ()
   m_l1L2CtrlLatency (2),
   m_l1L2DataLatency (2),
   m_ulSchedDelay (1),
-	m_wbCqiPeriodUs (500),
+	m_wbCqiPeriodUs (500.0),
 	m_tbDecodeLatencyUs (100.0),
 	m_maxTbSizeBytes (0x7FFF)
 {

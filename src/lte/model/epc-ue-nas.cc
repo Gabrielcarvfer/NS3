@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -16,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #include <ns3/fatal-error.h>
@@ -65,6 +69,7 @@ EpcUeNas::EpcUeNas ()
 {
   NS_LOG_FUNCTION (this);
   m_asSapUser = new MemberLteAsSapUser<EpcUeNas> (this);
+  m_mmWaveAsSapProvider = 0;
 }
 
 
@@ -139,6 +144,13 @@ EpcUeNas::GetAsSapUser ()
 }
 
 void
+EpcUeNas::SetMmWaveAsSapProvider (LteAsSapProvider* s)
+{
+  NS_LOG_FUNCTION (this << s);
+  m_mmWaveAsSapProvider = s;
+}
+
+void
 EpcUeNas::SetForwardUpCallback (Callback <void, Ptr<Packet> > cb)
 {
   NS_LOG_FUNCTION (this);
@@ -146,7 +158,7 @@ EpcUeNas::SetForwardUpCallback (Callback <void, Ptr<Packet> > cb)
 }
 
 void
-EpcUeNas::StartCellSelection (uint32_t dlEarfcn)
+EpcUeNas::StartCellSelection (uint16_t dlEarfcn)
 {
   NS_LOG_FUNCTION (this << dlEarfcn);
   m_asSapProvider->StartCellSelection (dlEarfcn);
@@ -162,7 +174,7 @@ EpcUeNas::Connect ()
 }
 
 void
-EpcUeNas::Connect (uint16_t cellId, uint32_t dlEarfcn)
+EpcUeNas::Connect (uint16_t cellId, uint16_t dlEarfcn)
 {
   NS_LOG_FUNCTION (this << cellId << dlEarfcn);
 
@@ -171,6 +183,21 @@ EpcUeNas::Connect (uint16_t cellId, uint32_t dlEarfcn)
 
   // tell RRC to go into connected mode
   m_asSapProvider->Connect ();
+}
+
+void
+EpcUeNas::ConnectMc (uint16_t cellId, uint16_t dlEarfcn, uint16_t mmWaveCellId)
+{
+  NS_LOG_FUNCTION (this << cellId << dlEarfcn);
+
+  // force the UE RRC to be camped on a specific eNB
+  m_asSapProvider->ForceCampedOnEnb (cellId, dlEarfcn);
+
+  // tell RRC to go into connected mode
+  m_asSapProvider->Connect ();
+
+  m_mmWaveCellId = mmWaveCellId;
+  m_dlEarfcn = dlEarfcn;
 }
 
 
@@ -234,11 +261,78 @@ EpcUeNas::Send (Ptr<Packet> packet)
 }
 
 void 
-EpcUeNas::DoNotifyConnectionSuccessful ()
+EpcUeNas::DoNotifyConnectionSuccessful (uint16_t rnti)
 {
   NS_LOG_FUNCTION (this);
+  switch (m_state)
+  {
+    case ACTIVE: // this means the Master LTE Cell was already connected 
+      {
+        // notify the LTE eNB RRC that a secondary cell is available
+        m_asSapProvider->NotifySecondaryCellConnected(rnti, m_mmWaveCellId);
+      }
+      break;
 
-  SwitchToState (ACTIVE); // will eventually activate dedicated bearers
+    default:
+      SwitchToState (ACTIVE); // will eventually activate dedicated bearers
+      break;
+  }
+}
+
+void
+EpcUeNas::DoNotifyHandoverSuccessful (uint16_t rnti, uint16_t mmWaveCellId)
+{
+  m_mmWaveCellId = mmWaveCellId;
+  NS_LOG_FUNCTION (this);
+  switch (m_state)
+  {
+    case ACTIVE: // this means the Master LTE Cell was already connected 
+      {
+        // notify the LTE eNB RRC that a secondary cell is available
+        m_asSapProvider->NotifySecondaryCellConnected(rnti, m_mmWaveCellId);
+      }
+      break;
+
+    default:
+      SwitchToState (ACTIVE); // will eventually activate dedicated bearers
+      break;
+  } 
+}
+
+void
+EpcUeNas::DoNotifyConnectToMmWave(uint16_t mmWaveCellId)
+{
+  NS_LOG_LOGIC(mmWaveCellId);  
+  m_mmWaveCellId = mmWaveCellId;
+
+  if(m_mmWaveAsSapProvider != 0) {
+
+    NS_ASSERT_MSG(mmWaveCellId > 0, "Invalid CellId");
+
+    NS_LOG_INFO("Connect to cell " << mmWaveCellId);
+    // force the UE RRC to be camped on a specific eNB
+    m_mmWaveAsSapProvider->ForceCampedOnEnb (mmWaveCellId, m_dlEarfcn); // TODO probably the second argument is useless
+
+    // tell RRC to go into connected mode
+    m_mmWaveAsSapProvider->Connect ();
+  } else {
+    NS_LOG_WARN("Trying to connect to a secondary cell a non MC capable device");
+  }
+  
+}
+
+void
+EpcUeNas::DoNotifySecondaryCellHandoverStarted (uint16_t oldRnti, uint16_t newRnti, uint16_t mmWaveCellId, LteRrcSap::RadioResourceConfigDedicated rrcd)
+{
+  m_mmWaveCellId = mmWaveCellId;
+  NS_ASSERT(m_asSapProvider != 0); 
+  
+  NS_ASSERT_MSG(mmWaveCellId > 0, "Invalid CellId");
+
+  NS_LOG_INFO("Notify the LTE RRC of the secondary cell HO to " << mmWaveCellId);
+  // Notify the LTE RRC of the secondary cell HO
+  m_asSapProvider->NotifySecondaryCellHandover(oldRnti, newRnti, mmWaveCellId, rrcd);
+   
 }
 
 void

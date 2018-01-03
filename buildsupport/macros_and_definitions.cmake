@@ -1,6 +1,6 @@
 if (WIN32)
     #If using MSYS2
-    set(MSYS2_PATH "E:\\msys64\\mingw64")
+    set(MSYS2_PATH "C:\\tools\\msys2\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
@@ -124,12 +124,11 @@ macro(process_options)
     #    endif()
     #endif()
 
-
     #process debug switch
     if(${NS3_DEBUG})
         add_definitions(-g)
         set(build_type "debug")
-        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
+        #set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
     else()
         add_definitions(-O3)
         set(build_type "release")
@@ -153,14 +152,18 @@ macro(process_options)
     include(buildsupport/check_dependencies.cmake)
 
     #Check for required headers and functions, set flags if they're found or warn if they're not found
-    check_include("stdint.h"   "HAVE_STDINT_H"   )
-    check_include("inttypes.h" "HAVE_INTTYPES_H" )
-    check_include("types.h"    "HAVE_SYS_TYPES_H")
-    check_include("stat.h"     "HAVE_SYS_STAT_H" )
-    check_include("dirent.h"   "HAVE_DIRENT_H"   )
-    check_include("stdlib.h"   "HAVE_STDLIB_H"   )
-    check_include("signal.h"   "HAVE_SIGNAL_H"   )
-    check_function("getenv"    "HAVE_GETENV"     )
+    check_include("stdint"   "HAVE_STDINT_H"   )
+    check_include("inttypes" "HAVE_INTTYPES_H" )
+    check_include("types"    "HAVE_SYS_TYPES_H")
+    check_include("stat"     "HAVE_SYS_STAT_H" )
+    check_include("dirent"   "HAVE_DIRENT_H"   )
+    check_include("stdlib"   "HAVE_STDLIB_H"   )
+    check_include("signal"   "HAVE_SIGNAL_H"   )
+    check_function("getenv"  "HAVE_GETENV"     )
+
+    if(${NS3_EMU})
+        check_include("netpacket/packet.h"   "EMU_FOUND"   )
+    endif()
 
     #Enable NS3 logging if requested
     if(${NS3_LOG})

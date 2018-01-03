@@ -57,27 +57,20 @@ public:
    */
   virtual void DoSendReleaseIndication (uint64_t imsi, uint16_t rnti, uint8_t bearerId) = 0;
 
-  /// BearerToBeSwitched structure
   struct BearerToBeSwitched
   {
-    uint8_t epsBearerId; ///< Bearer ID
-    uint32_t teid; ///< TEID
+    uint8_t epsBearerId;
+    uint32_t teid;
   };
   
-  /// PathSwitchRequestParameters structure
   struct PathSwitchRequestParameters
   {
-    uint16_t rnti; ///< RNTI
-    uint16_t cellId; ///< cell ID
-    uint32_t mmeUeS1Id; ///< mmeUeS1Id in practice, we use the IMSI
-    std::list<BearerToBeSwitched> bearersToBeSwitched; ///< list of bearers to be switched 
+    uint16_t rnti;
+    uint16_t cellId;
+    uint32_t mmeUeS1Id;
+    std::list<BearerToBeSwitched> bearersToBeSwitched;
   };
 
-  /** 
-   * Path Switch Request 
-   * 
-   * \param params 
-   */
   virtual void PathSwitchRequest (PathSwitchRequestParameters params) = 0;
 
 
@@ -124,22 +117,15 @@ public:
   /**
    * request the setup of a DataRadioBearer
    * 
-   *  \param params
    */
   virtual void DataRadioBearerSetupRequest (DataRadioBearerSetupRequestParameters params) = 0;
 
   
-  /// PathSwitchRequestAcknowledgeParameters structure
   struct PathSwitchRequestAcknowledgeParameters
   {
-    uint16_t rnti; ///< RNTI
+    uint16_t rnti;
   };
 
-  /**
-   * request a path switch acknowledge
-   * 
-   *  \param params
-   */
   virtual void PathSwitchRequestAcknowledge (PathSwitchRequestAcknowledgeParameters params) = 0;
   
 };
@@ -156,11 +142,6 @@ template <class C>
 class MemberEpcEnbS1SapProvider : public EpcEnbS1SapProvider
 {
 public:
-  /**
-   * Constructor
-   *
-   * \param owner the owner class
-   */
   MemberEpcEnbS1SapProvider (C* owner);
 
   // inherited from EpcEnbS1SapProvider
@@ -172,7 +153,7 @@ public:
 
 private:
   MemberEpcEnbS1SapProvider ();
-  C* m_owner; ///< owner class
+  C* m_owner;
 };
 
 template <class C>
@@ -220,11 +201,6 @@ template <class C>
 class MemberEpcEnbS1SapUser : public EpcEnbS1SapUser
 {
 public:
-  /**
-   * Constructor
-   *
-   * \param owner the owner class
-   */
   MemberEpcEnbS1SapUser (C* owner);
 
   // inherited from EpcEnbS1SapUser
@@ -233,7 +209,7 @@ public:
 
 private:
   MemberEpcEnbS1SapUser ();
-  C* m_owner; ///< owner class
+  C* m_owner;
 };
 
 template <class C>

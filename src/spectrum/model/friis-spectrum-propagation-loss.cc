@@ -22,6 +22,9 @@
 #include <ns3/friis-spectrum-propagation-loss.h>
 #include <cmath> // for M_PI
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 namespace ns3 {
 

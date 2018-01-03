@@ -33,7 +33,8 @@
 #include "ns3/string.h"
 #include "ns3/pointer.h"
 #include <ns3/simulator.h>
-#include <ns3/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mc-ue-net-device.h>
 #include <ns3/node.h>
 using namespace ns3;
 
@@ -49,12 +50,6 @@ MmWave3gppPropagationLossModel::GetTypeId (void)
   static TypeId tid = TypeId ("ns3::MmWave3gppPropagationLossModel")
     .SetParent<PropagationLossModel> ()
     .AddConstructor<MmWave3gppPropagationLossModel> ()
-    .AddAttribute ("Frequency",
-                   "The carrier frequency (in Hz) at which propagation occurs  (default is 28 GHz).",
-                   DoubleValue (28e9),
-                   MakeDoubleAccessor (&MmWave3gppPropagationLossModel::SetFrequency,
-                                       &MmWave3gppPropagationLossModel::GetFrequency),
-                   MakeDoubleChecker<double> ())
     .AddAttribute ("MinLoss",
                    "The minimum value (dB) of the total loss, used at short ranges.",
                    DoubleValue (0.0),
@@ -81,11 +76,11 @@ MmWave3gppPropagationLossModel::GetTypeId (void)
 				BooleanValue (true),
 				MakeBooleanAccessor (&MmWave3gppPropagationLossModel::m_shadowingEnabled),
 				MakeBooleanChecker ())
-    .AddAttribute ("InCar",
-                   "If inside a vehicle, car penetration loss should be added to propagation loss",
-                   BooleanValue (false),
-                   MakeBooleanAccessor (&MmWave3gppPropagationLossModel::m_inCar),
-                   MakeBooleanChecker ())
+	.AddAttribute ("InCar",
+				"If inside a vehicle, car penetration loss should be added to propagation loss",
+				BooleanValue (false),
+				MakeBooleanAccessor (&MmWave3gppPropagationLossModel::m_inCar),
+				MakeBooleanChecker ())
   ;
   return tid;
 }
@@ -114,14 +109,6 @@ MmWave3gppPropagationLossModel::GetMinLoss (void) const
   return m_minLoss;
 }
 
-void
-MmWave3gppPropagationLossModel::SetFrequency (double frequency)
-{
-  m_frequency = frequency;
-  static const double C = 299792458.0; // speed of light in vacuum
-  m_lambda = C / frequency;
-}
-
 double
 MmWave3gppPropagationLossModel::GetFrequency (void) const
 {
@@ -141,30 +128,31 @@ double
 MmWave3gppPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel> b) const
 {
 	Ptr<MobilityModel> ueMob, enbMob;
-	if(DynamicCast<MmWaveUeNetDevice> (a->GetObject<Node> ()->GetDevice (0)) !=0)
+	if((DynamicCast<MmWaveUeNetDevice> (a->GetObject<Node> ()->GetDevice (0)) !=0)
+		|| (DynamicCast<McUeNetDevice> (a->GetObject<Node> ()->GetDevice (0)) !=0))
 	{
-		if(DynamicCast<MmWaveUeNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
-		{
-			NS_LOG_INFO("UE->UE Link, skip Pathloss computation");
-			return 0;
-		}
-		else
+		if(DynamicCast<MmWaveEnbNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
 		{
 			ueMob = a;
 			enbMob = b;
 		}
+		else
+		{
+			NS_LOG_INFO("UE->UE Link, skip Pathloss computation");
+			return 0;
+		}
 	}
 	else
 	{
-		if(DynamicCast<MmWaveUeNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
-		{
-			ueMob = b;
-			enbMob = a;
-		}
-		else
+		if(DynamicCast<MmWaveEnbNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
 		{
 			NS_LOG_INFO("ENB->ENB Link, skip Pathloss computation");
 			return 0;
+		}
+		else
+		{
+			ueMob = b;
+			enbMob = a;
 		}
 	}
 
@@ -293,7 +281,7 @@ MmWave3gppPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel
 			}
 			else
 			{
-				NS_FATAL_ERROR ("Unknown channel condition");
+				NS_FATAL_ERROR ("Unknown scenario");
 			}
 
 			if (PRef <= probLos)
@@ -315,7 +303,8 @@ MmWave3gppPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel
 		// assign a large negative value to identify initial transmission.
 		condition.m_shadowing = -1e6;
 		condition.m_hE = 0;
-        condition.m_carPenetrationLoss = 9+m_norVar->GetValue()*5;
+		//condition.m_carPenetrationLoss = 9+m_norVar->GetValue()*5;
+		condition.m_carPenetrationLoss = 10;
 		std::pair<channelConditionMap_t::const_iterator, bool> ret;
 		ret = m_channelConditionMap.insert (std::make_pair(std::make_pair (a,b), condition));
 		m_channelConditionMap.insert (std::make_pair(std::make_pair (b,a), condition));
@@ -621,10 +610,6 @@ MmWave3gppPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel
 		UpdateConditionMap(a,b,cond);
 	}
 
-    if(m_inCar)
-    {
-        lossDb += (*it).second.m_carPenetrationLoss;
-    }
 
 	 /*FILE* log_file;
 
@@ -654,6 +639,12 @@ MmWave3gppPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel
 	  free(fname);
 
 	  fname = 0;*/
+
+	if(m_inCar)
+	{
+		lossDb += (*it).second.m_carPenetrationLoss;
+	}
+
 	return std::max (lossDb, m_minLoss);
 }
 
@@ -688,4 +679,15 @@ std::string
 MmWave3gppPropagationLossModel::GetScenario ()
 {
 	return m_scenario;
+}
+
+void
+MmWave3gppPropagationLossModel::SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig)
+{
+	m_phyMacConfig = ptrConfig;
+	m_frequency = m_phyMacConfig->GetCenterFrequency();
+    static const double C = 299792458.0; // speed of light in vacuum
+    m_lambda = C / m_frequency;
+
+    NS_LOG_INFO("Frequency " << m_frequency);
 }

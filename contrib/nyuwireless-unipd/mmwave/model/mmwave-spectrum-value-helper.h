@@ -30,7 +30,7 @@
 #define MMWAVE_SPECTRUM_VALUE_HELPER_H
 
 #include <ns3/spectrum-value.h>
-#include <ns3/mmwave-phy-mac-common.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy-mac-common.h>
 #include <vector>
 
 

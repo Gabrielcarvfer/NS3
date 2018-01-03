@@ -13,10 +13,10 @@ if(${TAP_FOUND})
             helper/encode-decode.cc
             helper/creator-utils.cc
             )
-    target_link_libraries(tap-device-creator ${TAP_LIBRARIES})
+    target_link_libraries(tap-device-creator ${libfd-net-device} ${TAP_LIBRARIES})
 endif()
 
-if(${EMU_FOUND})
+if(${NS3_EMU} AND ${EMU_FOUND})
     set(emu_sources
             helper/emu-fd-net-device-helper.cc
             )
@@ -28,7 +28,7 @@ if(${EMU_FOUND})
             helper/encode-decode.cc
             helper/creator-utils.cc
             )
-    target_link_libraries(raw-sock-creator ${EMU_LIBRARIES})
+    target_link_libraries(raw-sock-creator ${libfd-net-device} ${EMU_LIBRARIES})
 endif()
 
 if(${PLANETLAB_FOUND})
@@ -43,13 +43,13 @@ if(${PLANETLAB_FOUND})
             helper/encode-decode.cc
             helper/creator-utils.cc
             )
-    target_link_libraries(planetlab-tap-creator ${PLANETLAB_LIBRARIES})
+    target_link_libraries(planetlab-tap-creator ${libfd-net-device} ${PLANETLAB_LIBRARIES})
 endif()
 
 set(source_files
-        ${tap_sources}
-        ${emu_sources}
-        ${planetlab_sources}
+        "${tap_sources}"
+        "${emu_sources}"
+        "${planetlab_sources}"
         model/fd-net-device.cc
         helper/fd-net-device-helper.cc
         helper/encode-decode.cc
@@ -57,9 +57,9 @@ set(source_files
        )
 
 set(header_files
-        ${tap_headers}
-        ${emu_sources}
-        ${planetlab_sources}
+        "${tap_headers}"
+        "${emu_sources}"
+        "${planetlab_sources}"
         model/fd-net-device.h
         helper/fd-net-device-helper.h
         )

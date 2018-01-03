@@ -17,6 +17,9 @@
  *
  * Author: Giuseppe Piro  <g.piro@poliba.it>
  *         Marco Miozzo <mmiozzo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #include <ns3/object-factory.h>
@@ -74,34 +77,18 @@ static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = NanoSeconds (214286);
 class EnbMemberLteEnbPhySapProvider : public LteEnbPhySapProvider
 {
 public:
-  /**
-   * Constructor
-   *
-   * \param phy the ENB Phy
-   */
   EnbMemberLteEnbPhySapProvider (LteEnbPhy* phy);
 
   // inherited from LteEnbPhySapProvider
   virtual void SendMacPdu (Ptr<Packet> p);
+  virtual void SetBandwidth (uint8_t ulBandwidth, uint8_t dlBandwidth);
+  virtual void SetCellId (uint16_t cellId);
   virtual void SendLteControlMessage (Ptr<LteControlMessage> msg);
   virtual uint8_t GetMacChTtiDelay ();
-  /**
-   * Set bandwidth function
-   *
-   * \param ulBandwidth the UL bandwidth
-   * \param dlBandwidth the DL bandwidth
-   */
-  virtual void SetBandwidth (uint8_t ulBandwidth, uint8_t dlBandwidth);
-  /**
-   * Set Cell ID function
-   *
-   * \param cellId the cell ID
-   */
-  virtual void SetCellId (uint16_t cellId);
 
 
 private:
-  LteEnbPhy* m_phy; ///< the ENB Phy
+  LteEnbPhy* m_phy;
 };
 
 EnbMemberLteEnbPhySapProvider::EnbMemberLteEnbPhySapProvider (LteEnbPhy* phy) : m_phy (phy)
@@ -635,7 +622,7 @@ LteEnbPhy::StartSubFrame (void)
   if (m_srsPeriodicity>0)
     { 
       // might be 0 in case the eNB has no UEs attached
-      NS_ASSERT_MSG (m_nrFrames > 1, "the SRS index check code assumes that frameNo starts at 1");
+      NS_ASSERT_MSG (m_nrFrames >= 1, "the SRS index check code assumes that frameNo starts at 1");
       NS_ASSERT_MSG (m_nrSubFrames > 0 && m_nrSubFrames <= 10, "the SRS index check code assumes that subframeNo starts at 1");
       m_currentSrsOffset = (((m_nrFrames-1)*10 + (m_nrSubFrames-1)) % m_srsPeriodicity);
     }
@@ -720,7 +707,6 @@ LteEnbPhy::StartSubFrame (void)
                   params.m_size = dci->GetDci ().m_tbsSize.at (i);
                   params.m_rv = dci->GetDci ().m_rv.at (i);
                   params.m_ndi = dci->GetDci ().m_ndi.at (i);
-                  params.m_ccId = m_componentCarrierId;
                   m_dlPhyTransmission (params);
                 }
 
@@ -925,7 +911,7 @@ LteEnbPhy::DoSetBandwidth (uint8_t ulBandwidth, uint8_t dlBandwidth)
 }
 
 void 
-LteEnbPhy::DoSetEarfcn (uint32_t ulEarfcn, uint32_t dlEarfcn)
+LteEnbPhy::DoSetEarfcn (uint16_t ulEarfcn, uint16_t dlEarfcn)
 {
   NS_LOG_FUNCTION (this << ulEarfcn << dlEarfcn);
   m_ulEarfcn = ulEarfcn;
@@ -1029,7 +1015,8 @@ LteEnbPhy::CreateSrsReport (uint16_t rnti, double srs)
   (*it).second++;
   if ((*it).second == m_srsSamplePeriod)
     {
-      m_reportUeSinr (m_cellId, rnti, srs, (uint16_t) m_componentCarrierId);
+      uint8_t cc = 0;
+      m_reportUeSinr (m_cellId, rnti, srs, cc);
       (*it).second = 0;
     }
 }

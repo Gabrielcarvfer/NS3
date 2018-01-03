@@ -77,7 +77,6 @@ public:
 
   /**
     * Class constructor
-    * \param protocolType the name of the protocol type
     */
   RadioBearerStatsCalculator (std::string protocolType);
 

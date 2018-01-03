@@ -1,6 +1,7 @@
  /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
  /*
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -20,6 +21,9 @@
  *        	 Sourjya Dutta <sdutta@nyu.edu>
  *        	 Russell Ford <russell.ford@nyu.edu>
  *        	 Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *			Dual Connectivity and Handover functionalities
  */
 
 
@@ -27,14 +31,15 @@
 #include <ns3/log.h>
 #include <ns3/math.h>
 #include <ns3/simulator.h>
-#include <ns3/mmwave-phy.h>
-#include <ns3/mmwave-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy.h>
+#include <ns3/nyuwireless-unipd/mmwave-net-device.h>
 #include <ns3/node.h>
-#include <ns3/mmwave-ue-net-device.h>
-#include <ns3/mmwave-enb-net-device.h>
-#include <ns3/antenna-array-model.h>
-#include <ns3/mmwave-ue-phy.h>
-#include <ns3/mmwave-enb-phy.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mc-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-enb-net-device.h>
+#include <ns3/nyuwireless-unipd/antenna-array-model.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-phy.h>
+#include <ns3/nyuwireless-unipd/mmwave-enb-phy.h>
 #include <ns3/double.h>
 #include <algorithm>
 
@@ -169,24 +174,60 @@ MmWaveChannelMatrix::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPs
 		rxAntennaArray = DynamicCast<AntennaArrayModel> (
 					rxUe->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
 	}
+	else if (txEnb!=0 && rxUe == 0)
+	{
+		Ptr<McUeNetDevice> mcRxUe = DynamicCast<McUeNetDevice> (rxDevice);
+		if (mcRxUe != 0) 
+		{
+			NS_LOG_INFO ("this is downlink case for MC device");
+			txAntennaNum[0] = sqrt (txEnb->GetAntennaNum ());
+			txAntennaNum[1] = sqrt (txEnb->GetAntennaNum ());
+			rxAntennaNum[0] = sqrt (mcRxUe->GetAntennaNum ());
+			rxAntennaNum[1] = sqrt (mcRxUe->GetAntennaNum ());
+
+			txAntennaArray = DynamicCast<AntennaArrayModel> (
+						txEnb->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+			rxAntennaArray = DynamicCast<AntennaArrayModel> (
+						mcRxUe->GetMmWavePhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+		}
+	}
 	else if (txEnb==0 && rxUe==0 )
 	{
-		NS_LOG_INFO ("this is uplink case");
-
 		Ptr<MmWaveUeNetDevice> txUe =
 						DynamicCast<MmWaveUeNetDevice> (txDevice);
 		Ptr<MmWaveEnbNetDevice> rxEnb =
 						DynamicCast<MmWaveEnbNetDevice> (rxDevice);
+		if (txUe != 0)
+		{
+			NS_LOG_INFO ("this is uplink case");
+			txAntennaNum[0] = sqrt (txUe->GetAntennaNum ());
+			txAntennaNum[1] = sqrt (txUe->GetAntennaNum ());
+			rxAntennaNum[0] = sqrt (rxEnb->GetAntennaNum ());
+			rxAntennaNum[1] = sqrt (rxEnb->GetAntennaNum ());
 
-		txAntennaNum[0] = sqrt (txUe->GetAntennaNum ());
-		txAntennaNum[1] = sqrt (txUe->GetAntennaNum ());
-		rxAntennaNum[0] = sqrt (rxEnb->GetAntennaNum ());
-		rxAntennaNum[1] = sqrt (rxEnb->GetAntennaNum ());
+			txAntennaArray = DynamicCast<AntennaArrayModel> (
+						txUe->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+			rxAntennaArray = DynamicCast<AntennaArrayModel> (
+						rxEnb->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+		} 
+		else
+		{
+			Ptr<McUeNetDevice> mcTxUe = DynamicCast<McUeNetDevice> (txDevice);
 
-		txAntennaArray = DynamicCast<AntennaArrayModel> (
-					txUe->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
-		rxAntennaArray = DynamicCast<AntennaArrayModel> (
-					rxEnb->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+			if (mcTxUe != 0)
+			{
+				NS_LOG_INFO ("this is MC uplink case");
+				txAntennaNum[0] = sqrt (mcTxUe->GetAntennaNum ());
+				txAntennaNum[1] = sqrt (mcTxUe->GetAntennaNum ());
+				rxAntennaNum[0] = sqrt (rxEnb->GetAntennaNum ());
+				rxAntennaNum[1] = sqrt (rxEnb->GetAntennaNum ());
+
+				txAntennaArray = DynamicCast<AntennaArrayModel> (
+							mcTxUe->GetMmWavePhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+				rxAntennaArray = DynamicCast<AntennaArrayModel> (
+							rxEnb->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+			}
+		} 
 	}
 	else
 	{
@@ -523,7 +564,7 @@ MmWaveChannelMatrix::GetChannelGain (Ptr<const SpectrumValue> txPsd, Ptr<mmWaveB
 		std::complex<double> subsbandGain (0.0,0.0);
 		if ((*vit) != 0.00)
 		{
-			double fsb = m_phyMacConfig->GetCentreFrequency () - GetSystemBandwidth ()/2 + m_phyMacConfig->GetChunkWidth ()*iSubband ;
+			double fsb = m_phyMacConfig->GetCenterFrequency () - GetSystemBandwidth ()/2 + m_phyMacConfig->GetChunkWidth ()*iSubband ;
 			for (unsigned int pathIndex = 0; pathIndex < pathNum; pathIndex++)
 			{
 
@@ -534,7 +575,7 @@ MmWaveChannelMatrix::GetChannelGain (Ptr<const SpectrumValue> txPsd, Ptr<mmWaveB
 				}
 				else
 				{
-					double f_d = speed*m_phyMacConfig->GetCentreFrequency ()/3e8;
+					double f_d = speed*m_phyMacConfig->GetCenterFrequency ()/3e8;
 					double temp_Doppler = 2*M_PI*t*f_d*bfParams->m_channelParams->m_doppler.at (pathIndex);
 					doppler = std::complex<double> (cos (temp_Doppler), sin (temp_Doppler));
 				}
@@ -578,6 +619,15 @@ MmWaveChannelMatrix::GetSystemBandwidth () const
 	double bw = 0.00;
 	bw = m_phyMacConfig->GetChunkWidth () * m_phyMacConfig->GetNumChunkPerRb () * m_phyMacConfig->GetNumRb ();
 	return bw;
+}
+
+
+Ptr<SpectrumValue> 
+MmWaveChannelMatrix::CalcRxPowerSpectralDensity(Ptr<const SpectrumValue> txPsd,
+	                                                   Ptr<const MobilityModel> a,
+	                                                   Ptr<const MobilityModel> b) const
+{
+	return DoCalcRxPowerSpectralDensity(txPsd, a, b);
 }
 
 

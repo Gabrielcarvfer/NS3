@@ -1,0 +1,17 @@
+*.o
+*.pyc
+*.pyo
+
+*.cwnd
+*.dat
+*.log
+*.mob
+*.pcap
+*.plt
+*.routes
+*.tr
+
+*/doc/build/
+*/doc/source/figures/*.eps
+*/doc/source/figures/*.pdf
+*/doc/*.png

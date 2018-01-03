@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,11 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
+ *				Marco Giordani <m.giordani91@gmail.com>
+ *					LOS-NLOS transitions, SINR measurement error and filtering
  */
 
 
@@ -36,9 +42,11 @@
 #include "mmwave-mac.h"
 #include <ns3/lte-enb-phy-sap.h>
 #include <ns3/lte-enb-cphy-sap.h>
-#include <ns3/mmwave-harq-phy.h>
+#include <ns3/nyuwireless-unipd/mmwave-harq-phy.h>
 
 namespace ns3{
+
+typedef std::pair<uint64_t, uint64_t > pairDevices_t;
 
 class PacketBurst;
 class MmWaveNetDevice;
@@ -58,8 +66,8 @@ public:
 	virtual void DoInitialize (void);
 	virtual void DoDispose (void);
 
-	void SetmmWaveEnbCphySapUser (LteEnbCphySapUser* s);
-	LteEnbCphySapProvider* GetmmWaveEnbCphySapProvider ();
+	void SetMmWaveEnbCphySapUser (LteEnbCphySapUser* s);
+	LteEnbCphySapProvider* GetMmWaveEnbCphySapProvider ();
 
 	void SetTxPower (double pow);
 	double GetTxPower () const;
@@ -111,6 +119,21 @@ public:
 
 	void ReceiveUlHarqFeedback (UlHarqInfo mes);
 
+	void UpdateUeSinrEstimate ();
+
+	void CallPathloss ();
+
+    double AddGaussianNoise(double sample);
+
+	std::pair <uint64_t,uint64_t> ApplyFilter(std::vector<double>);
+
+	double MakeAvg(std::vector<double>);
+
+	double MakeVar(std::vector<double>, double);
+
+	std::vector<double> MakeFilter (std::vector<double> , std::vector<double> , std::pair <uint64_t , uint64_t > );
+
+
 
 private:
 
@@ -152,6 +175,21 @@ private:
 	LteEnbCphySapUser* m_enbCphySapUser;
 	LteRrcSap::SystemInformationBlockType1 m_sib1;
 	std::set <uint16_t> m_ueAttachedRnti;
+	std::map <uint64_t, Ptr<NetDevice> > m_ueAttachedImsiMap;
+	std::map <uint64_t, double > m_sinrMap;
+	std::map <uint64_t, Ptr<SpectrumValue> > m_rxPsdMap;
+	std::map <pairDevices_t , std::vector<double> > m_sinrVector; // array containing all SINR values for a specific pair (UE-eNB)
+	std::map <pairDevices_t , std::vector<double> > m_sinrVectorToFilter; // array containing the  SINR values that must be filtered
+	std::map <pairDevices_t , std::vector<double> > m_sinrVectorNoisy; // array containing the  noisy SINR values that must be filteredF
+	std::map <pairDevices_t , std::vector<double> > m_finalSinrVector; // array containing all  SINR values after the filtering for a specific pair (UE-eNB)
+	std::map <pairDevices_t, std::pair <uint64_t,uint64_t> > m_samplesFilter; // array containing all noisy SINR values for a specific pair (UE-eNB)
+
+	int m_updateSinrPeriod; // the period of SINR update for eNBs
+	double m_ueUpdateSinrPeriod; // the period of SINR reporting to the UEs
+	double m_updateSinrCollect; // the period of SINR collection, for a pair (UE-eNB)
+	uint16_t m_roundFromLastUeSinrUpdate; // the ratio between the two above
+	double m_transient; // after m_transient, we can start apply the filter
+	bool m_noiseAndFilter; // If true, use noisy SINR samples, filtered. If false, just use the SINR measure
 
 	Ptr<MmWaveHarqPhy> m_harqPhyModule;
 	std::vector <int> m_channelChunks;

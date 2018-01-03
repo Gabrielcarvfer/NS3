@@ -1,6 +1,7 @@
  /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
  /*
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -20,19 +21,26 @@
  *        	 Sourjya Dutta <sdutta@nyu.edu>
  *        	 Russell Ford <russell.ford@nyu.edu>
  *        	 Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *			Dual Connectivity and Handover functionalities
  */
 
 
 #include "mmwave-beamforming.h"
+#include "mmwave.h"
 
 #include <ns3/log.h>
 #include <fstream>
 #include <ns3/simulator.h>
 #include <ns3/abort.h>
-#include <ns3/mmwave-enb-net-device.h>
-#include <ns3/mmwave-ue-net-device.h>
-#include <ns3/mmwave-ue-phy.h>
-#include <ns3/antenna-array-model.h>
+#include <ns3/nyuwireless-unipd/mmwave-enb-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mc-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-ue-phy.h>
+#include <ns3/nyuwireless-unipd/antenna-array-model.h>
+
+
 #include <ns3/node.h>
 #include <algorithm>
 #include <ns3/double.h>
@@ -69,7 +77,6 @@ MmWaveBeamforming::MmWaveBeamforming (uint32_t enbAntenna, uint32_t ueAntenna)
 	:m_pathNum (20),
 	m_enbAntennaSize(enbAntenna),
 	m_ueAntennaSize(ueAntenna),
-	m_longTermUpdatePeriod (0),
 	m_smallScale (true),
 	m_fixSpeed (false),
 	m_ueSpeed (0.0),
@@ -78,6 +85,7 @@ MmWaveBeamforming::MmWaveBeamforming (uint32_t enbAntenna, uint32_t ueAntenna)
 	if (g_smallScaleFadingInstance.empty ())
 	LoadFile();
 	m_uniformRV = CreateObject<UniformRandomVariable> ();
+	Initialize();
 }
 
 
@@ -191,7 +199,8 @@ MmWaveBeamforming::LoadFile()
 void
 MmWaveBeamforming::LoadSmallScaleFading ()
 {
-	std::string filename = "src/mmwave/model/BeamFormingMatrix/SmallScaleFading.txt";
+    std::string filename = baseDirectory;
+    filename.append("BeamFormingMatrix/SmallScaleFading.txt");
 	NS_LOG_FUNCTION (this << "Loading SmallScaleFading file " << filename);
 	std::ifstream singlefile;
 	singlefile.open (filename.c_str (), std::ifstream::in);
@@ -219,14 +228,15 @@ MmWaveBeamforming::LoadSmallScaleFading ()
 void
 MmWaveBeamforming::LoadEnbAntenna ()
 {
-	std::string filename = "src/mmwave/model/BeamFormingMatrix/TxAntenna.txt";
+    std::string filename = baseDirectory;
+    filename.append("BeamFormingMatrix/TxAntenna.txt");
 	NS_LOG_FUNCTION (this << "Loading TxAntenna file " << filename);
 	std::ifstream singlefile;
 	std::complex<double> complexVar;
 	singlefile.open (filename.c_str (), std::ifstream::in);
-
 	NS_LOG_INFO (this << " File: " << filename);
 	NS_ASSERT_MSG(singlefile.good (), " TxAntenna file not found");
+
     std::string line;
     std::string token;
     while( std::getline(singlefile, line) ) //Parse each line of the file
@@ -247,7 +257,8 @@ MmWaveBeamforming::LoadEnbAntenna ()
 void
 MmWaveBeamforming::LoadUeAntenna ()
 {
-	std::string filename = "src/mmwave/model/BeamFormingMatrix/RxAntenna.txt";
+    std::string filename = baseDirectory;
+    filename.append("BeamFormingMatrix/RxAntenna.txt");
 	NS_LOG_FUNCTION (this << "Loading RxAntenna file " << filename);
 	std::ifstream singlefile;
 	std::complex<double> complexVar;
@@ -275,7 +286,8 @@ MmWaveBeamforming::LoadUeAntenna ()
 void
 MmWaveBeamforming::LoadEnbSpatialSignature ()
 {
-	std::string filename = "src/mmwave/model/BeamFormingMatrix/TxSpatialSigniture.txt";
+    std::string filename = baseDirectory;
+    filename.append("BeamFormingMatrix/TxSpatialSigniture.txt");
 	NS_LOG_FUNCTION (this << "Loading TxspatialSigniture file " << filename);
 	std::ifstream singlefile;
 	std::string line;
@@ -311,14 +323,15 @@ MmWaveBeamforming::LoadEnbSpatialSignature ()
 void
 MmWaveBeamforming::LoadUeSpatialSignature ()
 {
-	std::string strFilename = "src/mmwave/model/BeamFormingMatrix/RxSpatialSigniture.txt";
-	NS_LOG_FUNCTION (this << "Loading RxspatialSigniture file " << strFilename);
+    std::string filename = baseDirectory;
+    filename.append("BeamFormingMatrix/RxSpatialSigniture.txt");
+	NS_LOG_FUNCTION (this << "Loading RxspatialSigniture file " << filename);
 	std::ifstream singlefile;
 	std::complex<double> complexVar;
 	complex2DVector_t rxSpatialMatrix;
-	singlefile.open (strFilename.c_str (), std::ifstream::in);
+	singlefile.open (filename.c_str (), std::ifstream::in);
 
-	NS_LOG_INFO (this << " File: " << strFilename);
+	NS_LOG_INFO (this << " File: " << filename);
 	NS_ASSERT_MSG (singlefile.good (), " RxSpatialSigniture file not found");
 
 	std::string line;
@@ -348,30 +361,42 @@ MmWaveBeamforming::LoadUeSpatialSignature ()
 void
 MmWaveBeamforming::Initial(NetDeviceContainer ueDevices, NetDeviceContainer enbDevices)
 {
+	m_longTermUpdatePeriod = MilliSeconds (100.0);
+	NS_LOG_INFO("Update channel matrix and bf vector, update after " << m_longTermUpdatePeriod);
 	for (NetDeviceContainer::Iterator i = ueDevices.Begin(); i != ueDevices.End(); i++)
 	{
 		for (NetDeviceContainer::Iterator j = enbDevices.Begin(); j != enbDevices.End(); j++)
 		{
 			if(m_update)
 			{
-				SetChannelMatrix (*i,*j);
+				SetChannelMatrix (*i,*j); // this call is independent on the subclass of NetDevice
+				SetBeamformingVector(*i,*j); // possible beamforming vector for all the UE eNB pairs
 			}
 		}
 
 	}
 
-	for (NetDeviceContainer::Iterator i = ueDevices.Begin(); i != ueDevices.End(); i++)
-	{
+	// for (NetDeviceContainer::Iterator i = ueDevices.Begin(); i != ueDevices.End(); i++)
+	// {
 
-		Ptr<MmWaveUeNetDevice> UeDev =
-						DynamicCast<MmWaveUeNetDevice> (*i);
-		if (UeDev->GetTargetEnb ())
-		{
-			Ptr<NetDevice> targetBs = UeDev->GetTargetEnb();
-			SetBeamformingVector(*i,targetBs);
+	// 	Ptr<MmWaveUeNetDevice> UeDev = (*i)->GetObject<MmWaveUeNetDevice> ();
+	// 	if (UeDev != 0) { // It actually is a MmWaveUeNetDevice
+	// 		if (UeDev->GetTargetEnb ())
+	// 		{
+	// 			Ptr<NetDevice> targetBs = UeDev->GetTargetEnb();
+	// 			SetBeamformingVector(*i,targetBs);
 
-		}
-	}
+	// 		}
+	// 	} else { // It is a McUeNetDevice
+	// 		Ptr<McUeNetDevice> mcUeDev = (*i)->GetObject<McUeNetDevice> (); 
+	// 		if (mcUeDev->GetMmWaveTargetEnb())
+	// 		{
+	// 			Ptr<NetDevice> targetBs = mcUeDev->GetMmWaveTargetEnb();
+	// 			SetBeamformingVector(*i, targetBs);
+	// 		}
+	// 	}
+	// }
+
 	Simulator::Schedule (m_longTermUpdatePeriod, &MmWaveBeamforming::Initial,this,ueDevices,enbDevices);
 
 	/*if (!m_nextLongTermUpdate)
@@ -389,7 +414,7 @@ MmWaveBeamforming::SetChannelMatrix (Ptr<NetDevice> ueDevice, Ptr<NetDevice> enb
 {
 	key_t key = std::make_pair(ueDevice,enbDevice);
 	int randomInstance = m_uniformRV->GetValue (0, g_numInstance-1);
-	NS_LOG_DEBUG ("************* UPDATING CHANNEL MATRIX (instance " << randomInstance << ") *************");
+	NS_LOG_UNCOND ("************* UPDATING CHANNEL MATRIX (instance " << randomInstance << ") *************");
 
 	Ptr<BeamformingParams> bfParams = Create<BeamformingParams> ();
 	bfParams->m_enbW = g_enbAntennaInstance.at (randomInstance);
@@ -415,15 +440,10 @@ MmWaveBeamforming::SetBeamformingVector (Ptr<NetDevice> ueDevice, Ptr<NetDevice>
 	std::map< key_t, Ptr<BeamformingParams> >::iterator it = m_channelMatrixMap.find(key);
 	NS_ASSERT_MSG (it != m_channelMatrixMap.end (), "could not find");
 	Ptr<BeamformingParams> bfParams = it->second;
-	Ptr<MmWaveEnbNetDevice> EnbDev =
-				DynamicCast<MmWaveEnbNetDevice> (enbDevice);
-	Ptr<MmWaveUeNetDevice> UeDev =
-				DynamicCast<MmWaveUeNetDevice> (ueDevice);
 
-	Ptr<AntennaArrayModel> ueAntennaArray = DynamicCast<AntennaArrayModel> (
-			UeDev->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
-	Ptr<AntennaArrayModel> enbAntennaArray = DynamicCast<AntennaArrayModel> (
-			EnbDev->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+	antennaPair antennaArrays = GetUeEnbAntennaPair(ueDevice, enbDevice);
+	Ptr<AntennaArrayModel> enbAntennaArray = antennaArrays.second;
+	Ptr<AntennaArrayModel> ueAntennaArray = antennaArrays.first;
 
 	/*double variable = m_uniformRV->GetValue (0, 1);
 	if(m_update && variable<0.08)
@@ -434,8 +454,8 @@ MmWaveBeamforming::SetBeamformingVector (Ptr<NetDevice> ueDevice, Ptr<NetDevice>
 	}
 	else
 	{*/
-		ueAntennaArray->SetBeamformingVector (bfParams->m_ueW);
-		enbAntennaArray->SetBeamformingVector (bfParams->m_enbW, ueDevice);
+	ueAntennaArray->SetBeamformingVector (bfParams->m_ueW, enbDevice);
+	enbAntennaArray->SetBeamformingVector (bfParams->m_enbW, ueDevice);
 
 	//}
 }
@@ -492,7 +512,7 @@ MmWaveBeamforming::GetChannelGainVector (Ptr<const SpectrumValue> txPsd, Ptr<Bea
 		std::complex<double> subsbandGain (0.0,0.0);
 		if ((*vit) != 0.00)
 		{
-			double fsb = m_phyMacConfig->GetCentreFrequency () - GetSystemBandwidth ()/2 + m_phyMacConfig->GetChunkWidth ()*iSubband ;
+			double fsb = m_phyMacConfig->GetCenterFrequency () - GetSystemBandwidth ()/2 + m_phyMacConfig->GetChunkWidth ()*iSubband ;
 			for (unsigned int pathIndex = 0; pathIndex < m_pathNum; pathIndex++)
 			{
 				double sigma = bfParams->m_channelMatrix.m_powerFraction.at (pathIndex);
@@ -505,7 +525,7 @@ MmWaveBeamforming::GetChannelGainVector (Ptr<const SpectrumValue> txPsd, Ptr<Bea
 				}
 				else
 				{
-					double f_d = speed*m_phyMacConfig->GetCentreFrequency ()/3e8;
+					double f_d = speed*m_phyMacConfig->GetCenterFrequency ()/3e8;
 					double temp_Doppler = 2*M_PI*t*f_d*DopplerShift[pathIndex];
 
 					doppler = std::complex<double> (cos (temp_Doppler), sin (temp_Doppler));
@@ -521,6 +541,14 @@ MmWaveBeamforming::GetChannelGainVector (Ptr<const SpectrumValue> txPsd, Ptr<Bea
 	}
 	return tempPsd;
 
+}
+
+Ptr<SpectrumValue>
+MmWaveBeamforming::CalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
+												Ptr<const MobilityModel> a,
+												Ptr<const MobilityModel> b) const
+{
+	return DoCalcRxPowerSpectralDensity(txPsd, a, b);
 }
 
 Ptr<SpectrumValue>
@@ -563,15 +591,9 @@ MmWaveBeamforming::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
 
 	Ptr<BeamformingParams> bfParams = it->second;
 
-	Ptr<MmWaveUeNetDevice> UeDev =
-				DynamicCast<MmWaveUeNetDevice> (ueDevice);
-	Ptr<MmWaveUePhy> uePhy = UeDev->GetPhy ();
-	Ptr<MmWaveEnbNetDevice> EnbDev =
-				DynamicCast<MmWaveEnbNetDevice> (enbDevice);
-	Ptr<AntennaArrayModel> ueAntennaArray = DynamicCast<AntennaArrayModel> (
-			UeDev->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
-	Ptr<AntennaArrayModel> enbAntennaArray = DynamicCast<AntennaArrayModel> (
-			EnbDev->GetPhy ()->GetDlSpectrumPhy ()->GetRxAntenna ());
+	antennaPair antennaArrays = GetUeEnbAntennaPair(ueDevice, enbDevice);
+	Ptr<AntennaArrayModel> enbAntennaArray = antennaArrays.second;
+	Ptr<AntennaArrayModel> ueAntennaArray = antennaArrays.first;
 
 	if (enbAntennaArray->IsOmniTx ())
 	{
@@ -617,7 +639,7 @@ MmWaveBeamforming::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
 	Ptr<SpectrumValue> bfPsd = GetChannelGainVector (rxPsd, bfParams,  relativeSpeed);
 	SpectrumValue bfGain = (*bfPsd)/(*rxPsd);
 	int nbands = bfGain.GetSpectrumModel ()->GetNumBands ();
-//	NS_LOG_UNCOND ((*bfPsd)/(*rxPsd));
+//	NS_LOG_UNCOND (*bfPsd);
 //	NS_LOG_UNCOND (Sum((*bfPsd)/(*rxPsd)));
 //	std::cout << "beam: ";
 //	for (unsigned i = 0; i < bfParams->m_beam.size(); i++)
@@ -638,13 +660,25 @@ MmWaveBeamforming::DoCalcRxPowerSpectralDensity (Ptr<const SpectrumValue> txPsd,
 //			std::cout << bfParams->m_ueW.at(i) << " ";
 //		}
 //		std::cout << std::endl;
+	Ptr<MmWaveUePhy> uePhy;
+	Ptr<MmWaveUeNetDevice> ueMmw = ueDevice->GetObject<MmWaveUeNetDevice> ();
+	Ptr<McUeNetDevice> ueMc = ueDevice->GetObject<McUeNetDevice> ();
+	if (ueMmw != 0) 
+	{
+		uePhy = ueMmw->GetPhy ();
+	} 
+	else if (ueMc != 0)
+	{
+		uePhy = ueMc -> GetMmWavePhy ();
+	}
+	
 	if (downlink)
 	{
-		NS_LOG_DEBUG ("****** DL BF gain (RNTI " << uePhy->GetRnti() << ") == " << Sum (bfGain)/nbands << " RX PSD " << Sum(*rxPsd)/nbands); // print avg bf gain
+		NS_LOG_INFO ("****** DL BF gain (RNTI " << uePhy->GetRnti() << ") == " << Sum (bfGain)/nbands << " RX PSD " << Sum(*rxPsd)/nbands); // print avg bf gain
 	}
 	else
 	{
-		NS_LOG_DEBUG ("****** UL BF gain (RNTI " << uePhy->GetRnti() << ") == " << Sum (bfGain)/nbands << " RX PSD " << Sum(*rxPsd)/nbands);
+		NS_LOG_INFO ("****** UL BF gain (RNTI " << uePhy->GetRnti() << ") == " << Sum (bfGain)/nbands << " RX PSD " << Sum(*rxPsd)/nbands);
 	}
 	return bfPsd;
 }
@@ -661,5 +695,30 @@ MmWaveBeamforming::UpdateMatrices (bool update)
 {
 	m_update = update;
 }
+
+antennaPair
+MmWaveBeamforming::GetUeEnbAntennaPair(Ptr<NetDevice> ueDevice, Ptr<NetDevice> enbDevice) const
+{
+	Ptr<MmWaveEnbNetDevice> EnbDev =
+				DynamicCast<MmWaveEnbNetDevice> (enbDevice);
+	Ptr<MmWaveUeNetDevice> UeDev = ueDevice->GetObject<MmWaveUeNetDevice> ();
+						// DynamicCast<MmWaveUeNetDevice> (*i);
+	Ptr<MmWaveUePhy> uePhy;
+	Ptr<MmWaveEnbPhy> enbPhy = EnbDev->GetPhy();
+	if (UeDev != 0) { // It actually is a MmWaveUeNetDevice
+		uePhy = UeDev->GetPhy();	
+	} else { // It is a McUeNetDevice
+		Ptr<McUeNetDevice> mcUeDev = ueDevice->GetObject<McUeNetDevice> (); 
+		uePhy = mcUeDev->GetMmWavePhy();
+	}
+
+	Ptr<AntennaArrayModel> ueAntennaArray = DynamicCast<AntennaArrayModel> (
+														uePhy->GetDlSpectrumPhy ()->GetRxAntenna ());
+	Ptr<AntennaArrayModel> enbAntennaArray = DynamicCast<AntennaArrayModel> (
+														enbPhy->GetDlSpectrumPhy ()->GetRxAntenna ());
+
+	return antennaPair(ueAntennaArray, enbAntennaArray);
+}
+
 
 }// namespace ns3

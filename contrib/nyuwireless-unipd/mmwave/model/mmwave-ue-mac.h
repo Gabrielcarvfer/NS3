@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -66,6 +70,16 @@ public:
 	void SetPhySapProvider (MmWavePhySapProvider* ptr);
 
 	void RecvRaResponse (BuildRarListElement_s raResponse);
+
+	/**
+	* Assign a fixed random variable stream number to the random variables
+	* used by this model.  Return the number of streams (possibly zero) that
+	* have been assigned.
+	*
+	* \param stream first stream index to use
+	* \return the number of stream indices assigned by this model
+	*/
+	int64_t AssignStreams (int64_t stream);
 
 private:
 
@@ -144,6 +158,9 @@ private:
 
 	bool m_waitingForRaResponse;
 	static uint8_t g_raPreambleId;
+	Ptr<UniformRandomVariable> m_randomAccessProcedureDelay;
+	double m_ueUpdateSinrPeriod;
+	bool m_interRatHoCapable;
 
 };
 

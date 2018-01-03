@@ -27,7 +27,7 @@
 
 
 // Include a header file from your module to test.
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave.h"
 
 // An essential include is test.h
 #include "ns3/test.h"

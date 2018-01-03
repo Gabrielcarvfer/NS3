@@ -2,7 +2,7 @@
 
 set(contribution_libraries_to_build
         gabrielcarvfer
-        #nyuwireless-unipd
+        nyuwireless-unipd
         )
 
 #All contrib libraries can be linked afterwards linking with ${ns3-contrib-libs}

@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -16,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #ifndef EPC_UE_NAS_H
@@ -33,7 +37,6 @@ class EpcHelper;
 
 class EpcUeNas : public Object
 {
-  /// allow MemberLteAsSapUser<EpcUeNas> class friend access
   friend class MemberLteAsSapUser<EpcUeNas>;
 public:
 
@@ -49,10 +52,6 @@ public:
 
   // inherited from Object
   virtual void DoDispose (void);
-  /**
-   * \brief Get the type ID.
-   * \return the object TypeId
-   */
   static TypeId GetTypeId (void);
 
 
@@ -96,6 +95,13 @@ public:
   LteAsSapUser* GetAsSapUser ();
 
   /**
+   * Set the SAP provider to interact with the MmWave light RRC entity (if set)
+   *
+   * \param s the AS SAP provider
+   */
+  void SetMmWaveAsSapProvider (LteAsSapProvider* s);
+
+  /**
    * set the callback used to forward data packets up the stack
    *
    * \param cb the callback
@@ -107,7 +113,7 @@ public:
    *
    * \param dlEarfcn the DL frequency of the eNB
    */
-  void StartCellSelection (uint32_t dlEarfcn);
+  void StartCellSelection (uint16_t dlEarfcn);
 
   /**
    * \brief Causes NAS to tell AS to go to ACTIVE state.
@@ -126,7 +132,18 @@ public:
    * Since RRC Idle Mode cell selection is not supported yet, we force the UE
    * RRC to be camped on a specific eNB.
    */
-  void Connect (uint16_t cellId, uint32_t dlEarfcn);
+  void Connect (uint16_t cellId, uint16_t dlEarfcn);
+
+  /**
+   * \brief Causes NAS to tell AS to camp to a specific cell and go to ACTIVE
+   *        state. It also specify which is the cellId for the MmWave BS to which 
+   *        the UE will connect later on
+   * \param cellId the id of the eNB to camp on
+   * \param dlEarfcn the DL frequency of the eNB
+   * \param mmWaveCellId the id of the MmWave cell
+   *
+   */
+  void ConnectMc (uint16_t cellId, uint16_t dlEarfcn, uint16_t mmWaveCellId);
  
   /** 
    * instruct the NAS to disconnect
@@ -177,7 +194,7 @@ public:
    * TracedCallback signature for state change events.
    *
    * \param [in] oldState The old State.
-   * \param [in] newState the new State.
+   * \pararm [in] newState the new State.
    */
   typedef void (* StateTracedCallback)
     (const State oldState, const State newState);
@@ -185,24 +202,16 @@ public:
 private:
 
   // LTE AS SAP methods
-  /// Notify successful connection
-  void DoNotifyConnectionSuccessful ();
-  /// Notify connection failed
+  void DoNotifyConnectionSuccessful (uint16_t rnti);
+  void DoNotifyHandoverSuccessful (uint16_t rnti, uint16_t mmWaveCellId);
+  void DoNotifyConnectToMmWave (uint16_t mmWaveCellId);
   void DoNotifyConnectionFailed ();
-  /// Notify connection released
   void DoNotifyConnectionReleased ();
-  /**
-   * Receive data
-   * \param packet the packet
-   */
   void DoRecvData (Ptr<Packet> packet);
+  void DoNotifySecondaryCellHandoverStarted (uint16_t oldRnti, uint16_t newRnti, uint16_t mmWaveCellId, LteRrcSap::RadioResourceConfigDedicated rrcd);
+
 
   // internal methods
-  /**
-   * Activate EPS Bearer
-   * \param bearer the EPS bearer
-   * \param tft the EPC TFT
-   */
   void DoActivateEpsBearer (EpsBearer bearer, Ptr<EpcTft> tft);
   /**
    * Switch the UE RRC to the given state.
@@ -229,24 +238,25 @@ private:
   /// Closed Subscriber Group identity.
   uint32_t m_csgId;
 
-  /// LTE SAP provider
   LteAsSapProvider* m_asSapProvider;
-  /// LTE SAP user
   LteAsSapUser* m_asSapUser;
+  LteAsSapProvider* m_mmWaveAsSapProvider;
 
-  uint8_t m_bidCounter; ///< bid counter
-  EpcTftClassifier m_tftClassifier; ///< tft classifier
+  uint8_t m_bidCounter;
+  EpcTftClassifier m_tftClassifier;
 
-  Callback <void, Ptr<Packet> > m_forwardUpCallback; ///< upward callback
+  Callback <void, Ptr<Packet> > m_forwardUpCallback;
 
-  /// BearerToBeActivated structure
   struct BearerToBeActivated
   {
-    EpsBearer bearer; ///< EPS bearer
-    Ptr<EpcTft> tft; ///< TFT
+    EpsBearer bearer;
+    Ptr<EpcTft> tft;
   };
 
-  std::list<BearerToBeActivated> m_bearersToBeActivatedList; ///< bearers to be activated list
+  std::list<BearerToBeActivated> m_bearersToBeActivatedList;
+
+  uint16_t m_mmWaveCellId;
+  uint16_t m_dlEarfcn; // TODO maybe useless
 
 };
 

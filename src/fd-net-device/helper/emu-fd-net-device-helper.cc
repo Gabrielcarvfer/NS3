@@ -30,7 +30,6 @@
 #include "ns3/trace-helper.h"
 
 #include <arpa/inet.h>
-#include <errno.h>
 #include <iostream>
 #include <iomanip>
 #include <limits>
@@ -58,7 +57,7 @@ namespace ns3 {
 NS_LOG_COMPONENT_DEFINE ("EmuFdNetDeviceHelper");
 
 #define EMU_MAGIC 65867
-
+#define RAW_SOCK_CREATOR "../bin/raw-socket-creator"
 EmuFdNetDeviceHelper::EmuFdNetDeviceHelper ()
 {
   m_deviceName = "undefined";

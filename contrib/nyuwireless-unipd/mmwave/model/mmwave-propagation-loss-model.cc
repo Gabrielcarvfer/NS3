@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
@@ -50,12 +54,6 @@ MmWavePropagationLossModel::GetTypeId (void)
   static TypeId tid = TypeId ("ns3::MmWavePropagationLossModel")
     .SetParent<PropagationLossModel> ()
     .AddConstructor<MmWavePropagationLossModel> ()
-    .AddAttribute ("Frequency",
-                   "The carrier frequency (in Hz) at which propagation occurs  (default is 28 GHz).",
-                   DoubleValue (28e9),
-                   MakeDoubleAccessor (&MmWavePropagationLossModel::SetFrequency,
-                                       &MmWavePropagationLossModel::GetFrequency),
-                   MakeDoubleChecker<double> ())
     .AddAttribute ("MinLoss",
                    "The minimum value (dB) of the total loss, used at short ranges. Note: ",
                    DoubleValue (0.0),
@@ -97,15 +95,6 @@ MmWavePropagationLossModel::GetMinLoss (void) const
   return m_minLoss;
 }
 
-void
-MmWavePropagationLossModel::SetFrequency (double frequency)
-{
-  //NS_ASSERT (m_frequency = frequency);
-  m_frequency = frequency;
-  static const double C = 299792458.0; // speed of light in vacuum
-  m_lambda = C / frequency;
-}
-
 double
 MmWavePropagationLossModel::GetFrequency (void) const
 {
@@ -139,7 +128,7 @@ MmWavePropagationLossModel::DoCalcRxPower (double txPowerDbm,
 		double distance = a->GetDistanceFrom (b);
 		if (distance < 3*m_lambda)
 		{
-			//NS_LOG_WARN ("distance not within the far field region => inaccurate propagation loss value");
+			NS_LOG_WARN ("distance not within the far field region => inaccurate propagation loss value");
 		}
 		if (distance <= 0)
 		{
@@ -190,7 +179,7 @@ MmWavePropagationLossModel::DoCalcRxPower (double txPowerDbm,
 				scenario.m_channelScenario = 'o';
 				return (txPowerDbm - 500.00);
 			}
-			scenario.m_shadowing = normalVariable->GetValue()*sigma;
+			scenario.m_shadowing = normalVariable->GetValue(0,1)*sigma;
 			m_channelScenarioMap.insert (std::make_pair(std::make_pair (a,b), scenario));
 			m_channelScenarioMap.insert (std::make_pair(std::make_pair (b,a), scenario));
 			it = m_channelScenarioMap.find(std::make_pair(a,b));
@@ -265,4 +254,15 @@ MmWavePropagationLossModel::UpDataScenarioMap ()
 {
 	m_channelScenarioMap.clear ();
 	Simulator::Schedule(Seconds(1), &MmWavePropagationLossModel::UpDataScenarioMap,this);
+}
+
+void
+MmWavePropagationLossModel::SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig)
+{
+	m_phyMacConfig = ptrConfig;
+	m_frequency = m_phyMacConfig->GetCenterFrequency();
+    static const double C = 299792458.0; // speed of light in vacuum
+    m_lambda = C / m_frequency;
+
+	NS_LOG_INFO("Frequency " << m_frequency);
 }

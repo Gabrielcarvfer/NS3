@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,12 +24,15 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
+#ifndef MMWAVE_RRC_PROTOCOL_IDEAL_H
+#define MMWAVE_RRC_PROTOCOL_IDEAL_H
 
-#ifndef LTE_RRC_PROTOCOL_IDEAL_H
-#define LTE_RRC_PROTOCOL_IDEAL_H
 
 #include <stdint.h>
 #include <map>
@@ -51,14 +55,14 @@ class LteUeRrc;
  * resources. 
  * 
  */
-class mmWaveUeRrcProtocolIdeal : public Object
+class MmWaveUeRrcProtocolIdeal : public Object
 {
-  friend class MemberLteUeRrcSapUser<mmWaveUeRrcProtocolIdeal>;
+  friend class MemberLteUeRrcSapUser<MmWaveUeRrcProtocolIdeal>;
 
 public:
 
-  mmWaveUeRrcProtocolIdeal ();
-  virtual ~mmWaveUeRrcProtocolIdeal ();
+  MmWaveUeRrcProtocolIdeal ();
+  virtual ~MmWaveUeRrcProtocolIdeal ();
 
   // inherited from Object
   virtual void DoDispose (void);
@@ -80,6 +84,7 @@ private:
   void DoSendRrcConnectionReestablishmentRequest (LteRrcSap::RrcConnectionReestablishmentRequest msg);
   void DoSendRrcConnectionReestablishmentComplete (LteRrcSap::RrcConnectionReestablishmentComplete msg);
   void DoSendMeasurementReport (LteRrcSap::MeasurementReport msg);
+  void DoSendNotifySecondaryCellConnected (uint16_t mmWaveRnti, uint16_t mmWaveCellId);
 
   void SetEnbRrcSapProvider ();
 
@@ -132,6 +137,8 @@ private:
   void DoSendRrcConnectionReestablishmentReject (uint16_t rnti, LteRrcSap::RrcConnectionReestablishmentReject msg);
   void DoSendRrcConnectionRelease (uint16_t rnti, LteRrcSap::RrcConnectionRelease msg);
   void DoSendRrcConnectionReject (uint16_t rnti, LteRrcSap::RrcConnectionReject msg);
+  void DoSendRrcConnectionSwitch (uint16_t rnti, LteRrcSap::RrcConnectionSwitch msg);
+  void DoSendRrcConnectToMmWave (uint16_t rnti, uint16_t mmWaveCellId);
   Ptr<Packet> DoEncodeHandoverPreparationInformation (LteRrcSap::HandoverPreparationInfo msg);
   LteRrcSap::HandoverPreparationInfo DoDecodeHandoverPreparationInformation (Ptr<Packet> p);
   Ptr<Packet> DoEncodeHandoverCommand (LteRrcSap::RrcConnectionReconfiguration msg);
@@ -151,4 +158,5 @@ private:
 }
 
 
-#endif // LTE_RRC_PROTOCOL_IDEAL_H
+#endif
+// MMWAVE_RRC_PROTOCOL_IDEAL_H

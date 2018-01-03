@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,11 +24,15 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
 #include "mmwave-ue-mac.h"
 #include "mmwave-phy-sap.h"
+#include <ns3/lte-rlc.h>
 #include <ns3/log.h>
 
 namespace ns3
@@ -150,6 +155,10 @@ public:
 
 	virtual void SubframeIndication (SfnSf sfn);
 
+	virtual void SetConfigurationParameters(Ptr<MmWavePhyMacCommon> params);
+
+
+
 	//virtual void NotifyHarqDeliveryFailure (uint8_t harqId);
 
 private:
@@ -179,6 +188,12 @@ MacUeMemberPhySapUser::SubframeIndication (SfnSf sfn)
 	m_mac->DoSubframeIndication(sfn);
 }
 
+void
+MacUeMemberPhySapUser::SetConfigurationParameters (Ptr<MmWavePhyMacCommon> params)
+{
+	m_mac->SetConfigurationParameters(params);
+}
+
 //void
 //MacUeMemberPhySapUser::NotifyHarqDeliveryFailure (uint8_t harqId)
 //{
@@ -193,6 +208,16 @@ MmWaveUeMac::GetTypeId (void)
 	static TypeId tid = TypeId ("ns3::MmWaveUeMac")
 			.SetParent<MmWaveMac> ()
 			.AddConstructor<MmWaveUeMac> ()
+			.AddAttribute ("UpdateUeSinrEstimatePeriod",
+               "Period (in ms) of reporting of SINR estimate of all the UE",
+               DoubleValue (25.6),
+               MakeDoubleAccessor (&MmWaveUeMac::m_ueUpdateSinrPeriod),
+               MakeDoubleChecker<double> ())
+		    .AddAttribute ("InterRatHoCapable",
+                 "True if this UE supports hard handover between LTE and MmWave",
+                 BooleanValue (false),
+                 MakeBooleanAccessor (&MmWaveUeMac::m_interRatHoCapable),
+                 MakeBooleanChecker ())
 	;
 	return tid;
 }
@@ -210,6 +235,7 @@ MmWaveUeMac::MmWaveUeMac (void)
 	m_macSapProvider = new UeMemberMmWaveMacSapProvider (this);
 	m_phySapUser = new MacUeMemberPhySapUser (this);
 	m_raPreambleUniformVariable = CreateObject<UniformRandomVariable> ();
+	m_randomAccessProcedureDelay = CreateObject<UniformRandomVariable> ();
 }
 
 MmWaveUeMac::~MmWaveUeMac (void)
@@ -233,15 +259,20 @@ MmWaveUeMac::SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig)
 {
 	m_phyMacConfig = ptrConfig;
 
-  m_miUlHarqProcessesPacket.resize (m_phyMacConfig->GetNumHarqProcess ());
-  for (uint8_t i = 0; i < m_miUlHarqProcessesPacket.size (); i++)
-    {
-      Ptr<PacketBurst> pb = CreateObject <PacketBurst> ();
-      m_miUlHarqProcessesPacket.at (i).m_pktBurst = pb;
-    }
-  m_miUlHarqProcessesPacketTimer.resize (m_phyMacConfig->GetNumHarqProcess (), 0);
+	m_miUlHarqProcessesPacket.clear();
+	m_miUlHarqProcessesPacket.resize (m_phyMacConfig->GetNumHarqProcess ());
+	for (uint8_t i = 0; i < m_miUlHarqProcessesPacket.size (); i++)
+	{
+		Ptr<PacketBurst> pb = CreateObject <PacketBurst> ();
+		m_miUlHarqProcessesPacket.at (i).m_pktBurst = pb;
+	}
+	m_miUlHarqProcessesPacketTimer.clear();
+	m_miUlHarqProcessesPacketTimer.resize (m_phyMacConfig->GetNumHarqProcess (), 0);
 
-  m_bsrPeriodicity = MicroSeconds (m_phyMacConfig->GetSymbolsPerSubframe());
+	m_bsrPeriodicity = MicroSeconds (m_phyMacConfig->GetSymbolsPerSubframe());
+
+  	m_randomAccessProcedureDelay->SetAttribute ("Min", DoubleValue (0.0));
+  	m_randomAccessProcedureDelay->SetAttribute ("Max", DoubleValue (m_ueUpdateSinrPeriod));
 }
 
 Ptr<MmWavePhyMacCommon>
@@ -268,18 +299,14 @@ MmWaveUeMac::DoTransmitPdu (LteMacSapProvider::TransmitPduParameters params)
 		{
 			return;
 		}
-
 		if(it->second.m_pdu == 0)
 		{
 			it->second.m_pdu = params.pdu;
 		}
 		else
 		{
-
-			it->second.m_pdu->AddAtEnd (params.pdu); // append to MAC PDU
+			it->second.m_pdu->AddAtEnd (params.pdu); // append to MAC PDU	
 		}
-
-		//it->second.m_pdu->AddAtEnd (params.pdu); // append to MAC PDU
 
 		MacSubheader subheader (params.lcid, params.pdu->GetSize ());
 		it->second.m_macHeader.AddSubheader (subheader); // add RLC PDU sub-header into MAC header
@@ -327,11 +354,20 @@ MmWaveUeMac::DoReportBufferStatus (LteMacSapProvider::ReportBufferStatusParamete
   it = m_ulBsrReceived.find (params.lcid);
   if (it!=m_ulBsrReceived.end ())
     {
+      if(params.lcid == 1)
+      {
+        NS_LOG_INFO("Update entry");
+      }
+      
       // update entry
       (*it).second = params;
     }
   else
     {
+      if(params.lcid == 1)
+      {
+        NS_LOG_INFO("Insert entry");
+      }
       m_ulBsrReceived.insert (std::pair<uint8_t, LteMacSapProvider::ReportBufferStatusParameters> (params.lcid, params));
     }
   m_freshUlBsr = true;
@@ -354,9 +390,9 @@ MmWaveUeMac::SendReportBufferStatus (void)
       NS_LOG_INFO ("No BSR report to transmit");
       return;
     }
-  MacCeElement bsr = MacCeElement();
-  bsr.m_rnti = m_rnti;
-  bsr.m_macCeType = MacCeElement::BSR;
+  MacCeElement bsr{m_rnti, MacCeElement::BSR};
+  
+  bool send = true;
 
   // BSR is reported for each LCG
   std::map <uint8_t, LteMacSapProvider::ReportBufferStatusParameters>::iterator it;
@@ -364,15 +400,24 @@ MmWaveUeMac::SendReportBufferStatus (void)
   for (it = m_ulBsrReceived.begin (); it != m_ulBsrReceived.end (); it++)
     {
       uint8_t lcid = it->first;
+      NS_LOG_INFO("MmWave lcid of BSR " << (uint16_t)lcid << " queue size " << (*it).second.txQueueSize);
+
       std::map <uint8_t, LcInfo>::iterator lcInfoMapIt;
       lcInfoMapIt = m_lcInfoMap.find (lcid);
-      NS_ASSERT (lcInfoMapIt !=  m_lcInfoMap.end ());
-      NS_ASSERT_MSG ((lcid != 0) || (((*it).second.txQueueSize == 0)
+      if (lcInfoMapIt !=  m_lcInfoMap.end ())
+      {
+      	NS_ASSERT_MSG ((lcid != 0) || (((*it).second.txQueueSize == 0)
                                      && ((*it).second.retxQueueSize == 0)
                                      && ((*it).second.statusPduSize == 0)),
                      "BSR should not be used for LCID 0");
-      uint8_t lcg = lcInfoMapIt->second.lcConfig.logicalChannelGroup;
-      queue.at (lcg) += ((*it).second.txQueueSize + (*it).second.retxQueueSize + (*it).second.statusPduSize);
+      	uint8_t lcg = lcInfoMapIt->second.lcConfig.logicalChannelGroup;
+      	queue.at (lcg) += ((*it).second.txQueueSize + (*it).second.retxQueueSize + (*it).second.statusPduSize);
+      }
+      else
+      {
+        NS_LOG_INFO("lcid not found");
+      	send = false;
+      }
     }
 
   // FF API says that all 4 LCGs are always present
@@ -384,7 +429,10 @@ MmWaveUeMac::SendReportBufferStatus (void)
   // create the feedback to eNB
   Ptr<MmWaveBsrMessage> msg = Create<MmWaveBsrMessage> ();
   msg->SetBsr (bsr);
-  m_phySapProvider->SendControlMessage (msg);
+  if(send)
+  {
+	m_phySapProvider->SendControlMessage (msg);
+  }
 }
 
 void
@@ -449,10 +497,11 @@ MmWaveUeMac::DoReceivePhyPdu (Ptr<Packet> p)
 	p->RemovePacketTag (tag);
 	MmWaveMacPduHeader macHeader;
 	p->RemoveHeader (macHeader);
-
+  NS_LOG_INFO("ReceivePdu for rnti " << tag.GetRnti());
 	if (tag.GetRnti () == m_rnti) // packet is for the current user
 	{
 		std::vector<MacSubheader> macSubheaders = macHeader.GetSubheaders ();
+		//NS_LOG_UNCOND("MmWaveUeMac receive PHY pdu with " << macSubheaders.size() << " pdu");
 		uint32_t currPos = 0;
 		for (unsigned ipdu = 0; ipdu < macSubheaders.size (); ipdu++)
 		{
@@ -460,27 +509,32 @@ MmWaveUeMac::DoReceivePhyPdu (Ptr<Packet> p)
 			{
 				continue;
 			}
+			NS_LOG_INFO("It is for lcid " << (uint16_t)macSubheaders[ipdu].m_lcid);
 			std::map <uint8_t, LcInfo>::const_iterator it = m_lcInfoMap.find (macSubheaders[ipdu].m_lcid);
-			NS_ASSERT_MSG (it != m_lcInfoMap.end (), "received packet with unknown lcid");
-			Ptr<Packet> rlcPdu;
-			if((p->GetSize ()-currPos) < (uint32_t)macSubheaders[ipdu].m_size)
+			NS_ASSERT_MSG (it != m_lcInfoMap.end (), "received packet with unknown lcid " << (uint16_t)macSubheaders[ipdu].m_lcid);
+			if(it!=m_lcInfoMap.end ())
 			{
-				NS_LOG_ERROR ("Packet size less than specified in MAC header (actual= " \
-				              <<p->GetSize ()<<" header= "<<(uint32_t)macSubheaders[ipdu].m_size<<")" );
-			}
-			else if ((p->GetSize ()-currPos) > (uint32_t)macSubheaders[ipdu].m_size)
-			{
-				NS_LOG_DEBUG ("Fragmenting MAC PDU (packet size greater than specified in MAC header (actual= " \
-				              <<p->GetSize ()<<" header= "<<(uint32_t)macSubheaders[ipdu].m_size<<")" );
-				rlcPdu = p->CreateFragment (currPos, (uint32_t)macSubheaders[ipdu].m_size);
-				currPos += (uint32_t)macSubheaders[ipdu].m_size;
-				it->second.macSapUser->ReceivePdu (rlcPdu);
-			}
-			else
-			{
-				rlcPdu = p->CreateFragment (currPos, p->GetSize ()-currPos);
-				currPos = p->GetSize ();
-				it->second.macSapUser->ReceivePdu (rlcPdu);
+				Ptr<Packet> rlcPdu;
+				if((p->GetSize ()-currPos) < (uint32_t)macSubheaders[ipdu].m_size)
+				{
+					NS_LOG_ERROR ("Packet size less than specified in MAC header (actual= " \
+					              <<p->GetSize ()<<" header= "<<(uint32_t)macSubheaders[ipdu].m_size<<")" );
+				}
+				else if ((p->GetSize ()-currPos) > (uint32_t)macSubheaders[ipdu].m_size)
+				{
+					NS_LOG_DEBUG ("Fragmenting MAC PDU (packet size greater than specified in MAC header (actual= " \
+					              <<p->GetSize ()<<" header= "<<(uint32_t)macSubheaders[ipdu].m_size<<")" );
+					rlcPdu = p->CreateFragment (currPos, (uint32_t)macSubheaders[ipdu].m_size);
+					currPos += (uint32_t)macSubheaders[ipdu].m_size;
+					it->second.macSapUser->ReceivePdu (rlcPdu);
+				}
+				else
+				{
+					rlcPdu = p->CreateFragment (currPos, p->GetSize ()-currPos);
+					currPos = p->GetSize ();
+					LteRlcSpecificLteMacSapUser* user = (LteRlcSpecificLteMacSapUser*)it->second.macSapUser;
+					user->ReceivePdu (rlcPdu);
+				}
 			}
 		}
 	}
@@ -504,9 +558,28 @@ MmWaveUeMac::RecvRaResponse (BuildRarListElement_s raResponse)
 {
   NS_LOG_FUNCTION (this);
   m_waitingForRaResponse = false;
+  //m_noRaResponseReceivedEvent.Cancel ();
+  NS_LOG_INFO ("got RAR for RAPID " << (uint32_t) m_raPreambleId << ", setting T-C-RNTI = " << raResponse.m_rnti);
   m_rnti = raResponse.m_rnti;
   m_cmacSapUser->SetTemporaryCellRnti (m_rnti);
+  
   m_cmacSapUser->NotifyRandomAccessSuccessful ();
+  // trigger tx opportunity for Message 3 over LC 0
+  // this is needed since Message 3's UL GRANT is in the RAR, not in UL-DCIs
+  // const uint8_t lc0Lcid = 0;
+  // std::map <uint8_t, LcInfo>::iterator lc0InfoIt = m_lcInfoMap.find (lc0Lcid);
+  // NS_ASSERT (lc0InfoIt != m_lcInfoMap.end ());
+  // std::map <uint8_t, LteMacSapProvider::ReportBufferStatusParameters>::iterator lc0BsrIt
+  //   = m_ulBsrReceived.find (lc0Lcid);
+  // if ((lc0BsrIt != m_ulBsrReceived.end ())
+  //     && (lc0BsrIt->second.txQueueSize > 0))
+  //   {
+  //     NS_ASSERT_MSG (raResponse.m_grant.m_tbSize > lc0BsrIt->second.txQueueSize, 
+  //                    "segmentation of Message 3 is not allowed raResponse.m_grant.m_tbSize " << raResponse.m_grant.m_tbSize 
+  //                    << " lc0BsrIt->second.txQueueSize " << lc0BsrIt->second.txQueueSize);
+  //     lc0InfoIt->second.macSapUser->NotifyTxOpportunity (raResponse.m_grant.m_tbSize, 0, 0); 
+  //     lc0BsrIt->second.txQueueSize = 0;
+  //   }
 }
 
 std::map<uint32_t, struct MacPduInfo>::iterator MmWaveUeMac::AddToMacPduMap (DciInfoElementTdma dci, unsigned activeLcs)
@@ -545,7 +618,7 @@ MmWaveUeMac::DoReceiveControlMessage  (Ptr<MmWaveControlMessage> msg)
 		Ptr<MmWaveTdmaDciMessage> dciMsg = DynamicCast <MmWaveTdmaDciMessage> (msg);
 		DciInfoElementTdma dciInfoElem = dciMsg->GetDciInfoElement ();
 
-		if (dciInfoElem.m_format == DciInfoElementTdma::UL)
+		if (dciInfoElem.m_format == DciInfoElementTdma::UL_dci)
 		{
 			if (dciInfoElem.m_ndi == 1)
 			{
@@ -768,7 +841,7 @@ MmWaveUeMac::DoReceiveControlMessage  (Ptr<MmWaveControlMessage> msg)
 		if (m_waitingForRaResponse == true)
 		{
 			Ptr<MmWaveRarMessage> rarMsg = DynamicCast<MmWaveRarMessage> (msg);
-			NS_LOG_LOGIC (this << "got RAR with RA-RNTI " << (uint32_t) rarMsg->GetRaRnti () << ", expecting " << (uint32_t) m_raRnti);
+			NS_LOG_DEBUG (this << "got RAR with RA-RNTI " << (uint32_t) rarMsg->GetRaRnti () << ", expecting " << (uint32_t) m_raRnti);
 			for (std::list<MmWaveRarMessage::Rar>::const_iterator it = rarMsg->RarListBegin ();
 					it != rarMsg->RarListEnd ();
 					++it)
@@ -825,9 +898,17 @@ void
 MmWaveUeMac::SendRaPreamble(bool contention)
 {
 	//m_raPreambleId = m_raPreambleUniformVariable->GetInteger (0, 64 - 1);
-	m_raPreambleId = g_raPreambleId++;
+	if(contention)
+	{
+		m_raPreambleId = g_raPreambleId++;
+	}
+	// else m_raPreambleId was already set
+	
 	/*raRnti should be subframeNo -1 */
 	m_raRnti = 1;
+	m_waitingForRaResponse = true;
+
+	NS_LOG_DEBUG("SendRachPreamble at time " << Simulator::Now());
 	m_phySapProvider->SendRachPreamble(m_raPreambleId, m_raRnti);
 }
 
@@ -837,14 +918,26 @@ MmWaveUeMac::DoStartNonContentionBasedRandomAccessProcedure (uint16_t rnti, uint
 	NS_LOG_FUNCTION (this << " rnti" << rnti);
 	NS_ASSERT_MSG (prachMask == 0, "requested PRACH MASK = " << (uint32_t) prachMask << ", but only PRACH MASK = 0 is supported");
 	m_rnti = rnti;
+	m_raPreambleId = preambleId;
+  	bool contention = false;
+  	if(!m_interRatHoCapable) // we assume that the LTE eNB can send directionality info, thus the UE has not to wait to collect updated info
+  	{
+	  	SendRaPreamble (contention);  		
+  	}
+  	else // instead in a single connectivity framework, the UE must wait for the periodic update with the channel estimate
+  	{
+  		Time delay = MilliSeconds(m_randomAccessProcedureDelay->GetValue());
+  		NS_LOG_DEBUG("Schedule RA with delay " << delay);
+  		Simulator::Schedule(delay, &MmWaveUeMac::SendRaPreamble, this, contention);
+  	}
 }
 
 void
 MmWaveUeMac::AddLc (uint8_t lcId,  LteUeCmacSapProvider::LogicalChannelConfig lcConfig, LteMacSapUser* msu)
 {
 	NS_LOG_FUNCTION (this << " lcId" << (uint32_t) lcId);
-	NS_ASSERT_MSG (m_lcInfoMap.find (lcId) == m_lcInfoMap.end (), "cannot add channel because LCID " << lcId << " is already present");
-
+	//NS_ASSERT_MSG (m_lcInfoMap.find (lcId) == m_lcInfoMap.end (), "cannot add channel because LCID " << lcId << " is already present");
+	NS_LOG_DEBUG("Add LC in " << m_rnti << " lcid " << (uint32_t)lcId);
 	LcInfo lcInfo;
 	lcInfo.lcConfig = lcConfig;
 	lcInfo.macSapUser = msu;
@@ -854,7 +947,12 @@ MmWaveUeMac::AddLc (uint8_t lcId,  LteUeCmacSapProvider::LogicalChannelConfig lc
 void
 MmWaveUeMac::DoRemoveLc (uint8_t lcId)
 {
-	NS_LOG_FUNCTION (this << " lcId" << lcId);
+  NS_LOG_FUNCTION (this << " lcId" << lcId);
+  NS_LOG_DEBUG("Remove LC in " << m_rnti << " lcid " << (uint32_t)lcId);
+  if(m_lcInfoMap.find (lcId) != m_lcInfoMap.end ())
+  {
+    m_lcInfoMap.erase(m_lcInfoMap.find(lcId));  
+  }
 }
 
 LteMacSapProvider*
@@ -867,7 +965,44 @@ void
 MmWaveUeMac::DoReset ()
 {
 	NS_LOG_FUNCTION (this);
+	std::map <uint8_t, LcInfo>::iterator it = m_lcInfoMap.begin ();
+	while (it != m_lcInfoMap.end ())
+	{
+	  // don't delete CCCH)
+	  if (it->first == 0)
+	    {          
+	      ++it;
+	    }
+	  else
+	    {
+	      	// note: use of postfix operator preserves validity of iterator
+    		NS_LOG_LOGIC("RemoveLc " << (uint16_t)it->first);
+	      	m_lcInfoMap.erase (it++);
+	    }
+	}
+	m_rnti = 0;
+
+	// m_noRaResponseReceivedEvent.Cancel ();
+	// m_rachConfigured = false;
+	m_miUlHarqProcessesPacket.clear();
+	m_miUlHarqProcessesPacketTimer.clear();
+	m_freshUlBsr = false;
+	m_ulBsrReceived.clear ();
+	m_macPduMap.clear();
+
+	// set things to their initial state
+	SetConfigurationParameters(m_phyMacConfig);
+
 }
+
+int64_t
+MmWaveUeMac::AssignStreams (int64_t stream)
+{
+ NS_LOG_FUNCTION (this << stream);
+ m_randomAccessProcedureDelay->SetStream (stream);
+ return 1;
+}
+
 //////////////////////////////////////////////
 
 

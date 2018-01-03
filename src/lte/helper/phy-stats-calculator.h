@@ -40,14 +40,12 @@ namespace ns3 {
  *   - C-RNTI
  *   - RSRP
  *   - SINR
- *   - componentCarrierId
  * - UE SINR
  *   - Timestamp (in seconds)
  *   - Cell ID of the reported Enb
  *   - IMSI
  *   - C-RNTI
  *   - measured and reported SINR value in linear
- *   - componentCarrierId
  * - Interference for UL
  *   - Cell ID of the reported Enb
  *   - IMSI of the scheduled UE
@@ -120,9 +118,8 @@ public:
    * @param rnti C-RNTI scheduled
    * @param rsrp Reference Signal Received Power
    * @param sinr SINR averaged among RBs
-   * @param componentCarrierId
    */
-  void ReportCurrentCellRsrpSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti, double rsrp, double sinr, uint8_t componentCarrierId);
+  void ReportCurrentCellRsrpSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti, double rsrp, double sinr);
 
   /**
    * Notifies the stats calculator that an UE SINR report has occurred.
@@ -130,9 +127,8 @@ public:
    * @param imsi IMSI of the scheduled UE
    * @param rnti C-RNTI scheduled
    * @param sinrLinear measured and reported SINR value in linear
-   * @param componentCarrierId
    */
-  void ReportUeSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti, double sinrLinear, uint8_t componentCarrierId);
+  void ReportUeSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti, double sinrLinear);
 
   /**
    * Notifies the stats calculator that an interference report has occurred.
@@ -150,11 +146,10 @@ public:
    * \param rnti 
    * \param rsrp 
    * \param sinr 
-   * \param componentCarrierId
    */
   static void ReportCurrentCellRsrpSinrCallback (Ptr<PhyStatsCalculator> phyStats,
                                           std::string path, uint16_t cellId, uint16_t rnti,
-                                          double rsrp, double sinr, uint8_t componentCarrierId);
+                                          double rsrp, double sinr);
   
   /** 
    * trace sink
@@ -163,11 +158,10 @@ public:
    * \param path 
    * \param cellId 
    * \param rnti 
-   * \param sinrLinear
-   * \param componentCarrierId
+   * \param sinrLinear 
    */
   static void ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, std::string path,
-                     uint16_t cellId, uint16_t rnti, double sinrLinear, uint8_t componentCarrierId);
+                     uint16_t cellId, uint16_t rnti, double sinrLinear);
 
   /** 
    * trace sink

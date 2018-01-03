@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -38,14 +42,17 @@
 #include <ns3/spectrum-channel.h>
 #include <ns3/spectrum-signal-parameters.h>
 #include <ns3/spectrum-interference.h>
+#include <ns3/propagation-loss-model.h>
 #include <ns3/generic-phy.h>
-#include <ns3/antenna-array-model.h>
+#include <ns3/nyuwireless-unipd/antenna-array-model.h>
 #include "mmwave-phy-mac-common.h"
 #include "mmwave-spectrum-phy.h"
 #include "mmwave-net-device.h"
 #include "mmwave-phy-sap.h"
 #include <string>
 #include <map>
+#include <ns3/nyuwireless-unipd/mmwave-los-tracker.h>
+
 
 namespace ns3 {
 
@@ -63,9 +70,9 @@ public:
 
 	static TypeId GetTypeId (void);
 
-	void SetDevice (Ptr<MmWaveNetDevice> d);
+	void SetDevice (Ptr<NetDevice> d);
 
-	Ptr<MmWaveNetDevice> GetDevice ();
+	Ptr<NetDevice> GetDevice ();
 
 	void SetChannel (Ptr<SpectrumChannel> c);
 
@@ -113,8 +120,13 @@ public:
 	void SetDlSfAllocInfo (SfAllocInfo sfAllocInfo);
 	void SetUlSfAllocInfo (SfAllocInfo sfAllocInfo);
 
+	// hacks needed to compute SINR at eNB for each UE, without pilots
+	void AddSpectrumPropagationLossModel(Ptr<SpectrumPropagationLossModel> model);
+	void AddPropagationLossModel(Ptr<PropagationLossModel> model);
+	void AddLosTracker(Ptr<MmWaveLosTracker>);
+
 protected:
-	Ptr<MmWaveNetDevice> m_netDevice;
+	Ptr<NetDevice> m_netDevice;
 
 	Ptr<MmWaveSpectrumPhy> m_spectrumPhy;
 	Ptr<MmWaveSpectrumPhy> m_downlinkSpectrumPhy;
@@ -152,6 +164,12 @@ protected:
 	uint32_t m_raPreambleId;
 
 	bool m_sfAllocInfoUpdated;
+
+	// hack to allow eNB to compute the SINR, periodically, without pilots 
+	Ptr<SpectrumPropagationLossModel> m_spectrumPropagationLossModel;
+	Ptr<PropagationLossModel> m_propagationLoss;
+	Ptr<MmWaveLosTracker> m_losTracker;
+
 
 private:
 };

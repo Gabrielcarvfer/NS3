@@ -35,7 +35,7 @@
 #include <ns3/nstime.h>
 #include <ns3/spectrum-value.h>
 #include <string.h>
-#include <ns3/mmwave-chunk-processor.h>
+#include <ns3/nyuwireless-unipd/mmwave-chunk-processor.h>
 
 
 namespace ns3 {

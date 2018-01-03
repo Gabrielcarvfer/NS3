@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ *  Modified by: Michele Polese <michele.polese@gmail.com> 
+ *               Dual Connectivity and Handover functionalities
  */
 
 
@@ -268,7 +272,7 @@ MmWaveAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
 			if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
 			{
 				uint8_t mcs = 0;
-				TbStats_t tbStats;
+				MmWaveTbStats_t tbStats;
 				while (mcs <= 28)
 				{
 					MmWaveHarqProcessInfoList_t harqInfoList;
@@ -364,7 +368,7 @@ MmWaveAmc::CreateCqiFeedbacksTdma (const SpectrumValue& sinr, uint8_t numSym)
 		for (it = sinr.ConstValuesBegin (); it != sinr.ConstValuesEnd (); it++)
 		{
 			uint8_t mcs = 0;
-			TbStats_t tbStats;
+			MmWaveTbStats_t tbStats;
 			std::vector <int> chunkMap;
 			chunkMap.push_back (chunkId++);
 			while (mcs <= 28)
@@ -476,7 +480,7 @@ MmWaveAmc::CreateCqiFeedbackWbTdma (const SpectrumValue& sinr, uint8_t numSym, u
 		sinrAvg /= chunkId;
 
 		mcs = 0;
-		TbStats_t tbStats;
+		MmWaveTbStats_t tbStats;
 		while (mcs <= 28)
 		{
 			MmWaveHarqProcessInfoList_t harqInfoList;
@@ -492,7 +496,7 @@ MmWaveAmc::CreateCqiFeedbackWbTdma (const SpectrumValue& sinr, uint8_t numSym, u
 			mcs--;
 		}
 //		MmWaveHarqProcessInfoList_t harqInfoList;
-//		TbStats_t tbStatsFinal = MmWaveMiErrorModel::GetTbDecodificationStats (sinr, chunkMap, tbSize, mcs, harqInfoList);
+//		MmWaveTbStats_t tbStatsFinal = MmWaveMiErrorModel::GetTbDecodificationStats (sinr, chunkMap, tbSize, mcs, harqInfoList);
 //		NS_LOG_UNCOND ("TBLER " << tbStatsFinal.tbler << " for chunks " << chunkMap.size () << " numSym "
 //		               << (unsigned)numSym << " tbSize " << tbSize << " mcs " << (unsigned)mcs << " sinr " << sinrAvg);
 //		NS_LOG_UNCOND (sinr);

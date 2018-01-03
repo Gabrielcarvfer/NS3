@@ -55,15 +55,15 @@ public:
 
 	MmWaveRrMacScheduler ();
 
-	virtual ~MmWaveRrMacScheduler ();
-	virtual void DoDispose (void);
+	~MmWaveRrMacScheduler ();
+	void DoDispose (void);
 	static TypeId GetTypeId (void);
 
-	virtual void SetMacSchedSapUser (MmWaveMacSchedSapUser* sap);
+	void SetMacSchedSapUser (MmWaveMacSchedSapUser* sap);
 
-	virtual MmWaveMacSchedSapProvider* GetMacSchedSapProvider ();
+	MmWaveMacSchedSapProvider* GetMacSchedSapProvider ();
 
-	virtual void ConfigureCommonParameters (Ptr<MmWavePhyMacCommon> config);
+	void ConfigureCommonParameters (Ptr<MmWavePhyMacCommon> config);
 
   void DoSchedDlRlcBufferReq (const struct MmWaveMacSchedSapProvider::SchedDlRlcBufferReqParameters& params);
 

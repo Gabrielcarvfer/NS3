@@ -8,8 +8,6 @@ set(contribution_lib_components
 
 set(examples
         dynamic_beacon_10static_1moving
-        dynamic_beacon_10static_2moving
-        dynamic_beacon_10static_3moving
         dynamic_beacon_2ap_10static_1moving
 
         )

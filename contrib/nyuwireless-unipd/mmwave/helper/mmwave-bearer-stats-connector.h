@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
@@ -34,6 +38,10 @@
 #include <ns3/config.h>
 #include <ns3/simple-ref-count.h>
 #include <ns3/ptr.h>
+#include "mc-stats-calculator.h"
+#include <fstream>
+#include "ns3/object.h"
+#include <string>
 
 #include <set>
 #include <map>
@@ -41,6 +49,7 @@
 namespace ns3 {
 
 class MmWaveBearerStatsCalculator;
+//class McStatsCalculator;
 
 /**
  * \ingroup lte
@@ -53,11 +62,25 @@ class MmWaveBearerStatsCalculator;
  * LteHelper::EnableRlcTraces().
  */
 
-class MmWaveBearerStatsConnector
+class MmWaveBearerStatsConnector : public Object
 {
 public:
   /// Constructor
   MmWaveBearerStatsConnector ();
+
+  /**
+   * Class destructor
+   */
+  virtual
+  ~MmWaveBearerStatsConnector ();
+
+  // Inherited from ns3::Object
+  /**
+   *  Register this type.
+   *  \return The object TypeId.
+   */
+  static TypeId GetTypeId (void);
+  void DoDispose ();
 
   /**
    * Enables trace sinks for RLC layer. Usually, this function
@@ -72,6 +95,8 @@ public:
    * \param pdcpStats statistics calculator for PDCP layer
    */
   void EnablePdcpStats (Ptr<MmWaveBearerStatsCalculator> pdcpStats);
+
+  void EnableMcStats  (Ptr<McStatsCalculator> mcStats);
 
   /**
    * Connects trace sinks to appropriate trace sources
@@ -179,6 +204,32 @@ public:
    */
   static void NotifyHandoverEndOkEnb (MmWaveBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
 
+  // TODO doc
+  static void NotifySwitchToMmWaveUe (MmWaveBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+
+  static void NotifySecondaryMmWaveEnbAvailable (MmWaveBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+
+  static void NotifyMmWaveSinr (MmWaveBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, long double sinr);
+  void PrintMmWaveSinr (uint64_t imsi, uint16_t cellId, long double sinr);
+  static void NotifyLteSinr (MmWaveBearerStatsConnector* c, std::string context, uint16_t cellId, uint16_t rnti, double rsrp, double sinr, uint8_t cc);
+  void PrintLteSinr (uint16_t rnti, uint16_t cellId, double sinr);
+
+  std::string GetEnbHandoverStartOutputFilename (void);
+  std::string  GetUeHandoverStartOutputFilename (void);
+  std::string GetEnbHandoverEndOutputFilename (void);
+  std::string  GetUeHandoverEndOutputFilename (void);
+  std::string GetCellIdStatsOutputFilename (void);
+  std::string GetMmWaveSinrOutputFilename (void);
+  std::string GetLteSinrOutputFilename (void);
+  
+  void SetEnbHandoverStartOutputFilename (std::string outputFilename);
+  void  SetUeHandoverStartOutputFilename (std::string outputFilename);
+  void SetEnbHandoverEndOutputFilename (std::string outputFilename);
+  void  SetUeHandoverEndOutputFilename (std::string outputFilename);
+  void SetCellIdStatsOutputFilename (std::string outputFilename);
+  void SetMmWaveSinrOutputFilename (std::string outputFilename);
+  void SetLteSinrOutputFilename (std::string outputFilename);
+
 private:
   /**
    * Creates UE Manager path and stores it in m_ueManagerPathByCellIdRnti
@@ -265,9 +316,18 @@ private:
    */
   void DisconnectTracesEnb (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
 
+  void ConnectSecondaryTracesUe (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+  void ConnectSecondaryTracesEnb (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+
+  void PrintEnbStartHandover(uint64_t imsi, uint16_t sourceCellid, uint16_t targetCellId, uint16_t rnti);
+  void PrintEnbEndHandover(uint64_t imsi, uint16_t targetCellId, uint16_t rnti);
+  void PrintUeStartHandover(uint64_t imsi, uint16_t sourceCellid, uint16_t targetCellId, uint16_t rnti);
+  void PrintUeEndHandover(uint64_t imsi, uint16_t targetCellId, uint16_t rnti);
+
 
   Ptr<MmWaveBearerStatsCalculator> m_rlcStats; //!< Calculator for RLC Statistics
   Ptr<MmWaveBearerStatsCalculator> m_pdcpStats; //!< Calculator for PDCP Statistics
+  Ptr<McStatsCalculator> m_mcStats;
 
   bool m_connected; //!< true if traces are connected to sinks, initially set to false
   std::set<uint64_t> m_imsiSeenUe; //!< stores all UEs for which RLC and PDCP traces were connected
@@ -292,6 +352,21 @@ private:
    */
   std::map<CellIdRnti, std::string> m_ueManagerPathByCellIdRnti;
 
+  std::string m_enbHandoverStartFilename;
+  std::string m_enbHandoverEndFilename;
+  std::string  m_ueHandoverStartFilename;
+  std::string  m_ueHandoverEndFilename;
+  std::string m_cellIdInTimeHandoverFilename;
+  std::string m_mmWaveSinrOutputFilename;
+  std::string m_lteSinrOutputFilename;
+
+  std::ofstream m_enbHandoverStartOutFile;
+  std::ofstream  m_ueHandoverStartOutFile;
+  std::ofstream m_enbHandoverEndOutFile;
+  std::ofstream  m_ueHandoverEndOutFile;
+  std::ofstream m_cellIdInTimeHandoverOutFile;
+  std::ofstream m_mmWaveSinrOutFile;
+  std::ofstream m_lteSinrOutFile;
 };
 
 

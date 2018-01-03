@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -286,12 +290,70 @@ MmWaveMacMemberMacCschedSapUser::CschedCellConfigUpdateInd (const struct CschedC
   m_mac->DoCschedCellConfigUpdateInd (params);
 }
 
+// Enb Mac Sap Provider
+
+template <class C>
+class EnbMacMemberMmWaveMacSapProvider : public LteMacSapProvider
+{
+public:
+  EnbMacMemberMmWaveMacSapProvider (C* mac);
+
+  // inherited from LteMacSapProvider
+  virtual void TransmitPdu (TransmitPduParameters params);
+  virtual void ReportBufferStatus (ReportBufferStatusParameters params);
+
+private:
+  C* m_mac;
+};
+
+
+template <class C>
+EnbMacMemberMmWaveMacSapProvider<C>::EnbMacMemberMmWaveMacSapProvider (C* mac)
+  : m_mac (mac)
+{
+}
+
+template <class C>
+void EnbMacMemberMmWaveMacSapProvider<C>::TransmitPdu (TransmitPduParameters params)
+{
+  m_mac->DoTransmitPdu (params);
+}
+
+template <class C>
+void EnbMacMemberMmWaveMacSapProvider<C>::ReportBufferStatus (ReportBufferStatusParameters params)
+{
+  m_mac->DoReportBufferStatus (params);
+}
+
+
+
+
+
 TypeId
 MmWaveEnbMac::GetTypeId (void)
 {
 	static TypeId tid = TypeId ("ns3::MmWaveEnbMac")
 			.SetParent<MmWaveMac> ()
 			.AddConstructor<MmWaveEnbMac> ()
+			.AddAttribute ("NumberOfRaPreambles",
+		           "how many random access preambles are available for the contention based RACH process",
+		           UintegerValue (50),
+		           MakeUintegerAccessor (&MmWaveEnbMac::m_numberOfRaPreambles),
+		           MakeUintegerChecker<uint8_t> (4, 64))
+		    .AddAttribute ("PreambleTransMax",
+                   "Maximum number of random access preamble transmissions",
+                   UintegerValue (50),
+                   MakeUintegerAccessor (&MmWaveEnbMac::m_preambleTransMax),
+                   MakeUintegerChecker<uint8_t> (3, 200))
+		    .AddAttribute ("RaResponseWindowSize",
+                   "length of the window (in TTIs) for the reception of the random access response (RAR); the resulting RAR timeout is this value + 3 ms",
+                   UintegerValue (3),
+                   MakeUintegerAccessor (&MmWaveEnbMac::m_raResponseWindowSize),
+                   MakeUintegerChecker<uint8_t> (2, 10))
+	        .AddTraceSource ("DlMacTxCallback",
+					"MAC transmission with tb size and number of retx.",
+					MakeTraceSourceAccessor (&MmWaveEnbMac::m_macDlTxSizeRetx),
+					"ns3::LteRlc::RetransmissionCountCallback")
 	;
 	return tid;
 }
@@ -304,10 +366,11 @@ MmWaveEnbMac::MmWaveEnbMac (void) :
 {
 	NS_LOG_FUNCTION (this);
 	m_cmacSapProvider = new MmWaveEnbMacMemberEnbCmacSapProvider (this);
-	m_macSapProvider = new EnbMacMemberLteMacSapProvider<MmWaveEnbMac> (this);
+	m_macSapProvider = new EnbMacMemberMmWaveMacSapProvider<MmWaveEnbMac> (this);
 	m_phySapUser = new MmWaveMacEnbMemberPhySapUser (this);
 	m_macSchedSapUser = new MmWaveMacMemberMacSchedSapUser (this);
 	m_macCschedSapUser = new MmWaveMacMemberMacCschedSapUser (this);
+	Initialize();
 }
 
 MmWaveEnbMac::~MmWaveEnbMac (void)
@@ -388,15 +451,27 @@ MmWaveEnbMac::DoSubframeIndication (SfnSf sfnSf)
 
 	if (!m_receivedRachPreambleCount.empty ())
 	{
-    // process received RACH preambles and notify the scheduler
+    	// process received RACH preambles and notify the scheduler
 		Ptr<MmWaveRarMessage> rarMsg = Create<MmWaveRarMessage> ();
 
 		for (std::map<uint8_t, uint32_t>::const_iterator it = m_receivedRachPreambleCount.begin ();
 				it != m_receivedRachPreambleCount.end ();
 				++it)
 		{
-			uint32_t rnti = m_cmacSapUser->AllocateTemporaryCellRnti ();
-			NS_LOG_INFO (rnti);
+			uint16_t rnti;
+			std::map<uint8_t, NcRaPreambleInfo>::iterator jt = m_allocatedNcRaPreambleMap.find (it->first);
+			NS_LOG_LOGIC("received RapId " << (uint16_t)it->first);
+			if (jt != m_allocatedNcRaPreambleMap.end ())
+			{
+			  rnti = jt->second.rnti;
+			  NS_LOG_INFO ("preambleId previously allocated for NC based RA, RNTI =" << (uint32_t) rnti << ", sending RAR");
+			  m_allocatedNcRaPreambleMap.erase(jt);
+			}
+			else
+			{
+			  rnti = m_cmacSapUser->AllocateTemporaryCellRnti ();
+			  NS_LOG_INFO ("preambleId " << (uint32_t) it->first << ": allocated T-C-RNTI " << (uint32_t) rnti << ", sending RAR");
+			}
 			MmWaveRarMessage::Rar rar;
 			rar.rapId = (*it).first;
 			rar.rarPayload.m_rnti = rnti;
@@ -422,6 +497,7 @@ MmWaveEnbMac::DoSubframeIndication (SfnSf sfnSf)
 	{
 		MmWaveMacSchedSapProvider::SchedUlMacCtrlInfoReqParameters ulMacReq;
 		ulMacReq.m_sfnSf = sfnSf;
+		NS_LOG_DEBUG("ulMacReq.m_macCeList size " << m_ulCeReceived.size());
 		ulMacReq.m_macCeList.insert (ulMacReq.m_macCeList.begin (), m_ulCeReceived.begin (), m_ulCeReceived.end ());
 		m_ulCeReceived.erase (m_ulCeReceived.begin (), m_ulCeReceived.end ());
 		m_macSchedSapProvider->SchedUlMacCtrlInfoReq (ulMacReq);
@@ -466,6 +542,12 @@ MmWaveEnbMac::DoSubframeIndication (SfnSf sfnSf)
 		params.m_ueList = m_associatedUe;
 		m_macSchedSapProvider->SchedTriggerReq (params);
 	}
+}
+
+void 
+MmWaveEnbMac::SetCellId (uint16_t cellId)
+{
+	m_cellId = cellId;
 }
 
 void
@@ -530,7 +612,7 @@ MmWaveEnbMac::DoReceivePhyPdu (Ptr<Packet> p)
 				currPos = p->GetSize ();
 				(*lcidIt).second->ReceivePdu (rlcPdu);
 			}
-		NS_LOG_DEBUG ("Enb Mac Rx Packet, Rnti:" <<rnti<<" lcid:"<<macSubheaders[ipdu].m_lcid<<" size:"<<macSubheaders[ipdu].m_size);
+		NS_LOG_INFO ("MmWave Enb Mac Rx Packet, Rnti:" <<rnti<<" lcid:"<<(uint32_t)macSubheaders[ipdu].m_lcid<<" size:"<<macSubheaders[ipdu].m_size);
 	}
 }
 
@@ -606,7 +688,7 @@ MmWaveEnbMac::DoReceiveControlMessage  (Ptr<MmWaveControlMessage> msg)
 		case (MmWaveControlMessage::BSR):
 		{
 			Ptr<MmWaveBsrMessage> bsr = DynamicCast<MmWaveBsrMessage> (msg);
-		  m_ulCeReceived.push_back (bsr->GetBsr ());
+		  	m_ulCeReceived.push_back (bsr->GetBsr ());
 			break;
 		}
 		case (MmWaveControlMessage::DL_HARQ):
@@ -685,6 +767,8 @@ MmWaveEnbMac::DoReportBufferStatus (LteMacSapProvider::ReportBufferStatusParamet
   schedParams.m_retxPacketDelays = params.retxPacketDelays;
   schedParams.m_arrivalRate = params.arrivalRate;
 
+  NS_LOG_LOGIC("ReportBufferStatus for lcid " << (uint16_t)params.lcid << " rnti " << params.rnti << " txPacketSizes " << params.txPacketSizes.size());
+
   m_macSchedSapProvider->SchedDlRlcBufferReq (schedParams);
 }
 
@@ -694,6 +778,7 @@ MmWaveEnbMac::DoTransmitPdu (LteMacSapProvider::TransmitPduParameters params)
 {
 	// TB UID passed back along with RLC data as HARQ process ID
 	uint32_t tbMapKey = ((params.rnti & 0xFFFF) << 8) | (params.harqProcessId & 0xFF);
+	NS_LOG_LOGIC("Tx RLC PDU for rnti " << params.rnti << " lcid " << (uint32_t) params.lcid);
 	std::map<uint32_t, struct MacPduInfo>::iterator it = m_macPduMap.find (tbMapKey);
 	if (it == m_macPduMap.end ())
 	{
@@ -709,7 +794,6 @@ MmWaveEnbMac::DoTransmitPdu (LteMacSapProvider::TransmitPduParameters params)
 		{
 			it->second.m_pdu->AddAtEnd (params.pdu); // append to MAC PDU
 		}
-
 		MacSubheader subheader (params.lcid, params.pdu->GetSize ());
 		it->second.m_macHeader.AddSubheader (subheader); // add RLC PDU sub-header into MAC header
 		it->second.m_numRlcPdu++;
@@ -725,9 +809,12 @@ MmWaveEnbMac::DoSchedConfigIndication (MmWaveMacSchedSapUser::SchedConfigIndPara
 	for (unsigned islot = 0; islot < ind.m_sfAllocInfo.m_slotAllocInfo.size (); islot++)
 	{
 		SlotAllocInfo &slotAllocInfo = ind.m_sfAllocInfo.m_slotAllocInfo[islot];
-		if (slotAllocInfo.m_slotType != SlotAllocInfo::CTRL && slotAllocInfo.m_tddMode == SlotAllocInfo::DL)
+		if (slotAllocInfo.m_slotType != SlotAllocInfo::CTRL && slotAllocInfo.m_tddMode == SlotAllocInfo::DL_slotAllocInfo)
 		{
 			uint16_t rnti = slotAllocInfo.m_dci.m_rnti;
+			// here log all the packets sent in downlink 
+			m_macDlTxSizeRetx(rnti, m_cellId, slotAllocInfo.m_dci.m_tbSize, slotAllocInfo.m_dci.m_rv);
+
 			std::map <uint16_t, std::map<uint8_t, LteMacSapUser*> >::iterator rntiIt = m_rlcAttached.find (rnti);
 			if (rntiIt == m_rlcAttached.end())
 			{
@@ -742,7 +829,7 @@ MmWaveEnbMac::DoSchedConfigIndication (MmWaveMacSchedSapUser::SchedConfigIndPara
 				// update Harq Processes
 				if (dciElem.m_ndi == 1)
 				{
-					NS_ASSERT (dciElem.m_format == DciInfoElementTdma::DL);
+					NS_ASSERT (dciElem.m_format == DciInfoElementTdma::DL_dci);
 					std::vector<RlcPduInfo> &rlcPduInfo = slotAllocInfo.m_rlcPduInfo;
 					NS_ASSERT (rlcPduInfo.size () > 0);
 					SfnSf pduSfn = ind.m_sfnSf;
@@ -805,7 +892,7 @@ MmWaveEnbMac::DoSchedConfigIndication (MmWaveMacSchedSapUser::SchedConfigIndPara
 				{
 					NS_LOG_INFO ("DL retransmission");
 					if (dciElem.m_tbSize > 0)
-					{
+					{						
 						// HARQ retransmission -> retrieve TB from HARQ buffer
 						std::map <uint16_t, MmWaveDlHarqProcessesBuffer_t>::iterator it = m_miDlHarqProcessesPackets.find (rnti);
 						NS_ASSERT(it!=m_miDlHarqProcessesPackets.end());
@@ -856,7 +943,7 @@ MmWaveEnbMac::DoConfigureMac (uint8_t ulBandwidth, uint8_t dlBandwidth)
 void
 MmWaveEnbMac::DoAddUe (uint16_t rnti)
 {
-	NS_LOG_FUNCTION (this << " rnti=" << rnti);
+	NS_LOG_FUNCTION (this << " DoAddUe rnti=" << rnti);
 	std::map<uint8_t, LteMacSapUser*> empty;
 	std::pair <std::map <uint16_t, std::map<uint8_t, LteMacSapUser*> >::iterator, bool>
 	 ret = m_rlcAttached.insert (std::pair <uint16_t,  std::map<uint8_t, LteMacSapUser*> >
@@ -890,6 +977,13 @@ MmWaveEnbMac::DoRemoveUe (uint16_t rnti)
   params.m_rnti = rnti;
   m_macCschedSapProvider->CschedUeReleaseReq (params);
   m_miDlHarqProcessesPackets.erase (rnti);
+  // for(std::vector<UlHarqInfo>::iterator iter = m_ulHarqInfoReceived.begin(); iter != m_ulHarqInfoReceived.end(); ++iter)
+  // {
+  // 	if(iter->m_rnti == rnti)
+  // 	{
+  // 		iter = m_ulHarqInfoReceived.erase(iter);
+  // 	}
+  // }
   m_rlcAttached.erase (rnti);
 }
 
@@ -898,6 +992,7 @@ MmWaveEnbMac::DoAddLc (LteEnbCmacSapProvider::LcInfo lcinfo, LteMacSapUser* msu)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_FUNCTION (this);
+  NS_LOG_INFO("Add LC for lcid " << lcinfo.lcId);
 
   std::map <LteFlowId_t, LteMacSapUser* >::iterator it;
 
@@ -912,14 +1007,14 @@ MmWaveEnbMac::DoAddLc (LteEnbCmacSapProvider::LcInfo lcinfo, LteMacSapUser* msu)
     }
   else
     {
-      NS_LOG_ERROR ("LC already exists");
+      NS_LOG_INFO ("LC already exists");
     }
 
   // CCCH (LCID 0) is pre-configured
   // see FF LTE MAC Scheduler
   // Interface Specification v1.11,
   // 4.3.4 logicalChannelConfigListElement
-  if (lcinfo.lcId != 0)
+  if (true)//(lcinfo.lcId != 0)
   {
   	struct MmWaveMacCschedSapProvider::CschedLcConfigReqParameters params;
   	params.m_rnti = lcinfo.rnti;
@@ -951,6 +1046,7 @@ void
 MmWaveEnbMac::DoReleaseLc (uint16_t rnti, uint8_t lcid)
 {
 	//Find user based on rnti and then erase lcid stored against the same
+	NS_LOG_INFO("ReleaseLc");
 	std::map <uint16_t, std::map<uint8_t, LteMacSapUser*> >::iterator rntiIt = m_rlcAttached.find (rnti);
 	rntiIt->second.erase (lcid);
 
@@ -976,14 +1072,48 @@ LteEnbCmacSapProvider::RachConfig
 MmWaveEnbMac::DoGetRachConfig ()
 {
   struct LteEnbCmacSapProvider::RachConfig rc;
+	rc.numberOfRaPreambles = m_numberOfRaPreambles;
+  rc.preambleTransMax = m_preambleTransMax;
+  rc.raResponseWindowSize = m_raResponseWindowSize;
   return rc;
 }
 
 LteEnbCmacSapProvider::AllocateNcRaPreambleReturnValue
 MmWaveEnbMac::DoAllocateNcRaPreamble (uint16_t rnti)
 {
+	bool found = false;
+	uint8_t preambleId;
+	for (preambleId = m_numberOfRaPreambles; preambleId < 64; ++preambleId)
+	{
+	  std::map<uint8_t, NcRaPreambleInfo>::iterator it = m_allocatedNcRaPreambleMap.find (preambleId);
+	  if ((it ==  m_allocatedNcRaPreambleMap.end ())
+	      || (it->second.expiryTime < Simulator::Now ()))
+	    {
+	      found = true;
+	      NcRaPreambleInfo preambleInfo;
+	      uint32_t expiryIntervalMs = (uint32_t) m_preambleTransMax * ((uint32_t) m_raResponseWindowSize + 5); 
+	      
+	      preambleInfo.expiryTime = Simulator::Now () + MilliSeconds (expiryIntervalMs);
+	      preambleInfo.rnti = rnti;
+	      NS_LOG_INFO ("allocated preamble for NC based RA: preamble " << (uint16_t)preambleId << ", RNTI " << preambleInfo.rnti << ", exiryTime " << preambleInfo.expiryTime);
+	      m_allocatedNcRaPreambleMap[preambleId] = preambleInfo; // create if not exist, update otherwise
+	      break;
+	    }
+	}
 	LteEnbCmacSapProvider::AllocateNcRaPreambleReturnValue ret;
-  return ret;
+	if (found)
+	{
+	  ret.valid = true;
+	  ret.raPreambleId = preambleId;
+	  ret.raPrachMaskIndex = 0;
+	}
+	else
+	{
+	  ret.valid = false;
+	  ret.raPreambleId = 0;
+	  ret.raPrachMaskIndex = 0;
+	}
+	return ret;
 }
 
 // ////////////////////////////////////////////

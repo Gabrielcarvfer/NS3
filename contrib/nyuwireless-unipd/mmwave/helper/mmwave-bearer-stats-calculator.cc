@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
@@ -144,19 +148,19 @@ MmWaveBearerStatsCalculator::UlTxPdu (uint16_t cellId, uint64_t imsi, uint16_t r
 
   if (!m_ulOutFile.is_open ())
   {
-  	m_ulOutFile.open (GetUlOutputFilename ().c_str (), std::ios_base::app);
+  	m_ulOutFile.open (GetUlOutputFilename ().c_str ());
   }
 
-  if (m_protocolType == "RLC")
-  {
-  	m_ulOutFile << "RLC ";
-  }
-  else
-  {
-  	m_ulOutFile << "PDCP ";
-  }
+  // if (m_protocolType == "RLC")
+  // {
+  // 	m_ulOutFile << "R ";
+  // }
+  // else
+  // {
+  // 	m_ulOutFile << "P ";
+  // }
 
-  m_ulOutFile << "UlTxPDU " << Simulator::Now () << " "<< cellId << " "
+  m_ulOutFile << "Tx " << Simulator::Now ().GetNanoSeconds () / 1.0e9 << " "<< cellId << " "
   		<< rnti << " " << (uint32_t) lcid << " " << packetSize << " " << std::endl;
 
   /*ImsiLcidPair_t p (imsi, lcid);
@@ -177,19 +181,19 @@ MmWaveBearerStatsCalculator::DlTxPdu (uint16_t cellId, uint64_t imsi, uint16_t r
 
   if (!m_dlOutFile.is_open ())
   {
-  	m_dlOutFile.open (GetDlOutputFilename ().c_str (), std::ios_base::app);
+  	m_dlOutFile.open (GetDlOutputFilename ().c_str ());
   }
 
-  if (m_protocolType == "RLC")
-  {
-  	m_dlOutFile << "RLC ";
-  }
-  else
-  {
-  	m_dlOutFile << "PDCP ";
-  }
+  // if (m_protocolType == "RLC")
+  // {
+  // 	m_dlOutFile << "R ";
+  // }
+  // else
+  // {
+  // 	m_dlOutFile << "P ";
+  // }
 
-  m_dlOutFile << "DlTxPDU " << Simulator::Now () << " "<< cellId << " "
+  m_dlOutFile << "Tx " << Simulator::Now ().GetNanoSeconds () / 1.0e9 << " "<< cellId << " "
   		<< rnti << " " << (uint32_t) lcid << " " << packetSize << " " << std::endl;
 
 
@@ -212,19 +216,19 @@ MmWaveBearerStatsCalculator::UlRxPdu (uint16_t cellId, uint64_t imsi, uint16_t r
 
   if (!m_ulOutFile.is_open ())
   {
-  	m_ulOutFile.open (GetUlOutputFilename ().c_str (), std::ios_base::app);
+  	m_ulOutFile.open (GetUlOutputFilename ().c_str ());
   }
 
-  if (m_protocolType == "RLC")
-  {
-  	m_ulOutFile << "RLC ";
-  }
-  else
-  {
-  	m_ulOutFile << "PDCP ";
-  }
+  // if (m_protocolType == "RLC")
+  // {
+  // 	m_ulOutFile << "R ";
+  // }
+  // else
+  // {
+  // 	m_ulOutFile << "P ";
+  // }
 
-  m_ulOutFile << "UlRxPDU " << Simulator::Now () << " "<< cellId << " "
+  m_ulOutFile << "Rx " << Simulator::Now ().GetNanoSeconds () / 1.0e9 << " "<< cellId << " "
   		<< rnti << " " << (uint32_t) lcid << " " << packetSize << " " << delay << std::endl;
 
   /*ImsiLcidPair_t p (imsi, lcid);
@@ -254,19 +258,19 @@ MmWaveBearerStatsCalculator::DlRxPdu (uint16_t cellId, uint64_t imsi, uint16_t r
 
   if (!m_dlOutFile.is_open ())
   {
-  	m_dlOutFile.open (GetDlOutputFilename ().c_str (), std::ios_base::app);
+  	m_dlOutFile.open (GetDlOutputFilename ().c_str ());
   }
 
-  if (m_protocolType == "RLC")
-  {
-  	m_dlOutFile << "RLC ";
-  }
-  else
-  {
-  	m_dlOutFile << "PDCP ";
-  }
+  // if (m_protocolType == "RLC")
+  // {
+  // 	m_dlOutFile << "R ";
+  // }
+  // else
+  // {
+  // 	m_dlOutFile << "P ";
+  // }
 
-  m_dlOutFile << "DlRxPDU " << Simulator::Now () << " "<< cellId << " "
+  m_dlOutFile << "Rx " << Simulator::Now ().GetNanoSeconds () / 1.0e9 << " "<< cellId << " "
   		<< rnti << " " << (uint32_t) lcid << " " << packetSize << " " << delay << std::endl;
 
  /* ImsiLcidPair_t p (imsi, lcid);

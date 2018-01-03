@@ -1,0 +1,29 @@
+language: cpp
+sudo: required
+branches:
+  only:
+    - master
+os:
+  - linux
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
+env:
+    - COMPILER_VERSION="CC=gcc-5 && CXX=g++-5" # Use GCC version 5.4
+compiler:
+  - gcc
+before_install:
+  - eval "${COMPILER_VERSION}"
+  - git clone https://github.com/nsnam/ns-3-dev-git ns-3-dev
+  - cd ns-3-dev/src
+  - git clone https://github.com/nyuwireless-unipd/mmwave mmwave
+  - cp mmwave/ns-3-patches/patch-for-lte.diff lte
+  - cd lte
+  - patch -p1 -N -E -i patch-for-lte.diff
+  - rm patch-for-lte.diff
+script:
+  - cd /home/travis/build/nyuwireless-unipd/mmwave/ns-3-dev/
+  - ./waf configure --enable-tests --enable-examples && ./waf build

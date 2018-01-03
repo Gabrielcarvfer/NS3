@@ -31,7 +31,7 @@
 #define SRC_MMWAVE_MODEL_MMWAVE_AMC_H_
 #include <ns3/object.h>
 #include <ns3/spectrum-value.h>
-#include <ns3/mmwave-phy-mac-common.h>
+#include <ns3/nyuwireless-unipd/mmwave-phy-mac-common.h>
 
 namespace ns3 {
 

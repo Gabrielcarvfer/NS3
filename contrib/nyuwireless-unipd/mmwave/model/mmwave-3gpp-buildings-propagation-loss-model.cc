@@ -24,6 +24,7 @@
 
 #include "mmwave-3gpp-buildings-propagation-loss-model.h"
 
+#include "mmwave-3gpp-propagation-loss-model.h"
 #include "ns3/log.h"
 #include "ns3/mobility-model.h"
 #include "ns3/double.h"
@@ -31,8 +32,10 @@
 #include <ns3/building-list.h>
 #include <ns3/angles.h>
 #include "ns3/config-store.h"
-#include <ns3/mmwave-ue-net-device.h>
-#include <ns3/mmwave-enb-net-device.h>
+#include "ns3/string.h"
+#include <ns3/nyuwireless-unipd/mmwave-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mc-ue-net-device.h>
+#include <ns3/nyuwireless-unipd/mmwave-enb-net-device.h>
 #include <ns3/node.h>
 #include "ns3/boolean.h"
 
@@ -80,11 +83,6 @@ MmWave3gppBuildingsPropagationLossModel::GetTypeId (void)
 	static TypeId tid = TypeId ("ns3::MmWave3gppBuildingsPropagationLossModel")
 		.SetParent<BuildingsPropagationLossModel> ()
 		.AddConstructor<MmWave3gppBuildingsPropagationLossModel> ()
-		.AddAttribute ("Frequency",
-					   "The Frequency  (default is 28 GHz).",
-					   DoubleValue (28e9),
-					   MakeDoubleAccessor (&MmWave3gppBuildingsPropagationLossModel::SetFrequency),
-					   MakeDoubleChecker<double> ())
 		.AddAttribute ("UpdateCondition",
 					"Update los/nlos condition while UE moves",
 					BooleanValue (true),
@@ -94,15 +92,6 @@ MmWave3gppBuildingsPropagationLossModel::GetTypeId (void)
 	return tid;
 }
 
-
-
-void
-MmWave3gppBuildingsPropagationLossModel::SetFrequency (double freq)
-{
-	m_frequency = freq;
-	static const double C = 299792458.0; // speed of light in vacuum
-	m_lambda = C / freq;
-}
 
 double
 MmWave3gppBuildingsPropagationLossModel::DoCalcRxPower (double txPowerDbm, Ptr<MobilityModel> a, Ptr<MobilityModel> b) const
@@ -151,7 +140,9 @@ MmWave3gppBuildingsPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<Mobi
 		}
 		else if(a1->IsIndoor () && b1->IsIndoor ())
 		{
-			NS_FATAL_ERROR("indoor propagation loss not implemented yet");
+			//NS_FATAL_ERROR("indoor propagation loss not implemented yet");
+			return	m_3gppLos->GetLoss (a,b);
+
 		}
 		else //outdoor to indoor case
 		{
@@ -290,18 +281,19 @@ MmWave3gppBuildingsPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<Mobi
 		Vector ueLoc, enbLoc;
 		if(DynamicCast<MmWaveUeNetDevice> (a->GetObject<Node> ()->GetDevice (0)) !=0)
 		{
-			/*if(DynamicCast<MmWaveEnbNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
-			{
-				NS_LOG_INFO("UE->ENB Link");
-				ueLoc = a->GetPosition();
-				enbLoc = b->GetPosition();
-				LocationTrace(enbLoc, ueLoc, (*it).second.m_channelCondition == 'l');
+			// if(DynamicCast<MmWaveEnbNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
+			// {
+			// 	NS_LOG_INFO("UE->ENB Link");
+			// 	ueLoc = a->GetPosition();
+			// 	enbLoc = b->GetPosition();
+			// 	LocationTrace(enbLoc, ueLoc, (*it).second.m_channelCondition == 'l');
 
-			}*/
+			// }
 		}
 		else
 		{
-			if(DynamicCast<MmWaveUeNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0)
+			if((DynamicCast<MmWaveUeNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0) ||
+				(DynamicCast<McUeNetDevice> (b->GetObject<Node> ()->GetDevice (0)) !=0))
 			{
 				NS_LOG_INFO("ENB->UE Link");
 				enbLoc = a->GetPosition();
@@ -410,5 +402,18 @@ MmWave3gppBuildingsPropagationLossModel::GetChannelCondition(Ptr<MobilityModel> 
 
 }
 
+void
+MmWave3gppBuildingsPropagationLossModel::SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig)
+{
+	m_phyMacConfig = ptrConfig;
+	m_frequency = m_phyMacConfig->GetCenterFrequency();
+    static const double C = 299792458.0; // speed of light in vacuum
+    m_lambda = C / m_frequency;
+
+	NS_LOG_INFO("Frequency " << m_frequency);
+
+    m_3gppNlos->SetConfigurationParameters(ptrConfig);
+    m_3gppLos->SetConfigurationParameters(ptrConfig);
+}
 
 } // namespace ns3

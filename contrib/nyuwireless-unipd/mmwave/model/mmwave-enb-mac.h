@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                 Dual Connectivity and Handover functionalities
  */
 
 
@@ -46,7 +50,7 @@ namespace ns3
 		std::vector<uint8_t> m_lcidList;
 	};
 
-typedef std::vector < MmWaveDlHarqProcessInfo> MmWaveDlHarqProcessesBuffer_t;
+typedef std::vector <MmWaveDlHarqProcessInfo> MmWaveDlHarqProcessesBuffer_t;
 
 class MmWaveEnbMac : public Object
 {
@@ -105,6 +109,8 @@ public:
 	void SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig);
 	Ptr<MmWavePhyMacCommon> GetConfigurationParameters (void) const;
 
+	void SetCellId(uint16_t cellId);
+
 	// forwarded from LteMacSapProvider
 	void DoTransmitPdu (LteMacSapProvider::TransmitPduParameters);
 	void DoReportBufferStatus (LteMacSapProvider::ReportBufferStatusParameters);
@@ -149,6 +155,17 @@ public:
 	void DoCschedUeReleaseCnf (MmWaveMacCschedSapUser::CschedUeReleaseCnfParameters params);
 	void DoCschedUeConfigUpdateInd (MmWaveMacCschedSapUser::CschedUeConfigUpdateIndParameters params);
 	void DoCschedCellConfigUpdateInd (MmWaveMacCschedSapUser::CschedCellConfigUpdateIndParameters params);
+
+   /**
+    * TracedCallback signature for
+    *
+    * \param [in] rnti C-RNTI scheduled.
+    * \param [in] the cellId
+    * \param [in] the allocated transport block size
+    * \param [in] the number of HARQ retransmissions for that packet
+    */
+  	typedef void (* HarqRetxCallback)
+    	(uint16_t rnti, uint16_t cellId, uint32_t tbSize, uint8_t numRetx);
 
 private:
 	// forwarded from LteEnbCmacSapProvider
@@ -202,6 +219,31 @@ private:
 	std::vector <DlHarqInfo> m_dlHarqInfoReceived; // DL HARQ feedback received
 	std::vector <UlHarqInfo> m_ulHarqInfoReceived; // UL HARQ feedback received
 	std::map <uint16_t, MmWaveDlHarqProcessesBuffer_t> m_miDlHarqProcessesPackets; // Packet under trasmission of the DL HARQ process
+	
+	/**
+	* info associated with a preamble allocated for non-contention based RA
+	* 
+	*/
+	struct NcRaPreambleInfo
+	{   
+		uint16_t rnti; ///< rnti previously allocated for this non-contention based RA procedure
+		Time expiryTime; ///< value the expiration time of this allocation (so that stale preambles can be reused)
+	};
+
+	uint8_t m_numberOfRaPreambles;
+	uint8_t m_preambleTransMax;
+	uint8_t m_raResponseWindowSize;
+
+	/**
+	* map storing as key the random acccess preamble IDs allocated for
+	* non-contention based access, and as value the associated info
+	* 
+	*/
+	std::map<uint8_t, NcRaPreambleInfo> m_allocatedNcRaPreambleMap;
+
+	uint16_t m_cellId;
+
+	TracedCallback<uint16_t, uint16_t, uint32_t, uint8_t> m_macDlTxSizeRetx;
 
 };
 

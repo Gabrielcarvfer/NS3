@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011, 2012 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -17,12 +18,16 @@
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>,
  *         Marco Miozzo <mmiozzo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #ifndef LTE_ENB_CPHY_SAP_H
 #define LTE_ENB_CPHY_SAP_H
 
 #include <stdint.h>
+#include <map>
 #include <ns3/ptr.h>
 
 #include <ns3/lte-rrc-sap.h>
@@ -63,7 +68,7 @@ public:
    * \param ulEarfcn the UL EARFCN
    * \param dlEarfcn the DL EARFCN
    */
-  virtual void SetEarfcn (uint32_t ulEarfcn, uint32_t dlEarfcn) = 0;
+  virtual void SetEarfcn (uint16_t ulEarfcn, uint16_t dlEarfcn) = 0;
   
   /** 
    * Add a new UE to the cell
@@ -73,7 +78,7 @@ public:
   virtual void AddUe (uint16_t rnti) = 0;
 
   /** 
-   * Remove an UE from the cell
+   * Remove an UE from the the cell
    * 
    * \param rnti the UE id relative to this cell
    */
@@ -134,6 +139,13 @@ public:
    */
   virtual ~LteEnbCphySapUser ();
 
+  struct UeAssociatedSinrInfo
+  {
+    std::map<uint64_t, double> ueImsiSinrMap;
+  };
+
+  virtual void UpdateUeSinrEstimate(LteEnbCphySapUser::UeAssociatedSinrInfo info) = 0;
+
 };
 
 
@@ -146,17 +158,12 @@ template <class C>
 class MemberLteEnbCphySapProvider : public LteEnbCphySapProvider
 {
 public:
-  /**
-   * Constructor
-   *
-   * \param owner the owner class
-   */
   MemberLteEnbCphySapProvider (C* owner);
 
   // inherited from LteEnbCphySapProvider
   virtual void SetCellId (uint16_t cellId);
   virtual void SetBandwidth (uint8_t ulBandwidth, uint8_t dlBandwidth);
-  virtual void SetEarfcn (uint32_t ulEarfcn, uint32_t dlEarfcn);
+  virtual void SetEarfcn (uint16_t ulEarfcn, uint16_t dlEarfcn);
   virtual void AddUe (uint16_t rnti);
   virtual void RemoveUe (uint16_t rnti);
   virtual void SetPa (uint16_t rnti, double pa);
@@ -168,7 +175,7 @@ public:
   
 private:
   MemberLteEnbCphySapProvider ();
-  C* m_owner; ///< the owner class
+  C* m_owner;
 };
 
 template <class C>
@@ -199,7 +206,7 @@ MemberLteEnbCphySapProvider<C>::SetBandwidth (uint8_t ulBandwidth, uint8_t dlBan
 
 template <class C>
 void 
-MemberLteEnbCphySapProvider<C>::SetEarfcn (uint32_t ulEarfcn, uint32_t dlEarfcn)
+MemberLteEnbCphySapProvider<C>::SetEarfcn (uint16_t ulEarfcn, uint16_t dlEarfcn)
 {
   m_owner->DoSetEarfcn (ulEarfcn, dlEarfcn);
 }
@@ -269,18 +276,15 @@ template <class C>
 class MemberLteEnbCphySapUser : public LteEnbCphySapUser
 {
 public:
-  /**
-   * Constructor
-   *
-   * \param owner the owner class
-   */
   MemberLteEnbCphySapUser (C* owner);
+  virtual void UpdateUeSinrEstimate(UeAssociatedSinrInfo info);
+
 
   // methods inherited from LteEnbCphySapUser go here
 
 private:
   MemberLteEnbCphySapUser ();
-  C* m_owner; ///< the owner class
+  C* m_owner;
 };
 
 template <class C>
@@ -293,6 +297,14 @@ template <class C>
 MemberLteEnbCphySapUser<C>::MemberLteEnbCphySapUser ()
 {
 }
+
+template <class C>
+void
+MemberLteEnbCphySapUser<C>::UpdateUeSinrEstimate(UeAssociatedSinrInfo info)
+{
+  return m_owner->DoUpdateUeSinrEstimate(info);
+}
+
 
 
 

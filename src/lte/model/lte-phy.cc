@@ -1,6 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 TELEMATICS LAB, DEE - Politecnico di Bari
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -17,6 +18,9 @@
  *
  * Author: Giuseppe Piro  <g.piro@poliba.it>
  *         Marco Miozzo <mmiozzo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #include <ns3/waveform-generator.h>
@@ -49,8 +53,7 @@ LtePhy::LtePhy (Ptr<LteSpectrumPhy> dlPhy, Ptr<LteSpectrumPhy> ulPhy)
     m_dlBandwidth (0),
     m_rbgSize (0),
     m_macChTtiDelay (0),
-    m_cellId (0),
-    m_componentCarrierId(0)
+    m_cellId (0)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -87,14 +90,14 @@ LtePhy::DoDispose ()
 }
 
 void
-LtePhy::SetDevice (Ptr<LteNetDevice> d)
+LtePhy::SetDevice (Ptr<NetDevice> d)
 {
   NS_LOG_FUNCTION (this << d);
   m_netDevice = d;
 }
 
 
-Ptr<LteNetDevice>
+Ptr<NetDevice>
 LtePhy::GetDevice () const
 {
   NS_LOG_FUNCTION (this);
@@ -250,18 +253,5 @@ LtePhy::DoSetCellId (uint16_t cellId)
   m_uplinkSpectrumPhy->SetCellId (cellId);
 }
 
-void
-LtePhy::SetComponentCarrierId (uint8_t index)
-{
-  m_componentCarrierId = index;
-  m_downlinkSpectrumPhy->SetComponentCarrierId (index);
-  m_uplinkSpectrumPhy->SetComponentCarrierId (index);
-}
-
-uint8_t
-LtePhy::GetComponentCarrierId ()
-{
-  return m_componentCarrierId;
-}
 
 } // namespace ns3

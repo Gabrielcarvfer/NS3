@@ -1,0 +1,5 @@
+mkdir ns3dock && copy Dockerfile ns3dock/Dockerfile && cd ns3dock && docker build -t gabrielcarvfer/ns3:latest . && cd .. && rmdir ns3dock
+docker save -o NS3Dock
+docker load -i NS3Dock
+docker images
+docker run -it gabrielcarvfer/ns3 /bin/bash

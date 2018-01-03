@@ -28,9 +28,13 @@
 #include <ns3/config.h>
 #include <ns3/simple-ref-count.h>
 #include <ns3/ptr.h>
-
+#include <ns3/object.h>
+#include <fstream>
 #include <set>
 #include <map>
+#include "retx-stats-calculator.h"
+#include "mac-tx-stats-calculator.h"
+
 
 namespace ns3 {
 
@@ -40,9 +44,9 @@ class RadioBearerStatsCalculator;
  * \ingroup lte
  *
  * This class is very useful when user needs to collect
- * statistics from PDCP and RLC. It automatically connects
+ * statistics from PDCD and RLC. It automatically connects
  * RadioBearerStatsCalculator to appropriate trace sinks.
- * Usually user does not use this class. All he/she needs
+ * Usually user do not use this class. All he/she needs to
  * to do is to call: LteHelper::EnablePdcpTraces() and/or
  * LteHelper::EnableRlcTraces().
  */
@@ -262,6 +266,9 @@ private:
 
   Ptr<RadioBearerStatsCalculator> m_rlcStats; //!< Calculator for RLC Statistics
   Ptr<RadioBearerStatsCalculator> m_pdcpStats; //!< Calculator for PDCP Statistics
+  Ptr<RetxStatsCalculator> m_retxStats;
+  Ptr<MacTxStatsCalculator> m_macTxStats;        
+
 
   bool m_connected; //!< true if traces are connected to sinks, initially set to false
   std::set<uint64_t> m_imsiSeenUe; //!< stores all UEs for which RLC and PDCP traces were connected
@@ -278,10 +285,6 @@ private:
 
   /**
    * Less than operator for CellIdRnti, because it is used as key in map
-   *
-   * \param a the lhs operand
-   * \param b the rhs operand
-   * \returns true if less than
    */
   friend bool operator < (const CellIdRnti &a, const CellIdRnti &b);
 

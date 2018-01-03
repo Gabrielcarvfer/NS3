@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011-2013 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -18,6 +19,9 @@
  * Author: Jaume Nin <jnin@cttc.es>
  *         Nicola Baldo <nbaldo@cttc.es>
  *         Manuel Requena <manuel.requena@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Support for real S1AP link
  */
 
 #ifndef EMU_EPC_HELPER_H
@@ -37,7 +41,10 @@ class NetDevice;
 class VirtualNetDevice;
 class EpcSgwPgwApplication;
 class EpcX2;
-class EpcMme;
+class EpcUeNas;
+class EpcMmeApplication;
+class EpcS1apEnb;
+class EpcS1apMme;
 
 /**
  * \ingroup lte
@@ -78,6 +85,7 @@ public:
   virtual void AddUe (Ptr<NetDevice> ueLteDevice, uint64_t imsi);
   virtual void AddX2Interface (Ptr<Node> enbNode1, Ptr<Node> enbNode2);
   virtual uint8_t ActivateEpsBearer (Ptr<NetDevice> ueLteDevice, uint64_t imsi, Ptr<EpcTft> tft, EpsBearer bearer);
+  virtual uint8_t ActivateEpsBearer (Ptr<NetDevice> ueLteDevice, Ptr<EpcUeNas> ueNas, uint64_t imsi, Ptr<EpcTft> tft, EpsBearer bearer);
   virtual Ptr<Node> GetPgwNode ();
   virtual Ipv4InterfaceContainer AssignUeIpv4Address (NetDeviceContainer ueDevices);
   virtual Ipv4Address GetUeDefaultGatewayAddress ();
@@ -90,6 +98,12 @@ private:
    * helper to assign addresses to UE devices as well as to the TUN device of the SGW/PGW
    */
   Ipv4AddressHelper m_ueAddressHelper; 
+
+  /** 
+   * helper to assign addresses to S1-AP NetDevices 
+   */
+  Ipv4AddressHelper m_s1apIpv4AddressHelper; 
+
 
   /**
    * SGW-PGW network element
@@ -109,7 +123,12 @@ private:
   /**
    * MME network element
    */
-  Ptr<EpcMme> m_mme;
+  Ptr<Node> m_mmeNode;
+
+  /**
+   * MME application
+   */
+  Ptr<EpcMmeApplication> m_mmeApp;
 
   /** 
    * helper to assign addresses to S1-U NetDevices 
@@ -120,6 +139,27 @@ private:
    * UDP port where the GTP-U Socket is bound, fixed by the standard as 2152
    */
   uint16_t m_gtpuUdpPort;
+
+  /**
+   * The data rate to be used for the next S1-AP link to be created
+   */
+  DataRate m_s1apLinkDataRate;
+
+  /**
+   * The delay to be used for the next S1-AP link to be created
+   */
+  Time     m_s1apLinkDelay;
+
+  /**
+   * The MTU of the next S1-AP link to be created. 
+   */
+  uint16_t m_s1apLinkMtu;
+
+  /**
+   * UDP port where the UDP Socket is bound, fixed by the standard as 
+   * 36412 (it should be sctp, but it is not supported in ns-3)
+   */
+  uint16_t m_s1apUdpPort;
 
   /**
    * Map storing for each IMSI the corresponding eNB NetDevice

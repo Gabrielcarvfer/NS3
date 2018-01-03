@@ -13,7 +13,9 @@ def build(bld):
         'helper/mmwave-phy-rx-trace.cc',
         'helper/mmwave-point-to-point-epc-helper.cc',
         'helper/mmwave-bearer-stats-calculator.cc',        
-        'helper/mmwave-bearer-stats-connector.cc',           
+        'helper/mmwave-bearer-stats-connector.cc', 
+        'helper/mc-stats-calculator.cc', 
+        'helper/core-network-stats-calculator.cc',               
         'model/mmwave-net-device.cc',
         'model/mmwave-enb-net-device.cc',
         'model/mmwave-ue-net-device.cc',
@@ -39,6 +41,7 @@ def build(bld):
         'model/mmwave-enb-mac.cc',
         'model/mmwave-ue-mac.cc',
         'model/mmwave-rrc-protocol-ideal.cc',
+        'model/mmwave-lte-rrc-protocol-real.cc',
         'model/mmwave-channel-matrix.cc',
 		'model/buildings-obstacle-propagation-loss-model.cc',
         'model/mmwave-mac-pdu-header.cc',
@@ -47,25 +50,26 @@ def build(bld):
         'model/mmwave-flex-tti-mac-scheduler.cc',   
         'model/mmwave-flex-tti-maxweight-mac-scheduler.cc',
         'model/mmwave-flex-tti-maxrate-mac-scheduler.cc',   
-        'model/mmwave-flex-tti-pf-mac-scheduler.cc',         
+        'model/mmwave-flex-tti-pf-mac-scheduler.cc',
         'model/mmwave-propagation-loss-model.cc',
         'model/antenna-array-model.cc',
         'model/mmwave-channel-raytracing.cc',
+        'model/mc-ue-net-device.cc', 
+        'model/mmwave-los-tracker.cc',        
+        'model/mmwave-3gpp-propagation-loss-model.cc',
+        'model/mmwave-3gpp-channel.cc', 
+        'model/mmwave-3gpp-buildings-propagation-loss-model.cc',        
         #'model/mmwave-enb-cmac-sap.cc',
         #'model/mmwave-enb-rrc.cc',
         #'model/mmwave-mac-sap.cc',
         #'model/mmwave-rrc-sap.cc',
         #'model/mmwave-rlc.cc',
-        #'model/mmwave-rlc-sap.cc',
-        'model/mmwave-3gpp-propagation-loss-model.cc',
-        'model/mmwave-3gpp-channel.cc', 
-        'model/mmwave-3gpp-buildings-propagation-loss-model.cc',
-         
+        #'model/mmwave-rlc-sap.cc'
         ]
 
     module_test = bld.create_ns3_module_test_library('mmwave')
     module_test.source = [
-        'test/mmwave-test-suite.cc'
+        #'mmwave-test-suite.cc'
         ]
 
     headers = bld(features='ns3header')
@@ -74,7 +78,9 @@ def build(bld):
         'helper/mmwave-helper.h',
         'helper/mmwave-phy-rx-trace.h',
         'helper/mmwave-point-to-point-epc-helper.h',
-        'helper/mmwave-bearer-stats-calculator.h',        
+        'helper/mmwave-bearer-stats-calculator.h',
+        'helper/mc-stats-calculator.h',        
+        'helper/core-network-stats-calculator.h',        
         'helper/mmwave-bearer-stats-connector.h',        
         'model/mmwave-net-device.h',
         'model/mmwave-enb-net-device.h',
@@ -101,28 +107,30 @@ def build(bld):
         'model/mmwave-enb-mac.h',
         'model/mmwave-ue-mac.h',
         'model/mmwave-rrc-protocol-ideal.h',
+        'model/mmwave-lte-rrc-protocol-real.h',        
         'model/mmwave-channel-matrix.h',
 		'model/buildings-obstacle-propagation-loss-model.h',
         'model/mmwave-mac-pdu-header.h',
         'model/mmwave-mac-pdu-tag.h',
         'model/mmwave-harq-phy.h',
-        'model/mmwave-flex-tti-mac-scheduler.h',   
+        'model/mmwave-flex-tti-mac-scheduler.h',
         'model/mmwave-flex-tti-maxweight-mac-scheduler.h',
-        'model/mmwave-flex-tti-maxrate-mac-scheduler.h',   
-        'model/mmwave-flex-tti-pf-mac-scheduler.h',   
+        'model/mmwave-flex-tti-maxrate-mac-scheduler.h', 
+        'model/mmwave-flex-tti-pf-mac-scheduler.h',       
         'model/mmwave-propagation-loss-model.h',
         'model/antenna-array-model.h',
         'model/mmwave-channel-raytracing.h',
+        'model/mc-ue-net-device.h',
+        'model/mmwave-los-tracker.h' ,
+        'model/mmwave-3gpp-propagation-loss-model.h',
+        'model/mmwave-3gpp-channel.h',
+        'model/mmwave-3gpp-buildings-propagation-loss-model.h',
         #'model/mmwave-enb-cmac-sap.h',
         #'model/mmwave-enb-rrc.h',
         #'model/mmwave-mac-sap.h',
         #'model/mmwave-rrc-sap.h',
         #'model/mmwave-rlc.h',
-        #'model/mmwave-rlc-sap.h',
-        'model/mmwave-3gpp-propagation-loss-model.h',
-        'model/mmwave-3gpp-channel.h',
-        'model/mmwave-3gpp-buildings-propagation-loss-model.h',
-        
+        #'model/mmwave-rlc-sap.h'
         ]
 
     if bld.env.ENABLE_EXAMPLES:

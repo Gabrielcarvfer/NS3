@@ -29,7 +29,7 @@
 #include "ns3/core-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/config-store.h"
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-helper.h"
 #include <ns3/buildings-helper.h>
 #include "ns3/log.h"
 #include <ns3/buildings-module.h>

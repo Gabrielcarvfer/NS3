@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2012 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -17,6 +18,9 @@
  *
  * Authors: Nicola Baldo <nbaldo@cttc.es>
  *          Lluis Parcerisa <lparcerisa@cttc.cat>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #include <ns3/fatal-error.h>
@@ -36,8 +40,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteRrcProtocolReal");
 
-/// RRC real message delay
-const Time RRC_REAL_MSG_DELAY = MilliSeconds (0); 
+const Time RRC_REAL_MSG_DELAY = MicroSeconds (500); 
 
 NS_OBJECT_ENSURE_REGISTERED (LteUeRrcProtocolReal);
 
@@ -111,19 +114,26 @@ LteUeRrcProtocolReal::DoSendRrcConnectionRequest (LteRrcSap::RrcConnectionReques
   m_rnti = m_rrc->GetRnti ();
   SetEnbRrcSapProvider ();
 
-  Ptr<Packet> packet = Create<Packet> ();
+  Simulator::Schedule (RRC_REAL_MSG_DELAY, 
+                       &LteEnbRrcSapProvider::RecvRrcConnectionRequest,
+                       m_enbRrcSapProvider,
+                       m_rnti, 
+                       msg);
 
-  RrcConnectionRequestHeader rrcConnectionRequestHeader;
-  rrcConnectionRequestHeader.SetMessage (msg);
+  // real RRC code
+  // Ptr<Packet> packet = Create<Packet> ();
 
-  packet->AddHeader (rrcConnectionRequestHeader);
+  // RrcConnectionRequestHeader rrcConnectionRequestHeader;
+  // rrcConnectionRequestHeader.SetMessage (msg);
 
-  LteRlcSapProvider::TransmitPdcpPduParameters transmitPdcpPduParameters;
-  transmitPdcpPduParameters.pdcpPdu = packet;
-  transmitPdcpPduParameters.rnti = m_rnti;
-  transmitPdcpPduParameters.lcid = 0;
+  // packet->AddHeader (rrcConnectionRequestHeader);
 
-  m_setupParameters.srb0SapProvider->TransmitPdcpPdu (transmitPdcpPduParameters);
+  // LteRlcSapProvider::TransmitPdcpPduParameters transmitPdcpPduParameters;
+  // transmitPdcpPduParameters.pdcpPdu = packet;
+  // transmitPdcpPduParameters.rnti = m_rnti;
+  // transmitPdcpPduParameters.lcid = 0;
+
+  // m_setupParameters.srb0SapProvider->TransmitPdcpPdu (transmitPdcpPduParameters);
 }
 
 void 
@@ -166,7 +176,7 @@ LteUeRrcProtocolReal::DoSendRrcConnectionReconfigurationCompleted (LteRrcSap::Rr
   transmitPdcpSduParameters.pdcpSdu = packet;
   transmitPdcpSduParameters.rnti = m_rnti;
   transmitPdcpSduParameters.lcid = 1;
-
+  NS_LOG_INFO("Tx RRC Connection reconf completed");
   m_setupParameters.srb1SapProvider->TransmitPdcpSdu (transmitPdcpSduParameters);
 }
 
@@ -192,6 +202,28 @@ LteUeRrcProtocolReal::DoSendMeasurementReport (LteRrcSap::MeasurementReport msg)
 
   m_setupParameters.srb1SapProvider->TransmitPdcpSdu (transmitPdcpSduParameters);
 }
+
+void 
+LteUeRrcProtocolReal::DoSendNotifySecondaryCellConnected (uint16_t mmWaveRnti, uint16_t mmWaveCellId)
+{
+  m_rnti = m_rrc->GetRnti ();
+  SetEnbRrcSapProvider ();
+
+  Ptr<Packet> packet = Create<Packet> ();
+
+  RrcNotifySecondaryConnectedHeader rrcNotifyHeader;
+  rrcNotifyHeader.SetMessage (mmWaveCellId, mmWaveRnti);
+
+  packet->AddHeader (rrcNotifyHeader);
+
+  LtePdcpSapProvider::TransmitPdcpSduParameters transmitPdcpSduParameters;
+  transmitPdcpSduParameters.pdcpSdu = packet;
+  transmitPdcpSduParameters.rnti = m_rnti;
+  transmitPdcpSduParameters.lcid = 1;
+
+  m_setupParameters.srb1SapProvider->TransmitPdcpSdu (transmitPdcpSduParameters);
+}
+
 
 void 
 LteUeRrcProtocolReal::DoSendRrcConnectionReestablishmentRequest (LteRrcSap::RrcConnectionReestablishmentRequest msg)
@@ -256,7 +288,7 @@ LteUeRrcProtocolReal::SetEnbRrcSapProvider ()
             }
           else
             {
-              if (enbDev->HasCellId (cellId))
+              if (enbDev->GetCellId () == cellId)
                 {
                   found = true;
                   break;
@@ -282,6 +314,7 @@ LteUeRrcProtocolReal::DoReceivePdcpPdu (Ptr<Packet> p)
   RrcConnectionReestablishmentRejectHeader rrcConnectionReestablishmentRejectHeader;
   RrcConnectionSetupHeader rrcConnectionSetupHeader;
   RrcConnectionRejectHeader rrcConnectionRejectHeader;
+  RrcConnectToMmWaveHeader rrcConnectToMmWaveHeader;
 
   // Declare possible messages
   LteRrcSap::RrcConnectionReestablishment rrcConnectionReestablishmentMsg;
@@ -316,6 +349,12 @@ LteUeRrcProtocolReal::DoReceivePdcpPdu (Ptr<Packet> p)
       rrcConnectionSetupMsg = rrcConnectionSetupHeader.GetMessage ();
       m_ueRrcSapProvider->RecvRrcConnectionSetup (rrcConnectionSetupMsg);
       break;
+    case 4:
+      // RrcConnectToMmWave
+      p->RemoveHeader (rrcConnectToMmWaveHeader);
+      uint16_t mmWaveCellId = rrcConnectToMmWaveHeader.GetMessage ();
+      m_ueRrcSapProvider->RecvRrcConnectToMmWave(mmWaveCellId);
+      break;
     }
 }
 
@@ -329,11 +368,12 @@ LteUeRrcProtocolReal::DoReceivePdcpSdu (LtePdcpSapUser::ReceivePdcpSduParameters
   // Declare possible headers to receive
   RrcConnectionReconfigurationHeader rrcConnectionReconfigurationHeader;
   RrcConnectionReleaseHeader rrcConnectionReleaseHeader;
+  RrcConnectionSwitchHeader rrcSwitchHeader;
 
   // Declare possible messages to receive
   LteRrcSap::RrcConnectionReconfiguration rrcConnectionReconfigurationMsg;
   LteRrcSap::RrcConnectionRelease rrcConnectionReleaseMsg;
-
+  LteRrcSap::RrcConnectionSwitch rrcConnectionSwitchMsg;
   // Deserialize packet and call member recv function with appropiate structure
   switch ( rrcDlDcchMessage.GetMessageType () )
     {
@@ -346,6 +386,11 @@ LteUeRrcProtocolReal::DoReceivePdcpSdu (LtePdcpSapUser::ReceivePdcpSduParameters
       params.pdcpSdu->RemoveHeader (rrcConnectionReleaseHeader);
       rrcConnectionReleaseMsg = rrcConnectionReleaseHeader.GetMessage ();
       //m_ueRrcSapProvider->RecvRrcConnectionRelease (rrcConnectionReleaseMsg);
+      break;
+    case 6:
+      params.pdcpSdu->RemoveHeader (rrcSwitchHeader);
+      rrcConnectionSwitchMsg = rrcSwitchHeader.GetMessage ();
+      m_ueRrcSapProvider->RecvRrcConnectionSwitch (rrcConnectionSwitchMsg);
       break;
     }
 }
@@ -504,9 +549,9 @@ LteEnbRrcProtocolReal::DoRemoveUe (uint16_t rnti)
 }
 
 void 
-LteEnbRrcProtocolReal::DoSendSystemInformation (uint16_t cellId, LteRrcSap::SystemInformation msg)
+LteEnbRrcProtocolReal::DoSendSystemInformation (LteRrcSap::SystemInformation msg)
 {
-  NS_LOG_FUNCTION (this << cellId);
+    NS_LOG_FUNCTION (this << m_cellId);
   // walk list of all nodes to get UEs with this cellId
   Ptr<LteUeRrc> ueRrc;
   for (NodeList::Iterator i = NodeList::Begin (); i != NodeList::End (); ++i)
@@ -520,7 +565,7 @@ LteEnbRrcProtocolReal::DoSendSystemInformation (uint16_t cellId, LteRrcSap::Syst
             {
               Ptr<LteUeRrc> ueRrc = ueDev->GetRrc ();
               NS_LOG_LOGIC ("considering UE IMSI " << ueDev->GetImsi () << " that has cellId " << ueRrc->GetCellId ());
-              if (ueRrc->GetCellId () == cellId)
+              if (ueRrc->GetCellId () == m_cellId)
                 {
                   NS_LOG_LOGIC ("sending SI to IMSI " << ueDev->GetImsi ());
                   ueRrc->GetLteUeRrcSapProvider ()->RecvSystemInformation (msg);
@@ -531,7 +576,7 @@ LteEnbRrcProtocolReal::DoSendSystemInformation (uint16_t cellId, LteRrcSap::Syst
                 }
             }
         }
-    } 
+    }
 }
 
 void 
@@ -549,7 +594,15 @@ LteEnbRrcProtocolReal::DoSendRrcConnectionSetup (uint16_t rnti, LteRrcSap::RrcCo
   transmitPdcpPduParameters.rnti = rnti;
   transmitPdcpPduParameters.lcid = 0;
 
-  m_setupUeParametersMap.at (rnti).srb0SapProvider->TransmitPdcpPdu (transmitPdcpPduParameters);
+  if (m_setupUeParametersMap.find (rnti) == m_setupUeParametersMap.end () )
+    {
+      NS_LOG_ERROR("RNTI not found in Enb setup parameters Map!");
+    }
+  else
+    {
+      NS_LOG_INFO("Queue RRC connection setup " << packet << " rnti " << rnti << " cellId " << m_cellId);
+      m_setupUeParametersMap[rnti].srb0SapProvider->TransmitPdcpPdu (transmitPdcpPduParameters);
+    }
 }
 
 void 
@@ -561,6 +614,43 @@ LteEnbRrcProtocolReal::DoSendRrcConnectionReject (uint16_t rnti, LteRrcSap::RrcC
   rrcConnectionRejectHeader.SetMessage (msg);
 
   packet->AddHeader (rrcConnectionRejectHeader);
+
+  LteRlcSapProvider::TransmitPdcpPduParameters transmitPdcpPduParameters;
+  transmitPdcpPduParameters.pdcpPdu = packet;
+  transmitPdcpPduParameters.rnti = rnti;
+  transmitPdcpPduParameters.lcid = 0;
+
+  m_setupUeParametersMap[rnti].srb0SapProvider->TransmitPdcpPdu (transmitPdcpPduParameters);
+}
+
+
+void 
+LteEnbRrcProtocolReal::DoSendRrcConnectionSwitch (uint16_t rnti, LteRrcSap::RrcConnectionSwitch msg)
+{
+  Ptr<Packet> packet = Create<Packet> ();
+
+  RrcConnectionSwitchHeader rrcSwitchHeader;
+  rrcSwitchHeader.SetMessage (msg);
+
+  packet->AddHeader (rrcSwitchHeader);
+
+  LtePdcpSapProvider::TransmitPdcpSduParameters transmitPdcpSduParameters;
+  transmitPdcpSduParameters.pdcpSdu = packet;
+  transmitPdcpSduParameters.rnti = rnti;
+  transmitPdcpSduParameters.lcid = 1;
+
+  m_setupUeParametersMap[rnti].srb1SapProvider->TransmitPdcpSdu (transmitPdcpSduParameters);
+}
+
+void 
+LteEnbRrcProtocolReal::DoSendRrcConnectToMmWave (uint16_t rnti, uint16_t mmWaveId)
+{
+  Ptr<Packet> packet = Create<Packet> ();
+
+  RrcConnectToMmWaveHeader connectToMmWaveHeader;
+  connectToMmWaveHeader.SetMessage(mmWaveId);
+
+  packet->AddHeader (connectToMmWaveHeader);
 
   LteRlcSapProvider::TransmitPdcpPduParameters transmitPdcpPduParameters;
   transmitPdcpPduParameters.pdcpPdu = packet;
@@ -683,6 +773,7 @@ LteEnbRrcProtocolReal::DoReceivePdcpSdu (LtePdcpSapUser::ReceivePdcpSduParameter
   RrcConnectionReconfigurationCompleteHeader rrcConnectionReconfigurationCompleteHeader;
   RrcConnectionReestablishmentCompleteHeader rrcConnectionReestablishmentCompleteHeader;
   RrcConnectionSetupCompleteHeader rrcConnectionSetupCompleteHeader;
+  RrcNotifySecondaryConnectedHeader rrcNotifyHeader;
 
   // Declare possible messages to receive
   LteRrcSap::MeasurementReport measurementReportMsg;
@@ -712,6 +803,12 @@ LteEnbRrcProtocolReal::DoReceivePdcpSdu (LtePdcpSapUser::ReceivePdcpSduParameter
       params.pdcpSdu->RemoveHeader (rrcConnectionSetupCompleteHeader);
       rrcConnectionSetupCompletedMsg = rrcConnectionSetupCompleteHeader.GetMessage ();
       m_enbRrcSapProvider->RecvRrcConnectionSetupCompleted (params.rnti, rrcConnectionSetupCompletedMsg);
+      break;
+    case 5:
+      params.pdcpSdu->RemoveHeader (rrcNotifyHeader);
+      std::pair<uint16_t, uint16_t> rrcNotifyPair;
+      rrcNotifyPair = rrcNotifyHeader.GetMessage ();
+      m_enbRrcSapProvider->RecvRrcSecondaryCellInitialAccessSuccessful (params.rnti, rrcNotifyPair.second, rrcNotifyPair.first);
       break;
     }
 }

@@ -32,6 +32,7 @@
 namespace ns3 {
 
 /* ... */
+    const char baseDirectory[] = "../../../../../contrib/nyuwireless-unipd/mmwave/model/";
 
 }
 

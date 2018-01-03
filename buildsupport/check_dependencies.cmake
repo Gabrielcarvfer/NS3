@@ -3,11 +3,13 @@ include(CheckFunctionExists)
 
 #Macro that checks if a required file is present and set the flag passed if found
 macro(check_include file flag)
-    check_include_file_cxx(${file} HAVE_${file}_H)
+    check_include_file_cxx(${file}.h HAVE_${file}_H)
     if(NOT ${HAVE_${file}_H})
         message(WARNING ${file} not found)
+        set(${flag} FALSE)
     else()
         add_definitions(-D${flag})
+        set(${flag} TRUE)
     endif()
 endmacro()
 

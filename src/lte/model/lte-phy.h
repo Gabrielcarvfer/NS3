@@ -1,6 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2010 TELEMATICS LAB, DEE - Politecnico di Bari
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -18,6 +19,9 @@
  * Author: Giuseppe Piro  <g.piro@poliba.it>
  *         Marco Miozzo <mmiozzo@cttc.es>
  *         Nicola Baldo <nbaldo@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #ifndef LTE_PHY_H
@@ -67,22 +71,18 @@ public:
 
   virtual ~LtePhy ();
 
-  /**
-   * \brief Get the type ID.
-   * \return the object TypeId
-   */
   static TypeId GetTypeId (void);
 
   /**
    * \brief Set the device where the phy layer is attached
    * \param d the device
    */
-  void SetDevice (Ptr<LteNetDevice> d);
+  void SetDevice (Ptr<NetDevice> d);
   /**
    * \brief Get the device where the phy layer is attached
    * \return the pointer to the device
    */
-  Ptr<LteNetDevice> GetDevice () const;
+  Ptr<NetDevice> GetDevice () const;
 
   /** 
    * 
@@ -213,23 +213,11 @@ public:
   */
   virtual void ReportRsReceivedPower (const SpectrumValue& power) = 0;
 
-  /**
-  * Set the component carrier ID 
-  *
-  * \param index the component carrier ID index
-  */
-  void SetComponentCarrierId (uint8_t index);
 
-  /**
-  * Get the component carrier ID 
-  *
-  * \returns the component carrier ID index
-  */
-  uint8_t GetComponentCarrierId ();
 
 protected:
   /// Pointer to the NetDevice where this PHY layer is attached.
-  Ptr<LteNetDevice> m_netDevice;
+  Ptr<NetDevice> m_netDevice;
 
   /**
    * The downlink LteSpectrumPhy associated to this LtePhy. Also available as
@@ -278,12 +266,12 @@ protected:
    * The downlink carrier frequency.
    * Specified by the upper layer through CPHY SAP.
    */
-  uint32_t m_dlEarfcn;
+  uint16_t m_dlEarfcn;
   /**
    * The uplink carrier frequency.
    * Specified by the upper layer through CPHY SAP.
    */
-  uint32_t m_ulEarfcn;
+  uint16_t m_ulEarfcn;
 
   /// A queue of packet bursts to be sent.
   std::vector< Ptr<PacketBurst> > m_packetBurstQueue;
@@ -306,9 +294,6 @@ protected:
    * eNodeB which this PHY layer is synchronized with.
    */
   uint16_t m_cellId;
-
-  /// component carrier Id used to address sap
-  uint8_t m_componentCarrierId;
 
 }; // end of `class LtePhy`
 

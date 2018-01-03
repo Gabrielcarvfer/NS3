@@ -1,7 +1,7 @@
 #######################################
 # Required CMake version#
 #######################################
-cmake_minimum_required( VERSION 3.0 )
+cmake_minimum_required( VERSION 3.1 )
 
 #######################################
 # Project name                        #
@@ -41,9 +41,11 @@ option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 
 option(NS3_TAP "Build with Tap support" OFF)
 
-option(NS3_EMU "Build with emu support" OFF)
+option(NS3_EMU "Build with emu support" ON)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
+
+option(NS3_NETANIM "Build NetAnim" OFF)
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
@@ -83,7 +85,7 @@ set(libs_to_build
         sixlowpan
         spectrum #
         stats #
-        #tap-bridge *not compiling after update to ns3.27
+        #tap-bridge #*not compiling after update to ns3.27
         #test
         topology-read #needs to swap posix regex to c++ regex
         traffic-control #

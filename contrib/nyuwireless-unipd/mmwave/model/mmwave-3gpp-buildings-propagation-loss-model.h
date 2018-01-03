@@ -22,13 +22,13 @@
  *        	 Menglei Zhang <menglei@nyu.edu>
  */
 
-#ifndef BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_
-#define BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_
+#ifndef MMWAVE_3GPP_BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_
+#define MMWAVE_3GPP_BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_
 
-#include "mmwave-3gpp-propagation-loss-model.h"
+#include "ns3/nyuwireless-unipd/mmwave-3gpp-propagation-loss-model.h"
 #include <ns3/buildings-propagation-loss-model.h>
-#include "mmwave-beamforming.h"
 #include <ns3/simulator.h>
+#include "mmwave-phy-mac-common.h"
 #include <fstream>
 
 namespace ns3 {
@@ -36,7 +36,6 @@ namespace ns3 {
 
 class MmWave3gppBuildingsPropagationLossModel : public BuildingsPropagationLossModel
 {
-
 public:
 	static TypeId GetTypeId (void);
 	MmWave3gppBuildingsPropagationLossModel ();
@@ -44,7 +43,8 @@ public:
 	virtual double GetLoss (Ptr<MobilityModel> a, Ptr<MobilityModel> b) const;
 	  // inherited from PropagationLossModel
 	virtual double DoCalcRxPower (double txPowerDbm, Ptr<MobilityModel> a, Ptr<MobilityModel> b) const;
-	void SetFrequency (double freq);
+
+	void SetConfigurationParameters (Ptr<MmWavePhyMacCommon> ptrConfig);
 	std::string GetScenario();
 	char GetChannelCondition(Ptr<MobilityModel> a, Ptr<MobilityModel> b);
 
@@ -65,8 +65,9 @@ private:
 	mutable channelConditionMap_t m_conditionMap;
 	bool m_updateCondition;
 	mutable Time m_prevTime;
+	Ptr<MmWavePhyMacCommon> m_phyMacConfig;
 };
 
 }
 
-#endif /* BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_ */
+#endif /* MMWAVE_3GPP_BUILDINGS_OBSTACLE_PROPAGATION_LOSS_MODEL_H_ */

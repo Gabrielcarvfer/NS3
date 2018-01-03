@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011-2013 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -18,6 +19,9 @@
  * Author: Jaume Nin <jnin@cttc.es>
  *         Nicola Baldo <nbaldo@cttc.es>
  *         Manuel Requena <manuel.requena@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Support for real S1AP link
  */
 
 #ifndef EPC_HELPER_H
@@ -37,6 +41,7 @@ class VirtualNetDevice;
 class EpcSgwPgwApplication;
 class EpcX2;
 class EpcMme;
+class EpcUeNas;
 
 /**
  * \ingroup lte
@@ -106,9 +111,22 @@ public:
    * \param imsi the unique identifier of the UE
    * \param tft the Traffic Flow Template of the new bearer
    * \param bearer struct describing the characteristics of the EPS bearer to be activated
-   * \return bearer ID
    */
   virtual uint8_t ActivateEpsBearer (Ptr<NetDevice> ueLteDevice, uint64_t imsi, Ptr<EpcTft> tft, EpsBearer bearer) = 0;
+
+  /** 
+   * Activate an EPS bearer, setting up the corresponding S1-U tunnel.
+   * 
+   * 
+   * 
+   * \param ueLteDevice the Ipv4-enabled device of the UE, normally
+   * connected via the LTE radio interface
+   * \param the NAS of that device
+   * \param imsi the unique identifier of the UE
+   * \param tft the Traffic Flow Template of the new bearer
+   * \param bearer struct describing the characteristics of the EPS bearer to be activated
+   */
+  virtual uint8_t ActivateEpsBearer (Ptr<NetDevice> ueLteDevice, Ptr<EpcUeNas> ueNas, uint64_t imsi, Ptr<EpcTft> tft, EpsBearer bearer) = 0;
 
 
   /** 

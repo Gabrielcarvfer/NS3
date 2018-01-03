@@ -30,7 +30,7 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/config-store.h"
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-helper.h"
 #include <ns3/buildings-helper.h>
 #include "ns3/global-route-manager.h"
 #include "ns3/ipv4-global-routing-helper.h"
@@ -43,6 +43,9 @@ using namespace ns3;
 int 
 main (int argc, char *argv[])
 {
+
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ResourceBlockNum", UintegerValue(1));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ChunkPerRB", UintegerValue(72));
 
   CommandLine cmd;
   cmd.Parse (argc, argv);
@@ -63,6 +66,14 @@ main (int argc, char *argv[])
   //LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_INFO);
   //LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_INFO);
 
+  /* Information regarding the traces generated:
+   *
+   * 1. UE_1_SINR.txt : Gives the SINR for each sub-band
+   * 	Subframe no.  | Slot No. | Sub-band  | SINR (db)
+   *
+   * 2. UE_1_Tb_size.txt : Allocated transport block size
+   * 	Time (micro-sec)  |  Tb-size in bytes
+   * */
 
   Ptr<MmWaveHelper> ptr_mmWave = CreateObject<MmWaveHelper> ();
 

@@ -187,7 +187,7 @@ AntennaArrayModel::GetBeamformingVector ()
 {
 	if(m_omniTx)
 	{
-		NS_FATAL_ERROR ("omi transmission do not need beamforming vector");
+		NS_FATAL_ERROR ("omni transmission do not need beamforming vector");
 	}
 	return m_beamformingVector;
 }

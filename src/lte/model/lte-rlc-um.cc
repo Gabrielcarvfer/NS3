@@ -1,6 +1,7 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
+ * Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -16,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Author: Manuel Requena <manuel.requena@cttc.es>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com>
+ *          Dual Connectivity functionalities
  */
 
 #include "ns3/simulator.h"
@@ -44,6 +48,8 @@ LteRlcUm::LteRlcUm ()
 {
   NS_LOG_FUNCTION (this);
   m_reassemblingState = WAITING_S0_FULL;
+  m_epcX2RlcUser = new EpcX2RlcSpecificUser<LteRlcUm> (this);
+  m_epcX2RlcProvider = 0;
 }
 
 LteRlcUm::~LteRlcUm ()
@@ -75,6 +81,12 @@ LteRlcUm::DoDispose ()
   m_rbsTimer.Cancel ();
 
   LteRlc::DoDispose ();
+}
+
+uint32_t
+LteRlcUm::GetMaxBuff()
+{
+  return m_maxTxBufferSize;
 }
 
 /**
@@ -118,13 +130,19 @@ LteRlcUm::DoTransmitPdcpPdu (Ptr<Packet> p)
   m_rbsTimer.Cancel ();
 }
 
+void 
+LteRlcUm::DoSendMcPdcpSdu(EpcX2Sap::UeDataParams params)
+{
+  NS_LOG_FUNCTION(this);
+  DoTransmitPdcpPdu(params.ueData);
+}
 
 /**
  * MAC SAP
  */
 
 void
-LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, uint8_t componentCarrierId, uint16_t rnti, uint8_t lcid)
+LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId)
 {
   NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << bytes);
 
@@ -331,8 +349,7 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
 
   // FIRST SEGMENT
   LteRlcSduStatusTag tag;
-  NS_ASSERT_MSG ((*it)->PeekPacketTag (tag), "LteRlcSduStatusTag is missing");
-  (*it)->PeekPacketTag (tag);
+  (*it)->RemovePacketTag (tag);
   if ( (tag.GetStatus () == LteRlcSduStatusTag::FULL_SDU) ||
         (tag.GetStatus () == LteRlcSduStatusTag::FIRST_SEGMENT) )
     {
@@ -342,26 +359,19 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
     {
       framingInfo |= LteRlcHeader::NO_FIRST_BYTE;
     }
+  (*it)->AddPacketTag (tag);
 
   while (it < dataField.end ())
     {
       NS_LOG_LOGIC ("Adding SDU/segment to packet, length = " << (*it)->GetSize ());
 
-      NS_ASSERT_MSG ((*it)->PeekPacketTag (tag), "LteRlcSduStatusTag is missing");
-      (*it)->RemovePacketTag (tag);
-      if (packet->GetSize () > 0)
-        {
-          packet->AddAtEnd (*it);
-        }
-      else
-        {
-          packet = (*it);
-        }
+      packet->AddAtEnd (*it);
       it++;
     }
 
   // LAST SEGMENT (Note: There could be only one and be the first one)
   it--;
+  (*it)->RemovePacketTag (tag);
   if ( (tag.GetStatus () == LteRlcSduStatusTag::FULL_SDU) ||
         (tag.GetStatus () == LteRlcSduStatusTag::LAST_SEGMENT) )
     {
@@ -371,6 +381,7 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
     {
       framingInfo |= LteRlcHeader::NO_LAST_BYTE;
     }
+  (*it)->AddPacketTag (tag);
 
   rlcHeader.SetFramingInfo (framingInfo);
 
@@ -379,7 +390,7 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
 
   // Sender timestamp
   RlcTag rlcTag (Simulator::Now ());
-  packet->ReplacePacketTag (rlcTag);
+  packet->AddByteTag (rlcTag);
   m_txPdu (m_rnti, m_lcid, packet->GetSize ());
 
   // Send RLC PDU to MAC layer
@@ -389,7 +400,6 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
   params.lcid = m_lcid;
   params.layer = layer;
   params.harqProcessId = harqId;
-  params.componentCarrierId = componentCarrierId;
 
   m_macSapProvider->TransmitPdu (params);
 
@@ -406,17 +416,24 @@ LteRlcUm::DoNotifyHarqDeliveryFailure ()
   NS_LOG_FUNCTION (this);
 }
 
+std::vector < Ptr<Packet> > 
+LteRlcUm::GetTxBuffer()
+{
+  return m_txBuffer;
+}
+
 void
-LteRlcUm::DoReceivePdu (Ptr<Packet> p, uint16_t rnti, uint8_t lcid)
+LteRlcUm::DoReceivePdu (Ptr<Packet> p)
 {
   NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << p->GetSize ());
 
   // Receiver timestamp
   RlcTag rlcTag;
   Time delay;
-  NS_ASSERT_MSG (p->PeekPacketTag (rlcTag), "RlcTag is missing");
-  p->RemovePacketTag (rlcTag);
-  delay = Simulator::Now() - rlcTag.GetSenderTimestamp ();
+  if (p->FindFirstMatchingByteTag (rlcTag))
+    {
+      delay = Simulator::Now() - rlcTag.GetSenderTimestamp ();
+    }
   m_rxPdu (m_rnti, m_lcid, p->GetSize (), delay.GetNanoSeconds ());
 
   // 5.1.2.2 Receive operations
@@ -671,7 +688,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                               */
                               for ( it = m_sdusBuffer.begin () ; it != m_sdusBuffer.end () ; it++ )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (*it);
+                                  TriggerReceivePdcpPdu (*it);
                                 }
                               m_sdusBuffer.clear ();
                       break;
@@ -684,7 +701,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                               */
                               while ( m_sdusBuffer.size () > 1 )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
 
@@ -708,7 +725,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( ! m_sdusBuffer.empty () )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
                       break;
@@ -735,7 +752,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                    */
                                   while ( m_sdusBuffer.size () > 1 )
                                     {
-                                      m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                      TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                       m_sdusBuffer.pop_front ();
                                     }
 
@@ -767,14 +784,14 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                               */
                               m_keepS0->AddAtEnd (m_sdusBuffer.front ());
                               m_sdusBuffer.pop_front ();
-                              m_rlcSapUser->ReceivePdcpPdu (m_keepS0);
+                              TriggerReceivePdcpPdu (m_keepS0);
 
                               /**
                                 * Deliver zero, one or multiple PDUs
                                 */
                               while ( ! m_sdusBuffer.empty () )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
                       break;
@@ -797,14 +814,14 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                   */
                                   m_keepS0->AddAtEnd (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
-                                  m_rlcSapUser->ReceivePdcpPdu (m_keepS0);
+                                  TriggerReceivePdcpPdu (m_keepS0);
 
                                   /**
                                   * Deliver zero, one or multiple PDUs
                                   */
                                   while ( m_sdusBuffer.size () > 1 )
                                     {
-                                      m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                      TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                       m_sdusBuffer.pop_front ();
                                     }
 
@@ -847,7 +864,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               for ( it = m_sdusBuffer.begin () ; it != m_sdusBuffer.end () ; it++ )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (*it);
+                                  TriggerReceivePdcpPdu (*it);
                                 }
                               m_sdusBuffer.clear ();
                       break;
@@ -860,7 +877,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( m_sdusBuffer.size () > 1 )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
 
@@ -884,7 +901,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( ! m_sdusBuffer.empty () )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
                       break;
@@ -911,7 +928,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                   */
                                   while ( m_sdusBuffer.size () > 1 )
                                     {
-                                      m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                      TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                       m_sdusBuffer.pop_front ();
                                     }
 
@@ -948,7 +965,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( ! m_sdusBuffer.empty () )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
                       break;
@@ -966,7 +983,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( m_sdusBuffer.size () > 1 )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
 
@@ -996,7 +1013,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                */
                               while ( ! m_sdusBuffer.empty () )
                                 {
-                                  m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                  TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                   m_sdusBuffer.pop_front ();
                                 }
                       break;
@@ -1028,7 +1045,7 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
                                    */
                                   while ( m_sdusBuffer.size () > 1 )
                                     {
-                                      m_rlcSapUser->ReceivePdcpPdu (m_sdusBuffer.front ());
+                                      TriggerReceivePdcpPdu (m_sdusBuffer.front ());
                                       m_sdusBuffer.pop_front ();
                                     }
 
@@ -1055,6 +1072,22 @@ LteRlcUm::ReassembleAndDeliver (Ptr<Packet> packet)
         }
     }
 
+}
+
+void
+LteRlcUm::TriggerReceivePdcpPdu(Ptr<Packet> p)
+{
+  if(!isMc) 
+  {
+    NS_LOG_INFO(this << " RlcUm forwards packet to PDCP (either from MmWave or LTE stack)");
+    m_rlcSapUser->ReceivePdcpPdu(p);
+  }
+  else
+  {
+    NS_LOG_INFO(this << " MmWave Rlc Um forwards packet to remote PDCP");
+    m_ueDataParams.ueData = p;
+    m_epcX2RlcProvider->ReceiveMcPdcpSdu(m_ueDataParams);
+  }
 }
 
 
@@ -1124,7 +1157,6 @@ LteRlcUm::DoReportBufferStatus (void)
   if (! m_txBuffer.empty ())
     {
       RlcTag holTimeTag;
-      NS_ASSERT_MSG (m_txBuffer.front ()->PeekPacketTag (holTimeTag), "RlcTag is missing");
       m_txBuffer.front ()->PeekPacketTag (holTimeTag);
       holDelay = Simulator::Now () - holTimeTag.GetSenderTimestamp ();
 

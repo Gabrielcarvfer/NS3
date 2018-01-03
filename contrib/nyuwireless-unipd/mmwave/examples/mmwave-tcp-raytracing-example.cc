@@ -27,9 +27,9 @@
 
 
 #include "ns3/point-to-point-module.h"
-#include "ns3/mmwave-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-helper.h"
 #include "ns3/epc-helper.h"
-#include "ns3/mmwave-point-to-point-epc-helper.h"
+#include "ns3/nyuwireless-unipd/mmwave-point-to-point-epc-helper.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/ipv4-global-routing-helper.h"
@@ -207,6 +207,8 @@ main (int argc, char *argv[])
 	Config::SetDefault ("ns3::LteRlcUmLowLat::MaxTxBufferSize", UintegerValue (1024 * 1024));
 	Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (131072*40));
 	Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (131072*40));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ResourceBlockNum", UintegerValue(1));
+	Config::SetDefault ("ns3::MmWavePhyMacCommon::ChunkPerRB", UintegerValue(72));
 	Config::SetDefault ("ns3::MmWaveHelper::RlcAmEnabled", BooleanValue(true));
 	Config::SetDefault ("ns3::MmWaveHelper::HarqEnabled", BooleanValue(true));
 	Config::SetDefault ("ns3::MmWaveFlexTtiMacScheduler::HarqEnabled", BooleanValue(true));

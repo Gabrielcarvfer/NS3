@@ -2,6 +2,7 @@
  /*
  *   Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)
  *   Copyright (c) 2015, NYU WIRELESS, Tandon School of Engineering, New York University
+ *   Copyright (c) 2016, University of Padova, Dep. of Information Engineering, SIGNET lab. 
  *  
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License version 2 as
@@ -23,6 +24,9 @@
  *        	 	  Sourjya Dutta <sdutta@nyu.edu>
  *        	 	  Russell Ford <russell.ford@nyu.edu>
  *        		  Menglei Zhang <menglei@nyu.edu>
+ *
+ * Modified by: Michele Polese <michele.polese@gmail.com> 
+ *                Dual Connectivity and Handover functionalities
  */
 
 
@@ -63,14 +67,14 @@ struct SfnSf
 	void
 	Decode (uint32_t sfn)
 	{
-		m_frameNum = sfn >> 16;
-		m_sfNum = ((sfn & 0xFF00) >> 8);
-		m_slotNum = sfn & 0xFF;
+		m_frameNum = (uint16_t)(sfn >> 16);
+		m_sfNum    = (uint8_t) ((sfn & 0xFF00) >> 8);
+		m_slotNum  = (uint8_t) (sfn & 0xFF);
 	}
 
 	uint16_t m_frameNum;
-	uint8_t m_sfNum;
-	uint8_t m_slotNum;			 // also used for symbol start index in some cases
+	uint8_t  m_sfNum;
+	uint8_t  m_slotNum;			 // also used for symbol start index in some cases
 };
 
 /* Equivalent to the DCI in LTE*/
@@ -127,7 +131,7 @@ struct DlDciInfoElementTdma
 
 struct DciInfoElementTdma
 {
-	enum DciFormat { DL = 0, UL = 1 };
+	enum DciFormat { DL_dci = 0, UL_dci = 1 };
 
 	DciInfoElementTdma () :
 			m_rnti (0), m_format (0), m_symStart (0), m_numSym (0), m_mcs (0),
@@ -199,8 +203,8 @@ struct SlotAllocInfo
 	enum TddMode
 	{
 		NA = 0,
-		DL = 1,
-		UL = 2,
+		DL_slotAllocInfo = 1,
+		UL_slotAllocInfo = 2,
 	};
 
 	enum TddSlotType
@@ -327,10 +331,6 @@ struct UlCqiInfo
 
 struct MacCeValue
 {
-	MacCeValue() : 
-	m_phr(0), m_crnti(0)
-	{
-	}
   uint8_t   m_phr;
   uint8_t   m_crnti;
   std::vector <uint8_t> m_bufferStatus;
@@ -341,10 +341,6 @@ struct MacCeValue
  */
 struct MacCeElement
 {
-	MacCeElement() : 
-	m_rnti(0)
-	{
-	}
   uint16_t  m_rnti;
   enum MacCeType
   {
@@ -589,7 +585,7 @@ public:
 	}
 
 	inline double
-	GetCentreFrequency (void)
+	GetCenterFrequency (void)
 	{
 		return m_centerFrequency;
 	}
@@ -841,7 +837,7 @@ private:
 	uint32_t m_l1L2CtrlLatency; // In no. of sub-frames
 	uint32_t m_l1L2DataLatency; // In no. of slots
 	uint32_t m_ulSchedDelay;	// delay between transmission of UL-DCI and corresponding subframe in TTIs
-	uint32_t m_wbCqiPeriodUs;	// WB CQI periodicity in microseconds
+	double m_wbCqiPeriodUs;	// WB CQI periodicity in microseconds
 
 	uint32_t m_tbDecodeLatencyUs;
 	uint32_t m_maxTbSizeBytes;
