@@ -58,8 +58,8 @@ set(source_files
 
 set(header_files
         "${tap_headers}"
-        "${emu_sources}"
-        "${planetlab_sources}"
+        "${emu_headers}"
+        "${planetlab_headers}"
         model/fd-net-device.h
         helper/fd-net-device-helper.h
         )

@@ -7,8 +7,7 @@ set(contribution_lib_components
 #build_contrib_lib("${contrib_name}" "${contribution_lib_components}")
 
 set(examples
-        dynamic_beacon_10static_1moving
-        dynamic_beacon_2ap_10static_1moving
+        dynamic_beacon
 
         )
 
@@ -22,6 +21,7 @@ foreach(example ${examples})
             ${libinternet}
             ${libinternet-applications}
             ${libnetanim}
+            ${ns3-libs}
             )
 
     build_contrib_example("${name}" "${contrib_name}" "${source_files}" "${header_files}" "${libraries_to_link}")

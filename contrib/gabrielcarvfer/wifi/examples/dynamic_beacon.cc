@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     int sim_id = 0, nDevices = 10, nMovingDevices = 1, nAPs = 2, simulationDuration = 20;
     bool g_verbose = true, trace = false, enableDynamicBeacon = false;
     double startApplication = 1.0, endApplication = 20.0;
-    double movingSTAxSpeed = 25.0, movingSTAySpeed = 25.0;
+    double movingSTAxSpeed = 15.0, movingSTAySpeed = 15.0;
     double beaconInterval = 0.1,  maxAPDeviceRadius = 100.0, interestRadius = 0.85;
     unsigned scanInterval=10;
     double maxBeaconInterval = 6.4, minBeaconInterval = 0.1, apMaxRange = 120.0, distanceBetweenAPs = 80.0;
@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
     phy.SetChannel(channel.Create());
     
     WifiHelper wifi;
-    wifi.SetStandard(WIFI_PHY_STANDARD_80211b);
     wifi.SetRemoteStationManager("ns3::AarfWifiManager");
     NqosWifiMacHelper mac = NqosWifiMacHelper::Default();
 
@@ -122,42 +121,45 @@ int main(int argc, char *argv[])
 
 // 4. Set mobility of the nodes
     MobilityHelper mobility;
-
+    
     // Configure mobility of APs
-    for (int i = 0; i < wifiApNodes.GetN(); i++)
-    {
-        NodeContainer nc;
-        nc.Add(wifiApNodes.Get(i));
-        setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150+distanceBetweenAPs*(i), 150+distanceBetweenAPs*(i), 0.0);
-    }
-
+    if (nAPs < 3)
+        for (int i = 0; i < wifiApNodes.GetN(); i++)
+        {
+            NodeContainer nc;
+            nc.Add(wifiApNodes.Get(i));
+            setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150+distanceBetweenAPs*(i), 150+distanceBetweenAPs*(i), 0.0);
+        }
+        
     //4 nodes
-    //{
-    //    NodeContainer nc;
-    //    nc.Add(wifiApNodes.Get(0));
-    //    setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (0),
-    //                   150 + distanceBetweenAPs * (0), 0.0);
-    //}
-    //{
-    //    NodeContainer nc;
-    //    nc.Add(wifiApNodes.Get(1));
-    //    setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (1),
-    //                   150 + distanceBetweenAPs * (0), 0.0);
-    //}
-    //{
-    //    NodeContainer nc;
-    //    nc.Add(wifiApNodes.Get(2));
-    //    setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (0),
-    //                   150 + distanceBetweenAPs * (1), 0.0);
-    //}
-    //{
-    //    NodeContainer nc;
-    //    nc.Add(wifiApNodes.Get(3));
-    //    setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (1),
-    //                   150 + distanceBetweenAPs * (1), 0.0);
-    //}
+    if (nAPs == 4)
+    {
+        {
+            NodeContainer nc;
+            nc.Add(wifiApNodes.Get(0));
+            setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (0),
+                           150 + distanceBetweenAPs * (0), 0.0);
+        }
+        {
+            NodeContainer nc;
+            nc.Add(wifiApNodes.Get(1));
+            setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (1),
+                           150 + distanceBetweenAPs * (0), 0.0);
+        }
+        {
+            NodeContainer nc;
+            nc.Add(wifiApNodes.Get(2));
+            setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (0),
+                           150 + distanceBetweenAPs * (1), 0.0);
+        }
+        {
+            NodeContainer nc;
+            nc.Add(wifiApNodes.Get(3));
+            setup_mobility(&nc, "ns3::ConstantPositionMobilityModel", 150 + distanceBetweenAPs * (1),
+                           150 + distanceBetweenAPs * (1), 0.0);
+        }
 
-
+    }
 
     // Configure mobility of static devices
     setup_mobility(&wifiStaticStaNodes, "ns3::ConstantPositionMobilityModel", 150.0, 150.0, maxAPDeviceRadius);
