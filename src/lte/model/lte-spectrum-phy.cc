@@ -425,6 +425,7 @@ LteSpectrumPhy::SetState (State newState)
 }
 
 
+
 void
 LteSpectrumPhy::ChangeState (State newState)
 {
@@ -1299,6 +1300,11 @@ LteSpectrumPhy::AssignStreams (int64_t stream)
   return 1;
 }
 
-
+//custom
+LteSpectrumPhy::State
+LteSpectrumPhy::GetState (void)
+{
+    return m_state;
+}
 
 } // namespace ns3

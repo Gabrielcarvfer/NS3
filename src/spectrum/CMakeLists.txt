@@ -65,6 +65,7 @@ set(header_files
         helper/waveform-generator-helper.h
         helper/spectrum-analyzer-helper.h
         helper/tv-spectrum-transmitter-helper.h
+        ../applications/model/CustomApp.h
         )
 
 set(libraries_to_link ${libpropagation} ${libantenna})

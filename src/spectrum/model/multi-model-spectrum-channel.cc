@@ -37,6 +37,10 @@
 #include <iostream>
 #include <utility>
 #include "multi-model-spectrum-channel.h"
+#include <ns3/CustomApp.h>
+#include <cstdint>
+#include <stdint-gcc.h>
+#include <ns3/lte-net-device.h>
 
 
 namespace ns3 {
@@ -221,7 +225,6 @@ MultiModelSpectrumChannel::FindAndEventuallyAddTxSpectrumModel (Ptr<const Spectr
   return txInfoIterator;
 }
 
-    
 
 void
 MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
@@ -346,6 +349,15 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                   Simulator::Schedule (delay, &MultiModelSpectrumChannel::StartRx, this,
                                        rxParams, *rxPhyIterator);
                 }
+                //MARKED: notify channel as in use
+
+                if (netDev->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
+                {
+
+                    Ptr<CustomApp> app = netDev->GetObject<LteNetDevice>()->GetNode()->GetApplication(5)->GetObject<CustomApp>();
+                    app->SendPacket(true);
+                }
+
             }
         }
 
@@ -358,6 +370,13 @@ MultiModelSpectrumChannel::StartRx (Ptr<SpectrumSignalParameters> params, Ptr<Sp
 {
   NS_LOG_FUNCTION (this);
   receiver->StartRx (params);
+  //Notify channel as free
+  if (receiver->GetDevice()->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
+  {
+
+      Ptr<CustomApp> app = receiver->GetDevice()->GetObject<LteNetDevice>()->GetNode()->GetApplication(5)->GetObject<CustomApp>();
+      app->SendPacket(false);
+  }
 }
 
 std::size_t

@@ -537,8 +537,11 @@ private:
   EventId m_endRxDataEvent; ///< end receive data event
   EventId m_endRxDlCtrlEvent; ///< end receive DL control event
   EventId m_endRxUlSrsEvent; ///< end receive UL SRS event
-  
 
+
+//custom
+public:
+        State GetState (void);
 };
 
 
