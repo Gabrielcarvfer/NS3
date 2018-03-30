@@ -59,7 +59,7 @@ public:
   virtual ~LteRrcSap ();
 
   /// Constraint values
-  static const uint8_t MaxReportCells = 255;
+  static const uint8_t MaxReportCells = 8;
 
   // Information Elements
   /// PlmnIdentityInfo structure
@@ -327,7 +327,7 @@ public:
     std::list<uint8_t> blackCellsToRemoveList; ///< black cells to remove list
     std::list<BlackCellsToAddMod> blackCellsToAddModList; ///< black cells to add mod list
     bool haveCellForWhichToReportCGI; ///< have cell for which to report CGI?
-    uint8_t cellForWhichToReportCGI; ///< cell for which to report CGI
+    uint16_t cellForWhichToReportCGI; ///< cell for which to report CGI
   };
 
   /**

@@ -11,7 +11,7 @@ project(NS3 CXX)
 set(CMAKE_CXX_COMPILER="ccache g++")
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.27)
+set(NS3_VER 3.28)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
@@ -31,7 +31,7 @@ option(NS3_BOOST "Build with Boost support" OFF)
 set(NS3_BOOST ON)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
-set(NS3_GTK2 ON)
+set(NS3_GTK2 OFF)
 
 option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
 set(NS3_LIBXML2 ON)
