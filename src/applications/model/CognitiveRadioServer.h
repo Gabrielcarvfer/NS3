@@ -1,53 +1,107 @@
-//
-// Created by gabri on 26/03/2018.
-//
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2007,2008,2009 INRIA, UDCAST
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation;
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Author: Amine Ismail <amine.ismail@sophia.inria.fr>
+ *                      <amine.ismail@udcast.com>
+ *
+ */
 
-#ifndef NS3_CUSTOMAPP_H
-#define NS3_CUSTOMAPP_H
+#ifndef COGNITIVE_RADIO_SERVER_H
+#define COGNITIVE_RADIO_SERVER_H
 
-#include "ns3/address.h"
 #include "ns3/application.h"
 #include "ns3/event-id.h"
 #include "ns3/ptr.h"
-#include "ns3/traced-callback.h"
-
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-
+#include "ns3/address.h"
+#include "packet-loss-counter.h"
 namespace ns3 {
+/**
+ * \ingroup applications
+ * \defgroup udpclientserver UdpClientServer
+ */
 
-    class Address;
-    class Socket;
-
-//Início da aplicação customizada simples
+/**
+ * \ingroup udpclientserver
+ *
+ * \brief A UDP server, receives UDP packets from a remote host.
+ *
+ * UDP packets carry a 32bits sequence number followed by a 64bits time
+ * stamp in their payloads. The application uses the sequence number
+ * to determine if a packet is lost, and the time stamp to compute the delay.
+ */
     class CognitiveRadioServer : public Application
     {
-        public:
+    public:
+        /**
+         * \brief Get the type ID.
+         * \return the object TypeId
+         */
+        static TypeId GetTypeId (void);
+        CognitiveRadioServer ();
+        virtual ~CognitiveRadioServer ();
+        /**
+         * \brief Returns the number of lost packets
+         * \return the number of lost packets
+         */
+        uint32_t GetLost (void) const;
 
-            CognitiveRadioServer();
+        /**
+         * \brief Returns the number of received packets
+         * \return the number of received packets
+         */
+        uint64_t GetReceived (void) const;
 
-            virtual ~CognitiveRadioServer();
+        /**
+         * \brief Returns the size of the window used for checking loss.
+         * \return the size of the window used for checking loss.
+         */
+        uint16_t GetPacketWindowSize () const;
 
-            void Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode);
+        /**
+         * \brief Set the size of the window used for checking loss. This value should
+         *  be a multiple of 8
+         * \param size the size of the window used for checking loss. This value should
+         *  be a multiple of 8
+         */
+        void SetPacketWindowSize (uint16_t size);
+    protected:
+        virtual void DoDispose (void);
 
-            void SendPacket(Time now, Time delay);
+    private:
 
-        private:
-            virtual void StartApplication(void);
+        virtual void StartApplication (void);
+        virtual void StopApplication (void);
 
-            virtual void StopApplication(void);
+        /**
+         * \brief Handle a packet reception.
+         *
+         * This function is called by lower layers.
+         *
+         * \param socket the socket the packet was received to.
+         */
+        void HandleRead (Ptr<Socket> socket);
 
-            void ScheduleTx(void);
-
-            Ptr<Socket> m_socket;
-            Address m_peer;
-            EventId m_sendEvent;
-            Ptr<Node> myNode;
-            bool m_running;
+        uint16_t m_port; //!< Port on which we listen for incoming packets.
+        Ptr<Socket> m_socket; //!< IPv4 Socket
+        Ptr<Socket> m_socket6; //!< IPv6 Socket
+        uint64_t m_received; //!< Number of received packets
+        PacketLossCounter m_lossCounter; //!< Lost packet counter
     };
 
+} // namespace ns3
 
-
-}
-#endif //NS3_CUSTOMAPP_H
+#endif /* UDP_SERVER_H */

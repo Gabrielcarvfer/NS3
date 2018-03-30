@@ -23,6 +23,7 @@
 #include <ns3/uan-module.h>
 #include <ns3/point-to-point-module.h>
 #include <cstdint>
+#include "../src/applications/model/CognitiveRadioServer.h"
 
 using namespace ns3;
 
@@ -186,8 +187,12 @@ int main()
 
 
     //13.1 Instala aplicação no servidor
-    UdpEchoServerHelper serverHelper(80);
-    csmaServer = serverHelper.Install(csmaNodes.Get(0));
+    //UdpServerHelper serverHelper(80);
+    //csmaServer = serverHelper.Install(csmaNodes.Get(0));
+
+    Ptr<CognitiveRadioServer> serv = CreateObject<CognitiveRadioServer> ();
+    csmaServer.Add(serv);
+    csmaNodes.Get(0)->AddApplication(serv);
 
 
     //13.2 Instala aplicação no cliente

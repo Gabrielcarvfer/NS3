@@ -31,7 +31,7 @@ namespace ns3 {
 
             void Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode);
 
-            void SendPacket(Time now, Time delay);
+            void SendPacket(Time now, Time delay, Time duration);
 
         private:
             virtual void StartApplication(void);

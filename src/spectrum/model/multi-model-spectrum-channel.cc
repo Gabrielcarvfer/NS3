@@ -355,7 +355,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                 {
 
                     Ptr<CognitiveRadioClient> app = netDev->GetObject<LteNetDevice>()->GetNode()->GetApplication(5)->GetObject<CognitiveRadioClient>();
-                    app->SendPacket(Simulator::Now(),delay);
+                    app->SendPacket(Simulator::Now(), delay, rxParams->duration);
                 }
 
             }
