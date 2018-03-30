@@ -1,29 +1,32 @@
 
-#include "CustomApp.h"
+#include "CognitiveRadioServer.h"
 
 using namespace ns3;
 
-CustomApp::CustomApp()
+CognitiveRadioServer::CognitiveRadioServer()
         : m_socket(0),
           m_peer(),
           m_sendEvent(),
           myNode(NULL),
-          m_running(false) {
+          m_running(false)
+{
+
 }
 
-CustomApp::~CustomApp() {
+CognitiveRadioServer::~CognitiveRadioServer()
+{
     m_socket = 0;
 }
 
 void
-CustomApp::Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode) {
+CognitiveRadioServer::Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode) {
     this->m_socket = socket;
     this->m_peer = address;
     this->myNode = myNode;
 }
 
 void
-CustomApp::StartApplication(void) {
+CognitiveRadioServer::StartApplication(void) {
     m_running = true;
     m_socket->Bind();
     m_socket->Connect(m_peer);
@@ -31,7 +34,7 @@ CustomApp::StartApplication(void) {
 }
 
 void
-CustomApp::StopApplication(void) {
+CognitiveRadioServer::StopApplication(void) {
     m_running = false;
 
     if (m_sendEvent.IsRunning()) {
@@ -44,7 +47,7 @@ CustomApp::StopApplication(void) {
 }
 
 void
-CustomApp::SendPacket(bool channel_state) {
+CognitiveRadioServer::SendPacket(Time now, Time delay) {
     /*
     LteSpectrumPhy::State a;
 
@@ -61,16 +64,18 @@ CustomApp::SendPacket(bool channel_state) {
     msg << downlink->GetState();
     msg << uplink->GetState();
      */
-    msg << channel_state;
+    //msg << channel_state;
+    msg << now;
+    msg << delay;
     Ptr<Packet> packet = Create<Packet>((const uint8_t *) msg.str().c_str(), msg.str().size());
     m_socket->Send(packet);
     //ScheduleTx ();
 }
 
 void
-CustomApp::ScheduleTx(void) {
+CognitiveRadioServer::ScheduleTx(void) {
     if (m_running) {
         Time tNext(Seconds(0.1));
-        //m_sendEvent = Simulator::Schedule (tNext, &CustomApp::SendPacket, this);
+        //m_sendEvent = Simulator::Schedule (tNext, &CognitiveRadioServer::SendPacket, this);
     }
 }

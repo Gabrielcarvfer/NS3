@@ -202,7 +202,7 @@ int main()
     Ptr<Socket> ns3UdpSocket = Socket::CreateSocket(csmaNodes.Get(1), UdpSocketFactory::GetTypeId());
 
     //13.2.4 Instancia aplicação customizada
-    Ptr<CustomApp> app = CreateObject<CustomApp> ();
+    Ptr<CognitiveRadioClient> app = CreateObject<CognitiveRadioClient> ();
 
     //13.2.5 Cria instância com endereço e porta do servidor
     Address serverAddress (InetSocketAddress(Ipv4Address("2.0.0.1"),80));

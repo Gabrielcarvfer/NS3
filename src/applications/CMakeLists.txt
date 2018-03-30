@@ -23,12 +23,9 @@ set(source_files
         helper/packet-sink-helper.cc
         helper/udp-client-server-helper.cc
         helper/udp-echo-helper.cc
-<<<<<<< NS3.29
+        model/CognitiveRadioClient.cc
+        model/CognitiveRadioServer.cc
         helper/three-gpp-http-helper.cc
-=======
-
-        model/CustomApp.cc
->>>>>>> Custom app for reporting spectrum occupation
         )
 
 set(header_files
@@ -52,13 +49,9 @@ set(header_files
         helper/packet-sink-helper.h
         helper/udp-client-server-helper.h
         helper/udp-echo-helper.h
-<<<<<<< NS3.29
         helper/three-gpp-http-helper.h
-
-=======
-
-        model/CustomApp.h
->>>>>>> Custom app for reporting spectrum occupation
+        model/CognitiveRadioClient.h
+        model/CognitiveRadioServer.h
         )
 
 #link to dependencies

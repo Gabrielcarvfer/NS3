@@ -21,17 +21,17 @@ namespace ns3 {
     class Socket;
 
 //Início da aplicação customizada simples
-    class CustomApp : public Application
+    class CognitiveRadioServer : public Application
     {
         public:
 
-            CustomApp();
+            CognitiveRadioServer();
 
-            virtual ~CustomApp();
+            virtual ~CognitiveRadioServer();
 
             void Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode);
 
-            void SendPacket(bool channel_status);
+            void SendPacket(Time now, Time delay);
 
         private:
             virtual void StartApplication(void);
