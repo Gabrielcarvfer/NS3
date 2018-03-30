@@ -159,7 +159,7 @@ extern "C" {
 /**
  * 32 bit FNV-0 hash type
  */
-typedef int32_t Fnv32_t;
+typedef u_int32_t Fnv32_t;
 
 
 /**
@@ -202,10 +202,10 @@ typedef int32_t Fnv32_t;
  * 64 bit FNV-0 hash
  */
 #if defined(HAVE_64BIT_LONG_LONG)
-typedef uint64_t Fnv64_t;
+typedef u_int64_t Fnv64_t;
 #else /* HAVE_64BIT_LONG_LONG */
 typedef struct {
-    uint32_t w32[2]; /* w32[0] is low order, w32[1] is high order word */
+    u_int32_t w32[2]; /* w32[0] is low order, w32[1] is high order word */
 } Fnv64_t;
 #endif /* HAVE_64BIT_LONG_LONG */
 

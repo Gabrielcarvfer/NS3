@@ -34,7 +34,7 @@
 #include "ns3/net-device.h"
 #include "ns3/callback.h"
 #include "ns3/node.h"
-//#include "ns3/core-config.h"
+#include "ns3/core-config.h"
 #include "ns3/arp-l3-protocol.h"
 #include "ns3/ipv4-click-routing.h"
 #include "ns3/ipv4-l3-click-protocol.h"
