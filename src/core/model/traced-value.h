@@ -20,7 +20,7 @@
 #ifndef TRACED_VALUE_H
 #define TRACED_VALUE_H
 
-#include "traced-callback.h"
+#include "ns3/traced-callback.h"
 #include "integer.h"
 #include "uinteger.h"
 #include "boolean.h"

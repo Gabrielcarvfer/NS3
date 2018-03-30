@@ -119,6 +119,7 @@ set(source_files
         model/rip.cc
         model/rip-header.cc
         helper/rip-helper.cc
+        model/tcp-lp.cc
         )
 
 set(private_header_files
@@ -230,6 +231,7 @@ set(header_files
         model/rip.h
         model/rip-header.h
         helper/rip-helper.h
+        model/tcp-lp.h
         )
 
 set(libraries_to_link
@@ -293,6 +295,8 @@ set(test_sources
         test/tcp-endpoint-bug2211.cc
         test/tcp-datasentcb-test.cc
         test/ipv4-rip-test.cc
+        test/tcp-close-test.cc
+        test/tcp-lp-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

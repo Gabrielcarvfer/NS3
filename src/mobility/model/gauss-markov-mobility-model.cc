@@ -18,7 +18,6 @@
  * Author: Dan Broyles <dbroyl01@ku.edu>
  */
 #include <cmath>
-#include <ns3/log.h>
 #include "ns3/simulator.h"
 #include "ns3/double.h"
 #include "ns3/pointer.h"

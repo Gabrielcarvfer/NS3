@@ -98,6 +98,12 @@ set(source_files
         model/simple-frame-capture-model.cc
         model/vht-operation.cc
         model/wifi-utils.cc
+
+        #Added in ns3.28
+        model/extended-capabilities.cc
+        model/he-operation.cc
+        model/mac-low-transmission-parameters.cc
+        model/wifi-mac-queue-item.cc
         )
 
 set(header_files
@@ -198,6 +204,13 @@ set(header_files
         model/simple-frame-capture-model.h
         model/vht-operation.h
         model/wifi-utils.h
+
+        #Added in ns3.28
+        model/extended-capabilities.h
+        model/he-operation.h
+        model/mac-low-transmission-parameters.h
+        model/wifi-mac-queue-item.h
+        model/wifi-phy-state.h
         )
 
 set(libraries_to_link
@@ -218,6 +231,7 @@ set(test_sources
         test/spectrum-wifi-phy-test.cc
         test/wifi-aggregation-test.cc
         test/wifi-error-rate-models-test.cc
+        test/wifi-transmit-mask-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
