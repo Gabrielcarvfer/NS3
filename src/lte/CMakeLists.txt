@@ -328,6 +328,8 @@ set(test_sources
         test/lte-test-interference-fr.cc
         test/lte-test-cqi-generation.cc
         test/lte-simple-spectrum-phy.cc
+        test/lte-test-carrier-aggregation-configuration.cc
+        test/lte-test-ipv6-routing.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

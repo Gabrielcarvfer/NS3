@@ -61,6 +61,8 @@ set(source_files
         utils/packet-socket-server.cc
         utils/packet-data-calculators.cc
         utils/packet-probe.cc
+        utils/mac8-address.cc
+        utils/queue-size.cc
         helper/application-container.cc
         helper/net-device-container.cc
         helper/node-container.cc
@@ -135,6 +137,8 @@ set(header_files
         utils/pcap-test.h
         utils/packet-data-calculators.h
         utils/packet-probe.h
+        utils/mac8-address.h
+        utils/queue-size.h
         helper/application-container.h
         helper/net-device-container.h
         helper/node-container.h

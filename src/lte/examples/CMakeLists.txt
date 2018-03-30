@@ -100,6 +100,24 @@ set(header_files)
 set(libraries_to_link ${liblte})
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
+set(name lena-ipv6-addr-conf)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${liblte})
+build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name lena-ipv6-ue-rh)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${liblte})
+build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name lena-ipv6-ue-ue)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${liblte})
+build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 
 if(${NS3_EMU})
     set(name lena-simple-epc-emu)
