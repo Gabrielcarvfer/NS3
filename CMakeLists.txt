@@ -11,7 +11,7 @@ project(NS3 CXX)
 set(CMAKE_CXX_COMPILER="ccache g++")
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.27)
+set(NS3_VER 3.28)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
@@ -20,7 +20,6 @@ option(NS3_TESTS "Enable tests to be built" ON)
 option(NS3_EXAMPLES "Enable examples to be built" ON)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" ON)
-set(NS3_DEBUG ON)
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
 set(NS3_PYTHON OFF)
