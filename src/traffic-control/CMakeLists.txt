@@ -15,6 +15,10 @@ set(source_files
 
         #Added in ns3.27
         model/mq-queue-disc.cc
+
+        #Added in ns3.28
+        model/fifo-queue-disc.cc
+        model/tbf-queue-disc.cc
         )
 
 set(header_files
@@ -32,6 +36,9 @@ set(header_files
         #Added in ns3.27
         model/mq-queue-disc.h
 
+        #Added in ns3.28
+        model/fifo-queue-disc.h
+        model/tbf-queue-disc.h
         )
 
 set(libraries_to_link
@@ -42,6 +49,11 @@ set(libraries_to_link
 set(test_sources
         test/red-queue-disc-test-suite.cc
         test/codel-queue-disc-test-suite.cc
+        test/adaptive-red-queue-disc-test-suite.cc
+        test/pie-queue-disc-test-suite.cc
+        test/fifo-queue-disc-test-suite.cc
+        test/tbf-queue-disc-test-suite.cc
+        test/tc-flow-control-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

@@ -1,8 +1,0 @@
-./waf --run scratch/file(.cc) --vis
-
-
-#add_subdirectory(shared)
-
-#add_executable(wif-ap2 wif-ap2.cpp)
-
-#target_link_libraries(wif-ap2 ${ns3-libs})

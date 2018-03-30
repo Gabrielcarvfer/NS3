@@ -19,7 +19,6 @@
 #include "tap-bridge.h"
 #include "tap-encode-decode.h"
 
-
 #include "ns3/node.h"
 #include "ns3/channel.h"
 #include "ns3/packet.h"
