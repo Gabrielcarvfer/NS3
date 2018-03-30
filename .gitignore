@@ -10,3 +10,5 @@ cmake-build-debug
 scratch/shared/
 scratch/wif*
 scratch/run*
+
+\.vs/

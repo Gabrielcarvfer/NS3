@@ -207,7 +207,8 @@ macro (write_module_header name header_files)
         get_filename_component(head ${header} NAME)
         list(APPEND contents
                 "
-    #include \"${head}\"")
+    #include <ns3/${head}>")
+    ##include \"ns3/${head}\"")
     endforeach()
 
     #Common module footer
