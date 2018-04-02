@@ -203,6 +203,33 @@ namespace ns3 {
                 std::cout << ss << std::endl;
 
                 //We can now parse and use params to do something
+                size_t pos;
+
+                cognitive_reg reg;
+
+                reg.OriginAddress = from;
+
+                pos = ss.find('\n');
+                reg.SimCurrTime = Time(ss.substr(0,pos));
+                ss.erase(0, pos + 1);
+
+                pos = ss.find('\n');
+                reg.Delay = Time(ss.substr(0,pos));
+                ss.erase(0, pos + 1);
+
+                pos = ss.find('\n');
+                reg.TransmissionTime = Time(ss.substr(0,pos));
+                ss.erase(0, pos + 1);
+
+
+                //Save cognitive reg with times collected and source
+                if (channelOccupation.find(from) == channelOccupation.end())
+                {
+                    channelOccupation.emplace(from, std::vector<CognitiveReg>());
+                }
+
+                channelOccupation.at(from).push_back(reg);
+
             }
         }
     }

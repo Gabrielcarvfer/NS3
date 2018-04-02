@@ -38,6 +38,7 @@ int main()
     double interPacketInterval = 25;
 
 
+
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     Ptr<PointToPointEpcHelper>  epcHelper = CreateObject<PointToPointEpcHelper> ();
@@ -243,6 +244,10 @@ int main()
     anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(true);
     //anim.EnableIpv4RouteTracking (outputFolder+"routingtable-wireless.xml", Seconds (0), Seconds (9), Seconds (0.25));
+
+    //Enable packet metadata print (conflicts with LTE EPC traffic flow template classifier... (derp)
+    //Packet::EnablePrinting ();
+    //Packet::EnableChecking ();
 
     //Rodar o simulador
     Simulator::Stop(Seconds(1)); // Rodar simulação por 10 segundos

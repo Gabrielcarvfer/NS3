@@ -65,9 +65,9 @@ CognitiveRadioClient::SendPacket(Time now, Time delay, Time duration) {
     msg << uplink->GetState();
      */
     //msg << channel_state;
-    msg << now;
-    msg << delay;
-    msg << duration;
+    msg << now << std::endl;
+    msg << delay << std::endl;
+    msg << duration << std::endl;
     Ptr<Packet> packet = Create<Packet>((const uint8_t *) msg.str().c_str(), msg.str().size()+1);
     m_socket->Send(packet);
     //ScheduleTx ();

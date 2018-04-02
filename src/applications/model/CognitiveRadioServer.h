@@ -33,7 +33,13 @@ namespace ns3 {
  * \ingroup applications
  * \defgroup udpclientserver UdpClientServer
  */
-
+    typedef struct cognitive_reg
+    {
+        Address OriginAddress;
+        Time SimCurrTime;
+        Time Delay;
+        Time TransmissionTime;
+    } CognitiveReg;
 /**
  * \ingroup udpclientserver
  *
@@ -100,6 +106,7 @@ namespace ns3 {
         Ptr<Socket> m_socket6; //!< IPv6 Socket
         uint64_t m_received; //!< Number of received packets
         PacketLossCounter m_lossCounter; //!< Lost packet counter
+        std::map< Address, std::vector<CognitiveReg> > channelOccupation;
     };
 
 } // namespace ns3
