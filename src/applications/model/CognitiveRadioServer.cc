@@ -200,7 +200,7 @@ namespace ns3 {
                 uint8_t *buffer = new uint8_t[packet->GetSize ()];
                 int msg_size = packet->CopyData(buffer, packet->GetSize ());
                 std::string ss = std::string(buffer, buffer+packet->GetSize());
-                std::cout << ss << std::endl;
+                //std::cout << ss << std::endl;
 
                 //We can now parse and use params to do something
                 size_t pos;
@@ -209,6 +209,8 @@ namespace ns3 {
 
                 reg.OriginAddress = from;
 
+
+                //Parsing to get info from packet
                 pos = ss.find('\n');
                 reg.SimCurrTime = Time(ss.substr(0,pos));
                 ss.erase(0, pos + 1);
@@ -225,9 +227,10 @@ namespace ns3 {
                 //Save cognitive reg with times collected and source
                 if (channelOccupation.find(from) == channelOccupation.end())
                 {
+                    //new from addrss, add it to map
                     channelOccupation.emplace(from, std::vector<CognitiveReg>());
                 }
-
+                //Not new address just add it
                 channelOccupation.at(from).push_back(reg);
 
             }

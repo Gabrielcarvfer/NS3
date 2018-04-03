@@ -3,10 +3,21 @@
 
 using namespace ns3;
 
+TypeId
+CognitiveRadioClient::GetTypeId (void)
+{
+    static TypeId tid = TypeId ("ns3::CognitiveRadioClient")
+            .SetParent<Application> ()
+            .SetGroupName("Applications")
+            .AddConstructor<CognitiveRadioClient> ()
+    ;
+    return tid;
+}
+
 CognitiveRadioClient::CognitiveRadioClient()
         : m_socket(0),
           m_peer(),
-          m_sendEvent(),
+          m_sendEvent(EventId()),
           myNode(NULL),
           m_running(false)
 {

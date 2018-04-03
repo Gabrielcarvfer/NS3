@@ -20,17 +20,37 @@ namespace ns3 {
     class Address;
     class Socket;
 
+    /*
+     * \brief A Cognitive Radio Client. Sends a packet containing when channel starts to be occupied, the delay and the duration of transmission
+     */
 //Início da aplicação customizada simples
     class CognitiveRadioClient : public Application
     {
         public:
+            /*
+             * \brief Get the Type ID
+             * \return Object Type ID
+             */
+            static TypeId GetTypeId(void);
 
+            /*
+             * \brief Empty constructor
+             */
             CognitiveRadioClient();
 
+            /*
+             * \brief Destructor
+             */
             virtual ~CognitiveRadioClient();
 
+            /*
+             *  \brief Used to initialize variables of an instance
+             */
             void Setup(Ptr<Socket> socket, Address address, Ptr<Node> myNode);
 
+            /*
+             * \brief Sends the packet
+             */
             void SendPacket(Time now, Time delay, Time duration);
 
         private:
@@ -40,11 +60,11 @@ namespace ns3 {
 
             void ScheduleTx(void);
 
-            Ptr<Socket> m_socket;
-            Address m_peer;
-            EventId m_sendEvent;
-            Ptr<Node> myNode;
-            bool m_running;
+            Ptr<Socket> m_socket; // Socket
+            Address m_peer; // Peer Address
+            EventId m_sendEvent; // Event to send the next packet
+            Ptr<Node> myNode; //Node which uses the app, not used for now as we have it's address
+            bool m_running; //Is running?
     };
 
 
