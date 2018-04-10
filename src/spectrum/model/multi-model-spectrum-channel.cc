@@ -350,11 +350,11 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                                        rxParams, *rxPhyIterator);
                 }
                 //MARKED: notify channel as in use
-
-                if (netDev->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
+                Ptr<LteNetDevice> lteNetDev = netDev->GetObject<LteNetDevice>();
+                if(lteNetDev != NULL && lteNetDev->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
                 {
 
-                    Ptr<CognitiveRadioClient> app = netDev->GetObject<LteNetDevice>()->GetNode()->GetApplication(5)->GetObject<CognitiveRadioClient>();
+                    Ptr<CognitiveRadioClient> app = lteNetDev->GetNode()->GetApplication(5)->GetObject<CognitiveRadioClient>();
                     app->SendPacket(Simulator::Now(), delay, rxParams->duration);
                 }
 

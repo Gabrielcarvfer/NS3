@@ -23,7 +23,7 @@
 #include <ns3/uan-module.h>
 #include <ns3/point-to-point-module.h>
 #include <cstdint>
-#include "../src/applications/model/CognitiveRadioServer.h"
+#include <ns3/spectrum-module.h>
 
 using namespace ns3;
 
@@ -160,6 +160,40 @@ int main()
     serverApps.Start (Seconds (0.01));
     clientApps.Start (Seconds (0.01));
     lteHelper->EnableTraces ();
+/**************************************************/
+
+
+
+    SpectrumAnalyzerHelper spectrumAnalyzerHelper;
+    spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
+    Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
+    Ptr<LteEnbPhy> enbPhy = enbNetDev->GetPhy();
+    Ptr<LteSpectrumPhy> enbSpectrPhy = enbPhy->GetUlSpectrumPhy();
+    Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
+    Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel ( model);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
+    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300MHz3GhzLog);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300Khz300GhzLog);
+    spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (2)));
+
+    //From lte-spectrum-value-helper.cc
+    const double kT_dBm_Hz = -174.0;  // dBm/Hz
+    double kT_W_Hz = std::pow (10.0, (kT_dBm_Hz - 30) / 10.0);
+    double noiseFigureLinear = std::pow (10.0, enbPhy->GetNoiseFigure() / 10.0);
+    double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
+
+    spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
+    spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
+
+    NodeContainer spectrumAnalyzer;
+    spectrumAnalyzer.Create(1);
+
+
+    NetDeviceContainer spectrumDevice;
+
+
+    spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
 
 
