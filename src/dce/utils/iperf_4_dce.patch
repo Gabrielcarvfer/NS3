@@ -1,0 +1,32 @@
+diff --git a/compat/Thread.c b/compat/Thread.c
+index e0fe4f8951c0..e286f35e7d06 100644
+--- a/compat/Thread.c
++++ b/compat/Thread.c
+@@ -409,6 +409,7 @@ void thread_rest ( void ) {
+     SwitchToThread( );
+ #endif
+ #endif
++    sleep (1);
+ }
+ 
+ #ifdef __cplusplus
+diff --git a/include/headers.h b/include/headers.h
+index 4667bfe894ce..8d7d9a64874c 100644
+--- a/include/headers.h
++++ b/include/headers.h
+@@ -57,6 +57,7 @@
+ #define HEADERS_H
+ 
+ 
++#include <math.h>
+ #ifdef HAVE_CONFIG_H
+     #include "config.h"
+ 
+@@ -82,7 +83,6 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <time.h>
+-#include <math.h>
+ 
+ #ifdef WIN32
+ 

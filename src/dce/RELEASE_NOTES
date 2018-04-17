@@ -1,0 +1,497 @@
+
+		ns-3-dce RELEASE NOTES
+
+This file contains Direct Code Execution release notes (most recent releases first).  
+
+Please refer the page http://www.nsnam.org/projects/direct-code-execution/ for detailed instructions
+
+Release dce-1.10
+===============
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.10
+   or
+ % bake.py configure -e dce-linux-1.10
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 14.04 64bit
+- Ubuntu 16.04 64bit
+- Ubuntu 17.04 64bit
+- Fedora 26 64bit
+- Fedora 27 64bit
+
+New user-visible features
+-------------------------
+- migrate github for the repositories (ns-3-dce, quagga, umip)
+- add various missing symbols which are required for newer glibc (ubuntu 16/17, Fedora26/27)
+- migrate to circleci 2.0 build
+- doc infra update: generate doxygen on readthedocs.io servers
+- Updated waf to 1.8.19
+
+Bugs fixed
+----------
+- Bug 2833 - ns-3-dce compilation fails on gcc-6.3
+- github #57 Fatal error: glibc detected an invalid stdio handle
+- github #54 dce documentation missguide
+- fix DceCradle bind issues
+- update deprecated method of ns3::WifiHelper
+- update iperf2 patch
+- Enable C++11 following ns3 example
+- Use so_names to prevent loading wrong abi (#56)
+
+Release dce-1.9
+===============
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.9
+   or
+ % bake.py configure -e dce-linux-1.9
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 14.04 64bit
+- Ubuntu 15.04 64bit
+- Ubuntu 16.04 64bit
+
+New user-visible features
+-------------------------
+- update docker base image from ubuntu12.04 to ubuntu14.04
+- enabled c++11 following ns3 move to c++11 in commit d5650a8D.  This implies new minimal
+requirements for your compiler:
+- g++-4.8 or later
+- clang-3.3 or later
+
+Bugs fixed
+----------
+- Bug 2516 - Test dce-tcp-ns3-nsc-comparison fails
+
+Release dce-1.8
+===============
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.8
+   or
+ % bake.py configure -e dce-linux-1.8
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 14.04 64bit
+- Ubuntu 15.04 64bit
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+- All logger names start with Dce. DceAlloc got renamed to DceKingsleyAlloc
+- All test names are prefixed with 'dce' (concerns process-manager and netlink-socket tests)
+
+Bugs fixed
+----------
+- Bug 2098 - DCE_PATH and DCE_ROOT are now taken into account by DCE
+- github #5  Allow to override values returned by DceNodeContext::UName #5
+- github issue#2 - dce_getifaddrs() now returns a correct result
+- github #28 - waf incorrectly detects present modules
+
+
+Release dce-1.7
+===============
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.7
+   or
+ % bake.py configure -e dce-linux-1.7
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Availability
+------------
+
+Tested platforms
+-------------------
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 14.04 64bit
+- Ubuntu 15.04 64bit (new)
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+- dlopen(3), dlsym(3) support, this is useful for newer iproute2
+- Added an overload DceManagerHelper::Install(Ptr<Node>)
+
+Bugs fixed
+----------
+- Bug 2080 - MPTCP - FullMesh: queue_delayed_work is only successful on the first
+- Bug 2085 - DCE build process crashes when using compiler flag for C++0x / C++11
+- Bug 1980 - setting UnixSocketFd socket buffer size
+- Bug 2129 - DCE-Linux simulations with heterogeneous nodes crash (some DCE-Linux and some ns3)
+- Bug 2101 - When loading binary not compiled with the correct options, dce crashes
+- Bug 2160 - Waf Fails to recognize pygccxml version 1.6.2
+- github PR#6 fix routing in dce-iperf-mptcp example
+
+
+Release dce-1.6
+===============
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.6
+   or
+ % bake.py configure -e dce-linux-1.6
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+
+Availability
+------------
+
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 14.04 64bit
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+- adapt new SimExported API for net-next-sim
+
+Bugs fixed
+----------
+- Bug 2051 - DCE submodules (dce-quagga, dce-umip, etc) are not linked to scripts under myscripts
+
+
+Release dce-1.5
+===============
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.5
+   or
+ % bake.py configure -e dce-linux-1.5
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+    
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 14.04 64bit (new)
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+(none)
+
+Bugs fixed
+----------
+- Bug 2009 - update code for RandomVariable deprecation
+- Bug 2015 - static/optimized build fails to execute with a script under myscripts
+- Bug 2035 - write(2)/send(2) crashes with connected UDP socket
+- Bug 2036 - wrong return code from dce_readv in case it fails within multiple buffers loop
+
+Release dce-1.4
+===============
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.4
+   or
+ % bake.py configure -e dce-linux-1.4
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+    
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 14.04 64bit (new)
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+- A simple bash example is now added for DCE. You can use a shell script to run on your simulation.
+- add Dockerfile for dce-linux-dev
+- add emulation version of dce-iperf.cc
+
+Bugs fixed
+----------
+- Bug 1949 - iproute build failed
+- Bug 1952 - DCE can't parse envp argument of main function
+- Bug 1953 - add bash-4.1 build for DCE
+- avoid python bindings build for static build 
+
+
+Release dce-1.3
+===============
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.3
+   or
+ % bake.py configure -e dce-linux-1.3
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 12.10 64bit
+- Ubuntu 13.04 64bit
+- Ubuntu 13.10 64bit (new)
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+
+New user-visible features
+-------------------------
+- DCE now requires an additional option to LDFLAGS for applications running on DCE (Bug 1773).
+  - we only needed to add '-pie' option to build PIE (Position Independent Executable) binary
+  - (new) but we need '-rdynamic' option from now to resolve symbols defined in PIE applications.
+
+- LinuxStackHelper now can configure IPv6 addresses with the support of Ipv6AddressHelper
+- DCE Cradle now support IPv6 sockets (TCP6, UDP6, RAW6, DCCP6, SCTP6)
+- Stream Control Transmission Protocol (SCTP) support, DCE Cradle as well
+  you need to install lksctp-dev/lksctp-tools-devel to run example.
+- FreeBSD version of network stack is now supported (Bug 1878).
+- support socket option (Get/Set sockopt) for DCE Cradle
+- Support for tmpfile, timer_create, timer_settime and timer_gettime functions
+- Support for Python bindings. The bindings do not exactly match the C++ API 
+
+Bugs fixed
+----------
+- Bug 1713 - Ipv6 address configuration support for LinuxStackHelper
+- Bug 1827 - Linux SCTP support over DCE
+- Bug 1828 - Tests and examples do not compile when sctp-tools is not enabled 
+- Bug 1825 - IpL4Protocol not declared in this scope in ipv6-linux.cc
+- Bug 1773 - DCE doesn't run on Fedora 19, Ubuntu 13.10 (64bits) (temporal fix)
+- Bug 1875 - Memory leak: LinuxSocketImpl:Send()/Sendto() with DCE Cradle
+- Bug 1878 - FreeBSD version of network stack for DCE
+- Bug 1892 - Support for tmpfile function
+- Bug 1806 - CcnClientHelper m_files is never cleared
+
+Release dce-1.2
+=============
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.2
+   or
+ % bake.py configure -e dce-linux-1.2
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 12.10 64bit
+- Ubuntu 13.04 64bit
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+- CentOS 6.4 64bit
+
+New user-visible features
+-------------------------
+(none)
+
+Bugs fixed
+----------
+- Bug 1759 - dce httpd example stops working with big files (~1MB)
+- Bug 1765 - DCE can't use TapBridge if built via bake
+- Bug 1804 - dce-ns3-1.1/dce-linux-1.1 can't built with ns3-3.18.1
+- Bug 1806 - CcnClientHelper m_files is never cleared
+- Bug 1800 - ns-3-dce can't build on debian testing
+
+Known issues
+------------
+In general, known issues are tracked on the project tracker available
+at http://www.nsnam.org/bugzilla/
+
+In particular, the following bugs are not fixed in this release.
+- Bug 1773 - DCE doesn't run on Fedora 19 (64bits)
+
+
+Release dce-1.1.1 (hotfix)
+=========================
+This release includes a hotfix for the combination with ns3-18.1.
+
+Bugs fixed
+----------
+Bug 1804 - dce-ns3-1.1/dce-linux-1.1 can't built with ns3-3.18.1
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.1.1
+   or
+ % bake.py configure -e dce-linux-1.1.1
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 12.10 64bit
+- Ubuntu 13.04 64bit
+- Fedora 18 32bit
+- CentOS 6.2 64bit
+- CentOS 6.4 64bit
+
+
+Release dce-1.1
+=============
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3-1.1
+   or
+ % bake.py configure -e dce-linux-1.1
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-------------------
+- Ubuntu 10.04 64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 12.10 64bit
+- Ubuntu 13.04 64bit
+- Fedora 18 32bit
+
+New user-visible features
+-------------------------
+- LTE (LteUeNetDevice) Support with multipath TCP
+- early version: Bug 1598 - include tracing system for kernel code
+
+Bugs fixed
+----------
+- Bug 1709 - dce_select don't clear fds when returning 0
+- Bug 1711 - Allow DCE cradle to support ns-3 based bulk send application
+- Fix static/optimized build
+
+Known issues
+------------
+In general, known issues are tracked on the project tracker available
+at http://www.nsnam.org/bugzilla/
+
+Release 1.0
+===========
+
+Availability
+------------
+In order to use DCE, please use bake tool to install DCE.
+The followings are the basic steps to use DCE.
+
+ % bake.py configure -e dce-ns3
+ % bake.py download
+ % bake.py build
+
+For more information, please refer the document.
+
+Tested platforms
+-----------------
+- Ubuntu 10.04 32bit/64bit
+- Ubuntu 10.10 32bit/64bit
+- Ubuntu 11.04 32bit/64bit
+- Ubuntu 11.10 32bit/64bit
+- Ubuntu 12.04 32bit/64bit
+- Ubuntu 12.10 64bit
+- Fedora 14 32bit/64bit
+- Fedora 15 32bit/64bit
+- Fedora 16 32bit/64bit
+- Fedora 18 32bit
+
+New user-visible features
+-------------------------
+- gcov coverage test support (Bug 1594)
+- DCE Cradle (Bug 1593)
+- Tested applications
+-- ccnx
+-- quagga
+-- umip
+-- iperf
+-- ping/ping6
+-- iproute (ip command)
+-- thttpd
+-- wget
+
+
+Bugs fixed
+----------
+- Bug 1624 - glibc-2.15/2.16 on 32bit oses broke dce-iperf
+
+Known issues
+------------
+- elf-loader with PthreadFiberManager crashes (Bug 1513)
+- no python binding (Bug 1455)
+- the lack of IPv6 support with LinuxStackHelper
