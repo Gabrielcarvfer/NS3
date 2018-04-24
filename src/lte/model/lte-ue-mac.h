@@ -34,6 +34,10 @@
 #include <vector>
 #include <ns3/packet.h>
 #include <ns3/packet-burst.h>
+#include <ns3/spectrum-signal-parameters.h>
+#include <ns3/simulator.h>
+#include <cstdint>
+#include "lte-spectrum-signal-parameters.h"
 
 
 namespace ns3 {
@@ -259,6 +263,12 @@ private:
   uint32_t m_subframeNo; ///< subframe number
   uint8_t m_raRnti; ///< RA RNTI
   bool m_waitingForRaResponse; ///< waiting for RA response
+
+
+    //Custom
+public:
+     void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams);
+
 };
 
 } // namespace ns3

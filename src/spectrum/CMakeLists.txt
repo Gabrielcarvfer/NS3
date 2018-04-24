@@ -69,11 +69,9 @@ set(header_files
         helper/waveform-generator-helper.h
         helper/spectrum-analyzer-helper.h
         helper/tv-spectrum-transmitter-helper.h
-        ../applications/model/CognitiveRadioClient.h
-        ../lte/model/lte-net-device.h
         )
 
-set(libraries_to_link ${libpropagation} ${libantenna} ${libapplications} )
+set(libraries_to_link ${libpropagation} ${libantenna} )
 
 set(test_sources
         test/spectrum-interference-test.cc

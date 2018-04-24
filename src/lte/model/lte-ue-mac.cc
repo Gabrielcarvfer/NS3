@@ -34,7 +34,8 @@
 #include <ns3/lte-control-messages.h>
 #include <ns3/simulator.h>
 #include <ns3/lte-common.h>
-
+#include <ns3/lte-mac-sap.h>
+#include <cstdint>
 
 
 namespace ns3 {
@@ -583,6 +584,7 @@ LteUeMac::DoReceivePhyPdu (Ptr<Packet> p)
 {
   LteRadioBearerTag tag;
   p->RemovePacketTag (tag);
+
   if (tag.GetRnti () == m_rnti)
     {
       // packet is for the current user
@@ -839,4 +841,41 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
+
+void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
+{
+
+  Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
+  Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
+  Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
+
+  std::stringstream msg;
+  msg << m_rnti << std::endl;
+  msg << Simulator::Now() << std::endl;
+  msg << rxParams->duration << std::endl;
+
+  if (lteDataRxParams != 0)
+  {
+    msg << "LteDataFrame" << std::endl;
+  }
+  if (lteDlCtrlRxParams != 0)
+  {
+    msg << "LteDlCtrlFrame" << std::endl;
+  }
+  if (lteUlSrsRxParams != 0)
+  {
+    msg << "LteUlSrsFrame" << std::endl;
+  }
+  Ptr<Packet> packet = Create<Packet>((const uint8_t *) msg.str().c_str(), msg.str().size()+1);
+
+  LteMacSapProvider::TransmitPduParameters params;
+  params.pdu = packet;
+  params.rnti = m_rnti;
+  params.lcid = 0x0ff; // arbitrary number
+  params.layer = 1; // 1-mac 2-rlc
+  params.harqProcessId = m_harqProcessId;
+  params.componentCarrierId = m_componentCarrierId;
+
+  DoTransmitPdu(params);
+};
 } // namespace ns3

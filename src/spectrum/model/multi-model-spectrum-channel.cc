@@ -37,10 +37,8 @@
 #include <iostream>
 #include <utility>
 #include "multi-model-spectrum-channel.h"
-#include <ns3/CognitiveRadioClient.h>
 #include <cstdint>
 #include <stdint-gcc.h>
-#include <ns3/lte-net-device.h>
 
 
 namespace ns3 {
@@ -337,26 +335,18 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
 
               Ptr<NetDevice> netDev = (*rxPhyIterator)->GetDevice ();
               if (netDev)
-                {
+              {
                   // the receiver has a NetDevice, so we expect that it is attached to a Node
                   uint32_t dstNode =  netDev->GetNode ()->GetId ();
                   Simulator::ScheduleWithContext (dstNode, delay, &MultiModelSpectrumChannel::StartRx, this,
                                                   rxParams, *rxPhyIterator);
-                }
+              }
               else
-                {
+              {
                   // the receiver is not attached to a NetDevice, so we cannot assume that it is attached to a node
-                  Simulator::Schedule (delay, &MultiModelSpectrumChannel::StartRx, this,
-                                       rxParams, *rxPhyIterator);
-                }
-                //MARKED: notify channel as in use
-                Ptr<LteNetDevice> lteNetDev = netDev->GetObject<LteNetDevice>();
-                if(lteNetDev != NULL && lteNetDev->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
-                {
-
-                    Ptr<CognitiveRadioClient> app = lteNetDev->GetNode()->GetApplication(5)->GetObject<CognitiveRadioClient>();
-                    app->SendPacket(Simulator::Now(), delay, rxParams->duration);
-                }
+                  Simulator::Schedule(delay, &MultiModelSpectrumChannel::StartRx, this,
+                                      rxParams, *rxPhyIterator);
+              }
 
             }
         }
@@ -370,12 +360,7 @@ MultiModelSpectrumChannel::StartRx (Ptr<SpectrumSignalParameters> params, Ptr<Sp
 {
   NS_LOG_FUNCTION (this);
   receiver->StartRx (params);
-  //Notify channel as free
-  //if (receiver->GetDevice()->GetObject<LteNetDevice>()->GetNode()->GetNApplications()>4)
-  //{
-  //    Ptr<CognitiveRadioClient> app = receiver->GetDevice()->GetObject<LteNetDevice>()->GetNode()->GetApplication(5)->GetObject<CognitiveRadioClient>();
-  //    app->SendPacket(false);
-  //}
+
 }
 
 std::size_t

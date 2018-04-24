@@ -154,12 +154,21 @@ int main()
         }
         else
         {
-            clientApps.Add (client.Install (ueNodes.Get(0)));
+            clientApps.Add (client.Install (ueNodes.Get((uint32_t)0)));
         }
     }
+
+    UdpEchoServerHelper udpEchoServerHelper(ulPort+1);
+    serverApps.Add(udpEchoServerHelper.Install(remoteHost));
+    UdpEchoClientHelper udpEchoClientHelper(remoteHostAddr, ulPort+1);
+    clientApps.Add(udpEchoClientHelper.Install(ueNodes.Get((uint32_t)0)));
+
+
     serverApps.Start (Seconds (0.01));
     clientApps.Start (Seconds (0.01));
     lteHelper->EnableTraces ();
+
+
 /**************************************************/
 
 
@@ -198,7 +207,7 @@ int main()
 
 
 /**************************************************/
-
+/*
     //11 Instala link P2P/CSMA entre eNodeBs e UEs
     CsmaHelper csmaHelper;
 
@@ -225,9 +234,9 @@ int main()
     //UdpServerHelper serverHelper(80);
     //csmaServer = serverHelper.Install(csmaNodes.Get(0));
 
-    Ptr<CognitiveRadioServer> serv = CreateObject<CognitiveRadioServer> ();
-    csmaServer.Add(serv);
-    csmaNodes.Get(0)->AddApplication(serv);
+    //Ptr<CognitiveRadioServer> serv = CreateObject<CognitiveRadioServer> ();
+    //csmaServer.Add(serv);
+    //csmaNodes.Get(0)->AddApplication(serv);
 
 
     //13.2 Instala aplicação no cliente
@@ -264,7 +273,7 @@ int main()
 
     //14 Habilita captura de tráfego P2P
     csmaHelper.EnablePcapAll("csma");
-
+*/
 
 /***************************************************/
 

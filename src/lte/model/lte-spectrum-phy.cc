@@ -38,8 +38,11 @@
 #include <ns3/boolean.h>
 #include <ns3/double.h>
 #include <ns3/config.h>
+#include "lte-ue-net-device.h"
+#include "lte-ue-mac.h"
 
 namespace ns3 {
+
 
 NS_LOG_COMPONENT_DEFINE ("LteSpectrumPhy");
 
@@ -440,9 +443,6 @@ LteSpectrumPhy::SetHarqPhyModule (Ptr<LteHarqPhy> harq)
   m_harqPhyModule = harq;
 }
 
-
-
-
 bool
 LteSpectrumPhy::StartTxDataFrame (Ptr<PacketBurst> pb, std::list<Ptr<LteControlMessage> > ctrlMsgList, Time duration)
 {
@@ -662,7 +662,13 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
-  
+
+  Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+  if (dev != 0)
+  {
+      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
+  }
+
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
   Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (spectrumRxParams);
@@ -971,7 +977,6 @@ LteSpectrumPhy::EndRxData ()
   NS_LOG_DEBUG (this << " txMode " << (uint16_t)m_transmissionMode << " gain " << m_txModeGain.at (m_transmissionMode));
   NS_ASSERT (m_transmissionMode < m_txModeGain.size ());
   m_sinrPerceived *= m_txModeGain.at (m_transmissionMode);
-  
   while (itTb!=m_expectedTbs.end ())
     {
       if ((m_dataErrorModelEnabled)&&(m_rxPacketBurstList.size ()>0)) // avoid to check for errors when there is no actual data transmitted
@@ -1300,11 +1305,6 @@ LteSpectrumPhy::AssignStreams (int64_t stream)
   return 1;
 }
 
-//custom
-LteSpectrumPhy::State
-LteSpectrumPhy::GetState (void)
-{
-    return m_state;
-}
+
 
 } // namespace ns3

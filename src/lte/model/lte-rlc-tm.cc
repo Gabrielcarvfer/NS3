@@ -184,6 +184,14 @@ LteRlcTm::DoReceivePdu (Ptr<Packet> p, uint16_t rnti, uint8_t lcid)
   // 5.1.1.2.1  General
   // When receiving a new TMD PDU from lower layer, the receiving TM RLC entity shall:
   // - deliver the TMD PDU without any modification to upper layer.
+  std::cout<<p<<std::endl;
+
+    uint8_t *buffer = new uint8_t[p->GetSize ()];
+    int msg_size = p->CopyData(buffer, p->GetSize ());
+    std::string ss = std::string(buffer, buffer+p->GetSize());
+    std::cout << ss << std::endl;
+
+
 
    m_rlcSapUser->ReceivePdcpPdu (p);
 }

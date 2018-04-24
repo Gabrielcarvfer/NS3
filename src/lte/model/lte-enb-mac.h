@@ -454,7 +454,19 @@ private:
 
   /// component carrier Id used to address sap
   uint8_t m_componentCarrierId;
- 
+
+  //Custom
+public:
+    typedef struct cognitive_reg
+    {
+        uint16_t OriginAddress;
+        Time SimCurrTime;
+        Time Delay;
+        Time TransmissionTime;
+    } CognitiveReg;
+    std::map< uint16_t, std::vector<CognitiveReg> > channelOccupation;
+    void RecvCognitiveMessage(Ptr<Packet> p);
+
 };
 
 } // end namespace ns3

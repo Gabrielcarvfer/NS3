@@ -40,6 +40,8 @@
 #include "ns3/lte-mac-sap.h"
 #include "ns3/lte-enb-cmac-sap.h"
 #include <ns3/lte-common.h>
+#include <cinttypes>
+#include <cstdint>
 
 
 namespace ns3 {
@@ -765,6 +767,8 @@ LteEnbMac::DoReceivePhyPdu (Ptr<Packet> p)
   std::map<uint8_t, LteMacSapUser*>::iterator lcidIt = rntiIt->second.find (lcid);
   //NS_ASSERT_MSG (lcidIt != rntiIt->second.end (), "could not find LCID" << lcid);
 
+  if (lcid == 0x0ff)
+    RecvCognitiveMessage(p);
   //Receive PDU only if LCID is found
   if (lcidIt != rntiIt->second.end ())
     {
@@ -1267,5 +1271,46 @@ LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
   m_dlInfoListReceived.push_back (params);
 }
 
+void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
+{
+    //Receive cognitive radio params
+    uint8_t *buffer = new uint8_t[p->GetSize ()];
+    int msg_size = p->CopyData(buffer, p->GetSize ());
+    std::string ss = std::string(buffer, buffer+p->GetSize());
+    std::cout << ss << std::endl;
+
+    //We can now parse and use params to do something
+    size_t pos;
+    cognitive_reg reg;
+    pos = ss.find('\n');
+    std::string temp = ss.substr(0,pos);
+    char * ptr;
+    reg.OriginAddress = std::strtoimax(temp.c_str(), &ptr, temp.size());
+    ss.erase(0, pos + 1);
+
+    //Parsing to get info from packet
+    pos = ss.find('\n');
+    reg.SimCurrTime = Time(ss.substr(0,pos));
+    ss.erase(0, pos + 1);
+
+    //pos = ss.find('\n');
+    //reg.Delay = Time(ss.substr(0,pos));
+    //ss.erase(0, pos + 1);
+
+    pos = ss.find('\n');
+    reg.TransmissionTime = Time(ss.substr(0,pos));
+    ss.erase(0, pos + 1);
+
+
+    //Save cognitive reg with times collected and source
+    if (channelOccupation.find(reg.OriginAddress) == channelOccupation.end())
+    {
+        //new from addrss, add it to map
+        channelOccupation.emplace(reg.OriginAddress, std::vector<CognitiveReg>());
+    }
+    //Not new address just add it
+    channelOccupation.at(reg.OriginAddress).push_back(reg);
+    return;
+}
 
 } // namespace ns3
