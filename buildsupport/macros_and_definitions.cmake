@@ -21,6 +21,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 
+#fPIC 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
+
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
@@ -28,7 +31,6 @@ macro(process_options)
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
     #Set common include folder
-    include_directories( ${CMAKE_OUTPUT_DIRECTORY})
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
@@ -96,10 +98,12 @@ macro(process_options)
     if(${NS3_MPI})
         find_package(MPI)
         if(NOT ${MPI_FOUND})
-            #message(FATAL_ERROR "MPI not found")
+            message(FATAL_ERROR "MPI not found")
         else()
-            include_directories( ${MPI_INCLUDE_PATH})
-            add_definitions(${MPI_COMPILE_FLAGS} ${MPI_LINK_FLAGS})
+            include_directories( ${MPI_CXX_INCLUDE_PATH}) 
+            add_definitions(${MPI_CXX_COMPILE_FLAGS} ${MPI_CXX_LINK_FLAGS} -DNS3_MPI) 
+            link_libraries(${MPI_CXX_LIBRARIES}) 
+            #set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER}) 
         endif()
     endif()
 
@@ -248,6 +252,9 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/examples)
             add_subdirectory(examples)
         endif()
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/example) 
+            add_subdirectory(example) 
+        endif() 
     endif()
 
     #Build pybindings  if requested

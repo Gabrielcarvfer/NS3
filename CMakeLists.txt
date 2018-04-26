@@ -8,16 +8,15 @@ cmake_minimum_required( VERSION 3.0 )
 #######################################
 project(NS3 CXX)
 
-set(CMAKE_CXX_COMPILER="ccache g++")
 include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.28)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
-option(NS3_TESTS "Enable tests to be built" ON)
+option(NS3_TESTS "Enable tests to be built" OFF)
 
-option(NS3_EXAMPLES "Enable examples to be built" ON)
+option(NS3_EXAMPLES "Enable examples to be built" OFF)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" ON)
 
@@ -40,7 +39,7 @@ option(NS3_LIBRT "Build with RT support" OFF)
 set(NS3_LIBRT ON)
 
 option(NS3_MPI "Build with MPI support" OFF)
-set(NS3_MPI ON)
+set(NS3_MPI OFF)
 
 option(NS3_GSL "Build with GSL support" OFF)
 set(NS3_GSL ON)
@@ -95,7 +94,7 @@ set(libs_to_build
         sixlowpan
         spectrum #
         stats #
-        #tap-bridge *not compiling after update to ns3.27
+        tap-bridge #
         test
         topology-read #needs to swap posix regex to c++ regex
         traffic-control #
