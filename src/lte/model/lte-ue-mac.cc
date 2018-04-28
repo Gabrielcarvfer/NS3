@@ -849,10 +849,14 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
   Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
   Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
 
+  // Serialize data to send to eNB
   std::stringstream msg;
   msg << m_rnti << std::endl;
   msg << Simulator::Now() << std::endl;
   msg << rxParams->duration << std::endl;
+  msg << rxParams->pathLossDb << std::endl;
+  msg << rxParams->maxPathLossDb << std::endl;
+  msg << rxParams->psd << std::endl;
 
   if (lteDataRxParams != 0)
   {

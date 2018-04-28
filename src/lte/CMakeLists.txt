@@ -261,6 +261,7 @@ set(header_files
         model/no-op-component-carrier-manager.h
         model/simple-ue-component-carrier-manager.h
         helper/cc-helper.h
+        #helper/wireshark_epan_dissectors_packet-mac-lte.h
         )
 
 set(libraries_to_link

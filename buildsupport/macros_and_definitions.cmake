@@ -63,6 +63,8 @@ macro(process_options)
     #Copy all header files to outputfolder/include/
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim-3.107/*.h) #just copying every single header from netanim into ns3 include folder
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim-3.108/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
@@ -216,7 +218,7 @@ macro(process_options)
                link_directories(${gsl_dir}/lib)
             include_directories(${gsl_dir}/include)
         else()
-            include_directories( ${GSL_INCLUDE_DIRS})
+            include_directories(${GSL_INCLUDE_DIRS})
             link_directories(${GSL_LIBRARY})
         endif()
     endif()

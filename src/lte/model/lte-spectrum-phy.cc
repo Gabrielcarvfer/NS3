@@ -669,6 +669,15 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
   }
 
+  //If signal can't be decoded, add as interference
+  //In the original behavior, the receiver only receives whatever it can receive (checked by the transmissor)
+  if (spectrumRxParams->pathLossDb > spectrumRxParams->maxPathLossDb)
+  {
+      m_interferenceData->AddSignal (rxPsd, duration);
+      m_interferenceCtrl->AddSignal (rxPsd, duration);
+  }
+
+
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
   Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (spectrumRxParams);

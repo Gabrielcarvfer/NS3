@@ -10,6 +10,15 @@ cmake_minimum_required( VERSION 3.1 )
 # Project name                        #
 #######################################
 project(NS3 CXX)
+set(NS3_VER 3.27)
+
+option(NS3_AUTO_INSTALL_DEPENDENCIES "Automatically download missing libraries with Microsoft Vcpkg" OFF)
+set(NS3_AUTO_INSTALL_DEPENDENCIES OFF)
+
+if (NS3_AUTO_INSTALL_DEPENDENCIES)
+    include(buildsupport/vcpkg_setup.cmake)
+    set(CMAKE_TOOLCHAIN_FILE ./3rd-party/vcpkg/scripts/buildsystems/vcpkg.cmake)
+endif()
 
 include(buildsupport/macros_and_definitions.cmake)
 
@@ -45,7 +54,7 @@ option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
 
 option(NS3_GSL "Build with GSL support" OFF)
-set(NS3_GSL ON)
+set(NS3_GSL OFF)
 
 option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 set(NS3_PLANETLAB OFF)
@@ -118,7 +127,6 @@ set(libs_to_build
         mesh
         mobility #
         mpi
-        netanim
         network #
 >>>>>>> Custom app for reporting spectrum occupation
         nix-vector-routing
@@ -141,7 +149,6 @@ set(libs_to_build
         wifi                  #
         wimax                 #
         )
-
 
 #######################################
 # Process options                     #

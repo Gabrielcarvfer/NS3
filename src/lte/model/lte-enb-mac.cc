@@ -1271,6 +1271,8 @@ LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
   m_dlInfoListReceived.push_back (params);
 }
 
+
+// Receive "cognitive messages" from UEs
 void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
 {
     //Receive cognitive radio params

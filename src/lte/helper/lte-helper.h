@@ -42,6 +42,7 @@
 #include <ns3/component-carrier-enb.h>
 #include <ns3/cc-helper.h>
 #include <map>
+#include <ns3/trace-helper.h>
 
 namespace ns3 {
 
@@ -669,12 +670,54 @@ public:
    */
   Ptr<SpectrumChannel> GetDownlinkSpectrumChannel (void) const;
 
-
+/**
+   * Get the data link type of PCAP traces to be used.
+   *
+   * @see SupportedPcapDataLinkTypes
+   *
+   * @returns The data link type of the pcap file (and packets) to be used
+   */
+    //PcapHelper::DataLinkType GetPcapDataLinkType (void) const;
 protected:
   // inherited from Object
   virtual void DoInitialize (void);
 
 private:
+
+    /**
+   * @brief Enable pcap output the indicated net device.
+   *
+   * NetDevice-specific implementation mechanism for hooking the trace and
+   * writing to the trace file.
+   *
+   * @param prefix Filename prefix to use for pcap files.
+   * @param nd Net device for which you want to enable tracing.
+   * @param promiscuous If true capture all possible packets available at the device.
+   * @param explicitFilename Treat the prefix as an explicit filename if true
+   */
+   // virtual void EnablePcapInternal (std::string prefix,
+   //                                  Ptr<NetDevice> nd,
+   //                                  bool promiscuous,
+   //                                  bool explicitFilename);
+
+    /**
+     * \brief Enable ascii trace output on the indicated net device.
+     *
+     * NetDevice-specific implementation mechanism for hooking the trace and
+     * writing to the trace file.
+     *
+     * \param stream The output stream object to use when logging ascii traces.
+     * \param prefix Filename prefix to use for ascii trace files.
+     * \param nd Net device for which you want to enable tracing.
+     * \param explicitFilename Treat the prefix as an explicit filename if true
+     */
+    //virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
+    //                                  std::string prefix,
+    //                                  Ptr<NetDevice> nd,
+    //                                  bool explicitFilename);
+    //void PcapSniffTxEvent ( Ptr<PcapFileWrapper> file, Ptr<const Packet> packet, uint16_t channelFreqMhz);
+    //void PcapSniffRxEvent (Ptr<PcapFileWrapper>  file, Ptr<const Packet> packet, uint16_t channelFreqMhz, float signalNoise);
+    //PcapHelper::DataLinkType m_pcapDlt = PcapHelper::DLT_LTE; ///< PCAP data link type
 
   /**
    * Configure the component carriers
