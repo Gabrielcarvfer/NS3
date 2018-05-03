@@ -862,13 +862,17 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
   {
     msg << "LteDataFrame" << std::endl;
   }
-  if (lteDlCtrlRxParams != 0)
+  else if (lteDlCtrlRxParams != 0)
   {
     msg << "LteDlCtrlFrame" << std::endl;
   }
-  if (lteUlSrsRxParams != 0)
+  else if (lteUlSrsRxParams != 0)
   {
     msg << "LteUlSrsFrame" << std::endl;
+  }
+  else
+  {
+      msg << "Non-LTE transmission detected" << std::endl;
   }
   Ptr<Packet> packet = Create<Packet>((const uint8_t *) msg.str().c_str(), msg.str().size()+1);
 

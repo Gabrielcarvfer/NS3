@@ -602,7 +602,7 @@ LteSpectrumPhy::StartTxUlSrsFrame ()
       txParams->txAntenna = m_antenna;
       txParams->psd = m_txPsd;
       txParams->cellId = m_cellId;
-      m_channel->StartTx (txParams);
+      m_channel->StartTx (txParams);//Transmit multiple times for a single package and mark to discard contents
       m_endTxEvent = Simulator::Schedule (UL_SRS_DURATION, &LteSpectrumPhy::EndTxUlSrs, this);
     }
     return false;
@@ -673,8 +673,10 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   //In the original behavior, the receiver only receives whatever it can receive (checked by the transmissor)
   if (spectrumRxParams->pathLossDb > spectrumRxParams->maxPathLossDb)
   {
+      // other type of signal (could be 3G, GSM, whatever) -> interference
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
+      return;
   }
 
 

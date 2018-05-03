@@ -37,7 +37,7 @@ int main()
     double distance = 60.0;
     double interPacketInterval = 25;
 
-
+    NodeContainer allNodes;
 
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
@@ -45,9 +45,48 @@ int main()
     lteHelper->SetEpcHelper (epcHelper);
     Ptr<Node> pgw = epcHelper->GetPgwNode ();
 
-    //2 Cria nó que representa "internet" (fonte/saída de tráfego externo)
     NodeContainer remoteHostContainer;
     remoteHostContainer.Create (1);
+    allNodes.Add(remoteHostContainer);
+    allNodes.Add(pgw);
+
+    NodeContainer ueNodes;
+    NodeContainer enbNodes;
+    enbNodes.Create(numberOfNodes);
+    ueNodes.Create(numberOfNodes);
+    allNodes.Add(enbNodes);
+    allNodes.Add(ueNodes);
+
+    NodeContainer spectrumAnalyzer;
+    spectrumAnalyzer.Create(1);
+    allNodes.Add(spectrumAnalyzer);
+
+    NodeContainer waveformGeneratorNodes;
+    waveformGeneratorNodes.Create(1);
+    allNodes.Add(waveformGeneratorNodes);
+
+
+
+
+    Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
+    positionAlloc->Add (Vector (  0.0,   0.0,  0.0));  // 0 - Remote Host
+    positionAlloc->Add (Vector ( 20.0,  20.0, 20.0));  // 1 - PGW
+    positionAlloc->Add (Vector (150.0,   0.0,  0.0));  // 2 - eNB 1
+    positionAlloc->Add (Vector (  0.0, 150.0,  0.0));  // 3 - eNB 2
+    positionAlloc->Add (Vector ( 75.0,  35.0,  0.0));  // 4 - UE 1
+    positionAlloc->Add (Vector (110.0,  89.0,  0.0));  // 5 - UE 2
+    positionAlloc->Add (Vector ( 75.0,  75.0,  0.0));  // 6 - Spectrum Analyzer
+    positionAlloc->Add (Vector ( 74.0,  36.0,  0.0));  // 7 - Microwave Oven
+    //positionAlloc->Add (Vector ( 74.0,  37.0,  0.0));  // 8 - Microwave Oven
+    //positionAlloc->Add (Vector (109.0,  90.0,  0.0));  // 9 - Microwave Oven
+
+    MobilityHelper mobility;
+    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    mobility.SetPositionAllocator(positionAlloc);
+    mobility.Install(allNodes);
+
+
+    //2 Cria nó que representa "internet" (fonte/saída de tráfego externo)
     Ptr<Node> remoteHost = remoteHostContainer.Get (0);
     InternetStackHelper internet;
     internet.Install (remoteHostContainer);
@@ -71,22 +110,9 @@ int main()
     Ptr<Ipv4StaticRouting> remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting (remoteHost->GetObject<Ipv4> ());
     remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
 
-    NodeContainer ueNodes;
-    NodeContainer enbNodes;
-    enbNodes.Create(numberOfNodes);
-    ueNodes.Create(numberOfNodes);
 
-    //5 Configura e instala modelo de mobilidade e posiciona elementos da rede
-    Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
-    for (uint16_t i = 0; i < numberOfNodes; i++)
-    {
-        positionAlloc->Add (Vector(distance * i, 0, 0));
-    }
-    MobilityHelper mobility;
-    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    mobility.SetPositionAllocator(positionAlloc);
-    mobility.Install(enbNodes);
-    mobility.Install(ueNodes);
+
+
 
     //6 Instala dispositivos LTE aos nós
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
@@ -195,85 +221,27 @@ int main()
     spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
     spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
 
-    NodeContainer spectrumAnalyzer;
-    spectrumAnalyzer.Create(1);
-
-
     NetDeviceContainer spectrumDevice;
-
-
     spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
 
-
 /**************************************************/
-/*
-    //11 Instala link P2P/CSMA entre eNodeBs e UEs
-    CsmaHelper csmaHelper;
+    Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 ();
 
-    NodeContainer csmaNodes;
-    csmaNodes.Add(enbNodes.Get(0));
-    csmaNodes.Add(ueNodes.Get(0));
+    WaveformGeneratorHelper waveformGeneratorHelper;
+    waveformGeneratorHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
+    waveformGeneratorHelper.SetTxPowerSpectralDensity (mwoPsd);
 
-    NetDeviceContainer p2pDevices;
-    p2pDevices = csmaHelper.Install(csmaNodes);
+    waveformGeneratorHelper.SetPhyAttribute ("Period", TimeValue (Seconds (1.0 / 60)));   // corresponds to 60 Hz
+    waveformGeneratorHelper.SetPhyAttribute ("DutyCycle", DoubleValue (0.5));
+    NetDeviceContainer waveformGeneratorDevices = waveformGeneratorHelper.Install (waveformGeneratorNodes);
 
-    //12 Cria nova rede e configura endereços da subrede (2.0.0.0)
-    ipv4h.NewNetwork();
-    ipv4h.SetBase ("2.0.0.0", "255.255.255.0");
-
-    Ipv4InterfaceContainer p2pIpIfaces;
-    p2pIpIfaces =  ipv4h.Assign(p2pDevices);
-
-    //13 Cria e instala aplicações dos UEs, que enviam dados do canal para os eNodeBs
-    ApplicationContainer csmaServer;
-    ApplicationContainer csmaClient;
-
-
-    //13.1 Instala aplicação no servidor
-    //UdpServerHelper serverHelper(80);
-    //csmaServer = serverHelper.Install(csmaNodes.Get(0));
-
-    //Ptr<CognitiveRadioServer> serv = CreateObject<CognitiveRadioServer> ();
-    //csmaServer.Add(serv);
-    //csmaNodes.Get(0)->AddApplication(serv);
-
-
-    //13.2 Instala aplicação no cliente
-
-    //13.2.1 Cria um socket para receber pacotes enquanto não tem uma aplicação dedicada para isso
-    PacketSinkHelper packetSinkHelper("ns3::UdpSocketFactory", Address(InetSocketAddress(Ipv4Address::GetAny(), 80)));
-    csmaClient.Add(packetSinkHelper.Install(csmaNodes.Get(1)));
-
-    //13.2.2 Instala aplicação customizada que envia mensagens
-
-    //13.2.3 Cria socket no nó do qual deseja enviar mensagens
-    Ptr<Socket> ns3UdpSocket = Socket::CreateSocket(csmaNodes.Get(1), UdpSocketFactory::GetTypeId());
-
-    //13.2.4 Instancia aplicação customizada
-    Ptr<CognitiveRadioClient> app = CreateObject<CognitiveRadioClient> ();
-
-    //13.2.5 Cria instância com endereço e porta do servidor
-    Address serverAddress (InetSocketAddress(Ipv4Address("2.0.0.1"),80));
-
-    //13.2.6 Configura aplicação customizada com informações desejadas
-    app->Setup(ns3UdpSocket, serverAddress, csmaNodes.Get(1));//nodes.Get(1)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal()
-
-    //13.2.7 Instala aplicação customizada no nó cliente
-    csmaNodes.Get(1)->AddApplication(app);
-    csmaClient.Add(app);
-
-
-    //13.3 Configura momento de início e fim das aplicações de clientes e servidores
-    csmaServer.Start(Seconds(0.1));
-    csmaClient.Start(Seconds(0.2));
-
-    csmaServer.Stop(Seconds(1));
-    csmaClient.Stop(Seconds(1));
-
-    //14 Habilita captura de tráfego P2P
-    csmaHelper.EnablePcapAll("csma");
-*/
+    Simulator::Schedule (Seconds (0.1), &WaveformGenerator::Start,
+                         waveformGeneratorDevices.Get (0)->GetObject<NonCommunicatingNetDevice> ()->GetPhy ()->GetObject<WaveformGenerator> ());
+    //Simulator::Schedule (Seconds (0.1), &WaveformGenerator::Start,
+    //                     waveformGeneratorDevices.Get (1)->GetObject<NonCommunicatingNetDevice> ()->GetPhy ()->GetObject<WaveformGenerator> ());
+    //Simulator::Schedule (Seconds (0.1), &WaveformGenerator::Start,
+    //                     waveformGeneratorDevices.Get (2)->GetObject<NonCommunicatingNetDevice> ()->GetPhy ()->GetObject<WaveformGenerator> ());
 
 /***************************************************/
 

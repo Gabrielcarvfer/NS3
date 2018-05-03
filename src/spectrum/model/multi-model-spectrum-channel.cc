@@ -246,6 +246,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
   NS_LOG_LOGIC ("converter map size: " << txInfoIteratorerator->second.m_spectrumConverterMap.size ());
   NS_LOG_LOGIC ("converter map first element: " << txInfoIteratorerator->second.m_spectrumConverterMap.begin ()->first);
 
+  int spectrumModelSize = m_rxSpectrumModelInfoMap.size();
   for (RxSpectrumModelInfoMap_t::const_iterator rxInfoIterator = m_rxSpectrumModelInfoMap.begin ();
        rxInfoIterator != m_rxSpectrumModelInfoMap.end ();
        ++rxInfoIterator)
@@ -264,13 +265,18 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           NS_LOG_LOGIC (" converting txPowerSpectrum SpectrumModelUids" << txSpectrumModelUid << " --> " << rxSpectrumModelUid);
           SpectrumConverterMap_t::const_iterator rxConverterIterator = txInfoIteratorerator->second.m_spectrumConverterMap.find (rxSpectrumModelUid);
           if (rxConverterIterator == txInfoIteratorerator->second.m_spectrumConverterMap.end ())
-            {
+          {
               // No converter means TX SpectrumModel is orthogonal to RX SpectrumModel
-              continue;
-            }
-          convertedTxPowerSpectrum = rxConverterIterator->second.Convert (txParams->psd);
+              //TODO: continue;
+              convertedTxPowerSpectrum = txParams->psd;
+          }
+          else
+          {
+              convertedTxPowerSpectrum = rxConverterIterator->second.Convert(txParams->psd);
+          }
         }
 
+      int rxPhySize = rxInfoIterator->second.m_rxPhySet.size();
 
       for (std::set<Ptr<SpectrumPhy> >::const_iterator rxPhyIterator = rxInfoIterator->second.m_rxPhySet.begin ();
            rxPhyIterator != rxInfoIterator->second.m_rxPhySet.end ();
