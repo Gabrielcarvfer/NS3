@@ -21,6 +21,7 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
+#include <cstdlib>
 #include "ap-wifi-mac.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -91,6 +92,10 @@ namespace ns3 {
                                BooleanValue(true),
                                MakeBooleanAccessor(&ApWifiMac::dynamicBeaconEnabled),
                                MakeBooleanChecker())
+                .AddAttribute ("DynamicBeaconAdjustment", "If set as true, trickle beacon interval is enabled. Otherwise, dynamic",
+                               BooleanValue(false),
+                               MakeBooleanAccessor(&ApWifiMac::trickleEnabled),
+                               MakeBooleanChecker())
                 .AddAttribute ("ScanInterval", "Interval between motility scans (ms)",
                                UintegerValue(10),
                                MakeUintegerAccessor(&ApWifiMac::scan_interval),
@@ -113,6 +118,10 @@ namespace ns3 {
         m_beaconDca->SetMaxCw (0);
         m_beaconDca->SetLow (m_low);
         m_low->SetRegisterSampleCallback(MakeCallback(&ApWifiMac::RegisterSample, this));
+        if (!trickleEnabled)
+            beaconAdjustType = DYNAMIC_BEACON;
+        else
+            beaconAdjustType = TRICKLE_BEACON;
         scan_interval = 10;
         m_low->ap = true;
         average_sta_distance_deviation = 0.0;
@@ -122,6 +131,9 @@ namespace ns3 {
 
         m_beaconDca->SetManager (m_dcfManager);
         m_beaconDca->SetTxMiddle (m_txMiddle);
+        if (dynamicBeaconEnabled && beaconAdjustType == TRICKLE_BEACON)
+            m_TrickleIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Trickle, this);
+
         //samples = std::map<Mac48Address, STA_samples>();
 
         //Let the lower layers know that we are acting as an AP.
@@ -137,6 +149,7 @@ namespace ns3 {
         m_staAtRange.clear();
         samples.clear();
         Simulator::Cancel(m_motilityIntervalEvent);
+        Simulator::Cancel(m_TrickleIntervalEvent);
         Simulator::Cancel(m_beaconEvent);
 
 
@@ -811,8 +824,22 @@ namespace ns3 {
         if (dynamicBeaconEnabled)
         {
             m_activeNetwork = false;
-            double tempInterval = m_beaconInterval.GetInteger() * 2;
-            m_beaconInterval = tempInterval < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInterval) : m_maxBeaconInterval;
+
+            switch (beaconAdjustType)
+            {
+                case (DYNAMIC_BEACON):
+                    {
+                        double tempInt = m_beaconInterval.GetInteger() * 2;
+                        m_beaconInterval =
+                            tempInt < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInt) : m_maxBeaconInterval;
+
+                    }
+                    break;
+                case (TRICKLE_BEACON):
+                    break;
+                default:
+                    break;
+            }
         }
         m_beaconEvent = Simulator::Schedule(m_beaconInterval, &ApWifiMac::SendOneBeacon, this);
 
@@ -1220,7 +1247,9 @@ namespace ns3 {
         RegularWifiMac::DoInitialize();
         if (dynamicBeaconEnabled)
         {
+
             m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility, this);
+
         }
 
     }
@@ -1312,8 +1341,10 @@ namespace ns3 {
         standardDeviation = sqrt(standardDeviation / samples.size());
         return standardDeviation;
     }
+
     bool ApWifiMac::Motility()
     {
+        Time scan_interval_time = MilliSeconds(scan_interval);
         m_motilityIntervalEvent = Simulator::Schedule(MilliSeconds(scan_interval), &ApWifiMac::Motility, this);
 
         //Skip execution if there are no collected samples
@@ -1464,12 +1495,50 @@ namespace ns3 {
             m_beaconInterval = m_beaconInterval > m_minBeaconInterval ? m_beaconInterval : m_minBeaconInterval;
 
             //Cancel previous beacon and register new one
-            Time t = Simulator::GetDelayLeft(m_beaconEvent);
-            Simulator::Cancel(m_beaconEvent);
-            m_beaconEvent = Simulator::Schedule(m_beaconInterval.GetInteger() < t.GetInteger()?
-                    m_beaconInterval : t, &ApWifiMac::SendOneBeacon, this);
-        }
+            switch(beaconAdjustType)
+            {
+                case (DYNAMIC_BEACON):
+                    {
+                        Time t = Simulator::GetDelayLeft(m_beaconEvent);
+                        Simulator::Cancel(m_beaconEvent);
+                        m_beaconEvent = Simulator::Schedule(m_beaconInterval.GetInteger() < t.GetInteger() ?
+                                                        m_beaconInterval : t, &ApWifiMac::SendOneBeacon, this);
+                    }
+                    break;
+                case (TRICKLE_BEACON):
+                    {
+                        Time t = Simulator::GetDelayLeft(m_TrickleIntervalEvent);
 
+                        if ((t.GetInteger() - m_trickleBeaconInterval/2) >= 0)
+                        {
+                            Trickle();
+                            Simulator::Cancel(m_beaconEvent);
+                            m_beaconEvent = Simulator::Schedule(m_beaconInterval.GetInteger() < t.GetInteger() ?
+                                                                m_beaconInterval : t, &ApWifiMac::SendOneBeacon, this);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    bool ApWifiMac::Trickle()
+    {
+        if (!m_activeNetwork)
+        {
+            long int tempInt = m_beaconInterval.GetInteger() * 2;
+            m_beaconInterval = tempInt < m_maxBeaconInterval.GetInteger() ? NanoSeconds(tempInt) : m_maxBeaconInterval;
+        }
+        else
+        {
+            m_beaconInterval =  m_minBeaconInterval;
+        }
+        m_trickleBeaconInterval = m_beaconInterval;
+        Simulator::Cancel(m_TrickleIntervalEvent);
+        m_TrickleIntervalEvent = Simulator::Schedule(
+                NanoSeconds(m_beaconInterval.GetInteger() / 2 + (rand() % (m_beaconInterval.GetInteger() / 2))),
+                &ApWifiMac::Trickle,
+                this);
 
     }
 

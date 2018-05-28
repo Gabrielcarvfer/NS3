@@ -2,6 +2,7 @@
 // Created by gabriel on 12/6/17.
 //
 
+#include <random>
 #include "shared.h"
 
 
@@ -60,6 +61,32 @@ void setup_mobility(NodeContainer * nodes, std::string mobilityModel, double x, 
     mobility.SetMobilityModel(mobilityModel);
     mobility.Install(*nodes);
 }
+
+
+void setup_mobility2(NodeContainer * nodes, std::string mobilityModel, double x, double y, double z, double radius)
+{
+    MobilityHelper mobility;
+
+    Ptr<RandomBoxPositionAllocator> randomPositionAlloc = CreateObject<RandomBoxPositionAllocator> ();
+    Ptr<UniformRandomVariable> xVal = CreateObject<UniformRandomVariable> ();
+    xVal->SetAttribute ("Min", DoubleValue (x-radius));
+    xVal->SetAttribute ("Max", DoubleValue (x+radius));
+    Ptr<UniformRandomVariable> yVal = CreateObject<UniformRandomVariable> ();
+    yVal->SetAttribute ("Min", DoubleValue (y-radius));
+    yVal->SetAttribute ("Max", DoubleValue (y+radius));
+    Ptr<UniformRandomVariable> zVal = CreateObject<UniformRandomVariable> ();
+    zVal->SetAttribute ("Min", DoubleValue (z));
+    zVal->SetAttribute ("Max", DoubleValue (z));
+
+    mobility.SetPositionAllocator("ns3::RandomBoxPositionAllocator",
+                                  "X", PointerValue (xVal),
+                                  "Y", PointerValue (yVal),
+                                  "Z", PointerValue (zVal)
+                                  );
+    mobility.SetMobilityModel(mobilityModel);
+    mobility.Install(*nodes);
+}
+
 
 void setup_print_position_and_battery()
 {

@@ -2,6 +2,7 @@
 // #1 sends UDP echo mesg to the AP; AP sends a UDP response back to the node
 // Communication is possible only when the station is within a certain distance from the AP
 
+#include <random>
 #include "shared.h"
 
 using namespace ns3;

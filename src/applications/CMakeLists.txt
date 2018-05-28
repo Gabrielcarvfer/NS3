@@ -12,6 +12,8 @@ set(source_files
         model/udp-trace-client.cc
         model/packet-loss-counter.cc
         model/udp-echo-client.cc
+        model/udp-echo-client2.cc
+
         model/udp-echo-server.cc
         model/application-packet-probe.cc
         helper/bulk-send-helper.cc
@@ -31,6 +33,8 @@ set(header_files
         model/udp-trace-client.h
         model/packet-loss-counter.h
         model/udp-echo-client.h
+        model/udp-echo-client2.h
+
         model/udp-echo-server.h
         model/application-packet-probe.h
         helper/bulk-send-helper.h
@@ -38,6 +42,7 @@ set(header_files
         helper/packet-sink-helper.h
         helper/udp-client-server-helper.h
         helper/udp-echo-helper.h
+
         )
 
 #link to dependencies

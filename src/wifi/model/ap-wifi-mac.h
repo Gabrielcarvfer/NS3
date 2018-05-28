@@ -354,6 +354,7 @@ private:
 
     //Stuff for network motility
     bool Motility();
+    bool Trickle();
     bool moved;
     uint scan_interval;
     EventId m_motilityIntervalEvent;
@@ -386,7 +387,14 @@ private:
     void RegisterSample(Mac48Address from, double rssi, double txpower, Time timestamp);
         bool dynamicBeaconEnabled;
         double interest_radius;
-};
+    typedef enum {DYNAMIC_BEACON, TRICKLE_BEACON} beaconAdjustType_e;
+    beaconAdjustType_e beaconAdjustType;
+    EventId m_TrickleIntervalEvent;
+    Time m_trickleBeaconInterval;
+    bool trickleEnabled;
+
+
+    };
 
 } //namespace ns3
 

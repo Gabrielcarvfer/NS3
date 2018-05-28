@@ -19,6 +19,7 @@ option(NS3_TESTS "Enable tests to be built" OFF)
 option(NS3_EXAMPLES "Enable examples to be built" ON)
 set(NS3_EXAMPLES ON)
 option(NS3_DEBUG "Build NS3-lib in debug mode" ON)
+set(NS3_DEBUG OFF)
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
 
@@ -41,7 +42,7 @@ option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 
 option(NS3_TAP "Build with Tap support" OFF)
 
-option(NS3_EMU "Build with emu support" ON)
+option(NS3_EMU "Build with emu support" TRUE)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 
