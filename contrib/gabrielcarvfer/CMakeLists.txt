@@ -9,6 +9,7 @@ set(contribution_lib_components
 set(examples
         dynamic_beacon
         dynamic_beacon2
+        dynamic_beacon3
         )
 
 foreach(example ${examples})
@@ -21,6 +22,8 @@ foreach(example ${examples})
             ${libinternet}
             ${libinternet-applications}
             ${libnetanim}
+            ${libcore}
+            ${libnetwork}
             ${ns3-libs}
             )
 

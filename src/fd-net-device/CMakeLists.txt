@@ -18,19 +18,21 @@ endif()
 
 
 
-if(${NS3_EMU} AND ${EMU_FOUND})
-    set(emu_sources
-            helper/emu-fd-net-device-helper.cc
-            )
-    set(emu_headers
-            helper/emu-fd-net-device-helper.h
-            )
-    add_executable(raw-sock-creator
-            helper/raw-sock-creator.cc
-            helper/encode-decode.cc
-            helper/creator-utils.cc
-            )
-    target_link_libraries(raw-sock-creator ${libfd-net-device} ${EMU_LIBRARIES})
+if(${NS3_EMU})
+    if(${EMU_FOUND})
+        set(emu_sources
+                helper/emu-fd-net-device-helper.cc
+                )
+        set(emu_headers
+                helper/emu-fd-net-device-helper.h
+                )
+        add_executable(raw-sock-creator
+                helper/raw-sock-creator.cc
+                helper/encode-decode.cc
+                helper/creator-utils.cc
+                )
+        target_link_libraries(raw-sock-creator ${libfd-net-device} ${EMU_LIBRARIES})
+    endif()
 endif()
 
 if(${PLANETLAB_FOUND})

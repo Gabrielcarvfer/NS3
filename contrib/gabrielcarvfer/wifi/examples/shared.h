@@ -46,7 +46,7 @@ PrintCellInfo (EnergySourceContainer esCon, ApplicationContainer *clientApps);
 
 double watthToJoule(double watth);
 
-bool enable_log();
+void enable_log();
 
 void setup_mobility(NodeContainer * nodes, std::string mobilityModel, double x, double y, double maxRho);
 void setup_mobility2(NodeContainer * nodes, std::string mobilityModel, double x, double y, double z, double radius);

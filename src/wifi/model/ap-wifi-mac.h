@@ -39,6 +39,7 @@ namespace ns3 {
     class distance_sample{
     public:
         distance_sample(double rssi, double txpower, Time timestamp);
+        ~distance_sample();
         double distance;
         Time timestamp;
     };
@@ -48,6 +49,7 @@ namespace ns3 {
     public:
         explicit distance_registry(distance_samples_list * distance_samples);
         distance_registry(double average_distance, double standard_deviation, Time measurement_interval);
+        ~distance_registry();
         double average_distance;
         double standard_deviation;
         Time measurement_interval;

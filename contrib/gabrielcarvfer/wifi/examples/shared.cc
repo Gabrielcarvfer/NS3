@@ -39,13 +39,14 @@ double watthToJoule(double watth)
     return watth*3600;
 }
 
-bool enable_log()
+void enable_log()
 {
     //LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_ALL);
     //LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_ALL);
     //LogComponentEnable("LiIonEnergySource", LOG_LEVEL_DEBUG);
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
     //LogComponentEnable("YansWifiPhy", LOG_LEVEL_ALL);
+
 }
 
 void setup_mobility(NodeContainer * nodes, std::string mobilityModel, double x, double y, double maxRho)

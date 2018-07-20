@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
 
     unsigned sim_id = 0, nDevicesPerAp = 5, nDevicesMovingPerAp = 2, nLevels = 1, nAPs = 10, simulationDuration = 600;
-    bool g_verbose = true, trace = false, enableDynamicBeacon = true, trickleEnabled = true;
+    bool g_verbose = true, trace = false, enableDynamicBeacon = false, trickleEnabled = true;
     double distanceBetweenAPs = 5.0, buildingHeight = 3.0;
     double startApplication = 1.0, endApplication = 20.0;
     double movingSTAxSpeed = 0.3, movingSTAySpeed = 0.3;
@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
                 "ScanInterval", UintegerValue(scanInterval),
                 "InterestRadius", DoubleValue(interestRadius)
                 );
+
     NetDeviceContainer apDevices;
     apDevices = wifi.Install(phy, mac, wifiApNodes);
 
@@ -269,7 +270,7 @@ int main(int argc, char *argv[])
 // 8b. Create and setup applications (traffic source)
 
 
-    std::uniform_real_distribution<double> unif(0.0,50.0);
+    std::normal_distribution<double> unif(packetInterval,packetInterval/4);
     std::default_random_engine re;
 
     ApplicationContainer clientApps;
@@ -312,10 +313,10 @@ int main(int argc, char *argv[])
     //wifi.EnableLogComponents();
     //stack.EnablePcapIpv4("wif-ap2-ap", wifiApNodes);
     //stack.EnablePcapIpv4("wif-ap2-sta", wifiStaNodes);
-    setup_print_position_and_battery();
+    //setup_print_position_and_battery();
 
 //10. Configure animation
-   //AnimationInterface anim = AnimationInterface(outputFolder+pcap_filename.str()+"_anim.xml");
+    //AnimationInterface anim = AnimationInterface(outputFolder+pcap_filename.str()+"_anim.xml");
 
     //setup_netanim(simulationDuration, &wifiApNodes, &anim);
 

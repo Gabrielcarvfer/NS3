@@ -110,7 +110,6 @@ set(source_files
         model/tdtbfq-ff-mac-scheduler.cc
         model/trace-fading-loss-model.cc
         model/tta-ff-mac-scheduler.cc
-        helper/emu-epc-helper.cc
         helper/epc-helper.cc
         helper/lte-global-pathloss-database.cc
         helper/lte-helper.cc
@@ -237,7 +236,6 @@ set(header_files
         model/tdtbfq-ff-mac-scheduler.h
         model/trace-fading-loss-model.h
         model/tta-ff-mac-scheduler.h
-        helper/emu-epc-helper.h
         helper/epc-helper.h
         helper/lte-global-pathloss-database.h
         helper/lte-helper.h

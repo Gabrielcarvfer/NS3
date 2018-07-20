@@ -42,7 +42,7 @@ option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 
 option(NS3_TAP "Build with Tap support" OFF)
 
-option(NS3_EMU "Build with emu support" TRUE)
+option(NS3_EMU "Build with emu support" OFF)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 

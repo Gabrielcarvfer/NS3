@@ -12,7 +12,7 @@ NETANIM_VARS;
 int main(int argc, char *argv[])
 {
     int sim_id = 0, nDevices = 10, nMovingDevices = 1, nAPs = 2, simulationDuration = 20;
-    bool g_verbose = true, trace = false, enableDynamicBeacon = false;
+    bool g_verbose = true, trace = false, enableDynamicBeacon = false, trickleEnabled = false, uniform_dist = true;
     double startApplication = 1.0, endApplication = 20.0;
     double movingSTAxSpeed = 15.0, movingSTAySpeed = 15.0;
     double beaconInterval = 0.1,  maxAPDeviceRadius = 100.0, interestRadius = 0.85;
@@ -20,13 +20,8 @@ int main(int argc, char *argv[])
     double maxBeaconInterval = 6.4, minBeaconInterval = 0.1, apMaxRange = 120.0, distanceBetweenAPs = 80.0;
     unsigned maxpackets = 4294967295, packetSize = 1024;
     uint64_t packetInterval = 100;
-    std::string outputFolder = "output/";
+    std::string outputFolder = "output";
 
-#ifdef WIN32
-    CreateDirectory(outputFolder, NULL);
-#else
-    mkdir(outputFolder.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
 
     CommandLine cmd;
     //Number of devices configuration
@@ -49,6 +44,7 @@ int main(int argc, char *argv[])
     //Beaconing parameters
     cmd.AddValue ("enableDynamicBeacon", "Enable the beacon interval to be dynamically adjusted", enableDynamicBeacon);
     cmd.AddValue ("beaconInterval", "Beacon interval in seconds", beaconInterval);
+    cmd.AddValue ("trickleEnabled", "If true, trickle interval is inabled. Otherwise, dynamic adjustment", trickleEnabled);
     cmd.AddValue ("maxBeaconInterval", "Max beacon interval in seconds", maxBeaconInterval);
     cmd.AddValue ("minBeaconInterval", "Min beacon interval in seconds", minBeaconInterval);
     cmd.AddValue ("scanInterval", "Interval checked for changes in network in ms", scanInterval);
@@ -61,6 +57,7 @@ int main(int argc, char *argv[])
     cmd.AddValue ("distanceBetweenAPs", "Average distance between APs", distanceBetweenAPs);
 
     //Interval between packets transmission and size of packets
+    cmd.AddValue ("uniform_dist", "Distribution is uniform(true) or normal(false)", uniform_dist);
     cmd.AddValue ("packetInterval", "Packet interval between transmissions", packetInterval);
     cmd.AddValue ("packetSize", "Size of packages to be sent", packetSize);
 
@@ -70,6 +67,13 @@ int main(int argc, char *argv[])
     cmd.AddValue ("trace", "Enable pcap tracing", trace);
     cmd.Parse(argc, argv);
 
+    std::stringstream outputFolderID;
+    outputFolderID << outputFolder << sim_id;
+#ifdef WIN32
+    CreateDirectory(outputFolderID.str().c_str(), NULL);
+#else
+    mkdir(outputFolderID.str().c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
     if (g_verbose)
     {
         enable_log();
@@ -90,7 +94,8 @@ int main(int argc, char *argv[])
     phy.SetChannel(channel.Create());
     
     WifiHelper wifi;
-    wifi.SetRemoteStationManager("ns3::AarfWifiManager");
+    wifi.SetStandard(WIFI_PHY_STANDARD_80211n_2_4GHZ);
+    wifi.SetRemoteStationManager("ns3::IdealWifiManager");
     NqosWifiMacHelper mac = NqosWifiMacHelper::Default();
 
 // 3. Set up MAC
@@ -113,6 +118,7 @@ int main(int argc, char *argv[])
                 "MaxBeaconInterval", TimeValue(Seconds(maxBeaconInterval)),
                 "MinBeaconInterval", TimeValue(Seconds(minBeaconInterval)),
                 "EnableDynamicBeacon", BooleanValue(enableDynamicBeacon),
+                "DynamicBeaconAdjustment", BooleanValue(trickleEnabled),
                 "ScanInterval", UintegerValue(scanInterval),
                 "InterestRadius", DoubleValue(interestRadius)
                 );
@@ -214,15 +220,29 @@ int main(int argc, char *argv[])
     echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(packetInterval)));
     echoClient.SetAttribute("PacketSize", UintegerValue(packetSize));
 
-    std::uniform_real_distribution<double> unif(0.0,1.0);
-    std::default_random_engine re;
-
     ApplicationContainer clientApps = echoClient.Install(wifiStaticStaNodes);
-    for (unsigned i = 0; i < wifiStaticStaNodes.GetN();i++)
+
+    if (uniform_dist)
     {
-        clientApps.Add(echoClient.Install(wifiStaticStaNodes.Get(i)));
-        clientApps.Get(i)->SetAttribute("Interval",TimeValue(Seconds(packetInterval+unif(re))));
+        std::uniform_real_distribution<double> unif(0.0, 1.0);
+        std::default_random_engine re;
+        for (unsigned i = 0; i < wifiStaticStaNodes.GetN();i++)
+        {
+            clientApps.Add(echoClient.Install(wifiStaticStaNodes.Get(i)));
+            clientApps.Get(i)->SetAttribute("Interval",TimeValue(Seconds(packetInterval+unif(re))));
+        }
     }
+    else
+    {
+        std::normal_distribution<double> unif(packetInterval,packetInterval/4);
+        std::default_random_engine re;
+        for (unsigned i = 0; i < wifiStaticStaNodes.GetN();i++)
+        {
+            clientApps.Add(echoClient.Install(wifiStaticStaNodes.Get(i)));
+            clientApps.Get(i)->SetAttribute("Interval",TimeValue(Seconds(packetInterval+unif(re))));
+        }
+    }
+
 
     clientApps.Start(Seconds(startApplication));
     clientApps.Stop(Seconds(endApplication));
@@ -239,7 +259,7 @@ int main(int argc, char *argv[])
     //pcap_filename << "_beaconInterval-"<<(int)(beaconInterval)<<"s";
     //pcap_filename << "_packetInterval-"<<(int)(packetInterval)<<"s";
     //pcap_filename << "_packetSize-"<< packetSize<<"KB";
-    phy.EnablePcap (outputFolder+pcap_filename.str(), wifiApNodes, true);
+    phy.EnablePcap (outputFolderID.str()+"/"+pcap_filename.str(), wifiApNodes, true);
 
     //wifi.EnableLogComponents();
     //stack.EnablePcapIpv4("wif-ap2-ap", wifiApNodes);
@@ -247,9 +267,9 @@ int main(int argc, char *argv[])
     setup_print_position_and_battery();
 
 //10. Configure animation
-    AnimationInterface anim = AnimationInterface(outputFolder+pcap_filename.str()+"_anim.xml");
+    //AnimationInterface anim = AnimationInterface(outputFolderID.str()+"/"+pcap_filename.str()+"_anim.xml");
 
-    setup_netanim(simulationDuration, &wifiApNodes, &anim);
+    //setup_netanim(simulationDuration, &wifiApNodes, &anim);
 
 //11. Run and destroy simulation
     Simulator::Stop(Seconds(simulationDuration));
