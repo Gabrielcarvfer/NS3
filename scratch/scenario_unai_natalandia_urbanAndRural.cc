@@ -85,10 +85,12 @@ int main()
     Ptr<Node> pgw = epcHelper->GetPgwNode ();
     allNodes.Add(pgw);
 
+    //2 Cria nó remoto
     NodeContainer remoteHostContainer;
     remoteHostContainer.Create (1);
     allNodes.Add(remoteHostContainer);
 
+    //3 Cria eNodeBs e UEs
     NodeContainer ueNodes;
     NodeContainer enbNodes;
     enbNodes.Create(1); // Macro cell
@@ -100,99 +102,84 @@ int main()
 // Unaí         50000, 50000, 0
 // Natalândia   66000, 94000, 0
 
+    //4 Aloca posições dos dispositivos
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
-    positionAlloc->Add (Vector (    0.0,     0.0,  0.0));  // 0 - Remote Host
-    positionAlloc->Add (Vector (   10.0,     0.0,  0.0));  // 1 - PGW
-    positionAlloc->Add (Vector (50000.0, 50000.0,  0.0));  // 2 - eNB 1
-    //positionAlloc->Add (Vector (  0.0, 150.0,  0.0));  // 3 - eNB 2
-    positionAlloc->Add (Vector (66000.0, 94000.0,  0.0));  // 4 - UE 1
-    //positionAlloc->Add (Vector (110.0,  89.0,  0.0));  // 5 - UE 2
+    positionAlloc->Add (Vector (   10.0,     0.0,  0.0));  // 0 - PGw
+    positionAlloc->Add (Vector (    0.0,     0.0,  0.0));  // 1 - Internet
+    positionAlloc->Add (Vector (50000.0, 50000.0,  0.0));  // 2 - eNB
+    positionAlloc->Add (Vector (66000.0, 94000.0,  0.0));  // 3 - UE
 
+    //5 Instala mobilidade dos dispositivos (parados)
     MobilityHelper mobility;
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.SetPositionAllocator(positionAlloc);
     mobility.Install(allNodes);
 
 
-    //2 Cria nó que representa "internet" (fonte/saída de tráfego externo)
+    //6 Instala pilha IP no nó que representa "internet" (fonte/saída de tráfego externo)
     Ptr<Node> remoteHost = remoteHostContainer.Get (0);
     InternetStackHelper internet;
     internet.Install (remoteHostContainer);
 
-    //2 Cria internet ligando nó externo ao PGW
+    //7 Cria "internet" ligando nó externo ao PGW
     PointToPointHelper p2ph;
     p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
     p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
     p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.010)));
     NetDeviceContainer internetDevices = p2ph.Install (pgw, remoteHost);
 
-    //3 Configura endereço do PGW e nó externo (subrede 1.0.0.0/8)
+    //8 Configura endereço do PGW e nó externo (subrede 1.0.0.0/8)
     Ipv4AddressHelper ipv4h;
     ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
     Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
 
-    // interface 0 is localhost, 1 is the p2p device
+    // interface 0 is localhost/loopback, 1 is the p2p device
     Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
-    //std::cout << "IP " << remoteHostAddr << std::endl;
 
-    //4 Configura roteamento estático entre IP interno e externo do PGW (7.0.0.0 e 1.0.0.0)
+    //9 Configura roteamento estático entre IP interno e externo do PGW (7.0.0.0 e 1.0.0.0)
+    //      Permitindo que nós externos (internet) consigam mandar pacotes para UEs
     Ipv4StaticRoutingHelper ipv4RoutingHelper;
     Ptr<Ipv4StaticRouting> remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting (remoteHost->GetObject<Ipv4> ());
     remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ( "7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
-    //remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("10.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
-
-
-    //Ptr<Ipv4StaticRouting> pgwStaticRouting = ipv4RoutingHelper.GetStaticRouting(pgw->GetObject<Ipv4>());
-    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address( "1.0.0.0"),Ipv4Mask("255.0.0.0"),0);
-    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address( "7.0.0.0"),Ipv4Mask("255.0.0.0"),1);
-    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address("10.0.0.0"),Ipv4Mask("255.0.0.0"),3);
 
 
 
-
-    //6 Instala dispositivos LTE aos nós
-
-    // use 0dB Pathloss, since we are testing only the antenna gain
+    //10 Configura antena e modelo de atenuação LTE, de maneira picareteada para garantir alcance absurdo
     lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::ConstantSpectrumPropagationLossModel"));
     lteHelper->SetPathlossModelAttribute ("Loss", DoubleValue (0.0));
-
     lteHelper->SetEnbAntennaModelType ("ns3::CosineAntennaModel");
     lteHelper->SetEnbAntennaModelAttribute ("Orientation", DoubleValue (0.0));
     lteHelper->SetEnbAntennaModelAttribute ("Beamwidth",   DoubleValue (35.0));
     lteHelper->SetEnbAntennaModelAttribute ("MaxGain",     DoubleValue (400.0));
 
+    //11 Instala eNodeB e UE
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
     NetDeviceContainer ueLteDevs = lteHelper->InstallUeDevice (ueNodes);
 
-    //Ptr<AntennaModel> enbAntenna = enbLteDevs.Get(0)->GetObject<std::map<uint8_t, Ptr<ComponentCarrierEnb>>->second->GetObject<LteEnbPhy>()->GetDlSpectrumPhy()->GetRxAntenna();
 
-
-    //7 Instala pilha IP nos UE
+    //12 Instala pilha IP nos UE e dá endereços controlados pelo EPC
     internet.Install (ueNodes);
     Ipv4InterfaceContainer ueIpIface;
     ueIpIface = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
 
-    //Ptr<Ipv4StaticRouting> enbStaticRouting = ipv4RoutingHelper.GetStaticRouting (enbNodes.Get(0)->GetObject<Ipv4> ());
-    //enbStaticRouting->AddNetworkRouteTo (Ipv4Address("7.0.0.0"),Ipv4Mask("255.0.0.0"),1);
-
-    //8 Configura endereço IP dos UEs e instala aplicações
+    //13 Modifica UEs para adicionar o gateway correspondendo ao EPC
+    // (conexão entre UE/eNB é feita através de uma aplicação e tunelamento GPRS)
     for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
     {
         Ptr<Node> ueNode = ueNodes.Get (u);
-        // Set the default gateway for the UE
         Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNode->GetObject<Ipv4> ());
         ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
     }
 
-    //9 Associa UE ao eNodeB
+    //14 Associa UE ao eNodeB
     lteHelper->Attach (ueLteDevs.Get(0), enbLteDevs.Get(0));
 
-    //10 Cria nós wifi
+    //15 Cria nós wifi (futuramente receberão interface AP e STA)
     NodeContainer wifiStaNodes, wifiApNodes;
     wifiApNodes.Add(ueNodes);
-
     wifiStaNodes.Create(10);
 
+    //16 Posiciona AP e STAs ao redor
     positionAlloc->Add (Vector (66000.0, 94000.0,  0.0));
 
     for (unsigned sta = 0; sta < 10; sta++)
@@ -202,7 +189,7 @@ int main()
         setup_mobility2(&nc, "ns3::ConstantPositionMobilityModel", 66000.0,  94000.0, 0.0, 998.0);
     }
 
-// 2. Create channel for communication
+    //17 Cria canal Wi-Fi para roubar no alcance
     SpectrumChannelHelper channel = SpectrumChannelHelper::Default();
     SpectrumWifiPhyHelper phy = SpectrumWifiPhyHelper::Default();
 
@@ -215,8 +202,7 @@ int main()
 
     NqosWifiMacHelper mac = NqosWifiMacHelper::Default();
 
-// 3. Set up MAC
-// 3a. Set up MAC for base stations
+    //18 Instala interface wifi das STAs
     Ssid ssid = Ssid("ns-3-ssid");
     mac.SetType("ns3::StaWifiMac",
                 "Ssid", SsidValue(ssid),
@@ -225,7 +211,7 @@ int main()
 
     staDevices = wifi.Install(phy, mac, wifiStaNodes);
 
-// 3b. Set up MAC for AP
+    //19 Instala interface wifi das STAs
     mac.SetType("ns3::ApWifiMac",
                 "Ssid", SsidValue(ssid),
                 "BeaconGeneration", BooleanValue(true),
@@ -233,61 +219,46 @@ int main()
     NetDeviceContainer apDevices;
     apDevices = wifi.Install(phy, mac, wifiApNodes);
 
+    //20 Instala pilha IP nas STAs (AP/UE já tem pilha instalada)
     InternetStackHelper stack;
     stack.Install(wifiStaNodes);
 
+    //21 Adiciona todos nós wifi num container
     NetDeviceContainer wifiDevices;
     wifiDevices.Add(apDevices);
     wifiDevices.Add(staDevices);
 
+    //22 Recebe endereços IP registrados no EPC
     Ipv4InterfaceContainer wifiInterfaces = epcHelper->AssignUeIpv4Address (wifiDevices);
 
-    Ptr<Node> ApNode = wifiApNodes.Get (0);
-
-    // Set the default gateway for the UE
+    //23 Configura roteamento da interface UE para interface AP
     Ptr<Ipv4StaticRouting> apStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get(0)->GetObject<Ipv4>());
-    //apStaticRouting->AddNetworkRouteTo("10.0.0.0", "255.0.0.0", 1);
-    //apStaticRouting->AddNetworkRouteTo(" 7.0.0.0", "255.0.0.0", 2);
-    //std::cout << "Gateway AP-UE " << ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal()<<std::endl;
-    //apStaticRouting->SetDefaultRoute(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),2);
     apStaticRouting->AddNetworkRouteTo("7.0.0.0", Ipv4Mask("255.255.255.252"),2);
-    //apStaticRouting->AddNetworkRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
-    //                                    Ipv4Mask("255.255.255.253"), 2);
-    //for (int i = 0; i < 2; i++)
-    //    std::cout << "Enb IP " << enbNodes.Get(0)->GetObject<Ipv4>()->GetAddress(i,0).GetLocal()<<std::endl;
-    //Ptr<Ipv4StaticRouting> enbStaticRouting = ipv4RoutingHelper.GetStaticRouting (enbNodes.Get(0)->GetObject<Ipv4>());
 
-    //enbStaticRouting->AddNetworkRouteTo(enbNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),
-    //                                    Ipv4Mask("255.0.0.0"),
-    //                                    0);
-
+    //24 Recupera ponteiro da aplicação de tunelamento para registro (um gato tão grande quando um Liger)
     Ptr<EpcSgwPgwApplication> sgwpgwapp = pgw->GetApplication(0)->GetObject<EpcSgwPgwApplication>();
-    //8 Configura endereço IP dos UEs e instala aplicações
+
+    //25 Configura gateway dos UEs e registra no EPC e aplicação de tunelamento GPRS
     for (uint32_t u = 0; u < wifiStaNodes.GetN (); ++u)
     {
         Ptr<Node> staNode = wifiStaNodes.Get (u);
-        // Set the default gateway for the UE
         Ptr<Ipv4StaticRouting> staStaticRouting = ipv4RoutingHelper.GetStaticRouting (staNode->GetObject<Ipv4> ());
         staStaticRouting->SetDefaultRoute (ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(), 1);
 
+        // Registra "UEs" falsas (estações WiFi que recebem conexão do AP wifi que é uma UE ligada ao eNodeB)
         epcHelper->AddUe(staDevices.Get(u), 310150123450000+u);
-        sgwpgwapp->SetUeAddress(310150123450000+u, staNode->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal());
+        sgwpgwapp->SetUeAddress(310150123450000+u,
+                staNode->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
+                ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal());
     }
 
-
-    //10 Configura, instala e inicia aplicações em APs e servidor remoto
+    // 26 Configura e instala aplicações
     uint16_t serverPort = 9;
 
-    // 8a. Create and setup applications (traffic sink)
-    UdpEchoServerHelper echoServer(serverPort); // Port # 9
+    UdpEchoServerHelper echoServer(serverPort); // Porta #9
     ApplicationContainer serverApps = echoServer.Install(remoteHost);
 
-
-    UdpEchoServerHelper echoServer1(2152); // GPRS port
-    serverApps.Add(echoServer1.Install(remoteHost));
-
     serverApps.Start(Seconds(0.5));
-
 
     UdpEchoClientHelper echoClient(remoteHost->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(10000));
@@ -298,14 +269,13 @@ int main()
     clientApps.Add(echoClient.Install(wifiStaNodes));
     clientApps.Start (Seconds (0.7));
 
+    //27 Coleta traces LTE, WiFi e P2P
     lteHelper->EnableTraces ();
     phy.EnablePcapAll ("natalandia", true);
     p2ph.EnablePcapAll("natalandia_p2p", true);
 
-    //Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
-
-    //Exportar animação para o Netanim
+    //28 Exportar animação para o Netanim
     BaseStationNetDevice b;
     SubscriberStationNetDevice s;
     CsmaNetDevice c;
@@ -315,6 +285,7 @@ int main()
     anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(true);
 
+    //29 Troca nomes, cores e tamanho das bolinhas na animação
     anim.UpdateNodeDescription (pgw, "PGW"); // Optional
     anim.UpdateNodeColor (pgw, 0, 255, 0); // Optional
     anim.UpdateNodeSize(pgw->GetId(), 100, 100);
@@ -347,18 +318,23 @@ int main()
         anim.UpdateNodeSize(wifiStaNodes.Get(i)->GetId(), 10, 10);
     }
 
+    //30 Imprime tabela de roteamento
+    /*
+    Ipv4GlobalRoutingHelper g;
+    Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
+            ("dynamic-global-routing.routes", std::ios::out);
+    g.PrintRoutingTableAllAt (Seconds (12), routingStream);
+     */
 
-    //Ipv4GlobalRoutingHelper g;
-    //Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
-    //        ("dynamic-global-routing.routes", std::ios::out);
-    //g.PrintRoutingTableAllAt (Seconds (12), routingStream);
-
+    //31 Imprime todos os endereços de todas interfaces de todos os nós na simulação
+    /*
     for (int i = 0; i < allNodes.GetN(); i++)
         for (int j = 0; j < allNodes.Get(i)->GetObject<Ipv4>()->GetNInterfaces(); j++)
             std::cout << "Node " << i << " ID "<< allNodes.Get(i)->GetId()<< " IP " << allNodes.Get(i)->GetObject<Ipv4>()->GetAddress(j,0).GetLocal()<<std::endl;
+    */
 
-    //Rodar o simulador
-    Simulator::Stop(Seconds(simTime)); // Rodar simulação por 10 segundos
+    //31 Rodar o simulador
+    Simulator::Stop(Seconds(simTime)); 
     Simulator::Run();
     Simulator::Destroy();
 

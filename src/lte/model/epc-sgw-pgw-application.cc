@@ -339,7 +339,7 @@ EpcSgwPgwApplication::SetUeAddress (uint64_t imsi, Ipv4Address ueAddr)
   NS_ASSERT_MSG (ueit != m_ueInfoByImsiMap.end (), "unknown IMSI " << imsi);
   m_ueInfoByAddrMap[ueAddr] = ueit->second;
   ueit->second->SetUeAddr (ueAddr);
-  ueit->second->SetGatewayAddr(nullptr);
+  ueit->second->SetGatewayAddr("255.255.255.255");
 }
 
 void
