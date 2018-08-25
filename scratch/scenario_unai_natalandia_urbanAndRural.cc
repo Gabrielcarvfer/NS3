@@ -30,6 +30,7 @@
 using namespace ns3;
 
 #include <map>
+#include <ns3/olsr-helper.h>
 
 void setup_mobility2(NodeContainer * nodes, std::string mobilityModel, double x, double y, double z, double radius)
 {
@@ -55,12 +56,23 @@ void setup_mobility2(NodeContainer * nodes, std::string mobilityModel, double x,
     mobility.Install(*nodes);
 }
 
+void print_ips(Ptr<Ipv4> ips)
+{
+    std::cout << "IPs" << std::endl;
+    for (int i = 0; i < ips->GetNInterfaces(); i++)
+    {
+        std::cout << ips->GetAddress(i+1,0).GetLocal() << std::endl;
+    }
+    std::cout << std::endl;
+}
+
 //Simple network setup
 int main()
 {
+
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
-    double simTime = 1.1;
+    double simTime = 30;
     double distance = 60.0;
     double interPacketInterval = 25;
 
@@ -71,12 +83,11 @@ int main()
     Ptr<PointToPointEpcHelper>  epcHelper = CreateObject<PointToPointEpcHelper> ();
     lteHelper->SetEpcHelper (epcHelper);
     Ptr<Node> pgw = epcHelper->GetPgwNode ();
-
+    allNodes.Add(pgw);
 
     NodeContainer remoteHostContainer;
     remoteHostContainer.Create (1);
     allNodes.Add(remoteHostContainer);
-    allNodes.Add(pgw);
 
     NodeContainer ueNodes;
     NodeContainer enbNodes;
@@ -92,7 +103,7 @@ int main()
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
     positionAlloc->Add (Vector (    0.0,     0.0,  0.0));  // 0 - Remote Host
     positionAlloc->Add (Vector (   10.0,     0.0,  0.0));  // 1 - PGW
-    positionAlloc->Add (Vector (66010.0, 94010.0,  0.0));  // 2 - eNB 1
+    positionAlloc->Add (Vector (50000.0, 50000.0,  0.0));  // 2 - eNB 1
     //positionAlloc->Add (Vector (  0.0, 150.0,  0.0));  // 3 - eNB 2
     positionAlloc->Add (Vector (66000.0, 94000.0,  0.0));  // 4 - UE 1
     //positionAlloc->Add (Vector (110.0,  89.0,  0.0));  // 5 - UE 2
@@ -119,18 +130,37 @@ int main()
     Ipv4AddressHelper ipv4h;
     ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
     Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
+
     // interface 0 is localhost, 1 is the p2p device
     Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
+    //std::cout << "IP " << remoteHostAddr << std::endl;
 
     //4 Configura roteamento estático entre IP interno e externo do PGW (7.0.0.0 e 1.0.0.0)
     Ipv4StaticRoutingHelper ipv4RoutingHelper;
     Ptr<Ipv4StaticRouting> remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting (remoteHost->GetObject<Ipv4> ());
-    remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
+    remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ( "7.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
+    //remoteHostStaticRouting->AddNetworkRouteTo (Ipv4Address ("10.0.0.0"), Ipv4Mask ("255.0.0.0"), 1);
 
-    Ptr<Ipv4StaticRouting> pgwStaticRouting = ipv4RoutingHelper.GetStaticRouting(pgw->GetObject<Ipv4>());
-    pgwStaticRouting->AddNetworkRouteTo (Ipv4Address("1.0.0.0"),Ipv4Mask("255.0.0.0"),0);
+
+    //Ptr<Ipv4StaticRouting> pgwStaticRouting = ipv4RoutingHelper.GetStaticRouting(pgw->GetObject<Ipv4>());
+    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address( "1.0.0.0"),Ipv4Mask("255.0.0.0"),0);
+    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address( "7.0.0.0"),Ipv4Mask("255.0.0.0"),1);
+    //pgwStaticRouting->AddNetworkRouteTo (Ipv4Address("10.0.0.0"),Ipv4Mask("255.0.0.0"),3);
+
+
+
 
     //6 Instala dispositivos LTE aos nós
+
+    // use 0dB Pathloss, since we are testing only the antenna gain
+    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::ConstantSpectrumPropagationLossModel"));
+    lteHelper->SetPathlossModelAttribute ("Loss", DoubleValue (0.0));
+
+    lteHelper->SetEnbAntennaModelType ("ns3::CosineAntennaModel");
+    lteHelper->SetEnbAntennaModelAttribute ("Orientation", DoubleValue (0.0));
+    lteHelper->SetEnbAntennaModelAttribute ("Beamwidth",   DoubleValue (35.0));
+    lteHelper->SetEnbAntennaModelAttribute ("MaxGain",     DoubleValue (400.0));
+
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
     NetDeviceContainer ueLteDevs = lteHelper->InstallUeDevice (ueNodes);
 
@@ -142,6 +172,8 @@ int main()
     Ipv4InterfaceContainer ueIpIface;
     ueIpIface = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
 
+    //Ptr<Ipv4StaticRouting> enbStaticRouting = ipv4RoutingHelper.GetStaticRouting (enbNodes.Get(0)->GetObject<Ipv4> ());
+    //enbStaticRouting->AddNetworkRouteTo (Ipv4Address("7.0.0.0"),Ipv4Mask("255.0.0.0"),1);
 
     //8 Configura endereço IP dos UEs e instala aplicações
     for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
@@ -174,7 +206,7 @@ int main()
     SpectrumChannelHelper channel = SpectrumChannelHelper::Default();
     SpectrumWifiPhyHelper phy = SpectrumWifiPhyHelper::Default();
 
-    channel.AddPropagationLoss("ns3::RangePropagationLossModel","MaxRange",DoubleValue(1000.0));
+    channel.AddPropagationLoss("ns3::RangePropagationLossModel","MaxRange",DoubleValue(5000.0));
 
     phy.SetChannel(channel.Create());
 
@@ -214,30 +246,22 @@ int main()
 
     // Set the default gateway for the UE
     Ptr<Ipv4StaticRouting> apStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNodes.Get(0)->GetObject<Ipv4>());
-    /*apStaticRouting->AddHostRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),
-                                    ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(),
-                                    1);
-    apStaticRouting->AddHostRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(),
-                                    ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),
-                                    1);*/
+    //apStaticRouting->AddNetworkRouteTo("10.0.0.0", "255.0.0.0", 1);
+    //apStaticRouting->AddNetworkRouteTo(" 7.0.0.0", "255.0.0.0", 2);
+    //std::cout << "Gateway AP-UE " << ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal()<<std::endl;
     //apStaticRouting->SetDefaultRoute(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),2);
-    apStaticRouting->AddNetworkRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(),
-                                       Ipv4Mask("255.0.0.0"),
-                                       ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
-                                       1);
-    apStaticRouting->AddNetworkRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
-                                        Ipv4Mask("255.0.0.0"),
-                                       ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(),
-                                       2);
-    for (int i = 0; i < 3; i++)
-        std::cout << "IP " << ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(i,0).GetLocal()<<std::endl;
-    Ptr<Ipv4StaticRouting> enbStaticRouting = ipv4RoutingHelper.GetStaticRouting (enbNodes.Get(0)->GetObject<Ipv4>());
+    apStaticRouting->AddNetworkRouteTo("7.0.0.0", Ipv4Mask("255.255.255.252"),2);
+    //apStaticRouting->AddNetworkRouteTo(ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(),
+    //                                    Ipv4Mask("255.255.255.253"), 2);
+    //for (int i = 0; i < 2; i++)
+    //    std::cout << "Enb IP " << enbNodes.Get(0)->GetObject<Ipv4>()->GetAddress(i,0).GetLocal()<<std::endl;
+    //Ptr<Ipv4StaticRouting> enbStaticRouting = ipv4RoutingHelper.GetStaticRouting (enbNodes.Get(0)->GetObject<Ipv4>());
 
     //enbStaticRouting->AddNetworkRouteTo(enbNodes.Get(0)->GetObject<Ipv4>()->GetAddress(0,0).GetLocal(),
     //                                    Ipv4Mask("255.0.0.0"),
     //                                    0);
 
-
+    Ptr<EpcSgwPgwApplication> sgwpgwapp = pgw->GetApplication(0)->GetObject<EpcSgwPgwApplication>();
     //8 Configura endereço IP dos UEs e instala aplicações
     for (uint32_t u = 0; u < wifiStaNodes.GetN (); ++u)
     {
@@ -245,7 +269,11 @@ int main()
         // Set the default gateway for the UE
         Ptr<Ipv4StaticRouting> staStaticRouting = ipv4RoutingHelper.GetStaticRouting (staNode->GetObject<Ipv4> ());
         staStaticRouting->SetDefaultRoute (ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal(), 1);
+
+        epcHelper->AddUe(staDevices.Get(u), 310150123450000+u);
+        sgwpgwapp->SetUeAddress(310150123450000+u, staNode->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(2,0).GetLocal());
     }
+
 
     //10 Configura, instala e inicia aplicações em APs e servidor remoto
     uint16_t serverPort = 9;
@@ -253,8 +281,13 @@ int main()
     // 8a. Create and setup applications (traffic sink)
     UdpEchoServerHelper echoServer(serverPort); // Port # 9
     ApplicationContainer serverApps = echoServer.Install(remoteHost);
+
+
+    UdpEchoServerHelper echoServer1(2152); // GPRS port
+    serverApps.Add(echoServer1.Install(remoteHost));
+
     serverApps.Start(Seconds(0.5));
-    serverApps.Stop(Seconds(9));
+
 
     UdpEchoClientHelper echoClient(remoteHost->GetObject<Ipv4>()->GetAddress(1,0).GetLocal(), serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(10000));
@@ -282,8 +315,50 @@ int main()
     anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(true);
 
+    anim.UpdateNodeDescription (pgw, "PGW"); // Optional
+    anim.UpdateNodeColor (pgw, 0, 255, 0); // Optional
+    anim.UpdateNodeSize(pgw->GetId(), 100, 100);
+
+
+    anim.UpdateNodeDescription (remoteHost, "Internet"); // Optional
+    anim.UpdateNodeColor (remoteHost, 0, 255, 0); // Optional
+    anim.UpdateNodeSize(remoteHost->GetId(), 100, 100);
+
+
+    anim.UpdateNodeDescription (enbNodes.Get(0), "Enb"); // Optional
+    anim.UpdateNodeColor (enbNodes.Get(0), 0, 255, 0); // Optional
+    anim.UpdateNodeSize(enbNodes.Get(0)->GetId(), 100, 100);
+
+    for (uint32_t i = 0; i < wifiApNodes.GetN (); ++i)
+    {
+        std::stringstream ss;
+        ss << "AP" << i;
+        anim.UpdateNodeDescription (wifiApNodes.Get (i), ss.str()); // Optional
+        anim.UpdateNodeColor (wifiApNodes.Get (i), 0, 255, 0); // Optional
+        anim.UpdateNodeSize(wifiApNodes.Get(i)->GetId(), 10, 10);
+    }
+
+    for (uint32_t i = 0; i < wifiStaNodes.GetN (); ++i)
+    {
+        std::stringstream ss;
+        ss << "STA" << i;
+        anim.UpdateNodeDescription (wifiStaNodes.Get (i), ss.str()); // Optional
+        anim.UpdateNodeColor (wifiStaNodes.Get (i), 0, 255, 0); // Optional
+        anim.UpdateNodeSize(wifiStaNodes.Get(i)->GetId(), 10, 10);
+    }
+
+
+    //Ipv4GlobalRoutingHelper g;
+    //Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
+    //        ("dynamic-global-routing.routes", std::ios::out);
+    //g.PrintRoutingTableAllAt (Seconds (12), routingStream);
+
+    for (int i = 0; i < allNodes.GetN(); i++)
+        for (int j = 0; j < allNodes.Get(i)->GetObject<Ipv4>()->GetNInterfaces(); j++)
+            std::cout << "Node " << i << " ID "<< allNodes.Get(i)->GetId()<< " IP " << allNodes.Get(i)->GetObject<Ipv4>()->GetAddress(j,0).GetLocal()<<std::endl;
+
     //Rodar o simulador
-    Simulator::Stop(Seconds(10)); // Rodar simulação por 10 segundos
+    Simulator::Stop(Seconds(simTime)); // Rodar simulação por 10 segundos
     Simulator::Run();
     Simulator::Destroy();
 

@@ -172,6 +172,11 @@ public:
   typedef void (* RxTracedCallback)
     (Ptr<Packet> packet);
 
+  void SetUeAddress (uint64_t imsi, Ipv4Address ueAddr, Ipv4Address gatewayUeAddr);
+
+
+
+
 private:
 
   // S11 SAP SGW methods
@@ -259,6 +264,7 @@ public:
      * \return the IPv6 address of the UE
      */
     Ipv6Address GetUeAddr6 ();
+    Ipv4Address GetGatewayAddr ();
 
     /**
      * set the IPv6 address of the UE
@@ -267,11 +273,17 @@ public:
      */
     void SetUeAddr6 (Ipv6Address addr);
 
+    void SetGatewayAddr (Ipv4Address addr);
+
+
   private:
     EpcTftClassifier m_tftClassifier; ///< TFT classifier
     Ipv4Address m_enbAddr; ///< ENB IPv4 address
     Ipv4Address m_ueAddr; ///< UE IPv4 address
     Ipv6Address m_ueAddr6; ///< UE IPv6 address
+    Ipv4Address m_enbAddr; ///< ENB address
+    Ipv4Address m_ueAddr; ///< UE address
+    Ipv4Address m_gatewayUeAddr;
     std::map<uint8_t, uint32_t> m_teidByBearerIdMap; ///< TEID By bearer ID Map
   };
 
@@ -291,6 +303,7 @@ public:
    * Map telling for each UE IPv4 address the corresponding UE info 
    */
   std::map<Ipv4Address, Ptr<UeInfo> > m_ueInfoByAddrMap;
+  std::map<Ipv4Address, Ptr<UeInfo> > m_forwardUeInfoByAddrMap;
 
   /**
    * Map telling for each UE IPv6 address the corresponding UE info 
@@ -298,6 +311,8 @@ public:
   std::map<Ipv6Address, Ptr<UeInfo> > m_ueInfoByAddrMap6;
 
   /**
+
+    /**
    * Map telling for each IMSI the corresponding UE info 
    */
   std::map<uint64_t, Ptr<UeInfo> > m_ueInfoByImsiMap;

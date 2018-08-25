@@ -1279,7 +1279,7 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     uint8_t *buffer = new uint8_t[p->GetSize ()];
     int msg_size = p->CopyData(buffer, p->GetSize ());
     std::string ss = std::string(buffer, buffer+p->GetSize());
-    std::cout << ss << std::endl;
+    //std::cout << ss << std::endl;
 
     //We can now parse and use params to do something
     size_t pos;
