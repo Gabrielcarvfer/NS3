@@ -16,14 +16,6 @@ set(header_files)
 set(libraries_to_link ${libcore})
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
-
-set(name main-random-variable)
-set(source_files ${name}.cc)
-set(header_files)
-set(libraries_to_link ${libcore} ${libconfig-store} ${libstats})
-build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
-
-
 set(name main-random-variable-stream)
 set(source_files ${name}.cc)
 set(header_files)

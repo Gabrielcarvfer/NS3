@@ -18,7 +18,6 @@ set(libraries_to_link ${libinternet} ${libinternet} ${libcore})
 set(test_sources
         test/sixlowpan-hc1-test.cc
         test/sixlowpan-iphc-test.cc
-        test/error-channel-sixlow.cc
         test/sixlowpan-fragmentation-test.cc
         )
 

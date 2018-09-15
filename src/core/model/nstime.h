@@ -64,7 +64,7 @@ class TimeWithUnit;
  *
  * This class defines all the classic C++ addition/subtraction
  * operators: +, -, +=, -=; and all the classic comparison operators:
- * ==, !=, <, >, <=, >=. It is thus easy to add, substract, or
+ * ==, !=, <, >, <=, >=. It is thus easy to add, subtract, or
  * compare Time objects.
  *
  * For example:
@@ -394,7 +394,7 @@ public:
   }
   inline double GetDouble (void) const
   {
-    return m_data;
+    return static_cast<double> (m_data);
   }
   inline int64_t GetInteger (void) const
   {
@@ -544,6 +544,13 @@ public:
    * \return The Time with embedded unit.
    */
   TimeWithUnit As (const enum Unit unit) const;
+
+  /**
+   * TracedCallback signature for Time
+   *
+   * \param [in] value Current value of Time
+   */
+  typedef void (* TracedCallback)(Time value);
 
 private:
   /** How to convert between other units and the current unit. */

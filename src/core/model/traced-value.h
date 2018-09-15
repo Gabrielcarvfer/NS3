@@ -20,7 +20,7 @@
 #ifndef TRACED_VALUE_H
 #define TRACED_VALUE_H
 
-#include "ns3/traced-callback.h"
+#include "traced-callback.h"
 #include "integer.h"
 #include "uinteger.h"
 #include "boolean.h"
@@ -144,7 +144,7 @@ public:
     return *this;
   }
   /**
-   * Copy from a TracedValue of a compatable type.
+   * Copy from a TracedValue of a compatible type.
    * \tparam U \deduced The underlying type of the other TracedValue.
    * \param [in] other The other TracedValuet to copy.
    */

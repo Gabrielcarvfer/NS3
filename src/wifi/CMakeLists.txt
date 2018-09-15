@@ -3,7 +3,6 @@ set(name wifi)
 set(source_files
         model/wifi-information-element.cc
         model/wifi-information-element-vector.cc
-        model/wifi-channel.cc
         model/wifi-mode.cc
         model/ssid.cc
         model/wifi-phy.cc
@@ -25,13 +24,10 @@ set(source_files
         model/wifi-mac-queue.cc
         model/mac-tx-middle.cc
         model/mac-rx-middle.cc
-        model/dca-txop.cc
         model/supported-rates.cc
         model/capability-information.cc
         model/status-code.cc
         model/mgt-headers.cc
-        model/random-stream.cc
-        model/dcf-manager.cc
         model/wifi-mac.cc
         model/regular-wifi-mac.cc
         model/wifi-remote-station-manager.cc
@@ -51,12 +47,9 @@ set(source_files
         model/minstrel-wifi-manager.cc
         model/minstrel-ht-wifi-manager.cc
         model/qos-utils.cc
-        model/edca-txop-n.cc
         model/msdu-aggregator.cc
         model/amsdu-subframe-header.cc
-        model/msdu-standard-aggregator.cc
         model/originator-block-ack-agreement.cc
-        model/dcf.cc
         model/ctrl-headers.cc
         model/qos-blocked-destinations.cc
         model/block-ack-agreement.cc
@@ -69,7 +62,6 @@ set(source_files
         model/aparf-wifi-manager.cc
         model/ampdu-subframe-header.cc
         model/mpdu-aggregator.cc
-        model/mpdu-standard-aggregator.cc
         model/ampdu-tag.cc
         model/wifi-radio-energy-model.cc
         model/wifi-tx-current-model.cc
@@ -79,18 +71,13 @@ set(source_files
         model/dsss-parameter-set.cc
         model/edca-parameter-set.cc
         helper/wifi-radio-energy-model-helper.cc
-        helper/vht-wifi-mac-helper.cc
-        helper/ht-wifi-mac-helper.cc
         helper/athstats-helper.cc
         helper/wifi-helper.cc
         helper/yans-wifi-helper.cc
         helper/spectrum-wifi-helper.cc
-        helper/nqos-wifi-mac-helper.cc
-        helper/qos-wifi-mac-helper.cc
         helper/wifi-mac-helper.cc
 
         #added in ns3.27
-        model/dcf-state.cc
         model/frame-capture-model.cc
         model/he-capabilities.cc
         model/ht-operation.cc
@@ -104,13 +91,19 @@ set(source_files
         model/he-operation.cc
         model/mac-low-transmission-parameters.cc
         model/wifi-mac-queue-item.cc
+
+        #Added in ns3.29
+        model/cf-parameter-set.cc
+        model/channel-access-manager.cc
+        model/infrastructure-wifi-mac.cc
+        model/qos-txop.cc
+        model/txop.cc
         )
 
 set(header_files
         model/wifi-information-element.h
         model/wifi-information-element-vector.h
         model/wifi-net-device.h
-        model/wifi-channel.h
         model/wifi-mode.h
         model/ssid.h
         model/wifi-preamble.h
@@ -146,24 +139,19 @@ set(header_files
         model/nist-error-rate-model.h
         model/dsss-error-rate-model.h
         model/wifi-mac-queue.h
-        model/dca-txop.h
         model/wifi-mac-header.h
         model/wifi-mac-trailer.h
         model/wifi-phy-state-helper.h
         model/qos-utils.h
-        model/edca-txop-n.h
         model/msdu-aggregator.h
         model/amsdu-subframe-header.h
-        model/msdu-standard-aggregator.h
         model/mgt-headers.h
         model/status-code.h
         model/capability-information.h
-        model/dcf-manager.h
         model/mac-tx-middle.h
         model/mac-rx-middle.h
         model/mac-low.h
         model/originator-block-ack-agreement.h
-        model/dcf.h
         model/ctrl-headers.h
         model/block-ack-agreement.h
         model/block-ack-manager.h
@@ -175,7 +163,6 @@ set(header_files
         model/wifi-tx-vector.h
         model/ampdu-subframe-header.h
         model/mpdu-aggregator.h
-        model/mpdu-standard-aggregator.h
         model/ampdu-tag.h
         model/wifi-radio-energy-model.h
         model/wifi-tx-current-model.h
@@ -185,18 +172,13 @@ set(header_files
         model/dsss-parameter-set.h
         model/edca-parameter-set.h
         helper/wifi-radio-energy-model-helper.h
-        helper/vht-wifi-mac-helper.h
-        helper/ht-wifi-mac-helper.h
         helper/athstats-helper.h
         helper/wifi-helper.h
         helper/yans-wifi-helper.h
         helper/spectrum-wifi-helper.h
-        helper/nqos-wifi-mac-helper.h
-        helper/qos-wifi-mac-helper.h
         helper/wifi-mac-helper.h
 
         #added in ns3.27
-        model/dcf-state.h
         model/frame-capture-model.h
         model/he-capabilities.h
         model/ht-operation.h
@@ -211,6 +193,15 @@ set(header_files
         model/mac-low-transmission-parameters.h
         model/wifi-mac-queue-item.h
         model/wifi-phy-state.h
+
+        #Added in ns3.29
+        model/block-ack-type.h
+        model/cf-parameter-set.h
+        model/channel-access-manager.h
+        model/infrastructure-wifi-mac.h
+        model/qos-txop.h
+        model/txop.h
+        model/wifi-mpdu-type.h
         )
 
 set(libraries_to_link
@@ -224,7 +215,6 @@ set(libraries_to_link
 
 set(test_sources
         test/block-ack-test-suite.cc
-        test/dcf-manager-test.cc
         test/tx-duration-test.cc
         test/power-rate-adaptation-test.cc
         test/wifi-test.cc
@@ -232,6 +222,7 @@ set(test_sources
         test/wifi-aggregation-test.cc
         test/wifi-error-rate-models-test.cc
         test/wifi-transmit-mask-test.cc
+        test/channel-access-manager-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
