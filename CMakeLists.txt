@@ -1,7 +1,7 @@
 #######################################
 # Required CMake version#
 #######################################
-cmake_minimum_required( VERSION 3.0 )
+cmake_minimum_required( VERSION 3.1 )
 
 #######################################
 # Project name                        #
@@ -10,7 +10,7 @@ project(NS3 CXX)
 
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.28)
+set(NS3_VER 3.29)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
@@ -18,13 +18,11 @@ option(NS3_TESTS "Enable tests to be built" OFF)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
 
-option(NS3_DEBUG "Build NS3-lib in debug mode" ON)
+option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
+set(NS3_DEBUG ON)
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
 set(NS3_PYTHON OFF)
-
-#set(NS3_PTHREAD ON)
-#option(NS3_PTHREAD "Build with pthread support" OFF)
 
 option(NS3_BOOST "Build with Boost support" OFF)
 set(NS3_BOOST ON)
@@ -124,9 +122,7 @@ add_subdirectory(3rd-party)
 add_subdirectory(src)
 
 #Build NS library examples
-if(${NS3_EXAMPLES})
-    add_subdirectory(examples)
-endif()
+add_subdirectory(examples)
 
 #Build contribution libraries
 add_subdirectory(contrib)

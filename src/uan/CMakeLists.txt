@@ -7,7 +7,6 @@ set(source_files
         model/uan-mac.cc
         model/uan-transducer.cc
         model/uan-transducer-hd.cc
-        model/uan-address.cc
         model/uan-net-device.cc
         model/uan-tx-mode.cc
         model/uan-prop-model.cc
@@ -38,7 +37,6 @@ set(header_files
         model/uan-transducer.h
         model/uan-phy-gen.h
         model/uan-transducer-hd.h
-        model/uan-address.h
         model/uan-prop-model-ideal.h
         model/uan-mac-aloha.h
         model/uan-header-common.h

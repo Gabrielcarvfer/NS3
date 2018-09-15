@@ -9,6 +9,86 @@ http://www.nsnam.org including tutorials: http://www.nsnam.org/tutorials.html
 Consult the file CHANGES.html for more detailed information about changed
 API and behavior across ns-3 releases.
 
+Release 3.29
+============
+
+Availability
+------------
+This release is not yet available.
+
+Supported platforms
+-------------------
+This release is intended to work on systems with the following minimal
+requirements (Note:  not all features available on all platforms):
+- g++-4.9 or later
+- Apple LLVM version 7.0.2 or later 
+- clang-3.3 or later
+
+In addition, Python 2.7 (Python 2 series) or Python 3.4-3.7 (Python 3 series) 
+
+This release has been tested on the following platforms:
+- Ubuntu 18.04 (64 bit) with g++-7.3.0 and Python 2.7.15
+- Ubuntu 16.04 (64 bit) with g++-5.4.0 and Python 2.7.12/3.5.2
+- Fedora Core 28 (64 bit) with g++-8.1.1 and Python 2.7.15/3.7.0
+- Fedora Core 26 (64 bit) with g++-7.3.1 and Python 2.7.14/3.6.5
+- macOS High Sierra 10.13.5 with Xcode 9.4.1, Apple LLVM version 9.1.0, Python 2.7.10
+
+New user-visible features
+-------------------------
+- (buildings) A new position allocator has been added to the buildings module.
+  The allocator places nodes randomly but in a manner that rejects positions
+  that are located within buildings defined in the scenario.
+- (applications) Add 3GPP HTTP model
+- (traffic-control) Add priority queue disc (PrioQueueDisc)
+- (tcp) Added PRR as recovery algorithm
+- (wifi) Add a new trace source to StaWifiMac to trace beacon arrivals
+- (network) Add a method to allow random variable-based jitter to be added
+  to the start times of applications in a container.
+- (network) Add a method to check whether a node with a given ID is within
+  a NodeContainer.
+- (spectrum) A new trace source named "Gain" is added to the SpectrumChannel class.
+  This trace is fired whenever a new path loss value is calculated. It exports pointers
+  to the mobility model of the transmitter and the receiver, Tx antenna gain, Rx antenna gain,
+  propagation gain and the pathloss value.
+
+Bugs fixed
+----------
+- Bug 2299 - uan: WOSS integration missing patch
+- Bug 2399 - wifi: Improve scanning procedure of StaWifiMac
+- Bug 2451 - bindings: (partial fix) generating ILP32 bindings from LP64
+- Bug 2461 - core: CommandLine should handle non-option arguments
+- Bug 2772 - bridge:  Bridge doesn't learn from packets sent to it
+- Bug 2801 - fd-net-device: FdNetDevice device MTU is not set correctly
+- Bug 2819 - traffic-control: FqCoDel handling of non-IP packets
+- Bug 2891 - netanim:  dumbbell-animation breaks when RightCount > LeftCount
+- Bug 2901 - core: Add CommandLine::Parse (const std::vector<std::string>> args)
+- Bug 2902 - build: missing modules cause Waf to run indefinitely
+- Bug 2908 - build:  Check if pybindgen version exists before use
+- Bug 2911 - aodv:  Binary exponential backoff can become unlimited
+- Bug 2914 - tcp: Adv Win resilience to SequenceNumber wrap-around
+- Bug 2915 - build: Enforce gcc minimum version
+- Bug 2920 - wifi: Default MaxSlrc and fragmentation threshold values differ from standard
+- Bug 2921 - tcp: Add min_cwnd variable to LEDBAT
+- Bug 2923 - tap-bridge: UseLocal mode uses wrong MAC address
+- Bug 2924 - traffic-control:documentation about Peek/Dequeue usage
+- Bug 2925 - wifi: MinstrelHt provides strange results at low SNR with A-MPDU enabled
+- Bug 2926 - wifi: SSRC and SLRC mechanism not fully aligned to the standard
+- Bug 2927 - lte:  Valgrind error in lena-x2-handover example
+- Bug 2931 - traffic-control: QueueDisc drops the CE marked packets
+- Bug 2936 - Disable -Wparentheses with GTK+ and gcc-8
+- Bug 2938 - build: add --disable-werror flag to Waf
+- Bug 2940 - traffic-control: QueueDisc SojournTime should be TracedCallback 
+- Bug 2941 - wifi: Order bit of Frame control field of WifiMacHeader not correctly set for some frames
+- Bug 2948 - network: SetPriority does not support value 7
+- Bug 2949 - test: Exit test.py if incorrect fullness option used
+- Bug 2964 - wifi: IdealWifiManager keeps using the same MCS when all transmissions fail
+- Bug 2974 - lte: Inconsistent declaration of IPV6 methods
+
+Known issues
+------------
+In general, known issues are tracked on the project tracker available
+at http://www.nsnam.org/bugzilla/
+
 Release 3.28
 ============
 
@@ -200,7 +280,7 @@ Bugs fixed
 - Bug 2534 - traffic-control: ARED and PIE examples should return 1 upon exit
 - Bug 2535 - utils: memory leak in bench-simulator.cc
 - Bug 2536 - wimax: fixed dead assignment and potential memory leak in wimax
-- Bug 2537 - traffic-control: Fix dead assigment on CoDel::DoDequeue
+- Bug 2537 - traffic-control: Fix dead assignment on CoDel::DoDequeue
 - Bug 2538 - tap-bridge: fixed dead assignment on tap-bridge
 - Bug 2540 - mesh: fixed dead assignment on mesh/ie-dot11s-perr
 - Bug 2541 - wifi: preamble not assigned correctly
@@ -485,7 +565,7 @@ New user-visible features
      error models
   3) The WiFi helper API for the WifiMac sublayer, and the configuration
      of HT modes and parameters, has been simplified
-  4) Better support for backward compatibilty with legacy modes
+  4) Better support for backward compatibility with legacy modes
 
 - (wifi) 802.11g was made backward compatible with 802.11b networks
 
@@ -1402,7 +1482,7 @@ New user-visible features
 Bugs fixed
 ----------
 - bug 1256 - Unnecessary SND.NXT advance, missing ACK for Out of Order segments
-- bug 1318 - Ipv6L3Protocol::LocalDeliver can get stuck in an infinte loop
+- bug 1318 - Ipv6L3Protocol::LocalDeliver can get stuck in an infinite loop
 - bug 1409 - Add an attribute "SystemId" to configure the ID for MPI
 - bug 1421 - Frequency dependent propagation loss models need uniform Frequency / Lambda attribute
 - bug 1434 - DSR throughput not comparable to other protocols for manet example
@@ -1415,7 +1495,7 @@ Bugs fixed
 - bug 1563 - Reduce valgrind test scope
 - bug 1564 - Packet meta data isn't shown in dumbbell-animation.xml
 - bug 1566 - WiFi SNR tag improvements
-- bug 1568 - Deserialized addresses are implicity marked as Mac48Address
+- bug 1568 - Deserialized addresses are implicitly marked as Mac48Address
 - bug 1569 - droptail_vs_red example doesn't run
 - bug 1570 - Valgrind errors in new test examples
 - bug 1574 - Node color overwritten, by mobility updates in netanim
@@ -1980,7 +2060,7 @@ since ns-3.10, in many cases referencing the Bugzilla bug number.
    - bug 1047 - Multicast routes on nodes with >16 interfaces
    - bug 1048 - suggested MatrixPropagationLossModel::SetLoss() API change
    - bug 1049 - Issues with OLSR HNA messages sent by multiple gateways
-   - bug 1052 - olsr::RoutingProtocol::LinkTupleUpdated incorrect detection of asymetric link with multiple interface nodes
+   - bug 1052 - olsr::RoutingProtocol::LinkTupleUpdated incorrect detection of asymmetric link with multiple interface nodes
    - bug 1054 - ipv6 InternetStackHelper EnablePcapIpv6All() broken
    - bug 1056 - CSMA: padding not handled correctly for LLC encapsulation
    - bug 1058 - InternetStackHelper pitfall: calling Install before adding routing protocols
@@ -2466,7 +2546,7 @@ many cases referencing the Bugzilla bug number
    - bug 860 - waf sometimes dies while executing ns3header or gen_ns3_module_header tasks in case of 
                parallel jobs
    - bug 862 - NotifyInterfaceUp() Adds network route even when netmask is /32
-   - bug 863 - Wrong Scalar arithmetics
+   - bug 863 - Wrong Scalar arithmetic
    - bug 864 - Invalid return value in UdpSocketImpl::Send and Ipv4RawSocketImpl::Send
    - bug 865 - Ipv4RawSocketImpl::RecvFrom does not return from address all the time.
    - bug 866 - WiMAX mobility models not aggregated to Node
@@ -2478,7 +2558,7 @@ many cases referencing the Bugzilla bug number
    - bug 877 - python bindings broken with multiple inheritance ?
    - bug 880 - Node sending a packet to itself via 127.0.0.1 aborts
    - bug 885 - Error in Ascii tracing in Python examples
-   - bug 888 - Writing ascii trace to addtional tests fails
+   - bug 888 - Writing ascii trace to additional tests fails
    - bug 891 - WiMAX device helper does not include propagation loss model by default 
    - bug 894 - ./waf --run error message upon segfault
    - bug 895 - SimpleOfdmWimaxPhy SNR computation
@@ -2582,7 +2662,7 @@ many cases referencing the Bugzilla bug number
    - bug 738 ReceiveErrorModel called too late
    - Fix NSC improper response to FIN
    - Fixed bug in serialization of PbbAddressBlock.
-   - Fix bug 780 (problem in RoutingTableComputation with asymetric links), 
+   - Fix bug 780 (problem in RoutingTableComputation with asymmetric links), 
      while adding debugging methods to OLSR.  
    - bug 759: Ipv6 uses wrong outgoing interface.
    - bug 770: IPv6 size calculation for unknown options is wrong.
@@ -2785,7 +2865,7 @@ New user-visible features
      and simulated networks.
 
   d) A new build option (ns-3-allinone) has been provided to make it easier for
-     users to download and bulid commonly used ns-3 configurations.
+     users to download and build commonly used ns-3 configurations.
 
   e) The ns-3 calendar queue scheduler has been ported to ns-3.
 
@@ -3040,7 +3120,7 @@ Release 3.0.12 (2008/04/07)
 attribute support to all in-tree models
     - Add a mid-level helper API to build simulation topologies 
 and perform simple ascii and pcap link-level tracing.
-    - Large amount of structural changes to accomodate the needs
+    - Large amount of structural changes to accommodate the needs
 of the upcoming python bindings
     - new rate control algorithm (RRAA) and a jakes propagation model
 in the 802.11 model (Federico Maguolo).

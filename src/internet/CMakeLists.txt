@@ -120,6 +120,10 @@ set(source_files
         model/rip-header.cc
         helper/rip-helper.cc
         model/tcp-lp.cc
+        model/arp-queue-disc-item.cc
+        model/tcp-prr-recovery.cc
+        model/tcp-recovery-ops.cc
+        model/tcp-socket-state.cc
         )
 
 set(private_header_files
@@ -232,6 +236,10 @@ set(header_files
         model/rip-header.h
         helper/rip-helper.h
         model/tcp-lp.h
+        model/arp-queue-disc-item.h
+        model/tcp-prr-recovery.h
+        model/tcp-recovery-ops.h
+        model/tcp-socket-state.h
         )
 
 set(libraries_to_link
@@ -267,11 +275,6 @@ set(test_sources
         test/tcp-header-test.cc
         test/tcp-general-test.cc
         test/tcp-error-model.cc
-        test/tcp-slow-start-test.cc
-        test/tcp-cong-avoid-test.cc
-        test/tcp-fast-retr-test.cc
-        test/tcp-rto-test.cc
-        test/tcp-highspeed-test.cc
         test/tcp-hybla-test.cc
         test/tcp-vegas-test.cc
         test/tcp-scalable-test.cc
@@ -297,6 +300,9 @@ set(test_sources
         test/ipv4-rip-test.cc
         test/tcp-close-test.cc
         test/tcp-lp-test.cc
+        test/tcp-classic-recovery-test.cc
+        test/tcp-ecn-test.cc
+        test/tcp-prr-recovery-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

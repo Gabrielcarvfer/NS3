@@ -18,37 +18,32 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
+#include "ns3/packet.h"
+#include "ns3/nstime.h"
 #include "wifi-utils.h"
+#include "ctrl-headers.h"
 #include "wifi-mac-header.h"
-#include <cmath>
+#include "wifi-mac-trailer.h"
+#include "wifi-mode.h"
 
 namespace ns3 {
 
 double
-Log2 (double val)
-{
-  return std::log (val) / std::log (2.0);
-}
-
-
-double
 DbToRatio (double dB)
 {
-  double ratio = std::pow (10.0, dB / 10.0);
-  return ratio;
+  return std::pow (10.0, 0.1 * dB);
 }
 
 double
 DbmToW (double dBm)
 {
-  double mW = std::pow (10.0, dBm / 10.0);
-  return mW / 1000.0;
+  return std::pow (10.0, 0.1 * (dBm - 30.0));
 }
 
 double
 WToDbm (double w)
 {
-  return 10.0 * std::log10 (w * 1000.0);
+  return 10.0 * std::log10 (w) + 30.0;
 }
 
 double
@@ -60,21 +55,13 @@ RatioToDb (double ratio)
 bool
 Is2_4Ghz (double frequency)
 {
-  if (frequency >= 2400 && frequency <= 2500)
-    {
-      return true;
-    }
-  return false;
+  return frequency >= 2400 && frequency <= 2500;
 }
 
 bool
 Is5Ghz (double frequency)
 {
-  if (frequency >= 5000 && frequency <= 6000)
-    {
-      return true;
-    }
-  return false;
+  return frequency >= 5000 && frequency <= 6000;
 }
 
 uint16_t
@@ -83,7 +70,7 @@ ConvertGuardIntervalToNanoSeconds (WifiMode mode, bool htShortGuardInterval, Tim
   uint16_t gi;
   if (mode.GetModulationClass () == WIFI_MOD_CLASS_HE)
     {
-      gi = heGuardInterval.GetNanoSeconds ();
+      gi = static_cast<uint16_t> (heGuardInterval.GetNanoSeconds ());
     }
   else if (mode.GetModulationClass () == WIFI_MOD_CLASS_HT || mode.GetModulationClass () == WIFI_MOD_CLASS_VHT)
     {
