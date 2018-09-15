@@ -19,6 +19,9 @@ set(source_files
         #Added in ns3.28
         model/fifo-queue-disc.cc
         model/tbf-queue-disc.cc
+
+        #Added in ns3.29
+        model/prio-queue-disc.cc
         )
 
 set(header_files
@@ -39,6 +42,9 @@ set(header_files
         #Added in ns3.28
         model/fifo-queue-disc.h
         model/tbf-queue-disc.h
+
+        #Added in ns3.29
+        model/prio-queue-disc.h
         )
 
 set(libraries_to_link
@@ -54,6 +60,8 @@ set(test_sources
         test/fifo-queue-disc-test-suite.cc
         test/tbf-queue-disc-test-suite.cc
         test/tc-flow-control-test-suite.cc
+        test/prio-queue-disc-test-suite.cc
+        test/queue-disc-traces-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

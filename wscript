@@ -30,11 +30,8 @@ modules_enabled  = ['all_modules']
 examples_enabled = False
 tests_enabled    = False
 
-# Compiler warning suppressions
-
-# Bug 1868:  be conservative about -Wstrict-overflow for optimized builds
-# on older compilers; it can generate spurious warnings.  
-gcc_version_warn_strict_overflow = ('4', '8', '2')
+# GCC minimum version requirements for C++11 support
+gcc_min_version = (4, 9, 2)
 
 # Bug 2181:  clang warnings about unused local typedefs and potentially
 # evaluated expressions affecting darwin clang/LLVM version 7.0.0 (Xcode 7)
@@ -391,6 +388,11 @@ def configure(conf):
     env['APPNAME'] = wutils.APPNAME
     env['VERSION'] = wutils.VERSION
 
+    if conf.env['CXX_NAME'] in ['gcc']:
+        if tuple(map(int, conf.env['CC_VERSION'])) < gcc_min_version:
+            conf.fatal('gcc version %s older than minimum supported version %s' %
+                       ('.'.join(conf.env['CC_VERSION']), '.'.join(map(str, gcc_min_version))))
+
     if conf.env['CXX_NAME'] in ['gcc', 'icc']:
         if Options.options.build_profile == 'release': 
             env.append_value('CXXFLAGS', '-fomit-frame-pointer') 
@@ -398,7 +400,7 @@ def configure(conf):
             if conf.check_compilation_flag('-march=native'):
                 env.append_value('CXXFLAGS', '-march=native') 
             env.append_value('CXXFLAGS', '-fstrict-overflow')
-            if conf.env['CC_VERSION'] >= gcc_version_warn_strict_overflow:
+            if conf.env['CXX_NAME'] in ['gcc']:
                 env.append_value('CXXFLAGS', '-Wstrict-overflow=2')
 
         if sys.platform == 'win32':
@@ -415,13 +417,13 @@ def configure(conf):
         if libstdcxx_location:
             conf.env.append_value('NS3_MODULE_PATH', libstdcxx_location)
 
-        if Options.platform in ['linux']:
+        if Utils.unversioned_sys_platform() in ['linux']:
             if conf.check_compilation_flag('-Wl,--soname=foo'):
                 env['WL_SONAME_SUPPORTED'] = True
 
     # bug 2181 on clang warning suppressions
     if conf.env['CXX_NAME'] in ['clang']:
-        if Options.platform == 'darwin':
+        if Utils.unversioned_sys_platform() == 'darwin':
             if conf.env['CC_VERSION'] >= darwin_clang_version_warn_unused_local_typedefs:
                 env.append_value('CXXFLAGS', '-Wno-unused-local-typedefs')
             if conf.env['CC_VERSION'] >= darwin_clang_version_warn_potentially_evaluated: 
@@ -433,7 +435,7 @@ def configure(conf):
                 env.append_value('CXXFLAGS', '-Wno-potentially-evaluated-expression')
     env['ENABLE_STATIC_NS3'] = False
     if Options.options.enable_static:
-        if Options.platform == 'darwin':
+        if Utils.unversioned_sys_platform() == 'darwin':
             if conf.check_compilation_flag(flag=[], linkflags=['-Wl,-all_load']):
                 conf.report_optional_feature("static", "Static build", True, '')
                 env['ENABLE_STATIC_NS3'] = True
@@ -641,7 +643,6 @@ def configure(conf):
             if conf.check_compilation_flag(flag, mode='cc'):
                 env.append_value('CCFLAGS', flag)
 
-    add_gcc_flag('-Wno-error=deprecated-declarations')
     add_gcc_flag('-fstrict-aliasing')
     add_gcc_flag('-Wstrict-aliasing')
 
@@ -892,9 +893,16 @@ def build(bld):
                     if not dep.startswith('ns3-'):
                         continue
                     if dep not in modules and dep not in contribModules:
-                        if dep in env['NS3_MODULES']: modules.append(dep)
-                        elif dep in env['NS3_CONTRIBUTED_MODULES']: contribModules.append(dep)
-                        changed = True
+                        if dep in env['NS3_MODULES']: 
+                            modules.append(dep)
+                            changed = True
+                        elif dep in env['NS3_CONTRIBUTED_MODULES']: 
+                            contribModules.append(dep)
+                            changed = True
+                        else:
+                            Logs.error("Error:  Cannot find dependency \'" + dep[4:] + "\' of module \'"
+                                       + module[4:] + "\'; check the module wscript for errors.")
+                            raise SystemExit(1)
 
         env['NS3_ENABLED_MODULES'] = modules
 

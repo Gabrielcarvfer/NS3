@@ -21,13 +21,13 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#include "ptr.h"
-#include "fatal-error.h"
-#include "empty.h"
-#include "type-traits.h"
-#include "attribute.h"
-#include "attribute-helper.h"
-#include "simple-ref-count.h"
+#include "ns3/ptr.h"
+#include "ns3/fatal-error.h"
+#include "ns3/empty.h"
+#include "ns3/type-traits.h"
+#include "ns3/attribute.h"
+#include "ns3/attribute-helper.h"
+#include "ns3/simple-ref-count.h"
 #include <typeinfo>
 
 /**
