@@ -352,7 +352,11 @@ MakeDirectories (std::string path)
       bool makeDirErr = false;
       
 #if defined(HAVE_MKDIR_H)
-      makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+  #ifdef _WIN32
+        makeDirErr = (CreateDirectory(path.c_str(),NULL) == 0);
+  #else
+        makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+  #endif
 #endif
 
       if (makeDirErr)

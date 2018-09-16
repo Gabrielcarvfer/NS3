@@ -23,7 +23,7 @@
 
 #include <string>
 #include <iostream>
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/nstime.h"
 #include "ns3/attribute.h"
 #include "ns3/attribute-helper.h"

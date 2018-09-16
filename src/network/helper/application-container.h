@@ -21,7 +21,7 @@
 #ifndef APPLICATION_CONTAINER_H
 #define APPLICATION_CONTAINER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <vector>
 #include "ns3/application.h"
 #include "ns3/random-variable-stream.h"

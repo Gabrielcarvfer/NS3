@@ -21,7 +21,8 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
-#include <stdint.h>
+#include <cstdint>
+#include <cinttypes>
 #include <ostream>
 #include "ns3/attribute.h"
 #include "ns3/attribute-helper.h"

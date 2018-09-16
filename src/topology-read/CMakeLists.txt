@@ -17,7 +17,13 @@ set(header_files
         helper/topology-reader-helper.h
         )
 
-set(libraries_to_link ${libnetwork})
+if(WIN32)
+    set(pcre_lib_name libpcre2-posix)
+else()
+    set(pcre_lib_name pcre)
+endif()
+
+set(libraries_to_link ${libnetwork} ${pcre_lib_name})
 
 set(test_sources
         test/rocketfuel-topology-reader-test-suite.cc

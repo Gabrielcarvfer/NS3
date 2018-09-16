@@ -21,7 +21,7 @@
 #ifndef TCP_L4_PROTOCOL_H
 #define TCP_L4_PROTOCOL_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "ns3/ipv4-address.h"
 #include "ns3/ipv6-address.h"

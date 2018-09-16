@@ -20,7 +20,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 

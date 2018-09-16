@@ -22,7 +22,7 @@
 #ifndef MAC_HEADER_TYPE_H
 #define MAC_HEADER_TYPE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {
@@ -93,7 +93,7 @@ private:
 #ifndef GENERIC_MAC_HEADER_H
 #define GENERIC_MAC_HEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "cid.h"
 
@@ -237,7 +237,7 @@ private:
 #ifndef BANDWIDTH_REQUEST_HEADER_H
 #define BANDWIDTH_REQUEST_HEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "cid.h"
 
@@ -362,7 +362,7 @@ private:
 #ifndef GRANT_MANAGEMENT_SUBHEADER_H
 #define GRANT_MANAGEMENT_SUBHEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {
@@ -444,7 +444,7 @@ private:
 #ifndef FRAGMENTATION_SUBHEADER_H
 #define FRAGMENTATION_SUBHEADER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {

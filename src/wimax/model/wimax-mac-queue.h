@@ -22,7 +22,7 @@
 #define WIMAX_MAC_QUEUE_H
 
 #include <queue>
-#include <stdint.h>
+#include <cstdint>
 #include "wimax-mac-header.h"
 #include "ns3/packet.h"
 #include "ns3/object.h"

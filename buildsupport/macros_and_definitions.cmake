@@ -1,13 +1,13 @@
 if (WIN32)
     #If using MSYS2
-    set(MSYS2_PATH "E:\\msys64\\mingw64")
+    set(MSYS2_PATH "C:\\tools\\msys64\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
-    set(QT_RCC_EXECUTABLE "${MSYS2_PATH}\\bin\\rcc.exe")
-    set(QT_UIC_EXECUTABLE "${MSYS2_PATH}\\bin\\uic.exe")
-    set(QT_MOC_EXECUTABLE "${MSYS2_PATH}\\bin\\moc.exe")
-    set(QT_MKSPECS_DIR    "${MSYS2_PATH}\\share\\qt4\\mkspecs")
+    set(QT_RCC_EXECUTABLE   "${MSYS2_PATH}\\bin\\rcc.exe")
+    set(QT_UIC_EXECUTABLE   "${MSYS2_PATH}\\bin\\uic.exe")
+    set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
+    set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
 endif()
 
 #Fixed definitions
@@ -34,9 +34,19 @@ macro(process_options)
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    add_definitions(-std=c++11 -fPIC)
+    add_definitions(-std=c++11)
 
     #find required dependencies
+    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
+
+    #Libpcre2 for regex
+    find_package(PCRE)
+    if (NOT ${PCRE_FOUND})
+        message(FATAL_ERROR PCRE2 not found)
+    else()
+        link_directories(${PCRE_LIBRARY})
+        include_directories(${PCRE_INCLUDE_DIR})
+    endif()
 
     #BoostC++
     if(${NS3_BOOST})
@@ -79,7 +89,7 @@ macro(process_options)
         if(NOT ${LIBRT_FOUND})
             message(FATAL_ERROR LibRT not found)
         else()
-            add_definitions(-lrt)
+            link_libraries(rt)
             add_definitions(-DHAVE_RT)
         endif()
     endif()
@@ -127,6 +137,13 @@ macro(process_options)
     #    endif()
     #endif()
 
+    #if(${NS3_BRITE})
+    #    find_package(Brite)
+    #    if(NOT ${BRITE_FOUND})
+    #        message(FATAL_ERROR BRITEnot found)
+    #    else()
+    #    endif()
+    #endif()
 
     #process debug switch
     if(${NS3_DEBUG})

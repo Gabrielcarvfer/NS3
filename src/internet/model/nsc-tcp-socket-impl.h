@@ -16,7 +16,7 @@
 #ifndef NSC_TCP_SOCKET_IMPL_H
 #define NSC_TCP_SOCKET_IMPL_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <queue>
 #include <vector>
 

@@ -22,7 +22,7 @@
 #ifndef SERVICE_FLOW_H
 #define SERVICE_FLOW_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "wimax-phy.h"
 #include "wimax-connection.h"
 #include "cs-parameters.h"

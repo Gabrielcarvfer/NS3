@@ -23,7 +23,7 @@
 #ifndef SS_SCHEDULER_H
 #define SS_SCHEDULER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/packet.h"
 #include "ns3/packet-burst.h"
 #include "wimax-phy.h"
