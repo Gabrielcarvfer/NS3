@@ -20,7 +20,7 @@
 #ifndef TAG_BUFFER_H
 #define TAG_BUFFER_H
 
-#include <stdint.h>
+#include <cstdint>
 
 #define TAG_BUFFER_USE_INLINE 1
 

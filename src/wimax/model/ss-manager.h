@@ -23,7 +23,7 @@
 #ifndef SS_MANAGER_H
 #define SS_MANAGER_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "cid.h"
 #include "ss-record.h"
 

@@ -22,11 +22,27 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <regex.h>
+
+
+#include <pcre2posix.h>
 
 #include "ns3/log.h"
 #include "ns3/unused.h"
 #include "rocketfuel-topology-reader.h"
+#include <sys/types.h>
+
+#ifndef HAVE_STRSEP
+char * strsep(char **sp, char *sep)
+{
+    char *p, *s;
+    if (sp == NULL || *sp == NULL || **sp == '\0') return(NULL);
+    s = *sp;
+    p = s + strcspn(s, sep);
+    if (*p != '\0') *p++ = '\0';
+    *sp = p;
+    return(s);
+}
+#endif
 
 namespace ns3 {
 

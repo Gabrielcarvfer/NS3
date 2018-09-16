@@ -18,18 +18,23 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include "ns3/inet6-socket-address.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/log.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv6-routing-protocol.h"
-#include "ns3/ipv6-packet-info-tag.h"
+#ifdef _WIN32
+  #include <winsock2.h>
+  #include <windows.h>
+#else
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+  #include <sys/types.h>
+#endif
 
+#include <ns3/inet6-socket-address.h>
+#include <ns3/node.h>
+#include <ns3/packet.h>
+#include <ns3/uinteger.h>
+#include <ns3/log.h>
+#include "ipv6-route.h"
+#include "ipv6-routing-protocol.h"
+#include "ipv6-packet-info-tag.h"
 #include "ipv6-l3-protocol.h"
 #include "ipv6-raw-socket-impl.h"
 #include "icmpv6-header.h"

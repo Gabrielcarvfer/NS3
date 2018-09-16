@@ -24,7 +24,7 @@
 #include <list>
 #include <map>
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/ipv4-address.h"
 #include "ns3/ptr.h"
 #include "ns3/net-device.h"

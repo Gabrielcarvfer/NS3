@@ -20,7 +20,7 @@
 #ifndef MAC16_ADDRESS_H
 #define MAC16_ADDRESS_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <ostream>
 #include "ns3/attribute.h"
 #include "ns3/attribute-helper.h"

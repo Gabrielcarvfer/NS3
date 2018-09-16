@@ -20,7 +20,7 @@
 #ifndef SIMPLE_NET_DEVICE_H
 #define SIMPLE_NET_DEVICE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 #include "ns3/traced-callback.h"

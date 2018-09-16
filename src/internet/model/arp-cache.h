@@ -20,7 +20,7 @@
 #ifndef ARP_CACHE_H
 #define ARP_CACHE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include <list>
 #include "ns3/simulator.h"
 #include "ns3/callback.h"
