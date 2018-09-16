@@ -3,6 +3,9 @@
 #######################################
 cmake_minimum_required( VERSION 3.1 )
 
+#set(CMAKE_C_COMPILER "clang")
+#set(CMAKE_CXX_COMPILER "clang++")
+
 #######################################
 # Project name                        #
 #######################################
@@ -17,6 +20,7 @@ option(NS3_LOG "Enable logging to be built" ON)
 option(NS3_TESTS "Enable tests to be built" OFF)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
+set(NS3_EXAMPLES OFF)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -34,7 +38,7 @@ option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
 set(NS3_LIBXML2 ON)
 
 option(NS3_LIBRT "Build with RT support" OFF)
-set(NS3_LIBRT ON)
+set(NS3_LIBRT OFF) #not working on Windows
 
 option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
@@ -52,56 +56,62 @@ option(NS3_EMU "Build with emu support" OFF)
 set(NS3_EMU OFF)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
-set(NS3_GNUPLOT ON)
+set(NS3_GNUPLOT OFF)
+
+option(NS3_BRITE "Build with Brite support" OFF)
+set(NS3_BRITE OFF)
+
+option(NS3_NETANIM "Build netanim support" OFF)
+set(NS3_NETANIM OFF)
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
 # libs marked with * on the right, are not compiling correctly yet when using CMake
 set(libs_to_build
-        antenna #
-        aodv
-        applications
-        bridge #
-        #brite
-        buildings #
-        click
-        config-store #
-        core #
-        csma #
-        csma-layout
-        dsdv
-        dsr
-        energy #
-        fd-net-device #requires socket implementation
-        flow-monitor
-        internet #main block, couldnt identify the problem
-        internet-apps
-        lr-wpan #
-        lte
-        mesh
-        mobility #
-        mpi
-        netanim
-        network #
+        antenna               #
+        aodv                  #
+        applications          #
+        bridge                #
+        brite
+        buildings             #
+        click                 #
+        config-store          #
+        core                  #
+        csma                  #
+        csma-layout           #
+        dsdv                  #
+        dsr                   #
+        energy                #
+        #fd-net-device        #requires socket implementation
+        flow-monitor          #
+        internet              #
+        internet-apps         #
+        lr-wpan               #
+        lte                   #
+        mesh                  #
+        mobility              #
+        mpi                   #
+        netanim               # Not working with Clang on Windows
+        network               #
         nix-vector-routing
         olsr
         #openflow
-        point-to-point #
+        point-to-point        #
         point-to-point-layout
-        propagation #
+        propagation           #
         sixlowpan
-        spectrum #
-        stats #
-        tap-bridge #
+        spectrum              #
+        stats                 #
+        #tap-bridge           #
         test
-        topology-read #needs to swap posix regex to c++ regex
-        traffic-control #
-        uan
-        virtual-net-device #
+        topology-read         # fixed on Windows with LibPCRE2-posix
+        traffic-control       #
+        uan                   #
+        virtual-net-device    #
         #visualizer
-        wave
-        wifi #
-        wimax
+        wave                  #
+        wifi                  #
+        wimax                 #
         )
 
 

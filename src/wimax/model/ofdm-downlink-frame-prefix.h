@@ -21,7 +21,7 @@
 #ifndef DL_FRAME_PREFIX_IE_H
 #define DL_FRAME_PREFIX_IE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 
 namespace ns3 {
@@ -125,7 +125,7 @@ private:
 #ifndef OFDM_DOWNLINK_FRAME_PREFIX_H
 #define OFDM_DOWNLINK_FRAME_PREFIX_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/header.h"
 #include "ns3/mac48-address.h"
 

@@ -20,7 +20,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "buffer.h"
 #include "header.h"
 #include "trailer.h"

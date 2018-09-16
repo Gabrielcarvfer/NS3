@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get -y install apt-utils
 
 #Dependencies for git and base NS3
-RUN apt-get -y install git gcc g++ cmake
+RUN apt-get -y install git gcc g++ cmake libpcre2-dev
 
 #Dependencies for NetAnim
 RUN apt-get -y install qt5-default 

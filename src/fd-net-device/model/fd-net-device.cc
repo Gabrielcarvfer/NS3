@@ -36,9 +36,14 @@
 #include "ns3/trace-source-accessor.h"
 #include "ns3/uinteger.h"
 
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <net/ethernet.h>
+
+#ifdef _WIN32
+  #include <windows.h>
+#else
+  #include <unistd.h>
+  #include <arpa/inet.h>
+  #include <net/ethernet.h>
+#endif
 
 namespace ns3 {
 

@@ -23,7 +23,7 @@
 
 #include "chunk.h"
 #include "buffer.h"
-#include <stdint.h>
+#include <cstdint>
 
 namespace ns3 {
 

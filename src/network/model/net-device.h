@@ -21,7 +21,7 @@
 #ifndef NET_DEVICE_H
 #define NET_DEVICE_H
 
-#include <stdint.h>
+#include <cstdint>
 #include "ns3/callback.h"
 #include "ns3/object.h"
 #include "ns3/ptr.h"

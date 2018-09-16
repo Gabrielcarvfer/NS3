@@ -19,7 +19,7 @@
  */
 
 #include "system-wall-clock-ms.h"
-
+#include "log.h"
 #include <ctime>
 
 /**

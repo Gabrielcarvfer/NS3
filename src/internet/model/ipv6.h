@@ -23,14 +23,18 @@
 #ifndef IPV6_H
 #define IPV6_H
 
-#include <stdint.h>
-
-#include "ns3/object.h"
-#include "ns3/socket.h"
-#include "ns3/callback.h"
-
-#include "ns3/ipv6-address.h"
+#include <cstdint>
+#include <cinttypes>
+#include <ns3/object.h>
+#include <ns3/socket.h>
+#include <ns3/callback.h>
+#include <ns3/ipv6-address.h>
 #include "ipv6-interface-address.h"
+
+#if _WIN32
+//MSYS2 defines "interface" as a struct in mingw/include/rpc.h
+#undef interface
+#endif
 
 namespace ns3 {
 

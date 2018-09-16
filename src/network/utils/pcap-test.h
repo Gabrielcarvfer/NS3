@@ -23,7 +23,7 @@
 
 #include <sstream>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include "pcap-file.h"
 #include "ns3/test.h"
 
