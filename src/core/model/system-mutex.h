@@ -22,6 +22,7 @@
 #define SYSTEM_MUTEX_H
 
 #include "ptr.h"
+#include <mutex>
 
 /**
  * @file
@@ -32,7 +33,6 @@
 
 namespace ns3 { 
 	
-class SystemMutexPrivate;
 
 /**
  * @ingroup thread
@@ -73,7 +73,7 @@ public:
 	
 private:
   /** The (system-dependent) implementation. */
-  SystemMutexPrivate * m_priv;
+  std::mutex * m_priv;
 };
 
 /**

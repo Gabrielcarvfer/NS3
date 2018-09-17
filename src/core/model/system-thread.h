@@ -23,9 +23,8 @@
 
 //#include "ns3/core-config.h"
 #include "callback.h"
-#ifdef HAVE_PTHREAD_H
-#include <pthread.h>
-#endif /* HAVE_PTHREAD_H */
+
+#include <thread>
 
 /**
  * @file
@@ -57,10 +56,8 @@ class SystemThread : public SimpleRefCount<SystemThread>
 {
 public:
 
-#ifdef HAVE_PTHREAD_H
   /** Type alias for the system-dependent thread object. */
-  typedef pthread_t ThreadId;
-#endif
+  typedef uint32_t ThreadId;
 
   /**
    * @brief Create a SystemThread object.
@@ -157,7 +154,6 @@ public:
   static bool Equals(ThreadId id);
 
 private:
-#ifdef HAVE_PTHREAD_H
   /**
    * Invoke the callback in the new thread.
    *
@@ -167,8 +163,7 @@ private:
   static void *DoRun (void *arg);
 
   Callback<void> m_callback;  /**< The main function for this thread when launched. */
-  pthread_t m_thread;  /**< The thread id of the child thread. */
-#endif 
+  std::thread m_thread;  /**< The thread reference of the child thread. */
 };
 
 } // namespace ns3
