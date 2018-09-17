@@ -16,6 +16,7 @@
 # PCRE_FOUND	- True if pcre found.
 
 # Look for the header file.
+
 FIND_PATH(PCRE_INCLUDE_DIR NAMES pcre.h)
 
 # Look for the library.
