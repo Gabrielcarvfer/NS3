@@ -4,7 +4,7 @@
 cmake_minimum_required( VERSION 3.1 )
 
 #set(CMAKE_C_COMPILER "clang")
-#set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_COMPILER "clang++")
 
 #######################################
 # Project name                        #
@@ -20,7 +20,7 @@ option(NS3_LOG "Enable logging to be built" ON)
 option(NS3_TESTS "Enable tests to be built" OFF)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES OFF)
+set(NS3_EXAMPLES ON)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -38,7 +38,7 @@ option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
 set(NS3_LIBXML2 ON)
 
 option(NS3_LIBRT "Build with RT support" OFF)
-set(NS3_LIBRT OFF) #not working on Windows
+set(NS3_LIBRT ON) #not working on Windows
 
 option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
