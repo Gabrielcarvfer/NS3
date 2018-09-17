@@ -1,3 +1,7 @@
+include(buildsupport/vcpkg_hunter.cmake)
+
+setup_vcpkg()
+
 if (WIN32)
     #If using MSYS2
     set(MSYS2_PATH "C:\\tools\\msys64\\mingw64")
@@ -24,6 +28,7 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
+
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
@@ -34,7 +39,8 @@ macro(process_options)
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    add_definitions(-std=c++11)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
     #find required dependencies
     list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
@@ -42,7 +48,11 @@ macro(process_options)
     #Libpcre2 for regex
     find_package(PCRE)
     if (NOT ${PCRE_FOUND})
-        message(FATAL_ERROR PCRE2 not found)
+        #If we don't find installed, install
+        add_package(pcre2)
+        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+        link_directories(${pcre2_dir}/lib)
+        include_directories(${pcre2_dir}/include)
     else()
         link_directories(${PCRE_LIBRARY})
         include_directories(${PCRE_INCLUDE_DIR})
@@ -52,7 +62,12 @@ macro(process_options)
     if(${NS3_BOOST})
         find_package(Boost)
         if(NOT ${BOOST_FOUND})
-            message(FATAL_ERROR BoostC++ not found)
+            #message(FATAL_ERROR BoostC++ not found)
+            #If we don't find installed, install
+            add_package(boost)
+            get_property(boost_dir GLOBAL PROPERTY DIR_boost)
+            link_directories(${boost_dir}/lib)
+            include_directories(${boost_dir}/include)
         else()
             link_directories(${BOOST_LIBRARY_DIRS})
             include_directories( ${BOOST_INCLUDE_DIR})
@@ -75,11 +90,18 @@ macro(process_options)
     if(${NS3_LIBXML2})
         find_package(LibXml2)
         if(NOT ${LIBXML2_FOUND})
-            message(FATAL_ERROR LibXML2 not found)
+            #message(FATAL_ERROR LibXML2 not found)
+            #If we don't find installed, install
+            add_package (libxml2)
+            get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
+               link_directories(${libxml2_dir}/lib)
+            include_directories(${libxml2_dir}/include)
+            #set(LIBXML2_DEFINITIONS)
+            set(LIBXML2_LIBRARIES libxml2)
         else()
             link_directories(${LIBXML2_LIBRARY_DIRS})
             include_directories( ${LIBXML2_INCLUDE_DIR})
-            add_definitions(${LIBXML2_DEFINITIONS})
+            #add_definitions(${LIBXML2_DEFINITIONS})
         endif()
     endif()
 
@@ -120,7 +142,12 @@ macro(process_options)
     if(${NS3_GSL})
         find_package(GSL)
         if(NOT ${GSL_FOUND})
-            message(FATAL_ERROR GSL not found)
+            #message(FATAL_ERROR GSL not found)
+            #If we don't find installed, install
+            add_package (gsl)
+            get_property(gsl_dir GLOBAL PROPERTY DIR_gsl)
+               link_directories(${gsl_dir}/lib)
+            include_directories(${gsl_dir}/include)
         else()
             include_directories( ${GSL_INCLUDE_DIRS})
             link_directories(${GSL_LIBRARY})
@@ -147,11 +174,11 @@ macro(process_options)
 
     #process debug switch
     if(${NS3_DEBUG})
-        add_definitions(-g)
+        set(CMAKE_BUILD_TYPE Debug)
         set(build_type "debug")
         set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
     else()
-        add_definitions(-O3)
+        set(CMAKE_BUILD_TYPE Release)
         set(build_type "release")
         set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
     endif()
