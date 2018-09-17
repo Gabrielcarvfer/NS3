@@ -32,7 +32,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
-    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/*.h) #just copying every single header into ns3 include folder
+    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
+    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim-3.108/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
     #Set common include folder

@@ -58,11 +58,18 @@ set(header_files)
 set(libraries_to_link ${libcore})
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
-if((${NS3_PTHREAD}) AND (${NS3_LIBRT}))
+
+set(name main-callback-thread)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${libcore})
+build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+
+if(${NS3_LIBRT})
     set(name main-test-sync)
     set(source_files ${name}.cc)
     set(header_files)
     set(libraries_to_link ${libnetwork})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
-
 endif()
