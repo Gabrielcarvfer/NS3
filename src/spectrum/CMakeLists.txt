@@ -70,7 +70,6 @@ set(header_files
 set(libraries_to_link ${libpropagation} ${libantenna})
 
 set(test_sources
-        test/spectrum-test.h
         test/spectrum-interference-test.cc
         test/spectrum-value-test.cc
         test/spectrum-ideal-phy-test.cc

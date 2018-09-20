@@ -13,7 +13,7 @@ if (${GSL_FOUND})
 endif()
 
 #Check for dependencies and add sources accordingly
-if (${NS3_LIBRT})
+if (${NS3_LIBRT} AND NOT WIN32)
     set(rt_sources
             model/realtime-simulator-impl.cc
             model/wall-clock-synchronizer.cc

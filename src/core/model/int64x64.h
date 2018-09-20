@@ -30,7 +30,7 @@
 #include "int64x64-128.h"
 #elif defined (INT64X64_USE_CAIRO) && !defined (PYTHON_SCAN)
 #include "int64x64-cairo.h"
-#elif defined (INT64X64_USE_DOUBLE) || defined (PYTHON_SCAN)
+#elif defined (INT64X64_USE_DOUBLE) || defined (PYTHON_SCAN) || _WIN32
 #include "int64x64-double.h"
 #endif
 

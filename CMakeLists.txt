@@ -4,7 +4,7 @@
 cmake_minimum_required( VERSION 3.1 )
 
 #set(CMAKE_C_COMPILER "clang")
-set(CMAKE_CXX_COMPILER "clang++")
+#set(CMAKE_CXX_COMPILER "clang++")
 
 #######################################
 # Project name                        #
@@ -18,9 +18,10 @@ set(NS3_VER 3.29)
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
+#set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES ON)
+set(NS3_EXAMPLES OFF)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -64,6 +65,9 @@ set(NS3_BRITE OFF)
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM OFF)
 
+option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
+set(AUTOINSTALL_DEPENDENCIES OFF)
+
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
 # libs marked with * on the right, are not compiling correctly yet when using CMake
@@ -72,7 +76,7 @@ set(libs_to_build
         aodv                  #
         applications          #
         bridge                #
-        brite
+        #brite
         buildings             #
         click                 #
         config-store          #
@@ -139,6 +143,9 @@ add_subdirectory(contrib)
 
 #Build scratch/simulation scripts
 add_subdirectory(scratch)
+
+#Build test utils
+add_subdirectory(utils)
 
 
 
