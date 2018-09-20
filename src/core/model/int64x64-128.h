@@ -22,7 +22,8 @@
 #if !defined(INT64X64_128_H) && defined (INT64X64_USE_128) && !defined(PYTHON_SCAN)
 #define INT64X64_128_H
 
-#include <stdint.h>
+#include <cstdint>
+#include <cinttypes>
 #include <cmath>  // pow
 
 #if defined(HAVE___UINT128_T) && !defined(HAVE_UINT128_T)

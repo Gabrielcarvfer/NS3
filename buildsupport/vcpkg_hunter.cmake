@@ -49,13 +49,14 @@ function(setup_vcpkg)
         execute_process ( COMMAND "${VCPKG_DIR}/${command}"
                 WORKING_DIRECTORY ${VCPKG_DIR} )
         #message(WARNING "VCPKG bootstrapped")
+		include_directories(${VCPKG_DIR})
     endif()
 endfunction()
-include(ExternalProject)
+
 function(add_package package_name)
-    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} --triplet ${VCPKG_TRIPLET} install ${package_name}
-            OUTPUT_VARIABLE err
-            )
+    message(WARNING "${package_name} will be installed")
+    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET})
+    message(WARNING "${package_name} was installed")
         if (${NS3_DEBUG})
             set(TRIPLET_APP dbg)
         else()
