@@ -1,6 +1,8 @@
 include(buildsupport/vcpkg_hunter.cmake)
 
-setup_vcpkg()
+if (${AUTOINSTALL_DEPENDENCIES})
+    setup_vcpkg()
+endif()
 
 if (WIN32)
     #If using MSYS2
@@ -42,20 +44,25 @@ macro(process_options)
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17) #c++17 for inline variables in Windows
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
     #find required dependencies
     list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
 
+        set(NOT_FOUND_MSG  "is required and couldn't be found")
     #Libpcre2 for regex
     find_package(PCRE)
     if (NOT ${PCRE_FOUND})
-        #If we don't find installed, install
-        add_package(pcre2)
-        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-        link_directories(${pcre2_dir}/lib)
-        include_directories(${pcre2_dir}/include)
+        if (NOT ${AUTOINSTALL_DEPENDENCIES})
+            message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+        else()
+            #If we don't find installed, install
+            add_package(pcre2)
+            get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+            link_directories(${pcre2_dir}/lib)
+            include_directories(${pcre2_dir}/include)
+        endif()
     else()
         link_directories(${PCRE_LIBRARY})
         include_directories(${PCRE_INCLUDE_DIR})
@@ -65,12 +72,17 @@ macro(process_options)
     if(${NS3_BOOST})
         find_package(Boost)
         if(NOT ${BOOST_FOUND})
-            #message(FATAL_ERROR BoostC++ not found)
-            #If we don't find installed, install
-            add_package(boost)
-            get_property(boost_dir GLOBAL PROPERTY DIR_boost)
-            link_directories(${boost_dir}/lib)
-            include_directories(${boost_dir}/include)
+            if (NOT ${AUTOINSTALL_DEPENDENCIES})
+                message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
+            else()
+                #If we don't find installed, install
+                #add_package(boost) #this install all the boost libraries and was a bad idea
+                #todo: add individual boost libraries required
+
+                get_property(boost_dir GLOBAL PROPERTY DIR_boost)
+                link_directories(${boost_dir}/lib)
+                include_directories(${boost_dir}/include)
+            endif()
         else()
             link_directories(${BOOST_LIBRARY_DIRS})
             include_directories( ${BOOST_INCLUDE_DIR})
@@ -81,7 +93,11 @@ macro(process_options)
     if(${NS3_GTK2})
         find_package(GTK2)
         if(NOT ${GTK2_FOUND})
-            message(FATAL_ERROR LibGTK2 not found)
+            if (NOT ${AUTOINSTALL_DEPENDENCIES})
+                message(FATAL_ERROR "LibGTK2 ${NOT_FOUND_MSG}")
+            else()
+                #todo
+            endif()
         else()
             link_directories(${GTK2_LIBRARY_DIRS})
             include_directories( ${GTK2_INCLUDE_DIRS})
@@ -93,14 +109,17 @@ macro(process_options)
     if(${NS3_LIBXML2})
         find_package(LibXml2)
         if(NOT ${LIBXML2_FOUND})
-            #message(FATAL_ERROR LibXML2 not found)
-            #If we don't find installed, install
-            add_package (libxml2)
-            get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
-               link_directories(${libxml2_dir}/lib)
-            include_directories(${libxml2_dir}/include)
-            #set(LIBXML2_DEFINITIONS)
-            set(LIBXML2_LIBRARIES libxml2)
+            if (NOT ${AUTOINSTALL_DEPENDENCIES})
+                message(FATAL_ERROR "LibXML2 ${NOT_FOUND_MSG}")
+            else()
+                #If we don't find installed, install
+                add_package (libxml2)
+                get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
+                link_directories(${libxml2_dir}/lib)
+                include_directories(${libxml2_dir}/include)
+                #set(LIBXML2_DEFINITIONS)
+                set(LIBXML2_LIBRARIES libxml2)
+            endif()
         else()
             link_directories(${LIBXML2_LIBRARY_DIRS})
             include_directories( ${LIBXML2_INCLUDE_DIR})
@@ -119,16 +138,18 @@ macro(process_options)
         endif()
     endif()
 
+    #removed in favor of C++ threads
     #if(${NS3_PTHREAD})
-        set(THREADS_PREFER_PTHREAD_FLAG)
-        find_package(Threads REQUIRED)
-        if(NOT ${THREADS_FOUND})
-            message(FATAL_ERROR Thread library not found)
-        else()
-            include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
-            add_definitions(-DHAVE_PTHREAD_H)
-        endif()
+    #    set(THREADS_PREFER_PTHREAD_FLAG)
+    #    find_package(Threads REQUIRED)
+    #    if(NOT ${THREADS_FOUND})
+    #        message(FATAL_ERROR Thread library not found)
+    #    else()
+    #        include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
+    #        add_definitions(-DHAVE_PTHREAD_H)
+    #    endif()
     #endif()
+    set(THREADS_FOUND TRUE)
 
     if(${NS3_MPI})
         find_package(MPI)
@@ -189,6 +210,11 @@ macro(process_options)
     #Process core-config
     set(INT64X64 128)
 
+	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
+		message(ERROR "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+		set(INT64X64 DOUBLE)
+	endif()
+
     if(INT64X64 EQUAL 128)
         add_definitions(-DHAVE___UINT128_T)
         add_definitions(-DINT64X64_USE_128)
@@ -227,11 +253,16 @@ macro(process_options)
 
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
     set(ns3-libs )
+    set(ns3-libs-tests )
     foreach(libname ${libs_to_build})
-        #TODO: add 3rd-party library dependency check
-        list(APPEND lib${libname} ns${NS3_VER}-${libname}-${build_type})
+        #Create libname of output library of module
+        set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
         list(APPEND ns3-libs ${lib${libname}})
+
+
     endforeach()
+    string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
+    add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
 
 	#Dump definitions for later use
     get_directory_property( ADDED_DEFINITIONS COMPILE_DEFINITIONS )
@@ -284,13 +315,14 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         list(LENGTH test_sources test_source_len)
         if (${test_source_len} GREATER 0)
             #Create libname of output library test of module
-            list(APPEND test${libname} ns${NS3_VER}-${libname}-test-${build_type})
+            set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
+            set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
 
             #Create shared library containing tests of the module
             add_library(${test${libname}} SHARED "${test_sources}")
 
             #Link test library to the module library
-            target_link_libraries(${test${libname}} ${lib${libname}})
+            target_link_libraries(${test${libname}} -Wl,--no-as-needed ${lib${libname}} -Wl,--as-needed)
         endif()
     endif()
 

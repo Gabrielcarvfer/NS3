@@ -83,7 +83,6 @@ set(test_sources
         test/dot11s/regression.cc
         test/flame/flame-test-suite.cc
         test/flame/flame-regression.cc
-        test/flame/regression.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

@@ -22,6 +22,7 @@
 #include "system-thread.h"
 #include "log.h"
 #include <cstring>
+#include <thread>
 
 /**
  * @file
@@ -50,13 +51,6 @@ SystemThread::Start (void)
 {
   NS_LOG_FUNCTION (this);
   m_thread = std::thread (&SystemThread::DoRun, (void*)this);
-  int rc = (int) std::hash<std::thread::id>{}(m_thread.get_id ());
-
-  if (rc == 0)
-    {
-      NS_FATAL_ERROR ("pthread_create failed: " << rc << "=\"" << 
-                      std::strerror (rc) << "\".");
-    }
 }
 
 void
@@ -81,14 +75,14 @@ SystemThread::ThreadId
 SystemThread::Self (void)
 {
   NS_LOG_FUNCTION_NOARGS ();
-  return (int) std::hash<std::thread::id>{}(std::this_thread::get_id ());
+  return std::hash<std::thread::id>{}(std::this_thread::get_id ());
 }
 
 bool 
 SystemThread::Equals (SystemThread::ThreadId id)
 {
   NS_LOG_FUNCTION (id);
-  return (pthread_self () == id);
+  return (std::hash<std::thread::id>{}(std::this_thread::get_id ()) == id);
 }
 
 
