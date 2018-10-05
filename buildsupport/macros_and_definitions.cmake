@@ -258,17 +258,16 @@ macro(process_options)
         #Create libname of output library of module
         set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
         list(APPEND ns3-libs ${lib${libname}})
-
-
     endforeach()
-    string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
-    add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
+
+    #string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
+    #add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
 
 	#Dump definitions for later use
     get_directory_property( ADDED_DEFINITIONS COMPILE_DEFINITIONS )
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/ns3-definitions "${ADDED_DEFINITIONS}")
 endmacro()
-#----------------------------------------------
+
 macro (write_module_header name header_files)
     string(TOUPPER ${name} uppercase_name)
     string(REPLACE "-" "_" final_name ${uppercase_name} )
@@ -305,7 +304,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${lib${libname}} ${libraries_to_link})
+    target_link_libraries(${lib${libname}} -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
 
     #Write a module header that includes all headers from that module
     write_module_header("${libname}" "${header_files}")
