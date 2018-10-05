@@ -66,7 +66,7 @@ option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM OFF)
 
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
-set(AUTOINSTALL_DEPENDENCIES OFF)
+set(AUTOINSTALL_DEPENDENCIES ON)
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows

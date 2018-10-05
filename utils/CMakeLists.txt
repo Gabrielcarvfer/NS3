@@ -17,3 +17,8 @@ if (${NS3_TESTS})
 
     add_test(test_core test-runner --test-name=libns3-core-test-debug)
 endif()
+
+#todo: fix failing bugs
+#   devices-wifi : 2831
+#   aggregation-wifi : ampdu
+#   wave mac-extension-test-suite : annex_c
