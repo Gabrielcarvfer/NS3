@@ -405,6 +405,9 @@ WaveHelper::Install (const WifiPhyHelper &phyHelper,  const WifiMacHelper &macHe
 
       node->AddDevice (device);
       devices.Add (device);
+
+      device->GetChannelScheduler()->SetWaveNetDevice(device);
+
     }
   return devices;
 }
