@@ -22,9 +22,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <regex.h>
 
-
-#include <pcre2posix.h>
+//#include <pcre2posix.h>
 
 #include "ns3/log.h"
 #include "ns3/unused.h"
