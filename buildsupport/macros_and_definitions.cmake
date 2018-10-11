@@ -357,7 +357,7 @@ macro (build_example name source_files header_files libraries_to_link)
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${name} ${libraries_to_link})
+    target_link_libraries(${name}  -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
 
     set_target_properties( ${name}
             PROPERTIES
@@ -370,7 +370,7 @@ macro (build_lib_example name source_files header_files libraries_to_link)
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${name} ${libraries_to_link})
+    target_link_libraries(${name}  -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
 
     set_target_properties( ${name}
             PROPERTIES
