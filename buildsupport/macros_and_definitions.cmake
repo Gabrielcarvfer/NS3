@@ -1,3 +1,10 @@
+#include Cristian Adam cmake modules to increase cmake speed
+if(${CMAKE_VERSION} VERSION_LESS "3.11.0")
+    message(WARNING "Cristian Adam CMakeChecksCache modules to speed up cmake requires CMake 3.11")
+elseif()
+    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/CMakeChecksCache")
+endif()
+
 include(buildsupport/vcpkg_hunter.cmake)
 
 if (${AUTOINSTALL_DEPENDENCIES})
@@ -30,6 +37,13 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
+if (GCC)
+    set(LIB_AS_NEEDED_PRE -Wl,--no-as-needed)
+    set(LIB_AS_NEEDED_POST -Wl,--as-needed)
+elseif(CLANG)
+    set(LIB_AS_NEEDED_PRE )
+    set(LIB_AS_NEEDED_POST )
+endif()
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -50,7 +64,8 @@ macro(process_options)
     #find required dependencies
     list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
 
-        set(NOT_FOUND_MSG  "is required and couldn't be found")
+
+    set(NOT_FOUND_MSG  "is required and couldn't be found")
     #Libpcre2 for regex
     find_package(PCRE)
     if (NOT ${PCRE_FOUND})
@@ -304,7 +319,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${lib${libname}} -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
+    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     #Write a module header that includes all headers from that module
     write_module_header("${libname}" "${header_files}")
@@ -321,7 +336,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
             add_library(${test${libname}} SHARED "${test_sources}")
 
             #Link test library to the module library
-            target_link_libraries(${test${libname}} -Wl,--no-as-needed ${lib${libname}} -Wl,--as-needed)
+            target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${LIB_AS_NEEDED_POST})
         endif()
     endif()
 
@@ -357,7 +372,7 @@ macro (build_example name source_files header_files libraries_to_link)
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${name}  -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
+    target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}
             PROPERTIES
@@ -370,7 +385,7 @@ macro (build_lib_example name source_files header_files libraries_to_link)
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${name}  -Wl,--no-as-needed ${libraries_to_link} -Wl,--as-needed)
+    target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}
             PROPERTIES
