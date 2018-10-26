@@ -11,6 +11,10 @@ macro(process_contribution contribution_list)
     #Add contribution folders to be built
     foreach(libname ${contribution_list})
         add_subdirectory("${libname}")
+
+        #Just copying every single header into ns3 include folder
+        file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/contrib/${libname}/*.h)
+        file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
     endforeach()
 endmacro()
 
@@ -34,13 +38,23 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
         endif()
     endif()
 
+    #Build lib examples if requested
+    if(${NS3_EXAMPLES})
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/examples)
+            add_subdirectory(examples)
+        endif()
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/example)
+            add_subdirectory(example)
+        endif()
+    endif()
+
     #set_target_properties( ${lib${name}}
     #        PROPERTIES
     #        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/contrib/${name}/
     #        )
 endmacro()
 
-macro (build_contrib_example name contrib source_files header_files libraries_to_link)
+macro (build_contrib_example name contrib source_files header_files libraries_to_link files_to_copy)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
@@ -51,6 +65,9 @@ macro (build_contrib_example name contrib source_files header_files libraries_to
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/contrib/${contrib}/examples
             )
+
+    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/contrib/${contrib}/examples/)
+
 endmacro()
 
 macro (build_contrib_lib contrib_name components)
