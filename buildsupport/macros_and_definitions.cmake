@@ -380,7 +380,7 @@ macro (build_example name source_files header_files libraries_to_link)
             )
 endmacro()
 
-macro (build_lib_example name source_files header_files libraries_to_link)
+macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
@@ -391,6 +391,8 @@ macro (build_lib_example name source_files header_files libraries_to_link)
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}
             )
+
+    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname})
 endmacro()
 
 #Add contributions macros
