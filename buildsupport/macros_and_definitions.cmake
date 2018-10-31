@@ -37,13 +37,25 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
-if (GCC)
-    set(LIB_AS_NEEDED_PRE -Wl,--no-as-needed)
-    set(LIB_AS_NEEDED_POST -Wl,--as-needed)
-elseif(CLANG)
-    set(LIB_AS_NEEDED_PRE )
-    set(LIB_AS_NEEDED_POST )
+
+set(LIB_AS_NEEDED_PRE  )
+set(LIB_AS_NEEDED_POST )
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # using Clang
+    set(LIB_AS_NEEDED_PRE -Wl,-all_load)
+    set(LIB_AS_NEEDED_POST             )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # using GCC
+    set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
+    set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    # using Intel C++
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    # using Visual Studio C++
 endif()
+
+
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -165,6 +177,16 @@ macro(process_options)
     #    endif()
     #endif()
     set(THREADS_FOUND TRUE)
+
+    if(${NS3_PYTHON})
+        find_package(Python COMPONENTS Interpreter Development)
+        if(NOT ${PYTHON_FOUND})
+            message(FATAL_ERROR "PYTHON not found")
+        else()
+            link_directories(${Python_LIBRARY_DIRS})
+            include_directories( ${Python_INCLUDE_DIRS})
+        endif()
+    endif()
 
     if(${NS3_MPI})
         find_package(MPI)
@@ -385,7 +407,7 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
     add_executable(${name} "${source_files}" "${header_files}")
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+    target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}
             PROPERTIES
