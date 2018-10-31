@@ -112,7 +112,7 @@ set(libs_to_build
         traffic-control       #
         uan                   #
         virtual-net-device    #
-        #visualizer
+        visualizer
         wave                  #
         wifi                  #
         wimax                 #
