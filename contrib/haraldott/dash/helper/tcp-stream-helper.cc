@@ -105,7 +105,7 @@ TcpStreamClientHelper::Install (std::vector <std::pair <Ptr<Node>, std::string> 
 {
   ApplicationContainer apps;
 
-  for (uint i = 0; i < clients.size (); i++)
+  for (uint64_t i = 0; i < clients.size (); i++)
     {
       apps.Add (InstallPriv (clients.at (i).first, clients.at (i).second, i));
     }

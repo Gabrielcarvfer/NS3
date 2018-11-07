@@ -243,8 +243,8 @@ TobascoAlgorithm::AverageSegmentThroughput (int64_t t_1, int64_t t_2)
 
   // First, we have to find the index of the start of the download of the first downloaded segment in
   // the interval [t_1, t_2]
-  uint index = 0;
-  for (uint i = 0; i <= m_throughput.transmissionEnd.size () - 1; i++)
+  uint64_t index = 0;
+  for (uint64_t i = 0; i <= m_throughput.transmissionEnd.size () - 1; i++)
     {
       if (m_throughput.transmissionEnd.at (i) < t_1)
         {

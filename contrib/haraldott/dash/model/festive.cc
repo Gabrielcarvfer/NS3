@@ -87,7 +87,7 @@ FestiveAlgorithm::GetNextRep (const int64_t segmentCounter, int64_t clientId)
     }
   // calculate harmonic mean of values in thrptEstimationTmp
   double harmonicMeanDenominator = 0;
-  for (uint i = 0; i < thrptEstimationTmp.size (); i++)
+  for (uint64_t i = 0; i < thrptEstimationTmp.size (); i++)
     {
       harmonicMeanDenominator += 1 / (thrptEstimationTmp.at (i));
     }
