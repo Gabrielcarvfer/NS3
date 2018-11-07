@@ -62,10 +62,11 @@ main(int argc, char *argv[])
 //   LogComponentEnable ("TcpStreamServerApplication", LOG_LEVEL_INFO);
 // #endif
 
-    uint64_t segmentDuration = 100;
+
     // The simulation id is used to distinguish log file results from potentially multiple consequent simulation runs.
     uint32_t simulationId = 1;
     uint32_t numberOfClients = 10;
+    uint64_t segmentDuration = 100;
     std::string adaptationAlgo = "festive"; // festive | panda | tobasco
     std::string segmentSizeFilePath = "segmentsizes.txt";
 

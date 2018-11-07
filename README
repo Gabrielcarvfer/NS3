@@ -1,3 +1,24 @@
+Configuring
+-----------
+It's CMake, you can configure the options the way you prefer (e.g. command line, ncurses, GUI, editing the main file). 
+
+Building
+---------
+Just like any CMake project, create a cmake directory to hold the cache and run cmake. 
+From the ns3 folder, you can run:
+    mkdir cmake-cache && cd cmake-cache && cmake ../ && make|ninja|msbuild|whatever buildsystem you prefer
+
+Running
+--------
+After building: the executables will be in ns3/build/bin, or one of its subfolders (library examples);
+libraries will be in ns3/build/lib; headers will be in ns3/build/ns3.
+
+
+
+
+
+Original Readme below
+==================================
 
     The Network Simulator, Version 3
     --------------------------------
