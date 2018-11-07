@@ -32,6 +32,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
+
 add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 
 #fPIC 
@@ -183,12 +184,13 @@ macro(process_options)
     set(THREADS_FOUND TRUE)
 
     if(${NS3_PYTHON})
-        find_package(Python COMPONENTS Interpreter Development)
-        if(NOT ${PYTHON_FOUND})
+        find_package(Python2 COMPONENTS Interpreter Development)
+        if(NOT ${Python2_FOUND})
             message(FATAL_ERROR "PYTHON not found")
         else()
-            link_directories(${Python_LIBRARY_DIRS})
-            include_directories( ${Python_INCLUDE_DIRS})
+            file(MAKE_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/ns)
+            link_directories(${Python2_LIBRARY_DIRS})
+            include_directories( ${Python2_INCLUDE_DIRS})
         endif()
     endif()
 
@@ -252,7 +254,7 @@ macro(process_options)
     set(INT64X64 128)
 
 	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
-		message(ERROR "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+		message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
 		set(INT64X64 DOUBLE)
 	endif()
 
@@ -378,18 +380,10 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 
     #Build pybindings  if requested
     if(${NS3_PYTHON})
-        set(arch gcc_ILP32)
-        add_custom_command(
-                OUTPUT
-                ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/modulegen_${arch}.py
-                COMMAND
-                ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py
-                ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/
-                ${PROJECT_SOURCE_DIR}/src/${libname}/
-                ${CMAKE_HEADER_OUTPUT_DIRECTORY}/${libname}-module.h
-                modulegen_${arch}.py
-                ${CMAKE_CXX_FLAGS}
-                )
+        set(arch gcc_LP64)#ILP32)#
+        execute_process(
+                COMMAND  PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${Python2_EXEC} ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/modulegen__${arch}.py > ${CMAKE_OUTPUT_DIRECTORY}/ns/${libname}-module.cc
+        )
     endif()
 endmacro()
 
