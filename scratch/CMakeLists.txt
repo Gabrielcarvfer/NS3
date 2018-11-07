@@ -4,6 +4,6 @@ foreach(scratch_src ${scratches})
     get_filename_component(scratch_name ${scratch_src} NAME)
     string(REGEX REPLACE "\\.[^.]*$" "" scratch_name ${scratch_name})
     add_executable(${scratch_name} "${scratch_src}")
-    target_link_libraries(${scratch_name} "${ns3-libs}")
+    target_link_libraries(${scratch_name} "${ns3-libs}" ns3.29-contrib-haraldott-debug)
 endforeach()
 
