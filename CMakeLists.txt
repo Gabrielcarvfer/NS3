@@ -86,7 +86,6 @@ set(libs_to_build
         applications          #
         bridge                #
         #brite
-<<<<<<< NS3.29
         buildings             #
         click                 #
         config-store          #
@@ -107,28 +106,6 @@ set(libs_to_build
         mpi                   #
         netanim               # Not working with Clang on Windows
         network               #
-=======
-        buildings #
-        click
-        config-store #
-        #cognitive
-        core #
-        csma #
-        csma-layout
-        dsdv
-        dsr
-        energy #
-        fd-net-device #requires socket implementation
-        flow-monitor
-        internet #main block, couldnt identify the problem
-        internet-apps
-        lr-wpan #
-        lte
-        mesh
-        mobility #
-        mpi
-        network #
->>>>>>> Custom app for reporting spectrum occupation
         nix-vector-routing
         olsr
         #openflow
@@ -144,7 +121,7 @@ set(libs_to_build
         traffic-control       #
         uan                   #
         virtual-net-device    #
-        visualizer
+        #visualizer
         wave                  #
         wifi                  #
         wimax                 #

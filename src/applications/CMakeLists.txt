@@ -23,8 +23,6 @@ set(source_files
         helper/packet-sink-helper.cc
         helper/udp-client-server-helper.cc
         helper/udp-echo-helper.cc
-        model/CognitiveRadioClient.cc
-        model/CognitiveRadioServer.cc
         helper/three-gpp-http-helper.cc
         )
 
@@ -50,8 +48,6 @@ set(header_files
         helper/udp-client-server-helper.h
         helper/udp-echo-helper.h
         helper/three-gpp-http-helper.h
-        model/CognitiveRadioClient.h
-        model/CognitiveRadioServer.h
         )
 
 #link to dependencies

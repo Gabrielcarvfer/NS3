@@ -169,8 +169,6 @@ private:
    */
   std::size_t m_numDevices;
 
-<<<<<<< NS3.29
-=======
   /**
    * Maximum loss [dB].
    *
@@ -188,7 +186,6 @@ private:
   //Holds event ID of notification of occupied channel for sensing
   EventId m_sendChannelStateEvent;
 
->>>>>>> Custom app for reporting spectrum occupation
 };
 
 

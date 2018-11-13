@@ -281,8 +281,6 @@ public:
     Ipv4Address m_enbAddr; ///< ENB IPv4 address
     Ipv4Address m_ueAddr; ///< UE IPv4 address
     Ipv6Address m_ueAddr6; ///< UE IPv6 address
-    Ipv4Address m_enbAddr; ///< ENB address
-    Ipv4Address m_ueAddr; ///< UE address
     Ipv4Address m_gatewayUeAddr;
     std::map<uint8_t, uint32_t> m_teidByBearerIdMap; ///< TEID By bearer ID Map
   };
