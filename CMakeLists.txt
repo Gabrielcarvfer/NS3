@@ -10,7 +10,6 @@ cmake_minimum_required( VERSION 3.1 )
 # Project name                        #
 #######################################
 project(NS3 CXX)
-set(NS3_VER 3.27)
 
 option(NS3_AUTO_INSTALL_DEPENDENCIES "Automatically download missing libraries with Microsoft Vcpkg" OFF)
 set(NS3_AUTO_INSTALL_DEPENDENCIES OFF)

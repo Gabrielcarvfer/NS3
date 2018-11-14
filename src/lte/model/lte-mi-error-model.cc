@@ -38,27 +38,11 @@
 #include "stdlib.h"
 #include <ns3/lte-mi-error-model.h>
 
-#include <ns3/picojson.h>
-#include <iostream>
-#include <fstream>
 
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteMiErrorModel");
 
-/*
-  void loadErrorData()
-  {
-    std::ifstream errorDataFile;
-    errorDataFile.open("errorData.json");
-    std::istream_iterator input(errorDataFile);
-    picojson::value v;
-    std::string err;
-    input = picojson::parse(v, input, std::istream_iterator(), &err);
-    if (! err.empty()) {
-      std::cerr << err << std::endl;
-    }
-  }*/
 
   /// global table of the effective code rates (ECR)s that have BLER performance curves
   static const double BlerCurvesEcrMap[38] = {

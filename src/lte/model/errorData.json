@@ -1,3 +1,4 @@
+//Always run JSMin to remove comments before parsing (python -m pip install jsmin && python -m jsmin errorData.json > errorData.min.json)
 {
   "BlerCurvesEcrMap": [
     // QPSK (M=2)
