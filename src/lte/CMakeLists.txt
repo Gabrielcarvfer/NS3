@@ -335,6 +335,3 @@ set(test_sources
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-
-add_executable(lte-error-loader model/lte-mi-error-data-loader.cc)
-target_link_libraries(lte-error-loader)

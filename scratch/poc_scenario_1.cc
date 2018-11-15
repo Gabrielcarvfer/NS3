@@ -261,7 +261,7 @@ int main()
     //Packet::EnableChecking ();
 
     //Rodar o simulador
-    Simulator::Stop(Seconds(1)); // Rodar simulação por 10 segundos
+    Simulator::Stop(Seconds(10)); // Rodar simulação por 10 segundos
     Simulator::Run();
     Simulator::Destroy();
 

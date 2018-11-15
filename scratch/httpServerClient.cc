@@ -46,6 +46,8 @@ int main (int argc, char *argv[])
     NodeContainer allNodes;
     // LTE HELPER constructor
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
+    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
+
     Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper>();
     lteHelper->SetEpcHelper(epcHelper);
     /************* ANTENNA SETUP ************/

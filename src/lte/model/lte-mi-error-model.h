@@ -45,14 +45,6 @@
 
 namespace ns3 {
   
-  /// PDCCH PCFICH curve size
-  const uint16_t PDCCH_PCFICH_CURVE_SIZE = 46;
-  /// MI map QPSK size 
-  const uint16_t MI_MAP_QPSK_SIZE = 797;
-  /// MI map 16QAM size
-  const uint16_t MI_MAP_16QAM_SIZE = 994;
-  /// MI map 64QAM size
-  const uint16_t MI_MAP_64QAM_SIZE = 752;
   /// MI QPSK maximum ID
   const uint16_t MI_QPSK_MAX_ID = 9;
   /// MI 16QAM maximum ID
@@ -82,7 +74,7 @@ class LteMiErrorModel
 {
 
 public:
-
+   static void LoadErrorData();
   /** 
    * \brief find the mmib (mean mutual information per bit) for different modulations of the specified TB
    * \param sinr the perceived sinrs in the whole bandwidth
@@ -119,8 +111,8 @@ public:
   static double GetPcfichPdcchError (const SpectrumValue& sinr);
 
 
-//private:
-
+private:
+  static bool errorDataLoaded;
 
 
 };
