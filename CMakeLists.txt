@@ -11,14 +11,6 @@ cmake_minimum_required( VERSION 3.1 )
 #######################################
 project(NS3 CXX)
 
-option(NS3_AUTO_INSTALL_DEPENDENCIES "Automatically download missing libraries with Microsoft Vcpkg" OFF)
-set(NS3_AUTO_INSTALL_DEPENDENCIES OFF)
-
-if (NS3_AUTO_INSTALL_DEPENDENCIES)
-    include(buildsupport/vcpkg_setup.cmake)
-    set(CMAKE_TOOLCHAIN_FILE ./3rd-party/vcpkg/scripts/buildsystems/vcpkg.cmake)
-endif()
-
 include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.29)
@@ -72,6 +64,9 @@ set(NS3_BRITE OFF)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM OFF)
+
+option(NS3_SHARED "Build shared libraries" ON)
+set(NS3_SHARED ON)
 
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)

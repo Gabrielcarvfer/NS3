@@ -21,6 +21,12 @@ if (WIN32)
     set(QT_UIC_EXECUTABLE   "${MSYS2_PATH}\\bin\\uic.exe")
     set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
     set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
+
+    if (${NS3_SHARED})
+        include(GenerateExportHeader)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+        set(BUILD_SHARED_LIBS TRUE)
+    endif()
 endif()
 
 #Fixed definitions
@@ -42,33 +48,25 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # using Clang
-    set(LIB_AS_NEEDED_PRE -Wl,-all_load)
-    set(LIB_AS_NEEDED_POST             )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # using GCC
-    set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
-    set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-    # using Intel C++
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    # using Visual Studio C++
+if (${NS3_SHARED})
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        # using Clang
+        set(LIB_AS_NEEDED_PRE -Wl,-all_load)
+        set(LIB_AS_NEEDED_POST             )
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        # using GCC
+        set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
+        set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+        # using Intel C++
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        # using Visual Studio C++
+    endif()
 endif()
-
 
 
 #process all options passed in main cmakeLists
 macro(process_options)
-    #Copy all header files to outputfolder/include/
-    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-    FILE(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim-3.107/*.h) #just copying every single header from netanim into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-
-    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim-3.108/*.h) #just copying every single header into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
@@ -328,6 +326,12 @@ macro (write_module_header name header_files)
     list(APPEND contents "
     // Module headers: ")
 
+   #Add libmodule_export.h if on Windows, to import DLLs
+    if (WIN32 AND ${NS3_SHARED})
+        list(APPEND contents "
+    #include <ns3/lib${name}_export.h>")
+    endif()
+
     #Write each header listed to the contents variable
     foreach(header ${header_files})
         get_filename_component(head ${header} NAME)
@@ -345,8 +349,22 @@ endmacro()
 
 
 macro (build_lib libname source_files header_files libraries_to_link test_sources)
+
     #Create shared library with sources and headers
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
+
+    #Copy modified headers to output directory
+    add_custom_command(TARGET ${lib${libname}}
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src/${libname}
+            )
+
+    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
+    if(WIN32 AND ${NS3_SHARED})
+        generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
+        file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
+    endif()
 
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
@@ -366,7 +384,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
             add_library(${test${libname}} SHARED "${test_sources}")
 
             #Link test library to the module library
-            target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${LIB_AS_NEEDED_POST})
+            target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${LIB_AS_NEEDED_POST})#${lib${libname}} ${LIB_AS_NEEDED_POST})
         endif()
     endif()
 

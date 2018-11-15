@@ -1,7 +1,3 @@
-//
-// Created by Gabriel on 28-May-18.
-//
-
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2011 Centre Tecnologic de Telecomunicacions de Catalunya (CTTC)

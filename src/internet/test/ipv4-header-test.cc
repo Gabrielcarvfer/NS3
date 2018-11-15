@@ -43,8 +43,15 @@
 #include <string>
 #include <sstream>
 #include <limits>
+
+#ifdef __WIN32__
+#pragma comment(lib, "ws2_32.lib")
+#include <winsock2.h>
+#else
 #include <netinet/in.h>
 #include <sys/socket.h>
+#endif
+
 #include <sys/types.h>
 
 using namespace ns3;

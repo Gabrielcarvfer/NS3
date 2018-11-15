@@ -38,7 +38,6 @@
 #include <utility>
 #include "multi-model-spectrum-channel.h"
 #include <cstdint>
-#include <stdint-gcc.h>
 
 
 namespace ns3 {

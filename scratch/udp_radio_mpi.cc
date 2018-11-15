@@ -1,8 +1,4 @@
 //
-// Created by Gabriel Ferreira (@gabrielcarvfer) on 15/04/2018.
-//
-
-//
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 21/03/2018.
 //
 
