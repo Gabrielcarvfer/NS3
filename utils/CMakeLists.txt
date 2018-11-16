@@ -1,6 +1,6 @@
 if (${NS3_TESTS})
     add_executable(test-runner test-runner.cc)
-    target_link_libraries(test-runner -Wl,--no-as-needed ${ns3-libs} ${ns3-libs-tests} -Wl,--as-needed)
+    target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
 
     add_executable(bench-simulator bench-simulator.cc)
     target_link_libraries(bench-simulator ${libcore})

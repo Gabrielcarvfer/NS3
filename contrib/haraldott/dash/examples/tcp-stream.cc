@@ -34,7 +34,7 @@
 #include <errno.h>
 
 #include <ns3/flow-monitor-module.h>
-#include <ns3/dash-module.h>
+#include <ns3/contrib-haraldott-module.h>
 #include <ns3/point-to-point-module.h>
 
 template<typename T>
@@ -228,11 +228,19 @@ main(int argc, char *argv[])
 
     // create folder so we can log the positions of the clients
     const char *mylogsDir = ("mylogs/");
-    mkdir(mylogsDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     const char *tobascoDir = ("mylogs/" + adaptationAlgo).c_str();
-    mkdir(tobascoDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     const char *dir = ("mylogs/" + adaptationAlgo + "/" + ToString(numberOfClients) + "/").c_str();
-    mkdir(dir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+
+#ifdef __WIN32__
+    mkdir(mylogsDir);
+    mkdir(tobascoDir);
+    mkdir(dir);
+#else
+    mkdir(mylogsDir,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(tobascoDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(dir,        S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
 
     std::ofstream clientPosLog;
     std::string clientPos =
@@ -242,7 +250,7 @@ main(int argc, char *argv[])
     NS_ASSERT_MSG (clientPosLog.is_open(), "Couldn't open clientPosLog file");
 
     // allocate clients to positions
-    for (uint i = 0; i < numberOfClients; i++)
+    for (int i = 0; i < numberOfClients; i++)
     {
         Vector pos = Vector(randPosAlloc->GetNext());
         positionAlloc->Add(pos);
@@ -280,7 +288,7 @@ main(int argc, char *argv[])
     clientHelper.SetAttribute("NumberOfClients", UintegerValue(numberOfClients));
     clientHelper.SetAttribute("SimulationId", UintegerValue(simulationId));
     ApplicationContainer clientApps = clientHelper.Install(clients);
-    for (uint i = 0; i < clientApps.GetN(); i++)
+    for (int i = 0; i < clientApps.GetN(); i++)
     {
         double startTime = i * 3;
         clientApps.Get(i)->SetStartTime(Seconds(startTime));

@@ -40,7 +40,17 @@
 
 #include <string>
 #include <limits>
+
+#ifdef __WIN32__
+#pragma comment(lib, "ws2_32.lib")
+#include <winsock2.h>
+//Undefine MINGW definitions
+#undef GetObject
+#undef SetPort
+#else
 #include <netinet/in.h>
+#endif
+
 
 using namespace ns3;
 
