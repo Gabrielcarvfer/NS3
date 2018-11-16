@@ -1,7 +1,7 @@
 #######################################
 # Required CMake version#
 #######################################
-cmake_minimum_required( VERSION 3.1 )
+cmake_minimum_required( VERSION 3.4 )
 
 #set(CMAKE_C_COMPILER "clang")
 #set(CMAKE_CXX_COMPILER "clang++")
@@ -11,17 +11,17 @@ cmake_minimum_required( VERSION 3.1 )
 #######################################
 project(NS3 CXX)
 
-include(buildsupport/macros_and_definitions.cmake)
-
 set(NS3_VER 3.29)
+
+include(buildsupport/macros_and_definitions.cmake)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
-#set(NS3_TESTS ON)
+set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES ON)
+#set(NS3_EXAMPLES ON)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -70,6 +70,7 @@ set(NS3_SHARED ON)
 
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
+
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows

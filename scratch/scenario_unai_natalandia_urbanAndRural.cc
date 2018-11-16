@@ -200,7 +200,7 @@ int main()
     WifiHelper wifi;
     wifi.SetRemoteStationManager("ns3::AarfWifiManager");
 
-    WifiMacHelper mac = WifiMacHelper::Default();
+    WifiMacHelper mac = WifiMacHelper();
 
     //18 Instala interface wifi das STAs
     Ssid ssid = Ssid("ns-3-ssid");

@@ -231,9 +231,15 @@ main(int argc, char *argv[])
     const char *tobascoDir = ("mylogs/" + adaptationAlgo).c_str();
     const char *dir = ("mylogs/" + adaptationAlgo + "/" + ToString(numberOfClients) + "/").c_str();
 
+#ifdef __WIN32__
     mkdir(mylogsDir);
     mkdir(tobascoDir);
     mkdir(dir);
+#else
+    mkdir(mylogsDir,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(tobascoDir, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(dir,        S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
 
     std::ofstream clientPosLog;
     std::string clientPos =

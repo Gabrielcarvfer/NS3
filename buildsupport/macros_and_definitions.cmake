@@ -5,11 +5,6 @@ elseif()
     list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/CMakeChecksCache")
 endif()
 
-include(buildsupport/vcpkg_hunter.cmake)
-
-if (${AUTOINSTALL_DEPENDENCIES})
-    setup_vcpkg()
-endif()
 
 if (WIN32)
     #If using MSYS2
@@ -22,11 +17,7 @@ if (WIN32)
     set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
     set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
 
-    if (${NS3_SHARED})
-        include(GenerateExportHeader)
-        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-        set(BUILD_SHARED_LIBS TRUE)
-    endif()
+
 endif()
 
 #Fixed definitions
@@ -67,6 +58,25 @@ endif()
 
 #process all options passed in main cmakeLists
 macro(process_options)
+
+    if (${AUTOINSTALL_DEPENDENCIES})
+        include(buildsupport/vcpkg_hunter.cmake)
+        setup_vcpkg()
+    endif()
+
+    if (WIN32 AND ${NS3_SHARED})
+        include(GenerateExportHeader)
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+        set(BUILD_SHARED_LIBS TRUE)
+    endif()
+
+    #Copy all header files to outputfolder/include/
+    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
+    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim/*.h) #just copying every single header from netanim into ns3 include folder
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
@@ -326,11 +336,11 @@ macro (write_module_header name header_files)
     list(APPEND contents "
     // Module headers: ")
 
-   #Add libmodule_export.h if on Windows, to import DLLs
-    if (WIN32 AND ${NS3_SHARED})
-        list(APPEND contents "
-    #include <ns3/lib${name}_export.h>")
-    endif()
+    #Add libmodule_export.h if on Windows, to import DLLs
+    #if (WIN32 AND ${NS3_SHARED})
+    #    list(APPEND contents "
+    ##include <ns3/lib${name}_export.h>")
+    #endif()
 
     #Write each header listed to the contents variable
     foreach(header ${header_files})
@@ -353,7 +363,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     #Create shared library with sources and headers
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
-    #Copy modified headers to output directory
+    #Copy modified headers to output directory before each build
     add_custom_command(TARGET ${lib${libname}}
             PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
@@ -361,10 +371,10 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
             )
 
     #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
-    if(WIN32 AND ${NS3_SHARED})
-        generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
-        file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
-    endif()
+    #if(WIN32 AND ${NS3_SHARED})
+    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
+    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
+    #endif()
 
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
