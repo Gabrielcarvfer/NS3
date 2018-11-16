@@ -21,7 +21,14 @@ endmacro()
 macro (build_contrib_lib_component name contrib source_files header_files libraries_to_link test_sources)
     #Create shared library with sources and headers
     add_library("${lib${contrib}-${name}}" OBJECT "${source_files}" "${header_files}")
+
     set(${contrib}_libraries_to_link "${${contrib}_libraries_to_link}" ${libraries_to_link} PARENT_SCOPE)
+
+    set(header_files_to_copy)
+    foreach(header_file ${header_files})
+        list(APPEND header_files_to_copy ${name}/${header_file})
+    endforeach()
+    set(${contrib}_headers_to_copy  "${${contrib}_headers_to_copy}" ${header_files_to_copy} PARENT_SCOPE)
 
     #Build tests if requested
     if(${NS3_TESTS})
@@ -76,6 +83,7 @@ macro (build_contrib_lib contrib_name components)
 
     #Set sublibraries list
     set(${contrib_name}-contrib-libs)
+    set(${contrib_name}_headers_to_copy )
 
     #Create a lib handler for each component of the contrib library and add their respective subfolder
     foreach(libname ${components})
@@ -95,6 +103,19 @@ macro (build_contrib_lib contrib_name components)
 
     #Create the contrib library with their components
     add_library(${lib${contrib_name}} SHARED ${component_target_objects})
+
+    #Copy modified headers to output directory before each build
+    add_custom_command(TARGET ${lib${contrib_name}}
+            PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy ${${contrib_name}_headers_to_copy} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/contrib/${contrib_name}
+            )
+
+    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
+    #if(WIN32 AND ${NS3_SHARED})
+    #    generate_export_header(${lib${contrib_name}} EXPORT_FILE_NAME libcontrib-${contrib_name}_export.h)
+    #    file(COPY ${CMAKE_CACHEFILE_DIR}/contrib/${contrib_name}/libcontrib-${contrib_name}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
+    #endif()
 
     #Link NS3 and/or 3rd-party dependencies
     target_link_libraries(${lib${contrib_name}} PUBLIC ${${contrib_name}_libraries_to_link})

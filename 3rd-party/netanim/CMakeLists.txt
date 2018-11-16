@@ -177,6 +177,13 @@ if(NS3_NETANIM)
                     )
         endif()
 
+        #Copy modified headers to output directory
+        #add_custom_command(TARGET netanim}
+        #        PRE_BUILD
+        #        COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
+        #        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party/netanim
+        #        )
+
         target_link_libraries(netanim ${libcore} Qt4::QtGui)
     endif()
 endif() #checking if configured to build netanim

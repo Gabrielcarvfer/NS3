@@ -48,7 +48,6 @@ set(header_files
         helper/udp-client-server-helper.h
         helper/udp-echo-helper.h
         helper/three-gpp-http-helper.h
-
         )
 
 #link to dependencies
