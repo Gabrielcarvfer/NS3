@@ -42,8 +42,11 @@ set(LIB_AS_NEEDED_POST )
 if (${NS3_SHARED})
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         # using Clang
-        set(LIB_AS_NEEDED_PRE -Wl,-all_load)
-        set(LIB_AS_NEEDED_POST             )
+        if(WIN32)
+            set(LINK_FLAGS /WHOLEARCHIVE)
+        else()
+            set(LIB_AS_NEEDED_PRE -Wl,-all_load)
+        endif()
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # using GCC
         set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
@@ -261,19 +264,21 @@ macro(process_options)
     endif()
 
     #Process core-config
-    set(INT64X64 128)
+    set(INT64X64 "128")
 
-	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
-		message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+	if (${CMAKE_CXX_COMPILER_ID} EQUAL GCC)
+    else()
+		message(WARNING "Microsoft MSVC and CLang doesn't support 128-bit integer operations. Falling back to double.")
 		set(INT64X64 DOUBLE)
 	endif()
 
-    if(INT64X64 EQUAL 128)
+
+    if(INT64X64 STREQUAL "128")
         add_definitions(-DHAVE___UINT128_T)
         add_definitions(-DINT64X64_USE_128)
-    elseif(INT64X64 EQUAL DOUBLE)
+    elseif(INT64X64 STREQUAL "DOUBLE")
         add_definitions(-DINT64X64_USE_DOUBLE)
-    elseif(INT64X64 EQUAL CAIRO)
+    elseif(INT64X64 STREQUAL "CAIRO")
         add_definitions(-DINT64X64_USE_CAIRO)
     else()
     endif()
@@ -297,11 +302,11 @@ macro(process_options)
     endif()
 
     #Process config-store-config
-    add_definitions(-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages")
-    add_definitions(-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages")
-    add_definitions(-DHAVE_PYEMBED)
-    add_definitions(-DHAVE_PYEXT)
-    add_definitions(-DHAVE_PYTHON_H)
+    #add_definitions(-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages")
+    #add_definitions(-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages")
+    #add_definitions(-DHAVE_PYEMBED)
+    #add_definitions(-DHAVE_PYEXT)
+    #add_definitions(-DHAVE_PYTHON_H)
 
 
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
@@ -364,11 +369,13 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
     #Copy modified headers to output directory before each build
-    add_custom_command(TARGET ${lib${libname}}
-            PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
-            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src/${libname}
-            )
+    #May seem stupid, but removing this required to reload the cmake project to copy header files to build/ns3
+    #Side effect of using it: forces recompilation of the whole library after copying headers if not using ccache
+    #add_custom_command(TARGET ${lib${libname}}
+    #        PRE_BUILD
+    #        COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
+    #        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src/${libname}
+    #        )
 
     #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
     #if(WIN32 AND ${NS3_SHARED})

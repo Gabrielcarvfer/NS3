@@ -40,6 +40,8 @@
 #include <ns3/config.h>
 #include "lte-ue-net-device.h"
 #include "lte-ue-mac.h"
+#include "./BLER/json_loader.h"
+
 
 namespace ns3 {
 
@@ -147,8 +149,14 @@ LteSpectrumPhy::LteSpectrumPhy ()
     {
       m_txModeGain.push_back (1.0);
     }
+
+  sensingEvents = 0;
+  sensingBudget = 0;
 }
 
+bool LteSpectrumPhy::PUProbLoaded = false;
+std::vector<double> LteSpectrumPhy::SNRdB;
+std::vector<double> LteSpectrumPhy::PdTot;
 
 LteSpectrumPhy::~LteSpectrumPhy ()
 {
@@ -175,6 +183,7 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyUlHarqFeedbackCallback = MakeNullCallback< void, UlInfoListElement_s > ();
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
+  m_sensingEvent.Cancel();
 } 
 
 /**
@@ -784,7 +793,70 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
 
+bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci)
+{
+    if (!PUProbLoaded)
+    {
+        //Json loader to parse the file
+        picojson::object o = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
 
+
+        //Load PU detection values from json file
+        {
+            auto temp = o["SNR_dB"].get<picojson::array>();
+            for (auto it = temp.begin(); it != temp.end(); it++)
+                SNRdB.push_back(it->get<double>());
+        }
+        {
+            auto temp = o["Pd_tot"].get<picojson::array>();
+            for (auto it = temp.begin(); it != temp.end(); it++)
+                PdTot.push_back(it->get<double>());
+        }
+        PUProbLoaded = true;
+    }
+
+    //Look for empty RBs SINR
+    double sinrVal = 10.0;
+
+    //Interpolate the probability
+    double x_0, y_0, x_1, y_1;
+    x_0 = y_0 = x_1 = y_1 = 0.0;
+    uint32_t index = -1;
+    for(auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    {
+        if (*it > sinrVal)
+        {
+            index = it - SNRdB.begin();
+            break;
+        }
+    }
+    //The current tested SINR value is not covered by the input table
+    if (index == -1)
+      exit(-1);
+    x_0 = SNRdB.at(index-1);
+    x_1 = SNRdB.at(index);
+    y_0 = PdTot.at(index-1);
+    y_1 = PdTot.at(index);
+
+    double prob = ( y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0) ) / (x_1 - x_0);
+
+    //Answer the probability of detecting the PU
+    return prob > 0.5 ? true : false;
+}
+
+void LteSpectrumPhy::Sense()
+{
+
+  //Collect interference data
+  sinrHistory.push_back(m_sinrPerceived.Copy());
+  puPresence.push_back(OuluProbability(m_sinrPerceived.Copy(),  m_rxControlMessageList));
+
+  //Count the sensing event and reschedule the next one
+  this->sensingBudget--;
+  this->sensingEvents++;
+  if (this->sensingBudget > 0)
+    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+}
 
 void
 LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams)
@@ -844,7 +916,29 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               m_rxControlMessageList = lteDlCtrlRxParams->ctrlMsgList;
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
               ChangeState (RX_DL_CTRL);
-              m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);            
+              m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);
+
+              // schedule sensing events
+              this->sensingBudget=10;
+              this->m_sensingEvent.Cancel();
+              this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+              /*
+             if (m_rxControlMessageList.size()>1)
+             {
+               for (auto pt = m_rxControlMessageList.begin(); pt != m_rxControlMessageList.end(); pt++)
+               {
+                   auto pt2 = Ptr<LteControlMessage>(*pt);
+                   if (pt2 != 0)
+                   {
+                       //Ptr<RarLteControlMessage> p3;//pt2);
+
+                      std::cout<<"bum chaca laca "<<std::endl;//p3->GetRaRnti()<<std::endl;
+                   }
+                   std::cout << "pararatimbum" << std::endl;
+               }
+               std::cout<<"pimba"<<std::endl;
+             }
+              */
             }
           else
             {

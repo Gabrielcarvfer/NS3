@@ -309,8 +309,6 @@ public:
   std::map<Ipv6Address, Ptr<UeInfo> > m_ueInfoByAddrMap6;
 
   /**
-
-    /**
    * Map telling for each IMSI the corresponding UE info 
    */
   std::map<uint64_t, Ptr<UeInfo> > m_ueInfoByImsiMap;

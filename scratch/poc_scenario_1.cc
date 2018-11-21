@@ -15,6 +15,7 @@
 #include <ns3/internet-module.h>
 #include <ns3/mobility-module.h>
 #include <ns3/applications-module.h>
+#include <ns3/contrib-haraldott-module.h>
 
 //Para netanim
 #include <ns3/netanim-module.h>
@@ -33,7 +34,7 @@ using namespace ns3;
 int main()
 {
     uint16_t numberOfNodes = 2;
-    double simTime = 1.1;
+    double simTime = 100;
     double distance = 60.0;
     double interPacketInterval = 25;
 
@@ -41,6 +42,8 @@ int main()
 
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
+    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
+
     Ptr<PointToPointEpcHelper>  epcHelper = CreateObject<PointToPointEpcHelper> ();
     lteHelper->SetEpcHelper (epcHelper);
     Ptr<Node> pgw = epcHelper->GetPgwNode ();
@@ -141,63 +144,36 @@ int main()
 
 
     //10 Configura, instala e inicia aplicações em UEs e servidor remoto
-    uint16_t dlPort = 1234;
-    uint16_t ulPort = 2000;
-    uint16_t otherPort = 3000;
-    ApplicationContainer clientApps;
-    ApplicationContainer serverApps;
-    for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
+    int serverPort = 80;
+    TcpStreamServerHelper serverHelper(serverPort);
+    ApplicationContainer serverApps = serverHelper.Install(remoteHost);
+
+    /* Install TCP/UDP Transmitter on the station */
+    uint32_t segmentDuration = 100;
+    char segmentSizeFilePath[] = "../../contrib/haraldott/dash/examples/segmentsizes.txt";
+    uint32_t numberOfClients = numberOfNodes;
+    TcpStreamClientHelper clientHelper(remoteHostAddr, serverPort);
+    clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));
+    clientHelper.SetAttribute("SegmentSizeFilePath", StringValue(segmentSizeFilePath));
+    clientHelper.SetAttribute("NumberOfClients", UintegerValue(numberOfClients));
+    char adaptationAlgo[] = "festive";
+
+    std::vector<std::pair<Ptr<Node>, std::string> > clients;
+    for (NodeContainer::Iterator i = ueNodes.Begin(); i != ueNodes.End(); ++i)
     {
-        ++ulPort;
-        ++otherPort;
-        PacketSinkHelper dlPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), dlPort));
-        PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), ulPort));
-        PacketSinkHelper packetSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), otherPort));
-        serverApps.Add (dlPacketSinkHelper.Install (ueNodes.Get(u)));
-        serverApps.Add (ulPacketSinkHelper.Install (remoteHost));
-        serverApps.Add (packetSinkHelper.Install (ueNodes.Get(u)));
-
-        UdpClientHelper dlClient (ueIpIface.GetAddress (u), dlPort);
-        dlClient.SetAttribute ("Interval", TimeValue (MilliSeconds(interPacketInterval)));
-        dlClient.SetAttribute ("MaxPackets", UintegerValue(1000000));
-        dlClient.SetAttribute ("PacketSize", UintegerValue(1500));
-
-        UdpClientHelper ulClient (remoteHostAddr, ulPort);
-        ulClient.SetAttribute ("Interval", TimeValue (MilliSeconds(interPacketInterval)));
-        ulClient.SetAttribute ("MaxPackets", UintegerValue(1000000));
-        ulClient.SetAttribute ("PacketSize", UintegerValue(1500));
-
-        UdpClientHelper client (ueIpIface.GetAddress (u), otherPort);
-        client.SetAttribute ("Interval", TimeValue (MilliSeconds(interPacketInterval)));
-        client.SetAttribute ("MaxPackets", UintegerValue(1000000));
-        client.SetAttribute ("PacketSize", UintegerValue(1500));
-
-        clientApps.Add (dlClient.Install (remoteHost));
-        clientApps.Add (ulClient.Install (ueNodes.Get(u)));
-        if (u+1 < ueNodes.GetN ())
-        {
-            clientApps.Add (client.Install (ueNodes.Get(u+1)));
-        }
-        else
-        {
-            clientApps.Add (client.Install (ueNodes.Get((uint32_t)0)));
-        }
+        std::pair<Ptr<Node>, std::string> client(*i, adaptationAlgo);
+        clients.push_back(client);
     }
 
-    UdpEchoServerHelper udpEchoServerHelper(ulPort+1);
-    serverApps.Add(udpEchoServerHelper.Install(remoteHost));
-    UdpEchoClientHelper udpEchoClientHelper(remoteHostAddr, ulPort+1);
-    clientApps.Add(udpEchoClientHelper.Install(ueNodes.Get((uint32_t)0)));
+    ApplicationContainer clientApps = clientHelper.Install(clients);
 
 
-    serverApps.Start (Seconds (0.01));
-    clientApps.Start (Seconds (0.01));
+    serverApps.Start (Seconds (1.0));
+    clientApps.Start (Seconds (1.0));
     lteHelper->EnableTraces ();
 
-
-/**************************************************/
-
-
+//
+/*
 
     SpectrumAnalyzerHelper spectrumAnalyzerHelper;
     spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
@@ -224,8 +200,8 @@ int main()
     NetDeviceContainer spectrumDevice;
     spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
+//
 
-/**************************************************/
     Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 ();
 
     WaveformGeneratorHelper waveformGeneratorHelper;
@@ -243,7 +219,9 @@ int main()
     //Simulator::Schedule (Seconds (0.1), &WaveformGenerator::Start,
     //                     waveformGeneratorDevices.Get (2)->GetObject<NonCommunicatingNetDevice> ()->GetPhy ()->GetObject<WaveformGenerator> ());
 
-/***************************************************/
+
+*/
+//
 
     //Exportar animação para o Netanim
     BaseStationNetDevice b;
@@ -261,7 +239,7 @@ int main()
     //Packet::EnableChecking ();
 
     //Rodar o simulador
-    Simulator::Stop(Seconds(10)); // Rodar simulação por 10 segundos
+    Simulator::Stop(Seconds(simTime)); // Rodar simulação por 10 segundos
     Simulator::Run();
     Simulator::Destroy();
 

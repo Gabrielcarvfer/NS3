@@ -6,7 +6,6 @@ set (name core)
 set(libraries_to_link)
 
 set(gsl_test_sources)
-
 if (${GSL_FOUND})
     set(libraries_to_link
             ${libraries_to_link}
@@ -19,6 +18,7 @@ if (${GSL_FOUND})
 endif()
 
 #Check for dependencies and add sources accordingly
+set(rt_sources)
 if (${NS3_LIBRT} AND NOT WIN32)
     set(rt_sources
             model/realtime-simulator-impl.cc
@@ -34,6 +34,7 @@ if (${NS3_LIBRT} AND NOT WIN32)
             )
 endif()
 
+set(osclock_sources)
 if (${WIN32})
     set(osclock_sources
             model/win32-system-wall-clock-ms.cc
@@ -44,18 +45,21 @@ else()
             )
 endif()
 
-if(${INT64X64} EQUAL 128)
+set(int64x64_sources)
+set(int64x64_headers)
+
+if(INT64X64 STREQUAL "128")
     set(int64x64_sources
             model/int64x64-128.cc
             )
     set(int64x64_headers
             model/int64x64-128.h
             )
-elseif(${INT64X64} EQUAL DOUBLE)
+elseif(INT64X64 STREQUAL "DOUBLE")
     set(int64x64_headers
             model/int64x64-double.h
             )
-elseif(${INT64X64} EQUAL CAIRO)
+elseif(INT64X64 STREQUAL "CAIRO")
     set(int64x64_sources
             model/int64x64-cairo.cc
             )
@@ -65,8 +69,10 @@ elseif(${INT64X64} EQUAL CAIRO)
             )
 endif()
 
-if (${THREADS_FOUND})
+set(thread_sources)
+set(thread_headers)
 
+if (${THREADS_FOUND})
     if(${WIN32})
         set(thread_sources
                 #model/win32-fd-reader.cc

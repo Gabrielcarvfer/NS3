@@ -319,11 +319,11 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                     }                    
                   NS_LOG_LOGIC ("total pathLoss = " << pathLossDb << " dB");    
                   m_pathLossTrace (txParams->txPhy, *rxPhyIterator, pathLossDb);
-                  //if ( pathLossDb > m_maxLossDb)
-                  //  {
-                  //    // beyond range
-                  //    continue;
-                  //  }
+                  if ( pathLossDb > m_maxLossDb)
+                    {
+                      // beyond range
+                      continue;
+                    }
                   double pathGainLinear = std::pow (10.0, (-pathLossDb) / 10.0);
                   *(rxParams->psd) *= pathGainLinear;              
 
@@ -337,8 +337,8 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       delay = m_propagationDelay->GetDelay (txMobility, receiverMobility);
                     }
                 }
-              rxParams->pathLossDb = pathLossDb;
-              rxParams->maxPathLossDb = m_maxLossDb;
+              //rxParams->pathLossDb = pathLossDb;
+              //rxParams->maxPathLossDb = m_maxLossDb;
               Ptr<NetDevice> netDev = (*rxPhyIterator)->GetDevice ();
               if (netDev)
               {

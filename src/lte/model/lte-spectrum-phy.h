@@ -538,6 +538,18 @@ private:
   EventId m_endRxDlCtrlEvent; ///< end receive DL control event
   EventId m_endRxUlSrsEvent; ///< end receive UL SRS event
 
+  EventId m_sensingEvent; ///< holds the scheduled sensing event
+  uint64_t sensingEvents; ///< count sensing events
+  uint64_t sensingBudget; ///< count remaining sensing samples to collect in a slot
+  std::vector< Ptr<SpectrumValue> > sinrHistory; ///< holds the history of measured sinr
+  std::vector<bool>   puPresence; ///< holds the history of PU detection
+  //Create structures to hold probabilities
+  static std::vector<double> SNRdB;
+  static std::vector<double> PdTot;
+  static bool PUProbLoaded;
+  bool OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci);
+  void Sense();
+
 };
 
 

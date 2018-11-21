@@ -38,7 +38,7 @@
 #include "stdlib.h"
 #include <ns3/lte-mi-error-model.h>
 
-#include "./BLER/json_loader.cc"
+#include "./BLER/json_loader.h"
 
 namespace ns3 {
 

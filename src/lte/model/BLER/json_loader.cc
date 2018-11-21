@@ -1,10 +1,8 @@
 //
 // Created by Gabriel on 14-Nov-18.
 //
-#include <ns3/picojson.h>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+
+#include "json_loader.h"
 
 picojson::object load_json(std::string jsonFile)
 {
@@ -31,4 +29,3 @@ picojson::object load_json(std::string jsonFile)
     picojson::object &o = v.get<picojson::object>();
     return o;
 }
-
