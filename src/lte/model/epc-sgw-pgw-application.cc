@@ -105,18 +105,6 @@ EpcSgwPgwApplication::UeInfo::SetUeAddr6 (Ipv6Address ueAddr)
   m_ueAddr6 = ueAddr;
 }
 
-Ipv4Address
-EpcSgwPgwApplication::UeInfo::GetGatewayAddr ()
-{
-  return m_gatewayUeAddr;
-}
-
-void
-EpcSgwPgwApplication::UeInfo::SetGatewayAddr (Ipv4Address addr)
-{
-  m_gatewayUeAddr = addr;
-}
-
 /////////////////////////
 // EpcSgwPgwApplication
 /////////////////////////
@@ -330,27 +318,14 @@ EpcSgwPgwApplication::AddUe (uint64_t imsi)
   m_ueInfoByImsiMap[imsi] = ueInfo;
 }
 
-
-void
+void 
 EpcSgwPgwApplication::SetUeAddress (uint64_t imsi, Ipv4Address ueAddr)
 {
   NS_LOG_FUNCTION (this << imsi << ueAddr);
   std::map<uint64_t, Ptr<UeInfo> >::iterator ueit = m_ueInfoByImsiMap.find (imsi);
-  NS_ASSERT_MSG (ueit != m_ueInfoByImsiMap.end (), "unknown IMSI " << imsi);
+  NS_ASSERT_MSG (ueit != m_ueInfoByImsiMap.end (), "unknown IMSI " << imsi); 
   m_ueInfoByAddrMap[ueAddr] = ueit->second;
   ueit->second->SetUeAddr (ueAddr);
-  ueit->second->SetGatewayAddr("255.255.255.255");
-}
-
-void
-EpcSgwPgwApplication::SetUeAddress (uint64_t imsi, Ipv4Address ueAddr, Ipv4Address gatewayUeAddr)
-{
-  NS_LOG_FUNCTION (this << imsi << ueAddr);
-  std::map<uint64_t, Ptr<UeInfo> >::iterator ueit = m_ueInfoByImsiMap.find (imsi);
-  NS_ASSERT_MSG (ueit != m_ueInfoByImsiMap.end (), "unknown IMSI " << imsi);
-  m_ueInfoByAddrMap[ueAddr] = ueit->second;
-  ueit->second->SetUeAddr (ueAddr);
-  ueit->second->SetGatewayAddr(gatewayUeAddr);
 }
 
 void 

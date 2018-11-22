@@ -538,6 +538,7 @@ private:
   EventId m_endRxDlCtrlEvent; ///< end receive DL control event
   EventId m_endRxUlSrsEvent; ///< end receive UL SRS event
 
+
   EventId m_sensingEvent; ///< holds the scheduled sensing event
   uint64_t sensingEvents; ///< count sensing events
   uint64_t sensingBudget; ///< count remaining sensing samples to collect in a slot
@@ -549,6 +550,8 @@ private:
   static bool PUProbLoaded;
   bool OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci);
   void Sense();
+  std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
+
 
 };
 

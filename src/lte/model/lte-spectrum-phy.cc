@@ -41,6 +41,9 @@
 #include "lte-ue-net-device.h"
 #include "lte-ue-mac.h"
 #include "./BLER/json_loader.h"
+#include <random>
+#include <mutex>
+
 
 
 namespace ns3 {
@@ -184,6 +187,11 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
   m_sensingEvent.Cancel();
+
+  std::cout << this << ": ";
+  for(auto it = puPresence.begin(); it != puPresence.end(); it++)
+      std::cout << puPresence.back();
+  std::cout << std::endl;
 } 
 
 /**
@@ -792,68 +800,134 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
       
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
-
+std::mutex mutex;
 bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci)
 {
-    if (!PUProbLoaded)
     {
-        //Json loader to parse the file
-        picojson::object o = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
+        std::lock_guard<std::mutex> lock(mutex);
+        if (!PUProbLoaded)
+        {
+            //Json loader to parse the file
+            picojson::object o = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
 
 
-        //Load PU detection values from json file
-        {
-            auto temp = o["SNR_dB"].get<picojson::array>();
-            for (auto it = temp.begin(); it != temp.end(); it++)
-                SNRdB.push_back(it->get<double>());
+            //Load PU detection values from json file
+            {
+                auto temp = o["SNR_dB"].get<picojson::array>();
+                for (auto it = temp.begin(); it != temp.end(); it++)
+                    SNRdB.push_back(it->get<double>());
+            }
+            {
+                auto temp = o["Pd_tot"].get<picojson::array>();
+                for (auto it = temp.begin(); it != temp.end(); it++)
+                    PdTot.push_back(it->get<double>());
+            }
+            PUProbLoaded = true;
         }
-        {
-            auto temp = o["Pd_tot"].get<picojson::array>();
-            for (auto it = temp.begin(); it != temp.end(); it++)
-                PdTot.push_back(it->get<double>());
-        }
-        PUProbLoaded = true;
     }
 
-    //Look for empty RBs SINR
-    double sinrVal = 10.0;
-
-    //Interpolate the probability
-    double x_0, y_0, x_1, y_1;
-    x_0 = y_0 = x_1 = y_1 = 0.0;
-    uint32_t index = -1;
-    for(auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    //Look for empty RBs SINR on the DCI
+    bool occupied_RB_indexes[32]{false};
+    for (auto it = dci.begin(); it != dci.end(); it++)
     {
-        if (*it > sinrVal)
+        auto p1 = *it;
+
+        //Skip control messages that are not DL_DCI
+        if (p1->GetMessageType() != LteControlMessage::DL_DCI)
+          continue;
+
+        //Cast to the proper type
+        Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
+
+        //Access the DCI info inside the message
+        auto p3 = p2->GetDci();
+
+        //Check bits to verify if RB is free or occupied
+        uint32_t mask = 0x1;
+        for (int j = 0; j < 32; j++)
         {
-            index = it - SNRdB.begin();
-            break;
+            if ((p3.m_rbBitmap & mask) != 0)
+            {
+                occupied_RB_indexes[j] = true;
+            }
+            mask = (mask << 1);
         }
     }
-    //The current tested SINR value is not covered by the input table
-    if (index == -1)
-      exit(-1);
-    x_0 = SNRdB.at(index-1);
-    x_1 = SNRdB.at(index);
-    y_0 = PdTot.at(index-1);
-    y_1 = PdTot.at(index);
 
-    double prob = ( y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0) ) / (x_1 - x_0);
+    //Calculate the probability of PU detection on given RBs
+    bool PUDetected = false;
+    uint8_t i = 0;
+    for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
+    {
+        if (occupied_RB_indexes[i])
+            continue;
 
-    //Answer the probability of detecting the PU
-    return prob > 0.5 ? true : false;
+        //Calculate SINR for the RBs from SpectrumValue
+        double sinrVal = 10 * log10((*it));
+
+
+        //Interpolate the probability
+        double x_0, y_0, x_1, y_1;
+        x_0 = y_0 = x_1 = y_1 = 0.0;
+        uint32_t index = -1;
+        for (auto it = SNRdB.begin()+1; it != SNRdB.end(); it++)
+        {
+            if (*it > sinrVal)
+            {
+                index = it - SNRdB.begin();
+                break;
+            }
+        }
+
+        double prob = 0.0;
+        //If SINR is in the table, interpolate
+        if (index != -1)
+        {
+            x_0 = SNRdB.at(index - 1);
+            x_1 = SNRdB.at(index);
+            y_0 = PdTot.at(index - 1);
+            y_1 = PdTot.at(index);
+
+            prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
+        }
+        //If the first point for the interpolation extrapolates the table, assume probability of detection is 0
+        else if (SNRdB.at(0) > sinrVal)
+        {
+            prob = 0.0;
+        }
+        //If the second point for the interpolation extrapolates the table, assume probability of detection is 1
+        else
+        {
+            prob = 1.0;
+        }
+        //Answer the probability of detecting the PU
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::bernoulli_distribution d(prob);
+        bool answer = d(gen);
+
+        if (answer)
+        {
+            PUDetected = true;
+        }
+    }
+    return PUDetected;
 }
 
 void LteSpectrumPhy::Sense()
 {
 
   //Collect interference data
-  sinrHistory.push_back(m_sinrPerceived.Copy());
-  puPresence.push_back(OuluProbability(m_sinrPerceived.Copy(),  m_rxControlMessageList));
+  if (m_sinrPerceived.GetSpectrumModel() != 0)
+  {
+    sinrHistory.push_back(m_sinrPerceived.Copy());
+    puPresence.push_back(OuluProbability(m_sinrPerceived.Copy(), m_rxControlMessageListCopy));
 
-  //Count the sensing event and reschedule the next one
-  this->sensingBudget--;
-  this->sensingEvents++;
+    //std::cout << "Pu detected: " << puPresence.back() << std::endl;
+    //Count the sensing event and reschedule the next one
+    this->sensingBudget--;
+    this->sensingEvents++;
+  }
   if (this->sensingBudget > 0)
     this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
 }
@@ -914,6 +988,12 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               
               // store the DCIs
               m_rxControlMessageList = lteDlCtrlRxParams->ctrlMsgList;
+              //copy for sensing purposes
+              for (auto it = m_rxControlMessageList.begin(); it != m_rxControlMessageList.end(); it++)
+              {
+                this->m_rxControlMessageListCopy.push_back(*it);
+              }
+
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
               ChangeState (RX_DL_CTRL);
               m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);
@@ -921,24 +1001,7 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               // schedule sensing events
               this->sensingBudget=10;
               this->m_sensingEvent.Cancel();
-              this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
-              /*
-             if (m_rxControlMessageList.size()>1)
-             {
-               for (auto pt = m_rxControlMessageList.begin(); pt != m_rxControlMessageList.end(); pt++)
-               {
-                   auto pt2 = Ptr<LteControlMessage>(*pt);
-                   if (pt2 != 0)
-                   {
-                       //Ptr<RarLteControlMessage> p3;//pt2);
-
-                      std::cout<<"bum chaca laca "<<std::endl;//p3->GetRaRnti()<<std::endl;
-                   }
-                   std::cout << "pararatimbum" << std::endl;
-               }
-               std::cout<<"pimba"<<std::endl;
-             }
-              */
+              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration, &LteSpectrumPhy::Sense, this);
             }
           else
             {

@@ -685,11 +685,12 @@ TdBetFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sc
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
           for (int j = 0; j < 32; j++)
             {
-              if (((dci.m_rbBitmap & mask) >> j) == 1)
-                {
+              //todo: check if (((dci.m_rbBitmap & mask) >> j) == 1)
+              if ((dci.m_rbBitmap & mask) != 0)
+              {
                   dciRbg.push_back (j);
                   NS_LOG_INFO ("\t" << j);
-                }
+              }
               mask = (mask << 1);
             }
           bool free = true;
