@@ -169,23 +169,6 @@ private:
    */
   std::size_t m_numDevices;
 
-  /**
-   * Maximum loss [dB].
-   *
-   * Any device above this loss is considered out of range.
-   */
-  double m_maxLossDb;
-
-  /**
-   * \deprecated The non-const \c Ptr<SpectrumPhy> argument
-   * is deprecated and will be changed to \c Ptr<const SpectrumPhy>
-   * in a future release.
-   */
-  TracedCallback<Ptr<SpectrumPhy>, Ptr<SpectrumPhy>, double > m_pathLossTrace;
-
-  //Holds event ID of notification of occupied channel for sensing
-  EventId m_sendChannelStateEvent;
-
 };
 
 

@@ -841,49 +841,4 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
-
-void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
-{
-
-  Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
-  Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
-  Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
-
-  // Serialize data to send to eNB
-  std::stringstream msg;
-  msg << m_rnti << std::endl;
-  msg << Simulator::Now() << std::endl;
-  msg << rxParams->duration << std::endl;
-  msg << rxParams->pathLossDb << std::endl;
-  msg << rxParams->maxPathLossDb << std::endl;
-  msg << rxParams->psd << std::endl;
-
-  if (lteDataRxParams != 0)
-  {
-    msg << "LteDataFrame" << std::endl;
-  }
-  else if (lteDlCtrlRxParams != 0)
-  {
-    msg << "LteDlCtrlFrame" << std::endl;
-  }
-  else if (lteUlSrsRxParams != 0)
-  {
-    msg << "LteUlSrsFrame" << std::endl;
-  }
-  else
-  {
-      msg << "Non-LTE transmission detected" << std::endl;
-  }
-  Ptr<Packet> packet = Create<Packet>((const uint8_t *) msg.str().c_str(), msg.str().size()+1);
-
-  LteMacSapProvider::TransmitPduParameters params;
-  params.pdu = packet;
-  params.rnti = m_rnti;
-  params.lcid = 0x0ff; // arbitrary number
-  params.layer = 1; // 1-mac 2-rlc
-  params.harqProcessId = m_harqProcessId;
-  params.componentCarrierId = m_componentCarrierId;
-
-  DoTransmitPdu(params);
-};
 } // namespace ns3

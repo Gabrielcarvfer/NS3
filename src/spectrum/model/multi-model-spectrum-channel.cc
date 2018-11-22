@@ -37,7 +37,6 @@
 #include <iostream>
 #include <utility>
 #include "multi-model-spectrum-channel.h"
-#include <cstdint>
 
 
 namespace ns3 {
@@ -222,6 +221,7 @@ MultiModelSpectrumChannel::FindAndEventuallyAddTxSpectrumModel (Ptr<const Spectr
   return txInfoIterator;
 }
 
+    
 
 void
 MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
@@ -245,7 +245,6 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
   NS_LOG_LOGIC ("converter map size: " << txInfoIteratorerator->second.m_spectrumConverterMap.size ());
   NS_LOG_LOGIC ("converter map first element: " << txInfoIteratorerator->second.m_spectrumConverterMap.begin ()->first);
 
-  int spectrumModelSize = m_rxSpectrumModelInfoMap.size();
   for (RxSpectrumModelInfoMap_t::const_iterator rxInfoIterator = m_rxSpectrumModelInfoMap.begin ();
        rxInfoIterator != m_rxSpectrumModelInfoMap.end ();
        ++rxInfoIterator)
@@ -264,18 +263,13 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           NS_LOG_LOGIC (" converting txPowerSpectrum SpectrumModelUids" << txSpectrumModelUid << " --> " << rxSpectrumModelUid);
           SpectrumConverterMap_t::const_iterator rxConverterIterator = txInfoIteratorerator->second.m_spectrumConverterMap.find (rxSpectrumModelUid);
           if (rxConverterIterator == txInfoIteratorerator->second.m_spectrumConverterMap.end ())
-          {
+            {
               // No converter means TX SpectrumModel is orthogonal to RX SpectrumModel
-              //TODO: continue;
-              convertedTxPowerSpectrum = txParams->psd;
-          }
-          else
-          {
-              convertedTxPowerSpectrum = rxConverterIterator->second.Convert(txParams->psd);
-          }
+              continue;
+            }
+          convertedTxPowerSpectrum = rxConverterIterator->second.Convert (txParams->psd);
         }
 
-      int rxPhySize = rxInfoIterator->second.m_rxPhySet.size();
 
       for (std::set<Ptr<SpectrumPhy> >::const_iterator rxPhyIterator = rxInfoIterator->second.m_rxPhySet.begin ();
            rxPhyIterator != rxInfoIterator->second.m_rxPhySet.end ();
@@ -286,7 +280,6 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
 
           if ((*rxPhyIterator) != txParams->txPhy)
             {
-              double pathLossDb = 0;
               NS_LOG_LOGIC (" copying signal parameters " << txParams);
               Ptr<SpectrumSignalParameters> rxParams = txParams->Copy ();
               rxParams->psd = Copy<SpectrumValue> (convertedTxPowerSpectrum);
@@ -296,6 +289,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
 
               if (txMobility && receiverMobility)
                 {
+                  double pathLossDb = 0;
                   if (rxParams->txAntenna != 0)
                     {
                       Angles txAngles (receiverMobility->GetPosition (), txMobility->GetPosition ());
@@ -337,23 +331,21 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       delay = m_propagationDelay->GetDelay (txMobility, receiverMobility);
                     }
                 }
-              //rxParams->pathLossDb = pathLossDb;
-              //rxParams->maxPathLossDb = m_maxLossDb;
+
               Ptr<NetDevice> netDev = (*rxPhyIterator)->GetDevice ();
               if (netDev)
-              {
+                {
                   // the receiver has a NetDevice, so we expect that it is attached to a Node
                   uint32_t dstNode =  netDev->GetNode ()->GetId ();
                   Simulator::ScheduleWithContext (dstNode, delay, &MultiModelSpectrumChannel::StartRx, this,
                                                   rxParams, *rxPhyIterator);
-              }
+                }
               else
-              {
+                {
                   // the receiver is not attached to a NetDevice, so we cannot assume that it is attached to a node
-                  Simulator::Schedule(delay, &MultiModelSpectrumChannel::StartRx, this,
-                                      rxParams, *rxPhyIterator);
-              }
-
+                  Simulator::Schedule (delay, &MultiModelSpectrumChannel::StartRx, this,
+                                       rxParams, *rxPhyIterator);
+                }
             }
         }
 
@@ -365,8 +357,7 @@ void
 MultiModelSpectrumChannel::StartRx (Ptr<SpectrumSignalParameters> params, Ptr<SpectrumPhy> receiver)
 {
   NS_LOG_FUNCTION (this);
-  receiver->StartRx(params);
-
+  receiver->StartRx (params);
 }
 
 std::size_t

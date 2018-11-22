@@ -265,10 +265,6 @@ private:
   bool m_waitingForRaResponse; ///< waiting for RA response
 
 
-    //Custom
-public:
-     void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams);
-
 };
 
 } // namespace ns3

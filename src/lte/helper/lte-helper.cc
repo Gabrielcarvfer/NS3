@@ -1022,6 +1022,7 @@ namespace ns3 {
         {
             // activate default EPS bearer
             m_epcHelper->ActivateEpsBearer (ueDevice, ueLteDevice->GetImsi (), EpcTft::Default (), EpsBearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT));
+            ueDevice->GetObject<LteUeNetDevice>()->SetTargetEnb(enbDevice->GetObject<LteEnbNetDevice>());
         }
 
         // tricks needed for the simplified LTE-only simulations

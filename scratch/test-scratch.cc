@@ -80,7 +80,7 @@ int main()
 
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
-    double simTime = 10;
+    double simTime = 2;
     double distance = 60.0;
     double interPacketInterval = 25;
 
@@ -89,10 +89,12 @@ int main()
 
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
+
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
     //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
     Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
+    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel"));
 
 
 
@@ -125,16 +127,27 @@ int main()
     positionAlloc->Add (Vector (5000.0, 5000.0,  0.0));  // 2 - eNB
 
     Ptr<ListPositionAllocator> positionAlloc2 = CreateObject<ListPositionAllocator> ();
-    positionAlloc2->Add(Vector (3200.0, 5000.0,  0.0));  // 3 - UE 0
-    positionAlloc2->Add(Vector (3500.0, 5000.0,  0.0));  // 4 - UE 1
-    positionAlloc2->Add(Vector (3800.0, 5000.0,  0.0));  // 5 - UE 2
-    positionAlloc2->Add(Vector (4100.0, 5000.0,  0.0));  // 6 - UE 3
-    positionAlloc2->Add(Vector (4400.0, 5000.0,  0.0));  // 7 - UE 4
-    positionAlloc2->Add(Vector (4700.0, 5000.0,  0.0));  // 8 - UE 5
-    positionAlloc2->Add(Vector (5000.0, 5000.0,  0.0));  // 9 - UE 6
-    positionAlloc2->Add(Vector (5300.0, 5000.0,  0.0));  //10 - UE 7
-    positionAlloc2->Add(Vector (5600.0, 5000.0,  0.0));  //11 - UE 8
-    positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
+    //positionAlloc2->Add(Vector (3200.0, 5000.0,  0.0));  // 3 - UE 0
+    //positionAlloc2->Add(Vector (3500.0, 5000.0,  0.0));  // 4 - UE 1
+    //positionAlloc2->Add(Vector (3800.0, 5000.0,  0.0));  // 5 - UE 2
+    //positionAlloc2->Add(Vector (4100.0, 5000.0,  0.0));  // 6 - UE 3
+    //positionAlloc2->Add(Vector (4400.0, 5000.0,  0.0));  // 7 - UE 4
+    //positionAlloc2->Add(Vector (4700.0, 5000.0,  0.0));  // 8 - UE 5
+    //positionAlloc2->Add(Vector (5000.0, 5000.0,  0.0));  // 9 - UE 6
+    //positionAlloc2->Add(Vector (5300.0, 5000.0,  0.0));  //10 - UE 7
+    //positionAlloc2->Add(Vector (5600.0, 5000.0,  0.0));  //11 - UE 8
+    //positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
+
+    positionAlloc2->Add(Vector ( 5000.0, 5000.0,  0.0));  // 3 - UE 0
+    positionAlloc2->Add(Vector (12000.0, 5000.0,  0.0));  // 4 - UE 1
+    positionAlloc2->Add(Vector (19000.0, 5000.0,  0.0));  // 5 - UE 2
+    positionAlloc2->Add(Vector (26000.0, 5000.0,  0.0));  // 6 - UE 3
+    positionAlloc2->Add(Vector (31000.0, 5000.0,  0.0));  // 7 - UE 4
+    positionAlloc2->Add(Vector (38000.0, 5000.0,  0.0));  // 8 - UE 5
+    positionAlloc2->Add(Vector (45000.0, 5000.0,  0.0));  // 9 - UE 6
+    positionAlloc2->Add(Vector (52000.0, 5000.0,  0.0));  //10 - UE 7
+    positionAlloc2->Add(Vector (59000.0, 5000.0,  0.0));  //11 - UE 8
+    positionAlloc2->Add(Vector (65000.0, 5000.0,  0.0));  //12 - UE 9
 
 
     //5 Instala mobilidade dos dispositivos (parados)
@@ -167,6 +180,7 @@ int main()
     Ipv4AddressHelper ipv4h;
     ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
     Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
+    ipv4h.NewNetwork();
 
     // interface 0 is localhost/loopback, 1 is the p2p device
     Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
@@ -195,21 +209,24 @@ int main()
     //12 Instala pilha IP nos UE e dá endereços controlados pelo EPC
     internet.Install (ueNodes);
     Ipv4InterfaceContainer ueIpIface;
-    ueIpIface = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
+    ueIpIface = epcHelper->AssignUeIpv4Address (ueLteDevs);
 
 
-    //13 Modifica UEs para adicionar o gateway correspondendo ao EPC
-    // (conexão entre UE/eNB é feita através de uma aplicação e tunelamento GPRS)
+
     for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
     {
+        //13 Modifica UEs para adicionar o gateway correspondendo ao EPC
+        // (conexão entre UE/eNB é feita através de uma aplicação e tunelamento GPRS)
         Ptr<Node> ueNode = ueNodes.Get (u);
         Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNode->GetObject<Ipv4> ());
         ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
+
+        //14 Associa UE ao eNodeB
+        lteHelper->Attach (ueLteDevs.Get(u), enbLteDevs.Get(0));
     }
 
 
-    //14 Associa UE ao eNodeB
-    lteHelper->Attach (ueLteDevs, enbLteDevs.Get(0));
+
 
     //enum EpsBearer::Qci q = EpsBearer::NGBR_VIDEO_TCP_DEFAULT;
     //EpsBearer bearer (q);
@@ -237,7 +254,9 @@ int main()
     ////lteHelper->ActivateDedicatedEpsBearer (ueLteDevs, bearer, tft);
     //}
 
-
+    //enum EpsBearer::Qci q = EpsBearer::GBR_CONV_VOICE;
+    //EpsBearer bearer (q);
+    //lteHelper->ActivateDataRadioBearer (ueLteDevs, bearer);
 
     // 26 Configura e instala aplicações
     uint16_t serverPort = 900;
@@ -252,12 +271,12 @@ int main()
     //ECHO APP
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(1)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(100));
+    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(10)));
+    echoClient.SetAttribute("PacketSize", UintegerValue(1000));
     clientApps.Add(echoClient.Install(ueNodes));
 
     //DASH APP
-    uint64_t segmentDuration = 1;
+    uint64_t segmentDuration = 10;
     std::string adaptationAlgo = "festive"; // festive | panda | tobasco
     std::string segmentSizeFilePath = "../../contrib/haraldott/dash/examples/segmentsizes.txt";
 
@@ -284,7 +303,6 @@ int main()
     clientApps.Start (Seconds (0.2));
 
 
-
     //27 Coleta traces LTE, WiFi e P2P
     lteHelper->EnableTraces ();
     p2ph.EnablePcapAll("test_scratch", true);
@@ -301,11 +319,10 @@ int main()
 
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
 
-    Ipv4GlobalRoutingHelper g;
-    Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
-            ("dynamic-global-routing.routes", std::ios::out);
-    g.PrintRoutingTableAllAt (Seconds (12), routingStream);
-
+    //Ipv4GlobalRoutingHelper g;
+    //Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
+    //        ("dynamic-global-routing.routes", std::ios::out);
+    //g.PrintRoutingTableAllAt (Seconds (12), routingStream);
     //for (int i = 0; i < allNodes.GetN(); i++)
     //    for (int j = 0; j < allNodes.Get(i)->GetObject<Ipv4>()->GetNInterfaces(); j++)
     //        std::cout << "Node " << i << " ID "<< allNodes.Get(i)->GetId()<< " IP " << allNodes.Get(i)->GetObject<Ipv4>()->GetAddress(j,0).GetLocal()<<std::endl;

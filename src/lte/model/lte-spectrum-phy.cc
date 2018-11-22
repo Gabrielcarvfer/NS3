@@ -680,28 +680,12 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
 
-  Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
-  if (dev != 0)
-  {
-      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
-  }
-
-  //If signal can't be decoded, add as interference
-  //In the original behavior, the receiver only receives whatever it can receive (checked by the transmissor)
-  if (spectrumRxParams->pathLossDb > spectrumRxParams->maxPathLossDb)
-  {
-      // other type of signal (could be 3G, GSM, whatever) -> interference
-      m_interferenceData->AddSignal (rxPsd, duration);
-      m_interferenceCtrl->AddSignal (rxPsd, duration);
-      return;
-  }
-
-
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
   Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (spectrumRxParams);
   Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (spectrumRxParams);
   Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (spectrumRxParams);
+
   if (lteDataRxParams != 0)
     {
       m_interferenceData->AddSignal (rxPsd, duration);
@@ -859,6 +843,7 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     uint8_t i = 0;
     for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
     {
+        //Skip if the RB is supposed to be occupied by an UE transmission
         if (occupied_RB_indexes[i])
             continue;
 
@@ -869,8 +854,8 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         //Interpolate the probability
         double x_0, y_0, x_1, y_1;
         x_0 = y_0 = x_1 = y_1 = 0.0;
-        uint32_t index = -1;
-        for (auto it = SNRdB.begin()+1; it != SNRdB.end(); it++)
+        int32_t index = -1;
+        for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
         {
             if (*it > sinrVal)
             {
@@ -881,7 +866,7 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
         double prob = 0.0;
         //If SINR is in the table, interpolate
-        if (index != -1)
+        if (index > 0)
         {
             x_0 = SNRdB.at(index - 1);
             x_1 = SNRdB.at(index);
@@ -891,7 +876,7 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
             prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
         }
         //If the first point for the interpolation extrapolates the table, assume probability of detection is 0
-        else if (SNRdB.at(0) > sinrVal)
+        else if (index == 0)
         {
             prob = 0.0;
         }
