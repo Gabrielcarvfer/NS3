@@ -25,7 +25,6 @@
 #include <ns3/log.h>
 #include <cmath>
 #include <ns3/simulator.h>
-#include <ns3/trace-source-accessor.h>
 #include <ns3/antenna-model.h>
 #include "lte-spectrum-phy.h"
 #include "lte-spectrum-signal-parameters.h"
@@ -34,7 +33,6 @@
 #include "lte-chunk-processor.h"
 #include "lte-phy-tag.h"
 #include <ns3/lte-mi-error-model.h>
-#include <ns3/lte-radio-bearer-tag.h>
 #include <ns3/boolean.h>
 #include <ns3/double.h>
 #include <ns3/config.h>
@@ -812,31 +810,61 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
     //Look for empty RBs SINR on the DCI
     bool occupied_RB_indexes[32]{false};
+    int dci_count = 0;
+    int rbgSize = 3;
+
     for (auto it = dci.begin(); it != dci.end(); it++)
     {
         auto p1 = *it;
-
-        //Skip control messages that are not DL_DCI
-        if (p1->GetMessageType() != LteControlMessage::DL_DCI)
-          continue;
-
-        //Cast to the proper type
-        Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
-
-        //Access the DCI info inside the message
-        auto p3 = p2->GetDci();
-
-        //Check bits to verify if RB is free or occupied
-        uint32_t mask = 0x1;
-        for (int j = 0; j < 32; j++)
+        switch(p1->GetMessageType())
         {
-            if ((p3.m_rbBitmap & mask) != 0)
-            {
-                occupied_RB_indexes[j] = true;
-            }
-            mask = (mask << 1);
+            //Skip control messages that are not DL_DCI or UL_DCI
+            default:
+                continue;
+            case LteControlMessage::DL_DCI:
+                {
+                    //Cast to the proper type
+                    Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
+
+                    //Access the DCI info inside the message
+                    auto p3 = p2->GetDci();
+
+                    //Check bits to verify if RB is free or occupied
+                    uint32_t mask = 0x1;
+                    for (int j = 0; j < 32-rbgSize; j+= rbgSize)
+                    {
+                        if ((p3.m_rbBitmap & mask) != 0)
+                        {
+                            for (int k = 0; k < rbgSize; k++)
+                                occupied_RB_indexes[j+k] = true;
+                        }
+                        mask = (mask << 1);
+                    }
+                }
+                break;
+            /*case LteControlMessage::UL_DCI:
+                {
+                    //Cast to the proper type
+                    Ptr<UlDciLteControlMessage> p2 = DynamicCast<UlDciLteControlMessage>(*it);
+
+                    //Access the DCI info inside the message
+                    auto p3 = p2->GetDci();
+
+                    //Mark allocated RBs as occupied
+                    for (int i = p3.m_rbStart; i < p3.m_rbStart+p3.m_rbLen; i++)
+                    {
+                        occupied_RB_indexes[i] = true;
+                    }
+
+                }
+                break;*/
         }
+        dci_count++;
     }
+
+    //No DCI received, then skip
+    if (dci_count == 0)
+        return false;
 
     //Calculate the probability of PU detection on given RBs
     bool PUDetected = false;
@@ -907,6 +935,7 @@ void LteSpectrumPhy::Sense()
   {
     sinrHistory.push_back(m_sinrPerceived.Copy());
     puPresence.push_back(OuluProbability(m_sinrPerceived.Copy(), m_rxControlMessageListCopy));
+    m_rxControlMessageListCopy.clear();
 
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
     //Count the sensing event and reschedule the next one
