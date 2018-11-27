@@ -80,7 +80,7 @@ int main()
 
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
-    double simTime = 2;
+    double simTime = 5;
     double distance = 60.0;
     double interPacketInterval = 25;
 
@@ -271,7 +271,7 @@ int main()
     //ECHO APP
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(10)));
+    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(1)));
     echoClient.SetAttribute("PacketSize", UintegerValue(1000));
     clientApps.Add(echoClient.Install(ueNodes));
 
@@ -312,11 +312,70 @@ int main()
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
+    //gerador de interferencia
+    NodeContainer waveformGeneratorNodes;
+    waveformGeneratorNodes.Create(1);
+    Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 ();
+
+    WaveformGeneratorHelper waveformGeneratorHelper;
+    waveformGeneratorHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
+    waveformGeneratorHelper.SetTxPowerSpectralDensity (mwoPsd);
+
+    waveformGeneratorHelper.SetPhyAttribute ("Period", TimeValue (Seconds (1.0)));   // corresponds to 60 Hz
+    waveformGeneratorHelper.SetPhyAttribute ("DutyCycle", DoubleValue (0.5));
+    NetDeviceContainer waveformGeneratorDevices = waveformGeneratorHelper.Install (waveformGeneratorNodes);
+    Simulator::Schedule (Seconds (2.5), &WaveformGenerator::Start, waveformGeneratorDevices.Get (0)->GetObject<NonCommunicatingNetDevice>()->GetPhy ()->GetObject<WaveformGenerator> ());
+
+
+
+
+
+    //captura espectro
+    NodeContainer spectrumAnalyzer;
+    spectrumAnalyzer.Create(1);
+
+    SpectrumAnalyzerHelper spectrumAnalyzerHelper;
+    spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
+    Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
+    Ptr<LteEnbPhy> enbPhy = enbNetDev->GetPhy();
+    Ptr<LteSpectrumPhy> enbSpectrPhy = enbPhy->GetUlSpectrumPhy();
+    Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
+    Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel ( model);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
+    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300MHz3GhzLog);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300Khz300GhzLog);
+    spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
+
+    //From lte-spectrum-value-helper.cc
+    const double kT_dBm_Hz = -174.0;  // dBm/Hz
+    double kT_W_Hz = std::pow (10.0, (kT_dBm_Hz - 30) / 10.0);
+    double noiseFigureLinear = std::pow (10.0, enbPhy->GetNoiseFigure() / 10.0);
+    double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
+
+    spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
+    spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
+
+    NetDeviceContainer spectrumDevice;
+    spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
+
+
+    NodeContainer waveNodes;
+    waveNodes.Add(spectrumAnalyzer);
+    waveNodes.Add(waveformGeneratorNodes);
+
+    Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
+    pos->Add(Vector(65000.0, 5000.0, 0.0));
+    pos->Add(Vector(65000.0, 5000.0, 0.0));
+    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    mobility.SetPositionAllocator(pos);
+    mobility.Install(waveNodes);
 
     //32 Rodar o simulador
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 
+    //33 Guarda flows
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
 
     //Ipv4GlobalRoutingHelper g;

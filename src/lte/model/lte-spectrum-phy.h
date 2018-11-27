@@ -496,10 +496,10 @@ private:
   LtePhyRxCtrlEndOkCallback     m_ltePhyRxCtrlEndOkCallback; ///< the LTE phy receive control end ok callback
   LtePhyRxCtrlEndErrorCallback  m_ltePhyRxCtrlEndErrorCallback; ///< the LTE phy receive control end error callback
   LtePhyRxPssCallback  m_ltePhyRxPssCallback; ///< the LTE phy receive PSS callback
-
+public:
   Ptr<LteInterference> m_interferenceData; ///< the data interference
   Ptr<LteInterference> m_interferenceCtrl; ///< the control interference
-
+private:
   uint16_t m_cellId; ///< the cell ID
   
   uint8_t m_componentCarrierId; ///< the component carrier ID

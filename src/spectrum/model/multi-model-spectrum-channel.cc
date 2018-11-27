@@ -263,11 +263,17 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           NS_LOG_LOGIC (" converting txPowerSpectrum SpectrumModelUids" << txSpectrumModelUid << " --> " << rxSpectrumModelUid);
           SpectrumConverterMap_t::const_iterator rxConverterIterator = txInfoIteratorerator->second.m_spectrumConverterMap.find (rxSpectrumModelUid);
           if (rxConverterIterator == txInfoIteratorerator->second.m_spectrumConverterMap.end ())
-            {
+          {
               // No converter means TX SpectrumModel is orthogonal to RX SpectrumModel
-              continue;
-            }
-          convertedTxPowerSpectrum = rxConverterIterator->second.Convert (txParams->psd);
+              //continue;
+
+              //force conversion to receive other transmissions
+              convertedTxPowerSpectrum = txParams->psd;
+          }
+          else
+          {
+              convertedTxPowerSpectrum = rxConverterIterator->second.Convert(txParams->psd);
+          }
         }
 
 

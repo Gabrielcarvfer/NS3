@@ -185,11 +185,13 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
   m_sensingEvent.Cancel();
-
-  std::cout << this << ": ";
-  for(auto it = puPresence.begin(); it != puPresence.end(); it++)
-      std::cout << puPresence.back();
-  std::cout << std::endl;
+  if (puPresence.size()>1)
+  {
+      std::cout << this << ": ";
+      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
+          std::cout << *it;
+      std::cout << std::endl;
+  }
 } 
 
 /**
@@ -811,7 +813,7 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     //Look for empty RBs SINR on the DCI
     bool occupied_RB_indexes[32]{false};
     int dci_count = 0;
-    int rbgSize = 3;
+    int rbgSize = 4;
 
     for (auto it = dci.begin(); it != dci.end(); it++)
     {
@@ -858,6 +860,19 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
                 }
                 break;*/
+            /*case LteControlMessage::RAR:
+                {
+                    //Cast to the proper type
+                    Ptr<RarLteControlMessage> p2 = DynamicCast<RarLteControlMessage>(*it);
+                    for(auto p3 = p2->RarListBegin(); p3 != p2->RarListEnd(); p3++)
+                    {
+                        for (int i = p3->rarPayload.m_grant.m_rbStart; i < p3->rarPayload.m_grant.m_rbStart+p3->rarPayload.m_grant.m_rbLen; i++)
+                        {
+                            occupied_RB_indexes[i] = true;
+                        }
+                    }
+                }
+                break;*/
         }
         dci_count++;
     }
@@ -871,13 +886,14 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     uint8_t i = 0;
     for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
     {
+
         //Skip if the RB is supposed to be occupied by an UE transmission
-        if (occupied_RB_indexes[i])
+        if (occupied_RB_indexes[i] || *it == 0)
             continue;
 
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = 10 * log10((*it));
-
+        //std::cout << this << " : " << Simulator::Now() << " " << sinrVal << std::endl;
 
         //Interpolate the probability
         double x_0, y_0, x_1, y_1;
@@ -934,16 +950,20 @@ void LteSpectrumPhy::Sense()
   if (m_sinrPerceived.GetSpectrumModel() != 0)
   {
     sinrHistory.push_back(m_sinrPerceived.Copy());
-    puPresence.push_back(OuluProbability(m_sinrPerceived.Copy(), m_rxControlMessageListCopy));
-    m_rxControlMessageListCopy.clear();
+    bool PuPresent = OuluProbability(m_sinrPerceived.Copy(), m_rxControlMessageListCopy);
+    puPresence.push_back(PuPresent);
 
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
     //Count the sensing event and reschedule the next one
     this->sensingBudget--;
     this->sensingEvents++;
+
+    if (this->sensingBudget > 0)
+    {
+        //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+        this->sensingBudget = 0;
+    }
   }
-  if (this->sensingBudget > 0)
-    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
 }
 
 void
@@ -1002,20 +1022,27 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               
               // store the DCIs
               m_rxControlMessageList = lteDlCtrlRxParams->ctrlMsgList;
+
+              // prepare to schedule sensing events
+              this->sensingBudget=10;
+              this->m_sensingEvent.Cancel();
+              this->m_rxControlMessageListCopy.clear();
+
               //copy for sensing purposes
               for (auto it = m_rxControlMessageList.begin(); it != m_rxControlMessageList.end(); it++)
               {
                 this->m_rxControlMessageListCopy.push_back(*it);
               }
 
+              // schedule sensing events
+              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration, &LteSpectrumPhy::Sense, this);
+
+
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
               ChangeState (RX_DL_CTRL);
               m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);
 
-              // schedule sensing events
-              this->sensingBudget=10;
-              this->m_sensingEvent.Cancel();
-              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration, &LteSpectrumPhy::Sense, this);
+
             }
           else
             {
