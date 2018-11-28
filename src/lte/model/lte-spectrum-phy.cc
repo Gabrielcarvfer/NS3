@@ -153,6 +153,7 @@ LteSpectrumPhy::LteSpectrumPhy ()
 
   sensingEvents = 0;
   sensingBudget = 0;
+  PU_presence = false;
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -189,7 +190,12 @@ void LteSpectrumPhy::DoDispose ()
   {
       std::cout << this << ": ";
       for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
-          std::cout << *it;
+          std::cout << *it << " ";
+      std::cout << std::endl;
+
+      std::cout << this << ": ";
+      for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
+          std::cout << *it << " ";
       std::cout << std::endl;
   }
 } 
@@ -706,6 +712,10 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       // other type of signal (could be 3G, GSM, whatever) -> interference
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
+
+      PU_presence = true;
+      PU_event.Cancel();
+      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this);
     }    
 }
 
@@ -784,8 +794,14 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
       
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
+
+void LteSpectrumPhy::reset_PU_presence()
+{
+  PU_presence = false;
+}
+
 std::mutex mutex;
-bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci)
+void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, bool * PUDetected, double * avgSinr)
 {
     {
         std::lock_guard<std::mutex> lock(mutex);
@@ -879,11 +895,12 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
     //No DCI received, then skip
     if (dci_count == 0)
-        return false;
+       return ;
 
     //Calculate the probability of PU detection on given RBs
-    bool PUDetected = false;
     uint8_t i = 0;
+    bool first = true;
+    uint8_t j = 0;
     for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
     {
 
@@ -894,6 +911,16 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = 10 * log10((*it));
         //std::cout << this << " : " << Simulator::Now() << " " << sinrVal << std::endl;
+        if (first)
+        {
+            *avgSinr = sinrVal;
+            first = false;
+        }
+        else
+        {
+            *avgSinr += sinrVal;
+        }
+        j++;
 
         //Interpolate the probability
         double x_0, y_0, x_1, y_1;
@@ -932,15 +959,21 @@ bool LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         //Answer the probability of detecting the PU
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::bernoulli_distribution d(prob);
-        bool answer = d(gen);
+
+        bool answer = false;
+        if (PU_presence)
+        {
+          std::bernoulli_distribution d(prob);
+          answer = d(gen);
+        }
 
         if (answer)
         {
-            PUDetected = true;
+            *PUDetected = true;
         }
     }
-    return PUDetected;
+    if (j > 0)
+        *avgSinr /= j;
 }
 
 void LteSpectrumPhy::Sense()
@@ -950,8 +983,11 @@ void LteSpectrumPhy::Sense()
   if (m_sinrPerceived.GetSpectrumModel() != 0)
   {
     sinrHistory.push_back(m_sinrPerceived.Copy());
-    bool PuPresent = OuluProbability(m_sinrPerceived.Copy(), m_rxControlMessageListCopy);
-    puPresence.push_back(PuPresent);
+    bool PUDetected = false;
+    double avgSinr = 0;
+    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &PUDetected, &avgSinr);
+    puPresence.push_back(PUDetected);
+    sinrAvgHistory.push_back(avgSinr);
 
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
     //Count the sensing event and reschedule the next one
@@ -960,8 +996,8 @@ void LteSpectrumPhy::Sense()
 
     if (this->sensingBudget > 0)
     {
-        //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
-        this->sensingBudget = 0;
+        this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+        //this->sensingBudget = 0;
     }
   }
 }

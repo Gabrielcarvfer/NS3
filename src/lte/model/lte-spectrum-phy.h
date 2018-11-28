@@ -543,15 +543,19 @@ private:
   uint64_t sensingEvents; ///< count sensing events
   uint64_t sensingBudget; ///< count remaining sensing samples to collect in a slot
   std::vector< Ptr<SpectrumValue> > sinrHistory; ///< holds the history of measured sinr
+  std::vector< double > sinrAvgHistory; ///< holds the history of measured sinr
   std::vector<bool>   puPresence; ///< holds the history of PU detection
   //Create structures to hold probabilities
   static std::vector<double> SNRdB;
   static std::vector<double> PdTot;
   static bool PUProbLoaded;
-  bool OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci);
+  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, bool * PUDetected, double * avgSinr);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
+  bool PU_presence;
+  EventId PU_event;
+  void reset_PU_presence();
 
 };
 
