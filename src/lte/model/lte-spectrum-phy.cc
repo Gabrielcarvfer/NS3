@@ -894,8 +894,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     }
 
     //No DCI received, then skip
-    if (dci_count == 0)
-       return ;
+    //if (dci_count == 0)
+    //   return ;
 
     //Calculate the probability of PU detection on given RBs
     uint8_t i = 0;
@@ -996,8 +996,8 @@ void LteSpectrumPhy::Sense()
 
     if (this->sensingBudget > 0)
     {
-        this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
-        //this->sensingBudget = 0;
+        //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+        this->sensingBudget = 0;
     }
   }
 }
