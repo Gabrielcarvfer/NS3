@@ -105,6 +105,8 @@ macro (build_contrib_lib contrib_name components)
     add_library(${lib${contrib_name}} SHARED ${component_target_objects})
 
     #Copy modified headers to output directory before each build
+    #May seem stupid, but removing this required to reload the cmake project to copy header files to build/ns3
+    #Side effect of using it: forces recompilation of the whole library after copying headers if not using ccache
     add_custom_command(TARGET ${lib${contrib_name}}
             PRE_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy ${${contrib_name}_headers_to_copy} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
