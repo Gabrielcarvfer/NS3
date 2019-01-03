@@ -6,13 +6,13 @@ RUN apt-get update
 RUN apt-get -y install apt-utils
 
 #Dependencies for git and base NS3
-RUN apt-get -y install git gcc g++ cmake libpcre2-dev
+RUN apt-get -y install git gcc g++ cmake 
 
 #Dependencies for NetAnim
-RUN apt-get -y install qt5-default 
+RUN apt-get -y install qt4-default 
 
 #Dependencies for python development and pyviz
-#RUN apt-get -y install mercurial python-setuptools python-pygraphviz python-kiwi python-pygoocanvas libgoocanvas-dev ipython
+RUN apt-get -y install mercurial python-setuptools python-pygraphviz python-kiwi python-pygoocanvas libgoocanvas-dev ipython python-pip
 
 #Dependencies for MPI distributed emulation
 RUN apt-get -y install openmpi-bin openmpi-common openmpi-doc libopenmpi-dev
@@ -24,7 +24,7 @@ RUN apt-get -y install gdb valgrind
 #RUN apt-get -y install doxygen graphviz imagemagick texlive-extra-utils texlive-latex-extra texlive-font-utils texlive-lang-portuguese dvipng python-sphinx dia 
 
 #Dependencies for accurate WiFi error models
-RUN apt-get -y install gsl-bin libgsl2 libgsl-dev 
+#RUN apt-get -y install gsl-bin libgsl2 libgsl-dev #can be installed with vcpkg
 
 #Dependencies for Network Simulation Cradle (nsc)
 #RUN apt-get -y install flex bison libfl-dev
@@ -51,8 +51,15 @@ RUN apt-get -y install libxml2 libxml2-dev
 #Dependencies for openflow
 #RUN apt-get -y install libboost-signals-dev libboost-filesystem-dev
 
+#Dependencies for VcPkg
+RUN apt-get -y install curl unzip tar
+
+#Dependencies for PyTorch Lib (C++)
+RUN python -m pip install https://download.pytorch.org/whl/cpu/torch-1.0.0-cp27-cp27mu-linux_x86_64.whl
+RUN python -m pip install torchvision 
+
 #Clone NS3 with Cmake
-RUN git clone https://github.com/Gabrielcarvfer/NS3.git
+#RUN git clone https://github.com/Gabrielcarvfer/NS3.git #fetch from remote source or use the current context with docker build -t ns3 .
 
 #Create a cmake folder, move to it and build project
-CMD cd NS3 && mkdir cmake && cd cmake && cmake .. && make all -j8
+CMD mkdir cmake && cd cmake && cmake .. && make all -j8

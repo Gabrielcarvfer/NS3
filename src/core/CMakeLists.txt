@@ -5,17 +5,8 @@ set (name core)
 #Set lib core link dependencies
 set(libraries_to_link)
 
-set(gsl_test_sources)
-
-if (${GSL_FOUND})
-    set(libraries_to_link
-            ${libraries_to_link}
-            ${GSL_LIBRARIES}
-            )
-    set(gsl_test_sources
-            test/rng-test-suite.cc
-            test/random-variable-stream-test-suite.cc
-            )
+if (${NS3_GSL})
+    list(APPEND libraries_to_link ${GSL_LIBRARIES} )
 endif()
 
 #Check for dependencies and add sources accordingly
@@ -273,6 +264,8 @@ set(test_sources
         test/object-test-suite.cc
         test/one-uniform-random-variable-many-get-value-calls-test-suite.cc
         test/ptr-test-suite.cc
+        test/random-variable-stream-test-suite.cc
+        test/rng-test-suite.cc
         test/sample-test-suite.cc
         test/simulator-test-suite.cc
         test/threaded-test-suite.cc
@@ -281,7 +274,6 @@ set(test_sources
         test/traced-callback-test-suite.cc
         test/type-id-test-suite.cc
         test/watchdog-test-suite.cc
-        ${gsl_test_sources}
         )
 
 #Build core lib

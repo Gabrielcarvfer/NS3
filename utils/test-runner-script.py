@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import subprocess, os, json
 
 
@@ -22,8 +23,7 @@ def dispatch_tests(tests_to_run):
 	import multiprocessing
 
 	results = []
-	#Lazy work ahead: dispatch all test processes (>200x2) at the same time
-	with multiprocessing.Pool(processes=len(tests)) as pool: 
+	with multiprocessing.Pool(processes=6) as pool: 
 		results = pool.starmap(run_test, [[x] for x in tests_to_run])
 
 	# Compile failed tests in a single dictionary
@@ -93,5 +93,4 @@ if __name__ == '__main__':
 	dump_results(results, dumpfile)
 
 	pass
-
 

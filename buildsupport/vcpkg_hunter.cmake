@@ -6,12 +6,13 @@ else()
     set(VCPKG_TARGET_ARCH x86)
 endif()
 
+
 if (WIN32)
     set(VCPKG_EXEC vcpkg.exe)
     set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-windows)
 else()
     set(VCPKG_EXEC vcpkg)
-    if (LINUX)
+    if (NOT APPLE) # LINUX
         set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-linux)
     else()
         set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-osx)
@@ -22,13 +23,14 @@ function(setup_vcpkg)
     #Check if vcpkg was downloaded previously
     if (EXISTS "${VCPKG_DIR}")
         #Vcpkg already downloaded
+        message(WARNING "VcPkg folder already exists, skipping git download")
     else()
         include(${PROJECT_SOURCE_DIR}/buildsupport/GitUtils.cmake)
 
         git_clone(
                 PROJECT_NAME    vcpkg
-                GIT_URL         https://github.com/Microsoft/vcpkg.git
-                GIT_BRANCH      master
+                GIT_URL         https://github.com/Gabrielcarvfer/vcpkg.git
+                GIT_BRANCH      NS3
                 DIRECTORY       ${PROJECT_SOURCE_DIR}/3rd-party/
         )
     endif()
@@ -55,7 +57,9 @@ endfunction()
 
 function(add_package package_name)
     message(WARNING "${package_name} will be installed")
-    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET})
+    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET}
+                     OUTPUT_QUIET #comment for easier debugging
+            )
     message(WARNING "${package_name} was installed")
         if (${NS3_DEBUG})
             set(TRIPLET_APP dbg)
