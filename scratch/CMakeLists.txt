@@ -12,7 +12,7 @@ foreach(scratch_src ${scratches})
 
     if(res LESS 0)
         add_executable(${scratch_name} "${scratch_src}")
-        target_link_libraries(${scratch_name} "${ns3-libs}" ns3.29-contrib-haraldott-debug)
+    target_link_libraries(${scratch_name} "${ns3-libs}" ${ns3-contrib-libs})
     endif()
 endforeach()
 
