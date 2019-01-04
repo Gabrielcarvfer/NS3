@@ -93,6 +93,13 @@ macro(process_options)
             get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
             link_directories(${pcre2_dir}/lib)
             include_directories(${pcre2_dir}/include)
+
+            if(WIN32)
+                set(PCRE_LIB libpcre2-posix)
+            else()
+                set(PRCE_LIB libpcre2-posix.a)
+            endif()
+
         endif()
     else()
         link_directories(${PCRE_LIBRARY})

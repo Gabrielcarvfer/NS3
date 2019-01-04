@@ -35,11 +35,29 @@ function(setup_vcpkg)
         )
     endif()
 
-    #message(WARNING "Checking VCPKG bootstrapping")
 
+    #Check if required packages are installed (unzip curl tar)
+    find_program(UNZIP_PRESENT unzip)
+    find_program(CURL_PRESENT curl)
+    find_program(TAR_PRESENT tar)
+
+    if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Unzip is required for VcPkg, but is not installed")
+    endif()
+
+    if(${CURL_PRESENT} STREQUAL CURL_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Curl is required for VcPkg, but is not installed")
+    endif()
+
+    if(${TAR_PRESENT} STREQUAL TAR_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Tar is required for VcPkg, but is not installed")
+    endif()
+
+
+    #message(WARNING "Checking VCPKG bootstrapping")
     #Check if vcpkg was bootstrapped previously
     if (EXISTS "${VCPKG_DIR}/${VCPKG_EXEC}")
-        #Vcpkg already bootstrapped
+        message("VcPkg already bootstrapped")
     else()
         #message(WARNING "Bootstrapping VCPKG")
         if (WIN32)
