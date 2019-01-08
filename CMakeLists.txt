@@ -1,20 +1,19 @@
 #######################################
 # Required CMake version#
 #######################################
-cmake_minimum_required( VERSION 3.4 )
+cmake_minimum_required( VERSION 3.11 )
 
 #set(CMAKE_C_COMPILER "clang")
 #set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_LINKER "lld-link")
 
 #######################################
 # Project name                        #
 #######################################
 project(NS3 CXX)
 
-set(NS3_VER 3.29)
-
 include(buildsupport/macros_and_definitions.cmake)
+
+set(NS3_VER 3.29)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
@@ -27,11 +26,17 @@ option(NS3_EXAMPLES "Enable examples to be built" OFF)
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
 
+option(NS3_SANITIZE "Run Google sanitizers" OFF)
+#set(NS3_SANITIZE ON)
+
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
-set(NS3_PYTHON OFF)
+#set(NS3_PYTHON ON)
 
 option(NS3_BOOST "Build with Boost support" OFF)
-set(NS3_BOOST ON)
+#set(NS3_BOOST ON)
+
+option(NS3_OPENFLOW "Build with Openflow support" OFF)
+#set(NS3_OPENFLOW OFF)#todo: fix
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
 set(NS3_GTK2 OFF)
@@ -45,8 +50,11 @@ set(NS3_LIBRT ON) #not working on Windows
 option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
 
+option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
+#set(NS3_PYTORCH ON)
+
 option(NS3_GSL "Build with GSL support" OFF)
-set(NS3_GSL OFF)
+set(NS3_GSL ON)
 
 option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 set(NS3_PLANETLAB OFF)
@@ -61,17 +69,13 @@ option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 set(NS3_GNUPLOT OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
-set(NS3_BRITE OFF)
+#set(NS3_BRITE ON)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
 
-option(NS3_SHARED "Build shared libraries" ON)
-set(NS3_SHARED ON)
-
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
-
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
@@ -91,7 +95,7 @@ set(libs_to_build
         dsdv                  #
         dsr                   #
         energy                #
-        #fd-net-device        #requires socket implementation
+        fd-net-device         #requires socket implementation
         flow-monitor          #
         internet              #
         internet-apps         #
@@ -111,8 +115,8 @@ set(libs_to_build
         sixlowpan
         spectrum              #
         stats                 #
-        #tap-bridge           #
-        test
+        tap-bridge            #
+        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
         topology-read         # fixed on Windows with LibPCRE2-posix
         traffic-control       #
         uan                   #
@@ -123,11 +127,15 @@ set(libs_to_build
         wimax                 #
         )
 
+#Build contribution libraries
+set(contribution_libraries_to_build
+        haraldott
+        )
+
 #######################################
 # Process options                     #
 #######################################
 process_options()
-
 
 #######################################
 # Add subdirectories                  #
@@ -141,9 +149,6 @@ add_subdirectory(src)
 
 #Build NS library examples
 add_subdirectory(examples)
-
-#Build contribution libraries
-add_subdirectory(contrib)
 
 #Build scratch/simulation scripts
 add_subdirectory(scratch)

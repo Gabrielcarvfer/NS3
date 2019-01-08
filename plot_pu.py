@@ -1,8 +1,11 @@
+#!/usr/bin/python3
 import matplotlib.pyplot as plt
 import numpy
 bufferFile = ""
 with open("./build/bin/output.txt",'r') as file:
     bufferFile = file.readlines()
+
+plt.ioff()
 
 
 ues_dict = {}
@@ -27,6 +30,7 @@ fig,(ax, ax2) = plt.subplots(nrows=2)
 
 x = list(range(0,4999,1))
 
+print("#UEs=",len(ues_dict))
 
 for ue in ues_dict:
     #ax.cla()
@@ -41,9 +45,10 @@ for ue in ues_dict:
     #normalizedSinr = [k/maxSinr for k in ues_dict[ue]['AvgSinr']]
     #ax2.plot(x,normalizedSinr,alpha=0.5)
     ax2.plot(x,ues_dict[ue]["AvgSinr"],alpha=0.5)
-    plt.show()
+    plt.show(block=False)
     #plt.savefig("%s.jpg" % ue)
     pass
 
-
+print("Done")
+input()
 pass

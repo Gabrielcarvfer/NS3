@@ -6,12 +6,13 @@ else()
     set(VCPKG_TARGET_ARCH x86)
 endif()
 
+
 if (WIN32)
     set(VCPKG_EXEC vcpkg.exe)
     set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-windows)
 else()
     set(VCPKG_EXEC vcpkg)
-    if (LINUX)
+    if (NOT APPLE) # LINUX
         set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-linux)
     else()
         set(VCPKG_TRIPLET ${VCPKG_TARGET_ARCH}-osx)
@@ -22,22 +23,41 @@ function(setup_vcpkg)
     #Check if vcpkg was downloaded previously
     if (EXISTS "${VCPKG_DIR}")
         #Vcpkg already downloaded
+        message(WARNING "VcPkg folder already exists, skipping git download")
     else()
         include(${PROJECT_SOURCE_DIR}/buildsupport/GitUtils.cmake)
 
         git_clone(
                 PROJECT_NAME    vcpkg
-                GIT_URL         https://github.com/Microsoft/vcpkg.git
-                GIT_BRANCH      master
+                GIT_URL         https://github.com/Gabrielcarvfer/vcpkg.git
+                GIT_BRANCH      NS3
                 DIRECTORY       ${PROJECT_SOURCE_DIR}/3rd-party/
         )
     endif()
 
-    #message(WARNING "Checking VCPKG bootstrapping")
 
+    #Check if required packages are installed (unzip curl tar)
+    find_program(UNZIP_PRESENT unzip)
+    find_program(CURL_PRESENT curl)
+    find_program(TAR_PRESENT tar)
+
+    if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Unzip is required for VcPkg, but is not installed")
+    endif()
+
+    if(${CURL_PRESENT} STREQUAL CURL_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Curl is required for VcPkg, but is not installed")
+    endif()
+
+    if(${TAR_PRESENT} STREQUAL TAR_PRESENT-NOTFOUND)
+        message(FATAL_ERROR "Tar is required for VcPkg, but is not installed")
+    endif()
+
+
+    #message(WARNING "Checking VCPKG bootstrapping")
     #Check if vcpkg was bootstrapped previously
     if (EXISTS "${VCPKG_DIR}/${VCPKG_EXEC}")
-        #Vcpkg already bootstrapped
+        message("VcPkg already bootstrapped")
     else()
         #message(WARNING "Bootstrapping VCPKG")
         if (WIN32)
@@ -55,7 +75,9 @@ endfunction()
 
 function(add_package package_name)
     message(WARNING "${package_name} will be installed")
-    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET})
+    execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET}
+                     OUTPUT_QUIET #comment for easier debugging
+            )
     message(WARNING "${package_name} was installed")
         if (${NS3_DEBUG})
             set(TRIPLET_APP dbg)
