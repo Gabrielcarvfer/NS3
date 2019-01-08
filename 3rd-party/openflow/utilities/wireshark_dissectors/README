@@ -1,0 +1,37 @@
+README: OpenFlow Wireshark Plugin
+<VERSION>
+<DATE>
+
+----------------------------------------
+I) Installation
+
+1) Install glib-devel; on Debian this can be done with 'sudo apt-get install libgtk2.0-dev'
+2) Install wireshark v1.0.0 or greater
+3) cd wireshark_dissectors/openflow
+4) make
+5) sudo make install
+5a) Note that this prints out where the plugin was installed.
+
+
+----------------------------------------
+II) Installation Verification
+
+1) Run wireshark
+2) Open the "Help" --> "About" menu
+3) Select the "Plugins" tab
+4) Click the "Name" header to the plugins by name
+5) Verify that "packet-openflow.so" appears in the list.
+6) Verify that its version is listed as <VERSION>.
+
+
+----------------------------------------
+III) Port Changes
+
+To have the dissector handle OpenFlow packets for any port other than the default, you must change the DISSECT_PORT variable in utilities/wireshark_dissectors/oepnflow/Makefile.
+
+----------------------------------------
+IV) Feedback and Bug Reporting
+
+Please post a message on the OpenFlow forums at openflowswitch.org or email
+David Underhill at dgu@cs.stanford.edu if you have any feedback or discover any
+bugs.

@@ -1,0 +1,9 @@
+syntax: glob
+*.orig
+*.rej
+*~
+*.o
+*.so
+
+syntax: regexp
+.*\#.*\#$

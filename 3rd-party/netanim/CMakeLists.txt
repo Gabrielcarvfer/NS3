@@ -50,7 +50,6 @@ if(NS3_NETANIM)
 
     set(header_files
             abort.h
-            assert.h
             logqt.h
             animatorconstants.h
             resizeableitem.h
