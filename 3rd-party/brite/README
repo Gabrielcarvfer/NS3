@@ -1,0 +1,128 @@
+==============================================================================
+ BRITE: Boston University Representative Internet Topology Generator
+
+    Alberto Medina, Anukool Lakhina, Ibrahim Matta, John Byers
+	 Department of Computer Science, Boston University
+
+
+ 
+Copyright (c) 2001 QoS Networking Laboratory (QNL), Boston University.  All
+rights reserved.  Permission to use, copy, modify, and distribute this
+software and its documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appear in all copies and
+that both the copyright notice and this permission notice appear in
+supporting documentation.  The QoS Networking Laboratory (QNL) of the
+Computer Science Department at Boston University makes no representations
+about the suitability of this software for any purpose.  It is provided "as
+is" without express or implied warranty.
+
+==============================================================================
+
+
+Thank you for downloading BRITE.  Up to date information can be found
+at the BRITE website at http://www.cs.bu.edu/brite/.
+
+The contents of this README are:
+  1.  Quick Start
+  2.  Where everything is
+  3.  More Documentation
+  4.  Bugs, mailing lists and other contact information
+
+
+1. Quick Start:
+----------------
+
+To get BRITE up and running, change your working directory to the
+location where you downloaded the tar.gz BRITE file.  Once there,
+execute the following at the command prompt:
+	
+  $ gunzip BRITE.tar.gz
+  $ tar xvf BRITE.tar.gz
+  $ cd BRITE/   	
+  $ make all	(Alternatively, to make the C++ version, type "make c++"
+		 and to make the Java version, "make java")
+
+To run BRITE with the GUI type:
+  $ ./startGUI     
+
+To run the command line C++ version, type:
+  $ cd C++/  
+  $ brite <conf-file> <out-file> <seed-file>    
+
+To run the command line of the Java version, type:
+  $ cd Java/  
+  $ java Main.Brite <conf-file> <out-file> <optional-seed-file>
+
+
+2.  Where everything is:
+-------------------------
+
+Depending on which distribution you chose to download, some files from
+the listing below might be missing in your distribution.  This README
+is common across all distributions and lists the files included in the
+complete distribution (Java & C++):
+
+
+ + ~/BRITE/
+    - GUI/		#The GUI source files
+    - C++/		#The C++ source files (also brite executable)	
+    - Java/		#The Java source (and class) files
+    - Makefile		#The main Makefile		
+    - startGUI		#A helper shell script to launch the GUI
+
+
+
+3.  More Documentation:
+------------------------
+
+Source level HTML documentation specific to the Java version of BRITE
+is available.  To make the documentation, change your working
+directory to the Java version and type:
+  $ make javadoc 
+This will create the source level API documentation in a folder called
+javadoc/ in the current directory.
+ 
+We highly recommend that you read the BRITE user manual to get the
+most out of BRITE.  This manual describes the BRITE architecture and
+also includes sections on installing, using and extending BRITE with
+examples.  The current version of the user manual can always be
+downloaded (in Postscript or PDF format) from
+http://www.cs.bu.edu/brite/docs.html.
+
+You may also ask any questions about running BRITE at the BRITE-Users
+mailing list. (see below)
+
+
+4.  Contact Us:
+----------------
+
+If you find bugs in BRITE, please email a detailed report describing
+the bug to brite-developers@cs.bu.edu.  Also, if you have extended
+BRITE or written your own generation model, please inform us at the
+same email address.  We maintain a repository of contributed
+generation models and would like to incorporate your generation model
+in future releases of BRITE.
+
+For general questions about BRITE, please email the BRITE users
+mailing list at brite-users@cs.bu.edu.  You are by default added to
+this list when you download BRITE.  However, if you did not subscribe
+to the list when you downloaded BRITE (or want to receive mail at a
+different address), proceed as follows: Send a blank email to
+brite-users-request@cs.bu.edu with the body of the email containing 
+"subscribe".  This will add you to the list.
+
+
+Once again, thank you for downloading BRITE.  Enjoy,
+
+The BRITE Team
+April 11th, 2001
+
+
+
+
+
+
+
+
+
+

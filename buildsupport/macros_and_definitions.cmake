@@ -45,6 +45,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
 endif()
 
+#3rd party libraries with sources shipped in 3rd-party folder
+set(3rdPartyLibraries
+        netanim
+        brite
+        )
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -52,8 +57,15 @@ macro(process_options)
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
-    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/netanim/*.h) #just copying every single header from netanim into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+    #Add 3rd-party library headers to include directories
+    foreach(3rdPartyLibrary ${3rdPartyLibraries})
+        #file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/${3rdPartyLibrary}/*.h) #just copying every single header from 3rd party libraries into ns3 include folder
+        #file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+        include_directories(3rd-party/${3rdPartyLibrary})
+    endforeach()
+
+    #BRITE
+    set(BRITE_LIBRARIES brite)
 
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
@@ -106,25 +118,64 @@ macro(process_options)
         include_directories(${PCRE_INCLUDE_DIR})
     endif()
 
-    #BoostC++
+    set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
+
+    if(${NS3_OPENFLOW})
+        #find_package(Openflow)
+        set(OPENFLOW_FOUND FALSE) #todo: fix current path and build openflow 3rd-party lib
+        if (NOT ${OPENFLOW_FOUND})
+            message(FATAL_ERROR "Openflow build was request but was not found")
+        else()
+            set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
+                    system
+                    signals
+                    filesystem
+                    )
+        endif()
+    endif()
+
+
     if(${NS3_BOOST})
-        find_package(Boost)
-        if(NOT ${BOOST_FOUND})
+        #find_package(Boost)
+        #if(NOT ${BOOST_FOUND})
             if (NOT ${AUTOINSTALL_DEPENDENCIES})
                 message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
             else()
-                #If we don't find installed, install
-                #add_package(boost) #this install all the boost libraries and was a bad idea
-                #todo: add individual boost libraries required
+                #add_package(boost) #this will install all the boost libraries and was a bad idea
 
-                get_property(boost_dir GLOBAL PROPERTY DIR_boost)
-                link_directories(${boost_dir}/lib)
-                include_directories(${boost_dir}/include)
+                set(requiredBoostLibraries
+                        ${OPENFLOW_REQUIRED_BOOST_LIBRARIES}
+                        )
+
+                #Holds libraries to link later
+                set(BOOST_LIBRARIES
+                        )
+                set(BOOST_INCLUDES
+                        )
+
+                #For each of the required boost libraries
+                foreach(requiredBoostLibrary ${requiredBoostLibraries})
+                    set(boostLib boost-${requiredBoostLibrary})
+                    add_package(${boostLib})
+                    get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
+                    link_directories(${${boostLib}_dir}/lib)
+                    #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
+                    list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
+
+                    if (WIN32)
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
+                    else()
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                    endif()
+                endforeach()
+
+
+                set(BOOST_FOUND TRUE)
             endif()
-        else()
-            link_directories(${BOOST_LIBRARY_DIRS})
-            include_directories( ${BOOST_INCLUDE_DIR})
-        endif()
+        #else()
+        #    link_directories(${BOOST_LIBRARY_DIRS})
+        #    include_directories( ${BOOST_INCLUDE_DIR})
+        #endif()
     endif()
 
     #GTK2
@@ -157,7 +208,7 @@ macro(process_options)
                 include_directories(${libxml2_dir}/include)
                 #set(LIBXML2_DEFINITIONS)
 
-                if(WIN)
+                if(WIN32)
                     set(LIBXML2_LIBRARIES libxml2)
                 else()
                     set(LIBXML2_LIBRARIES libxml2.a)
@@ -252,14 +303,6 @@ macro(process_options)
     #    else()
     #        include_directories(${GNUPLOT_INCLUDE_DIRS})
     #        link_directories(${GNUPLOT_LIBRARY})
-    #    endif()
-    #endif()
-
-    #if(${NS3_BRITE})
-    #    find_package(Brite)
-    #    if(NOT ${BRITE_FOUND})
-    #        message(FATAL_ERROR BRITE not found)
-    #    else()
     #    endif()
     #endif()
 

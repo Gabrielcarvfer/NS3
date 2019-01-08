@@ -21,7 +21,7 @@ option(NS3_TESTS "Enable tests to be built" OFF)
 #set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-#set(NS3_EXAMPLES OFF)
+#set(NS3_EXAMPLES ON)
 
 option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
 set(NS3_DEBUG ON)
@@ -33,7 +33,10 @@ option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
 #set(NS3_PYTHON ON)
 
 option(NS3_BOOST "Build with Boost support" OFF)
-set(NS3_BOOST ON)
+#set(NS3_BOOST ON)
+
+option(NS3_OPENFLOW "Build with Openflow support" OFF)
+#set(NS3_OPENFLOW OFF)#todo: fix
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
 set(NS3_GTK2 OFF)
@@ -66,7 +69,7 @@ option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 set(NS3_GNUPLOT OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
-set(NS3_BRITE OFF)
+set(NS3_BRITE ON)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
@@ -82,7 +85,7 @@ set(libs_to_build
         aodv                  #
         applications          #
         bridge                #
-        #brite
+        brite
         buildings             #
         click                 #
         config-store          #
@@ -105,7 +108,7 @@ set(libs_to_build
         network               #
         nix-vector-routing
         olsr
-        #openflow
+        openflow
         point-to-point        #
         point-to-point-layout
         propagation           #
