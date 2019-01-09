@@ -49,6 +49,7 @@ endif()
 set(3rdPartyLibraries
         netanim
         brite
+        openflow
         )
 
 #process all options passed in main cmakeLists
@@ -62,6 +63,7 @@ macro(process_options)
         #file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/${3rdPartyLibrary}/*.h) #just copying every single header from 3rd party libraries into ns3 include folder
         #file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
         include_directories(3rd-party/${3rdPartyLibrary})
+        include_directories(3rd-party/${3rdPartyLibrary}/include)
     endforeach()
 
     #BRITE
@@ -121,17 +123,22 @@ macro(process_options)
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
 
     if(${NS3_OPENFLOW})
-        #find_package(Openflow)
-        set(OPENFLOW_FOUND FALSE) #todo: fix current path and build openflow 3rd-party lib
-        if (NOT ${OPENFLOW_FOUND})
-            message(FATAL_ERROR "Openflow build was request but was not found")
-        else()
-            set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
-                    system
-                    signals
-                    filesystem
-                    )
-        endif()
+
+        set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
+                system
+                signals
+                filesystem
+                static-assert
+                config
+                )
+        include_directories(3rd-party/openflow/include)
+        #if (WIN32)
+            set(OPENFLOW_LIBRARIES openflow)
+        #else()
+        #    set(OPENFLOW_LIBRARIES libopenflow.a)
+        #endif()
+        set(OPENFLOW_FOUND TRUE)
+
     endif()
 
 
@@ -158,14 +165,18 @@ macro(process_options)
                     set(boostLib boost-${requiredBoostLibrary})
                     add_package(${boostLib})
                     get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
-                    link_directories(${${boostLib}_dir}/lib)
                     #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
                     list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
 
-                    if (WIN32)
-                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
-                    else()
-                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                    #Some boost libraries (e.g. static-assert) don't have an associated library
+                    if (EXISTS ${${boostLib}_dir}/lib)
+                        link_directories(${${boostLib}_dir}/lib)
+
+                        if (WIN32)
+                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
+                        else()
+                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                        endif()
                     endif()
                 endforeach()
 
@@ -213,6 +224,7 @@ macro(process_options)
                 else()
                     set(LIBXML2_LIBRARIES libxml2.a)
                 endif()
+                set(LIBXML2_FOUND TRUE)
             endif()
         else()
             link_directories(${LIBXML2_LIBRARY_DIRS})

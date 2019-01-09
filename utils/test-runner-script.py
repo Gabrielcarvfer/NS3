@@ -68,29 +68,31 @@ def load_previous(input_file):
 
 
 if __name__ == '__main__':
-	dumpfile = "failed_tests.json"
+	def main():
+		dumpfile = "failed_tests.json"
 
-	#Fetch test names from test-runner
-	tmp = subprocess.check_output(["./test-runner", "--list"], shell=False, cwd="../build/bin/", stderr=None).decode()
-	tests = tmp.split("\n")[:-1]
+		#Fetch test names from test-runner
+		tmp = subprocess.check_output(["./test-runner", "--list"], shell=False, cwd="../build/bin/", stderr=None).decode()
+		tests = tmp.split("\n")[:-1]
 
-	#If there is a failed tests file, load
-	have_previous, previous_results, previously_failed_tests = load_previous(dumpfile)
+		#If there is a failed tests file, load
+		have_previous, previous_results, previously_failed_tests = load_previous(dumpfile)
 
-	#If you want to run only tests that failed previously
-	rerunFailed = False
+		#If you want to run only tests that failed previously
+		rerunFailed = False
 
-	#Choose whether to rerun previously failed tests or run all the tests
-	if rerunFailed and have_previous:
-		tests = list(previously_failed_tests.keys())
+		#Choose whether to rerun previously failed tests or run all the tests
+		if rerunFailed and have_previous:
+			tests = list(previously_failed_tests.keys())
 
-	results, failed_tests = dispatch_tests(tests)
+		results, failed_tests = dispatch_tests(tests)
 
-	#Print results
-	print_results(failed_tests, len(tests))
+		#Print results
+		print_results(failed_tests, len(tests))
 
-	#Dump failed tests for future tests
-	dump_results(results, dumpfile)
+		#Dump failed tests for future tests
+		dump_results(results, dumpfile)
 
-	return len(results)
+		return len(results)
 
+	main()

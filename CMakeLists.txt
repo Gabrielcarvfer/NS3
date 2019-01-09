@@ -9,7 +9,7 @@ cmake_minimum_required( VERSION 3.11 )
 #######################################
 # Project name                        #
 #######################################
-project(NS3 CXX)
+project(NS3 CXX C)
 
 include(buildsupport/macros_and_definitions.cmake)
 
@@ -36,7 +36,7 @@ option(NS3_BOOST "Build with Boost support" OFF)
 #set(NS3_BOOST ON)
 
 option(NS3_OPENFLOW "Build with Openflow support" OFF)
-#set(NS3_OPENFLOW OFF)#todo: fix
+#set(NS3_OPENFLOW ON)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
 set(NS3_GTK2 OFF)
@@ -77,6 +77,11 @@ set(NS3_NETANIM ON)
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
 
+set(build_openflow)
+if(${NS3_OPENFLOW})
+    set(build_openflow openflow)
+endif()
+
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
 # libs marked with * on the right, are not compiling correctly yet when using CMake
@@ -108,7 +113,7 @@ set(libs_to_build
         network               #
         nix-vector-routing
         olsr
-        openflow
+        ${build_openflow}     # Only builds openflow if NS3_OPENFLOW is set
         point-to-point        #
         point-to-point-layout
         propagation           #
