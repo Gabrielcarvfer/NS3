@@ -74,6 +74,9 @@ set(NS3_BRITE ON)
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
 
+option(NS3_PTHREAD "Build with pthread support" ON)
+set(NS3_PTHREAD ON)
+
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
 
