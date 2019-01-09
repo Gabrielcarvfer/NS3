@@ -44,6 +44,7 @@
 #include <sys/resource.h>
 #include <sys/un.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "fatal-signal.h"
 #include "util.h"
 
