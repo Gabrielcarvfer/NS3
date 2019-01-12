@@ -18,7 +18,7 @@ set(NS3_VER 3.29)
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
-#set(NS3_TESTS ON)
+set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
 #set(NS3_EXAMPLES ON)
@@ -80,9 +80,30 @@ set(NS3_PTHREAD ON)
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
 
+option(NS3_fd-net-device ON)
+
 set(build_openflow)
 if(${NS3_OPENFLOW})
     set(build_openflow openflow)
+endif()
+
+set(build_brite)
+if(${NS3_BRITE} AND WIN32)
+    set(NS3_BRITE OFF)
+endif()
+
+if(${NS3_BRITE} AND NOT WIN32)
+    set(build_brite brite)
+endif()
+
+set(build_fd-net-device)
+if(${NS3_fd-net-device} AND NOT WIN32)
+    set(build_fd-net-device fd-net-device)
+endif()
+
+set(build_tap-bridge)
+if(${NS3_TAP} AND NOT WIN32)
+    set(build_tap-bridge tap-bridge)
 endif()
 
 #Select libs to be built
@@ -93,7 +114,7 @@ set(libs_to_build
         aodv                  #
         applications          #
         bridge                #
-        brite
+        ${build_brite}
         buildings             #
         click                 #
         config-store          #
@@ -103,7 +124,7 @@ set(libs_to_build
         dsdv                  #
         dsr                   #
         energy                #
-        fd-net-device         #requires socket implementation
+        ${build_fd-net-device}#requires socket implementation
         flow-monitor          #
         internet              #
         internet-apps         #
@@ -123,8 +144,7 @@ set(libs_to_build
         sixlowpan
         spectrum              #
         stats                 #
-        tap-bridge            #
-        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
+        ${build_tap-bridge}   #
         topology-read         # fixed on Windows with LibPCRE2-posix
         traffic-control       #
         uan                   #
@@ -133,6 +153,7 @@ set(libs_to_build
         wave                  #
         wifi                  #
         wimax                 #
+        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
         )
 
 #Build contribution libraries

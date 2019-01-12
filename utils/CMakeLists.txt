@@ -1,6 +1,8 @@
 if (${NS3_TESTS})
     add_executable(test-runner test-runner.cc)
-    target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
+
+    #Windows DLLs are a pain in the a**. Bunch of tests should be present on test-runner after the linking, but are not showing up.
+    target_link_libraries(test-runner  ${LIB_WHOLE_ARCHIVE_PRE} ${libtest} ${LIB_WHOLE_ARCHIVE_POST} ${LIB_AS_NEEDED_PRE} ${libcore} ${LIB_AS_NEEDED_POST})
 
     add_executable(bench-simulator bench-simulator.cc)
     target_link_libraries(bench-simulator ${libcore})

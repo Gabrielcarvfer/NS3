@@ -272,7 +272,8 @@ set(libraries_to_link
         ${libvirtual-net-device}
         ${libpoint-to-point}
         ${libapplications}
-        ${libinternetcsma}
+        ${libinternet}
+        ${libcsma}
         )
 
 set(test_sources

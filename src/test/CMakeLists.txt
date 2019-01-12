@@ -22,6 +22,8 @@ add_library(${test${name}} SHARED
         )
 
 target_link_libraries(${test${name}}
+        ${LIB_AS_NEEDED_PRE}
+        ${libcore}
         ${libapplications}
         ${libbridge}
         ${libconfig-store}
@@ -43,4 +45,6 @@ target_link_libraries(${test${name}}
         ${libinternet-apps}
         ${libpoint-to-point-layout}
         ${libtraffic-control}
+        ${LIB_AS_NEEDED_POST}
+
         )
