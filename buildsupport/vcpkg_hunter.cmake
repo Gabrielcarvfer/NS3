@@ -37,9 +37,15 @@ function(setup_vcpkg)
 
 
     #Check if required packages are installed (unzip curl tar)
-    find_program(UNZIP_PRESENT unzip)
-    find_program(CURL_PRESENT curl)
-    find_program(TAR_PRESENT tar)
+    if (WIN32)
+        find_program(UNZIP_PRESENT unzip.exe)
+        find_program(CURL_PRESENT curl.exe)
+        find_program(TAR_PRESENT tar.exe)
+    else()
+        find_program(UNZIP_PRESENT unzip)
+        find_program(CURL_PRESENT curl)
+        find_program(TAR_PRESENT tar)
+    endif()
 
     if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
         message(FATAL_ERROR "Unzip is required for VcPkg, but is not installed")

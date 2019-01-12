@@ -27,6 +27,8 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
+set(LIB_WHOLE_ARCHIVE_PRE  -Wl,--whole-archive)
+set(LIB_WHOLE_ARCHIVE_POST -Wl,--no-whole-archive)
 
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
@@ -36,27 +38,39 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(LIB_AS_NEEDED_PRE -Wl,-all_load)
     set(LIB_AS_NEEDED_POST             )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # using GCC
+    # using GCC)
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
-    set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
+    set(LIB_AS_NEEDED_POST -Wl,--as-needed)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
 endif()
 
-#3rd party libraries with sources shipped in 3rd-party folder
-set(3rdPartyLibraries
-        netanim
-        brite
-        openflow
-        )
+
 
 #process all options passed in main cmakeLists
 macro(process_options)
     #Copy all header files to outputfolder/include/
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
+
+    #Don't build incompatible libraries on Windows
+    if (WIN32)
+        set(build_lib_brite)
+        set(build_lib_openflow)
+    else()
+        set(build_lib_brite brite)
+        set(build_lib_openflow openflow)
+    endif()
+
+    #3rd party libraries with sources shipped in 3rd-party folder
+    set(3rdPartyLibraries
+            netanim
+            ${build_lib_brite}
+            ${build_lib_openflow}
+            )
 
     #Add 3rd-party library headers to include directories
     foreach(3rdPartyLibrary ${3rdPartyLibraries})
@@ -97,8 +111,8 @@ macro(process_options)
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
     #Libpcre2 for regex
-    find_package(PCRE)
-    if (NOT ${PCRE_FOUND})
+    #find_package(PCRE)
+    #if (NOT ${PCRE_FOUND})
         if (NOT ${AUTOINSTALL_DEPENDENCIES})
             message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
         else()
@@ -109,16 +123,16 @@ macro(process_options)
             include_directories(${pcre2_dir}/include)
 
             if(WIN32)
-                set(PCRE_LIB libpcre2-posix)
+                set(PCRE_LIBRARIES libpcre2-posix)
             else()
-                set(PRCE_LIB libpcre2-posix.a)
+                set(PRCE_LIBRARIES libpcre2-posix.a)
             endif()
 
         endif()
-    else()
-        link_directories(${PCRE_LIBRARY})
-        include_directories(${PCRE_INCLUDE_DIR})
-    endif()
+    #else()
+    #    link_directories(${PCRE_LIBRARY})
+    #    include_directories(${PCRE_INCLUDE_DIR})
+    #endif()
 
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
 
@@ -435,32 +449,38 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     #Create shared library with sources and headers
     add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
-    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
-    #if(WIN32 AND ${NS3_SHARED})
-    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
-    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
-    #endif()
-    #Link the shared library with the libraries passed
-    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
-
-    #Write a module header that includes all headers from that module
-    write_module_header("${libname}" "${header_files}")
-
     #Build tests if requested
     if(${NS3_TESTS})
         list(LENGTH test_sources test_source_len)
         if (${test_source_len} GREATER 0)
             #Create libname of output library test of module
             set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
-            set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
+            set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
 
             #Create shared library containing tests of the module
-            add_library(${test${libname}} SHARED "${test_sources}")
+            add_library(${test${libname}} OBJECT "${test_sources}")
 
             #Link test library to the module library
-            target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+            #target_link_libraries(${test${libname}} ${libtest} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link}  ${LIB_AS_NEEDED_POST})
         endif()
     endif()
+
+    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
+    #if(WIN32 AND ${NS3_SHARED})
+    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
+    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
+    #endif()
+
+    #Link the shared library with the libraries passed
+    if (${libname} STREQUAL "test")
+        list(APPEND ${libraries_to_link} ${LIB_WHOLE_ARCHIVE_PRE} ${ns3-libs-tests} ${LIB_WHOLE_ARCHIVE_POST})
+    endif()
+    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+
+    #Write a module header that includes all headers from that module
+    write_module_header("${libname}" "${header_files}")
+
+
 
     #Build lib examples if requested
     if(${NS3_EXAMPLES})

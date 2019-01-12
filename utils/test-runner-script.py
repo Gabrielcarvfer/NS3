@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 import subprocess, os, json
 
+runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
+
+cwd_path = os.getcwd()
+bin_path = "/".join(cwd_path.split('/')[:-1]+["build","bin"])
 
 #Run a test case and return output + error 
 def run_test(test_name):
@@ -8,7 +12,8 @@ def run_test(test_name):
 	output = None
 	error = None
 	try:
-		output = subprocess.check_output(["./test-runner", "--test-name="+test_name], shell=False, cwd="../build/bin/", stderr=subprocess.DEVNULL).decode()
+		os.chdir(bin_path)
+		output = subprocess.check_output([""+runner_name, "--test-name="+test_name], shell=False, stderr=subprocess.DEVNULL).decode()
 		output = output.split("\n")[-2]
 		output = output.split(" ")[0]
 	except Exception:
@@ -72,7 +77,10 @@ if __name__ == '__main__':
 		dumpfile = "failed_tests.json"
 
 		#Fetch test names from test-runner
-		tmp = subprocess.check_output(["./test-runner", "--list"], shell=False, cwd="../build/bin/", stderr=None).decode()
+		os.chdir(bin_path)
+		tmp = subprocess.check_output([runner_name, "--list"], shell=False, stderr=None).decode()
+		os.chdir(cwd_path)
+
 		tests = tmp.split("\n")[:-1]
 
 		#If there is a failed tests file, load

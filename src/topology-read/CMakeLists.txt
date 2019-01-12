@@ -17,7 +17,7 @@ set(header_files
         helper/topology-reader-helper.h
         )
 
-set(libraries_to_link ${libnetwork} ${PCRE_LIB})
+set(libraries_to_link ${libnetwork} ${PCRE_LIBRARIES})
 
 set(test_sources
         test/rocketfuel-topology-reader-test-suite.cc
