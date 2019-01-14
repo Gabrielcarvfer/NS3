@@ -12,7 +12,7 @@ macro(process_contribution contribution_list)
 endmacro()
 
 macro (build_contrib_lib_component name contrib source_files header_files libraries_to_link test_sources)
-    #Create shared library with sources and headers
+    #Create object library with sources and headers
     add_library("${lib${contrib}-${name}}" OBJECT "${source_files}" "${header_files}")
     set(${contrib}_libraries_to_link "${${contrib}_libraries_to_link}" ${libraries_to_link} PARENT_SCOPE)
 
@@ -23,8 +23,8 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
             #Create name of output library test of module
             set(test${name} ns${NS3_VER}-${name}-test-${build_type})
 
-            #Create shared library containing tests of the module
-            add_library(${test${name}} SHARED "${test_sources}")
+            #Create library containing tests of the module
+            add_library(${test${name}} "${test_sources}")
 
             #Link test library to the module library
             target_link_libraries(${test${name}} ${lib${contrib}})
@@ -87,7 +87,7 @@ macro (build_contrib_lib contrib_name components)
     endforeach()
 
     #Create the contrib library with their components
-    add_library(${lib${contrib_name}} SHARED ${component_target_objects})
+    add_library(${lib${contrib_name}} ${component_target_objects})
 
     #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
     #if(WIN32 AND ${NS3_SHARED})
