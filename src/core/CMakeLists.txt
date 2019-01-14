@@ -60,10 +60,10 @@ if (${THREADS_FOUND})
 
     if(${WIN32})
         set(thread_sources
-                #model/win32-fd-reader.cc
+                model/win32-fd-reader.cc
                 )
         set(thread_headers
-                #model/win32-fd-reader.h
+                model/win32-fd-reader.h
                 )
         set(libraries_to_link
                 ${libraries_to_link}
@@ -78,6 +78,7 @@ if (${THREADS_FOUND})
                 model/unix-fd-reader.h
                 )
     endif()
+
     set(thread_sources
             ${thread_sources}
             model/system-thread.cc

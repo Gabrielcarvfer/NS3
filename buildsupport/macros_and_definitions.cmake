@@ -40,7 +40,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC)
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
-    set(LIB_AS_NEEDED_POST -Wl,--as-needed)
+    #set(LIB_AS_NEEDED_POST -Wl,--as-needed)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -85,6 +85,27 @@ macro(process_options)
 
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
+
+
+
+    #process debug switch
+    if(${NS3_DEBUG})
+        set(CMAKE_BUILD_TYPE Debug)
+        set(build_type "debug")
+        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
+    else()
+        set(CMAKE_BUILD_TYPE Release)
+        set(build_type "release")
+        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
+    endif()
+
+    if(${NS3_SHARED})
+        set(LIB_TYPE SHARED)
+        set(BUILD_SHARED_LIBS ON)
+    else()
+        set(LIB_TYPE STATIC)
+        set(BUILD_SHARED_LIBS OFF)
+    endif()
 
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
@@ -332,17 +353,6 @@ macro(process_options)
     #    endif()
     #endif()
 
-    #process debug switch
-    if(${NS3_DEBUG})
-        set(CMAKE_BUILD_TYPE Debug)
-        set(build_type "debug")
-        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
-    else()
-        set(CMAKE_BUILD_TYPE Release)
-        set(build_type "release")
-        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
-    endif()
-
     #Process core-config
     set(INT64X64 128)
 
@@ -446,8 +456,8 @@ endmacro()
 
 
 macro (build_lib libname source_files header_files libraries_to_link test_sources)
-    #Create shared library with sources and headers
-    add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
+    #Create library with sources and headers
+    add_library(${lib${libname}} ${LIB_TYPE} "${source_files}" "${header_files}")
 
     #Build tests if requested
     if(${NS3_TESTS})
@@ -457,11 +467,9 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
             set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
             set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
 
-            #Create shared library containing tests of the module
+            #Create library containing tests of the module
             add_library(${test${libname}} OBJECT "${test_sources}")
 
-            #Link test library to the module library
-            #target_link_libraries(${test${libname}} ${libtest} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link}  ${LIB_AS_NEEDED_POST})
         endif()
     endif()
 
@@ -471,10 +479,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
     #endif()
 
-    #Link the shared library with the libraries passed
-    if (${libname} STREQUAL "test")
-        list(APPEND ${libraries_to_link} ${LIB_WHOLE_ARCHIVE_PRE} ${ns3-libs-tests} ${LIB_WHOLE_ARCHIVE_POST})
-    endif()
+    #Link the library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     #Write a module header that includes all headers from that module
@@ -502,10 +507,10 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 endmacro()
 
 macro (build_example name source_files header_files libraries_to_link)
-    #Create shared library with sources and headers
+    #Create library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
-    #Link the shared library with the libraries passed
+    #Link the library with the libraries passed
     target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}
@@ -515,10 +520,10 @@ macro (build_example name source_files header_files libraries_to_link)
 endmacro()
 
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
-    #Create shared library with sources and headers
+    #Create library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
-    #Link the shared library with the libraries passed
+    #Link the library with the libraries passed
     target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}

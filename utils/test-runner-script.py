@@ -78,7 +78,10 @@ if __name__ == '__main__':
 
 		#Fetch test names from test-runner
 		os.chdir(bin_path)
-		tmp = subprocess.check_output([runner_name, "--list"], shell=False, stderr=None).decode()
+		try:
+			tmp = subprocess.check_output([runner_name, "--list"], shell=False, stderr=None).decode()
+		except:
+			return -1
 		os.chdir(cwd_path)
 
 		tests = tmp.split("\n")[:-1]
@@ -103,4 +106,5 @@ if __name__ == '__main__':
 
 		return len(results)
 
-	main()
+	retval = main()
+	print(retval)
