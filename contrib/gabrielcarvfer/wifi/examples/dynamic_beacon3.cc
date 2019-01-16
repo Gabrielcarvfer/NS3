@@ -22,23 +22,21 @@ int main(int argc, char *argv[])
 
 
     unsigned sim_id = 0, nDevicesPerAp = 5, nDevicesMovingPerAp = 2, nLevels = 1, nAPs = 10, simulationDuration = 600;
-    bool g_verbose = true, trace = false, enableDynamicBeacon = false, trickleEnabled = true;
+    bool g_verbose = true, trace = false, enableDynamicBeacon = false, trickleEnabled = false;
     double distanceBetweenAPs = 5.0, buildingHeight = 3.0;
     double startApplication = 1.0, endApplication = 20.0;
     double movingSTAxSpeed = 0.3, movingSTAySpeed = 0.3;
     double beaconInterval = 0.1, interestRadius = 0.85;
     unsigned scanInterval=10;
-    double maxBeaconInterval = 6.4, minBeaconInterval = 0.1, apMaxRange = 30.0;
+    double maxBeaconInterval = 6.4, minBeaconInterval = 0.1, apMaxRange = 40.0;
     uint64_t maxpackets = 4294967295000;
-    unsigned packetSize = 10240;
-    uint64_t packetInterval = 200;
+    unsigned packetSize = 1024;
+    uint64_t packetInterval = 100;
     std::string outputFolder = "output/";
+    int simOption = 0;
+    bool activeProbing = false;
+    bool normalDistribution = false;
 
-#ifdef WIN32
-    CreateDirectory(outputFolder, NULL);
-#else
-    mkdir(outputFolder.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-#endif
 
     CommandLine cmd;
     //Number of devices configuration
@@ -81,12 +79,278 @@ int main(int argc, char *argv[])
     cmd.AddValue ("sim_id", "Id of simulation (used in collected traces)", sim_id);
     cmd.AddValue ("g_verbose", "Tell echo applications to log if true", g_verbose);
     cmd.AddValue ("trace", "Enable pcap tracing", trace);
+    cmd.AddValue ("simOption", "Which scenario to run", simOption);
     cmd.Parse(argc, argv);
+
+    std::stringstream ss;
 
     if (g_verbose)
     {
         enable_log();
     }
+    ss << simOption;
+    //Every 4 tests, switch between standard, pureTrickle, dynamicBeacon and dynamicTrickle
+    switch(simOption % 4)
+    {
+        case 0:
+            enableDynamicBeacon = false;
+            trickleEnabled      = false;
+            ss << "_standard";
+            break;
+        case 1:
+            enableDynamicBeacon = false;
+            trickleEnabled      = true;
+            ss << "_pureTrickle";
+            break;
+        case 2:
+            enableDynamicBeacon = true;
+            trickleEnabled      = false;
+            ss << "_dynamicBeacon";
+            break;
+        case 3:
+            enableDynamicBeacon = true;
+            trickleEnabled      = true;
+            ss << "_dynamicTrickle";
+            break;
+
+    }
+
+    //Every 48 tests, switch between minBeacon 0.1 and 0.2
+    if (((simOption / 48)+1 % 2) == 0)
+        minBeaconInterval = 0.2;
+
+    //Every 96 tests, switch between
+    //if (((simOption / 48)+1 % 2) == 0)
+
+
+    switch(simOption % 48)
+    {
+        //Active Probing off
+        case 0+0:
+        case 0+1:
+        case 0+2:
+        case 0+3:
+            packetInterval      = 100;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            normalDistribution  = false;
+            break;
+        case 4+0:
+        case 4+1:
+        case 4+2:
+        case 4+3:
+            packetInterval      = 100;
+            packetSize          = 10240;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = false;
+            normalDistribution  = false;
+            break;
+        case 8+0:
+        case 8+1:
+        case 8+2:
+        case 8+3:
+            packetInterval      = 25;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = false;
+            normalDistribution  = true;
+            break;
+        case 12+0:
+        case 12+1:
+        case 12+2:
+        case 12+3:
+            packetInterval      = 100;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = false;
+            normalDistribution  = true;
+            break;
+        case 16+0:
+        case 16+1:
+        case 16+2:
+        case 16+3:
+            packetInterval      = 200;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = false;
+            normalDistribution  = true;
+            break;
+
+        case 20+0:
+        case 20+1:
+        case 20+2:
+        case 20+3:
+            packetInterval      = 100;
+            packetSize          = 5120;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = false;
+            normalDistribution  = true;
+            break;
+        //Active Probing on
+        case 24+0:
+        case 24+1:
+        case 24+2:
+        case 24+3:
+            packetInterval      = 100;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = false;
+            break;
+        case 28+0:
+        case 28+1:
+        case 28+2:
+        case 28+3:
+            packetInterval      = 100;
+            packetSize          = 10240;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = false;
+            break;
+        case 32+0:
+        case 32+1:
+        case 32+2:
+        case 32+3:
+            packetInterval      = 25;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = true;
+            break;
+        case 36+0:
+        case 36+1:
+        case 36+2:
+        case 36+3:
+            packetInterval      = 100;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = true;
+            break;
+        case 40+0:
+        case 40+1:
+        case 40+2:
+        case 40+3:
+            packetInterval      = 200;
+            packetSize          = 1024;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = true;
+            break;
+
+        case 44+0:
+        case 44+1:
+        case 44+2:
+        case 44+3:
+            packetInterval      = 100;
+            packetSize          = 5120;
+            movingSTAxSpeed     = 0.3;
+            movingSTAySpeed     = 0.3;
+            distanceBetweenAPs  = 5.0;
+            scanInterval        = 10;
+            apMaxRange          = 40;
+            interestRadius      = 0.85;
+            minBeaconInterval   = 0.1;
+            maxBeaconInterval   = 6.4;
+            activeProbing       = true;
+            normalDistribution  = true;
+            break;
+        default:
+            break;
+    }
+
+    ss << "_option_"  << simOption;
+    ss << "_pktInt_"  << packetInterval;
+    ss << "_pktSz_"   << packetSize;
+    ss << "_minBeac_" << minBeaconInterval;
+    ss << "_normal_"  << normalDistribution;
+    ss << "_probe_"   << activeProbing;
+
+    outputFolder = ss.str();
+    std::cout << outputFolder << std::endl;
+
+#ifdef WIN32
+    CreateDirectory(outputFolder, NULL);
+#else
+    mkdir(outputFolder.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
 
     //GlobalValue::Bind ("SimulatorImplementationType", StringValue ("ns3::DistributedSimulatorImpl"));
 
@@ -110,7 +374,7 @@ int main(int argc, char *argv[])
     wifiStaticStaNodes.Create((nDevicesPerAp - nDevicesMovingPerAp) * nAPs);
     wifiMovingStaNodes.Create(nDevicesMovingPerAp * nAPs);
     wifiApNodes.Create(nAPs);
-    
+
 // 2. Create channel for communication
     YansWifiChannelHelper channel = YansWifiChannelHelper::Default();
     YansWifiPhyHelper phy = YansWifiPhyHelper::Default();
@@ -118,7 +382,7 @@ int main(int argc, char *argv[])
 
     phy.SetPcapDataLinkType(YansWifiPhyHelper::DLT_IEEE802_11_RADIO); //Radiotap
     phy.SetChannel(channel.Create());
-    
+
     WifiHelper wifi;
     wifi.SetStandard(WIFI_PHY_STANDARD_80211n_2_4GHZ);
     wifi.SetRemoteStationManager("ns3::IdealWifiManager");
@@ -129,7 +393,7 @@ int main(int argc, char *argv[])
     Ssid ssid = Ssid("ns-3-ssid");
     mac.SetType("ns3::StaWifiMac",
                 "Ssid", SsidValue(ssid),
-                "ActiveProbing", BooleanValue(false));
+                "ActiveProbing", BooleanValue(activeProbing));
     NetDeviceContainer staticStaDevices, movingStaDevices;
 
     staticStaDevices = wifi.Install(phy, mac, wifiStaticStaNodes);
@@ -190,7 +454,7 @@ int main(int argc, char *argv[])
                         uint32_t realStaId = (nStaticDevicesPerAp * apId) + staId;
                         nc.Add(wifiStaticStaNodes.Get(realStaId));
                         setup_mobility2(&nc, "ns3::ConstantPositionMobilityModel", apX, apY, apZ, distanceBetweenAPs*2);
-                        std::cout << "Ap id: " << apId << " Sta estatico real id: " << realStaId << std::endl;
+                        //std::cout << "Ap id: " << apId << " Sta estatico real id: " << realStaId << std::endl;
 
                     }
 
@@ -203,7 +467,7 @@ int main(int argc, char *argv[])
                         Ptr<RandomWalk2dMobilityModel> mob = wifiMovingStaNodes.Get(
                                 realStaId)->GetObject<RandomWalk2dMobilityModel>();
                         //mob->SetVelocity(Vector(movingSTAxSpeed, movingSTAySpeed, 0.0));
-                        std::cout << "Ap id: " << apId << " Sta movel real id: " << realStaId << std::endl;
+                        //std::cout << "Ap id: " << apId << " Sta movel real id: " << realStaId << std::endl;
 
                     }
                 //}
@@ -258,7 +522,7 @@ int main(int argc, char *argv[])
     Ipv4InterfaceContainer allNetInterfaces;
     address.SetBase("10.1.0.0", "255.255.0.0");
     allNetInterfaces = address.Assign(allNetDevices);
-    
+
     Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
 // 8a. Create and setup applications (traffic sink)
@@ -308,7 +572,7 @@ int main(int argc, char *argv[])
     //pcap_filename << "_beaconInterval-"<<(int)(beaconInterval)<<"s";
     //pcap_filename << "_packetInterval-"<<(int)(packetInterval)<<"s";
     //pcap_filename << "_packetSize-"<< packetSize<<"KB";
-    phy.EnablePcap (outputFolder+pcap_filename.str(), wifiApNodes, true);
+    phy.EnablePcap (outputFolder+"/"+pcap_filename.str(), wifiApNodes, true);
 
     //wifi.EnableLogComponents();
     //stack.EnablePcapIpv4("wif-ap2-ap", wifiApNodes);

@@ -33,7 +33,7 @@ macro(process_options)
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
     #Set C++ standard
-    add_definitions(-std=c++11 -fPIC)
+    add_definitions(-std=c++17 -fPIC)
 
     #find required dependencies
 

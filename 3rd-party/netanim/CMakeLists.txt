@@ -153,11 +153,11 @@ set(resource_files
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-find_package(Qt4 REQUIRED QtGui)
+set(Qt4_FOUND FALSE)
+#find_package(Qt4 REQUIRED QtGui)
 
 if(NOT ${Qt4_FOUND})
-    message(WARNING You need Qt4 installed to build NetAnim)
+    message(WARNING "You need Qt4 installed to build NetAnim")
 else()
     include(${QT_USE_FILE})
     add_definitions(-DNS3_LOG_ENABLE ${QT_DEFINITIONS})

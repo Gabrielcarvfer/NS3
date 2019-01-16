@@ -11,3 +11,4 @@ scratch/shared/
 scratch/wif*
 scratch/run*
 cmake
+cmake-build-release/

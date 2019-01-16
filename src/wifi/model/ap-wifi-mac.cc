@@ -22,6 +22,9 @@
  */
 
 #include <cstdlib>
+#include <random>
+
+
 #include <ns3/ap-wifi-mac.h>
 
 #include "ap-wifi-mac.h"
@@ -131,7 +134,6 @@ namespace ns3 {
         m_beaconDca->SetManager (m_dcfManager);
         m_beaconDca->SetTxMiddle (m_txMiddle);
         m_enableBeaconGeneration = false;
-        samples.clear();
 
         //samples = std::map<Mac48Address, STA_samples>();
 
@@ -1393,6 +1395,8 @@ namespace ns3 {
         //Skip execution if there are no collected samples
         if (samples.empty())
         {
+            //std::cout << "Motil1 " << std::endl;
+
             return false;
         }
 
@@ -1402,6 +1406,8 @@ namespace ns3 {
         //For each station at range process collected samples
         for (auto sta: m_staAtRange)
         {
+            //std::cout << "Motil2 "  << std::endl;
+
             samples.at(sta.first).moving = false;
             distance_samples_list * distance_samp = &samples.at(sta.first).distance_samples;
             distance_registry_list * distance_reg = &samples.at(sta.first).distance_registry;
@@ -1410,9 +1416,13 @@ namespace ns3 {
             //Analyze  measurements and calculate average distance plus standard error
             if (!distance_samp->empty())
             {
+                //std::cout << "Motil 2.1" << std::endl;
                 //Calculate average speed and standard error
                 distance_reg->emplace_front(distance_samp);
-                speed_reg->emplace_front(samples.at(sta.first).distance_registry);
+                Mac48Address staAddr = sta.first;
+
+                auto sample = samples.at(staAddr);
+                speed_reg->emplace_front(sample.distance_registry);
                 distance_samp->clear();
 
                 double diff = std::abs(distance_reg->begin()->average_distance - std::next(distance_reg->begin())->average_distance);
@@ -1443,7 +1453,7 @@ namespace ns3 {
 
             //Clean old registries to free memory and improve simulation speed
             //for (auto it : *distance_reg)
-            //    std::cout << "dist " << it.average_distance<<std::endl;
+            //std::cout << "dist " << average_sta_distance<<std::endl;
             if (distance_reg->size() > 2)
             {
                 auto it = distance_reg->begin();
@@ -1458,6 +1468,8 @@ namespace ns3 {
             }
 
         }
+        //std::cout << "Motil3 " << std::endl;
+
 
         average_sta_distance /= this->samples.size();
 
@@ -1467,8 +1479,12 @@ namespace ns3 {
         //For each station, find Stas approaching or moving away from AP
         for (auto sta: m_staAtRange)
         {
+            //std::cout << "Motil4 "  << std::endl;
+
             if(samples.at(sta.first).moving)
             {
+                //std::cout << "Motil5 " << std::endl;
+
                 distance_registry_list * distance_reg = &samples.at(sta.first).distance_registry;
                 speed_registry_list * speed_reg = &samples.at(sta.first).speed_registry;
                 
@@ -1530,13 +1546,15 @@ namespace ns3 {
                 }
             }
         }
+        //std::cout << "Motil6 " << std::endl;
 
         if (changedApproach | changedMoving)
         {
+            //std::cout << "Motil 6.1" << std::endl;
             m_activeNetwork = true;
             m_beaconInterval = NanoSeconds(m_beaconInterval.GetInteger()/2);
             m_beaconInterval = m_beaconInterval > m_minBeaconInterval ? m_beaconInterval : m_minBeaconInterval;
-
+            //std::cout << this << " beacon:" << m_beaconInterval << std::endl;
             //Cancel previous beacon and register new one
             switch(beaconAdjustType)
             {
@@ -1563,6 +1581,9 @@ namespace ns3 {
                     break;
             }
         }
+        //std::cout << "Motil7 " << std::endl;
+        return m_activeNetwork;
+
     }
 
     bool ApWifiMac::Trickle()
@@ -1586,13 +1607,11 @@ namespace ns3 {
     }
 
     distance_sample::distance_sample(double rssi, double txpower, Time timestamp)
-        : distance(0),
-          timestamp(Time(MilliSeconds(0)))
     {
         this->distance = calculate_distance_RSSI(rssi, txpower);
         this->timestamp = timestamp;
         //if (txpower > 0.0)
-        //std::cout<< "rssi" << rssi << std::endl;
+        //std::cout<< "rssi " << rssi << " distance " << this->distance << std::endl;
     }
 
     distance_sample::~distance_sample()
@@ -1601,13 +1620,22 @@ namespace ns3 {
     }
 
     distance_registry::distance_registry(double average_distance, double standard_deviation, Time measurement_interval)
-        : average_distance(0.0),
-          standard_deviation(0.0),
-          measurement_interval(Time(MilliSeconds(0)))
     {
         this->average_distance = average_distance;
         this->standard_deviation = standard_deviation;
         this->measurement_interval = measurement_interval;
+
+        /*
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::normal_distribution<double> d(average_distance,standard_deviation*2);
+
+        double newDistance = d(gen);
+        double newStddev = (this->standard_deviation + (average_distance-newDistance)/2.0 )/2.0;
+        //std::cout << "Dist " << average_distance << " : newDist " << newDistance << " : stdDev " << standard_deviation << " : newStdDev " << newStddev << std::endl;
+        this->average_distance = newDistance;
+        this->standard_deviation = newStddev;
+        */
     }
 
     distance_registry::~distance_registry()
@@ -1635,6 +1663,18 @@ namespace ns3 {
             measurement_interval = distance_samples->begin()->timestamp - distance_samples->end()->timestamp;
             //std::cout << "average distance "<<this->average_distance << "    standard error  "<< standard_deviation<<std::endl;
 
+            /*
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::normal_distribution<double> d(average_distance,standard_deviation*2);
+            double newDistance = d(gen);
+            double newStddev = (this->standard_deviation + (average_distance-newDistance)/2.0 )/2.0;
+
+            //if (standard_deviation != 0.0)
+                //std::cout << "Dist " << average_distance << " : newDist " << newDistance << " : stdDev " << standard_deviation << " : newStdDev " << newStddev << std::endl;
+            this->average_distance = newDistance;
+            this->standard_deviation = newStddev;
+            */
         }
     }
 

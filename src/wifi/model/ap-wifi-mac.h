@@ -387,8 +387,8 @@ private:
 
     STA_samples_list samples; //Map addressed by mac address containing a list of rssi and txpower
     void RegisterSample(Mac48Address from, double rssi, double txpower, Time timestamp);
-        bool dynamicBeaconEnabled;
-        double interest_radius;
+    bool dynamicBeaconEnabled;
+    double interest_radius;
     typedef enum {DYNAMIC_BEACON, TRICKLE_BEACON} beaconAdjustType_e;
     beaconAdjustType_e beaconAdjustType;
     EventId m_TrickleIntervalEvent;
