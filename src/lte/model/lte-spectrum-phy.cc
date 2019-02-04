@@ -712,7 +712,6 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       // other type of signal (could be 3G, GSM, whatever) -> interference
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
-
       PU_presence = true;
       PU_event.Cancel();
       PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this);
@@ -799,6 +798,8 @@ void LteSpectrumPhy::reset_PU_presence()
 {
   PU_presence = false;
 }
+
+std::default_random_engine gen;
 
 std::mutex mutex;
 void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, bool * PUDetected, double * avgSinr)
@@ -957,8 +958,6 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
             prob = 1.0;
         }
         //Answer the probability of detecting the PU
-        std::random_device rd;
-        std::mt19937 gen(rd());
 
         bool answer = false;
         if (PU_presence)
