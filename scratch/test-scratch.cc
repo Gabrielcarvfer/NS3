@@ -88,13 +88,17 @@ int main()
     bool useCa = true;
 
     //1 Configura EPC e PGW
-    Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
 
+    Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
     //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
     Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
-    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel"));
+
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel")); // Spectrum
+    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));         // Our version
+
 
 
 

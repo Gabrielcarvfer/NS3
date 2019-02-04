@@ -828,33 +828,199 @@ private:
 class RangePropagationLossModel : public PropagationLossModel
 {
 public:
-  /**
-   * \brief Get the type ID.
-   * \return the object TypeId
-   */
-  static TypeId GetTypeId (void);
-  RangePropagationLossModel ();
+    /**
+     * \brief Get the type ID.
+     * \return the object TypeId
+     */
+    static TypeId GetTypeId (void);
+    RangePropagationLossModel ();
 private:
-  /**
-   * \brief Copy constructor
-   *
-   * Defined and unimplemented to avoid misuse
-   */
-  RangePropagationLossModel (const RangePropagationLossModel&);
-  /**
-   * \brief Copy constructor
-   *
-   * Defined and unimplemented to avoid misuse
-   * \returns
-   */
-  RangePropagationLossModel& operator= (const RangePropagationLossModel&);
-  virtual double DoCalcRxPower (double txPowerDbm,
-                                Ptr<MobilityModel> a,
-                                Ptr<MobilityModel> b) const;
-  virtual int64_t DoAssignStreams (int64_t stream);
+    /**
+     * \brief Copy constructor
+     *
+     * Defined and unimplemented to avoid misuse
+     */
+    RangePropagationLossModel (const RangePropagationLossModel&);
+    /**
+     * \brief Copy constructor
+     *
+     * Defined and unimplemented to avoid misuse
+     * \returns
+     */
+    RangePropagationLossModel& operator= (const RangePropagationLossModel&);
+    virtual double DoCalcRxPower (double txPowerDbm,
+                                  Ptr<MobilityModel> a,
+                                  Ptr<MobilityModel> b) const;
+    virtual int64_t DoAssignStreams (int64_t stream);
 private:
-  double m_range; //!< Maximum Transmission Range (meters)
+    double m_range; //!< Maximum Transmission Range (meters)
 };
+
+/**
+ * \ingroup propagation
+ *
+ * \brief a 5G-RANGE propagation loss model
+ *
+ * The 5G-RANGE propagation loss model was first described in
+ * "A Note on a Simple Transmission Formula", by
+ * "Harald T. 5G-RANGE".
+ *
+ * The original equation was described as:
+ *  \f$ \frac{P_r}{P_t} = \frac{A_r A_t}{d^2\lambda^2} \f$
+ *  with the following equation for the case of an
+ *  isotropic antenna with no heat loss:
+ *  \f$ A_{isotr.} = \frac{\lambda^2}{4\pi} \f$
+ *
+ * The final equation becomes:
+ * \f$ \frac{P_r}{P_t} = \frac{\lambda^2}{(4 \pi d)^2} \f$
+ *
+ * Modern extensions to this original equation are:
+ * \f$ P_r = \frac{P_t G_t G_r \lambda^2}{(4 \pi d)^2 L}\f$
+ *
+ * With:
+ *  - \f$ P_r \f$ : reception power (W)
+ *  - \f$ P_t \f$ : transmission power (W)
+ *  - \f$ G_t \f$ : transmission gain (unit-less)
+ *  - \f$ G_r \f$ : reception gain (unit-less)
+ *  - \f$ \lambda \f$ : wavelength (m)
+ *  - \f$ d \f$ : distance (m)
+ *  - \f$ L \f$ : system loss (unit-less)
+ *
+ * In the implementation,  \f$ \lambda \f$ is calculated as
+ * \f$ \frac{C}{f} \f$, where  \f$ C = 299792458\f$ m/s is the speed of light in
+ * vacuum, and \f$ f \f$ is the frequency in Hz which can be configured by
+ * the user via the Frequency attribute.
+ *
+ * The 5G-RANGE model is valid only for propagation in free space within
+ * the so-called far field region, which can be considered
+ * approximately as the region for \f$ d > 3 \lambda \f$.
+ * The model will still return a value for \f$ d < 3 \lambda \f$, as
+ * doing so (rather than triggering a fatal error) is practical for
+ * many simulation scenarios. However, we stress that the values
+ * obtained in such conditions shall not be considered realistic.
+ *
+ * Related with this issue, we note that the 5G-RANGE formula is
+ * undefined for \f$ d = 0 \f$, and results in
+ * \f$ P_r > P_t \f$ for \f$ d < \lambda / 2 \sqrt{\pi} \f$.
+ * Both these conditions occur outside of the far field region, so in
+ * principle the 5G-RANGE model shall not be used in these conditions.
+ * In practice, however, 5G-RANGE is often used in scenarios where accurate
+ * propagation modeling is not deemed important, and values of \f$ d =
+ * 0 \f$ can occur. To allow practical use of the model in such
+ * scenarios, we have to 1) return some value for \f$ d = 0 \f$, and
+ * 2) avoid large discontinuities in propagation loss values (which
+ * could lead to artifacts such as bogus capture effects which are
+ * much worse than inaccurate propagation loss values). The two issues
+ * are conflicting, as, according to the 5G-RANGE formula,
+ * \f$\lim_{d \to 0 }  P_r = +\infty \f$;
+ * so if, for \f$ d = 0 \f$, we use a fixed loss value, we end up with an infinitely large
+ * discontinuity, which as we discussed can cause undesirable
+ * simulation artifacts.
+ *
+ * To avoid these artifact, this implementation of the 5G-RANGE model
+ * provides an attribute called MinLoss which allows to specify the
+ * minimum total loss (in dB) returned by the model. This is used in
+ * such a way that
+ * \f$ P_r \f$ continuously increases for \f$ d \to 0 \f$, until
+ * MinLoss is reached, and then stay constant; this allow to
+ * return a value for \f$ d  = 0 \f$ and at the same time avoid
+ * discontinuities. The model won't be much realistic, but at least
+ * the simulation artifacts discussed before are avoided. The default value of
+ * MinLoss is 0 dB, which means that by default the model will return
+ * \f$ P_r = P_t \f$ for \f$ d <= \lambda / 2 \sqrt{\pi} \f$. We note
+ * that this value of \f$ d \f$ is outside of the far field
+ * region, hence the validity of the model in the far field region is
+ * not affected.
+ *
+ */
+    class RANGEPropagationLossModel : public PropagationLossModel
+    {
+    public:
+        /**
+         * \brief Get the type ID.
+         * \return the object TypeId
+         */
+        static TypeId GetTypeId (void);
+        RANGEPropagationLossModel ();
+        /**
+         * \param frequency (Hz)
+         *
+         * Set the carrier frequency used in the RANGE model
+         * calculation.
+         */
+        void SetFrequency (double frequency);
+        /**
+         * \param systemLoss (dimension-less)
+         *
+         * Set the system loss used by the RANGE propagation model.
+         */
+        void SetSystemLoss (double systemLoss);
+
+        /**
+         * \param minLoss the minimum loss (dB)
+         *
+         * no matter how short the distance, the total propagation loss (in
+         * dB) will always be greater or equal than this value
+         */
+        void SetMinLoss (double minLoss);
+
+        /**
+         * \return the minimum loss.
+         */
+        double GetMinLoss (void) const;
+
+        /**
+         * \returns the current frequency (Hz)
+         */
+        double GetFrequency (void) const;
+        /**
+         * \returns the current system loss (dimension-less)
+         */
+        double GetSystemLoss (void) const;
+
+    private:
+        /**
+         * \brief Copy constructor
+         *
+         * Defined and unimplemented to avoid misuse
+         */
+        RANGEPropagationLossModel (const RANGEPropagationLossModel &);
+        /**
+         * \brief Copy constructor
+         *
+         * Defined and unimplemented to avoid misuse
+         * \returns
+         */
+        RANGEPropagationLossModel & operator = (const RANGEPropagationLossModel &);
+
+        virtual double DoCalcRxPower (double txPowerDbm,
+                                      Ptr<MobilityModel> a,
+                                      Ptr<MobilityModel> b) const;
+        virtual int64_t DoAssignStreams (int64_t stream);
+
+        /**
+         * Transforms a Dbm value to Watt
+         * \param dbm the Dbm value
+         * \return the Watts
+         */
+        double DbmToW (double dbm) const;
+
+        /**
+         * Transforms a Watt value to Dbm
+         * \param w the Watt value
+         * \return the Dbm
+         */
+        double DbmFromW (double w) const;
+
+        double m_lambda;        //!< the carrier wavelength
+        double m_frequency;     //!< the carrier frequency
+        double m_systemLoss;    //!< the system loss
+        double m_minLoss;       //!< the minimum loss
+        double m_kValue;        //!< 5G-RANGE constant
+        double m_shadowMu;      //!< mu value for log-normal shadowing
+        double m_shadowSigma;   //!< sigma value for log-normal shadowing
+        Ptr<LogNormalRandomVariable> m_logNormalGen;
+    };
 
 } // namespace ns3
 

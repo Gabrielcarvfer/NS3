@@ -185,19 +185,22 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyUlHarqFeedbackCallback = MakeNullCallback< void, UlInfoListElement_s > ();
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
+
   m_sensingEvent.Cancel();
+  /*
+  //todo: print PU detection status in a more appropriate manner
   if (puPresence.size()>1)
   {
       std::cout << this << ": ";
       for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
           std::cout << *it << " ";
       std::cout << std::endl;
-
       std::cout << this << ": ";
       for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
           std::cout << *it << " ";
       std::cout << std::endl;
   }
+  */
 } 
 
 /**

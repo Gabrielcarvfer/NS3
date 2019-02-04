@@ -55,6 +55,7 @@ PropagationLossModel::PropagationLossModel ()
 
 PropagationLossModel::~PropagationLossModel ()
 {
+
 }
 
 void
@@ -931,5 +932,172 @@ RangePropagationLossModel::DoAssignStreams (int64_t stream)
 }
 
 // ------------------------------------------------------------------------- //
+// ------------------------------------------------------------------------- //
 
+NS_OBJECT_ENSURE_REGISTERED (RANGEPropagationLossModel);
+
+TypeId
+RANGEPropagationLossModel::GetTypeId (void)
+{
+    static TypeId tid = TypeId ("ns3::RANGEPropagationLossModel")
+            .SetParent<PropagationLossModel> ()
+            .SetGroupName ("Propagation")
+            .AddConstructor<RANGEPropagationLossModel> ()
+            .AddAttribute ("Frequency",
+                           "The carrier frequency (in Hz) at which propagation occurs  (default is 5.15 GHz).",
+                           DoubleValue (5.150e9),
+                           MakeDoubleAccessor (&RANGEPropagationLossModel::SetFrequency,
+                                               &RANGEPropagationLossModel::GetFrequency),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute ("SystemLoss", "The system loss",
+                           DoubleValue (1.0),
+                           MakeDoubleAccessor (&RANGEPropagationLossModel::m_systemLoss),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute ("MinLoss",
+                           "The minimum value (dB) of the total loss, used at short ranges. Note: ",
+                           DoubleValue (0.0),
+                           MakeDoubleAccessor (&RANGEPropagationLossModel::SetMinLoss,
+                                               &RANGEPropagationLossModel::GetMinLoss),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute("K-value",
+                           "K constant added to pathloss in 5G-RANGE networks",
+                           DoubleValue(20.0),
+                           MakeDoubleAccessor(&RANGEPropagationLossModel::m_kValue),
+                           MakeDoubleChecker<double>())
+            .AddAttribute("ShadowingMu",
+                          "Mu for log-normal shadowing pathloss in 5G-RANGE networks",
+                          DoubleValue(0.0),
+                          MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowMu),
+                          MakeDoubleChecker<double>())
+            .AddAttribute("ShadowingSigma",
+                          "Sigma for log-normal shadowing pathloss in 5G-RANGE networks",
+                          DoubleValue(8.0),
+                          MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowSigma),
+                          MakeDoubleChecker<double>())
+    ;
+    return tid;
+}
+
+RANGEPropagationLossModel::RANGEPropagationLossModel ()
+{
+    m_logNormalGen = CreateObject<LogNormalRandomVariable> ();
+}
+
+void
+RANGEPropagationLossModel::SetSystemLoss (double systemLoss)
+{
+    m_systemLoss = systemLoss;
+}
+double
+RANGEPropagationLossModel::GetSystemLoss (void) const
+{
+    return m_systemLoss;
+}
+void
+RANGEPropagationLossModel::SetMinLoss (double minLoss)
+{
+    m_minLoss = minLoss;
+}
+double
+RANGEPropagationLossModel::GetMinLoss (void) const
+{
+    return m_minLoss;
+}
+
+void
+RANGEPropagationLossModel::SetFrequency (double frequency)
+{
+    m_frequency = frequency;
+    static const double C = 299792458.0; // speed of light in vacuum
+    m_lambda = C / frequency;
+}
+
+double
+RANGEPropagationLossModel::GetFrequency (void) const
+{
+    return m_frequency;
+}
+
+double
+RANGEPropagationLossModel::DbmToW (double dbm) const
+{
+    double mw = std::pow (10.0,dbm/10.0);
+    return mw / 1000.0;
+}
+
+double
+RANGEPropagationLossModel::DbmFromW (double w) const
+{
+    double dbm = std::log10 (w * 1000.0) * 10.0;
+    return dbm;
+}
+
+double
+RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
+                                          Ptr<MobilityModel> a,
+                                          Ptr<MobilityModel> b) const
+{
+    /*
+     * RANGE free space equation:
+     * where Pt, Gr, Gr and P are in Watt units
+     * L is in meter units.
+     *
+     *    P     Gt * Gr * (lambda^2)
+     *   --- = ---------------------
+     *    Pt     (4 * pi * d)^2 * L
+     *
+     * Gt: tx gain (unit-less)
+     * Gr: rx gain (unit-less)
+     * Pt: tx power (W)
+     * d: distance (m)
+     * L: system loss
+     * lambda: wavelength (m)
+     *
+     * Here, we ignore tx and rx gain and the input and output values
+     * are in dB or dBm:
+     *
+     *                           lambda^2
+     * rx = tx +  10 log10 (-------------------) + K
+     *                       (4 * pi * d)^2 * L
+     *
+     * rx: rx power (dB)
+     * tx: tx power (dB)
+     * d: distance (m)
+     * L: system loss (unit-less)
+     * lambda: wavelength (m)
+     * K: 5G-RANGE pathloss constant
+     */
+    double distance = a->GetDistanceFrom (b);
+    if (distance < 3*m_lambda)
+    {
+        NS_LOG_WARN ("distance not within the far field region => inaccurate propagation loss value");
+    }
+    if (distance <= 0)
+    {
+        return txPowerDbm - m_minLoss;
+    }
+
+    if (m_logNormalGen->GetMu() != m_shadowMu || m_logNormalGen->GetSigma() != m_shadowSigma)
+    {
+        m_logNormalGen->SetAttribute("Mu", DoubleValue(m_shadowMu));
+        m_logNormalGen->SetAttribute("Sigma", DoubleValue(m_shadowSigma));
+    }
+
+    double numerator = m_lambda * m_lambda;
+    double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
+    double shadow = m_logNormalGen->GetValue();
+    double lossDb = -10 * log10 (numerator / denominator);
+    lossDb += m_kValue + shadow;
+    NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
+    std::cout << this << ": " << lossDb << " " << shadow <<std::endl;
+    return txPowerDbm - std::max (lossDb, m_minLoss);
+}
+
+int64_t
+RANGEPropagationLossModel::DoAssignStreams (int64_t stream)
+{
+    return 0;
+}
+
+// ------------------------------------------------------------------------- //
 } // namespace ns3
