@@ -1089,7 +1089,7 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
     double lossDb = -10 * log10 (numerator / denominator);
     lossDb += m_kValue + shadow;
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
-    std::cout << this << ": " << lossDb << " " << shadow <<std::endl;
+    //std::cout << this << ": " << lossDb << " " << shadow <<std::endl;
     return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 

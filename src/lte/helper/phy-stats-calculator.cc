@@ -42,6 +42,9 @@ PhyStatsCalculator::PhyStatsCalculator ()
 PhyStatsCalculator::~PhyStatsCalculator ()
 {
   NS_LOG_FUNCTION (this);
+  outFileUeSinr.close();
+  outFileRsrpSinr.close();
+  outFileInterference.close();
 }
 
 TypeId
@@ -74,6 +77,18 @@ void
 PhyStatsCalculator::SetCurrentCellRsrpSinrFilename (std::string filename)
 {
   m_RsrpSinrFilename = filename;
+
+  if(outFileRsrpSinr.is_open())
+      outFileRsrpSinr.close();
+
+  outFileRsrpSinr.open (GetCurrentCellRsrpSinrFilename ().c_str ());
+  if (!outFileRsrpSinr.is_open ())
+  {
+      NS_LOG_ERROR ("Can't open file " << GetCurrentCellRsrpSinrFilename ().c_str ());
+      return;
+  }
+
+  m_RsrpSinrFirstWrite = true;
 }
 
 std::string
@@ -86,6 +101,18 @@ void
 PhyStatsCalculator::SetUeSinrFilename (std::string filename)
 {
   m_ueSinrFilename = filename;
+
+  if(outFileUeSinr.is_open())
+      outFileUeSinr.close();
+
+  outFileUeSinr.open (GetUeSinrFilename ().c_str ());
+  if (!outFileUeSinr.is_open ())
+  {
+      NS_LOG_ERROR ("Can't open file " << GetUeSinrFilename ().c_str ());
+      return;
+  }
+
+  m_UeSinrFirstWrite = true;
 }
 
 std::string
@@ -98,6 +125,18 @@ void
 PhyStatsCalculator::SetInterferenceFilename (std::string filename)
 {
   m_interferenceFilename = filename;
+
+  if(outFileInterference.is_open())
+      outFileInterference.close();
+
+  outFileInterference.open (GetInterferenceFilename ().c_str ());
+  if (!outFileInterference.is_open ())
+  {
+      NS_LOG_ERROR ("Can't open file " << GetInterferenceFilename ().c_str ());
+      return;
+  }
+
+  m_InterferenceFirstWrite = true;
 }
 
 std::string
@@ -115,37 +154,19 @@ PhyStatsCalculator::ReportCurrentCellRsrpSinr (uint16_t cellId, uint64_t imsi, u
   NS_LOG_FUNCTION (this << cellId <<  imsi << rnti  << rsrp << sinr);
   NS_LOG_INFO ("Write RSRP/SINR Phy Stats in " << GetCurrentCellRsrpSinrFilename ().c_str ());
 
-  std::ofstream outFile;
   if ( m_RsrpSinrFirstWrite == true )
-    {
-      outFile.open (GetCurrentCellRsrpSinrFilename ().c_str ());
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetCurrentCellRsrpSinrFilename ().c_str ());
-          return;
-        }
-      m_RsrpSinrFirstWrite = false;
-      outFile << "% time\tcellId\tIMSI\tRNTI\trsrp\tsinr\tComponentCarrierId";
-      outFile << std::endl;
-    }
-  else
-    {
-      outFile.open (GetCurrentCellRsrpSinrFilename ().c_str (),  std::ios_base::app);
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetCurrentCellRsrpSinrFilename ().c_str ());
-          return;
-        }
-    }
-
-  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFile << cellId << "\t";
-  outFile << imsi << "\t";
-  outFile << rnti << "\t";
-  outFile << rsrp << "\t";
-  outFile << sinr << "\t";
-  outFile << (uint32_t)componentCarrierId << std::endl;
-  outFile.close ();
+  {
+    m_RsrpSinrFirstWrite = false;
+    outFileRsrpSinr << "% time\tcellId\tIMSI\tRNTI\trsrp\tsinr\tComponentCarrierId";
+    outFileRsrpSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  }
+  outFileRsrpSinr << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFileRsrpSinr << cellId << "\t";
+  outFileRsrpSinr << imsi << "\t";
+  outFileRsrpSinr << rnti << "\t";
+  outFileRsrpSinr << rsrp << "\t";
+  outFileRsrpSinr << sinr << "\t";
+  outFileRsrpSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
 }
 
 void
@@ -154,36 +175,18 @@ PhyStatsCalculator::ReportUeSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti,
   NS_LOG_FUNCTION (this << cellId <<  imsi << rnti  << sinrLinear);
   NS_LOG_INFO ("Write SINR Linear Phy Stats in " << GetUeSinrFilename ().c_str ());
 
-  std::ofstream outFile;
   if ( m_UeSinrFirstWrite == true )
-    {
-      outFile.open (GetUeSinrFilename ().c_str ());
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetUeSinrFilename ().c_str ());
-          return;
-        }
-      m_UeSinrFirstWrite = false;
-      outFile << "% time\tcellId\tIMSI\tRNTI\tsinrLinear\tcomponentCarrierId";
-      outFile << std::endl;
-    }
-  else
-    {
-      outFile.open (GetUeSinrFilename ().c_str (),  std::ios_base::app);
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetUeSinrFilename ().c_str ());
-          return;
-        }
-    }
-
-  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFile << cellId << "\t";
-  outFile << imsi << "\t";
-  outFile << rnti << "\t";
-  outFile << sinrLinear << "\t";
-  outFile << (uint32_t)componentCarrierId << std::endl;
-  outFile.close ();
+  {
+    m_UeSinrFirstWrite = false;
+    outFileUeSinr << "% time\tcellId\tIMSI\tRNTI\tsinrLinear\tcomponentCarrierId";
+    outFileUeSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  }
+  outFileUeSinr << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFileUeSinr << cellId << "\t";
+  outFileUeSinr << imsi << "\t";
+  outFileUeSinr << rnti << "\t";
+  outFileUeSinr << sinrLinear << "\t";
+  outFileUeSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
 }
 
 void
@@ -192,33 +195,16 @@ PhyStatsCalculator::ReportInterference (uint16_t cellId, Ptr<SpectrumValue> inte
   NS_LOG_FUNCTION (this << cellId <<  interference);
   NS_LOG_INFO ("Write Interference Phy Stats in " << GetInterferenceFilename ().c_str ());
 
-  std::ofstream outFile;
   if ( m_InterferenceFirstWrite == true )
-    {
-      outFile.open (GetInterferenceFilename ().c_str ());
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetInterferenceFilename ().c_str ());
-          return;
-        }
-      m_InterferenceFirstWrite = false;
-      outFile << "% time\tcellId\tInterference";
-      outFile << std::endl;
-    }
-  else
-    {
-      outFile.open (GetInterferenceFilename ().c_str (),  std::ios_base::app);
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetInterferenceFilename ().c_str ());
-          return;
-        }
-    }
+  {
+    m_InterferenceFirstWrite = false;
+    outFileInterference << "% time\tcellId\tInterference";
+    outFileInterference << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  }
 
-  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFile << cellId << "\t";
-  outFile << *interference;
-  outFile.close ();
+  outFileInterference << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFileInterference << cellId << "\t";
+  outFileInterference << *interference;
 }
 
 
