@@ -29,6 +29,7 @@
 #include "ns3/string.h"
 #include "ns3/pointer.h"
 #include <cmath>
+#include <random>
 
 namespace ns3 {
 
@@ -909,6 +910,9 @@ RangePropagationLossModel::RangePropagationLossModel ()
 {
 }
 
+std::default_random_engine generator;
+std::lognormal_distribution<double> distribution(0.0,4.47);
+
 double
 RangePropagationLossModel::DoCalcRxPower (double txPowerDbm,
                                           Ptr<MobilityModel> a,
@@ -961,7 +965,7 @@ RANGEPropagationLossModel::GetTypeId (void)
                            MakeDoubleChecker<double> ())
             .AddAttribute("K-value",
                            "K constant added to pathloss in 5G-RANGE networks",
-                           DoubleValue(20.0),
+                           DoubleValue(29.38),
                            MakeDoubleAccessor(&RANGEPropagationLossModel::m_kValue),
                            MakeDoubleChecker<double>())
             .AddAttribute("ShadowingMu",
@@ -971,7 +975,7 @@ RANGEPropagationLossModel::GetTypeId (void)
                           MakeDoubleChecker<double>())
             .AddAttribute("ShadowingSigma",
                           "Sigma for log-normal shadowing pathloss in 5G-RANGE networks",
-                          DoubleValue(8.0),
+                          DoubleValue(4.47),
                           MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowSigma),
                           MakeDoubleChecker<double>())
     ;
@@ -1086,10 +1090,11 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
     double numerator = m_lambda * m_lambda;
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
     double shadow = m_logNormalGen->GetValue();
+    double shadow2 = distribution(generator);
     double lossDb = -10 * log10 (numerator / denominator);
     lossDb += m_kValue + shadow;
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
-    //std::cout << this << ": " << lossDb << " " << shadow <<std::endl;
+    std::cout << this << ": " << lossDb << " " << shadow << " " << shadow2 << "\n";
     return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 
