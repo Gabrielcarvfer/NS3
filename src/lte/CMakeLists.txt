@@ -130,6 +130,8 @@ set(source_files
         model/no-op-component-carrier-manager.cc
         model/simple-ue-component-carrier-manager.cc
         helper/cc-helper.cc
+
+        model/BLER/json_loader.cc
         )
 
 set(header_files

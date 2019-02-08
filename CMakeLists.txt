@@ -83,7 +83,7 @@ set(AUTOINSTALL_DEPENDENCIES ON)
 option(NS3_fd-net-device ON)
 
 option(NS3_SHARED ON)
-set(NS3_SHARED OFF)
+#set(NS3_SHARED OFF) #
 
 set(build_openflow)
 if(${NS3_OPENFLOW})
