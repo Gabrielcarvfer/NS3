@@ -216,53 +216,37 @@ RadioBearerStatsCalculator::ShowResults (void)
   NS_LOG_FUNCTION (this << GetUlOutputFilename ().c_str () << GetDlOutputFilename ().c_str ());
   NS_LOG_INFO ("Write Rlc Stats in " << GetUlOutputFilename ().c_str () << " and in " << GetDlOutputFilename ().c_str ());
 
-  std::ofstream ulOutFile;
-  std::ofstream dlOutFile;
+
 
   if (m_firstWrite == true)
+  {
+    outFileUlRlc.open (GetUlOutputFilename ().c_str ());
+    if (!outFileUlRlc.is_open ())
     {
-      ulOutFile.open (GetUlOutputFilename ().c_str ());
-      if (!ulOutFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
-          return;
-        }
-
-      dlOutFile.open (GetDlOutputFilename ().c_str ());
-      if (!dlOutFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
-          return;
-        }
-      m_firstWrite = false;
-      ulOutFile << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
-      ulOutFile << "delay\tstdDev\tmin\tmax\t";
-      ulOutFile << "PduSize\tstdDev\tmin\tmax";
-      ulOutFile << std::endl;
-      dlOutFile << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
-      dlOutFile << "delay\tstdDev\tmin\tmax\t";
-      dlOutFile << "PduSize\tstdDev\tmin\tmax";
-      dlOutFile << std::endl;
-    }
-  else
-    {
-      ulOutFile.open (GetUlOutputFilename ().c_str (), std::ios_base::app);
-      if (!ulOutFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
-          return;
-        }
-
-      dlOutFile.open (GetDlOutputFilename ().c_str (), std::ios_base::app);
-      if (!dlOutFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
-          return;
-        }
+      NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
+      return;
     }
 
-  WriteUlResults (ulOutFile);
-  WriteDlResults (dlOutFile);
+    outFileDlRlc.open (GetDlOutputFilename ().c_str ());
+    if (!outFileDlRlc.is_open ())
+    {
+      NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
+      return;
+    }
+
+    m_firstWrite = false;
+    outFileUlRlc << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
+    outFileUlRlc << "delay\tstdDev\tmin\tmax\t";
+    outFileUlRlc << "PduSize\tstdDev\tmin\tmax";
+    outFileUlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileDlRlc << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
+    outFileDlRlc << "delay\tstdDev\tmin\tmax\t";
+    outFileDlRlc << "PduSize\tstdDev\tmin\tmax";
+    outFileDlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  }
+
+  WriteUlResults (outFileUlRlc);
+  WriteDlResults (outFileDlRlc);
   m_pendingOutput = false;
 
 }
@@ -322,10 +306,8 @@ RadioBearerStatsCalculator::WriteUlResults (std::ofstream& outFile)
         {
           outFile << (*it) << "\t";
         }
-      outFile << std::endl;
+      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
     }
-
-  outFile.close ();
 }
 
 void
@@ -383,10 +365,8 @@ RadioBearerStatsCalculator::WriteDlResults (std::ofstream& outFile)
         {
           outFile << (*it) << "\t";
         }
-      outFile << std::endl;
+      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
     }
-
-  outFile.close ();
 }
 
 void
@@ -659,6 +639,16 @@ void
 RadioBearerStatsCalculator::SetUlPdcpOutputFilename (std::string outputFilename)
 {
   m_ulPdcpOutputFilename = outputFilename;
+
+  if(outFileUlPdcp.is_open())
+      outFileUlPdcp.close();
+
+  outFileUlPdcp.open (GetUlPdcpOutputFilename ().c_str ());
+  if (!outFileUlPdcp.is_open ())
+  {
+      NS_LOG_ERROR ("Can't open file " << GetUlPdcpOutputFilename ().c_str ());
+      return;
+  }
 }
 
 std::string
@@ -670,6 +660,17 @@ void
 RadioBearerStatsCalculator::SetDlPdcpOutputFilename (std::string outputFilename)
 {
   m_dlPdcpOutputFilename = outputFilename;
+
+  if(outFileDlPdcp.is_open())
+      outFileDlPdcp.close();
+
+  outFileDlPdcp.open (GetDlPdcpOutputFilename ().c_str ());
+  if (!outFileDlPdcp.is_open ())
+  {
+      NS_LOG_ERROR ("Can't open file " << GetDlPdcpOutputFilename ().c_str ());
+      return;
+  }
+
 }
 
 std::string
