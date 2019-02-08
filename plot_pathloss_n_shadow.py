@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 import statistics
-
+import math
+import numba
 
 bufferFile = ""
 
@@ -52,7 +53,7 @@ for prop_model in prop_models_dict:
 
 x = list(range(0, minLen, 1))
 
-fig,(ax, ax2, ax3, ax4, ax5) = plt.subplots(nrows=3)
+fig, ax = plt.subplots(nrows=1, figsize=(3,3))
 
 all_samples_shadow = []
 all_samples_shadow2 = []
@@ -75,7 +76,7 @@ for prop_model in prop_models_dict:
         statistics.stdev(prop_models_dict[prop_model]["shadow2"]),
         )
 
-    samples = np.array(prop_models_dict[prop_model]["shadow"])
+    samples = np.array(prop_models_dict[prop_model]["shadow"][:minLen])
     mean = np.mean(samples)
     var = np.var(samples)
     std = np.sqrt(var)
@@ -83,26 +84,24 @@ for prop_model in prop_models_dict:
     x = np.linspace(min(samples), max(samples), 12)
     y_pdf = stats.norm.pdf(x, mean, std)
 
-    samples1 = np.array(prop_models_dict[prop_model]["shadow2"])
+    samples1 = np.array(prop_models_dict[prop_model]["shadow2"][:minLen])
     mean1 = np.mean(samples1)
     var1 = np.var(samples1)
     std1 = np.sqrt(var1)
 
-    x = np.linspace(min(samples), max(samples), 12)
-    x1 = np.linspace(min(samples1), max(samples1), 12)
+    x = np.linspace(min(samples), max(samples), 100)
+    x1 = np.linspace(min(samples1), max(samples1), 100)
 
     y_pdf  = stats.norm.pdf(x, mean, std)
     y1_pdf = stats.norm.pdf(x1, mean1, std1)
     y2_pdf = stats.norm.pdf(x, 0.0, 4.47)
 
     ax.plot(x,y_pdf,color="blue", label="Shadowing NS3 lognormal PDF")
-    ax.plot(x1,y1_pdf,color="green", label="Shadowing std::lognormal PDF")
+    #ax.plot(x1,y1_pdf,color="green", label="Shadowing std::lognormal PDF")
     ax.plot(x,y2_pdf,color="red", label="Expected PDF")
     plt.show(block=False)
-    input()
-    pass
-    """
-    ax.set_xlabel('tick', )
+
+    """ax.set_xlabel('tick', )
     ax.set_ylabel('pathloss (dB)')
     ax.tick_params('y')
     ax2.set_xlabel('tick')
@@ -123,8 +122,10 @@ for prop_model in prop_models_dict:
     ax4.plot(x,prop_models_dict[prop_model]["shadow"][:minLen],alpha=0.5)
     ax5.hist(prop_models_dict[prop_model]["shadow"],alpha=0.5)
     plt.show(block=False)
-    #plt.savefig("%s.jpg" % prop_model)
     """
+    #plt.savefig("%s.jpg" % prop_model)
+    pass
+
 
 print(  "Propagation model ",
 		"all",
@@ -158,24 +159,53 @@ y_pdf  = stats.norm.pdf(x, mean, std)
 y1_pdf = stats.norm.pdf(x1, mean1, std1)
 y2_pdf = stats.norm.pdf(x, 0.0, 4.47)
 
-ax1.plot(x,y_pdf,color="cyan", label="Shadowing NS3 lognormal PDF")
-ax1.plot(x1,y1_pdf,color="olive", label="Shadowing std::lognormal PDF")
-ax1.plot(x,y2_pdf,color="magenta", label="Expected PDF")
-plt.show(block=False)
+#ax2.plot(x,y_pdf,color="cyan", label="Shadowing NS3 lognormal PDF")
+#ax2.plot(x1,y1_pdf,color="olive", label="Shadowing std::lognormal PDF")
+#ax2.plot(x,y2_pdf,color="magenta", label="Expected PDF")
+#plt.show(block=False)
    
+mu=0.0
+sigma=4.47
 
 #m_lambda 0.15533287979274613
-def range_pathloss(distance, m_lambda=0.14141153679245283, m_systemLoss=1, M_PI=math.pi, m_kValue = 29.38, mu=0.0, sigma=4.47)
-	numerator = m_lambda * m_lambda;
+def range_pathloss(distance, range=False, shadowing=False, shadow=0.0, m_lambda=0.14141153679245283, m_systemLoss=1, M_PI=math.pi, m_kValue = 29.38, mu=0.0, sigma=4.47):
+    numerator = m_lambda * m_lambda
     denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
-    shadow = list(numpy.random.lognormal(mean=mu, sigma=sigma, size=1))[0]
     lossDb = -10 * math.log10 (numerator / denominator);
-    lossDb += m_kValue + shadow;
+    if range:
+        lossDb += m_kValue
+        if shadowing:
+            lossDb += shadow
 
     return lossDb
 
 
+pathloss_x = list(range(1,10000, 10))
+shadows = np.random.normal(mu, sigma, size=len(pathloss_x))
 
+@numba.jit
+def get_pathloss_for_ranges(pathloss_x, range, shadowing):
+    pathloss_range = [0]*len(pathloss_x)
+    for x in numba.prange(len(pathloss_x)):
+        pathloss_range[x] = range_pathloss(distance=pathloss_x[x], range=range, shadowing=shadowing, shadow=shadows[x])
+    return pathloss_range
+
+
+pathloss_fspl = get_pathloss_for_ranges(pathloss_x, False, False)
+plt.plot(pathloss_x, pathloss_fspl, color="blue", label="FSPL pathloss")
+
+pathloss_range_noshadow = get_pathloss_for_ranges(pathloss_x, True, False)
+plt.plot(pathloss_x, pathloss_range_noshadow, color="green", label="5G-RANGE pathloss without shadowing")
+
+pathloss_range_shadow = get_pathloss_for_ranges(pathloss_x, True, True)
+plt.scatter(pathloss_x, pathloss_range_shadow, color="red", alpha=0.5, label="5G-RANGE pathloss with shadowing")
+
+legend = plt.legend(loc='lower center', shadow=True, fontsize='large')
+plt.ylabel("Pathloss [dB]")
+plt.xlabel("Distance [m]")
+
+
+plt.show(block=False)
 
 
 

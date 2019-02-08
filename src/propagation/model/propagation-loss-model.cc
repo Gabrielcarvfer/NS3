@@ -969,12 +969,12 @@ RANGEPropagationLossModel::GetTypeId (void)
                            MakeDoubleAccessor(&RANGEPropagationLossModel::m_kValue),
                            MakeDoubleChecker<double>())
             .AddAttribute("ShadowingMu",
-                          "Mu for log-normal shadowing pathloss in 5G-RANGE networks",
+                          "Mu for normal shadowing pathloss in 5G-RANGE networks",
                           DoubleValue(0.0),
                           MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowMu),
                           MakeDoubleChecker<double>())
             .AddAttribute("ShadowingSigma",
-                          "Sigma for log-normal shadowing pathloss in 5G-RANGE networks",
+                          "Sigma for normal shadowing pathloss in 5G-RANGE networks",
                           DoubleValue(4.47),
                           MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowSigma),
                           MakeDoubleChecker<double>())
@@ -984,7 +984,7 @@ RANGEPropagationLossModel::GetTypeId (void)
 
 RANGEPropagationLossModel::RANGEPropagationLossModel ()
 {
-    m_logNormalGen = CreateObject<LogNormalRandomVariable> ();
+    m_normalGen = CreateObject<NormalRandomVariable> ();
 }
 
 void
@@ -1081,15 +1081,15 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
         return txPowerDbm - m_minLoss;
     }
 
-    if (m_logNormalGen->GetMu() != m_shadowMu || m_logNormalGen->GetSigma() != m_shadowSigma)
+    if (m_normalGen->GetMean() != m_shadowMu || m_normalGen->GetVariance() != m_shadowSigma*m_shadowSigma)
     {
-        m_logNormalGen->SetAttribute("Mu", DoubleValue(m_shadowMu));
-        m_logNormalGen->SetAttribute("Sigma", DoubleValue(m_shadowSigma));
+        m_normalGen->SetAttribute("Mean", DoubleValue(m_shadowMu));
+        m_normalGen->SetAttribute("Variance", DoubleValue(m_shadowSigma*m_shadowSigma));
     }
 
     double numerator = m_lambda * m_lambda;
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
-    double shadow = m_logNormalGen->GetValue();
+    double shadow = m_normalGen->GetValue();
     double shadow2 = distribution(generator);
     double lossDb = -10 * log10 (numerator / denominator);
     lossDb += m_kValue + shadow;

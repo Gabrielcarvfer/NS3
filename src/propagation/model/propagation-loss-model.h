@@ -1017,9 +1017,9 @@ private:
         double m_systemLoss;    //!< the system loss
         double m_minLoss;       //!< the minimum loss
         double m_kValue;        //!< 5G-RANGE constant
-        double m_shadowMu;      //!< mu value for log-normal shadowing
-        double m_shadowSigma;   //!< sigma value for log-normal shadowing
-        Ptr<LogNormalRandomVariable> m_logNormalGen;
+        double m_shadowMu;      //!< mu value for normal shadowing
+        double m_shadowSigma;   //!< sigma value for normal shadowing
+        Ptr<NormalRandomVariable> m_normalGen;
     };
 
 } // namespace ns3
