@@ -126,7 +126,7 @@ PhyTxStatsCalculator::DlPhyTransmission (PhyTransmissionStatParameters params)
     m_dlTxFirstWrite = false;
     //outFileDlTx << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi"; // txMode is not available at dl tx side
     outFileDlTx << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi\tccId";
-    outFileDlTx << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileDlTx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
 //   outFileDlTx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
@@ -140,7 +140,7 @@ PhyTxStatsCalculator::DlPhyTransmission (PhyTransmissionStatParameters params)
   outFileDlTx << params.m_size << "\t";
   outFileDlTx << (uint32_t) params.m_rv << "\t";
   outFileDlTx << (uint32_t) params.m_ndi << "\t";
-  outFileDlTx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileDlTx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
@@ -155,7 +155,7 @@ PhyTxStatsCalculator::UlPhyTransmission (PhyTransmissionStatParameters params)
     m_ulTxFirstWrite = false;
 //     outFileUlTx << "% time\tcellId\tIMSI\tRNTI\ttxMode\tlayer\tmcs\tsize\trv\tndi";
     outFileUlTx << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi\tccId";
-    outFileUlTx << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileUlTx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 //   outFileUlTx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
   outFileUlTx << params.m_timestamp << "\t";
@@ -168,7 +168,7 @@ PhyTxStatsCalculator::UlPhyTransmission (PhyTransmissionStatParameters params)
   outFileUlTx << params.m_size << "\t";
   outFileUlTx << (uint32_t) params.m_rv << "\t";
   outFileUlTx << (uint32_t) params.m_ndi << "\t";
-  outFileUlTx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileUlTx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void

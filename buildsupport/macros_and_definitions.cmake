@@ -27,8 +27,6 @@ add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
 
-set(LIB_WHOLE_ARCHIVE_PRE  -Wl,--whole-archive)
-set(LIB_WHOLE_ARCHIVE_POST -Wl,--no-whole-archive)
 
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
@@ -38,16 +36,21 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(LIB_AS_NEEDED_PRE -Wl,-all_load)
     set(LIB_AS_NEEDED_POST             )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # using GCC)
+    # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
-    #set(LIB_AS_NEEDED_POST -Wl,--as-needed)
+    set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
 endif()
 
-
+#3rd party libraries with sources shipped in 3rd-party folder
+set(3rdPartyLibraries
+        netanim
+        brite
+        openflow
+        )
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -86,27 +89,7 @@ macro(process_options)
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
 
-
-
     #process debug switch
-    if(${NS3_DEBUG})
-        set(CMAKE_BUILD_TYPE Debug)
-        set(build_type "debug")
-        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
-    else()
-        set(CMAKE_BUILD_TYPE Release)
-        set(build_type "release")
-        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
-    endif()
-
-    if(${NS3_SHARED})
-        set(LIB_TYPE SHARED)
-        set(BUILD_SHARED_LIBS ON)
-    else()
-        set(LIB_TYPE STATIC)
-        set(BUILD_SHARED_LIBS OFF)
-    endif()
-
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
     endif()
@@ -131,29 +114,24 @@ macro(process_options)
 
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
-    #Libpcre2 for regex
-    #find_package(PCRE)
-    #if (NOT ${PCRE_FOUND})
-        if (NOT ${AUTOINSTALL_DEPENDENCIES})
-            message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+    #Libpcre2 for regex (removed procedure to look of packages already installed as most distributions stopped including the posix bindings)
+    if (NOT ${AUTOINSTALL_DEPENDENCIES})
+        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+    else()
+        #If we don't find installed, install
+        add_package(pcre2)
+        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+        link_directories(${pcre2_dir}/lib)
+        include_directories(${pcre2_dir}/include)
+
+        if(WIN32)
+            set(PCRE_LIBRARIES libpcre2-posix)
         else()
-            #If we don't find installed, install
-            add_package(pcre2)
-            get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-            link_directories(${pcre2_dir}/lib)
-            include_directories(${pcre2_dir}/include)
-
-            if(WIN32)
-                set(PCRE_LIBRARIES libpcre2-posix)
-            else()
-                set(PRCE_LIBRARIES libpcre2-posix.a)
-            endif()
-
+            set(PRCE_LIBRARIES libpcre2-posix.a)
         endif()
-    #else()
-    #    link_directories(${PCRE_LIBRARY})
-    #    include_directories(${PCRE_INCLUDE_DIR})
-    #endif()
+
+    endif()
+
 
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
 
@@ -353,6 +331,17 @@ macro(process_options)
     #    endif()
     #endif()
 
+    #process debug switch
+    if(${NS3_DEBUG})
+        set(CMAKE_BUILD_TYPE Debug)
+        set(build_type "debug")
+        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
+    else()
+        set(CMAKE_BUILD_TYPE Release)
+        set(build_type "release")
+        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
+    endif()
+
     #Process core-config
     set(INT64X64 128)
 
@@ -415,7 +404,7 @@ macro(process_options)
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/ns3-definitions "${ADDED_DEFINITIONS}")
 
     #All contrib libraries can be linked afterwards linking with ${ns3-contrib-libs}
-    process_contribution(${contribution_libraries_to_build})
+    process_contribution("${contribution_libraries_to_build}")
 endmacro()
 
 macro (write_module_header name header_files)
@@ -456,8 +445,19 @@ endmacro()
 
 
 macro (build_lib libname source_files header_files libraries_to_link test_sources)
-    #Create library with sources and headers
-    add_library(${lib${libname}} ${LIB_TYPE} "${source_files}" "${header_files}")
+    #Create shared library with sources and headers
+    add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
+
+    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
+    #if(WIN32 AND ${NS3_SHARED})
+    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
+    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
+    #endif()
+    #Link the shared library with the libraries passed
+    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+
+    #Write a module header that includes all headers from that module
+    write_module_header("${libname}" "${header_files}")
 
     #Build tests if requested
     if(${NS3_TESTS})
@@ -465,27 +465,23 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         if (${test_source_len} GREATER 0)
             #Create libname of output library test of module
             set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
-            set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
 
-            #Create library containing tests of the module
-            add_library(${test${libname}} OBJECT "${test_sources}")
+            if (WIN32)
+                set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
 
+                #Create shared library containing tests of the module
+                add_library(${test${libname}} OBJECT "${test_sources}")
+            else()
+                set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
+
+                #Create shared library containing tests of the module
+                add_library(${test${libname}} SHARED "${test_sources}")
+
+                #Link test library to the module library
+                target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+            endif()
         endif()
     endif()
-
-    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
-    #if(WIN32 AND ${NS3_SHARED})
-    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
-    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
-    #endif()
-
-    #Link the library with the libraries passed
-    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
-
-    #Write a module header that includes all headers from that module
-    write_module_header("${libname}" "${header_files}")
-
-
 
     #Build lib examples if requested
     if(${NS3_EXAMPLES})
@@ -507,10 +503,10 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 endmacro()
 
 macro (build_example name source_files header_files libraries_to_link)
-    #Create library with sources and headers
+    #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
-    #Link the library with the libraries passed
+    #Link the shared library with the libraries passed
     target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}
@@ -520,10 +516,10 @@ macro (build_example name source_files header_files libraries_to_link)
 endmacro()
 
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
-    #Create library with sources and headers
+    #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
-    #Link the library with the libraries passed
+    #Link the shared library with the libraries passed
     target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
     set_target_properties( ${name}

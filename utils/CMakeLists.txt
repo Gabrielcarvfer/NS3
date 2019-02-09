@@ -1,16 +1,13 @@
 if (${NS3_TESTS})
-    add_executable(test-runner test-runner.cc)
-
-    set(libraries_to_link ${ns3-libs})
-    list(REMOVE_ITEM libraries_to_link ${libtest})
     if(WIN32)
-        #Windows DLLs are a pain in the a**. Bunch of tests should be present on test-runner after the linking, but are not showing up.
-        target_link_libraries(test-runner
-                ${LIB_WHOLE_ARCHIVE_PRE} ${libtest} ${LIB_WHOLE_ARCHIVE_POST})
+        set(libraries_to_link ${ns3-libs})
+        list(REMOVE_ITEM libraries_to_link ${libtest})
+
+        add_executable(test-runner test-runner.cc ${ns3-libs-tests} $<TARGET_OBJECTS:${libtest}>)
+        target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${libraries_to_link}  ${LIB_AS_NEEDED_POST})
     else()
-        target_link_libraries(test-runner
-                ${LIB_WHOLE_ARCHIVE_PRE} ${libtest} ${LIB_WHOLE_ARCHIVE_POST}
-                ${LIB_AS_NEEDED_PRE}  ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+        add_executable(test-runner test-runner.cc)
+        target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
     endif()
 
     add_executable(bench-simulator bench-simulator.cc)
