@@ -2,7 +2,7 @@
 set(name test)
 
 add_library(${lib${name}}
-        ${LIB_TYPE}
+        OBJECT
         csma-system-test-suite.cc
         ns3tc/fq-codel-queue-disc-test-suite.cc
         ns3tc/pfifo-fast-queue-disc-test-suite.cc
@@ -19,10 +19,10 @@ add_library(${lib${name}}
         ns3wifi/wifi-ac-mapping-test-suite.cc
         traced/traced-callback-typedef-test-suite.cc
         traced/traced-value-callback-typedef-test-suite.cc
-        ${ns3-libs-tests} # modules test libraries are built as CMake OBJECT libraries
         )
 
-set(libraries_to_link ${ns3-libs})
-list(REMOVE_ITEM libraries_to_link ${lib${name}})
-
-target_link_libraries(${lib${name}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_PRE} )
+#message(WARNING ${ns3-libs-tests})
+#set(libraries_to_link ${ns3-libs})
+#list(REMOVE_ITEM libraries_to_link ${libtest})
+#
+#target_link_libraries(${lib${name}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
