@@ -80,6 +80,10 @@ set(NS3_PTHREAD ON)
 option(NS3_fd-net-device ON)
 
 
+if(MSVC)
+	set(NS3_NETANIM OFF)
+endif()
+
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
 

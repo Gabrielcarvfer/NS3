@@ -49,7 +49,12 @@ waf-2\.0\.9-897e824215d3dab2b64982d8af27db90/
 CMakeSettings\.json
 
 waf3-2\.0\.9-897e824215d3dab2b64982d8af27db90/
+*.pyc
+scratch/shared/
+scratch/wif*
+scratch/run*
 
+cmake-build-relwithdebinfo/
 cmake-cache/
 
 cmake-build-release/

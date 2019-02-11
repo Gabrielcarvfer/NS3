@@ -128,7 +128,7 @@ CallbackImplBase::Demangle (const std::string& mangled)
 std::string
 ns3::CallbackImplBase::Demangle (const std::string& mangled)
 {
-  NS_LOG_FUNCTION (this << mangled);
+  //NS_LOG_FUNCTION (this << mangled); //todo: fix static member referencing non-static members
   return mangled;
 }
 

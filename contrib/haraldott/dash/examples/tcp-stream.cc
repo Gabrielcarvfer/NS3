@@ -231,7 +231,6 @@ main(int argc, char *argv[])
     const char *tobascoDir = ("mylogs/" + adaptationAlgo).c_str();
     const char *dir = ("mylogs/" + adaptationAlgo + "/" + ToString(numberOfClients) + "/").c_str();
 
-
 #ifdef __WIN32__
     mkdir(mylogsDir);
     mkdir(tobascoDir);

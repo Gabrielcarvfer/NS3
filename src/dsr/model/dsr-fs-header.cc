@@ -158,7 +158,7 @@ uint32_t DsrFsHeader::Deserialize (Buffer::Iterator start)
   m_payloadLen = i.ReadU16 ();
 
   uint32_t dataLength = GetPayloadLength ();
-  uint8_t data[dataLength];
+  uint8_t *data = new uint8_t(dataLength);
   i.Read (data, dataLength);
 
   if (dataLength > m_data.GetSize ())
@@ -173,6 +173,7 @@ uint32_t DsrFsHeader::Deserialize (Buffer::Iterator start)
   i = m_data.Begin ();
   i.Write (data, dataLength);
 
+  delete data;
   return GetSerializedSize ();
 }
 
@@ -213,11 +214,12 @@ void DsrOptionField::Serialize (Buffer::Iterator start) const
 
 uint32_t DsrOptionField::Deserialize (Buffer::Iterator start, uint32_t length)
 {
-  uint8_t buf[length];
+  uint8_t *buf = new uint8_t(length);
   start.Read (buf, length);
   m_optionData = Buffer ();
   m_optionData.AddAtEnd (length);
   m_optionData.Begin ().Write (buf, length);
+  delete buf;
   return length;
 }
 

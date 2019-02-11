@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <unistd.h>
 #include <string>
 #include <cstring>
 #include <iostream>
@@ -30,6 +29,7 @@
     #include <windows.h>
     #include <ws2tcpip.h>
 #else
+	#include <unistd.h>
     #include <sys/socket.h>
     #include <sys/un.h>
     #include <sys/ioctl.h>

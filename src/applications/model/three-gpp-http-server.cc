@@ -35,6 +35,8 @@
 #include <ns3/inet-socket-address.h>
 #include <ns3/inet6-socket-address.h>
 #include <ns3/unused.h>
+#include <algorithm>
+
 
 
 NS_LOG_COMPONENT_DEFINE ("ThreeGppHttpServer");

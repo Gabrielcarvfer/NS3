@@ -29,19 +29,26 @@
 
 #if defined (HAVE_DIRENT_H) and defined (HAVE_SYS_TYPES_H)
 /** Do we have an \c opendir function? */
-#define HAVE_OPENDIR
-#include <sys/types.h>
-#include <dirent.h>
+	#define HAVE_OPENDIR
+	#ifdef WIN32
+		#undef HAVE_OPENDIR
+		#define HAVE_FIND_FIRST_FILE
+	#endif
 #endif
+
+#ifdef HAVE_OPENDIR
+	#include <sys/types.h>
+	#include <dirent.h>
+#endif
+
 #if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
-  /** Do we have a \c makedir function? */
-  #define HAVE_MKDIR_H
-  #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-    #include <windows.h>
-  #else
-    #include <sys/types.h>
-    #include <sys/stat.h>
-  #endif
+	/** Do we have a \c makedir function? */
+	#define HAVE_MKDIR_H
+	#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
+		#include <windows.h>
+	#endif
+	#include <sys/types.h>
+	#include <sys/stat.h>
 #endif
 #include <sstream>
 #include <ctime>
@@ -267,7 +274,7 @@ std::list<std::string> ReadFiles (std::string path)
   HANDLE hFind;
   WIN32_FIND_DATA fileData;
   
-  hFind = FindFirstFile (path.c_str (), &FindFileData);
+  hFind = FindFirstFile (path.c_str (), &fileData);
   if (hFind == INVALID_HANDLE_VALUE)
     {
       NS_FATAL_ERROR ("Could not open directory=" << path);

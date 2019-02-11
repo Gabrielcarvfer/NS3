@@ -35,7 +35,6 @@
 #include "ns3/global-value.h"
 #include <ns3/core-module.h>
 #include "tcp-stream-server.h"
-#include <unistd.h>
 #include <iterator>
 #include <numeric>
 #include <iomanip>
@@ -44,6 +43,10 @@
 #include <sys/stat.h>
 #include <cstring>
 #include <errno.h>
+
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
 namespace ns3 {
 

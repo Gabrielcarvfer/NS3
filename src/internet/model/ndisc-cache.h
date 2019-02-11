@@ -32,6 +32,8 @@
 #include "ns3/timer.h"
 #include "ns3/sgi-hashmap.h"
 #include "ns3/output-stream-wrapper.h"
+#include <unordered_map>
+
 
 namespace ns3
 {
@@ -406,11 +408,11 @@ private:
   /**
    * \brief Neighbor Discovery Cache container
    */
-  typedef sgi::hash_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash> Cache;
+  typedef std::unordered_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash> Cache;
   /**
    * \brief Neighbor Discovery Cache container iterator
    */
-  typedef sgi::hash_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash>::iterator CacheI;
+  typedef std::unordered_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash>::iterator CacheI;
 
   /**
    * \brief Copy constructor.

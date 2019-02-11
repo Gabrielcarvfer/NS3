@@ -22,10 +22,11 @@
 #include <ns3/log.h>
 #include <ns3/double.h>
 #include <cmath>
+#include <algorithm>
+
 
 #include "antenna-model.h"
 #include "parabolic-antenna-model.h"
-
 
 namespace ns3 {
 
