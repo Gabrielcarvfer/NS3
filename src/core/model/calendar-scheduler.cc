@@ -25,6 +25,7 @@
 #include <list>
 #include "assert.h"
 #include "log.h"
+#include <algorithm> //std::max
 
 /**
  * \file

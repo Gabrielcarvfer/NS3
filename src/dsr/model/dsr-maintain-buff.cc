@@ -86,7 +86,9 @@ DsrMaintainBuffer::DropPacketWithNextHop (Ipv4Address nextHop)
   Purge ();
   NS_LOG_INFO ("Drop Packet With next hop " << nextHop);
   m_maintainBuffer.erase (std::remove_if (m_maintainBuffer.begin (), m_maintainBuffer.end (),
-                                          std::bind2nd (std::ptr_fun (DsrMaintainBuffer::IsEqual), nextHop)), m_maintainBuffer.end ());
+                                          std::bind (std::cref (DsrMaintainBuffer::IsEqual),
+                                                     std::placeholders::_1, nextHop)),
+                          m_maintainBuffer.end ());
 }
 
 bool

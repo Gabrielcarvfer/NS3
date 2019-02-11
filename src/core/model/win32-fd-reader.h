@@ -26,6 +26,8 @@
 #include "callback.h"
 #include "system-thread.h"
 #include "event-id.h"
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 
 /**
  * \file

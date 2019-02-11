@@ -1,7 +1,7 @@
 include(buildsupport/vcpkg_hunter.cmake)
 
 
-if (WIN32)
+if (WIN32 AND NOT MSVC)
     #If using MSYS2
     set(MSYS2_PATH "C:\\tools\\msys64\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
@@ -14,7 +14,7 @@ if (WIN32)
 endif()
 
 #Fixed definitions
-unset(CMAKE_LINK_LIBRARY_SUFFIX)
+#unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
 #Output folders
 set(CMAKE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
@@ -23,6 +23,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
+link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 #fPIC 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
@@ -31,18 +33,27 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
 
+
+include(ProcessorCount)
+ProcessorCount(NumThreads)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # using Clang
     set(LIB_AS_NEEDED_PRE -Wl,-all_load)
     set(LIB_AS_NEEDED_POST             )
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set(BUILD_SHARED_LIBS TRUE)
+    set(CMake_MSVC_PARALLEL ${NumThreads})
 endif()
 
 #3rd party libraries with sources shipped in 3rd-party folder
@@ -54,6 +65,7 @@ set(3rdPartyLibraries
 
 #process all options passed in main cmakeLists
 macro(process_options)
+
     #Copy all header files to outputfolder/include/
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
@@ -88,6 +100,8 @@ macro(process_options)
 
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
+    #link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+    #link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
     #process debug switch
     if (${AUTOINSTALL_DEPENDENCIES})
@@ -343,19 +357,19 @@ macro(process_options)
     endif()
 
     #Process core-config
-    set(INT64X64 128)
+    set(INT64X64 "128")
 
 	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
-		message(ERROR "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
-		set(INT64X64 DOUBLE)
+		message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+		set(INT64X64 "DOUBLE")
 	endif()
 
-    if(INT64X64 EQUAL 128)
+    if(INT64X64 STREQUAL "128")
         add_definitions(-DHAVE___UINT128_T)
         add_definitions(-DINT64X64_USE_128)
-    elseif(INT64X64 EQUAL DOUBLE)
+    elseif(INT64X64 STREQUAL "DOUBLE")
         add_definitions(-DINT64X64_USE_DOUBLE)
-    elseif(INT64X64 EQUAL CAIRO)
+    elseif(INT64X64 STREQUAL "CAIRO")
         add_definitions(-DINT64X64_USE_CAIRO)
     else()
     endif()
@@ -455,6 +469,18 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     #endif()
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+    if(MSVC)
+        #set(whole_archive_string)
+        #foreach (lib_to_link ${libraries_to_link})
+        #    string(REPLACE ".dll" ".lib" lib_to_link_stripped ${lib_to_link})
+            #list(APPEND whole_archive_string ${lib_to_link_stripped}.dll)
+            #set(whole_archive_string ${whole_archive_string} /WHOLEARCHIVE:${lib_to_link_stripped})
+            #set(whole_archive_string ${whole_archive_string} /WHOLEARCHIVE:${lib_to_link})
+
+        #endforeach()
+        target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
+        #message(WARNING ${whole_archive_string})
+    endif()
 
     #Write a module header that includes all headers from that module
     write_module_header("${libname}" "${header_files}")

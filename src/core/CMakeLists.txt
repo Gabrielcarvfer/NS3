@@ -5,11 +5,20 @@ set (name core)
 #Set lib core link dependencies
 set(libraries_to_link)
 
-if (${NS3_GSL})
-    list(APPEND libraries_to_link ${GSL_LIBRARIES} )
+set(gsl_test_sources)
+if (${GSL_FOUND})
+    set(libraries_to_link
+            ${libraries_to_link}
+            ${GSL_LIBRARIES}
+            )
+    set(gsl_test_sources
+            test/rng-test-suite.cc
+            test/random-variable-stream-test-suite.cc
+            )
 endif()
 
 #Check for dependencies and add sources accordingly
+set(rt_sources)
 if (${NS3_LIBRT} AND NOT WIN32)
     set(rt_sources
             model/realtime-simulator-impl.cc
@@ -25,7 +34,8 @@ if (${NS3_LIBRT} AND NOT WIN32)
             )
 endif()
 
-if (${WIN32})
+set(osclock_sources)
+if (WIN32)
     set(osclock_sources
             model/win32-system-wall-clock-ms.cc
             )
@@ -35,18 +45,21 @@ else()
             )
 endif()
 
-if(${INT64X64} EQUAL 128)
+set(int64x64_sources)
+set(int64x64_headers)
+
+if(INT64X64 STREQUAL "128")
     set(int64x64_sources
             model/int64x64-128.cc
             )
     set(int64x64_headers
             model/int64x64-128.h
             )
-elseif(${INT64X64} EQUAL DOUBLE)
+elseif(INT64X64 STREQUAL "DOUBLE")
     set(int64x64_headers
             model/int64x64-double.h
             )
-elseif(${INT64X64} EQUAL CAIRO)
+elseif(INT64X64 STREQUAL "CAIRO")
     set(int64x64_sources
             model/int64x64-cairo.cc
             )
@@ -56,19 +69,38 @@ elseif(${INT64X64} EQUAL CAIRO)
             )
 endif()
 
-if (${THREADS_FOUND})
 
-    if(${WIN32})
+
+set(valgrind_sources)
+set(valgrind_headers)
+if (NS3_VALGRIND)
+	set(valgrind_headers
+	        model/valgrind.h
+		)
+endif()
+
+
+set(thread_sources)
+set(thread_headers)
+
+if (${THREADS_FOUND})
+    if(WIN32)
         set(thread_sources
                 model/win32-fd-reader.cc
                 )
         set(thread_headers
                 model/win32-fd-reader.h
                 )
+		set(winsock_libraries)
+		if (NOT MSVC)#Using pragma for MSVC and the following for MinGW/Clang
+			set(winsock_libraries
+				wsock32
+				ws2_32
+			)
+		endif()
         set(libraries_to_link
                 ${libraries_to_link}
-                wsock32
-                ws2_32
+				${winsock_libraries}
                 )
     else()
         set(thread_sources
@@ -105,6 +137,7 @@ set(source_files
         ${osclock_sources}
         ${int64x64_sources}
         ${thread_sources}
+		${valgrind_sources}
         model/time.cc
         model/event-id.cc
         model/scheduler.cc
@@ -166,6 +199,8 @@ set (header_files
         ${rt_headers}
         ${int64x64_headers}
         ${thread_headers}
+		${valgrind_headers}
+
         model/nstime.h
         model/event-id.h
         model/event-impl.h
@@ -244,7 +279,6 @@ set (header_files
         model/hash-murmur3.h
         model/hash-fnv.h
         model/hash.h
-        model/valgrind.h
         model/non-copyable.h
         model/build-profile.h
         model/des-metrics.h
@@ -265,8 +299,6 @@ set(test_sources
         test/object-test-suite.cc
         test/one-uniform-random-variable-many-get-value-calls-test-suite.cc
         test/ptr-test-suite.cc
-        test/random-variable-stream-test-suite.cc
-        test/rng-test-suite.cc
         test/sample-test-suite.cc
         test/simulator-test-suite.cc
         test/threaded-test-suite.cc
@@ -275,6 +307,7 @@ set(test_sources
         test/traced-callback-test-suite.cc
         test/type-id-test-suite.cc
         test/watchdog-test-suite.cc
+        ${gsl_test_sources}
         )
 
 #Build core lib

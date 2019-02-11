@@ -18,6 +18,8 @@
 // Author: George F. Riley<riley@ece.gatech.edu>
 //
 
+#include <algorithm>
+
 #include "ns3/packet.h"
 #include "ns3/log.h"
 #include "ns3/callback.h"

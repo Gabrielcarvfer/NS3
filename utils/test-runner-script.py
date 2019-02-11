@@ -2,9 +2,11 @@
 import subprocess, os, json
 
 runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
+dot_path = "./" if os is not "nt" else ".\\"
 
 cwd_path = os.getcwd()
 bin_path = "/".join(cwd_path.split('/')[:-1]+["build","bin"])
+
 
 #Run a test case and return output + error 
 def run_test(test_name):
@@ -13,7 +15,7 @@ def run_test(test_name):
 	error = None
 	try:
 		os.chdir(bin_path)
-		output = subprocess.check_output([""+runner_name, "--test-name="+test_name], shell=False, stderr=subprocess.DEVNULL).decode()
+		output = subprocess.check_output([dot_path+runner_name, "--test-name="+test_name], shell=False, stderr=subprocess.DEVNULL).decode()
 		output = output.split("\n")[-2]
 		output = output.split(" ")[0]
 	except Exception:
@@ -79,9 +81,11 @@ if __name__ == '__main__':
 		#Fetch test names from test-runner
 		os.chdir(bin_path)
 		try:
-			tmp = subprocess.check_output([runner_name, "--list"], shell=False, stderr=None).decode()
+			tmp = subprocess.check_output([dot_path+runner_name, "--list"], shell=False, stderr=None)
 		except:
 			return -1
+
+		tmp = tmp.decode()
 		os.chdir(cwd_path)
 
 		tests = tmp.replace("\r","").split("\n")[:-1]
