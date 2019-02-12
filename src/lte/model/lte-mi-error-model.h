@@ -73,8 +73,7 @@ class LteMiErrorModel
 {
 
 public:
-   static void LoadErrorData();
-  /** 
+  /**
    * \brief find the mmib (mean mutual information per bit) for different modulations of the specified TB
    * \param sinr the perceived sinrs in the whole bandwidth
    * \param map the actives RBs for the TB

@@ -93,7 +93,7 @@ if __name__ == '__main__':
 		#If there is a failed tests file, load
 		have_previous, previous_results, previously_failed_tests = load_previous(dumpfile)
 
-		#If you want to run only tests that failed previously
+		#If you want to run only tests that failed previously set as True. To run everything, set as False
 		rerunFailed = False
 
 		#Choose whether to rerun previously failed tests or run all the tests
