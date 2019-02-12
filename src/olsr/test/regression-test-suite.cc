@@ -36,7 +36,7 @@ class RegressionTestSuite : public TestSuite
 public:
   RegressionTestSuite () : TestSuite ("routing-olsr-regression", SYSTEM)
   {
-    SetDataDir (NS_TEST_SOURCEDIR);
+    SetDataDir ("./src/olsr/test/");
     AddTestCase (new HelloRegressionTest, TestCase::QUICK);
     AddTestCase (new TcRegressionTest, TestCase::QUICK);
     AddTestCase (new Bug780Test, TestCase::QUICK);

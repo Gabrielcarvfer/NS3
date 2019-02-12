@@ -5,7 +5,19 @@ runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
 dot_path = "./" if os is not "nt" else ".\\"
 
 cwd_path = os.getcwd()
-bin_path = "/".join(cwd_path.split('/')[:-1]+["build","bin"])
+cwd_components = cwd_path.split('/')
+
+cwd_offset_dict = { "NS3"  : len(cwd_components),
+					"utils": -1,
+					"build": -1,
+					"bin"  : -2,
+					"src"  : -1,				
+					}
+
+cwd_offset = cwd_offset_dict[cwd_components[-1]]
+ns3_path = "/".join(cwd_components[:cwd_offset])
+bin_path = "/".join([ns3_path,"build","bin",""])
+utils_path = "/".join([ns3_path,"utils",""])
 
 
 #Run a test case and return output + error 
@@ -52,15 +64,15 @@ def print_results(failed_tests, num_tests):
 #Dump failed tests
 def dump_results(failed_tests, output_file):
 
-	with open(output_file, "w") as file:
+	with open(utils_path+output_file, "w") as file:
 		json.dump(failed_tests, file)
 
 
 #Load previous results
 def load_previous(input_file):
-	if os.path.exists(input_file):
+	if os.path.exists(utils_path+input_file):
 		#Load results
-		with open(input_file, "r") as file:
+		with open(utils_path+input_file, "r") as file:
 			previous_results = json.load(file)
 
 		#Check failed tests
@@ -94,7 +106,7 @@ if __name__ == '__main__':
 		have_previous, previous_results, previously_failed_tests = load_previous(dumpfile)
 
 		#If you want to run only tests that failed previously set as True. To run everything, set as False
-		rerunFailed = False
+		rerunFailed = True
 
 		#Choose whether to rerun previously failed tests or run all the tests
 		if rerunFailed and have_previous:
