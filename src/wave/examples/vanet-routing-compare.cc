@@ -1533,7 +1533,7 @@ static ns3::GlobalValue g_phyMode ("VRCphyMode",
                                    ns3::MakeStringChecker ());
 static ns3::GlobalValue g_traceFile ("VRCtraceFile",
                                      "Mobility trace filename",
-                                     ns3::StringValue ("./src/wave/examples/low99-ct-unterstrass-1day.filt.7.adj.mob"),
+                                     ns3::StringValue ("../../src/wave/examples/low99-ct-unterstrass-1day.filt.7.adj.mob"),
                                      ns3::MakeStringChecker ());
 static ns3::GlobalValue g_logFile ("VRClogFile",
                                    "Log filename",

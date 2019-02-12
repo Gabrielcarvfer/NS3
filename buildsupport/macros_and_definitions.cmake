@@ -22,7 +22,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
-add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
+#add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
@@ -62,6 +62,7 @@ set(3rdPartyLibraries
         brite
         openflow
         )
+
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -137,12 +138,12 @@ macro(process_options)
         get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
         link_directories(${pcre2_dir}/lib)
         include_directories(${pcre2_dir}/include)
-
-        if(WIN32)
-            set(PCRE_LIBRARIES libpcre2-posix)
-        else()
-            set(PRCE_LIBRARIES libpcre2-posix.a)
-        endif()
+        #stopped working for whatever reason, hardwired topology-read cmake file
+        #if(WIN32)
+        #    #set(PCRE_LIBS libpcre2-posix)
+        #else()
+        #    #set(PRCE_LIBS libpcre2-posix.a)
+        #endif()
 
     endif()
 

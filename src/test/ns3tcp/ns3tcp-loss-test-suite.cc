@@ -453,7 +453,7 @@ Ns3TcpLossTestCase::DoRun (void)
     }
 
   std::ostringstream oss2;
-  oss2 << "src/test/ns3tcp/Tcp" << m_tcpModel << "." << m_testCase << ".log";
+  oss2 << "../../src/test/ns3tcp/Tcp" << m_tcpModel << "." << m_testCase << ".log";
   AsciiTraceHelper ascii;
   if (m_writeLogging)
     {
@@ -479,7 +479,7 @@ Ns3TcpLossTestSuite::Ns3TcpLossTestSuite ()
   : TestSuite ("ns3-tcp-loss", SYSTEM)
 {
   // We can't use NS_TEST_SOURCEDIR variable here because we use subdirectories
-  SetDataDir ("src/test/ns3tcp/response-vectors");
+  SetDataDir ("./src/test/ns3tcp/response-vectors");
   Packet::EnablePrinting ();  // Enable packet metadata for all test cases
 
   AddTestCase (new Ns3TcpLossTestCase ("NewReno", 0), TestCase::QUICK);
