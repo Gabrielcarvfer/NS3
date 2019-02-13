@@ -56,6 +56,16 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMake_MSVC_PARALLEL ${NumThreads})
 endif()
 
+#Used in build-profile-test-suite
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+    add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
+else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
+endif()
+
+
 #3rd party libraries with sources shipped in 3rd-party folder
 set(3rdPartyLibraries
         netanim
@@ -129,22 +139,29 @@ macro(process_options)
 
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
-    #Libpcre2 for regex (removed procedure to look of packages already installed as most distributions stopped including the posix bindings)
-    if (NOT ${AUTOINSTALL_DEPENDENCIES})
-        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
-    else()
-        #If we don't find installed, install
-        add_package(pcre2)
-        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-        link_directories(${pcre2_dir}/lib)
-        include_directories(${pcre2_dir}/include)
-        #stopped working for whatever reason, hardwired topology-read cmake file
-        #if(WIN32)
-        #    #set(PCRE_LIBS libpcre2-posix)
-        #else()
-        #    #set(PRCE_LIBS libpcre2-posix.a)
-        #endif()
+    #Libpcre2 for regex
+    include(FindPCRE)
+    find_package(PCRE)
+    if (NOT ${PCRE_FOUND})
+        if (NOT ${AUTOINSTALL_DEPENDENCIES})
+            message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+        else()
+            #If we don't find installed, install
+            add_package(pcre2)
+            get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+            link_directories(${pcre2_dir}/lib)
+            include_directories(${pcre2_dir}/include)
+            #stopped working for whatever reason, hardwired topology-read cmake file
+            if(WIN32)
+                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+            else()
+                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+            endif()
 
+        endif()
+    else()
+        link_directories(${PCRE_LIBRARY})
+        include_directories(${PCRE_INCLUDE_DIR})
     endif()
 
 
@@ -286,6 +303,7 @@ macro(process_options)
             include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
             add_definitions(-DHAVE_PTHREAD_H)
             set(THREADS_FOUND TRUE)
+            link_libraries(${CMAKE_THREAD_LIBS_INIT})
         endif()
     endif()
 
