@@ -1,3 +1,6 @@
+This version of NS3 was modified to use the CMake buildsystem instead of Waf. 
+As a side-effect, python bindings are not working (yet).
+
 Configuring
 -----------
 It's CMake, you can configure the options the way you prefer (e.g. command line, ncurses, GUI, editing the main file). 
@@ -13,7 +16,9 @@ Running
 After building: the executables will be in ns3/build/bin, or one of its subfolders (library examples);
 libraries will be in ns3/build/lib; headers will be in ns3/build/ns3.
 
-
+Discord server
+---------------
+If you have any problem using this repo source, please join our Discord server https://discord.gg/66z9y29
 
 
 
