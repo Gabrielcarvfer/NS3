@@ -42,6 +42,7 @@
 #include <ns3/lte-common.h>
 #include <cinttypes>
 #include <cstdint>
+#include <bitset> //binary bitstream
 
 
 namespace ns3 {
@@ -393,6 +394,7 @@ LteEnbMac::~LteEnbMac ()
 {
   NS_LOG_FUNCTION (this);
   //print sensing listing
+  /*
   std::map<uint16_t,uint64_t> sensingUesAndEventsMap;
   for (auto&& [frame,subframeMap]: channelOccupation)
   {
@@ -409,13 +411,24 @@ LteEnbMac::~LteEnbMac ()
           }
           std::cout << "\n\t]";
       }
-      std::cout << "\n}" << std::endl;
+      std::cout << "\n}";
   }
 
   for (auto &&[ue, events]: sensingUesAndEventsMap)
   {
-      std::cout << "ue " << ue << " reported " << events << " sensing events" << std::endl;
+      std::cout << "\nue " << ue << " reported " << events << " sensing events";
   }
+  */
+  /*
+  for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
+  {
+      for(auto&& [subframe, bitmap]: subframeMap)
+      {
+          std::cout << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<25>(bitmap);
+      }
+  }
+  std::cout << std::endl;
+   */
 }
 
 void
@@ -608,7 +621,12 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
     }
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
-
+  if (unexpectedChannelAccessBitmap.size() > 0)
+  {
+      auto x = unexpectedChannelAccessBitmap.rbegin();
+      if (x->second.size() > 0)
+        dlparams.sensedBitmap = x->second.rbegin()->second;
+  }
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1339,6 +1357,11 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     reg.SensedSubframeNo = std::strtoimax(temp.c_str(), &ptr, 10);
     ss.erase(0, pos + 1);
 
+    pos = ss.find('\n');
+    temp = ss.substr(0,pos);
+    reg.UnexpectedAccessBitmap = std::strtoimax(temp.c_str(), &ptr, 16);
+    ss.erase(0, pos + 1);
+
     //pos = ss.find('\n');
     //reg.TransmissionTime = Time(ss.substr(0,pos));
     //ss.erase(0, pos + 1);
@@ -1362,6 +1385,24 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
 
     //Then register UE reports
     channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
+
+
+
+    //First create map for sensed frames
+    if(unexpectedChannelAccessBitmap.find(reg.SensedFrameNo) == unexpectedChannelAccessBitmap.end())
+    {
+        unexpectedChannelAccessBitmap.emplace(reg.SensedFrameNo, std::map <uint64_t, uint32_t> ());
+    }
+
+    //After that, create map for sensed subframes
+    if(unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).find(reg.SensedSubframeNo) == unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).end())
+    {
+        unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).emplace(reg.SensedSubframeNo, 0);
+    }
+
+    //Then register UE sensed reports
+    unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo) |= reg.UnexpectedAccessBitmap;
+    uint32_t val = unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo);
     return;
 }
 

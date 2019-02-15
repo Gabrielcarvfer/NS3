@@ -669,6 +669,13 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   rbgMap.resize (m_cschedCellConfig.m_dlBandwidth / rbgSize, false);
 
   rbgMap = m_ffrSapProvider->GetAvailableDlRbg ();
+
+  //Take cognitive info into account before scheduling
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      rbgMap.at(i) = ( params.sensedBitmap & (1<<31-i) ) != 0 ? true : false;
+  }
+
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
       if ((*it) == true )

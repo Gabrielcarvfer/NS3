@@ -456,7 +456,7 @@ private:
   uint8_t m_componentCarrierId;
 
   //Custom
-public:
+public://todo: implement this properly through the SAP
     typedef struct cognitive_reg
     {
         uint16_t OriginAddress;
@@ -467,8 +467,10 @@ public:
         uint64_t SensedSubframeNo;
         uint64_t ReceivedFrameNo;
         uint64_t ReceivedSubframeNo;
+        uint32_t UnexpectedAccessBitmap;
     } CognitiveReg;
     std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
+    std::map <uint64_t, std::map<uint64_t, uint32_t> > unexpectedChannelAccessBitmap;
     void RecvCognitiveMessage(Ptr<Packet> p);
 
 };

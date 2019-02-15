@@ -545,6 +545,7 @@ private:
   std::vector< Ptr<SpectrumValue> > sinrHistory; ///< holds the history of measured sinr
   std::vector< double > sinrAvgHistory; ///< holds the history of measured sinr
   std::vector<bool>   puPresence; ///< holds the history of PU detection
+
   //Create structures to hold probabilities
   static std::vector<double> SNRdB;
   static std::vector<double> PdTot;
@@ -553,9 +554,12 @@ private:
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
-  bool PU_presence;
   EventId PU_event;
   void reset_PU_presence();
+
+public:
+    bool PU_presence;
+    uint32_t UnexpectedAccessBitmap;
 
 };
 

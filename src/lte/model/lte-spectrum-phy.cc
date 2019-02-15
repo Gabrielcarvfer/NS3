@@ -187,8 +187,9 @@ void LteSpectrumPhy::DoDispose ()
   SpectrumPhy::DoDispose ();
 
   m_sensingEvent.Cancel();
-  /*
+
   //todo: print PU detection status in a more appropriate manner
+  /*
   if (puPresence.size()>1)
   {
       std::cout << this << ": ";
@@ -199,8 +200,8 @@ void LteSpectrumPhy::DoDispose ()
       for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
           std::cout << *it << " ";
       std::cout << std::endl;
-  }
-  */
+  }*/
+
 } 
 
 /**
@@ -904,8 +905,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     }
 
     //No DCI received, then skip
-    //if (dci_count == 0)
-    //   return ;
+    if (dci_count == 0)
+       return ;
 
     //Calculate the probability of PU detection on given RBs
     uint8_t i = 0;
@@ -917,6 +918,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         //Skip if the RB is supposed to be occupied by an UE transmission
         if (occupied_RB_indexes[i] || *it == 0)
             continue;
+
+        UnexpectedAccessBitmap |= (1<<(i));
 
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = 10 * log10((*it));

@@ -95,9 +95,9 @@ int main()
     //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
     Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
 
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
+    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
     //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel")); // Spectrum
-    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));         // Our version
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));         // Our version
 
 
 
@@ -275,8 +275,8 @@ int main()
     //ECHO APP
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(100)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(10000));
+    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(10)));
+    echoClient.SetAttribute("PacketSize", UintegerValue(1000));
     clientApps.Add(echoClient.Install(ueNodes));
 
     //DASH APP

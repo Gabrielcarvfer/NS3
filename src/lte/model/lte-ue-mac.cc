@@ -854,6 +854,10 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
     msg << Simulator::Now() << "\n";
     msg << m_frameNo << "\n";
     msg << m_subframeNo << "\n";
+    msg << std::hex << ueSpectrumPhy->UnexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
+
+    ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
+
     //msg << rxParams->duration << "\n";
     //msg << rxParams->pathLossDb << "\n";
     //msg << rxParams->maxPathLossDb << "\n";
