@@ -463,8 +463,12 @@ public:
         Time SimCurrTime;
         Time Delay;
         Time TransmissionTime;
+        uint64_t SensedFrameNo;
+        uint64_t SensedSubframeNo;
+        uint64_t ReceivedFrameNo;
+        uint64_t ReceivedSubframeNo;
     } CognitiveReg;
-    std::map< uint16_t, std::vector<CognitiveReg> > channelOccupation;
+    std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
     void RecvCognitiveMessage(Ptr<Packet> p);
 
 };

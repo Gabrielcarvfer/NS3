@@ -392,6 +392,30 @@ m_ccmMacSapUser (0)
 LteEnbMac::~LteEnbMac ()
 {
   NS_LOG_FUNCTION (this);
+  //print sensing listing
+  std::map<uint16_t,uint64_t> sensingUesAndEventsMap;
+  for (auto&& [frame,subframeMap]: channelOccupation)
+  {
+      std::cout << "frame " << frame << " reported \n{";
+      for(auto&& [subframe, ueMap]: subframeMap)
+      {
+          std::cout << "\n\tsubframe " << subframe << " reported \n\t[";
+          for (auto&& [ue, cognitiveReg]: ueMap)
+          {
+              std::cout << "\n\t\t UE " << ue << " reported bitmap " << " in frame " << cognitiveReg.SensedFrameNo << " and subframe " << cognitiveReg.SensedSubframeNo;
+              if(sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
+                  sensingUesAndEventsMap.emplace(ue,0);
+              sensingUesAndEventsMap.at(ue) += 1;
+          }
+          std::cout << "\n\t]";
+      }
+      std::cout << "\n}" << std::endl;
+  }
+
+  for (auto &&[ue, events]: sensingUesAndEventsMap)
+  {
+      std::cout << "ue " << ue << " reported " << events << " sensing events" << std::endl;
+  }
 }
 
 void
@@ -558,6 +582,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
       m_schedSapProvider->SchedDlRachInfoReq (rachInfoReqParams);
       m_receivedRachPreambleCount.clear ();
     }
+
   // Get downlink transmission opportunities
   uint32_t dlSchedFrameNo = m_frameNo;
   uint32_t dlSchedSubframeNo = m_subframeNo;
@@ -582,6 +607,10 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
       m_dlInfoListReceived.clear ();
     }
 
+  //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
+
+
+  //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
 
 
@@ -1281,13 +1310,16 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     std::string ss = std::string(buffer, buffer+p->GetSize());
     //std::cout << ss << std::endl;
 
-    //We can now parse and use params to do something
+    //Alocate variables to manipulate packet
+    std::string temp;
+    char * ptr;
     size_t pos;
     cognitive_reg reg;
+
+    //We can now parse and use params to do something
     pos = ss.find('\n');
-    std::string temp = ss.substr(0,pos);
-    char * ptr;
-    reg.OriginAddress = std::strtoimax(temp.c_str(), &ptr, temp.size());
+    temp = ss.substr(0,pos);
+    reg.OriginAddress = std::strtoimax(temp.c_str(), &ptr, 10);
     ss.erase(0, pos + 1);
 
     //Parsing to get info from packet
@@ -1295,23 +1327,41 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     reg.SimCurrTime = Time(ss.substr(0,pos));
     ss.erase(0, pos + 1);
 
-    //pos = ss.find('\n');
-    //reg.Delay = Time(ss.substr(0,pos));
-    //ss.erase(0, pos + 1);
+    reg.Delay = Simulator::Now()-reg.SimCurrTime;
 
     pos = ss.find('\n');
-    reg.TransmissionTime = Time(ss.substr(0,pos));
+    temp = ss.substr(0,pos);
+    reg.SensedFrameNo = std::strtoimax(temp.c_str(), &ptr, 10);
     ss.erase(0, pos + 1);
 
+    pos = ss.find('\n');
+    temp = ss.substr(0,pos);
+    reg.SensedSubframeNo = std::strtoimax(temp.c_str(), &ptr, 10);
+    ss.erase(0, pos + 1);
+
+    //pos = ss.find('\n');
+    //reg.TransmissionTime = Time(ss.substr(0,pos));
+    //ss.erase(0, pos + 1);
+
+    reg.ReceivedFrameNo = m_frameNo;
+    reg.ReceivedSubframeNo = m_subframeNo;
 
     //Save cognitive reg with times collected and source
-    if (channelOccupation.find(reg.OriginAddress) == channelOccupation.end())
+
+    //First create map for frames
+    if(channelOccupation.find(reg.ReceivedFrameNo) == channelOccupation.end())
     {
-        //new from addrss, add it to map
-        channelOccupation.emplace(reg.OriginAddress, std::vector<CognitiveReg>());
+        channelOccupation.emplace(reg.ReceivedFrameNo, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > ());
     }
-    //Not new address just add it
-    channelOccupation.at(reg.OriginAddress).push_back(reg);
+
+    //After that, create map for subframes
+    if(channelOccupation.at(reg.ReceivedFrameNo).find(reg.ReceivedSubframeNo) == channelOccupation.at(reg.ReceivedFrameNo).end())
+    {
+        channelOccupation.at(reg.ReceivedFrameNo).emplace(reg.ReceivedSubframeNo, std::map<uint16_t, CognitiveReg> ());
+    }
+
+    //Then register UE reports
+    channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
     return;
 }
 

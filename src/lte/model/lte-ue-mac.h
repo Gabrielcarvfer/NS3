@@ -264,6 +264,8 @@ private:
   uint8_t m_raRnti; ///< RA RNTI
   bool m_waitingForRaResponse; ///< waiting for RA response
 
+public:
+  void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams);
 
 };
 

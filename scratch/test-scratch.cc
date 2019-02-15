@@ -143,15 +143,15 @@ int main()
     //positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
 
     positionAlloc2->Add(Vector ( 5000.0, 5000.0,  0.0));  // 3 - UE 0
-    positionAlloc2->Add(Vector (12000.0, 5000.0,  0.0));  // 4 - UE 1
-    positionAlloc2->Add(Vector (19000.0, 5000.0,  0.0));  // 5 - UE 2
-    positionAlloc2->Add(Vector (26000.0, 5000.0,  0.0));  // 6 - UE 3
-    positionAlloc2->Add(Vector (31000.0, 5000.0,  0.0));  // 7 - UE 4
-    positionAlloc2->Add(Vector (38000.0, 5000.0,  0.0));  // 8 - UE 5
-    positionAlloc2->Add(Vector (45000.0, 5000.0,  0.0));  // 9 - UE 6
-    positionAlloc2->Add(Vector (52000.0, 5000.0,  0.0));  //10 - UE 7
-    positionAlloc2->Add(Vector (59000.0, 5000.0,  0.0));  //11 - UE 8
-    positionAlloc2->Add(Vector (65000.0, 5000.0,  0.0));  //12 - UE 9
+    positionAlloc2->Add(Vector ( 6000.0, 5000.0,  0.0));  // 4 - UE 1
+    positionAlloc2->Add(Vector ( 7000.0, 5000.0,  0.0));  // 5 - UE 2
+    positionAlloc2->Add(Vector ( 8000.0, 5000.0,  0.0));  // 6 - UE 3
+    positionAlloc2->Add(Vector ( 9000.0, 5000.0,  0.0));  // 7 - UE 4
+    positionAlloc2->Add(Vector (10000.0, 5000.0,  0.0));  // 8 - UE 5
+    positionAlloc2->Add(Vector (11000.0, 5000.0,  0.0));  // 9 - UE 6
+    positionAlloc2->Add(Vector (12000.0, 5000.0,  0.0));  //10 - UE 7
+    positionAlloc2->Add(Vector (13000.0, 5000.0,  0.0));  //11 - UE 8
+    positionAlloc2->Add(Vector (14000.0, 5000.0,  0.0));  //12 - UE 9
 
 
     //5 Instala mobilidade dos dispositivos (parados)
@@ -275,8 +275,8 @@ int main()
     //ECHO APP
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(1)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(1000));
+    echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(100)));
+    echoClient.SetAttribute("PacketSize", UintegerValue(10000));
     clientApps.Add(echoClient.Install(ueNodes));
 
     //DASH APP
@@ -284,24 +284,24 @@ int main()
     std::string adaptationAlgo = "festive"; // festive | panda | tobasco
     std::string segmentSizeFilePath = "../../contrib/haraldott/dash/examples/segmentsizes.txt";
 
-    TcpStreamServerHelper serverHelper(serverPort+1);
-    serverApps.Add(serverHelper.Install(remoteHost));
+    //TcpStreamServerHelper serverHelper(serverPort+1);
+    //serverApps.Add(serverHelper.Install(remoteHost));
 
     /* Install TCP/UDP Transmitter on the station */
-    TcpStreamClientHelper clientHelper(serverAddress, serverPort+1);
-    clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));
-    clientHelper.SetAttribute("SegmentSizeFilePath", StringValue(segmentSizeFilePath));
-    clientHelper.SetAttribute("NumberOfClients", UintegerValue(1));
-    clientHelper.SetAttribute("SimulationId", UintegerValue(0));
+    //TcpStreamClientHelper clientHelper(serverAddress, serverPort+1);
+    //clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));
+    //clientHelper.SetAttribute("SegmentSizeFilePath", StringValue(segmentSizeFilePath));
+    //clientHelper.SetAttribute("NumberOfClients", UintegerValue(1));
+    //clientHelper.SetAttribute("SimulationId", UintegerValue(0));
+//
+    //std::vector<std::pair<Ptr<Node>, std::string> > clients;
+    //for (NodeContainer::Iterator i = ueNodes.Begin(); i != ueNodes.End(); i++)
+    //{
+    //    std::pair<Ptr<Node>, std::string> client(*i, adaptationAlgo);
+    //    clients.push_back(client);
+    //}
 
-    std::vector<std::pair<Ptr<Node>, std::string> > clients;
-    for (NodeContainer::Iterator i = ueNodes.Begin(); i != ueNodes.End(); i++)
-    {
-        std::pair<Ptr<Node>, std::string> client(*i, adaptationAlgo);
-        clients.push_back(client);
-    }
-
-    clientApps.Add(clientHelper.Install(clients));
+    //clientApps.Add(clientHelper.Install(clients));
 
     serverApps.Start(Seconds(0.0));
     clientApps.Start (Seconds (0.2));

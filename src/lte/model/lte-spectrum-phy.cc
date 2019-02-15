@@ -689,6 +689,12 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
 
+  Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+  if (dev != 0)
+  {
+      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
+  }
+
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
   Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (spectrumRxParams);

@@ -841,4 +841,50 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
+void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
+{
+
+    Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
+    Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
+    Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
+
+    // Serialize data to send to eNB
+    std::stringstream msg;
+    msg << m_rnti << "\n";
+    msg << Simulator::Now() << "\n";
+    msg << m_frameNo << "\n";
+    msg << m_subframeNo << "\n";
+    //msg << rxParams->duration << "\n";
+    //msg << rxParams->pathLossDb << "\n";
+    //msg << rxParams->maxPathLossDb << "\n";
+    //msg << rxParams->psd << "\n";
+
+    //if (lteDataRxParams != 0)
+    //{
+    //    msg << "LteDataFrame" << "\n";
+    //}
+    //if (lteDlCtrlRxParams != 0)
+    //{
+    //    msg << "LteDlCtrlFrame" << "\n";
+    //}
+    //if (lteUlSrsRxParams != 0)
+    //{
+    //    msg << "LteUlSrsFrame" << "\n";
+    //}
+    msg << std::endl;
+
+    std::string msgStr = msg.str();
+    Ptr<Packet> packet = Create<Packet>((const uint8_t *) msgStr.c_str(), msgStr.size()+1);
+
+    LteMacSapProvider::TransmitPduParameters params;
+    params.pdu = packet;
+    params.rnti = m_rnti;
+    params.lcid = 0x0ff; // arbitrary number
+    params.layer = 1; // 1-mac 2-rlc
+    params.harqProcessId = m_harqProcessId; //todo: fix (m_harqProcessId + 1) % HARQ_PERIOD;
+    params.componentCarrierId = m_componentCarrierId;
+
+    DoTransmitPdu(params);
+}
+
 } // namespace ns3
