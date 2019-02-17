@@ -1,4 +1,8 @@
 if(${NS3_NETANIM})
+    #Used by qt
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
 
     set(source_files
             main.cpp

@@ -20,9 +20,3 @@ add_library(${lib${name}}
         traced/traced-callback-typedef-test-suite.cc
         traced/traced-value-callback-typedef-test-suite.cc
         )
-
-#message(WARNING ${ns3-libs-tests})
-#set(libraries_to_link ${ns3-libs})
-#list(REMOVE_ITEM libraries_to_link ${libtest})
-#
-#target_link_libraries(${lib${name}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})

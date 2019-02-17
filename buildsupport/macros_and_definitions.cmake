@@ -360,9 +360,10 @@ macro(process_options)
         endif()
 
         #Used by Netanim (qt stuff)
-        set(CMAKE_AUTOMOC ON)
-        set(CMAKE_AUTORCC ON)
-        set(CMAKE_AUTOUIC ON)
+        #the following commands were moved to netanim CMakeLists to reduce _autogen targets
+        #set(CMAKE_AUTOMOC ON)
+        #set(CMAKE_AUTORCC ON)
+        #set(CMAKE_AUTOUIC ON)
         set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
         if (${Qt4_FOUND})
@@ -441,10 +442,17 @@ macro(process_options)
     #Process core-config
     set(INT64X64 "128")
 
-	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
-		message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
-		set(INT64X64 "DOUBLE")
-	endif()
+    if( NOT (${INT64X64} STREQUAL "DOUBLE") )
+        if (${CMAKE_CXX_COMPILER_ID} EQUAL "MSVC")
+            message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+            set(INT64X64 "DOUBLE")
+        endif()
+
+        if(APPLE)
+            message(WARNING "Apples CLang doesn't support 128-bit integer operations. Falling back to double.")
+            set(INT64X64 "DOUBLE")
+        endif()
+    endif()
 
     if(INT64X64 STREQUAL "128")
         add_definitions(-DHAVE___UINT128_T)
@@ -486,11 +494,22 @@ macro(process_options)
     set(ns3-libs )
     set(ns3-libs-tests )
     set(ns3-contrib-libs )
+    set(lib-ns3-static-objs)
+
     foreach(libname ${libs_to_build})
         #Create libname of output library of module
         set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
+        set(lib${libname}-obj ns${NS3_VER}-${libname}-${build_type}-obj)
         list(APPEND ns3-libs ${lib${libname}})
+
+        if( NOT (${libname} STREQUAL "test") )
+            list(APPEND lib-ns3-static-objs $<TARGET_OBJECTS:${lib${libname}-obj}>)
+        endif()
+
     endforeach()
+
+    #Create new lib for NS3 static builds
+    set(lib-ns3-static ns${NS3_VER}-static-${build_type})
 
     #string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
     #add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
@@ -518,12 +537,6 @@ macro (write_module_header name header_files)
     list(APPEND contents "
     // Module headers: ")
 
-    #Add libmodule_export.h if on Windows, to import DLLs
-    #if (WIN32 AND ${NS3_SHARED})
-    #    list(APPEND contents "
-    ##include <ns3/lib${name}_export.h>")
-    #endif()
-
     #Write each header listed to the contents variable
     foreach(header ${header_files})
         get_filename_component(head ${header} NAME)
@@ -541,27 +554,17 @@ endmacro()
 
 
 macro (build_lib libname source_files header_files libraries_to_link test_sources)
-    #Create shared library with sources and headers
-    add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
-    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
-    #if(WIN32 AND ${NS3_SHARED})
-    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
-    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
-    #endif()
+    #Create object library with sources and headers, that will be used in lib-ns3-static and the shared library
+    add_library(${lib${libname}-obj} OBJECT "${source_files}" "${header_files}")
+
+    #Create shared library with previously created object library (saving compilation time)
+    add_library(${lib${libname}} SHARED $<TARGET_OBJECTS:${lib${libname}-obj}>)
+
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
     if(MSVC)
-        #set(whole_archive_string)
-        #foreach (lib_to_link ${libraries_to_link})
-        #    string(REPLACE ".dll" ".lib" lib_to_link_stripped ${lib_to_link})
-            #list(APPEND whole_archive_string ${lib_to_link_stripped}.dll)
-            #set(whole_archive_string ${whole_archive_string} /WHOLEARCHIVE:${lib_to_link_stripped})
-            #set(whole_archive_string ${whole_archive_string} /WHOLEARCHIVE:${lib_to_link})
-
-        #endforeach()
         target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
-        #message(WARNING ${whole_archive_string})
     endif()
 
     #Write a module header that includes all headers from that module
