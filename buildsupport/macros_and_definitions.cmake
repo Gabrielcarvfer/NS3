@@ -26,8 +26,9 @@ set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-#fPIC 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
+#fPIC and fPIE
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE -fPIC")
 
 
 set(LIB_AS_NEEDED_PRE  )
@@ -344,6 +345,68 @@ macro(process_options)
             include_directories( ${GSL_INCLUDE_DIRS})
             link_directories(${GSL_LIBRARY})
         endif()
+    endif()
+
+    if (${NS3_NETANIM})
+
+        if (${USE_QT} STREQUAL "4")
+            find_package(Qt4 COMPONENTS QtGui REQUIRED)
+        elseif(${USE_QT} STREQUAL "5")
+            find_package(Qt5 COMPONENTS Core Widgets PrintSupport Gui REQUIRED)
+        endif()
+
+        if((NOT ${Qt4_FOUND}) AND (NOT ${Qt5_FOUND}))
+            message(ERROR You need Qt installed to build NetAnim)
+        endif()
+
+        #Used by Netanim (qt stuff)
+        set(CMAKE_AUTOMOC ON)
+        set(CMAKE_AUTORCC ON)
+        set(CMAKE_AUTOUIC ON)
+        set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+        if (${Qt4_FOUND})
+            include(${QT_USE_FILE})
+            add_definitions(${QT_DEFINITIONS})
+            include_directories(${QT_INCLUDES})
+        endif()
+
+        if(${Qt5_FOUND})
+            #Hard way
+            # Spent 4h trying to discover what caused a shared library not to be found.
+            # Ended up being a WSL bug https://github.com/Microsoft/WSL/issues/3023 https://superuser.com/a/1348051/691447
+                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+
+                #include_directories(${Qt5Core_INCLUDE_DIRS}
+                #        ${Qt5Widgets_INCLUDE_DIRS}
+                #        ${Qt5PrintSupport_INCLUDE_DIRS}
+                #        )
+
+                #Fetch the library path to Qt core lib
+                #get_target_property(Qt5Core_location Qt5::Core LOCATION)
+
+                ##Get the directory with the Qt core library
+                #get_filename_component(QT_PATH ${Qt5Core_location} DIRECTORY)
+
+                #set(QT_VERSION ${Qt5Widgets_VERSION})
+
+                #set(QT_LIBRARIES_N
+                #        libQt5Widgets.so.${QT_VERSION}
+                #        libQt5PrintSupport.so.${QT_VERSION}
+                #        libQt5Gui.so.${QT_VERSION}
+                #        libQt5Core.so.${QT_VERSION}
+                #        )
+
+                #set(QT_LIBRARIES )
+                #foreach(qt_lib ${QT_LIBRARIES_N})
+                #    list(APPEND QT_LIBRARIES ${QT_PATH}/${qt_lib})
+                #endforeach()
+
+                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+                #link_directories(${QT_PATH})
+                #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${QT_PATH}")
+        endif()
+
     endif()
 
     if(${NS3_PYTORCH})

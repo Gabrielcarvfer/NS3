@@ -1,4 +1,5 @@
-if(NS3_NETANIM)
+if(${NS3_NETANIM})
+
     set(source_files
             main.cpp
             logqt.cpp
@@ -150,39 +151,28 @@ if(NS3_NETANIM)
             qtpropertybrowser/src/qtpropertybrowser.qrc
             )
 
-    set(CMAKE_AUTOMOC ON)
-    set(CMAKE_AUTORCC ON)
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    find_package(Qt4 REQUIRED QtGui)
-
-    if(NOT ${Qt4_FOUND})
-        message(WARNING You need Qt4 installed to build NetAnim)
+    if(WIN32)
+        add_executable(netanim
+                WIN32
+                ${source_files}
+                ${resource_files}
+                )
     else()
-        include(${QT_USE_FILE})
-        add_definitions(-DNS3_LOG_ENABLE ${QT_DEFINITIONS})
-        include_directories(${QT_INCLUDES} ${CMAKE_BINARY_DIR} qtpropertybrowser/src)
-
-        if(WIN32)
-            add_executable(netanim
-                    WIN32
-                    ${source_files}
-                    ${resource_files}
-                    )
-        else()
-            add_executable(netanim
-                    ${source_files}
-                    ${resource_files}
-                    )
-        endif()
-
-        #Copy modified headers to output directory
-        #add_custom_command(TARGET netanim}
-        #        PRE_BUILD
-        #        COMMAND ${CMAKE_COMMAND} -E copy ${header_files} ${CMAKE_HEADER_OUTPUT_DIRECTORY}
-        #        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party/netanim
-        #        )
-
-        target_link_libraries(netanim ${libcore} Qt4::QtGui)
+        add_executable(netanim
+                ${source_files}
+                ${resource_files}
+                )
     endif()
+
+    if(Qt4_FOUND)
+        target_link_libraries(netanim ${libcore} Qt4::QtGui)
+    else()
+        #target_link_libraries(netanim ${libcore} ${QT_LIBRARIES}) #used to debug the Hard way mentioned in macros_and_definitions.cmake
+        target_link_libraries(netanim ${libcore} Qt5::Widgets Qt5::Core Qt5::PrintSupport Qt5::Gui)
+    endif()
+
+    target_include_directories(netanim PUBLIC qtpropertybrowser/src)
+
+
 endif() #checking if configured to build netanim
