@@ -495,6 +495,8 @@ macro(process_options)
     set(ns3-libs-tests )
     set(ns3-contrib-libs )
     set(lib-ns3-static-objs)
+    set(ns3-python-bindings ns${NS3_VER}-pybindings-${build_type})
+    set(ns3-python-bindings-modules )
 
     foreach(libname ${libs_to_build})
         #Create libname of output library of module
@@ -604,12 +606,39 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         endif() 
     endif()
 
-    #Build pybindings  if requested
-    if(${NS3_PYTHON})
-        set(arch gcc_LP64)#ILP32)#
+    #Build pybindings if requested and if bindings subfolder exists in NS3/src/libname
+    if(${NS3_PYTHON} AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/bindings")
+        set(arch gcc_LP64)#ILP32)
+        #todo: fix python module names, output folder and missing links
+        set(module_src ns3module.cc)
+        set(module_hdr ns3module.h)
+
+        string(REPLACE "-" "_" libname_sub input) # - causes problems (e.g. csma-layout) causes problems, rename to _ (e.g. csma_layout)
+
+        set(modulegen_modular_command  python2 ${CMAKE_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py ${CMAKE_CURRENT_SOURCE_DIR} ${arch} ${libname_sub} ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src})
+        set(modulegen_arch_command python2 ${CMAKE_CURRENT_SOURCE_DIR}/bindings/modulegen__${arch}.py 2> ${CMAKE_CURRENT_SOURCE_DIR}/bindings/ns3modulegen.log)
+
         execute_process(
-                COMMAND  PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${Python2_EXEC} ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/modulegen__${arch}.py > ${CMAKE_OUTPUT_DIRECTORY}/ns/${libname}-module.cc
+                COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${modulegen_modular_command}
+                COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${modulegen_arch_command}
+                TIMEOUT 60
+                #WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                #OUTPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src}
+                RESULT_VARIABLE res
+                OUTPUT_QUIET
+                ERROR_QUIET
         )
+
+        #message(WARNING ${res})
+
+        set(python_module_files ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_hdr} ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src})
+        if(${libname} STREQUAL "core")
+            list(APPEND python_module_files ${CMAKE_CURRENT_SOURCE_DIR}/bindings/module_helpers.cc ${CMAKE_CURRENT_SOURCE_DIR}/bindings/scan-header.h)
+        endif()
+
+        #message(WARNING ${python_module_files})
+        add_library(ns3module_${libname} OBJECT "${python_module_files}")
+        set(ns3-python-bindings-modules ${ns3-python-bindings-modules} $<TARGET_OBJECTS:ns3module_${libname}> CACHE INTERNAL "" FORCE)
     endif()
 endmacro()
 
