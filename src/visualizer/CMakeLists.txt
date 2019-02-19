@@ -1,6 +1,5 @@
 if(${NS3_PYTHON})
 
-        #if (${visualizer_python_dependencies})
     set(name visualizer)
 
     set(source_files

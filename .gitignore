@@ -58,3 +58,7 @@ cmake-build-relwithdebinfo/
 cmake-cache/
 
 cmake-build-release/
+
+ns3module.cc
+
+ns3module.h
