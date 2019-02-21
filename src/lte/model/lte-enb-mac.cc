@@ -43,6 +43,7 @@
 #include <cinttypes>
 #include <cstdint>
 #include <bitset> //binary bitstream
+#include <fstream>
 
 
 namespace ns3 {
@@ -387,48 +388,53 @@ m_ccmMacSapUser (0)
   m_cschedSapUser = new EnbMacMemberFfMacCschedSapUser (this);
   m_enbPhySapUser = new EnbMacMemberLteEnbPhySapUser (this);
   m_ccmMacSapProvider = new MemberLteCcmMacSapProvider<LteEnbMac> (this);
+  unexpectedChannelAccessBitmap.emplace(0, std::map <uint64_t, uint32_t> ());
+  unexpectedChannelAccessBitmap.at(0).emplace(0, 0);
 }
 
 
 LteEnbMac::~LteEnbMac ()
 {
   NS_LOG_FUNCTION (this);
-  //print sensing listing
-  /*
+
+  //print sensing list
+  std::ofstream sensing_list_file;
+  sensing_list_file.open("sensing_list.txt");
+
   std::map<uint16_t,uint64_t> sensingUesAndEventsMap;
   for (auto&& [frame,subframeMap]: channelOccupation)
   {
-      std::cout << "frame " << frame << " reported \n{";
+      sensing_list_file << "frame " << frame << " reported \n{";
       for(auto&& [subframe, ueMap]: subframeMap)
       {
-          std::cout << "\n\tsubframe " << subframe << " reported \n\t[";
+          sensing_list_file << "\n\tsubframe " << subframe << " reported \n\t[";
           for (auto&& [ue, cognitiveReg]: ueMap)
           {
-              std::cout << "\n\t\t UE " << ue << " reported bitmap " << " in frame " << cognitiveReg.SensedFrameNo << " and subframe " << cognitiveReg.SensedSubframeNo;
+              sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<25>(cognitiveReg.UnexpectedAccessBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe " << cognitiveReg.SensedSubframeNo;
               if(sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
                   sensingUesAndEventsMap.emplace(ue,0);
               sensingUesAndEventsMap.at(ue) += 1;
           }
-          std::cout << "\n\t]";
+          sensing_list_file << "\n\t]";
       }
-      std::cout << "\n}";
+      sensing_list_file << "\n}";
   }
 
   for (auto &&[ue, events]: sensingUesAndEventsMap)
   {
-      std::cout << "\nue " << ue << " reported " << events << " sensing events";
+      sensing_list_file << "\nue " << ue << " reported " << events << " sensing events";
   }
-  */
-  /*
+
+
   for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
   {
       for(auto&& [subframe, bitmap]: subframeMap)
       {
-          std::cout << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<25>(bitmap);
+          sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<25>(bitmap);
       }
   }
-  std::cout << std::endl;
-   */
+  sensing_list_file << std::endl;
+
 }
 
 void
@@ -621,11 +627,13 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
     }
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
+  dlparams.sensedBitmap = 0;
   if (unexpectedChannelAccessBitmap.size() > 0)
   {
       auto x = unexpectedChannelAccessBitmap.rbegin();
-      if (x->second.size() > 0)
-        dlparams.sensedBitmap = x->second.rbegin()->second;
+      if (x->first + 1 >= m_frameNo)
+          if (x->second.size() > 0)
+              dlparams.sensedBitmap = x->second.rbegin()->second;
   }
 
   //Calls for the scheduler
@@ -707,6 +715,11 @@ LteEnbMac::DoReceiveLteControlMessage  (Ptr<LteControlMessage> msg)
       Ptr<DlHarqFeedbackLteControlMessage> dlharq = DynamicCast<DlHarqFeedbackLteControlMessage> (msg);
       DoDlInfoListElementHarqFeeback (dlharq->GetDlHarqFeedback ());
     }
+  else if(msg->GetMessageType () == LteControlMessage::COG)
+  {
+      Ptr<CognitiveLteControlMessage> cog = DynamicCast<CognitiveLteControlMessage> (msg);
+      RecvCognitiveMessageC(cog);//receive through control channel
+  }
   else
     {
       NS_LOG_LOGIC (this << " LteControlMessage type " << msg->GetMessageType () << " not recognized");
@@ -814,7 +827,7 @@ LteEnbMac::DoReceivePhyPdu (Ptr<Packet> p)
   std::map<uint8_t, LteMacSapUser*>::iterator lcidIt = rntiIt->second.find (lcid);
   //NS_ASSERT_MSG (lcidIt != rntiIt->second.end (), "could not find LCID" << lcid);
 
-  if (lcid == 0x0ff)
+  if (lcid == 0x0ff)//receive through data channel
     RecvCognitiveMessage(p);
   //Receive PDU only if LCID is found
   if (lcidIt != rntiIt->second.end ())
@@ -1319,7 +1332,7 @@ LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
 }
 
 
-// Receive "cognitive messages" from UEs
+// Receive "cognitive messages" from UEs through the data channel
 void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
 {
     //Receive cognitive radio params
@@ -1405,5 +1418,54 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     uint32_t val = unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo);
     return;
 }
+
+// Receive "cognitive messages" from UEs through the ctrl channel
+void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
+{
+
+    CognitiveReg reg;
+    reg = p->GetMessage();
+
+    reg.Delay = Simulator::Now()-reg.SimCurrTime;
+    reg.ReceivedFrameNo = m_frameNo;
+    reg.ReceivedSubframeNo = m_subframeNo;
+
+    //Save cognitive reg with times collected and source
+
+    //First create map for frames
+    if(channelOccupation.find(reg.ReceivedFrameNo) == channelOccupation.end())
+    {
+        channelOccupation.emplace(reg.ReceivedFrameNo, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > ());
+    }
+
+    //After that, create map for subframes
+    if(channelOccupation.at(reg.ReceivedFrameNo).find(reg.ReceivedSubframeNo) == channelOccupation.at(reg.ReceivedFrameNo).end())
+    {
+        channelOccupation.at(reg.ReceivedFrameNo).emplace(reg.ReceivedSubframeNo, std::map<uint16_t, CognitiveReg> ());
+    }
+
+    //Then register UE reports
+    channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
+
+
+
+    //First create map for sensed frames
+    if(unexpectedChannelAccessBitmap.find(reg.SensedFrameNo) == unexpectedChannelAccessBitmap.end())
+    {
+        unexpectedChannelAccessBitmap.emplace(reg.SensedFrameNo, std::map <uint64_t, uint32_t> ());
+    }
+
+    //After that, create map for sensed subframes
+    if(unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).find(reg.SensedSubframeNo) == unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).end())
+    {
+        unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).emplace(reg.SensedSubframeNo, 0);
+    }
+
+    //Then register UE sensed reports
+    unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo) |= reg.UnexpectedAccessBitmap;
+    uint32_t val = unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo);
+    return;
+}
+
 
 } // namespace ns3

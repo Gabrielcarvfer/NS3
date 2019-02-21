@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy
 bufferFile = ""
-with open("./build/bin/output.txt",'r') as file:
+with open("./build/bin/plot_pu.txt",'r') as file:
     bufferFile = file.readlines()
 
 plt.ioff()
@@ -16,8 +16,8 @@ for ue_str in bufferFile:
         #Create registry
         ues_dict[y[0]] = {}
 
-        # Read PUDetected
-        ues_dict[y[0]]["PUDetected"] = [ float(k) for k in y[1].split()]
+        # Read PU_detected
+        ues_dict[y[0]]["PU_detected"] = [ float(k) for k in y[1].split()]
     else:
         #Read AvgSinr
         ues_dict[y[0]]["AvgSinr"]    = [ float(k) for k in y[1].split()]
@@ -41,7 +41,7 @@ for ue in ues_dict:
     ax2.set_xlabel('time (ms)')
     ax2.set_ylabel('avg sinr (dB)')
     ax2.tick_params('y')
-    ax.plot(x,ues_dict[ue]['PUDetected'],alpha=0.5)
+    ax.plot(x,ues_dict[ue]['PU_detected'],alpha=0.5)
     #normalizedSinr = [k/maxSinr for k in ues_dict[ue]['AvgSinr']]
     #ax2.plot(x,normalizedSinr,alpha=0.5)
     ax2.plot(x,ues_dict[ue]["AvgSinr"],alpha=0.5)

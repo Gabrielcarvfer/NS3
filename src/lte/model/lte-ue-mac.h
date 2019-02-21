@@ -44,6 +44,8 @@ namespace ns3 {
 
 class UniformRandomVariable;
 class    LteSpectrumPhy;//todo: implement this properly through the SAP
+class    LteUePhy;//todo: implement this properly through the SAP
+
 
 class LteUeMac :   public Object
 {
@@ -266,9 +268,10 @@ private:
   bool m_waitingForRaResponse; ///< waiting for RA response
 
 public:
+  uint32_t lastFrameNo;
+  uint32_t lastSubframeNo;
   void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams); //todo: implement this properly through the SAP
   Ptr<LteSpectrumPhy> ueSpectrumPhy; //todo: implement this properly through the SAP
-
 
 };
 

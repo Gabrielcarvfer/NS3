@@ -583,6 +583,17 @@ LteEnbPhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgL
               }
           }
           break;
+        case LteControlMessage::COG:
+           {
+                Ptr<CognitiveLteControlMessage> cogMsg = DynamicCast<CognitiveLteControlMessage> (*it);
+                LteEnbMac::CognitiveReg reg = cogMsg->GetMessage();
+                // check whether the UE is connected
+                if (m_ueAttached.find (reg.OriginAddress) != m_ueAttached.end ())
+                {
+                m_enbPhySapUser->ReceiveLteControlMessage (*it);
+                }
+           }
+           break;
         default:
           NS_FATAL_ERROR ("Unexpected LteControlMessage type");
           break;

@@ -308,6 +308,24 @@ DlHarqFeedbackLteControlMessage::GetDlHarqFeedback (void)
   return m_dlInfoListElement;
 }
 
+//-----------------------------------------------------------
+
+CognitiveLteControlMessage::CognitiveLteControlMessage (void)
+{
+    SetMessageType (LteControlMessage::COG);
+}
+
+void CognitiveLteControlMessage::SetMessage(LteEnbMac::CognitiveReg msg)
+{
+    m_cogReg = msg;
+}
+
+LteEnbMac::CognitiveReg CognitiveLteControlMessage::GetMessage() const
+{
+    return m_cogReg;
+}
+
+
 
 } // namespace ns3
 

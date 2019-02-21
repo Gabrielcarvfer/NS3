@@ -843,26 +843,38 @@ LteUeMac::AssignStreams (int64_t stream)
 
 void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
 {
+    //We stopped receiving ctrl messages(not supposed to happen), so estimate frames
+    if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
+    {
+        m_subframeNo++;
+        if(m_subframeNo > 9)
+        {
+            m_subframeNo = 0;
+            m_frameNo++;
+        }
+    }
 
-    Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
-    Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
-    Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
-
-    // Serialize data to send to eNB
-    std::stringstream msg;
-    msg << m_rnti << "\n";
-    msg << Simulator::Now() << "\n";
-    msg << m_frameNo << "\n";
-    msg << m_subframeNo << "\n";
-    msg << std::hex << ueSpectrumPhy->UnexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
-
-    ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
-
+    // Serialize data to send to eNB through the data channel
+    //
+    //Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
+    //Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
+    //Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
+    //
+    //
+    //std::stringstream msg;
+    //msg << m_rnti << "\n";
+    //msg << Simulator::Now() << "\n";
+    //msg << m_frameNo << "\n";
+    //msg << m_subframeNo << "\n";
+    //msg << std::hex << ueSpectrumPhy->UnexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
+    //
+    //ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
+    //
     //msg << rxParams->duration << "\n";
     //msg << rxParams->pathLossDb << "\n";
     //msg << rxParams->maxPathLossDb << "\n";
     //msg << rxParams->psd << "\n";
-
+    //
     //if (lteDataRxParams != 0)
     //{
     //    msg << "LteDataFrame" << "\n";
@@ -875,20 +887,36 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
     //{
     //    msg << "LteUlSrsFrame" << "\n";
     //}
-    msg << std::endl;
+    //msg << std::endl;
+    //
+    //std::string msgStr = msg.str();
+    //Ptr<Packet> packet = Create<Packet>((const uint8_t *) msgStr.c_str(), msgStr.size()+1);
 
-    std::string msgStr = msg.str();
-    Ptr<Packet> packet = Create<Packet>((const uint8_t *) msgStr.c_str(), msgStr.size()+1);
+    //Send report throught the data channel
+    //LteMacSapProvider::TransmitPduParameters params;
+    //params.pdu = packet;
+    //params.rnti = m_rnti;
+    //params.lcid = 0x0ff; // arbitrary number
+    //params.layer = 1; // 1-mac 2-rlc
+    //params.harqProcessId = m_harqProcessId; //todo: fix (m_harqProcessId + 1) % HARQ_PERIOD;
+    //params.componentCarrierId = m_componentCarrierId;
+    //DoTransmitPdu(params);
 
-    LteMacSapProvider::TransmitPduParameters params;
-    params.pdu = packet;
-    params.rnti = m_rnti;
-    params.lcid = 0x0ff; // arbitrary number
-    params.layer = 1; // 1-mac 2-rlc
-    params.harqProcessId = m_harqProcessId; //todo: fix (m_harqProcessId + 1) % HARQ_PERIOD;
-    params.componentCarrierId = m_componentCarrierId;
+    //Send report through the control channel
+    LteEnbMac::CognitiveReg senseReport;
+    senseReport.OriginAddress = m_rnti;
+    senseReport.SimCurrTime = Simulator::Now();
+    senseReport.SensedFrameNo = m_frameNo;
+    senseReport.SensedSubframeNo = m_subframeNo;
+    senseReport.UnexpectedAccessBitmap = ueSpectrumPhy->UnexpectedAccessBitmap;
 
-    DoTransmitPdu(params);
+    Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
+    msg->SetMessage(senseReport);
+    m_uePhySapProvider->SendLteControlMessage(msg);
+
+    ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
+    lastFrameNo = m_frameNo;
+    lastSubframeNo = m_subframeNo;
 }
 
 } // namespace ns3

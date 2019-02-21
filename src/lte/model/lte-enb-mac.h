@@ -45,6 +45,7 @@ namespace ns3 {
 class DlCqiLteControlMessage;
 class UlCqiLteControlMessage;
 class PdcchMapLteControlMessage;
+class CognitiveLteControlMessage;
 
 /// DlHarqProcessesBuffer_t typedef
 typedef std::vector <std::vector < Ptr<PacketBurst> > > DlHarqProcessesBuffer_t;
@@ -462,7 +463,7 @@ public://todo: implement this properly through the SAP
         uint16_t OriginAddress;
         Time SimCurrTime;
         Time Delay;
-        Time TransmissionTime;
+        //Time TransmissionTime;
         uint64_t SensedFrameNo;
         uint64_t SensedSubframeNo;
         uint64_t ReceivedFrameNo;
@@ -472,6 +473,7 @@ public://todo: implement this properly through the SAP
     std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
     std::map <uint64_t, std::map<uint64_t, uint32_t> > unexpectedChannelAccessBitmap;
     void RecvCognitiveMessage(Ptr<Packet> p);
+    void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
 
 };
 

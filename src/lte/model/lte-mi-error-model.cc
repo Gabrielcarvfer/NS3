@@ -228,7 +228,10 @@ double
 LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs)
 {
   NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
-  
+
+  if (!errorDataLoaded)
+      LoadErrorData();
+
   double MI;
   double MIsum = 0.0;
   SpectrumValue sinrCopy = sinr;

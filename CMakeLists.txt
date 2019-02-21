@@ -9,7 +9,7 @@ cmake_minimum_required( VERSION 3.10 )
 #######################################
 # Project name                        #
 #######################################
-project(NS3 CXX)
+project(NS3 CXX C)
 
 include(buildsupport/macros_and_definitions.cmake)
 

@@ -41,6 +41,7 @@
 #include "./BLER/json_loader.h"
 #include <random>
 #include <mutex>
+#include <fstream>
 
 
 
@@ -154,6 +155,7 @@ LteSpectrumPhy::LteSpectrumPhy ()
   sensingEvents = 0;
   sensingBudget = 0;
   PU_presence = false;
+  PU_detected = false;
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -170,6 +172,29 @@ LteSpectrumPhy::~LteSpectrumPhy ()
 void LteSpectrumPhy::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
+
+  //Sensing
+  m_sensingEvent.Cancel();
+
+
+  if (puPresence.size()>1)
+  {
+      std::ofstream plot_pu_file;
+      plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+
+      plot_pu_file << this << ": ";
+      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
+          plot_pu_file << *it << " ";
+      plot_pu_file << std::endl;
+      plot_pu_file << this << ": ";
+      for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
+          plot_pu_file << *it << " ";
+
+      plot_pu_file << std::endl;
+      plot_pu_file.close();
+  }
+  //End sensing
+
   m_channel = 0;
   m_mobility = 0;
   m_device = 0;
@@ -185,24 +210,7 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyUlHarqFeedbackCallback = MakeNullCallback< void, UlInfoListElement_s > ();
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
-
-  m_sensingEvent.Cancel();
-
-  //todo: print PU detection status in a more appropriate manner
-  /*
-  if (puPresence.size()>1)
-  {
-      std::cout << this << ": ";
-      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
-          std::cout << *it << " ";
-      std::cout << std::endl;
-      std::cout << this << ": ";
-      for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
-          std::cout << *it << " ";
-      std::cout << std::endl;
-  }*/
-
-} 
+}
 
 /**
  * Output stream output operator
@@ -693,7 +701,11 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
   if (dev != 0)
   {
-      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
+      if (PU_detected)
+      {
+          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
+          PU_detected = false;
+      }
   }
 
   // the device might start RX only if the signal is of a type
@@ -810,9 +822,8 @@ void LteSpectrumPhy::reset_PU_presence()
 }
 
 std::default_random_engine gen;
-
 std::mutex mutex;
-void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, bool * PUDetected, double * avgSinr)
+void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr)
 {
     {
         std::lock_guard<std::mutex> lock(mutex);
@@ -912,6 +923,7 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     uint8_t i = 0;
     bool first = true;
     uint8_t j = 0;
+    uint32_t test_output = 0;
     for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
     {
 
@@ -919,7 +931,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         if (occupied_RB_indexes[i] || *it == 0)
             continue;
 
-        UnexpectedAccessBitmap |= (1<<(i));
+        UnexpectedAccessBitmap |= (uint32_t)(1<<i);
+        test_output = UnexpectedAccessBitmap;
 
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = 10 * log10((*it));
@@ -980,9 +993,14 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
         if (answer)
         {
-            *PUDetected = true;
+            PU_detected = true;
+        }
+        else
+        {
+            UnexpectedAccessBitmap &= ~(uint32_t)(1<<i); //Reset unexpected access bit indicating the non-detection of PU presence
         }
     }
+
     if (j > 0)
         *avgSinr /= j;
 }
@@ -993,11 +1011,15 @@ void LteSpectrumPhy::Sense()
   //Collect interference data
   if (m_sinrPerceived.GetSpectrumModel() != 0)
   {
+      sinrHistory.push_back(m_sinrPerceived.Copy());
+  }
+
+  if (sinrHistory.size() > 0)
+  {
     sinrHistory.push_back(m_sinrPerceived.Copy());
-    bool PUDetected = false;
     double avgSinr = 0;
-    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &PUDetected, &avgSinr);
-    puPresence.push_back(PUDetected);
+    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr);
+    puPresence.push_back(PU_detected);
     sinrAvgHistory.push_back(avgSinr);
 
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
@@ -1005,6 +1027,8 @@ void LteSpectrumPhy::Sense()
     this->sensingBudget--;
     this->sensingEvents++;
 
+    this->m_sensingEvent.Cancel();
+    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
     if (this->sensingBudget > 0)
     {
         //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);

@@ -550,7 +550,7 @@ private:
   static std::vector<double> SNRdB;
   static std::vector<double> PdTot;
   static bool PUProbLoaded;
-  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, bool * PUDetected, double * avgSinr);
+  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
@@ -559,6 +559,7 @@ private:
 
 public:
     bool PU_presence;
+    bool PU_detected;
     uint32_t UnexpectedAccessBitmap;
 
 };
