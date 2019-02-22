@@ -41,6 +41,7 @@
 #include <ns3/ff-mac-common.h>
 #include <ns3/lte-harq-phy.h>
 #include <ns3/lte-common.h>
+#include <mutex>
 
 namespace ns3 {
 
@@ -557,6 +558,8 @@ private:
   EventId PU_event;
   void reset_PU_presence();
 
+  static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+  static std::mutex mut;
 public:
     bool PU_presence;
     bool PU_detected;

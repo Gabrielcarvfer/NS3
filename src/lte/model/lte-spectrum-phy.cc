@@ -161,6 +161,8 @@ LteSpectrumPhy::LteSpectrumPhy ()
 bool LteSpectrumPhy::PUProbLoaded = false;
 std::vector<double> LteSpectrumPhy::SNRdB;
 std::vector<double> LteSpectrumPhy::PdTot;
+std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+std::mutex LteSpectrumPhy::mut;
 
 LteSpectrumPhy::~LteSpectrumPhy ()
 {
@@ -179,8 +181,12 @@ void LteSpectrumPhy::DoDispose ()
 
   if (puPresence.size()>1)
   {
-      std::ofstream plot_pu_file;
-      plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+      std::lock_guard<std::mutex> protect(mut);
+
+      if(!plot_pu_file.is_open())
+      {
+          plot_pu_file.open("plot_pu.txt");
+      }
 
       plot_pu_file << this << ": ";
       for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
@@ -189,9 +195,7 @@ void LteSpectrumPhy::DoDispose ()
       plot_pu_file << this << ": ";
       for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
           plot_pu_file << *it << " ";
-
-      plot_pu_file << std::endl;
-      plot_pu_file.close();
+      plot_pu_file << "\n";//std::endl;
   }
   //End sensing
 
@@ -858,10 +862,7 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         auto p1 = *it;
         switch(p1->GetMessageType())
         {
-            //Skip control messages that are not DL_DCI or UL_DCI
-            default:
-                continue;
-            case LteControlMessage::DL_DCI:
+            /*case LteControlMessage::DL_DCI:
                 {
                     //Cast to the proper type
                     Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
@@ -881,7 +882,7 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
                         mask = (mask << 1);
                     }
                 }
-                break;
+                break;*/
             /*case LteControlMessage::UL_DCI:
                 {
                     //Cast to the proper type
@@ -911,13 +912,17 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
                     }
                 }
                 break;*/
+
+            //Skip control messages that are not DL_DCI or UL_DCI
+            default:
+                continue;
         }
         dci_count++;
     }
 
     //No DCI received, then skip
-    if (dci_count == 0)
-       return ;
+    //if (dci_count == 0)
+    //   return ;
 
     //Calculate the probability of PU detection on given RBs
     uint8_t i = 0;
