@@ -673,8 +673,10 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   //Take cognitive info into account before scheduling
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      rbgMap.at(i) = ( params.sensedBitmap & (1<<31-i) ) != 0 ? true : false;
+      rbgMap.at(i) = ( params.sensedBitmap>>i & 0x01 ) ? true : false;
+      //std::cout << (rbgMap.at(i) ? 1 : 0);
   }
+  //std::cout << std::endl;
 
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
@@ -1673,6 +1675,11 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
     }
   NS_LOG_INFO (this << " Allocated RBs:" << count_allocated_resource_blocks);
 
+  //for (int i = 0; i < rbgMap.size(); i++)
+  //{
+  //    std::cout << (rbgMap.at(i) ? 1 : 0);
+  //}
+  //std::cout << std::endl;
   return;
 }
 
