@@ -673,16 +673,16 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   //Take cognitive info into account before scheduling
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      rbgMap.at(i) = ( params.sensedBitmap>>i & 0x01 ) ? true : false;
+      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : false;
   }
 
-
-  std::cout << Simulator::Now() << ": ";
-  for (int i = 0; i < rbgMap.size(); i++)
-  {
-      std::cout << (rbgMap.at(i) ? 1 : 0);
-  }
-  std::cout << std::endl;
+  //SchedulerInput
+  //std::cout << Simulator::Now() << ": ";
+  //for (int i = 0; i < rbgMap.size(); i++)
+  //{
+  //    std::cout << (rbgMap.at(i) ? 1 : 0);
+  //}
+  //std::cout << std::endl;
 
 
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
@@ -1478,6 +1478,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
             {
               // erase current RBG from the list of available RBG
               availableRBGs.erase (currentRB);
+              rbgMap.at(currentRB) = true;
               continue;
             }
 
@@ -1500,8 +1501,9 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
           // erase current RBG from the list of available RBG
           availableRBGs.erase (currentRB);
+          rbgMap.at(currentRB) = true;
 
-          if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
+            if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
           //||(UeHasReachedGBR.find(userWithMaximumMetric)->second == true))
             {
               itCurrentGroup->second.erase (userWithMaximumMetric);
@@ -1682,14 +1684,14 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
     }
   NS_LOG_INFO (this << " Allocated RBs:" << count_allocated_resource_blocks);
 
-  /*
+  //SchedulerOutput
   std::cout << Simulator::Now() << ": ";
   for (int i = 0; i < rbgMap.size(); i++)
   {
       std::cout << (rbgMap.at(i) ? 1 : 0);
   }
   std::cout << std::endl;
-  */
+
 
   return;
 }

@@ -1,8 +1,4 @@
 //
-// Created by Gabriel on 22-Nov-18.
-//
-
-//
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 28/05/2018.
 //
 
@@ -31,7 +27,6 @@
 #include <ns3/point-to-point-module.h>
 #include <cstdint>
 #include <ns3/spectrum-module.h>
-
 
 
 using namespace ns3;
@@ -76,30 +71,30 @@ void print_ips(Ptr<Ipv4> ips)
 //Simple network setup
 int main()
 {
-    //std::ios::sync_with_stdio(false);
+    std::ios::sync_with_stdio(false);
 
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
     double simTime = 5;
-    double distance = 60.0;
-    double interPacketInterval = 25;
 
     NodeContainer allNodes;
-    bool useCa = true;
+    Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (100));
+    Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (100));
+
+    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (false));
+    Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
 
     //1 Configura EPC e PGW
-
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
-    //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
-    //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
-    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
-    Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
+
     lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
     //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel")); // Spectrum
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));         // Our version
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
 
 
+    //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
+    //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
 
 
     Ptr<PointToPointEpcHelper>  epcHelper = CreateObject<PointToPointEpcHelper> ();
@@ -126,32 +121,32 @@ int main()
 
     //4 Aloca posições dos dispositivos
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
-    positionAlloc->Add (Vector (  10.0,    0.0,  0.0));  // 0 - PGw
-    positionAlloc->Add (Vector (   0.0,    0.0,  0.0));  // 1 - Internet
-    positionAlloc->Add (Vector (5000.0, 5000.0,  0.0));  // 2 - eNB
+    positionAlloc->Add (Vector (   10.0,     0.0,  0.0));  // 0 - PGw
+    positionAlloc->Add (Vector (    0.0,     0.0,  0.0));  // 1 - Internet
+    positionAlloc->Add (Vector ( 5000.0,  5000.0,  0.0));  // 2 - eNB
 
     Ptr<ListPositionAllocator> positionAlloc2 = CreateObject<ListPositionAllocator> ();
-    //positionAlloc2->Add(Vector (3200.0, 5000.0,  0.0));  // 3 - UE 0
-    //positionAlloc2->Add(Vector (3500.0, 5000.0,  0.0));  // 4 - UE 1
-    //positionAlloc2->Add(Vector (3800.0, 5000.0,  0.0));  // 5 - UE 2
-    //positionAlloc2->Add(Vector (4100.0, 5000.0,  0.0));  // 6 - UE 3
-    //positionAlloc2->Add(Vector (4400.0, 5000.0,  0.0));  // 7 - UE 4
-    //positionAlloc2->Add(Vector (4700.0, 5000.0,  0.0));  // 8 - UE 5
-    //positionAlloc2->Add(Vector (5000.0, 5000.0,  0.0));  // 9 - UE 6
-    //positionAlloc2->Add(Vector (5300.0, 5000.0,  0.0));  //10 - UE 7
-    //positionAlloc2->Add(Vector (5600.0, 5000.0,  0.0));  //11 - UE 8
-    //positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
+    positionAlloc2->Add(Vector (3200.0, 5000.0,  0.0));  // 3 - UE 0
+    positionAlloc2->Add(Vector (3500.0, 5000.0,  0.0));  // 4 - UE 1
+    positionAlloc2->Add(Vector (3800.0, 5000.0,  0.0));  // 5 - UE 2
+    positionAlloc2->Add(Vector (4100.0, 5000.0,  0.0));  // 6 - UE 3
+    positionAlloc2->Add(Vector (4400.0, 5000.0,  0.0));  // 7 - UE 4
+    positionAlloc2->Add(Vector (4700.0, 5000.0,  0.0));  // 8 - UE 5
+    positionAlloc2->Add(Vector (5000.0, 5000.0,  0.0));  // 9 - UE 6
+    positionAlloc2->Add(Vector (5300.0, 5000.0,  0.0));  //10 - UE 7
+    positionAlloc2->Add(Vector (5600.0, 5000.0,  0.0));  //11 - UE 8
+    positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
 
-    positionAlloc2->Add(Vector ( 5000.0, 5000.0,  0.0));  // 3 - UE 0
-    positionAlloc2->Add(Vector ( 6000.0, 5000.0,  0.0));  // 4 - UE 1
-    positionAlloc2->Add(Vector ( 7000.0, 5000.0,  0.0));  // 5 - UE 2
-    positionAlloc2->Add(Vector ( 8000.0, 5000.0,  0.0));  // 6 - UE 3
-    positionAlloc2->Add(Vector ( 9000.0, 5000.0,  0.0));  // 7 - UE 4
-    positionAlloc2->Add(Vector (10000.0, 5000.0,  0.0));  // 8 - UE 5
-    positionAlloc2->Add(Vector (11000.0, 5000.0,  0.0));  // 9 - UE 6
-    positionAlloc2->Add(Vector (12000.0, 5000.0,  0.0));  //10 - UE 7
-    positionAlloc2->Add(Vector (13000.0, 5000.0,  0.0));  //11 - UE 8
-    positionAlloc2->Add(Vector (14000.0, 5000.0,  0.0));  //12 - UE 9
+    //positionAlloc2->Add(Vector (32000.0, 50000.0,  0.0));  // 3 - UE 0
+    //positionAlloc2->Add(Vector (35000.0, 50000.0,  0.0));  // 4 - UE 1
+    //positionAlloc2->Add(Vector (38000.0, 50000.0,  0.0));  // 5 - UE 2
+    //positionAlloc2->Add(Vector (41000.0, 50000.0,  0.0));  // 6 - UE 3
+    //positionAlloc2->Add(Vector (44000.0, 50000.0,  0.0));  // 7 - UE 4
+    //positionAlloc2->Add(Vector (47000.0, 50000.0,  0.0));  // 8 - UE 5
+    //positionAlloc2->Add(Vector (50000.0, 50000.0,  0.0));  // 9 - UE 6
+    //positionAlloc2->Add(Vector (53000.0, 50000.0,  0.0));  //10 - UE 7
+    //positionAlloc2->Add(Vector (56000.0, 50000.0,  0.0));  //11 - UE 8
+    //positionAlloc2->Add(Vector (59000.0, 50000.0,  0.0));  //12 - UE 9
 
 
     //5 Instala mobilidade dos dispositivos (parados)
@@ -184,7 +179,6 @@ int main()
     Ipv4AddressHelper ipv4h;
     ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
     Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign (internetDevices);
-    ipv4h.NewNetwork();
 
     // interface 0 is localhost/loopback, 1 is the p2p device
     Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress (1);
@@ -213,30 +207,25 @@ int main()
     //12 Instala pilha IP nos UE e dá endereços controlados pelo EPC
     internet.Install (ueNodes);
     Ipv4InterfaceContainer ueIpIface;
-    ueIpIface = epcHelper->AssignUeIpv4Address (ueLteDevs);
+    ueIpIface = epcHelper->AssignUeIpv4Address (NetDeviceContainer (ueLteDevs));
 
-
-
+    //13 Modifica UEs para adicionar o gateway correspondendo ao EPC
+    // (conexão entre UE/eNB é feita através de uma aplicação e tunelamento GPRS)
     for (uint32_t u = 0; u < ueNodes.GetN (); ++u)
     {
-        //13 Modifica UEs para adicionar o gateway correspondendo ao EPC
-        // (conexão entre UE/eNB é feita através de uma aplicação e tunelamento GPRS)
         Ptr<Node> ueNode = ueNodes.Get (u);
         Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting (ueNode->GetObject<Ipv4> ());
         ueStaticRouting->SetDefaultRoute (epcHelper->GetUeDefaultGatewayAddress (), 1);
-
-        //14 Associa UE ao eNodeB
-        lteHelper->Attach (ueLteDevs.Get(u), enbLteDevs.Get(0));
     }
 
+    //14 Associa UE ao eNodeB
+    lteHelper->Attach (ueLteDevs, enbLteDevs.Get(0));
 
-
-
-    //enum EpsBearer::Qci q = EpsBearer::NGBR_VIDEO_TCP_DEFAULT;
+    //enum EpsBearer::Qci q = EpsBearer::GBR_CONV_VOICE;
     //EpsBearer bearer (q);
     //lteHelper->ActivateDataRadioBearer (ueLteDevs, bearer);
 
-    ///Ptr<EpcTft> tft = Create<EpcTft> ();
+    //Ptr<EpcTft> tft = Create<EpcTft> ();
     //if (epcDl)
     //  {
     //    EpcTft::PacketFilter dlpf;
@@ -246,77 +235,78 @@ int main()
     //  }
     //if (epcUl)
     //  {
-    ////EpcTft::PacketFilter ulpf;
-    ////ulpf.remotePortStart = 9;
-    ////ulpf.remotePortEnd = 9;
-    ////tft->Add (ulpf);
+    //    EpcTft::PacketFilter ulpf;
+    //    ulpf.remotePortStart = 9;
+    //    ulpf.remotePortEnd = 9;
+    //    tft->Add (ulpf);
     //  }
 
     //if (epcDl || epcUl)
     //{
-    ////EpsBearer bearer (EpsBearer::GBR_GAMING);
-    ////lteHelper->ActivateDedicatedEpsBearer (ueLteDevs, bearer, tft);
+    // EpsBearer bearer (EpsBearer::GBR_GAMING);
+    // lteHelper->ActivateDedicatedEpsBearer (ueLteDevs, bearer, tft);
     //}
 
-    //enum EpsBearer::Qci q = EpsBearer::GBR_CONV_VOICE;
-    //EpsBearer bearer (q);
-    //lteHelper->ActivateDataRadioBearer (ueLteDevs, bearer);
+
 
     // 26 Configura e instala aplicações
-    uint16_t serverPort = 900;
-    Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1,0).GetLocal();
+    uint16_t serverPort = 9;
+
+    UdpEchoServerHelper echoServer(serverPort); // Porta #9
     ApplicationContainer serverApps;
-    ApplicationContainer clientApps;
+    ApplicationContainer serverApp;
 
+    serverApp = echoServer.Install(remoteHost);
+    serverApp.Start(Seconds(0.1));
+    serverApps.Add(serverApp);
 
-    UdpEchoServerHelper echoServer(serverPort); // Porta #900
-    serverApps.Add(echoServer.Install(remoteHost));
 
     //ECHO APP
+    Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1,0).GetLocal();
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
     echoClient.SetAttribute("Interval", TimeValue(MilliSeconds(10)));
     echoClient.SetAttribute("PacketSize", UintegerValue(1000));
+
+    ApplicationContainer clientApps;
     clientApps.Add(echoClient.Install(ueNodes));
 
     //DASH APP
-    uint64_t segmentDuration = 10;
+
+    uint64_t segmentDuration = 1;
     std::string adaptationAlgo = "festive"; // festive | panda | tobasco
     std::string segmentSizeFilePath = "../../contrib/haraldott/dash/examples/segmentsizes.txt";
 
-    //TcpStreamServerHelper serverHelper(serverPort+1);
-    //serverApps.Add(serverHelper.Install(remoteHost));
+    TcpStreamServerHelper serverHelper(serverPort+1);
+    serverApp = serverHelper.Install(remoteHost);
+    serverApp.Start(Seconds(0.5));
+    serverApps.Add(serverApp);
 
-    /* Install TCP/UDP Transmitter on the station */
-    //TcpStreamClientHelper clientHelper(serverAddress, serverPort+1);
-    //clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));
-    //clientHelper.SetAttribute("SegmentSizeFilePath", StringValue(segmentSizeFilePath));
-    //clientHelper.SetAttribute("NumberOfClients", UintegerValue(1));
-    //clientHelper.SetAttribute("SimulationId", UintegerValue(0));
-//
-    //std::vector<std::pair<Ptr<Node>, std::string> > clients;
-    //for (NodeContainer::Iterator i = ueNodes.Begin(); i != ueNodes.End(); i++)
-    //{
-    //    std::pair<Ptr<Node>, std::string> client(*i, adaptationAlgo);
-    //    clients.push_back(client);
-    //}
+    // Install TCP/UDP Transmitter on the station
+    TcpStreamClientHelper clientHelper(serverAddress, serverPort+1);
+    clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));
+    clientHelper.SetAttribute("SegmentSizeFilePath", StringValue(segmentSizeFilePath));
+    clientHelper.SetAttribute("NumberOfClients", UintegerValue(10));
+    clientHelper.SetAttribute("SimulationId", UintegerValue(0));
+    std::vector<std::pair<Ptr<Node>, std::string> > clients;
+    for (NodeContainer::Iterator i = ueNodes.Begin(); i != ueNodes.End(); ++i)
+    {
+        std::pair<Ptr<Node>, std::string> client(*i, adaptationAlgo);
+        clients.push_back(client);
+    }
 
-    //clientApps.Add(clientHelper.Install(clients));
+    clientApps.Add(clientHelper.Install(clients));
 
-    serverApps.Start(Seconds(0.0));
     clientApps.Start (Seconds (0.2));
+
 
 
     //27 Coleta traces LTE, WiFi e P2P
     lteHelper->EnableTraces ();
-    p2ph.EnablePcapAll("test_scratch", true);
+    //p2ph.EnablePcapAll("natalandia_p2p", true);
 
-    //31 Flow monitor
-    Ptr<FlowMonitor> flowMonitor;
-    FlowMonitorHelper flowHelper;
-    flowMonitor = flowHelper.InstallAll();
 
-    //gerador de interferencia
+    //28 gerador de interferencia
     NodeContainer waveformGeneratorNodes;
     waveformGeneratorNodes.Create(1);
     Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 ();
@@ -334,7 +324,7 @@ int main()
 
 
 
-    //captura espectro
+    //29 captura espectro
     NodeContainer spectrumAnalyzer;
     spectrumAnalyzer.Create(1);
 
@@ -369,27 +359,23 @@ int main()
     waveNodes.Add(waveformGeneratorNodes);
 
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-    pos->Add(Vector(65000.0, 5000.0, 0.0));
-    pos->Add(Vector(65000.0, 5000.0, 0.0));
+    pos->Add(Vector(6500.0, 5000.0, 0.0));
+    pos->Add(Vector(6500.0, 5000.0, 0.0));
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.SetPositionAllocator(pos);
     mobility.Install(waveNodes);
+
+    //31 Flow monitor
+    Ptr<FlowMonitor> flowMonitor;
+    FlowMonitorHelper flowHelper;
+    flowMonitor = flowHelper.InstallAll();
+
 
     //32 Rodar o simulador
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 
-    //33 Guarda flows
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
-
-    //Ipv4GlobalRoutingHelper g;
-    //Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
-    //        ("dynamic-global-routing.routes", std::ios::out);
-    //g.PrintRoutingTableAllAt (Seconds (12), routingStream);
-    //for (int i = 0; i < allNodes.GetN(); i++)
-    //    for (int j = 0; j < allNodes.Get(i)->GetObject<Ipv4>()->GetNInterfaces(); j++)
-    //        std::cout << "Node " << i << " ID "<< allNodes.Get(i)->GetId()<< " IP " << allNodes.Get(i)->GetObject<Ipv4>()->GetAddress(j,0).GetLocal()<<std::endl;
-
 
     Simulator::Destroy();
 

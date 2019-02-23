@@ -32,7 +32,7 @@ for intervalBitmap in bufferFileIn:
     interval = int(interval)#350000000
     interval /= 1000000 #350
 
-    inputAndOutputBitmapPerInterval[interval] = (int(y[1],2), 0)
+    inputAndOutputBitmapPerInterval[interval] = [int(y[1],2), 0]
 
 for intervalBitmap in bufferFileOut:
     y = intervalBitmap.split(sep=':')
@@ -43,8 +43,8 @@ for intervalBitmap in bufferFileOut:
     interval = int(interval)#350000000
     interval /= 1000000 #350
 
-    if y[0] not in inputAndOutputBitmapPerInterval:
-        inputAndOutputBitmapPerInterval[interval] = (0, int(y[1],2))
+    if interval not in inputAndOutputBitmapPerInterval:
+        inputAndOutputBitmapPerInterval[interval] = [0, int(y[1],2)]
     else:
         inputAndOutputBitmapPerInterval[interval][1] = int(y[1],2)
     
@@ -53,18 +53,23 @@ fig,ax = plt.subplots()
 
 x = list(sorted(inputAndOutputBitmapPerInterval.keys()))
 
-for interval in sorted(inputAndOutputBitmapPerInterval.keys()):
-
-    bitmaps = inputAndOutputBitmapPerInterval[interval]
+for i in range(25):
 
     input_barh = []
     output_barh = []
 
-    for i in range(25):
+    for interval in sorted(inputAndOutputBitmapPerInterval.keys()):
+
+        bitmaps = inputAndOutputBitmapPerInterval[interval]
+        marked = False
         if ( (bitmaps[0]>>i) & 0x01):
-            ax.broken_barh([(interval,1)],(i*2,2), facecolors="red", alpha=0.7) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
-        if ( (bitmaps[1]>>i) & 0x01):
-            ax.broken_barh([(interval,1)],(i*2,2), facecolors="blue", alpha=0.5) #Blocks occupied by transmissions scheduled by the eNB
+                input_barh += [(interval,1)] #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+                marked = True
+        if ( (bitmaps[1]>>i) & 0x01) and not marked:
+                output_barh += [(interval,1)] #Blocks occupied by transmissions scheduled by the eNB
+
+    ax.broken_barh(input_barh,(i*2,2), facecolors="red", alpha=0.7) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+    ax.broken_barh(output_barh,(i*2,2), facecolors="blue", alpha=0.5) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
 
     ax.set_xlabel('time (ms)', )
     ax.set_ylabel('Input')
