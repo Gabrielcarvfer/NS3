@@ -738,9 +738,11 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       // other type of signal (could be 3G, GSM, whatever) -> interference
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
-      PU_presence = true;
+
+      Time detectionDelay = Time(MilliSeconds(1));
+      Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
-      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this);
+      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false); //Set PU_presence to false after transmission finishes
     }    
 }
 
@@ -820,9 +822,9 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
 
-void LteSpectrumPhy::reset_PU_presence()
+void LteSpectrumPhy::reset_PU_presence(bool state)
 {
-  PU_presence = false;
+  PU_presence = state;
 }
 
 std::default_random_engine gen;

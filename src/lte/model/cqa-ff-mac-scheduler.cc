@@ -138,11 +138,15 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
   m_schedSapProvider = new MemberSchedSapProvider<CqaFfMacScheduler> (this);
   m_ffrSapProvider = 0;
   m_ffrSapUser = new MemberLteFfrSapUser<CqaFfMacScheduler> (this);
+  schedulerInputFile.open("schedulerInput.txt");
+  schedulerOutputFile.open("schedulerOutput.txt");
 }
 
 CqaFfMacScheduler::~CqaFfMacScheduler ()
 {
   NS_LOG_FUNCTION (this);
+  schedulerInputFile.close();
+  schedulerOutputFile.close();
 }
 
 void
@@ -677,12 +681,12 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   }
 
   //SchedulerInput
-  //std::cout << Simulator::Now() << ": ";
-  //for (int i = 0; i < rbgMap.size(); i++)
-  //{
-  //    std::cout << (rbgMap.at(i) ? 1 : 0);
-  //}
-  //std::cout << std::endl;
+  schedulerInputFile << Simulator::Now() << ": ";
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      schedulerInputFile << (rbgMap.at(i) ? 1 : 0);
+  }
+  schedulerInputFile << "\n";
 
 
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
@@ -1685,12 +1689,12 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   NS_LOG_INFO (this << " Allocated RBs:" << count_allocated_resource_blocks);
 
   //SchedulerOutput
-  std::cout << Simulator::Now() << ": ";
+  schedulerOutputFile << Simulator::Now() << ": ";
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      std::cout << (rbgMap.at(i) ? 1 : 0);
+      schedulerOutputFile << (rbgMap.at(i) ? 1 : 0);
   }
-  std::cout << std::endl;
+  schedulerOutputFile << "\n";
 
 
   return;

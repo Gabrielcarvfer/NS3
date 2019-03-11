@@ -556,7 +556,7 @@ private:
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
   EventId PU_event;
-  void reset_PU_presence();
+  void reset_PU_presence(bool state);
 
   static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
   static std::mutex mut;
