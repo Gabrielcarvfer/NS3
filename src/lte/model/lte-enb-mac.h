@@ -474,6 +474,7 @@ public://todo: implement this properly through the SAP
     std::map <uint64_t, std::map<uint64_t, uint32_t> > unexpectedChannelAccessBitmap;
     void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
+    uint64_t mergeSensingReports();
 
 };
 

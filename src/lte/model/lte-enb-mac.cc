@@ -627,14 +627,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
     }
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
-  dlparams.sensedBitmap = 0;
-  if (unexpectedChannelAccessBitmap.size() > 0)
-  {
-      auto x = unexpectedChannelAccessBitmap.rbegin();
-      if (x->first + 1 >= m_frameNo)
-          if (x->second.size() > 0)
-              dlparams.sensedBitmap = x->second.rbegin()->second;
-  }
+  dlparams.sensedBitmap = mergeSensingReports();
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1399,20 +1392,6 @@ void LteEnbMac::RecvCognitiveMessage(Ptr<Packet> p)
     //Then register UE reports
     channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
 
-
-
-    //First create map for sensed frames
-    if(unexpectedChannelAccessBitmap.find(reg.SensedFrameNo) == unexpectedChannelAccessBitmap.end())
-    {
-        unexpectedChannelAccessBitmap.emplace(reg.SensedFrameNo, std::map <uint64_t, uint32_t> ());
-    }
-
-    //After that, create map for sensed subframes
-    if(unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).find(reg.SensedSubframeNo) == unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).end())
-    {
-        unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).emplace(reg.SensedSubframeNo, 0);
-    }
-
     //Then register UE sensed reports
     unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo) |= reg.UnexpectedAccessBitmap;
     uint32_t val = unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo);
@@ -1448,23 +1427,38 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
     channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
 
 
+    return;
+}
+
+//Implements the fusion algorithm for collaborative sensing reports
+uint64_t LteEnbMac::mergeSensingReports()
+{
+    uint64_t sensedBitmap = 0;
+    if (channelOccupation.size() > 0)
+    {
+        auto frameIt = channelOccupation.rbegin();
+
+        for (; frameIt != channelOccupation.rend() && frameIt->first >= m_frameNo - 1; frameIt++)
+        {
+
+            for (auto subframeIt : frameIt->second)
+            {
+                for (auto origAddr : subframeIt.second)
+                {
+                    sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
+                }
+            }
+        }
+
+    }
 
     //First create map for sensed frames
-    if(unexpectedChannelAccessBitmap.find(reg.SensedFrameNo) == unexpectedChannelAccessBitmap.end())
-    {
-        unexpectedChannelAccessBitmap.emplace(reg.SensedFrameNo, std::map <uint64_t, uint32_t> ());
-    }
+    unexpectedChannelAccessBitmap.emplace(m_frameNo, std::map <uint64_t, uint32_t> ());
 
     //After that, create map for sensed subframes
-    if(unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).find(reg.SensedSubframeNo) == unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).end())
-    {
-        unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).emplace(reg.SensedSubframeNo, 0);
-    }
+    unexpectedChannelAccessBitmap.at(m_frameNo).emplace(m_subframeNo, sensedBitmap);
 
-    //Then register UE sensed reports
-    unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo) |= reg.UnexpectedAccessBitmap;
-    uint32_t val = unexpectedChannelAccessBitmap.at(reg.SensedFrameNo).at(reg.SensedSubframeNo);
-    return;
+    return sensedBitmap;
 }
 
 
