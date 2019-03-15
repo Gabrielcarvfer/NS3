@@ -1,9 +1,9 @@
 include(buildsupport/vcpkg_hunter.cmake)
 
 
-if (WIN32)
+if (WIN32 AND NOT MSVC)
     #If using MSYS2
-    set(MSYS2_PATH "C:\\tools\\msys64\\mingw64")
+    set(MSYS2_PATH "F:\\tools\\msys64\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
     set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
@@ -14,7 +14,7 @@ if (WIN32)
 endif()
 
 #Fixed definitions
-unset(CMAKE_LINK_LIBRARY_SUFFIX)
+#unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
 #Output folders
 set(CMAKE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
@@ -22,46 +22,89 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
-add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
+#add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
+link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-#fPIC 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON) 
+#fPIC and fPIE
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE -fPIC")
 
 
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
 
+
+include(ProcessorCount)
+ProcessorCount(NumThreads)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # using Clang
     set(LIB_AS_NEEDED_PRE -Wl,-all_load)
     set(LIB_AS_NEEDED_POST             )
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set(BUILD_SHARED_LIBS TRUE)
+    set(CMake_MSVC_PARALLEL ${NumThreads})
 endif()
+
+#Used in build-profile-test-suite
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
+elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+    add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
+else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
+endif()
+
 
 #3rd party libraries with sources shipped in 3rd-party folder
 set(3rdPartyLibraries
         netanim
         brite
+        openflow
         )
+
 
 #process all options passed in main cmakeLists
 macro(process_options)
+
     #Copy all header files to outputfolder/include/
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
     file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+
+
+    #Don't build incompatible libraries on Windows
+    if (WIN32)
+        set(build_lib_brite)
+        set(build_lib_openflow)
+    else()
+        set(build_lib_brite brite)
+        set(build_lib_openflow openflow)
+    endif()
+
+    #3rd party libraries with sources shipped in 3rd-party folder
+    set(3rdPartyLibraries
+            netanim
+            ${build_lib_brite}
+            ${build_lib_openflow}
+            )
 
     #Add 3rd-party library headers to include directories
     foreach(3rdPartyLibrary ${3rdPartyLibraries})
         #file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/${3rdPartyLibrary}/*.h) #just copying every single header from 3rd party libraries into ns3 include folder
         #file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
         include_directories(3rd-party/${3rdPartyLibrary})
+        include_directories(3rd-party/${3rdPartyLibrary}/include)
     endforeach()
 
     #BRITE
@@ -69,7 +112,10 @@ macro(process_options)
 
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
+    #link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+    #link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+    #process debug switch
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
     endif()
@@ -95,6 +141,7 @@ macro(process_options)
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
     #Libpcre2 for regex
+    include(FindPCRE)
     find_package(PCRE)
     if (NOT ${PCRE_FOUND})
         if (NOT ${AUTOINSTALL_DEPENDENCIES})
@@ -105,11 +152,11 @@ macro(process_options)
             get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
             link_directories(${pcre2_dir}/lib)
             include_directories(${pcre2_dir}/include)
-
+            #stopped working for whatever reason, hardwired topology-read cmake file
             if(WIN32)
-                set(PCRE_LIB libpcre2-posix)
+                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
             else()
-                set(PRCE_LIB libpcre2-posix.a)
+                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
             endif()
 
         endif()
@@ -118,20 +165,26 @@ macro(process_options)
         include_directories(${PCRE_INCLUDE_DIR})
     endif()
 
+
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
 
     if(${NS3_OPENFLOW})
-        #find_package(Openflow)
-        set(OPENFLOW_FOUND FALSE) #todo: fix current path and build openflow 3rd-party lib
-        if (NOT ${OPENFLOW_FOUND})
-            message(FATAL_ERROR "Openflow build was request but was not found")
-        else()
-            set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
-                    system
-                    signals
-                    filesystem
-                    )
-        endif()
+
+        set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
+                system
+                signals
+                filesystem
+                static-assert
+                config
+                )
+        include_directories(3rd-party/openflow/include)
+        #if (WIN32)
+            set(OPENFLOW_LIBRARIES openflow)
+        #else()
+        #    set(OPENFLOW_LIBRARIES libopenflow.a)
+        #endif()
+        set(OPENFLOW_FOUND TRUE)
+
     endif()
 
 
@@ -158,14 +211,18 @@ macro(process_options)
                     set(boostLib boost-${requiredBoostLibrary})
                     add_package(${boostLib})
                     get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
-                    link_directories(${${boostLib}_dir}/lib)
                     #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
                     list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
 
-                    if (WIN32)
-                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
-                    else()
-                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                    #Some boost libraries (e.g. static-assert) don't have an associated library
+                    if (EXISTS ${${boostLib}_dir}/lib)
+                        link_directories(${${boostLib}_dir}/lib)
+
+                        if (WIN32)
+                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
+                        else()
+                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                        endif()
                     endif()
                 endforeach()
 
@@ -213,6 +270,7 @@ macro(process_options)
                 else()
                     set(LIBXML2_LIBRARIES libxml2.a)
                 endif()
+                set(LIBXML2_FOUND TRUE)
             endif()
         else()
             link_directories(${LIBXML2_LIBRARY_DIRS})
@@ -236,18 +294,19 @@ macro(process_options)
         endif()
     endif()
 
-    #removed in favor of C++ threads
-    #if(${NS3_PTHREAD})
-    #    set(THREADS_PREFER_PTHREAD_FLAG)
-    #    find_package(Threads REQUIRED)
-    #    if(NOT ${THREADS_FOUND})
-    #        message(FATAL_ERROR Thread library not found)
-    #    else()
-    #        include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
-    #        add_definitions(-DHAVE_PTHREAD_H)
-    #    endif()
-    #endif()
-    set(THREADS_FOUND TRUE)
+    #removing pthreads in favor of C++ threads without proper testing was a bad idea
+    if(${NS3_PTHREAD})
+        set(THREADS_PREFER_PTHREAD_FLAG)
+        find_package(Threads REQUIRED)
+        if(NOT ${THREADS_FOUND})
+            message(FATAL_ERROR Thread library not found)
+        else()
+            include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
+            add_definitions(-DHAVE_PTHREAD_H)
+            set(THREADS_FOUND TRUE)
+            link_libraries(${CMAKE_THREAD_LIBS_INIT})
+        endif()
+    endif()
 
 
     if(${NS3_PYTHON})
@@ -288,6 +347,69 @@ macro(process_options)
         endif()
     endif()
 
+    if (${NS3_NETANIM})
+
+        if (${USE_QT} STREQUAL "4")
+            find_package(Qt4 COMPONENTS QtGui REQUIRED)
+        elseif(${USE_QT} STREQUAL "5")
+            find_package(Qt5 COMPONENTS Core Widgets PrintSupport Gui REQUIRED)
+        endif()
+
+        if((NOT ${Qt4_FOUND}) AND (NOT ${Qt5_FOUND}))
+            message(ERROR You need Qt installed to build NetAnim)
+        endif()
+
+        #Used by Netanim (qt stuff)
+        #the following commands were moved to netanim CMakeLists to reduce _autogen targets
+        #set(CMAKE_AUTOMOC ON)
+        #set(CMAKE_AUTORCC ON)
+        #set(CMAKE_AUTOUIC ON)
+        set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+        if (${Qt4_FOUND})
+            include(${QT_USE_FILE})
+            add_definitions(${QT_DEFINITIONS})
+            include_directories(${QT_INCLUDES})
+        endif()
+
+        if(${Qt5_FOUND})
+            #Hard way
+            # Spent 4h trying to discover what caused a shared library not to be found.
+            # Ended up being a WSL bug https://github.com/Microsoft/WSL/issues/3023 https://superuser.com/a/1348051/691447
+                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+
+                #include_directories(${Qt5Core_INCLUDE_DIRS}
+                #        ${Qt5Widgets_INCLUDE_DIRS}
+                #        ${Qt5PrintSupport_INCLUDE_DIRS}
+                #        )
+
+                #Fetch the library path to Qt core lib
+                #get_target_property(Qt5Core_location Qt5::Core LOCATION)
+
+                ##Get the directory with the Qt core library
+                #get_filename_component(QT_PATH ${Qt5Core_location} DIRECTORY)
+
+                #set(QT_VERSION ${Qt5Widgets_VERSION})
+
+                #set(QT_LIBRARIES_N
+                #        libQt5Widgets.so.${QT_VERSION}
+                #        libQt5PrintSupport.so.${QT_VERSION}
+                #        libQt5Gui.so.${QT_VERSION}
+                #        libQt5Core.so.${QT_VERSION}
+                #        )
+
+                #set(QT_LIBRARIES )
+                #foreach(qt_lib ${QT_LIBRARIES_N})
+                #    list(APPEND QT_LIBRARIES ${QT_PATH}/${qt_lib})
+                #endforeach()
+
+                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+                #link_directories(${QT_PATH})
+                #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${QT_PATH}")
+        endif()
+
+    endif()
+
     if(${NS3_PYTORCH})
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib/python3.6/dist-packages/torch")#installed with sudo pip3 install torch torchvision
         find_package(Torch REQUIRED)
@@ -318,19 +440,26 @@ macro(process_options)
     endif()
 
     #Process core-config
-    set(INT64X64 128)
+    set(INT64X64 "128")
 
-	if (${CMAKE_CXX_COMPILER_ID} EQUAL MSVC)
-		message(ERROR "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
-		set(INT64X64 DOUBLE)
-	endif()
+    if( NOT (${INT64X64} STREQUAL "DOUBLE") )
+        if (${CMAKE_CXX_COMPILER_ID} EQUAL "MSVC")
+            message(WARNING "Microsoft MSVC doesn't support 128-bit integer operations. Falling back to double.")
+            set(INT64X64 "DOUBLE")
+        endif()
 
-    if(INT64X64 EQUAL 128)
+        if(APPLE)
+            message(WARNING "Apples CLang doesn't support 128-bit integer operations. Falling back to double.")
+            set(INT64X64 "DOUBLE")
+        endif()
+    endif()
+
+    if(INT64X64 STREQUAL "128")
         add_definitions(-DHAVE___UINT128_T)
         add_definitions(-DINT64X64_USE_128)
-    elseif(INT64X64 EQUAL DOUBLE)
+    elseif(INT64X64 STREQUAL "DOUBLE")
         add_definitions(-DINT64X64_USE_DOUBLE)
-    elseif(INT64X64 EQUAL CAIRO)
+    elseif(INT64X64 STREQUAL "CAIRO")
         add_definitions(-DINT64X64_USE_CAIRO)
     else()
     endif()
@@ -365,11 +494,24 @@ macro(process_options)
     set(ns3-libs )
     set(ns3-libs-tests )
     set(ns3-contrib-libs )
+    set(lib-ns3-static-objs)
+    set(ns3-python-bindings ns${NS3_VER}-pybindings-${build_type})
+    set(ns3-python-bindings-modules )
+
     foreach(libname ${libs_to_build})
         #Create libname of output library of module
         set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
+        set(lib${libname}-obj ns${NS3_VER}-${libname}-${build_type}-obj)
         list(APPEND ns3-libs ${lib${libname}})
+
+        if( NOT (${libname} STREQUAL "test") )
+            list(APPEND lib-ns3-static-objs $<TARGET_OBJECTS:${lib${libname}-obj}>)
+        endif()
+
     endforeach()
+
+    #Create new lib for NS3 static builds
+    set(lib-ns3-static ns${NS3_VER}-static-${build_type})
 
     #string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
     #add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
@@ -379,7 +521,7 @@ macro(process_options)
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/ns3-definitions "${ADDED_DEFINITIONS}")
 
     #All contrib libraries can be linked afterwards linking with ${ns3-contrib-libs}
-    process_contribution(${contribution_libraries_to_build})
+    process_contribution("${contribution_libraries_to_build}")
 endmacro()
 
 macro (write_module_header name header_files)
@@ -396,12 +538,6 @@ macro (write_module_header name header_files)
     list(APPEND contents ${final_name})
     list(APPEND contents "
     // Module headers: ")
-
-    #Add libmodule_export.h if on Windows, to import DLLs
-    #if (WIN32 AND ${NS3_SHARED})
-    #    list(APPEND contents "
-    ##include <ns3/lib${name}_export.h>")
-    #endif()
 
     #Write each header listed to the contents variable
     foreach(header ${header_files})
@@ -420,16 +556,18 @@ endmacro()
 
 
 macro (build_lib libname source_files header_files libraries_to_link test_sources)
-    #Create shared library with sources and headers
-    add_library(${lib${libname}} SHARED "${source_files}" "${header_files}")
 
-    #Windows dlls require export headers for executables (╯°□°）╯︵ ┻━┻)
-    #if(WIN32 AND ${NS3_SHARED})
-    #    generate_export_header(${lib${libname}} EXPORT_FILE_NAME lib${libname}_export.h)
-    #    file(COPY ${CMAKE_CACHEFILE_DIR}/src/${libname}/lib${libname}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
-    #endif()
+    #Create object library with sources and headers, that will be used in lib-ns3-static and the shared library
+    add_library(${lib${libname}-obj} OBJECT "${source_files}" "${header_files}")
+
+    #Create shared library with previously created object library (saving compilation time)
+    add_library(${lib${libname}} SHARED $<TARGET_OBJECTS:${lib${libname}-obj}>)
+
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+    if(MSVC)
+        target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
+    endif()
 
     #Write a module header that includes all headers from that module
     write_module_header("${libname}" "${header_files}")
@@ -440,13 +578,21 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         if (${test_source_len} GREATER 0)
             #Create libname of output library test of module
             set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
-            set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
 
-            #Create shared library containing tests of the module
-            add_library(${test${libname}} SHARED "${test_sources}")
+            if (WIN32)
+                set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
 
-            #Link test library to the module library
-            target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+                #Create shared library containing tests of the module
+                add_library(${test${libname}} OBJECT "${test_sources}")
+            else()
+                set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
+
+                #Create shared library containing tests of the module
+                add_library(${test${libname}} SHARED "${test_sources}")
+
+                #Link test library to the module library
+                target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+            endif()
         endif()
     endif()
 
@@ -460,12 +606,39 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         endif() 
     endif()
 
-    #Build pybindings  if requested
-    if(${NS3_PYTHON})
-        set(arch gcc_LP64)#ILP32)#
+    #Build pybindings if requested and if bindings subfolder exists in NS3/src/libname
+    if(${NS3_PYTHON} AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/bindings")
+        set(arch gcc_LP64)#ILP32)
+        #todo: fix python module names, output folder and missing links
+        set(module_src ns3module.cc)
+        set(module_hdr ns3module.h)
+
+        string(REPLACE "-" "_" libname_sub input) # - causes problems (e.g. csma-layout) causes problems, rename to _ (e.g. csma_layout)
+
+        set(modulegen_modular_command  python2 ${CMAKE_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py ${CMAKE_CURRENT_SOURCE_DIR} ${arch} ${libname_sub} ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src})
+        set(modulegen_arch_command python2 ${CMAKE_CURRENT_SOURCE_DIR}/bindings/modulegen__${arch}.py 2> ${CMAKE_CURRENT_SOURCE_DIR}/bindings/ns3modulegen.log)
+
         execute_process(
-                COMMAND  PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${Python2_EXEC} ${PROJECT_SOURCE_DIR}/bindings/python/ns3modulegen-modular.py ${PROJECT_SOURCE_DIR}/src/${libname}/bindings/modulegen__${arch}.py > ${CMAKE_OUTPUT_DIRECTORY}/ns/${libname}-module.cc
+                COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${modulegen_modular_command}
+                COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_OUTPUT_DIRECTORY} ${modulegen_arch_command}
+                TIMEOUT 60
+                #WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                #OUTPUT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src}
+                RESULT_VARIABLE res
+                OUTPUT_QUIET
+                ERROR_QUIET
         )
+
+        #message(WARNING ${res})
+
+        set(python_module_files ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_hdr} ${CMAKE_CURRENT_SOURCE_DIR}/bindings/${module_src})
+        if(${libname} STREQUAL "core")
+            list(APPEND python_module_files ${CMAKE_CURRENT_SOURCE_DIR}/bindings/module_helpers.cc ${CMAKE_CURRENT_SOURCE_DIR}/bindings/scan-header.h)
+        endif()
+
+        #message(WARNING ${python_module_files})
+        add_library(ns3module_${libname} OBJECT "${python_module_files}")
+        set(ns3-python-bindings-modules ${ns3-python-bindings-modules} $<TARGET_OBJECTS:ns3module_${libname}> CACHE INTERNAL "" FORCE)
     endif()
 endmacro()
 

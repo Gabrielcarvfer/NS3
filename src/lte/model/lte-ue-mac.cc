@@ -841,18 +841,18 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
-void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
+void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint32_t UnexpectedAccessBitmap)
 {
     //We stopped receiving ctrl messages(not supposed to happen), so estimate frames
-    if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
-    {
-        m_subframeNo++;
-        if(m_subframeNo > 9)
-        {
-            m_subframeNo = 0;
-            m_frameNo++;
-        }
-    }
+    //if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
+    //{
+    //    m_subframeNo++;
+    //    if(m_subframeNo > 9)
+    //    {
+    //        m_subframeNo = 0;
+    //        m_frameNo++;
+    //    }
+    //}
 
     // Serialize data to send to eNB through the data channel
     //
@@ -908,13 +908,12 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams)
     senseReport.SimCurrTime = Simulator::Now();
     senseReport.SensedFrameNo = m_frameNo;
     senseReport.SensedSubframeNo = m_subframeNo;
-    senseReport.UnexpectedAccessBitmap = ueSpectrumPhy->UnexpectedAccessBitmap;
+    senseReport.UnexpectedAccessBitmap = UnexpectedAccessBitmap;
 
     Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
     msg->SetMessage(senseReport);
     m_uePhySapProvider->SendLteControlMessage(msg);
 
-    ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
     lastFrameNo = m_frameNo;
     lastSubframeNo = m_subframeNo;
 }

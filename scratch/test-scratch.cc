@@ -19,15 +19,15 @@
 #include <ns3/wifi-module.h>
 #include <ns3/olsr-helper.h>
 
+#include <ns3/point-to-point-module.h>
+#include <cstdint>
+#include <ns3/spectrum-module.h>
+
 //Para netanim
 #include <ns3/netanim-module.h>
 #include <ns3/bs-net-device.h>
 #include <ns3/csma-module.h>
 #include <ns3/uan-module.h>
-#include <ns3/point-to-point-module.h>
-#include <cstdint>
-#include <ns3/spectrum-module.h>
-
 
 using namespace ns3;
 
@@ -126,6 +126,13 @@ int main()
     positionAlloc->Add (Vector ( 5000.0,  5000.0,  0.0));  // 2 - eNB
 
     Ptr<ListPositionAllocator> positionAlloc2 = CreateObject<ListPositionAllocator> ();
+
+    // All nodes in a straight line (unrealistic, but just to get different CQI levels on each UE)
+    //  UE0 - 300m - UE1 - 300m - UE2 - 300m - UE3 - 300m - UE4 - 300m - UE5 - 300m - UE6 - eNB - 300m - UE7 - 300m - UE8 - 300m - UE9 - 600m - PU
+    // 1.8km       1.5km         1.2km        0.9km        0.6km        0.3km            0km            0.3km        0.6km       0.9km         1.5km
+    //
+
+    /*
     positionAlloc2->Add(Vector (3200.0, 5000.0,  0.0));  // 3 - UE 0
     positionAlloc2->Add(Vector (3500.0, 5000.0,  0.0));  // 4 - UE 1
     positionAlloc2->Add(Vector (3800.0, 5000.0,  0.0));  // 5 - UE 2
@@ -136,19 +143,64 @@ int main()
     positionAlloc2->Add(Vector (5300.0, 5000.0,  0.0));  //10 - UE 7
     positionAlloc2->Add(Vector (5600.0, 5000.0,  0.0));  //11 - UE 8
     positionAlloc2->Add(Vector (5900.0, 5000.0,  0.0));  //12 - UE 9
+    */
 
-    //positionAlloc2->Add(Vector (32000.0, 50000.0,  0.0));  // 3 - UE 0
-    //positionAlloc2->Add(Vector (35000.0, 50000.0,  0.0));  // 4 - UE 1
-    //positionAlloc2->Add(Vector (38000.0, 50000.0,  0.0));  // 5 - UE 2
-    //positionAlloc2->Add(Vector (41000.0, 50000.0,  0.0));  // 6 - UE 3
-    //positionAlloc2->Add(Vector (44000.0, 50000.0,  0.0));  // 7 - UE 4
-    //positionAlloc2->Add(Vector (47000.0, 50000.0,  0.0));  // 8 - UE 5
-    //positionAlloc2->Add(Vector (50000.0, 50000.0,  0.0));  // 9 - UE 6
-    //positionAlloc2->Add(Vector (53000.0, 50000.0,  0.0));  //10 - UE 7
-    //positionAlloc2->Add(Vector (56000.0, 50000.0,  0.0));  //11 - UE 8
-    //positionAlloc2->Add(Vector (59000.0, 50000.0,  0.0));  //12 - UE 9
+    /*
+     * Circular topology
+     *                               ``````````````````````
+                                ``````                      `````
+                             ```                                 ````
+                          ```           `````````````````            ```
+                       ```         `````                 ``````         ``
+                     ``        ````                            ```        ``
+                   ``       ```           `````````````           ```       ``
+                  `       ``         `````             `````         ``       ``
+                ``     ``        ```                       ````       ``       `
+               ``    __        ```           ````````           ``       ``      ``
+              .     |ue|     ``        ``````        `````        ``      ``      ``
+             .      |__|    ``      ```                   ```       ``      `      ``
+            .      .      ``      ```                        ``      ``      `      .
+           ``     ``     ``      ``       `````` ``````        ``      .      .      .
+           .     ``     ``     ``     __ `     ...       ```       __     .     .     ``
+          ``     .      .     ``     |ue|    ` ___ ``       ``    |ue|    ``    ___     .
+         __     ``     .      .      |__|  ``  \ /   ``      ``   |__|     .    \ /     .
+        |ue|    .      .     `      .     ``    |      ``     ``     .      `    |      .
+        |__|    .     ``     .     ``   _`_     |      _`_     .     `      .    |      .
+         `.     .     .      .     .    |ue|    |     |ue|    .     ``     .     |      .
+          .     .     ``     .     `    |__|   eNB    |__|  ``.     ``     .    PU      .
+          .     .      .     .      .      `` 0.3km  ..`   __      .      .     .      .
+          .     ``     .      .     ``      ``-.....`     |ue|    ``     .      .     ``
+          .      .     ``     ``     ``                   |__|    .      .     ``     .
+           .     ``     ``     ``      ``     0.6km     ``       `      .      .     ``
+           ``     .      ` __    ``      ````       ````       ``      `      .      .
+            .      .      |ue|    ``  __      ``````         ``       `      ``     ``
+             .      .     |__|      `|ue|                  ``       ``      ``     ``
+              `      ``   `````      |__|``   0.9km   `````       ``       `      ``
+               .      ``       ``          ```````````     __   ```      ``      ``
+                ``      ``       ```                      |ue|``       ```      ``
+                 ``       ``        `````     1.2km     ``|__|       ```      ``
+                   ``       ```          `````....``````           ``        ``
+                     ``        ```                             ````        ``
+                       ``         `````       1.5km        ````         ```
+                         ```           ```````..---```````           ```
+                            ````                                  ```
+                                `````         1.8km          `````
+                                     `````````--/--.`````````
 
+    */
 
+    positionAlloc2->Add(Vector (5000.0 - 1800.0, 5000.0 -     0.0,  0.0));  // 3 - UE 0
+    positionAlloc2->Add(Vector (5000.0 - 1228.0, 5000.0 -   660.0,  0.0));  // 4 - UE 1
+    positionAlloc2->Add(Vector (5000.0 -  944.0, 5000.0 -   966.0,  0.0));  // 5 - UE 2
+    positionAlloc2->Add(Vector (5000.0 -  971.0, 5000.0 -  -505.0,  0.0));  // 6 - UE 3
+    positionAlloc2->Add(Vector (5000.0 -  436.0, 5000.0 -  -587.0,  0.0));  // 7 - UE 4
+    positionAlloc2->Add(Vector (5000.0 -  466.0, 5000.0 -   177.0,  0.0));  // 8 - UE 5
+    positionAlloc2->Add(Vector (5000.0 -  300.0, 5000.0 -     0.0,  0.0));  // 9 - UE 6
+    positionAlloc2->Add(Vector (5000.0 +  300.0, 5000.0 -     0.0,  0.0));  //10 - UE 7
+    positionAlloc2->Add(Vector (5000.0 +  514.0, 5000.0 +   109.0,  0.0));  //11 - UE 8
+    positionAlloc2->Add(Vector (5000.0 +  544.0, 5000.0 +   769.0,  0.0));  //12 - UE 9
+
+    
     //5 Instala mobilidade dos dispositivos (parados)
     MobilityHelper mobility;
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
@@ -309,7 +361,12 @@ int main()
     //28 gerador de interferencia
     NodeContainer waveformGeneratorNodes;
     waveformGeneratorNodes.Create(1);
-    Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 ();
+    Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 (); //Basic microwave oven interference
+
+    //for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
+    //{
+    //    *valIt *= 100;//Increase power levels
+    //}
 
     WaveformGeneratorHelper waveformGeneratorHelper;
     waveformGeneratorHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
@@ -319,8 +376,6 @@ int main()
     waveformGeneratorHelper.SetPhyAttribute ("DutyCycle", DoubleValue (0.5));
     NetDeviceContainer waveformGeneratorDevices = waveformGeneratorHelper.Install (waveformGeneratorNodes);
     Simulator::Schedule (Seconds (2.5), &WaveformGenerator::Start, waveformGeneratorDevices.Get (0)->GetObject<NonCommunicatingNetDevice>()->GetPhy ()->GetObject<WaveformGenerator> ());
-
-
 
 
 
@@ -359,8 +414,8 @@ int main()
     waveNodes.Add(waveformGeneratorNodes);
 
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-    pos->Add(Vector(6500.0, 5000.0, 0.0));
-    pos->Add(Vector(6500.0, 5000.0, 0.0));
+    pos->Add(Vector(5000 + 1500.0, 5000.0, 0.0));
+    pos->Add(Vector(5000 + 1500.0, 5000.0, 0.0));
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.SetPositionAllocator(pos);
     mobility.Install(waveNodes);
@@ -370,8 +425,17 @@ int main()
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
+    //32 Exportar simulação para netanim
+    BaseStationNetDevice b;
+    SubscriberStationNetDevice s;
+    CsmaNetDevice c;
+    UanNetDevice u;
 
-    //32 Rodar o simulador
+    AnimationInterface anim("anim.xml");
+    anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+    anim.EnablePacketMetadata(true);
+
+    //33 Rodar o simulador
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 

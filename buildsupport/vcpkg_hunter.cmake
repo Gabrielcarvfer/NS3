@@ -23,7 +23,7 @@ function(setup_vcpkg)
     #Check if vcpkg was downloaded previously
     if (EXISTS "${VCPKG_DIR}")
         #Vcpkg already downloaded
-        message(WARNING "VcPkg folder already exists, skipping git download")
+        message(STATUS "VcPkg folder already exists, skipping git download")
     else()
         include(${PROJECT_SOURCE_DIR}/buildsupport/GitUtils.cmake)
 
@@ -35,29 +35,37 @@ function(setup_vcpkg)
         )
     endif()
 
+	if(MSVC)
 
-    #Check if required packages are installed (unzip curl tar)
-    find_program(UNZIP_PRESENT unzip)
-    find_program(CURL_PRESENT curl)
-    find_program(TAR_PRESENT tar)
+	else()
+		#Check if required packages are installed (unzip curl tar)
+		if (WIN32)
+			find_program(UNZIP_PRESENT unzip.exe)
+			find_program(CURL_PRESENT curl.exe)
+			find_program(TAR_PRESENT tar.exe)
+		else()
+			find_program(UNZIP_PRESENT unzip)
+			find_program(CURL_PRESENT curl)
+			find_program(TAR_PRESENT tar)
+		endif()
 
-    if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
-        message(FATAL_ERROR "Unzip is required for VcPkg, but is not installed")
-    endif()
+		if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
+			message(FATAL_ERROR "Unzip is required for VcPkg, but is not installed")
+		endif()
 
-    if(${CURL_PRESENT} STREQUAL CURL_PRESENT-NOTFOUND)
-        message(FATAL_ERROR "Curl is required for VcPkg, but is not installed")
-    endif()
+		if(${CURL_PRESENT} STREQUAL CURL_PRESENT-NOTFOUND)
+			message(FATAL_ERROR "Curl is required for VcPkg, but is not installed")
+		endif()
 
-    if(${TAR_PRESENT} STREQUAL TAR_PRESENT-NOTFOUND)
-        message(FATAL_ERROR "Tar is required for VcPkg, but is not installed")
-    endif()
-
+		if(${TAR_PRESENT} STREQUAL TAR_PRESENT-NOTFOUND)
+			message(FATAL_ERROR "Tar is required for VcPkg, but is not installed")
+		endif()
+	endif()
 
     #message(WARNING "Checking VCPKG bootstrapping")
     #Check if vcpkg was bootstrapped previously
     if (EXISTS "${VCPKG_DIR}/${VCPKG_EXEC}")
-        message("VcPkg already bootstrapped")
+        message(STATUS "VcPkg already bootstrapped")
     else()
         #message(WARNING "Bootstrapping VCPKG")
         if (WIN32)
@@ -68,17 +76,17 @@ function(setup_vcpkg)
 
         execute_process ( COMMAND "${VCPKG_DIR}/${command}"
                 WORKING_DIRECTORY ${VCPKG_DIR} )
-        #message(WARNING "VCPKG bootstrapped")
+        #message(STATUS "VCPKG bootstrapped")
 		include_directories(${VCPKG_DIR})
     endif()
 endfunction()
 
 function(add_package package_name)
-    message(WARNING "${package_name} will be installed")
+    message(STATUS "${package_name} will be installed")
     execute_process (COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet ${VCPKG_TRIPLET}
                      OUTPUT_QUIET #comment for easier debugging
             )
-    message(WARNING "${package_name} was installed")
+    message(STATUS "${package_name} was installed")
         if (${NS3_DEBUG})
             set(TRIPLET_APP dbg)
         else()

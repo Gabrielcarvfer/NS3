@@ -705,11 +705,13 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
   if (dev != 0)
   {
-      if (PU_detected)
+      if (PU_detected && UnexpectedAccessBitmap != 0)
       {
-          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams);
-          PU_detected = false;
+          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap);
+          UnexpectedAccessBitmap = 0;
       }
+      PU_detected = false;
+
   }
 
   // the device might start RX only if the signal is of a type
@@ -739,7 +741,8 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
 
-      Time detectionDelay = Time(MilliSeconds(1));
+      Time detectionDelay = Time(MilliSeconds(3));
+
       Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
       PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false); //Set PU_presence to false after transmission finishes
@@ -855,15 +858,19 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     }
 
     //Look for empty RBs SINR on the DCI
-    bool occupied_RB_indexes[32]{false};
+    bool occupied_RB_indexes[32];
+
+    for(int i = 0; i < 32; i++)
+        occupied_RB_indexes[i] = false;
+
     int dci_count = 0;
     int rbgSize = 4;
 
-    for (auto it = dci.begin(); it != dci.end(); it++)
-    {
-        auto p1 = *it;
-        switch(p1->GetMessageType())
-        {
+    //for (auto it = dci.begin(); it != dci.end(); it++)
+    //{
+    //    auto p1 = *it;
+    //    switch(p1->GetMessageType())
+    //    {
             /*case LteControlMessage::DL_DCI:
                 {
                     //Cast to the proper type
@@ -916,22 +923,22 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
                 break;*/
 
             //Skip control messages that are not DL_DCI or UL_DCI
-            default:
-                continue;
-        }
-        dci_count++;
-    }
+    //        default:
+    //            continue;
+    //    }
+    //    dci_count++;
+    //}
 
     //No DCI received, then skip
     //if (dci_count == 0)
     //   return ;
 
     //Calculate the probability of PU detection on given RBs
-    uint8_t i = 0;
+    int i = 0;
     bool first = true;
     uint8_t j = 0;
-    uint32_t test_output = 0;
-    for (auto it = sinr->ConstValuesBegin (); it != sinr->ConstValuesEnd (); it++, i++)
+
+    for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
     {
 
         //Skip if the RB is supposed to be occupied by an UE transmission
@@ -939,7 +946,6 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
             continue;
 
         UnexpectedAccessBitmap |= (uint32_t)(1<<i);
-        test_output = UnexpectedAccessBitmap;
 
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = 10 * log10((*it));
@@ -955,9 +961,7 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         }
         j++;
 
-        //Interpolate the probability
-        double x_0, y_0, x_1, y_1;
-        x_0 = y_0 = x_1 = y_1 = 0.0;
+        //Find the first sinr value bigger than the current one
         int32_t index = -1;
         for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
         {
@@ -972,6 +976,9 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         //If SINR is in the table, interpolate
         if (index > 0)
         {
+            double x_0, y_0, x_1, y_1;
+            x_0 = y_0 = x_1 = y_1 = 0.0;
+
             x_0 = SNRdB.at(index - 1);
             x_1 = SNRdB.at(index);
             y_0 = PdTot.at(index - 1);
@@ -989,8 +996,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
         {
             prob = 1.0;
         }
-        //Answer the probability of detecting the PU
 
+        //Check if the PU is detected based on the previous probability
         bool answer = false;
         if (PU_presence)
         {
@@ -1010,6 +1017,9 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
     if (j > 0)
         *avgSinr /= j;
+
+    if (*avgSinr < -174)
+        *avgSinr = -174;
 }
 
 void LteSpectrumPhy::Sense()

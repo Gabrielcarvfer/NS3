@@ -1,7 +1,7 @@
 #######################################
 # Required CMake version#
 #######################################
-cmake_minimum_required( VERSION 3.10 )
+cmake_minimum_required( VERSION 3.11 )
 
 #set(CMAKE_C_COMPILER "clang")
 #set(CMAKE_CXX_COMPILER "clang++")
@@ -18,7 +18,7 @@ set(NS3_VER 3.29)
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
-set(NS3_TESTS ON)
+#set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
 #set(NS3_EXAMPLES ON)
@@ -36,7 +36,7 @@ option(NS3_BOOST "Build with Boost support" OFF)
 #set(NS3_BOOST ON)
 
 option(NS3_OPENFLOW "Build with Openflow support" OFF)
-#set(NS3_OPENFLOW OFF)#todo: fix
+#set(NS3_OPENFLOW ON)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
 set(NS3_GTK2 OFF)
@@ -74,8 +74,46 @@ option(NS3_BRITE "Build with Brite support" OFF)
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
 
+set(USE_QT 4)# Choose between Qt 4 or 5
+
+option(NS3_PTHREAD "Build with pthread support" ON)
+set(NS3_PTHREAD ON)
+
+option(NS3_STATIC "Build static library" OFF)
+
+option(NS3_fd-net-device ON)
+
+
+if(MSVC)
+	set(NS3_NETANIM OFF)
+endif()
+
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
 set(AUTOINSTALL_DEPENDENCIES ON)
+
+set(build_openflow)
+if(${NS3_OPENFLOW})
+    set(build_openflow openflow)
+endif()
+
+set(build_brite)
+if(${NS3_BRITE} AND WIN32)
+    set(NS3_BRITE OFF)
+endif()
+
+if(${NS3_BRITE} AND NOT WIN32)
+    set(build_brite brite)
+endif()
+
+set(build_fd-net-device)
+if(${NS3_fd-net-device} AND NOT WIN32)
+    set(build_fd-net-device fd-net-device)
+endif()
+
+set(build_tap-bridge)
+if(${NS3_TAP} AND NOT WIN32)
+    set(build_tap-bridge tap-bridge)
+endif()
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
@@ -85,7 +123,7 @@ set(libs_to_build
         aodv                  #
         applications          #
         bridge                #
-        #brite
+        ${build_brite}
         buildings             #
         click                 #
         config-store          #
@@ -95,7 +133,7 @@ set(libs_to_build
         dsdv                  #
         dsr                   #
         energy                #
-        fd-net-device         #requires socket implementation
+        ${build_fd-net-device}#requires socket implementation
         flow-monitor          #
         internet              #
         internet-apps         #
@@ -108,16 +146,15 @@ set(libs_to_build
         network               #
         nix-vector-routing
         olsr
-        #openflow
+        ${build_openflow}     # Only builds openflow if NS3_OPENFLOW is set
         point-to-point        #
         point-to-point-layout
         propagation           #
         sixlowpan
         spectrum              #
         stats                 #
-        tap-bridge            #
-        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
-        topology-read         # fixed on Windows with LibPCRE2-posix
+        ${build_tap-bridge}   #
+        #topology-read         # fixed on Windows with LibPCRE2-posix
         traffic-control       #
         uan                   #
         virtual-net-device    #
@@ -125,6 +162,8 @@ set(libs_to_build
         wave                  #
         wifi                  #
         wimax                 #
+        #test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
+
         )
 
 #Build contribution libraries

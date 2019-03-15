@@ -17,10 +17,10 @@
 
 # Look for the header file.
 
-FIND_PATH(PCRE_INCLUDE_DIR NAMES pcre.h)
+FIND_PATH(PCRE_INCLUDE_DIR NAMES pcre2posix.h)
 
 # Look for the library.
-FIND_LIBRARY(PCRE_LIBRARY NAMES pcre)
+FIND_LIBRARY(PCRE_LIBRARY NAMES pcre2-8 pcre2-posix)
 
 # Handle the QUIETLY and REQUIRED arguments and set PCRE_FOUND to TRUE if all listed variables are TRUE.
 INCLUDE(FindPackageHandleStandardArgs)
