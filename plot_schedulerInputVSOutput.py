@@ -60,8 +60,14 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
 
     sortedInputOutputBitmapKeys = list(sorted(inputAndOutputBitmapPerInterval.keys()))
 
-    ax.set_xlabel('time (ms)', )
-    ax.set_ylabel('RBG #')
+    #Labels in english
+    #ax.set_xlabel('Time (ms)', )
+    #ax.set_ylabel('RBG status')
+
+    #Labels in portuguese
+    ax1.set_xlabel('Tempo (ms)', )
+    ax.set_ylabel('Estado do RBG')
+
     #ax.grid(True)
     ax.tick_params('y')
     yticks = [x for x in list(range(0, 25, 4))]

@@ -1437,17 +1437,29 @@ uint64_t LteEnbMac::mergeSensingReports()
     if (channelOccupation.size() > 0)
     {
         auto frameIt = channelOccupation.rbegin();
+        int frameOffset = 0;
+        int subframeOffset = 0;
 
-        for (; frameIt != channelOccupation.rend() && frameIt->first >= m_frameNo - 1; frameIt++)
+        if (m_subframeNo <3)
         {
+            frameOffset = 1;
+            subframeOffset = 5;
+        }
 
-            for (auto subframeIt : frameIt->second)
+        for (; frameIt != channelOccupation.rend() && frameIt->first >= (m_frameNo - frameOffset); frameIt++)//m_frameNo-1 is much more agressive
+        {
+            auto subframeIt = frameIt->second.begin();
+            std::advance(subframeIt,subframeOffset);
+
+            for ( ; subframeIt != frameIt->second.end(); subframeIt++)
             {
-                for (auto origAddr : subframeIt.second)
+                for (auto origAddr : subframeIt->second)
                 {
                     sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
                 }
             }
+
+            subframeOffset = 0;
         }
 
     }

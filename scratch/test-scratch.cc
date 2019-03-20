@@ -363,10 +363,11 @@ int main()
     waveformGeneratorNodes.Create(1);
     Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 (); //Basic microwave oven interference
 
-    //for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
-    //{
-    //    *valIt *= 100;//Increase power levels
-    //}
+    for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
+    {
+        //*valIt /= 4;//Decrease power levels
+        *valIt *= 16;//Increase power levels
+    }
 
     WaveformGeneratorHelper waveformGeneratorHelper;
     waveformGeneratorHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());

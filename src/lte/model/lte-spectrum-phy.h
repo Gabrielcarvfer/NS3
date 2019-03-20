@@ -42,6 +42,8 @@
 #include <ns3/lte-harq-phy.h>
 #include <ns3/lte-common.h>
 #include <mutex>
+#include <random>
+
 
 namespace ns3 {
 
@@ -548,10 +550,15 @@ private:
   std::vector<bool>   puPresence; ///< holds the history of PU detection
 
   //Create structures to hold probabilities
-  static std::vector<double> SNRdB;
-  static std::vector<double> PdTot;
+  static std::vector<double> SNRdB; // Sinr (x-axis of PU detection probability table)
+  static std::vector<double> PdTot; // Probability of detection (y-axis of PU detection probability table)
+  static double Pfa; //probability of false alarm
+  static std::bernoulli_distribution bdPfa;
+  static std::map<double, std::bernoulli_distribution> bdPdTot;
   static bool PUProbLoaded;
-  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr);
+  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
+  double interpolateProbability(double sinrVal);
+  bool checkPUPresence(double prob);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 

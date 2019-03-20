@@ -40,12 +40,26 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
     #print("#UEs=",len(ues_dict))
 
     for ue in ues_dict:
-        ax1.set_xlabel('time (ms)', )
-        ax1.set_ylabel('PU detected (bool)')
-        ax1.tick_params('y')
-        ax2.set_xlabel('time (ms)')
-        ax2.set_ylabel('avg sinr (dB)')
+        #Labels in english
+        #ax1.set_xlabel('Time (ms)', )
+        #ax1.set_ylabel('PU detected (bool)')
+        #ax1.set_yticklabels(["False","True"])
+        #ax2.set_xlabel('Time (ms)')
+        #ax2.set_ylabel('Avg. SINR (dB)')
+
+        #Labels in portuguese
+        ax1.set_xlabel('Tempo (ms)', )
+        ax1.set_ylabel('PU detectado')
+        ax1.set_yticklabels(["Não","Sim"])
+        ax2.set_xlabel('Tempo (ms)')
+        ax2.set_ylabel('SINR médio (dB)')
+
+
+        #ax1.tick_params('y')
+        ax1.minorticks_off()
+        ax1.set_yticks([0.0, 1.0])
         ax2.tick_params('y')
+
         ax1.plot(x,ues_dict[ue]['PU_detected'],alpha=0.5)
         ax2.plot(x,ues_dict[ue]["AvgSinr"],alpha=0.5)
         plt.show(block=False)

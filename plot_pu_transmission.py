@@ -44,8 +44,14 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
 
     orderedTimestamps = list(sorted(timestampDict.keys()))
     orderedTimestampsMs = [x*1000 for x in orderedTimestamps] # seconds to milliseconds
-    ax.set_xlabel('time (ms)', )
-    ax.set_ylabel('PSD (dBW/Hz)')
+
+    #Labels in english
+    #ax.set_xlabel('Time (ms)', )
+    #ax.set_ylabel('Measured PSD(dBW/Hz)')
+
+    #Labels in portuguese
+    ax.set_xlabel('Tempo (ms)', )
+    ax.set_ylabel('PSD medido (dBW/Hz)')
 
     ax.tick_params('y')
     yticks = [-float(x) for x in range(85, 100, 5)]

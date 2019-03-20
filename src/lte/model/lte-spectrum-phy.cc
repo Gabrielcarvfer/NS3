@@ -39,7 +39,6 @@
 #include "lte-ue-net-device.h"
 #include "lte-ue-mac.h"
 #include "./BLER/json_loader.h"
-#include <random>
 #include <mutex>
 #include <fstream>
 
@@ -161,6 +160,9 @@ LteSpectrumPhy::LteSpectrumPhy ()
 bool LteSpectrumPhy::PUProbLoaded = false;
 std::vector<double> LteSpectrumPhy::SNRdB;
 std::vector<double> LteSpectrumPhy::PdTot;
+double LteSpectrumPhy::Pfa;
+std::bernoulli_distribution LteSpectrumPhy::bdPfa;
+std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPdTot;
 std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
 std::mutex LteSpectrumPhy::mut;
 
@@ -830,17 +832,82 @@ void LteSpectrumPhy::reset_PU_presence(bool state)
   PU_presence = state;
 }
 
-std::default_random_engine gen;
+
+double LteSpectrumPhy::interpolateProbability(double sinrVal)
+{
+    //Find the first sinr value bigger than the current one
+    int32_t index = -1;
+    for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    {
+        if (*it > sinrVal)
+        {
+            index = it - SNRdB.begin();
+            //if (PU_presence)
+            //std::cout << "Sinr:" << sinrVal << "\tIndex:"<< index << std::endl;
+            break;
+        }
+    }
+
+    double prob = 0.0;
+    //If SINR is in the table, interpolate
+    if (index > 0)
+    {
+        double x_0, y_0, x_1, y_1;
+        x_0 = y_0 = x_1 = y_1 = 0.0;
+
+        x_0 = SNRdB.at(index - 1);
+        x_1 = SNRdB.at(index);
+        y_0 = PdTot.at(index - 1);
+        y_1 = PdTot.at(index);
+
+        prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
+    }
+        //If the first point for the interpolation extrapolates the table, assume probability of detection is 0
+    else if (index == 0)
+    {
+        prob = 0.0;
+    }
+        //If the second point for the interpolation extrapolates the table, assume probability of detection is 1
+    else
+    {
+        prob = 1.0;
+    }
+    return prob;
+}
+
+std::minstd_rand0 gen;
 std::mutex mutex;
-void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr)
+
+bool LteSpectrumPhy::checkPUPresence(double prob)
+{
+    bool answer = false;
+    if (PU_presence)
+    {
+        //Check if the PU is detected based on the previous probability
+        auto findProb = bdPdTot.find(prob);
+        if (findProb == bdPdTot.end()) {
+            bdPdTot.emplace(prob, std::bernoulli_distribution(prob));
+        }
+        answer = bdPdTot.at(prob)(gen);
+    }
+    else{
+        //False alarm probability
+        answer = bdPfa(gen);
+    }
+    return answer;
+}
+
+void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
 {
     {
         std::lock_guard<std::mutex> lock(mutex);
         if (!PUProbLoaded)
         {
             //Json loader to parse the file
-            picojson::object o = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
+            picojson::object origin = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
 
+            //Select which table to load
+            picojson::object o = origin["fig30wiba384"].get<picojson::object>();
 
             //Load PU detection values from json file
             {
@@ -850,8 +917,22 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
             }
             {
                 auto temp = o["Pd_tot"].get<picojson::array>();
+
+                bdPdTot.emplace(0.0, std::bernoulli_distribution(0.0));
+                bdPdTot.emplace(1.0, std::bernoulli_distribution(1.0));
+
                 for (auto it = temp.begin(); it != temp.end(); it++)
-                    PdTot.push_back(it->get<double>());
+                {
+                    double prob = it->get<double>();
+                    PdTot.push_back(prob);
+                    bdPdTot.emplace(prob, std::bernoulli_distribution(prob));
+                }
+
+            }
+            {
+                auto temp = o["Pfa"].get<double>();
+                Pfa = temp;
+                bdPfa = std::bernoulli_distribution(Pfa);
             }
             PUProbLoaded = true;
         }
@@ -935,91 +1016,64 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
 
     //Calculate the probability of PU detection on given RBs
     int i = 0;
-    bool first = true;
     uint8_t j = 0;
-
+    *avgSinr = 0;
+    std::stringstream ss;
     for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
     {
 
         //Skip if the RB is supposed to be occupied by an UE transmission
-        if (occupied_RB_indexes[i] || *it == 0)
+        if (occupied_RB_indexes[i])
             continue;
 
         UnexpectedAccessBitmap |= (uint32_t)(1<<i);
 
         //Calculate SINR for the RBs from SpectrumValue
-        double sinrVal = 10 * log10((*it));
-        //std::cout << this << " : " << Simulator::Now() << " " << sinrVal << std::endl;
-        if (first)
-        {
-            *avgSinr = sinrVal;
-            first = false;
-        }
-        else
-        {
-            *avgSinr += sinrVal;
-        }
+        double sinrVal = (*it);
+
+        //double puSinrVal = 10*log(1/(*it));
+
+        //std::cout << this << " : " << Simulator::Now() << " UE:" << sinrVal << " PU:" << puSinrVal << "\n";//std::endl;
+
+        *avgSinr += sinrVal;
         j++;
 
-        //Find the first sinr value bigger than the current one
-        int32_t index = -1;
-        for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+
+        if (senseRBs)
         {
-            if (*it > sinrVal)
+            double prob = interpolateProbability(sinrVal);
+            bool answer = checkPUPresence(prob);
+
+            if (answer)
             {
-                index = it - SNRdB.begin();
-                break;
+                PU_detected = true;
+            }
+            else
+            {
+                UnexpectedAccessBitmap &= ~(uint32_t) (1<< i); //Reset unexpected access bit indicating the non-detection of PU presence
             }
         }
-
-        double prob = 0.0;
-        //If SINR is in the table, interpolate
-        if (index > 0)
-        {
-            double x_0, y_0, x_1, y_1;
-            x_0 = y_0 = x_1 = y_1 = 0.0;
-
-            x_0 = SNRdB.at(index - 1);
-            x_1 = SNRdB.at(index);
-            y_0 = PdTot.at(index - 1);
-            y_1 = PdTot.at(index);
-
-            prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
-        }
-        //If the first point for the interpolation extrapolates the table, assume probability of detection is 0
-        else if (index == 0)
-        {
-            prob = 0.0;
-        }
-        //If the second point for the interpolation extrapolates the table, assume probability of detection is 1
-        else
-        {
-            prob = 1.0;
-        }
-
-        //Check if the PU is detected based on the previous probability
-        bool answer = false;
-        if (PU_presence)
-        {
-          std::bernoulli_distribution d(prob);
-          answer = d(gen);
-        }
-
-        if (answer)
-        {
-            PU_detected = true;
-        }
-        else
-        {
-            UnexpectedAccessBitmap &= ~(uint32_t)(1<<i); //Reset unexpected access bit indicating the non-detection of PU presence
-        }
     }
+
 
     if (j > 0)
         *avgSinr /= j;
 
     if (*avgSinr < -174)
         *avgSinr = -174;
+
+    if (!senseRBs)
+    {
+        double prob = interpolateProbability(*avgSinr);
+        bool answer = checkPUPresence(prob);
+
+
+        if (answer)
+        {
+            PU_detected = true;
+            UnexpectedAccessBitmap = 0xffffffff;
+        }
+    }
 }
 
 void LteSpectrumPhy::Sense()
@@ -1035,7 +1089,8 @@ void LteSpectrumPhy::Sense()
   {
     sinrHistory.push_back(m_sinrPerceived.Copy());
     double avgSinr = 0;
-    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr);
+    bool senseRBs = false;
+    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
     puPresence.push_back(PU_detected);
     sinrAvgHistory.push_back(avgSinr);
 
