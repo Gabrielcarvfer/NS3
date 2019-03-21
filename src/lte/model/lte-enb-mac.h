@@ -456,7 +456,21 @@ private:
   /// component carrier Id used to address sap
   uint8_t m_componentCarrierId;
 
+
+
+
   //Custom
+      enum mergeAlgorithmEnum{
+          MRG_MULTIFRAME_OR,
+          MRG_OR,
+          MRG_AND,
+          MRG_XOR,
+          MRG_1_OF_10,
+          MRG_2_OF_10,
+          MRG_3_OF_10,
+          MRG_4_OF_10
+      };
+
 public://todo: implement this properly through the SAP
     typedef struct cognitive_reg
     {
@@ -474,7 +488,7 @@ public://todo: implement this properly through the SAP
     std::map <uint64_t, std::map<uint64_t, uint32_t> > unexpectedChannelAccessBitmap;
     void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
-    uint64_t mergeSensingReports();
+    uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);
 
 };
 

@@ -627,7 +627,8 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
     }
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
-  dlparams.sensedBitmap = mergeSensingReports();
+  bool senseRBs = false;
+  dlparams.sensedBitmap = mergeSensingReports(MRG_OR, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1431,38 +1432,100 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
 }
 
 //Implements the fusion algorithm for collaborative sensing reports
-uint64_t LteEnbMac::mergeSensingReports()
+uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 {
     uint64_t sensedBitmap = 0;
     if (channelOccupation.size() > 0)
     {
         auto frameIt = channelOccupation.rbegin();
-        int frameOffset = 0;
-        int subframeOffset = 0;
 
-        if (m_subframeNo <3)
+        switch(alg)
         {
-            frameOffset = 1;
-            subframeOffset = 5;
-        }
 
-        for (; frameIt != channelOccupation.rend() && frameIt->first >= (m_frameNo - frameOffset); frameIt++)//m_frameNo-1 is much more agressive
-        {
-            auto subframeIt = frameIt->second.begin();
-            std::advance(subframeIt,subframeOffset);
-
-            for ( ; subframeIt != frameIt->second.end(); subframeIt++)
-            {
-                for (auto origAddr : subframeIt->second)
+            case MRG_OR:
                 {
-                    sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
-                }
-            }
+                    auto subframeIt = frameIt->second.rbegin();
 
-            subframeOffset = 0;
+                    if (m_frameNo < frameIt->first+2)
+                        for (auto origAddr : subframeIt->second)
+                        {
+                            sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
+                        }
+                }
+                break;
+            case MRG_AND:
+                {
+                    auto subframeIt = frameIt->second.rbegin();
+
+                    if (m_frameNo < frameIt->first+2)
+                        if (subframeIt->second.size()>0)
+                        {
+                            sensedBitmap = 0xffffffff;
+                            for (auto origAddr : subframeIt->second)
+                            {
+                                sensedBitmap &= origAddr.second.UnexpectedAccessBitmap;
+                            }
+                        }
+                }
+                break;
+            case MRG_XOR:
+                {
+                    auto subframeIt = frameIt->second.rbegin();
+                    if (m_frameNo < frameIt->first+2)
+                        for (auto origAddr : subframeIt->second)
+                        {
+                            sensedBitmap ^= origAddr.second.UnexpectedAccessBitmap;
+                        }
+                }
+                break;
+            case MRG_1_OF_10:
+                break;
+            case MRG_2_OF_10:
+                break;
+            case MRG_3_OF_10:
+                break;
+            case MRG_4_OF_10:
+                break;
+
+            case MRG_MULTIFRAME_OR:
+            default:
+                {
+                    if (m_frameNo >= frameIt->first+2)
+                        break;
+
+                    int frameOffset = 0;
+                    int subframeOffset = 0;
+
+                    if (m_subframeNo <3)
+                    {
+                        frameOffset = 1;
+                        subframeOffset = 5;
+                    }
+
+                    for (; frameIt != channelOccupation.rend() && frameIt->first >= (m_frameNo - frameOffset); frameIt++)//m_frameNo-1 is much more agressive
+                    {
+                        auto subframeIt = frameIt->second.begin();
+                        std::advance(subframeIt,subframeOffset);
+
+                        for ( ; subframeIt != frameIt->second.end(); subframeIt++)
+                        {
+                            for (auto origAddr : subframeIt->second)
+                            {
+                                sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
+                            }
+                        }
+
+                        subframeOffset = 0;
+                    }
+                }
+                break;
         }
+
 
     }
+
+    if(!senseRBs && sensedBitmap != 0)
+        sensedBitmap = 0xffffffff;
 
     //First create map for sensed frames
     unexpectedChannelAccessBitmap.emplace(m_frameNo, std::map <uint64_t, uint32_t> ());
