@@ -465,6 +465,7 @@ private:
           MRG_OR,
           MRG_AND,
           MRG_XOR,
+          MRG_XNOR,
           MRG_1_OF_10,
           MRG_2_OF_10,
           MRG_3_OF_10,

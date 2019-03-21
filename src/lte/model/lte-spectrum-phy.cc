@@ -897,7 +897,7 @@ bool LteSpectrumPhy::checkPUPresence(double prob)
     return answer;
 }
 
-void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
+void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
 {
     {
         std::lock_guard<std::mutex> lock(mutex);
@@ -1059,8 +1059,8 @@ void LteSpectrumPhy::OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<Lte
     if (j > 0)
         *avgSinr /= j;
 
-    if (*avgSinr < -174)
-        *avgSinr = -174;
+    //if (*avgSinr < -174)
+    //    *avgSinr = -174;
 
     if (!senseRBs)
     {
@@ -1090,7 +1090,7 @@ void LteSpectrumPhy::Sense()
     sinrHistory.push_back(m_sinrPerceived.Copy());
     double avgSinr = 0;
     bool senseRBs = false;
-    OuluProbability(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
+    sensingProcedure(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
     puPresence.push_back(PU_detected);
     sinrAvgHistory.push_back(avgSinr);
 

@@ -628,7 +628,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
   bool senseRBs = false;
-  dlparams.sensedBitmap = mergeSensingReports(MRG_OR, senseRBs);
+  dlparams.sensedBitmap = mergeSensingReports(MRG_MULTIFRAME_OR, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1475,6 +1475,16 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap ^= origAddr.second.UnexpectedAccessBitmap;
+                        }
+                }
+                break;
+            case MRG_XNOR:
+                {
+                    auto subframeIt = frameIt->second.rbegin();
+                    if (m_frameNo < frameIt->first+2)
+                        for (auto origAddr : subframeIt->second)
+                        {
+                            sensedBitmap = ~(sensedBitmap ^ origAddr.second.UnexpectedAccessBitmap);
                         }
                 }
                 break;

@@ -556,7 +556,7 @@ private:
   static std::bernoulli_distribution bdPfa;
   static std::map<double, std::bernoulli_distribution> bdPdTot;
   static bool PUProbLoaded;
-  void OuluProbability(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
+  void sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
   double interpolateProbability(double sinrVal);
   bool checkPUPresence(double prob);
   void Sense();

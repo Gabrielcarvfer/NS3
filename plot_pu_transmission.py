@@ -51,10 +51,10 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
 
     #Labels in portuguese
     ax.set_xlabel('Tempo (ms)', )
-    ax.set_ylabel('PSD medido (dBW/Hz)')
+    ax.set_ylabel('Potência (dBW)')
 
     ax.tick_params('y')
-    yticks = [-float(x) for x in range(85, 100, 5)]
+    yticks = [-float(x) for x in range(75, 100, 5)]
 
     msList = [float(x) for x in range(5000)]#5k ms = 5s = simulation time
 
