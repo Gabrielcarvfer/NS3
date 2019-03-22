@@ -709,7 +709,8 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   {
       if (PU_detected && UnexpectedAccessBitmap != 0)
       {
-          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap);
+          bool falsePositive = !PU_presence;
+          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, falsePositive);
           UnexpectedAccessBitmap = 0;
       }
       PU_detected = false;

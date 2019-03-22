@@ -841,7 +841,7 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
-void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint32_t UnexpectedAccessBitmap)
+void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint32_t UnexpectedAccessBitmap, bool falsePositive)
 {
     //We stopped receiving ctrl messages(not supposed to happen), so estimate frames
     //if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
@@ -909,6 +909,7 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint
     senseReport.SensedFrameNo = m_frameNo;
     senseReport.SensedSubframeNo = m_subframeNo;
     senseReport.UnexpectedAccessBitmap = UnexpectedAccessBitmap;
+    senseReport.falsePositive = falsePositive;
 
     Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
     msg->SetMessage(senseReport);
