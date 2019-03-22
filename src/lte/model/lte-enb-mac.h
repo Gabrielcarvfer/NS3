@@ -461,15 +461,16 @@ private:
 
   //Custom
       enum mergeAlgorithmEnum{
-          MRG_MULTIFRAME_OR,
-          MRG_OR,
+          MRG_MULTIFRAME_OR = 1,
+          MRG_OR = 2,
           MRG_AND,
           MRG_XOR,
           MRG_XNOR,
           MRG_1_OF_N,
           MRG_2_OF_N,
           MRG_3_OF_N,
-          MRG_4_OF_N
+          MRG_4_OF_N,
+          MRG_K_OF_N //Don't use this one
       };
 
 public://todo: implement this properly through the SAP

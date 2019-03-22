@@ -404,7 +404,7 @@ int main()
     double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
 
     spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
-    spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
+    //spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
 
     NetDeviceContainer spectrumDevice;
     spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);

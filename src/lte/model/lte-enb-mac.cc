@@ -639,7 +639,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
   bool senseRBs = false;
-  dlparams.sensedBitmap = mergeSensingReports(MRG_MULTIFRAME_OR, senseRBs);
+  dlparams.sensedBitmap = mergeSensingReports(MRG_2_OF_N, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1460,7 +1460,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                 {
                     auto subframeIt = frameIt->second.rbegin();
 
-                    if (m_frameNo < frameIt->first+2)
+                    if (m_frameNo <= frameIt->first + 1)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap  |= origAddr.second.UnexpectedAccessBitmap;
@@ -1472,7 +1472,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                 {
                     auto subframeIt = frameIt->second.rbegin();
 
-                    if (m_frameNo < frameIt->first+2)
+                    if (m_frameNo <= frameIt->first + 1)
                         if (subframeIt->second.size()>0)
                         {
                             sensedBitmap = 0xffffffff;
@@ -1487,7 +1487,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_XOR:
                 {
                     auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo < frameIt->first+2)
+                    if (m_frameNo <= frameIt->first + 1)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap ^= origAddr.second.UnexpectedAccessBitmap;
@@ -1498,7 +1498,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_XNOR:
                 {
                     auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo < frameIt->first+2)
+                    if (m_frameNo <= frameIt->first + 1)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap = ~(sensedBitmap ^ origAddr.second.UnexpectedAccessBitmap);
@@ -1518,19 +1518,20 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_4_OF_N:
                 if (k == 0)
                     k = 4;
+            case MRG_K_OF_N:
                 {
                     auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo < frameIt->first + 2)
+                    if (m_frameNo <= frameIt->first + 1)
                     {
-                        //Get number of UEs (N)
-                        int numUEs = UeRntiMap.size();
+                        int numUEs = UeRntiMap.size();//Get number of UEs (N)
 
                         //Select (K) random UEs
                         std::map<int,bool> ueOffsets;
-                        while(ueOffsets.size() <= k)
+                        while(ueOffsets.size() < k)
                         {
                             ueOffsets.emplace(rand() % numUEs, true);
                         }
+                        int kConfirmed = 0;
 
                         //Merge their reports
                         for (auto offset : ueOffsets)
@@ -1544,10 +1545,20 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //Check if the UE with the current RNTI reported something
                             if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                             {
-                                sensedBitmap |= subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap;
+                                kConfirmed += 1;
                                 falsePositive |= subframeIt->second.at(ueRnti->first).falsePositive;
                             }
                         }
+
+                        if (kConfirmed == k)
+                        {
+                            sensedBitmap |= 0xffffffff;
+                        }
+                        else
+                        {
+                            falsePositive = false;
+                        }
+
                     }
                 }
                 break;
@@ -1555,7 +1566,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_MULTIFRAME_OR:
             default:
                 {
-                    if (m_frameNo >= frameIt->first+2)
+                    if (!(m_frameNo <= frameIt->first + 1))
                         break;
 
                     int frameOffset = 0;
