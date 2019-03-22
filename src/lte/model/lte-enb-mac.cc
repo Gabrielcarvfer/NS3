@@ -390,6 +390,7 @@ m_ccmMacSapUser (0)
   m_ccmMacSapProvider = new MemberLteCcmMacSapProvider<LteEnbMac> (this);
   unexpectedChannelAccessBitmap.emplace(0, std::map <uint64_t, uint32_t> ());
   unexpectedChannelAccessBitmap.at(0).emplace(0, 0);
+
 }
 
 
@@ -628,7 +629,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
   bool senseRBs = false;
-  dlparams.sensedBitmap = mergeSensingReports(MRG_MULTIFRAME_OR, senseRBs);
+  dlparams.sensedBitmap = mergeSensingReports(MRG_1_OF_N, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -853,10 +854,13 @@ LteEnbMac::DoConfigureMac (uint8_t ulBandwidth, uint8_t dlBandwidth)
 void
 LteEnbMac::DoAddUe (uint16_t rnti)
 {
+
   NS_LOG_FUNCTION (this << " rnti=" << rnti);
+  UeRntiMap.emplace(rnti, true);
+
   std::map<uint8_t, LteMacSapUser*> empty;
   std::pair <std::map <uint16_t, std::map<uint8_t, LteMacSapUser*> >::iterator, bool> 
-    ret = m_rlcAttached.insert (std::pair <uint16_t,  std::map<uint8_t, LteMacSapUser*> > 
+    ret = m_rlcAttached.insert (std::pair <uint16_t,  std::map<uint8_t, LteMacSapUser*> >
                                 (rnti, empty));
   NS_ASSERT_MSG (ret.second, "element already present, RNTI already existed");
 
@@ -891,6 +895,8 @@ void
 LteEnbMac::DoRemoveUe (uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << " rnti=" << rnti);
+  UeRntiMap.erase(rnti);
+
   FfMacCschedSapProvider::CschedUeReleaseReqParameters params;
   params.m_rnti = rnti;
   m_cschedSapProvider->CschedUeReleaseReq (params);
@@ -1438,7 +1444,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
     if (channelOccupation.size() > 0)
     {
         auto frameIt = channelOccupation.rbegin();
-
+        int k = 0;
         switch(alg)
         {
 
@@ -1488,13 +1494,47 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         }
                 }
                 break;
-            case MRG_1_OF_10:
-                break;
-            case MRG_2_OF_10:
-                break;
-            case MRG_3_OF_10:
-                break;
-            case MRG_4_OF_10:
+            case MRG_1_OF_N:
+                if (k == 0)
+                    k = 1;
+            case MRG_2_OF_N:
+                if (k == 0)
+                    k = 2;
+            case MRG_3_OF_N:
+                if (k == 0)
+                    k = 3;
+            case MRG_4_OF_N:
+                if (k == 0)
+                    k = 4;
+                {
+                    auto subframeIt = frameIt->second.rbegin();
+                    if (m_frameNo < frameIt->first + 2)
+                    {
+                        //Get number of UEs (N)
+                        int numUEs = UeRntiMap.size();
+
+                        //Select (K) random UEs
+                        std::map<int,bool> ueOffsets;
+                        while(ueOffsets.size() <= k)
+                        {
+                            ueOffsets.emplace(rand() % numUEs, true);
+                        }
+
+                        //Merge their reports
+                        for (auto offset : ueOffsets)
+                        {
+                            //Get iterator to first RNTI
+                            auto ueRnti = UeRntiMap.begin();
+
+                            //Advance to the offset RNTI
+                            std::advance(ueRnti,offset.first);
+
+                            //Check if the UE with the current RNTI reported something
+                            if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
+                                sensedBitmap |= subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap;
+                        }
+                    }
+                }
                 break;
 
             case MRG_MULTIFRAME_OR:

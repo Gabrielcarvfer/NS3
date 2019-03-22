@@ -466,10 +466,10 @@ private:
           MRG_AND,
           MRG_XOR,
           MRG_XNOR,
-          MRG_1_OF_10,
-          MRG_2_OF_10,
-          MRG_3_OF_10,
-          MRG_4_OF_10
+          MRG_1_OF_N,
+          MRG_2_OF_N,
+          MRG_3_OF_N,
+          MRG_4_OF_N
       };
 
 public://todo: implement this properly through the SAP
@@ -487,6 +487,7 @@ public://todo: implement this properly through the SAP
     } CognitiveReg;
     std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
     std::map <uint64_t, std::map<uint64_t, uint32_t> > unexpectedChannelAccessBitmap;
+    std::map <uint16_t, bool> UeRntiMap;
     void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
     uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);

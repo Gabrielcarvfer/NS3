@@ -1,9 +1,9 @@
 file(GLOB_RECURSE scratches  ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
 set(REQUIRE_DCE
-        test_dce)
+        )
 set(REQUIRE_TAP
-        udp_radio_mpi)
+        )
 
 set(DONT_BUILD
         ${REQUIRE_DCE}
