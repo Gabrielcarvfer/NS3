@@ -1,0 +1,14 @@
+title: ns-3 with CMake
+description: >- 
+  Eliminating the waffle carbs.
+baseurl: "/NS3" 
+url: "https://gabrielcarvfer.github.io/" 
+twitter_username: gabrielcarvfer
+github_username:  gabrielcarvfer
+
+
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
+

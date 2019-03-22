@@ -1,0 +1,17 @@
+_site
+.sass-cache
+.jekyll-metadata
+Gemfile.lock
+Gemfile
+
+cmake-build-debug/
+
+build/
+
+__pycache__/
+
+3rd-party/
+
+\.idea/
+
+cmake-build-relwithdebinfo/
