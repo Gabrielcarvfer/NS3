@@ -389,7 +389,7 @@ m_ccmMacSapUser (0)
   m_enbPhySapUser = new EnbMacMemberLteEnbPhySapUser (this);
   m_ccmMacSapProvider = new MemberLteCcmMacSapProvider<LteEnbMac> (this);
   unexpectedChannelAccessBitmap.emplace(0, std::map <uint64_t, std::vector<uint32_t>> ());
-  unexpectedChannelAccessBitmap.at(0).emplace(0, std::vector<uint32_t>{0,0});
+  unexpectedChannelAccessBitmap.at(0).emplace(0, std::vector<uint32_t>{0,0,0});
 
 }
 
@@ -427,8 +427,9 @@ LteEnbMac::~LteEnbMac ()
   }
 
 
-  uint32_t totalReports = 0;
+  uint32_t totalFusions = 0;
   uint32_t falsePositiveReports = 0;
+  uint32_t falseNegativeFusions = 0;
   for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
   {
       for(auto&& [subframe, bitmap]: subframeMap)
@@ -436,12 +437,15 @@ LteEnbMac::~LteEnbMac ()
           //Bitmap[0] contains the bitmap itself
           //Bitmap[1] contains the false positive flag
           sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<25>(bitmap[0]);
-          totalReports += 1;
+          totalFusions += 1;
           falsePositiveReports += bitmap[1];
+          falseNegativeFusions += bitmap[2];
       }
   }
 
-  sensing_list_file << "\n\nFalse positives were " << 100*(double)falsePositiveReports/(double)totalReports << "%";
+  sensing_list_file << "\n\nFrom " << totalFusions << " fusions, " << falsePositiveReports << " were false positive and " << falseNegativeFusions << " were false negative.";
+  sensing_list_file <<   "\nFalse positives were " << 100*(double)falsePositiveReports/(double)totalFusions << "%.";
+  sensing_list_file <<   "\nFalse negatives were " << 100*(double)falseNegativeFusions/(double)totalFusions << "%.";
   sensing_list_file << std::endl;
 
 
@@ -639,7 +643,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
   bool senseRBs = false;
-  dlparams.sensedBitmap = mergeSensingReports(MRG_2_OF_N, senseRBs);
+  dlparams.sensedBitmap = mergeSensingReports(MRG_1_OF_N, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
@@ -1449,16 +1453,28 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 {
     uint64_t sensedBitmap = 0;
     bool falsePositive = false;
-    if (channelOccupation.size() > 0)
+    bool falseNegative = false;
+
+    while (channelOccupation.size() > 0)//just an if with break
     {
         auto frameIt = channelOccupation.rbegin();
+
+        //Check if the frame is the current or the previous
+        //effectively discard old sensing reports
+        if (!(m_frameNo <= frameIt->first + 1))
+            break;//jump out of the if
+
+        //Load the latest frame with registered reports
+        auto subframeIt = frameIt->second.rbegin();
+
+
         int k = 0;
         switch(alg)
         {
 
             case MRG_OR:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
+
 
                     if (m_frameNo <= frameIt->first + 1)
                         for (auto origAddr : subframeIt->second)
@@ -1523,24 +1539,38 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     auto subframeIt = frameIt->second.rbegin();
                     if (m_frameNo <= frameIt->first + 1)
                     {
-                        int numUEs = UeRntiMap.size();//Get number of UEs (N)
+                        int numUEs = UeRntiMap.size();
 
-                        //Select (K) random UEs
-                        std::map<int,bool> ueOffsets;
-                        while(ueOffsets.size() < k)
+                        //Get size of population to be sampled(N)
+                        int n = numUEs;
+
+                        //Select (N) random UEs into a population
+                        std::map<int,bool> ueOffsetsPopulation;
+                        while(ueOffsetsPopulation.size() < n)
                         {
-                            ueOffsets.emplace(rand() % numUEs, true);
+                            ueOffsetsPopulation.emplace(rand() % numUEs, true);
                         }
+
+                        //Select (K) random UEs to sample in the previous population
+                        std::map<int,bool> ueOffsetsSamples;
+                        while(ueOffsetsSamples.size() < k)
+                        {
+                            ueOffsetsSamples.emplace(rand() % n, true);
+                        }
+
+
                         int kConfirmed = 0;
 
                         //Merge their reports
-                        for (auto offset : ueOffsets)
+                        for (auto offset : ueOffsetsSamples)
                         {
-                            //Get iterator to first RNTI
-                            auto ueRnti = UeRntiMap.begin();
+                            //Get sampled population iterator and advance to the sampled UE
+                            auto uePopulation = ueOffsetsPopulation.begin();
+                            std::advance(uePopulation, offset.first);
 
-                            //Advance to the offset RNTI
-                            std::advance(ueRnti,offset.first);
+                            //Get global population (RNTI) and advance to the sampled UE
+                            auto ueRnti = UeRntiMap.begin();
+                            std::advance(ueRnti,uePopulation->first);
 
                             //Check if the UE with the current RNTI reported something
                             if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
@@ -1558,7 +1588,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         {
                             falsePositive = false;
                         }
-
                     }
                 }
                 break;
@@ -1566,8 +1595,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_MULTIFRAME_OR:
             default:
                 {
-                    if (!(m_frameNo <= frameIt->first + 1))
-                        break;
+
 
                     int frameOffset = 0;
                     int subframeOffset = 0;
@@ -1598,8 +1626,16 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                 break;
         }
 
+        //Check for false negatives
+        if(sensedBitmap == 0)
+            for (auto origAddr : subframeIt->second)
+            {
+                falseNegative |=  (origAddr.second.UnexpectedAccessBitmap != 0 && !origAddr.second.falsePositive);
+            }
 
+        break;//out of if
     }
+
 
     if(!senseRBs && sensedBitmap != 0)
         sensedBitmap = 0xffffffff;
@@ -1610,6 +1646,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
     std::vector<uint32_t> vet;
     vet.push_back(sensedBitmap);
     vet.push_back(falsePositive);
+    vet.push_back(falseNegative);//For measurement only purposes. Using this in your algorithm is cheating.
 
     //After that, create map for sensed subframes
     unexpectedChannelAccessBitmap.at(m_frameNo).emplace(m_subframeNo, vet);
