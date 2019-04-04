@@ -69,7 +69,7 @@ option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 set(NS3_GNUPLOT OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
-#set(NS3_BRITE ON)
+set(NS3_BRITE ON)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
@@ -154,7 +154,7 @@ set(libs_to_build
         spectrum              #
         stats                 #
         ${build_tap-bridge}   #
-        #topology-read         # fixed on Windows with LibPCRE2-posix
+        topology-read         # fixed on Windows with LibPCRE2-posix
         traffic-control       #
         uan                   #
         virtual-net-device    #
@@ -162,7 +162,7 @@ set(libs_to_build
         wave                  #
         wifi                  #
         wimax                 #
-        #test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
+        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
 
         )
 

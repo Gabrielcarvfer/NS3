@@ -35,7 +35,7 @@ if (${NS3_LIBRT} AND NOT WIN32)
 endif()
 
 set(osclock_sources)
-if (${WIN32})
+if (WIN32)
     set(osclock_sources
             model/win32-system-wall-clock-ms.cc
             )
@@ -69,21 +69,38 @@ elseif(INT64X64 STREQUAL "CAIRO")
             )
 endif()
 
+
+
+set(valgrind_sources)
+set(valgrind_headers)
+if (NS3_VALGRIND)
+	set(valgrind_headers
+	        model/valgrind.h
+		)
+endif()
+
+
 set(thread_sources)
 set(thread_headers)
 
 if (${THREADS_FOUND})
-    if(${WIN32})
+    if(WIN32)
         set(thread_sources
-                #model/win32-fd-reader.cc
+                model/win32-fd-reader.cc
                 )
         set(thread_headers
-                #model/win32-fd-reader.h
+                model/win32-fd-reader.h
                 )
+		set(winsock_libraries)
+		if (NOT MSVC)#Using pragma for MSVC and the following for MinGW/Clang
+			set(winsock_libraries
+				wsock32
+				ws2_32
+			)
+		endif()
         set(libraries_to_link
                 ${libraries_to_link}
-                wsock32
-                ws2_32
+				${winsock_libraries}
                 )
     else()
         set(thread_sources
@@ -93,6 +110,7 @@ if (${THREADS_FOUND})
                 model/unix-fd-reader.h
                 )
     endif()
+
     set(thread_sources
             ${thread_sources}
             model/system-thread.cc
@@ -119,6 +137,7 @@ set(source_files
         ${osclock_sources}
         ${int64x64_sources}
         ${thread_sources}
+		${valgrind_sources}
         model/time.cc
         model/event-id.cc
         model/scheduler.cc
@@ -180,6 +199,8 @@ set (header_files
         ${rt_headers}
         ${int64x64_headers}
         ${thread_headers}
+		${valgrind_headers}
+
         model/nstime.h
         model/event-id.h
         model/event-impl.h
@@ -258,7 +279,6 @@ set (header_files
         model/hash-murmur3.h
         model/hash-fnv.h
         model/hash.h
-        model/valgrind.h
         model/non-copyable.h
         model/build-profile.h
         model/des-metrics.h

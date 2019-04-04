@@ -110,7 +110,7 @@ VisualSimulatorImpl::IsFinished (void) const
 }
 #ifdef PYTHON3
 #define PYTHON_EXEC "python3"
-#else
+#elif PYTHON2
 #define PYTHON_EXEC "python2"
 #endif
 

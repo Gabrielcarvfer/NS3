@@ -97,7 +97,8 @@ DsrSendBuffer::DropPacketWithDst (Ipv4Address dst)
         }
     }
   m_sendBuffer.erase (std::remove_if (m_sendBuffer.begin (), m_sendBuffer.end (),
-                                      std::bind2nd (std::ptr_fun (DsrSendBuffer::IsEqual), dst)), m_sendBuffer.end ());
+                      std::bind (std::cref (DsrSendBuffer::IsEqual), std::placeholders::_1, dst)),
+      m_sendBuffer.end ());
 }
 
 bool

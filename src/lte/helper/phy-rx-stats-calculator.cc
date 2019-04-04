@@ -125,7 +125,7 @@ PhyRxStatsCalculator::DlPhyReception (PhyReceptionStatParameters params)
   {
     m_dlRxFirstWrite = false;
     outFileDlRx << "% time\tcellId\tIMSI\tRNTI\ttxMode\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
-    outFileDlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileDlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
 //   outFileDlRx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
@@ -140,7 +140,7 @@ PhyRxStatsCalculator::DlPhyReception (PhyReceptionStatParameters params)
   outFileDlRx << (uint32_t) params.m_rv << "\t";
   outFileDlRx << (uint32_t) params.m_ndi << "\t";
   outFileDlRx << (uint32_t) params.m_correctness << "\t";
-  outFileDlRx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileDlRx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
@@ -153,7 +153,7 @@ PhyRxStatsCalculator::UlPhyReception (PhyReceptionStatParameters params)
   {
     m_ulRxFirstWrite = false;
     outFileUlRx << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
-    outFileUlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileUlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
 //   outFileUlRx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
@@ -167,7 +167,7 @@ PhyRxStatsCalculator::UlPhyReception (PhyReceptionStatParameters params)
   outFileUlRx << (uint32_t) params.m_rv << "\t";
   outFileUlRx << (uint32_t) params.m_ndi << "\t";
   outFileUlRx << (uint32_t) params.m_correctness << "\t";
-  outFileUlRx << (uint32_t) params.m_ccId <<"\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileUlRx << (uint32_t) params.m_ccId <<"\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void

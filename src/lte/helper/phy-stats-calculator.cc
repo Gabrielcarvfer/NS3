@@ -158,7 +158,7 @@ PhyStatsCalculator::ReportCurrentCellRsrpSinr (uint16_t cellId, uint64_t imsi, u
   {
     m_RsrpSinrFirstWrite = false;
     outFileRsrpSinr << "% time\tcellId\tIMSI\tRNTI\trsrp\tsinr\tComponentCarrierId";
-    outFileRsrpSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileRsrpSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
   outFileRsrpSinr << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
   outFileRsrpSinr << cellId << "\t";
@@ -166,7 +166,7 @@ PhyStatsCalculator::ReportCurrentCellRsrpSinr (uint16_t cellId, uint64_t imsi, u
   outFileRsrpSinr << rnti << "\t";
   outFileRsrpSinr << rsrp << "\t";
   outFileRsrpSinr << sinr << "\t";
-  outFileRsrpSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileRsrpSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
@@ -179,14 +179,14 @@ PhyStatsCalculator::ReportUeSinr (uint16_t cellId, uint64_t imsi, uint16_t rnti,
   {
     m_UeSinrFirstWrite = false;
     outFileUeSinr << "% time\tcellId\tIMSI\tRNTI\tsinrLinear\tcomponentCarrierId";
-    outFileUeSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileUeSinr << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
   outFileUeSinr << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
   outFileUeSinr << cellId << "\t";
   outFileUeSinr << imsi << "\t";
   outFileUeSinr << rnti << "\t";
   outFileUeSinr << sinrLinear << "\t";
-  outFileUeSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileUeSinr << (uint32_t)componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
@@ -199,7 +199,7 @@ PhyStatsCalculator::ReportInterference (uint16_t cellId, Ptr<SpectrumValue> inte
   {
     m_InterferenceFirstWrite = false;
     outFileInterference << "% time\tcellId\tInterference";
-    outFileInterference << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileInterference << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
   outFileInterference << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";

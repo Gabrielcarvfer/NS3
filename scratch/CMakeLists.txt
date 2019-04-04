@@ -1,13 +1,8 @@
 file(GLOB_RECURSE scratches  ${CMAKE_CURRENT_SOURCE_DIR}/*.cc)
 
-set(REQUIRE_DCE
-        )
-set(REQUIRE_TAP
-        )
 
 set(DONT_BUILD
-        ${REQUIRE_DCE}
-        ${REQUIRE_TAP})
+        )
 
 foreach(scratch_src ${scratches})
     get_filename_component(scratch_name ${scratch_src} NAME)
@@ -17,7 +12,7 @@ foreach(scratch_src ${scratches})
 
     if(res LESS 0)
         add_executable(${scratch_name} "${scratch_src}")
-        target_link_libraries(${scratch_name} "${ns3-libs}" ns3.29-contrib-haraldott-debug)
+    target_link_libraries(${scratch_name} "${ns3-libs}" ${ns3-contrib-libs})
     endif()
 endforeach()
 

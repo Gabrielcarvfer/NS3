@@ -238,11 +238,11 @@ RadioBearerStatsCalculator::ShowResults (void)
     outFileUlRlc << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
     outFileUlRlc << "delay\tstdDev\tmin\tmax\t";
     outFileUlRlc << "PduSize\tstdDev\tmin\tmax";
-    outFileUlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileUlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
     outFileDlRlc << "% start\tend\tCellId\tIMSI\tRNTI\tLCID\tnTxPDUs\tTxBytes\tnRxPDUs\tRxBytes\t";
     outFileDlRlc << "delay\tstdDev\tmin\tmax\t";
     outFileDlRlc << "PduSize\tstdDev\tmin\tmax";
-    outFileDlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileDlRlc << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
   WriteUlResults (outFileUlRlc);
@@ -306,7 +306,7 @@ RadioBearerStatsCalculator::WriteUlResults (std::ofstream& outFile)
         {
           outFile << (*it) << "\t";
         }
-      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
     }
 }
 
@@ -365,7 +365,7 @@ RadioBearerStatsCalculator::WriteDlResults (std::ofstream& outFile)
         {
           outFile << (*it) << "\t";
         }
-      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+      outFile << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
     }
 }
 

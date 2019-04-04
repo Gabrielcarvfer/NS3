@@ -44,7 +44,6 @@
 
 
 namespace ns3 {
-  
   /// MI QPSK maximum ID
   const uint16_t MI_QPSK_MAX_ID = 9;
   /// MI 16QAM maximum ID
@@ -74,8 +73,7 @@ class LteMiErrorModel
 {
 
 public:
-   static void LoadErrorData();
-  /** 
+  /**
    * \brief find the mmib (mean mutual information per bit) for different modulations of the specified TB
    * \param sinr the perceived sinrs in the whole bandwidth
    * \param map the actives RBs for the TB
@@ -110,9 +108,15 @@ public:
   */  
   static double GetPcfichPdcchError (const SpectrumValue& sinr);
 
+  /**
+  * \brief load error-model data from the input json file
+  *
+  *
+  */
+  static void LoadErrorData();
 
 private:
-  static bool errorDataLoaded;
+  static bool errorDataLoaded; 
 
 
 };

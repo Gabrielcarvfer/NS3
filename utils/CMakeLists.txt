@@ -1,6 +1,14 @@
 if (${NS3_TESTS})
-    add_executable(test-runner test-runner.cc)
-    target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
+    if(WIN32)
+        set(libraries_to_link ${ns3-libs})
+        list(REMOVE_ITEM libraries_to_link ${libtest})
+
+        add_executable(test-runner test-runner.cc ${ns3-libs-tests} $<TARGET_OBJECTS:${libtest}>)
+        target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${libraries_to_link}  ${LIB_AS_NEEDED_POST})
+    else()
+        add_executable(test-runner test-runner.cc)
+        target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
+    endif()
 
     add_executable(bench-simulator bench-simulator.cc)
     target_link_libraries(bench-simulator ${libcore})
@@ -18,7 +26,3 @@ if (${NS3_TESTS})
     add_test(test_core test-runner --test-name=libns3-core-test-debug)
 endif()
 
-#todo: fix failing bugs
-#   devices-wifi : 2831
-#   aggregation-wifi : ampdu
-#   wave mac-extension-test-suite : annex_c

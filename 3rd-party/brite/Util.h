@@ -40,7 +40,8 @@
 #include <vector>
 #include <list>
 #include <assert.h>
-#include <stdlib.h>
+//#include <cstdlib> //erand48 is a posix standard, replaced with minstd_rand0
+#include <random>
 
 namespace brite {
 
@@ -72,18 +73,25 @@ class RandomVariable {
 
   unsigned short int seed[3];
   unsigned short int* sptr;
+  std::minstd_rand0 gen;
 
 };
 
 inline double RandomVariable::GetValUniform() {
 
-  return erand48(seed);
+  //return erand48(seed);
+  std::seed_seq see{seed[0],seed[1],seed[2]};
+  gen.seed (see);
+  return gen ();
 
 }
 
 inline double RandomVariable::GetValUniform(double r) {
 
-  return  r * erand48(seed);
+  //return  r * erand48(seed);
+  std::seed_seq see{seed[0],seed[1],seed[2]};
+  gen.seed (see);
+  return r * gen ();
 
 }
 

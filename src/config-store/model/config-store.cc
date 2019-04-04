@@ -34,9 +34,11 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <unistd.h>
 #include <cstdlib>
 
+#ifndef WIN32
+#include <unistd.h>
+#endif
 
 namespace ns3 {
 

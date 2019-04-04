@@ -29,6 +29,8 @@
 #include "pcap-file.h"
 #include "ns3/log.h"
 #include "ns3/build-profile.h"
+#include <algorithm>
+
 //
 // This file is used as part of the ns-3 test framework, so please refrain from 
 // adding any ns-3 specific constructs such as Packet to this file.

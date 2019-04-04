@@ -18,6 +18,8 @@
  *
  * Author: Tom Goff <thomas.goff@boeing.com>
  */
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "wsock32.lib")
 
 #include <cerrno>
 #include <cstring>
@@ -136,7 +138,7 @@ void FdReader::Stop (void)
   if (m_evpipe[1] != -1)
     {
       char zero = 0;
-      ssize_t len = write (m_evpipe[1], &zero, sizeof (zero));
+      ssize_t len = send (m_evpipe[1], &zero, sizeof (zero), 0);
       if (len != sizeof (zero))
         NS_LOG_WARN ("incomplete write(): " << std::strerror (errno));
     }
@@ -151,14 +153,14 @@ void FdReader::Stop (void)
   // close the write end of the event pipe
   if (m_evpipe[1] != -1)
     {
-      close (m_evpipe[1]);
+      closesocket (m_evpipe[1]);
       m_evpipe[1] = -1;
     }
 
   // close the read end of the event pipe
   if (m_evpipe[0] != -1)
     {
-      close (m_evpipe[0]);
+      closesocket (m_evpipe[0]);
       m_evpipe[0] = -1;
     }
 
@@ -198,7 +200,7 @@ void FdReader::Run (void)
           for (;;)
             {
               char buf[1024];
-              ssize_t len = read (m_evpipe[0], buf, sizeof (buf));
+              ssize_t len = recv (m_evpipe[0], buf, sizeof (buf), 0);
               if (len == 0)
                 {
                   NS_FATAL_ERROR ("event pipe closed");

@@ -16,12 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
-
-#include <thread>
-#include <mutex>
+#include <pthread.h>
 #include <cerrno>        // for ETIMEDOUT
-#include <condition_variable>
+#include <time.h>        // for timespec
+#include <sys/time.h>    // for timeval, gettimeofday
 
 #include "fatal-error.h"
 #include "system-condition.h"
@@ -84,9 +82,9 @@ public:
 
 private:
   /** Mutex controlling access to the condition. */
-  std::mutex m_mutex;
-  /** The thread condition variable. */
-  std::condition_variable m_cond;
+  pthread_mutex_t m_mutex;
+  /** The pthread condition variable. */
+  pthread_cond_t  m_cond;
   /** The condition state. */
   bool m_condition;
 };
@@ -96,11 +94,31 @@ SystemConditionPrivate::SystemConditionPrivate ()
   NS_LOG_FUNCTION (this);
 
   m_condition = false;
+
+  pthread_mutexattr_t mAttr;
+  pthread_mutexattr_init (&mAttr);
+//
+// Linux and OS X (at least) have, of course chosen different names for the 
+// error checking flags just to make life difficult.
+//
+#if defined (PTHREAD_MUTEX_ERRORCHECK_NP)
+  pthread_mutexattr_settype (&mAttr, PTHREAD_MUTEX_ERRORCHECK_NP);
+#else
+  pthread_mutexattr_settype (&mAttr, PTHREAD_MUTEX_ERRORCHECK);
+#endif
+  pthread_mutex_init (&m_mutex, &mAttr);
+
+  pthread_condattr_t cAttr;
+  pthread_condattr_init (&cAttr);
+  pthread_condattr_setpshared (&cAttr, PTHREAD_PROCESS_PRIVATE);
+  pthread_cond_init (&m_cond, &cAttr);
 }
 
 SystemConditionPrivate::~SystemConditionPrivate() 
 {
   NS_LOG_FUNCTION (this);
+  pthread_mutex_destroy (&m_mutex);
+  pthread_cond_destroy (&m_cond);
 }
 	
 void
@@ -122,8 +140,9 @@ SystemConditionPrivate::Signal (void)
 {
   NS_LOG_FUNCTION (this);
 
-  std::lock_guard<std::mutex> lk (this->m_mutex);
-  this->m_cond.notify_one ();
+  pthread_mutex_lock (&m_mutex);
+  pthread_cond_signal (&m_cond);
+  pthread_mutex_unlock (&m_mutex);
 }
 	
 void
@@ -131,8 +150,9 @@ SystemConditionPrivate::Broadcast (void)
 {
   NS_LOG_FUNCTION (this);
 
-  std::lock_guard<std::mutex> lk (this->m_mutex);
-  this->m_cond.notify_all ();
+  pthread_mutex_lock (&m_mutex);
+  pthread_cond_broadcast (&m_cond);
+  pthread_mutex_unlock (&m_mutex);
 }
 
 void
@@ -140,15 +160,13 @@ SystemConditionPrivate::Wait (void)
 {
   NS_LOG_FUNCTION (this);
 
-  std::unique_lock<std::mutex> lk (this->m_mutex);
+  pthread_mutex_lock (&m_mutex);
   m_condition = false;
   while (m_condition == false)
     {
-      this->m_cond.wait (lk);
-
+      pthread_cond_wait (&m_cond, &m_mutex);
     }
-  lk.unlock();
-
+  pthread_mutex_unlock (&m_mutex);
 }
 
 bool
@@ -156,18 +174,34 @@ SystemConditionPrivate::TimedWait (uint64_t ns)
 {
   NS_LOG_FUNCTION (this << ns);
 
+  struct timespec ts;
+  ts.tv_sec = ns / NS_PER_SEC;
+  ts.tv_nsec = ns % NS_PER_SEC;
 
-  std::unique_lock<std::mutex> lk (this->m_mutex);
+  struct timeval tv;
+  gettimeofday (&tv, NULL);
+
+  ts.tv_sec += tv.tv_sec;
+  ts.tv_nsec += tv.tv_usec * 1000;
+  if (ts.tv_nsec > (int64_t)NS_PER_SEC)
+    {
+      ++ts.tv_sec;
+      ts.tv_nsec %= NS_PER_SEC;
+    }
+
+  int rc;
+
+  pthread_mutex_lock (&m_mutex);
   while (m_condition == false)
     {
-      auto rc = this->m_cond.wait_for(lk, std::chrono::nanoseconds(ns));
-      if (rc == std::cv_status::timeout)
+      rc = pthread_cond_timedwait (&m_cond, &m_mutex, &ts);
+      if (rc == ETIMEDOUT)
         {
-          lk.unlock();
+          pthread_mutex_unlock (&m_mutex); 
           return true;
         }
     }
-  lk.unlock();
+  pthread_mutex_unlock (&m_mutex);
   return false;
 }
 	

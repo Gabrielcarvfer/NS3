@@ -55,3 +55,6 @@ scratch/wif*
 scratch/run*
 
 cmake-build-relwithdebinfo/
+cmake-cache/
+
+cmake-build-release/

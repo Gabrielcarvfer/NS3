@@ -126,7 +126,7 @@ MacStatsCalculator::DlScheduling (uint16_t cellId, uint64_t imsi, DlSchedulingCa
   {
     m_dlFirstWrite = false;
     outFileDl << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcsTb1\tsizeTb1\tmcsTb2\tsizeTb2\tccId";
-    outFileDl << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+    outFileDl << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
   outFileDl << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
@@ -139,7 +139,7 @@ MacStatsCalculator::DlScheduling (uint16_t cellId, uint64_t imsi, DlSchedulingCa
   outFileDl << dlSchedulingCallbackInfo.sizeTb1 << "\t";
   outFileDl << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << "\t";
   outFileDl << dlSchedulingCallbackInfo.sizeTb2 << "\t";
-  outFileDl << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileDl << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
@@ -153,7 +153,7 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
   {
       m_ulFirstWrite = false;
       outFileUl << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcs\tsize\tccId";
-      outFileUl << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+      outFileUl << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
   }
 
   outFileUl << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
@@ -164,7 +164,7 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
   outFileUl << rnti << "\t";
   outFileUl << (uint32_t) mcsTb << "\t";
   outFileUl << size << "\t";
-  outFileUl << (uint32_t) componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which is stupid
+  outFileUl << (uint32_t) componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
 }
 
 void
