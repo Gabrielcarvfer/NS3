@@ -714,6 +714,7 @@ namespace ns3 {
             ccPhy->GetUlSpectrumPhy ()->SetLtePhyUlHarqFeedbackCallback (MakeCallback (&LteEnbPhy::ReceiveLteUlHarqFeedback, ccPhy));
             NS_LOG_LOGIC ("set the propagation model frequencies");
             double dlFreq = LteSpectrumValueHelper::GetCarrierFrequency (it->second->m_dlEarfcn);
+            centralFreq = dlFreq;//save carrier freq
             NS_LOG_LOGIC ("DL freq: " << dlFreq);
             bool dlFreqOk = m_downlinkPathlossModel->SetAttributeFailSafe ("Frequency", DoubleValue (dlFreq));
             if (!dlFreqOk)

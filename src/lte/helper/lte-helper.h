@@ -890,6 +890,8 @@ private:
    */
   uint16_t m_noOfCcs;
 
+public:
+    double centralFreq;
 };   // end of `class LteHelper`
 
 

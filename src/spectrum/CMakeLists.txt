@@ -17,7 +17,7 @@ set(source_files
         model/spectrum-error-model.cc
         model/spectrum-model-ism2400MHz-res1MHz.cc
         model/spectrum-model-300kHz-300GHz-log.cc
-        model/spectrum-model-300MHz-3GHz-log.cc
+        model/spectrum-model-RANGE.cc
         model/spectrum-model-lte.cc
         model/wifi-spectrum-value-helper.cc
         model/waveform-generator.cc
@@ -52,7 +52,7 @@ set(header_files
         model/spectrum-error-model.h
         model/spectrum-model-ism2400MHz-res1MHz.h
         model/spectrum-model-300kHz-300GHz-log.h
-        model/spectrum-model-300MHz-3GHz-log.h
+        model/spectrum-model-RANGE.h
         model/spectrum-model-lte.h
         model/wifi-spectrum-value-helper.h
         model/waveform-generator.h

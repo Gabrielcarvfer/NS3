@@ -481,11 +481,11 @@ public://todo: implement this properly through the SAP
         uint64_t SensedSubframeNo;
         uint64_t ReceivedFrameNo;
         uint64_t ReceivedSubframeNo;
-        uint32_t UnexpectedAccessBitmap;
+        uint64_t UnexpectedAccessBitmap;
         bool     falsePositive; //For measurements only, using this in your algorithm is cheating
     } CognitiveReg;
     std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
-    std::map <uint64_t, std::map<uint64_t, std::vector<uint32_t> > > unexpectedChannelAccessBitmap;
+    std::map <uint64_t, std::map<uint64_t, std::vector<uint64_t> > > unexpectedChannelAccessBitmap;
     std::map <uint16_t, bool> UeRntiMap;
     void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);

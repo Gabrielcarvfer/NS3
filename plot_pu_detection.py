@@ -67,6 +67,6 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
 
 
 if __name__ == "__main__":
-    print_pu_detection_by_ues(standalone_plot=True)
+    plot_pu_detection_by_ues(standalone_plot=True)
     input()
     pass

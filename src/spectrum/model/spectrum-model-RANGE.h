@@ -18,8 +18,8 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef FREQS_300MHZ_3GHZ_LOG_H
-#define FREQS_300MHZ_3GHZ_LOG_H
+#ifndef FREQS_RANGE_H
+#define FREQS_RANGE_H
 
 
 #include <ns3/spectrum-value.h>
@@ -27,7 +27,7 @@
 namespace ns3 {
 
 
-extern Ptr<SpectrumModel> SpectrumModel300MHz3GhzLog;
+extern Ptr<SpectrumModel> SpectrumModelRANGE;
 
 
 }
@@ -35,4 +35,4 @@ extern Ptr<SpectrumModel> SpectrumModel300MHz3GhzLog;
 
 
 
-#endif /*  FREQS_300MHZ_3GHZ_LOG_H */
+#endif /*  FREQS_RANGE_LOG_H */

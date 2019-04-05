@@ -670,7 +670,7 @@ FdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint32_t mask = 0x1;
+          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
           for (int j = 0; j < 32; j++)
             {
@@ -723,10 +723,10 @@ FdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint32_t rbgMask = 0;
+                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + (0x1 << dciRbg.at (k));
+                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
                       rbgAllocatedNum++;
                     }
                   dci.m_rbBitmap = rbgMask;
@@ -1053,10 +1053,10 @@ FdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
 
       newDci.m_resAlloc = 0;  // only allocation type 0 at this stage
       newDci.m_rbBitmap = 0; // TBD (32 bit bitmap see 7.1.6 of 36.213)
-      uint32_t rbgMask = 0;
+      uint64_t rbgMask = 0;
       for (uint16_t k = 0; k < (*itMap).second.size (); k++)
         {
-          rbgMask = rbgMask + (0x1 << (*itMap).second.at (k));
+          rbgMask = rbgMask + ( (uint64_t)0x01 << (*itMap).second.at (k));
           NS_LOG_INFO (this << " Allocated RBG " << (*itMap).second.at (k));
         }
       newDci.m_rbBitmap = rbgMask; // (32 bit bitmap see 7.1.6 of 36.213)

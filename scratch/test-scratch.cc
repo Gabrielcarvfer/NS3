@@ -334,6 +334,7 @@ int main()
     serverApp.Start(Seconds(0.5));
     serverApps.Add(serverApp);
 
+
     // Install TCP/UDP Transmitter on the station
     TcpStreamClientHelper clientHelper(serverAddress, serverPort+1);
     clientHelper.SetAttribute("SegmentDuration", UintegerValue(segmentDuration));

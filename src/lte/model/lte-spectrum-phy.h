@@ -558,7 +558,7 @@ private:
   static bool PUProbLoaded;
   void sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
   double interpolateProbability(double sinrVal);
-  bool checkPUPresence(double prob);
+  bool checkPUPresence(double prob, bool aboveAvg);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
@@ -570,7 +570,7 @@ private:
 public:
     bool PU_presence;
     bool PU_detected;
-    uint32_t UnexpectedAccessBitmap;
+    uint64_t UnexpectedAccessBitmap;
 
 };
 

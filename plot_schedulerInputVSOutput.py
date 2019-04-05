@@ -65,14 +65,14 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
     #ax.set_ylabel('RBG status')
 
     #Labels in portuguese
-    ax1.set_xlabel('Tempo (ms)', )
+    ax.set_xlabel('Tempo (ms)', )
     ax.set_ylabel('Estado do RBG')
 
     #ax.grid(True)
     ax.tick_params('y')
-    yticks = [x for x in list(range(0, 25, 4))]
-    xticks = [float(x) for x in range(5000)]
-    for i in range(25):
+    yticks = [x for x in list(range(0, 50, 10))]
+    xticks = [float(x) for x in range(20000)]
+    for i in range(50):
 
         input_barh = []
         output_barh = []

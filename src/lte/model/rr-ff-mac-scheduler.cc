@@ -647,7 +647,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint32_t mask = 0x1;
+          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
           for (int j = 0; j < 32; j++)
             {
@@ -700,10 +700,10 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint32_t rbgMask = 0;
+                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + (0x1 << dciRbg.at (k));
+                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
                       NS_LOG_INFO (this << " New allocated RBG " << dciRbg.at (k));
                       rbgAllocatedNum++;
                     }
@@ -1022,7 +1022,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
               break;
             }
         }
-      uint32_t rbgMask = 0;
+      uint64_t rbgMask = 0;
       uint16_t i = 0;
       NS_LOG_INFO (this << " DL - Allocate user " << newEl.m_rnti << " LCs " << (uint16_t)(*itLcRnti).second << " bytes " << tbSize << " mcs " << (uint16_t) newDci.m_mcs.at (0) << " harqId " << (uint16_t)newDci.m_harqProcess <<  " layers " << nLayer);
       NS_LOG_INFO ("RBG:");
@@ -1030,7 +1030,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
         {
           if (rbgMap.at (rbgAllocated) == false)
             {
-              rbgMask = rbgMask + (0x1 << rbgAllocated);
+              rbgMask = rbgMask + ( (uint64_t)0x01 << rbgAllocated);
               NS_LOG_INFO ("\t " << rbgAllocated);
               i++;
               rbgMap.at (rbgAllocated) = true;

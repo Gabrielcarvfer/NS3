@@ -19,30 +19,30 @@
  */
 
 
-#include <ns3/spectrum-model-300MHz-3GHz-log.h>
+#include <ns3/spectrum-model-RANGE.h>
 
 namespace ns3 {
 
 
-Ptr<SpectrumModel> SpectrumModel300MHz3GhzLog;
+Ptr<SpectrumModel> SpectrumModelRANGE;
 
 
 
-class static_SpectrumModel300MHz3GhzLog_initializer
+class static_SpectrumModelRANGE_initializer
 {
 public:
-  static_SpectrumModel300MHz3GhzLog_initializer ()
+  static_SpectrumModelRANGE_initializer ()
   {
 
     std::vector<double> freqs;
-    for (double f = 3e5; f < 3e11; f = f * 2)
+    for (double f = 2.110e9; f < 2.1325e9; f+=0.0025e9)
       {
         freqs.push_back (f);
       }
-    SpectrumModel300MHz3GhzLog = Create<SpectrumModel> (freqs);
+    SpectrumModelRANGE = Create<SpectrumModel> (freqs);
   }
 
-} static_SpectrumModel300MHz3GhzLog_initializer_instance;
+} static_SpectrumModelRANGE_initializer_instance;
 
 
 

@@ -41,7 +41,8 @@
 #include "./BLER/json_loader.h"
 #include <mutex>
 #include <fstream>
-
+#include <bitset>
+#include <iomanip>
 
 
 namespace ns3 {
@@ -879,10 +880,10 @@ double LteSpectrumPhy::interpolateProbability(double sinrVal)
 std::minstd_rand0 gen;
 std::mutex mutex;
 
-bool LteSpectrumPhy::checkPUPresence(double prob)
+bool LteSpectrumPhy::checkPUPresence(double prob, bool aboveAvgSinr)
 {
     bool answer = false;
-    if (PU_presence)
+    if (PU_presence && !aboveAvgSinr)
     {
         //Check if the PU is detected based on the previous probability
         auto findProb = bdPdTot.find(prob);
@@ -891,7 +892,8 @@ bool LteSpectrumPhy::checkPUPresence(double prob)
         }
         answer = bdPdTot.at(prob)(gen);
     }
-    else{
+    else
+    {
         //False alarm probability
         answer = bdPfa(gen);
     }
@@ -938,42 +940,49 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             PUProbLoaded = true;
         }
     }
+    //Don't sense again if previous report hasn't been sent
+    if (PU_detected)
+        return;
+
+    //Initialize variable
+    UnexpectedAccessBitmap = 0;
 
     //Look for empty RBs SINR on the DCI
-    bool occupied_RB_indexes[32];
+    std::vector<bool> occupied_RB_indexes;
 
-    for(int i = 0; i < 32; i++)
-        occupied_RB_indexes[i] = false;
+    for(int i = 0; i < 64; i++)
+        occupied_RB_indexes.push_back(false);
 
     int dci_count = 0;
-    int rbgSize = 4;
+    int rbgSize = 2;
 
     //for (auto it = dci.begin(); it != dci.end(); it++)
     //{
     //    auto p1 = *it;
     //    switch(p1->GetMessageType())
     //    {
-            /*case LteControlMessage::DL_DCI:
-                {
-                    //Cast to the proper type
-                    Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
-
-                    //Access the DCI info inside the message
-                    auto p3 = p2->GetDci();
-
-                    //Check bits to verify if RB is free or occupied
-                    uint32_t mask = 0x1;
-                    for (int j = 0; j < 32-rbgSize; j+= rbgSize)
-                    {
-                        if ((p3.m_rbBitmap & mask) != 0)
-                        {
-                            for (int k = 0; k < rbgSize; k++)
-                                occupied_RB_indexes[j+k] = true;
-                        }
-                        mask = (mask << 1);
-                    }
-                }
-                break;*/
+    //        case LteControlMessage::DL_DCI:
+    //            {
+    //                //Cast to the proper type
+    //                Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
+    //
+    //                //Access the DCI info inside the message
+    //                auto p3 = p2->GetDci();
+    //
+    //                //Check bits to verify if RB is free or occupied
+    //                uint64_t mask = 0x01;
+    //                for (int j = 0; j < 64-rbgSize; j+= rbgSize)
+    //                {
+    //                    if ((p3.m_rbBitmap & mask) != 0)
+    //                    {
+    //                        for (int k = 0; k < rbgSize; k++)
+    //                            occupied_RB_indexes[j+k] = true;
+    //                    }
+    //                    mask = (mask << 1);
+    //                }
+    //                dci_count++;
+    //            }
+    //            break;
             /*case LteControlMessage::UL_DCI:
                 {
                     //Cast to the proper type
@@ -1016,18 +1025,18 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
     //   return ;
 
     //Calculate the probability of PU detection on given RBs
-    int i = 0;
+    uint64_t i = 0;
     uint8_t j = 0;
     *avgSinr = 0;
     std::stringstream ss;
     for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
     {
+        if (i >= 64)
+            break;
 
         //Skip if the RB is supposed to be occupied by an UE transmission
-        if (occupied_RB_indexes[i])
+        if (occupied_RB_indexes.at(i))
             continue;
-
-        UnexpectedAccessBitmap |= (uint32_t)(1<<i);
 
         //Calculate SINR for the RBs from SpectrumValue
         double sinrVal = (*it);
@@ -1042,8 +1051,10 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
 
         if (senseRBs)
         {
+            UnexpectedAccessBitmap |= ((uint64_t)0x01<<i);
+
             double prob = interpolateProbability(sinrVal);
-            bool answer = checkPUPresence(prob);
+            bool answer = checkPUPresence(prob, false);
 
             if (answer)
             {
@@ -1051,7 +1062,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             }
             else
             {
-                UnexpectedAccessBitmap &= ~(uint32_t) (1<< i); //Reset unexpected access bit indicating the non-detection of PU presence
+                UnexpectedAccessBitmap &= ~((uint64_t)0x01<< i); //Reset unexpected access bit indicating the non-detection of PU presence
             }
         }
     }
@@ -1065,15 +1076,66 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
 
     if (!senseRBs)
     {
+        //Single subchannel
+        /*
         double prob = interpolateProbability(*avgSinr);
         bool answer = checkPUPresence(prob);
-
 
         if (answer)
         {
             PU_detected = true;
-            UnexpectedAccessBitmap = 0xffffffff;
+            UnexpectedAccessBitmap = 0xffffffffffffffff;
         }
+        */
+
+
+        //Multiple subchannels
+        int rbsPerSubchannel = 25;
+        double avgSinrSubchannel = 0.0;
+        i = 0;
+        int k = 0;
+        int blank = 0;
+        //std::cout << this << " sinr size=" << sinr->ConstValuesEnd()-sinr->ConstValuesBegin() << std::endl;
+        for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
+        {
+            avgSinrSubchannel += (*it);
+            if (i==rbsPerSubchannel)
+            {
+                blank += (*it==0.0) ? 1:0;
+                avgSinrSubchannel /= (rbsPerSubchannel-blank);
+                double prob = interpolateProbability(avgSinrSubchannel);
+                bool answer =  checkPUPresence(prob, avgSinrSubchannel > *avgSinr/2);
+
+                //std::cout << this << "\t" << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+
+                if (answer)
+                {
+                    PU_detected = true;
+                    UnexpectedAccessBitmap |= ( (uint64_t)0x01fff<<(13*k) );
+                }
+                i -= rbsPerSubchannel;
+                avgSinrSubchannel = 0;
+                blank = 0;
+                k++;
+            }
+        }
+
+        if(i!=0)
+        {
+            avgSinrSubchannel /= i;
+
+            double prob = interpolateProbability(avgSinrSubchannel);
+            bool answer =  checkPUPresence(prob, avgSinrSubchannel > *avgSinr/2);
+
+            //std::cout << this << "\t" << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+
+            if (answer)
+            {
+                PU_detected = true;
+                UnexpectedAccessBitmap |= ( (uint64_t)0x01fff<<(13*k) );
+            }
+        }
+        UnexpectedAccessBitmap &= 0x3ffffffffffff; //filter everything above bit 50
     }
 }
 
@@ -1101,7 +1163,7 @@ void LteSpectrumPhy::Sense()
     this->sensingEvents++;
 
     this->m_sensingEvent.Cancel();
-    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
     if (this->sensingBudget > 0)
     {
         //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
@@ -1179,7 +1241,7 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               }
 
               // schedule sensing events
-              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration, &LteSpectrumPhy::Sense, this);
+              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
 
 
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
