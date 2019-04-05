@@ -846,6 +846,9 @@ LteEnbPhy::EndFrame (void)
 {
   NS_LOG_FUNCTION (this << Simulator::Now ().GetSeconds ());
   Simulator::ScheduleNow (&LteEnbPhy::StartFrame, this);
+
+  //Include silence period between frames //BREAKS EVERYTHING (phy-rx-stats-calculator -> lte-stats-calculator -> FindImsiFromEnbRlcPath)
+  //Simulator::Schedule(MilliSeconds(1), &LteEnbPhy::StartFrame, this);
 }
 
 

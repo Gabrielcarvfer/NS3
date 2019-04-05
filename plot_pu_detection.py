@@ -58,7 +58,7 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
         #ax1.tick_params('y')
         ax1.minorticks_off()
         ax1.set_yticks([0.0, 1.0])
-        ax2.tick_params('y')
+        #ax2.tick_params('y')
 
         ax1.plot(x,ues_dict[ue]['PU_detected'],alpha=0.5)
         ax2.plot(x,ues_dict[ue]["AvgSinr"],alpha=0.5)

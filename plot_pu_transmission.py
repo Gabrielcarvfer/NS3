@@ -81,7 +81,6 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
             psd_list += [float(round(decimal.Decimal(psd_val_adjusted.__repr__()),2))]
 
         ax.plot(orderedTimestampsMs, psd_list)
-        ax.set_yticks(yticks)
         plt.show(block=False)
         pass
     pass

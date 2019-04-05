@@ -372,6 +372,11 @@ LteEnbMac::GetTypeId (void)
                    UintegerValue (0),
                    MakeUintegerAccessor (&LteEnbMac::m_componentCarrierId),
                    MakeUintegerChecker<uint8_t> (0,4))
+     .AddAttribute("FusionAlgorithm",
+             "Fusion algorithm for the collaborative sensing merge function",
+             UintegerValue(0),
+             MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
+             MakeUintegerChecker<uint8_t> (1,10))
   ;
 
   return tid;
@@ -643,7 +648,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
   //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
   bool senseRBs = false;
-  dlparams.sensedBitmap = mergeSensingReports(MRG_1_OF_N, senseRBs);
+  dlparams.sensedBitmap = mergeSensingReports(FusionAlgorithm, senseRBs);
 
   //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
