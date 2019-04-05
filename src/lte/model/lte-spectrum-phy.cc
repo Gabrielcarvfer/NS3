@@ -1039,9 +1039,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             continue;
 
         //Calculate SINR for the RBs from SpectrumValue
-        double sinrVal = (*it);
-
-        //double puSinrVal = 10*log(1/(*it));
+        double sinrVal = 10*log10(*it);
 
         //std::cout << this << " : " << Simulator::Now() << " UE:" << sinrVal << " PU:" << puSinrVal << "\n";//std::endl;
 
@@ -1098,15 +1096,15 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
         //std::cout << this << " sinr size=" << sinr->ConstValuesEnd()-sinr->ConstValuesBegin() << std::endl;
         for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
         {
-            avgSinrSubchannel += (*it);
+            avgSinrSubchannel += 10*log10(*it);
             if (i==rbsPerSubchannel)
             {
                 blank += (*it==0.0) ? 1:0;
                 avgSinrSubchannel /= (rbsPerSubchannel-blank);
                 double prob = interpolateProbability(avgSinrSubchannel);
-                bool answer =  checkPUPresence(prob, avgSinrSubchannel > *avgSinr/2);
+                bool answer =  checkPUPresence(prob);
 
-                //std::cout << this << "\t" << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+                std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
                 if (answer)
                 {
@@ -1125,9 +1123,9 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             avgSinrSubchannel /= i;
 
             double prob = interpolateProbability(avgSinrSubchannel);
-            bool answer =  checkPUPresence(prob, avgSinrSubchannel > *avgSinr/2);
+            bool answer =  checkPUPresence(prob);
 
-            //std::cout << this << "\t" << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+            std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
             if (answer)
             {
@@ -1135,6 +1133,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
                 UnexpectedAccessBitmap |= ( (uint64_t)0x01fff<<(13*k) );
             }
         }
+        std::cout << std::endl;
         UnexpectedAccessBitmap &= 0x3ffffffffffff; //filter everything above bit 50
     }
 }
