@@ -1,1 +1,50 @@
-{"0": {"position": [0.0, 0.0, 0.0], "transmission_power": 20, "channel": 0, "duty_cycle": 0.1, "period": 5, "num": 0}, "1": {"position": [50000.0, 0.0, 0.0], "transmission_power": 20, "channel": 0, "duty_cycle": 0.1, "period": 5, "num": 1}, "2": {"position": [50000.0, 50000.0, 0.0], "transmission_power": 20, "channel": 0, "duty_cycle": 0.1, "period": 5, "num": 2}, "3": {"position": [50000.0, 50000.0, 0.0], "transmission_power": 20, "channel": 0, "duty_cycle": 0.1, "period": 5, "num": 3}}
+{
+    "0": {
+        "position": [
+            53918.520639537135,
+            94107.39042723738,
+            0.038337549109328344
+        ],
+        "transmission_power": 6.117113863684174,
+        "channel": 1,
+        "duty_cycle": 0.16041026137019665,
+        "period": 1.3289595914746557,
+        "num": 0
+    },
+    "1": {
+        "position": [
+            75102.14194863231,
+            90596.31062672292,
+            0.022916684867413353
+        ],
+        "transmission_power": 23.861482249556744,
+        "channel": 2,
+        "duty_cycle": 0.11143113651935259,
+        "period": 1.2179606048410805,
+        "num": 1
+    },
+    "2": {
+        "position": [
+            62161.36444213348,
+            31349.655544652476,
+            0.05581379459831699
+        ],
+        "transmission_power": 45.57510782843285,
+        "channel": 0,
+        "duty_cycle": 0.12467790531732088,
+        "period": 3.2199004044301693,
+        "num": 2
+    },
+    "3": {
+        "position": [
+            31318.35273896263,
+            46865.60808295009,
+            0.027321695964639004
+        ],
+        "transmission_power": 51.77002610374015,
+        "channel": 2,
+        "duty_cycle": 0.17534395256746502,
+        "period": 2.1736372201258862,
+        "num": 3
+    }
+}

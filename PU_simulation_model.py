@@ -19,29 +19,30 @@ class PU_Model():
 
     @staticmethod
     def to_json():
-        outputBuffer = json.dumps(PU_Model.PUs)
+        outputBuffer = json.dumps(PU_Model.PUs, indent=4)#make json readable by indenting it
         return outputBuffer
 
-def generateRandomPUs(numPUs=4,                  #
-                      xRange=(0,100),            #km
-                      yRange=(0,100),            #km
-                      zRange=(0,0),              #km
-                      txPowerRange=(0,60),       #dBm
-                      numChannels=4,             #
-                      dutyCycleRange=(0.1,0.2, 0.01),  # percentage of period to transmit and precision
-                      txPeriodRange=(1,5)        # period between Txs
+def generateRandomPUs(
+                      numPUs         = 4,           #
+                      xRange         = (0, 100e3),  # m
+                      yRange         = (0, 100e3),  # m
+                      zRange         = (0, 0.1),    # m
+                      txPowerRange   = (0, 60),     # dBm
+                      numChannels    = 4,           #
+                      dutyCycleRange = (0.1, 0.2),  # percentage of period to transmit and precision
+                      txPeriodRange  = (1, 5)       # period between Txs
                       ):
 
     for pu in range(numPUs):
-        x = random.rand(*xRange)
-        y = random.randrange(*yRange)
-        z = random.randrange(*zRange)
-        txPower = random.randrange(*txPowerRange)
-        channel = random.randrange(0,numChannels-1)
-        dutyCycleRange = random.randrange(*dutyCycleRange)
-        txPeriod = random.randrange(*txPeriodRange)
+        x              = random.uniform(*xRange)
+        y              = random.uniform(*yRange)
+        z              = random.uniform(*zRange)
+        txPower        = random.uniform(*txPowerRange)
+        channel        = random.randrange(0, numChannels-1)
+        dutyCycle      = random.uniform(*dutyCycleRange)
+        txPeriod       = random.uniform(*txPeriodRange)
 
-        PU_Model((x, y, z), txPower, channel, dutyCycleRange, txPeriod)
+        PU_Model((x, y, z), txPower, channel, dutyCycle, txPeriod)
 
 if __name__ == "__main__":
     numPUs = 4
