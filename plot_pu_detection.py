@@ -35,7 +35,7 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
         if ax1 is None or ax2 is None:
             exit(-1)
 
-    x = list(range(0,4999,1))
+    x = list(range(0,10000,1))
 
     #print("#UEs=",len(ues_dict))
 

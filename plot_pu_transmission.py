@@ -40,8 +40,13 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
     ax = None
     if standalone_plot:
         fig = plt.figure()
-        #ax  = fig.add_subplot(111, projection='3d')
-        ax = Axes3D(fig)
+        ax  = fig.add_subplot(111)
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(311)
+        ax3 = fig.add_subplot(411)
+
+        axs=[ax,ax1,ax2,ax3]
+        #ax = Axes3D(fig)
     else:
         if ax1 is None:
             exit(-1)
@@ -66,7 +71,15 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
     msList = [float(x) for x in range(20000)]#5k ms = 5s = simulation time
 
     #for freq in list(timestampDict.values[0].values()):
+    even = 0
+    i = 0
     for freq in list(freqs.keys()):
+        if even == 0:
+            even += 1
+            continue
+        else:
+            even = 0
+
         psd_list = []
 
         #To fill or not to fill empty timestamps with background noise or interpolate?
@@ -86,7 +99,9 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
             psd_val_adjusted = 10*math.log10(psd_val) #PSD (dBW/Hz)
             psd_list += [float(round(decimal.Decimal(psd_val_adjusted.__repr__()),2))]
 
-        ax.plot(orderedTimestampsMs, psd_list, zs=freq, label="%f" %freq)
+        #ax.plot(orderedTimestampsMs, psd_list, zs=freq, label="%f" %freq)
+        axs[i].plot(orderedTimestampsMs, psd_list, label="%f" %freq)
+        i +=1
         #ax.legend()
         plt.show(block=False)
         pass
