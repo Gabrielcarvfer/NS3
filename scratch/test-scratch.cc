@@ -81,8 +81,19 @@ int main()
     Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (100));
     Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (100));
 
-    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (false));
+    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
     Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
+
+    Config::SetDefault ("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_AND));
+
+    //60dBm = 1kW
+    //38dBm = 6.3W
+    //30dBm = 1W
+    //20dBm = 100mW
+    //10dBm =  10mW
+    // 0dBm =   1mW
+    Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(60.0));
+    Config::SetDefault("ns3::LteUePhy::TxPower" , DoubleValue(30.0));
 
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
@@ -366,8 +377,8 @@ int main()
 
     for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
     {
-        //*valIt /= 4;//Decrease power levels
-        *valIt *= 16;//Increase power levels
+        *valIt /= 16;//Decrease power levels
+        //*valIt *= 4;//Increase power levels
     }
 
     WaveformGeneratorHelper waveformGeneratorHelper;
@@ -393,9 +404,7 @@ int main()
     Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
     Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
     //spectrumAnalyzerHelper.SetRxSpectrumModel ( model);
-    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
-    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300MHz3GhzLog);
-    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300Khz300GhzLog);
+    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
     spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
 
     //From lte-spectrum-value-helper.cc

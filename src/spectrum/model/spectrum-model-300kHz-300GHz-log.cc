@@ -35,9 +35,9 @@ public:
   {
 
     std::vector<double> freqs;
-    for (double f = 3e5; f < 3e11; f = f * 2)
+      for (double f = 2.110e9; f < 2.1325e9; f+=0.0025e9)
       {
-        freqs.push_back (f);
+          freqs.push_back (f);
       }
     SpectrumModel300Khz300GhzLog = Create<SpectrumModel> (freqs);
   }

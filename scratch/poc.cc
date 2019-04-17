@@ -148,7 +148,7 @@ int main()
     //lteHelper->SetEnbAntennaModelAttribute ("Orientation", DoubleValue (0.0));
     //lteHelper->SetEnbAntennaModelAttribute ("Beamwidth",   DoubleValue (35.0));
     lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (8.0));
-    lteHelper->SetUeAntennaModelAttribute  ("Gain",     DoubleValue (8.0));
+    lteHelper->SetUeAntennaModelAttribute  ("Gain",     DoubleValue (2.0));
 
     //11 Installs eNB e UE network devices
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
@@ -205,12 +205,13 @@ int main()
     waveformGeneratorNodes.Create(1);
     Ptr<SpectrumValue> mwoPsd =  MicrowaveOvenSpectrumValueHelper::CreatePowerSpectralDensityMwo1 (); //Basic microwave oven interference
 
-    //for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
-    //{
-    //    //*valIt /= 4;//Decrease power levels
-    //    *valIt *= 16;//Increase power levels
-    //}
-
+    for (auto valIt = mwoPsd->ValuesBegin(); valIt != mwoPsd->ValuesEnd(); valIt++)
+    {
+        //std::cout << *valIt << " ";
+        *valIt /= 8;//Decrease power levels
+        //*valIt *= 16;//Increase power levels
+    }
+    //std::cout << std::endl;
     WaveformGeneratorHelper waveformGeneratorHelper;
     waveformGeneratorHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
     waveformGeneratorHelper.SetTxPowerSpectralDensity (mwoPsd);
@@ -234,9 +235,7 @@ int main()
     Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
     Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
     //spectrumAnalyzerHelper.SetRxSpectrumModel ( model);
-    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
-    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300MHz3GhzLog);
-    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModel300Khz300GhzLog);
+    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
     spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
 
     //From lte-spectrum-value-helper.cc

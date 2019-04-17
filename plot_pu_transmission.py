@@ -66,7 +66,7 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
     ax.set_ylabel('Potência (dBW)')
 
     ax.tick_params('y')
-    yticks = [-float(x) for x in range(75, 100, 5)]
+    #yticks = [-float(x) for x in range(75, 100, 5)]
 
     msList = [float(x) for x in range(20000)]#5k ms = 5s = simulation time
 

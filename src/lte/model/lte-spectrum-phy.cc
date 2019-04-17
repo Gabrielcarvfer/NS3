@@ -910,7 +910,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             picojson::object origin = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
 
             //Select which table to load
-            picojson::object o = origin["fig30wiba384"].get<picojson::object>();
+            picojson::object o = origin["fig30wiba384i"].get<picojson::object>();
 
             //Load PU detection values from json file
             {
@@ -1069,8 +1069,8 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
     if (j > 0)
         *avgSinr /= j;
 
-    //if (*avgSinr < -174)
-    //    *avgSinr = -174;
+    if (*avgSinr < -174 || j == 0)
+        *avgSinr = -174;
 
     if (!senseRBs)
     {
