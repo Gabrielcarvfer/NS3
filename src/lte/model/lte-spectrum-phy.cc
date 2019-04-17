@@ -160,10 +160,10 @@ LteSpectrumPhy::LteSpectrumPhy ()
 
 bool LteSpectrumPhy::PUProbLoaded = false;
 std::vector<double> LteSpectrumPhy::SNRdB;
-std::vector<double> LteSpectrumPhy::PdTot;
+std::vector<double> LteSpectrumPhy::Pd;
 double LteSpectrumPhy::Pfa;
 std::bernoulli_distribution LteSpectrumPhy::bdPfa;
-std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPdTot;
+std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPd;
 std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
 std::mutex LteSpectrumPhy::mut;
 
@@ -745,11 +745,11 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
 
-      Time detectionDelay = Time(MilliSeconds(3));
+      Time detectionDelay = Time(MilliSeconds(1));
 
-      Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true);//Set PU_presence to true after the transmission starts
+      Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
-      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false); //Set PU_presence to false after transmission finishes
+      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance); //Set PU_presence to false after transmission finishes
     }    
 }
 
@@ -829,13 +829,32 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
 
-void LteSpectrumPhy::reset_PU_presence(bool state)
+void LteSpectrumPhy::reset_PU_presence(bool state, double distance)
 {
+    if (state)
+    {
+        PUsDistance.emplace_back(distance);
+        PU_presence = true;
+    }
+    else
+    {
+        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        {
+            if (*it == distance)
+            {
+                PUsDistance.erase(it);
+                break;
+            }
+        }
+        if (PUsDistance.size()==0)
+            PU_presence = 0;
+
+    }
   PU_presence = state;
 }
 
 
-double LteSpectrumPhy::interpolateProbability(double sinrVal)
+double LteSpectrumPhy::interpolateProbabilitySNR(double sinrVal)
 {
     //Find the first sinr value bigger than the current one
     int32_t index = -1;
@@ -859,8 +878,8 @@ double LteSpectrumPhy::interpolateProbability(double sinrVal)
 
         x_0 = SNRdB.at(index - 1);
         x_1 = SNRdB.at(index);
-        y_0 = PdTot.at(index - 1);
-        y_1 = PdTot.at(index);
+        y_0 = Pd.at(index - 1);
+        y_1 = Pd.at(index);
 
         prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
     }
@@ -877,20 +896,62 @@ double LteSpectrumPhy::interpolateProbability(double sinrVal)
     return prob;
 }
 
+double LteSpectrumPhy::interpolateProbabilityDistance(double distance)
+{
+    //Find the first sinr value bigger than the current one
+    int32_t index = -1;
+    for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    {
+        if (*it > distance)
+        {
+            index = it - SNRdB.begin();
+            //if (PU_presence)
+            //std::cout << "Sinr:" << sinrVal << "\tIndex:"<< index << std::endl;
+            break;
+        }
+    }
+
+    double prob = 0.0;
+    //If SINR is in the table, interpolate
+    if (index > 0)
+    {
+        double x_0, y_0, x_1, y_1;
+        x_0 = y_0 = x_1 = y_1 = 0.0;
+
+        x_0 = SNRdB.at(index - 1);
+        x_1 = SNRdB.at(index);
+        y_0 = Pd.at(index - 1);
+        y_1 = Pd.at(index);
+
+        prob = (y_0 * (x_1 - distance) + y_1 * (distance - x_0)) / (x_1 - x_0);
+    }
+        //If the first point for the interpolation extrapolates the table, assume probability of detection is 1
+    else if (index == 0)
+    {
+        prob = 1.0;
+    }
+        //If the second point for the interpolation extrapolates the table, assume probability of detection is 0
+    else
+    {
+        prob = 0.0;
+    }
+    return prob;
+}
+
 std::minstd_rand0 gen;
 std::mutex mutex;
 
-bool LteSpectrumPhy::checkPUPresence(double prob, bool aboveAvgSinr)
+bool LteSpectrumPhy::checkPUPresence(double prob)
 {
     bool answer = false;
-    if (PU_presence && !aboveAvgSinr)
+    if (PU_presence)
     {
         //Check if the PU is detected based on the previous probability
-        auto findProb = bdPdTot.find(prob);
-        if (findProb == bdPdTot.end()) {
-            bdPdTot.emplace(prob, std::bernoulli_distribution(prob));
+        auto findProb = bdPd.find(prob);
+        if (findProb == bdPd.end()) {
+            bdPd.emplace(prob, std::bernoulli_distribution(prob));
         }
-        answer = bdPdTot.at(prob)(gen);
+        answer = bdPd.at(prob)(gen);
     }
     else
     {
@@ -899,8 +960,77 @@ bool LteSpectrumPhy::checkPUPresence(double prob, bool aboveAvgSinr)
     }
     return answer;
 }
+int LteSpectrumPhy::verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize)
+{
+    int dci_count = 0;
 
-void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
+    for (auto it = dci.begin(); it != dci.end(); it++)
+    {
+        auto p1 = *it;
+        switch(p1->GetMessageType())
+        {
+            case LteControlMessage::DL_DCI:
+                {
+                    //Cast to the proper type
+                    Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
+
+                    //Access the DCI info inside the message
+                    auto p3 = p2->GetDci();
+
+                    //Check bits to verify if RB is free or occupied
+                    uint64_t mask = 0x01;
+                    for (int j = 0; j < 64-rbgSize; j+= rbgSize)
+                    {
+                        if ((p3.m_rbBitmap & mask) != 0)
+                        {
+                            for (int k = 0; k < rbgSize; k++)
+                                occupied_RB_indexes->at(j+k) = true;
+                        }
+                        mask = (mask << 1);
+                    }
+                    dci_count++;
+                }
+                break;
+            case LteControlMessage::UL_DCI:
+            {
+                //Cast to the proper type
+                Ptr<UlDciLteControlMessage> p2 = DynamicCast<UlDciLteControlMessage>(*it);
+
+                //Access the DCI info inside the message
+                auto p3 = p2->GetDci();
+
+                //Mark allocated RBs as occupied
+                for (int i = p3.m_rbStart; i < p3.m_rbStart+p3.m_rbLen; i++)
+                {
+                    occupied_RB_indexes->at(i) = true;
+                }
+
+            }
+            break;
+            case LteControlMessage::RAR:
+            {
+                //Cast to the proper type
+                Ptr<RarLteControlMessage> p2 = DynamicCast<RarLteControlMessage>(*it);
+                for(auto p3 = p2->RarListBegin(); p3 != p2->RarListEnd(); p3++)
+                {
+                    for (int i = p3->rarPayload.m_grant.m_rbStart; i < p3->rarPayload.m_grant.m_rbStart+p3->rarPayload.m_grant.m_rbLen; i++)
+                    {
+                        occupied_RB_indexes->at(i) = true;
+                    }
+                }
+            }
+            break;
+
+            //Skip control messages that are not DL_DCI or UL_DCI
+            default:
+                continue;
+        }
+        dci_count++;
+    }
+    return dci_count;
+}
+
+void LteSpectrumPhy::sensingProcedureSNR(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
 {
     {
         std::lock_guard<std::mutex> lock(mutex);
@@ -909,8 +1039,11 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             //Json loader to parse the file
             picojson::object origin = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
 
+            //Select SNR vs Pb tables
+            picojson::object snr_tables = origin["SNR_vs_Pb_tables"].get<picojson::object>();
+
             //Select which table to load
-            picojson::object o = origin["fig30wiba384i"].get<picojson::object>();
+            picojson::object o = snr_tables["fig30wiba384i"].get<picojson::object>();
 
             //Load PU detection values from json file
             {
@@ -919,16 +1052,16 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
                     SNRdB.push_back(it->get<double>());
             }
             {
-                auto temp = o["Pd_tot"].get<picojson::array>();
+                auto temp = o["Pd"].get<picojson::array>();
 
-                bdPdTot.emplace(0.0, std::bernoulli_distribution(0.0));
-                bdPdTot.emplace(1.0, std::bernoulli_distribution(1.0));
+                bdPd.emplace(0.0, std::bernoulli_distribution(0.0));
+                bdPd.emplace(1.0, std::bernoulli_distribution(1.0));
 
                 for (auto it = temp.begin(); it != temp.end(); it++)
                 {
                     double prob = it->get<double>();
-                    PdTot.push_back(prob);
-                    bdPdTot.emplace(prob, std::bernoulli_distribution(prob));
+                    Pd.push_back(prob);
+                    bdPd.emplace(prob, std::bernoulli_distribution(prob));
                 }
 
             }
@@ -956,69 +1089,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
     int dci_count = 0;
     int rbgSize = 2;
 
-    //for (auto it = dci.begin(); it != dci.end(); it++)
-    //{
-    //    auto p1 = *it;
-    //    switch(p1->GetMessageType())
-    //    {
-    //        case LteControlMessage::DL_DCI:
-    //            {
-    //                //Cast to the proper type
-    //                Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
-    //
-    //                //Access the DCI info inside the message
-    //                auto p3 = p2->GetDci();
-    //
-    //                //Check bits to verify if RB is free or occupied
-    //                uint64_t mask = 0x01;
-    //                for (int j = 0; j < 64-rbgSize; j+= rbgSize)
-    //                {
-    //                    if ((p3.m_rbBitmap & mask) != 0)
-    //                    {
-    //                        for (int k = 0; k < rbgSize; k++)
-    //                            occupied_RB_indexes[j+k] = true;
-    //                    }
-    //                    mask = (mask << 1);
-    //                }
-    //                dci_count++;
-    //            }
-    //            break;
-            /*case LteControlMessage::UL_DCI:
-                {
-                    //Cast to the proper type
-                    Ptr<UlDciLteControlMessage> p2 = DynamicCast<UlDciLteControlMessage>(*it);
-
-                    //Access the DCI info inside the message
-                    auto p3 = p2->GetDci();
-
-                    //Mark allocated RBs as occupied
-                    for (int i = p3.m_rbStart; i < p3.m_rbStart+p3.m_rbLen; i++)
-                    {
-                        occupied_RB_indexes[i] = true;
-                    }
-
-                }
-                break;*/
-            /*case LteControlMessage::RAR:
-                {
-                    //Cast to the proper type
-                    Ptr<RarLteControlMessage> p2 = DynamicCast<RarLteControlMessage>(*it);
-                    for(auto p3 = p2->RarListBegin(); p3 != p2->RarListEnd(); p3++)
-                    {
-                        for (int i = p3->rarPayload.m_grant.m_rbStart; i < p3->rarPayload.m_grant.m_rbStart+p3->rarPayload.m_grant.m_rbLen; i++)
-                        {
-                            occupied_RB_indexes[i] = true;
-                        }
-                    }
-                }
-                break;*/
-
-            //Skip control messages that are not DL_DCI or UL_DCI
-    //        default:
-    //            continue;
-    //    }
-    //    dci_count++;
-    //}
+    //dci_count = verifyControlMessageBlocks(&occupied_RB_indexes, dci, rbgSize);
 
     //No DCI received, then skip
     //if (dci_count == 0)
@@ -1051,8 +1122,8 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
         {
             UnexpectedAccessBitmap |= ((uint64_t)0x01<<i);
 
-            double prob = interpolateProbability(sinrVal);
-            bool answer = checkPUPresence(prob, false);
+            double prob = interpolateProbabilitySNR(sinrVal);
+            bool answer = checkPUPresence(prob);
 
             if (answer)
             {
@@ -1101,7 +1172,7 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
             {
                 blank += (*it==0.0) ? 1:0;
                 avgSinrSubchannel /= (rbsPerSubchannel-blank);
-                double prob = interpolateProbability(avgSinrSubchannel);
+                double prob = interpolateProbabilitySNR(avgSinrSubchannel);
                 bool answer =  checkPUPresence(prob);
 
                 std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
@@ -1122,7 +1193,183 @@ void LteSpectrumPhy::sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<Lt
         {
             avgSinrSubchannel /= i;
 
-            double prob = interpolateProbability(avgSinrSubchannel);
+            double prob = interpolateProbabilitySNR(avgSinrSubchannel);
+            bool answer =  checkPUPresence(prob);
+
+            std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+
+            if (answer)
+            {
+                PU_detected = true;
+                UnexpectedAccessBitmap |= ( (uint64_t)0x01fff<<(13*k) );
+            }
+        }
+        std::cout << std::endl;
+        UnexpectedAccessBitmap &= 0x3ffffffffffff; //filter everything above bit 50
+    }
+}
+
+void LteSpectrumPhy::sensingProcedureDistance(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs)
+{
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (!PUProbLoaded)
+        {
+            //Json loader to parse the file
+            picojson::object origin = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
+
+            //Select distance vs Pb tables
+            picojson::object snr_tables = origin["distance_vs_Pb_tables"].get<picojson::object>();
+
+            //Select which table to load
+            picojson::object o = snr_tables["fortaleza_scenario"].get<picojson::object>();
+
+            //Load PU detection values from json file
+            {
+                auto temp = o["d_m"].get<picojson::array>();//loading distance into SNRdB, interpolation is the same
+                for (auto it = temp.begin(); it != temp.end(); it++)
+                    SNRdB.push_back(it->get<double>());
+            }
+            {
+                auto temp = o["Pd"].get<picojson::array>();
+
+                for (auto it = temp.begin(); it != temp.end(); it++)
+                {
+                    double prob = it->get<double>();
+                    Pd.push_back(prob);
+                    bdPd.emplace(prob, std::bernoulli_distribution(prob));
+                }
+
+            }
+            {
+                auto temp = o["Pfa"].get<double>();
+                Pfa = temp;
+                bdPfa = std::bernoulli_distribution(Pfa);
+            }
+            PUProbLoaded = true;
+        }
+    }
+    //Don't sense again if previous report hasn't been sent
+    if (PU_detected)
+        return;
+
+    //Initialize variable
+    UnexpectedAccessBitmap = 0;
+
+    //Look for empty RBs SINR on the DCI
+    std::vector<bool> occupied_RB_indexes;
+
+    for(int i = 0; i < 64; i++)
+        occupied_RB_indexes.push_back(false);
+
+    int dci_count = 0;
+    int rbgSize = 2;
+
+    //dci_count = verifyControlMessageBlocks(&occupied_RB_indexes, dci, rbgSize);
+
+    //No DCI received, then skip
+    //if (dci_count == 0)
+    //   return ;
+
+    //Calculate the probability of PU detection on given RBs
+    uint64_t i = 0;
+    uint8_t j = 0;
+    *avgSinr = 0;
+    std::stringstream ss;
+    for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
+    {
+        if (i >= 64)
+            break;
+
+        //Skip if the RB is supposed to be occupied by an UE transmission
+        if (occupied_RB_indexes.at(i))
+            continue;
+
+        //Calculate SINR for the RBs from SpectrumValue
+        double sinrVal = 10*log10(*it);
+
+        //std::cout << this << " : " << Simulator::Now() << " UE:" << sinrVal << " PU:" << puSinrVal << "\n";//std::endl;
+
+        *avgSinr += sinrVal;
+        j++;
+
+
+        if (senseRBs)
+        {
+            UnexpectedAccessBitmap |= ((uint64_t)0x01<<i);
+
+            double prob = interpolateProbabilityDistance(sinrVal);
+            bool answer = checkPUPresence(prob);
+
+            if (answer)
+            {
+                PU_detected = true;
+            }
+            else
+            {
+                UnexpectedAccessBitmap &= ~((uint64_t)0x01<< i); //Reset unexpected access bit indicating the non-detection of PU presence
+            }
+        }
+    }
+
+
+    if (j > 0)
+        *avgSinr /= j;
+
+    if (*avgSinr < -174 || j == 0)
+        *avgSinr = -174;
+
+    if (!senseRBs)
+    {
+        //Single subchannel
+        /*
+        double prob = interpolateProbability(*avgSinr);
+        bool answer = checkPUPresence(prob);
+
+        if (answer)
+        {
+            PU_detected = true;
+            UnexpectedAccessBitmap = 0xffffffffffffffff;
+        }
+        */
+
+
+        //Multiple subchannels
+        int rbsPerSubchannel = 25;
+        double avgSinrSubchannel = 0.0;
+        i = 0;
+        int k = 0;
+        int blank = 0;
+        //std::cout << this << " sinr size=" << sinr->ConstValuesEnd()-sinr->ConstValuesBegin() << std::endl;
+        for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
+        {
+            avgSinrSubchannel += 10*log10(*it);
+            if (i==rbsPerSubchannel)
+            {
+                blank += (*it==0.0) ? 1:0;
+                avgSinrSubchannel /= (rbsPerSubchannel-blank);
+                double prob = interpolateProbabilityDistance(avgSinrSubchannel);
+                bool answer =  checkPUPresence(prob);
+
+                std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+
+                if (answer)
+                {
+                    PU_detected = true;
+                    UnexpectedAccessBitmap |= ( (uint64_t)0x01fff<<(13*k) );
+                }
+                i -= rbsPerSubchannel;
+                avgSinrSubchannel = 0;
+                blank = 0;
+                k++;
+            }
+        }
+
+        if(i!=0)
+        {
+            avgSinrSubchannel /= i;
+
+            double prob = interpolateProbabilityDistance(avgSinrSubchannel);
             bool answer =  checkPUPresence(prob);
 
             std::cout << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t" << std::endl;//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
@@ -1152,7 +1399,10 @@ void LteSpectrumPhy::Sense()
     sinrHistory.push_back(m_sinrPerceived.Copy());
     double avgSinr = 0;
     bool senseRBs = false;
-    sensingProcedure(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
+
+    //sensingProcedureSNR(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
+    sensingProcedureDistance(sinrHistory.back(), m_rxControlMessageListCopy, &avgSinr, senseRBs);
+
     puPresence.push_back(PU_detected);
     sinrAvgHistory.push_back(avgSinr);
 

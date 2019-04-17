@@ -37,7 +37,7 @@
 #include <iostream>
 #include <utility>
 #include "multi-model-spectrum-channel.h"
-
+#include <cmath>
 
 namespace ns3 {
 
@@ -311,6 +311,12 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       NS_LOG_LOGIC ("rxAntennaGain = " << rxAntennaGain << " dB");
                       pathLossDb -= rxAntennaGain;
                     }
+                  if (rxParams->txAntenna != 0 && rxAntenna != 0)
+                  {
+                      auto txPos = txMobility->GetPosition();
+                      auto rxPos = receiverMobility->GetPosition();
+                      rxParams->distance = sqrt(pow(txPos.x-rxPos.x,2)+pow(txPos.y-rxPos.y,2)+pow(txPos.z-rxPos.z,2));
+                  }
                   if (m_propagationLoss)
                     {
                       double propagationGainDb = m_propagationLoss->CalcRxPower (0, txMobility, receiverMobility);

@@ -551,19 +551,23 @@ private:
 
   //Create structures to hold probabilities
   static std::vector<double> SNRdB; // Sinr (x-axis of PU detection probability table)
-  static std::vector<double> PdTot; // Probability of detection (y-axis of PU detection probability table)
+  static std::vector<double> Pd; // Probability of detection (y-axis of PU detection probability table)
   static double Pfa; //probability of false alarm
   static std::bernoulli_distribution bdPfa;
-  static std::map<double, std::bernoulli_distribution> bdPdTot;
+  static std::map<double, std::bernoulli_distribution> bdPd;
   static bool PUProbLoaded;
-  void sensingProcedure(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
-  double interpolateProbability(double sinrVal);
-  bool checkPUPresence(double prob, bool aboveAvg);
+  void sensingProcedureSNR(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
+  void sensingProcedureDistance(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
+  double interpolateProbabilitySNR(double sinrVal);
+  double interpolateProbabilityDistance(double distance);
+  int verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize);
+  bool checkPUPresence(double prob);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
   EventId PU_event;
-  void reset_PU_presence(bool state);
+  std::vector<double> PUsDistance;
+  void reset_PU_presence(bool state, double distance);
 
   static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
   static std::mutex mut;

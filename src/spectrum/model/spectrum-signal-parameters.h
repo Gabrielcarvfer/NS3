@@ -113,6 +113,7 @@ struct SpectrumSignalParameters : public SimpleRefCount<SpectrumSignalParameters
 
   double pathLossDb;
   double maxPathLossDb;
+  double distance;
 };
 
 

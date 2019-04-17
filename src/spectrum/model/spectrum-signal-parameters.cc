@@ -49,6 +49,7 @@ SpectrumSignalParameters::SpectrumSignalParameters (const SpectrumSignalParamete
   txAntenna = p.txAntenna;
   pathLossDb = 0.0;
   maxPathLossDb = 0.0;
+  distance = 0.0;
 }
 
 Ptr<SpectrumSignalParameters>
