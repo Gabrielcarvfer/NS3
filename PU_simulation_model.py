@@ -31,7 +31,7 @@ def generateRandomPUs(
                       yRange         = (0, 100e3),  # m
                       zRange         = (0, 0.1),    # m
                       txPowerRange   = (0, 60),     # dBm
-                      numSubChannels    = 4,           #
+                      numSubChannels = 4,           #
                       dutyCycleRange = (0.1, 0.2),  # percentage of period to transmit and precision
                       txPeriodRange  = (1, 5)       # period between Txs
                       ):

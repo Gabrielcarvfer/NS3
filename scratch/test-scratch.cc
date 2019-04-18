@@ -404,7 +404,7 @@ int main()
     Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
     Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
     //spectrumAnalyzerHelper.SetRxSpectrumModel ( model);
-    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelLte);
+    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelRANGE);
     spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
 
     //From lte-spectrum-value-helper.cc

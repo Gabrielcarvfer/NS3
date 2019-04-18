@@ -547,6 +547,7 @@ private:
   uint64_t sensingBudget; ///< count remaining sensing samples to collect in a slot
   std::vector< Ptr<SpectrumValue> > sinrHistory; ///< holds the history of measured sinr
   std::vector< double > sinrAvgHistory; ///< holds the history of measured sinr
+  std::vector<std::vector<double>> sinrGroupHistory; ///< holds the sinr history for arbitrarily sized RB groups
   std::vector<bool>   puPresence; ///< holds the history of PU detection
 
   //Create structures to hold probabilities
@@ -556,8 +557,9 @@ private:
   static std::bernoulli_distribution bdPfa;
   static std::map<double, std::bernoulli_distribution> bdPd;
   static bool PUProbLoaded;
-  void sensingProcedureSNR(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
-  void sensingProcedureDistance(Ptr<SpectrumValue> sinr, std::list< Ptr<LteControlMessage> > dci, double * avgSinr, bool senseRBs);
+  void calculateAvgSinr(Ptr<SpectrumValue> sinr, int groupingSize, double * avgChannelSinr, std::vector<double> *historicalGroupSinr);
+  static void loadDetectionCurves(bool SNRsensing);
+  void sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing);
   double interpolateProbabilitySNR(double sinrVal);
   double interpolateProbabilityDistance(double distance);
   int verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize);
@@ -566,8 +568,8 @@ private:
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
   EventId PU_event;
-  std::vector<double> PUsDistance;
-  void reset_PU_presence(bool state, double distance);
+  std::vector<std::tuple<double,int>> PUsDistance;
+  void reset_PU_presence(bool state, double distance, int channel);
 
   static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
   static std::mutex mut;
