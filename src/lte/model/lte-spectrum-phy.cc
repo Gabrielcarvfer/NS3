@@ -789,7 +789,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
           }
           i++;
       }
-      std::cout << "PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
+      //std::cout << Simulator::Now() << ": PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
 
       //Schedule event to store PU presence
       Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
@@ -1207,7 +1207,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //   return ;
 
     std::stringstream ss;
-
+    int k = 0;
     //Calculate the probability of PU detection on given RBs
     for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
         //Skip if the RB is supposed to be occupied by an UE transmission
@@ -1215,17 +1215,23 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //    continue;
 
         double distance = 10e10;
-        int k = 0;
         for (auto itPU = PUsDistance.begin(); itPU < PUsDistance.end(); itPU++)
             if (std::get<1>(*itPU) == k)
             {
-                distance = std::get<0>(*itPU);
-                //ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
+                double dis =std::get<0>(*itPU);
+                if (dis < distance)
+                {
+                    distance = dis;
+                    //ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
+                }
             }
 
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
 
         //ss << *groupSNR << " " << distance << " " << prob << "\n";
+        //ss << distance << " " << prob << "\n";
+        //if (prob == 0.1)
+        //    prob = 0.184; // For a total Pfa=0.1, with K tests, you need P*(1-P)^(K-1)=0.1. When K = 4, P = 0.184.
 
         bool answer = checkPUPresence(prob);
 
@@ -1240,7 +1246,6 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
         k++;
-
     }
     //std::cout << ss.str() << "\n";
     UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
@@ -1273,7 +1278,7 @@ void LteSpectrumPhy::Sense()
         groupingSize = 25; //subdivide 100RBs into 4 subchannels of 25RBs each
 
     //Precalculate SNR for RBGs and channel-wise SNR
-    calculateAvgSinr(sinrHistory.back(), rbgSize, &avgSinr, &historicalSNR);
+    calculateAvgSinr(sinrHistory.back(), groupingSize, &avgSinr, &historicalSNR);
     sinrAvgHistory.push_back(avgSinr);
     sinrGroupHistory.push_back(historicalSNR);
 

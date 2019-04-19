@@ -47,7 +47,7 @@ int main() {
     Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_AND));
+    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_OR));
 
     //60dBm = 1kW
     //38dBm = 6.3W
@@ -81,7 +81,7 @@ int main() {
     NodeContainer ueNodes;
     NodeContainer enbNodes;
     enbNodes.Create(1);
-    ueNodes.Create(2);
+    ueNodes.Create(10);
     allNodes.Add(enbNodes);
     //allNodes.Add(ueNodes);
 
@@ -97,9 +97,19 @@ int main() {
 
     Ptr<ListPositionAllocator> positionAlloc2 = CreateObject<ListPositionAllocator>();
 
-    //Linear topology
-    positionAlloc2->Add(Vector(66000.0, 94000.0, 0.0));  // 3 - UE 0
-    positionAlloc2->Add(Vector(100000.0, 50000.0, 0.0));  // 4 - UE 1
+    //positionAlloc2->Add(Vector( 66000.0, 94000.0, 0.0)); //  1 - UE 0
+    //positionAlloc2->Add(Vector(100000.0, 50000.0, 0.0)); //  2 - UE 1
+    positionAlloc2->Add(Vector (50000.0 - 18000.0, 50000.0 -     00.0,  0.0));  // 3 - UE 0
+    positionAlloc2->Add(Vector (50000.0 - 12280.0, 50000.0 -   6600.0,  0.0));  // 4 - UE 1
+    positionAlloc2->Add(Vector (50000.0 -  9440.0, 50000.0 -   9660.0,  0.0));  // 5 - UE 2
+    positionAlloc2->Add(Vector (50000.0 -  9710.0, 50000.0 -  -5050.0,  0.0));  // 6 - UE 3
+    positionAlloc2->Add(Vector (50000.0 -  4360.0, 50000.0 -  -5870.0,  0.0));  // 7 - UE 4
+    positionAlloc2->Add(Vector (50000.0 -  4660.0, 50000.0 -   1770.0,  0.0));  // 8 - UE 5
+    positionAlloc2->Add(Vector (50000.0 -  3000.0, 50000.0 -     00.0,  0.0));  // 9 - UE 6
+    positionAlloc2->Add(Vector (50000.0 +  3000.0, 50000.0 -     00.0,  0.0));  //10 - UE 7
+    positionAlloc2->Add(Vector (50000.0 +  5140.0, 50000.0 +   1090.0,  0.0));  //11 - UE 8
+    positionAlloc2->Add(Vector (50000.0 +  5440.0, 50000.0 +   7690.0,  0.0));  //12 - UE 9
+
 
 
     //5 Install mobility model to the nodes
@@ -198,11 +208,29 @@ int main() {
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
-    //17 configure the interference generator (acting as a PU)
-
+    //17 Create interference generators (PUs) and spectrum analyzer
     NodeContainer waveformGeneratorNodes;
     waveformGeneratorNodes.Create(4);
 
+    NodeContainer spectrumAnalyzer;
+    spectrumAnalyzer.Create(1);
+
+    NodeContainer waveNodes;
+    waveNodes.Add(spectrumAnalyzer);
+    waveNodes.Add(waveformGeneratorNodes);
+
+    //18 add mobility model and positions to waveNodes (PUs and spectrum analyzer) to prevent errors during their setup
+    Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
+    pos->Add(Vector( 50000.0,  50000.0, 0.0));
+    pos->Add(Vector(     0.0,      0.0, 0.0));
+    pos->Add(Vector(100000.0,      0.0, 0.0));
+    pos->Add(Vector(     0.0, 100000.0, 0.0));
+    pos->Add(Vector(100000.0, 100000.0, 0.0));
+    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    mobility.SetPositionAllocator(pos);
+    mobility.Install(waveNodes);
+
+    //19 configure the interference generator (acting as a PU)
     double basePsdWattsHz = pow (10.0, (38 - 30) / 10.0); // convert dBm to W/Hz
     double centralFreq = lteHelper->centralFreq;
     double channelBandwidth = 20.0e6;
@@ -238,10 +266,7 @@ int main() {
     }
 
 
-    //18 capture the spectrum transmissions
-    NodeContainer spectrumAnalyzer;
-    spectrumAnalyzer.Create(1);
-
+    //20 capture the spectrum transmissions with the spectrum analyzer
     SpectrumAnalyzerHelper spectrumAnalyzerHelper;
     spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
     Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
@@ -264,28 +289,12 @@ int main() {
     NetDeviceContainer spectrumDevice;
     spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
-
-    NodeContainer waveNodes;
-    waveNodes.Add(spectrumAnalyzer);
-    waveNodes.Add(waveformGeneratorNodes);
-
-    //19 position the interference generator and the spectrum analyzer
-    Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-    pos->Add(Vector( 50000.0,  50000.0, 0.0));
-    pos->Add(Vector(     0.0,      0.0, 0.0));
-    pos->Add(Vector(100000.0,      0.0, 0.0));
-    pos->Add(Vector(     0.0, 100000.0, 0.0));
-    pos->Add(Vector(100000.0, 100000.0, 0.0));
-    mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    mobility.SetPositionAllocator(pos);
-    mobility.Install(waveNodes);
-
-    //20 install the Flow monitor
+    //21 install the Flow monitor
     Ptr<FlowMonitor> flowMonitor;
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
-    //21 Export the netanim animation for the simulation
+    //22 Export the netanim animation for the simulation
     /*
     BaseStationNetDevice b;
     SubscriberStationNetDevice s;
@@ -297,11 +306,11 @@ int main() {
     anim.EnablePacketMetadata(true);
      */
 
-    //22 Run simulation
+    //23 Run simulation
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 
-    //23 Dump flowmonitor results
+    //24 Dump flowmonitor results
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
 
     Simulator::Destroy();

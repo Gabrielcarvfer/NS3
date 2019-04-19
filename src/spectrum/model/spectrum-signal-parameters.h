@@ -113,7 +113,7 @@ struct SpectrumSignalParameters : public SimpleRefCount<SpectrumSignalParameters
 
   double pathLossDb;
   double maxPathLossDb;
-  double distance;
+  double distance;//Using this distance for location purposes is cheating
 };
 
 

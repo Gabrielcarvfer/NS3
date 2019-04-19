@@ -1449,6 +1449,7 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
     //Then register UE reports
     channelOccupation.at(reg.ReceivedFrameNo).at(reg.ReceivedSubframeNo).emplace(reg.OriginAddress,reg);
 
+    //std::cout << std::bitset<64>(reg.UnexpectedAccessBitmap) << std::endl;
 
     return;
 }
