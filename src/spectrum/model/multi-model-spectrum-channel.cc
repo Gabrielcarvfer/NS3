@@ -311,12 +311,6 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       NS_LOG_LOGIC ("rxAntennaGain = " << rxAntennaGain << " dB");
                       pathLossDb -= rxAntennaGain;
                     }
-                  if (rxParams->txAntenna != 0 && rxAntenna != 0)
-                  {
-                      auto txPos = txMobility->GetPosition();
-                      auto rxPos = receiverMobility->GetPosition();
-                      rxParams->distance = sqrt(pow(txPos.x-rxPos.x,2)+pow(txPos.y-rxPos.y,2)+pow(txPos.z-rxPos.z,2));
-                  }
                   if (m_propagationLoss)
                     {
                       double propagationGainDb = m_propagationLoss->CalcRxPower (0, txMobility, receiverMobility);
@@ -342,6 +336,13 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                     {
                       delay = m_propagationDelay->GetDelay (txMobility, receiverMobility);
                     }
+                }
+                if(txMobility!=0 && receiverMobility != 0)
+                {
+                  auto txPos = txMobility->GetPosition();
+                  auto rxPos = receiverMobility->GetPosition();
+                  rxParams->distance = sqrt(pow(txPos.x-rxPos.x,2)+pow(txPos.y-rxPos.y,2)+pow(txPos.z-rxPos.z,2));
+                  //std::cout << rxParams->distance << " m" << std::endl;
                 }
 
               Ptr<NetDevice> netDev = (*rxPhyIterator)->GetDevice ();

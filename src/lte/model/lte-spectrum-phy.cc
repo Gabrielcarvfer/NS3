@@ -701,7 +701,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 {
   NS_LOG_FUNCTION (this << spectrumRxParams);
   NS_LOG_LOGIC (this << " state: " << m_state);
-  
+
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
 
@@ -747,27 +747,31 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
       Time detectionDelay = Time(MilliSeconds(1));
 
+
+
       //Calculate distance of current PU based on groupSinrHistory
       std::vector<double> currentGroupSinrHistory;
       double avgSinrSubchannel = 0.0;
       int rbsPerSubchannel = 25;
-      int i = 0, k = 0;
+      int i = 1, k = 0;
 
-      //Retrieve SINR from m_interferenceData
-      for (auto it = m_sinrPerceived.ConstValuesBegin (); it < m_sinrPerceived.ConstValuesEnd (); it++, i++)
+      //Retrieve SINR
+      for (auto it = m_sinrPerceived.ConstValuesBegin(); it < m_sinrPerceived.ConstValuesEnd(); it++, i++)
       {
-          avgSinrSubchannel += 10*log10(*it);
-          if (i==rbsPerSubchannel)
+          if (*it != 0)
+              avgSinrSubchannel += 10 * log10(*it);
+
+          if (i/rbsPerSubchannel != k)
           {
 
               avgSinrSubchannel /= rbsPerSubchannel;
-              currentGroupSinrHistory.emplace_back(avgSinrSubchannel);
-              avgSinrSubchannel = 0;
+              currentGroupSinrHistory.push_back(avgSinrSubchannel);
+              //std::cout << "*"<<avgSinrSubchannel << std::endl;
+              avgSinrSubchannel = 0.0;
               k++;
           }
       }
-      avgSinrSubchannel /= i;
-      currentGroupSinrHistory.emplace_back(avgSinrSubchannel);
+      //std::cout << std::endl;
 
       double maxDiff = 0.0;
       int channel = -1;
@@ -776,8 +780,8 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       {
           double currSinr = *it;
           double historySinr = sinrGroupHistory.back()[i];
-          double diff = sqrt(pow(currSinr - historySinr,2));//absolute difference
-          std::cout << this << " " << sinrGroupHistory.size() << " " << diff << " " << currSinr << " " << historySinr << std::endl;
+          double diff = sqrt(pow(currSinr - historySinr, 2));//absolute difference
+          //std::cout << this << " " << sinrGroupHistory.back().size() << " " << diff << " " << currSinr << " " << historySinr << std::endl;
           if (diff > maxDiff)
           {
               maxDiff = diff;
@@ -785,13 +789,13 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
           }
           i++;
       }
-
-
+      std::cout << "PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
 
       //Schedule event to store PU presence
       Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
       PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance, channel); //Set PU_presence to false after transmission finishes
+
     }    
 }
 
@@ -875,7 +879,16 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
 {
     if (state)
     {
-        PUsDistance.emplace_back(std::tuple<double,int>(distance,channel));
+        bool existent = false;
+        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        {
+            if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
+            {
+                existent = true;
+            }
+        }
+        if(!existent)
+            PUsDistance.emplace_back(distance,channel);
         PU_presence = true;
     }
     else
@@ -885,11 +898,10 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
             if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
             {
                 PUsDistance.erase(it);
-                break;
             }
         }
         if (PUsDistance.size()==0)
-            PU_presence = 0;
+            PU_presence = false;
 
     }
   PU_presence = state;
@@ -1074,14 +1086,17 @@ int LteSpectrumPhy::verifyControlMessageBlocks(std::vector<bool> * occupied_RB_i
 
 void LteSpectrumPhy::calculateAvgSinr(Ptr<SpectrumValue> sinr, int groupingSize, double * avgChannelSinr, std::vector<double> *historicalGroupSinr)
 {
-    int i = 0;
+    int i = 1;
     int k = 0;
     double avgChannelSnr = 0.0;
     double avgGroupSnr   = 0.0;
+    double sinrVal = 0.0;
+
     for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
     {
         //Calculate SINR for the RB from SpectrumValue
-        double sinrVal = 10*log10(*it);
+        if (*it != 0)
+            sinrVal = 10*log10(*it);
 
         //Add to group (RBG/subchannel) avg SNR
         avgGroupSnr+=sinrVal;
@@ -1203,10 +1218,14 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         int k = 0;
         for (auto itPU = PUsDistance.begin(); itPU < PUsDistance.end(); itPU++)
             if (std::get<1>(*itPU) == k)
+            {
                 distance = std::get<0>(*itPU);
+                //ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
+            }
 
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
-        ss << *groupSNR << " " << distance << " " << prob << "\n";
+
+        //ss << *groupSNR << " " << distance << " " << prob << "\n";
 
         bool answer = checkPUPresence(prob);
 
