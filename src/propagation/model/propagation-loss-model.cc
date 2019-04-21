@@ -887,59 +887,10 @@ MatrixPropagationLossModel::DoAssignStreams (int64_t stream)
 }
 
 // ------------------------------------------------------------------------- //
-
-NS_OBJECT_ENSURE_REGISTERED (RangePropagationLossModel);
-
-TypeId
-RangePropagationLossModel::GetTypeId (void)
-{
-  static TypeId tid = TypeId ("ns3::RangePropagationLossModel")
-    .SetParent<PropagationLossModel> ()
-    .SetGroupName ("Propagation")
-    .AddConstructor<RangePropagationLossModel> ()
-    .AddAttribute ("MaxRange",
-                   "Maximum Transmission Range (meters)",
-                   DoubleValue (250),
-                   MakeDoubleAccessor (&RangePropagationLossModel::m_range),
-                   MakeDoubleChecker<double> ())
-  ;
-  return tid;
-}
-
-RangePropagationLossModel::RangePropagationLossModel ()
-{
-}
-
-std::default_random_engine generator;
-std::lognormal_distribution<double> distribution(0.0,4.47);
-
-double
-RangePropagationLossModel::DoCalcRxPower (double txPowerDbm,
-                                          Ptr<MobilityModel> a,
-                                          Ptr<MobilityModel> b) const
-{
-  double distance = a->GetDistanceFrom (b);
-  if (distance <= m_range)
-    {
-      return txPowerDbm;
-    }
-  else
-    {
-      return -1000;
-    }
-}
-
-int64_t
-RangePropagationLossModel::DoAssignStreams (int64_t stream)
-{
-  return 0;
-}
-
-// ------------------------------------------------------------------------- //
-// ------------------------------------------------------------------------- //
-
 NS_OBJECT_ENSURE_REGISTERED (RANGEPropagationLossModel);
-
+//As defined in 5G-RANGE D3.1
+// http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
+//
 TypeId
 RANGEPropagationLossModel::GetTypeId (void)
 {
@@ -948,8 +899,8 @@ RANGEPropagationLossModel::GetTypeId (void)
             .SetGroupName ("Propagation")
             .AddConstructor<RANGEPropagationLossModel> ()
             .AddAttribute ("Frequency",
-                           "The carrier frequency (in Hz) at which propagation occurs  (default is 5.15 GHz).",
-                           DoubleValue (5.150e9),
+                           "The carrier frequency (in Hz) at which propagation occurs  (default is band 5: 850 MHz). ",
+                           DoubleValue (850e6),
                            MakeDoubleAccessor (&RANGEPropagationLossModel::SetFrequency,
                                                &RANGEPropagationLossModel::GetFrequency),
                            MakeDoubleChecker<double> ())
@@ -1042,7 +993,7 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
                                           Ptr<MobilityModel> b) const
 {
     /*
-     * RANGE free space equation:
+     * RANGE path loss equation:
      * where Pt, Gr, Gr and P are in Watt units
      * L is in meter units.
      *
@@ -1090,12 +1041,11 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
     double numerator = m_lambda * m_lambda;
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
     double shadow = m_normalGen->GetValue();
-    double shadow2 = distribution(generator);
     double lossDb = -10 * log10 (numerator / denominator);
     lossDb += m_kValue + shadow;
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
     //Print RANGE pathloss and shadowing
-    // std::cout << this << ": " << lossDb << " " << shadow << " " << shadow2 << "\n";
+    // std::cout << this << ": " << lossDb << " " << shadow << "\n";
     return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 

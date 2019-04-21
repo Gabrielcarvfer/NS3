@@ -43,6 +43,9 @@ int main() {
     NodeContainer allNodes;
     Config::SetDefault("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue(100));
     Config::SetDefault("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue(100));
+    Config::SetDefault("ns3::LteEnbNetDevice::DlEarfcn",    UintegerValue(2400)); // band 5 (~850MHz), check src/lte/model/lte-spectrum-value-helper.cc for references
+    Config::SetDefault("ns3::LteEnbNetDevice::UlEarfcn",    UintegerValue(20400));// band 5 (~850MHz), check src/lte/model/lte-spectrum-value-helper.cc for references
+
 
     Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
@@ -63,8 +66,8 @@ int main() {
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper>();
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
 
-    lteHelper->SetAttribute("PathlossModel", StringValue("ns3::FriisPropagationLossModel"));         // Default
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
+    //lteHelper->SetAttribute("PathlossModel", StringValue("ns3::FriisPropagationLossModel"));         // Default
+    lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
 
 
     Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper>();
@@ -157,7 +160,7 @@ int main() {
     //lteHelper->SetEnbAntennaModelAttribute ("Orientation", DoubleValue (0.0));
     //lteHelper->SetEnbAntennaModelAttribute ("Beamwidth",   DoubleValue (35.0));
     lteHelper->SetEnbAntennaModelAttribute("Gain", DoubleValue(8.0));
-    lteHelper->SetUeAntennaModelAttribute("Gain", DoubleValue(2.0));
+    lteHelper->SetUeAntennaModelAttribute("Gain", DoubleValue(8.0));
 
     //11 Installs eNB e UE network devices
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice(enbNodes);
