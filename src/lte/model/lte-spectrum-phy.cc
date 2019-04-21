@@ -1241,8 +1241,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     loadDetectionCurves(SNRsensing);
 
     //Don't sense again if previous report hasn't been sent
-    if (PU_detected)
-        return;
+    //if (PU_detected)
+    //    return;
 
     //Initialize variable
     UnexpectedAccessBitmap = 0;

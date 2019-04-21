@@ -61,12 +61,12 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
     sortedInputOutputBitmapKeys = list(sorted(inputAndOutputBitmapPerInterval.keys()))
 
     #Labels in english
-    #ax.set_xlabel('Time (ms)', )
-    #ax.set_ylabel('RBG status')
+    ax.set_xlabel('Time (ms)', )
+    ax.set_ylabel('RBG status')
 
     #Labels in portuguese
-    ax.set_xlabel('Tempo (ms)', )
-    ax.set_ylabel('Estado do RBG')
+    #ax.set_xlabel('Tempo (ms)', )
+    #ax.set_ylabel('Estado do RBG')
 
     #ax.grid(True)
     ax.tick_params('y')

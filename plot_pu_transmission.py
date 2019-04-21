@@ -82,16 +82,16 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
             psd_val_adjusted = 10*math.log10(psd_val) #PSD (dBW/Hz)
             psd_list += [round(psd_val_adjusted,2)]
 
-        #Labels in english
-        #ax.set_xlabel('Time (ms)', )
-        #ax.set_ylabel('PSD(dBW/Hz)')
 
-        #Labels in portuguese
-        ax[i].set_xlabel('Tempo (ms)', )
         ax[i].set_ylabel('PSD CH-%d (dBW/Hz)' % i)
         if i != 0:
             ax[i].set_ylabel('PSD CH-%d' % i)
 
+        #Labels in english
+        ax[i].set_xlabel('Time (ms)')
+
+        #Labels in portuguese
+        #ax[i].set_xlabel('Tempo (ms)')
 
         ax[i].tick_params('y')
         #yticks = [-float(x) for x in range(75, 100, 5)]
