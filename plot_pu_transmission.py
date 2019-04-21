@@ -5,10 +5,10 @@ import math
 import decimal
 
 
-def plot_pu_transmission(standalone_plot=False, ax1=None):
+def plot_pu_transmission(standalone_plot=False, axs=None):
     bufferFileIn = ""
 
-    with open("./build/bin/spectrum-analyzer-output-9-0.tr", 'r') as file:
+    with open("./build/bin/spectrum-analyzer-output-17-0.tr", 'r') as file:
         bufferFileIn = file.readlines()
 
     plt.ioff()
@@ -39,34 +39,17 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
 
     ax = None
     if standalone_plot:
-        fig = plt.figure()
-        ax  = fig.add_subplot(111)
-        ax1 = fig.add_subplot(211)
-        ax2 = fig.add_subplot(311)
-        ax3 = fig.add_subplot(411)
-
-        axs=[ax,ax1,ax2,ax3]
+        fig, ax = plt.subplots(nrows=4, sharex=True)
         #ax = Axes3D(fig)
     else:
-        if ax1 is None:
+        if axs is None:
             exit(-1)
         else:
-            ax = ax1
+            ax = axs
 
 
     orderedTimestamps = list(sorted(timestampDict.keys()))
     orderedTimestampsMs = [x*1000 for x in orderedTimestamps] # seconds to milliseconds
-
-    #Labels in english
-    #ax.set_xlabel('Time (ms)', )
-    #ax.set_ylabel('Measured PSD(dBW/Hz)')
-
-    #Labels in portuguese
-    ax.set_xlabel('Tempo (ms)', )
-    ax.set_ylabel('Potência (dBW)')
-
-    ax.tick_params('y')
-    #yticks = [-float(x) for x in range(75, 100, 5)]
 
     msList = [float(x) for x in range(20000)]#5k ms = 5s = simulation time
 
@@ -97,14 +80,29 @@ def plot_pu_transmission(standalone_plot=False, ax1=None):
         for timestamp in orderedTimestamps:
             psd_val = timestampDict[timestamp][freq]
             psd_val_adjusted = 10*math.log10(psd_val) #PSD (dBW/Hz)
-            psd_list += [float(round(decimal.Decimal(psd_val_adjusted.__repr__()),2))]
+            psd_list += [round(psd_val_adjusted,2)]
+
+        #Labels in english
+        #ax.set_xlabel('Time (ms)', )
+        #ax.set_ylabel('PSD(dBW/Hz)')
+
+        #Labels in portuguese
+        ax[i].set_xlabel('Tempo (ms)', )
+        ax[i].set_ylabel('PSD CH-%d (dBW/Hz)' % i)
+        if i != 0:
+            ax[i].set_ylabel('PSD CH-%d' % i)
+
+
+        ax[i].tick_params('y')
+        #yticks = [-float(x) for x in range(75, 100, 5)]
 
         #ax.plot(orderedTimestampsMs, psd_list, zs=freq, label="%f" %freq)
-        axs[i].plot(orderedTimestampsMs, psd_list, label="%f" %freq)
+        ax[i].plot(orderedTimestampsMs, psd_list, label="%f" %freq)
         i +=1
         #ax.legend()
         plt.show(block=False)
         pass
+    #plt.tight_layout()
     pass
 
 

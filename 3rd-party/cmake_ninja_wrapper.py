@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
-# CMake Ninja wrapper that forces CLion to build with Ninja (faster than CLion)
+# CMake Ninja wrapper that forces CLion to build with Ninja (faster than Make)
 # How to use: https://gist.github.com/arichardson/3de8adaebec0d488c13911edd2e0fe63
 
 import sys

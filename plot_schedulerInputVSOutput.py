@@ -70,7 +70,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
 
     #ax.grid(True)
     ax.tick_params('y')
-    yticks = [x for x in list(range(0, 50, 10))]
+    yticks = [x for x in list(range(0, 60, 10))]
     xticks = [float(x) for x in range(20000)]
     for i in range(50):
 

@@ -710,7 +710,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   {
       if (PU_detected && UnexpectedAccessBitmap != 0)
       {
-          bool falsePositive = !PU_presence;
+          bool falsePositive = !PU_presence;//todo: replace with a falsePositive bitmap
           dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, falsePositive);
           UnexpectedAccessBitmap = 0;
       }
@@ -747,13 +747,63 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
       Time detectionDelay = Time(MilliSeconds(1));
 
+      std::stringstream ss;
+      int k = 1;
+      int channel = -1;
+
+      //Third attempt to find which subchannel the PU is transmitting
+      /*
+      Ptr<const SpectrumValue> allSigSpectrum = m_interferenceData->GetAllSignals();
+      for (auto valIt = allSigSpectrum->ConstValuesBegin(); valIt != allSigSpectrum->ConstValuesEnd(); valIt++)
+      {
+        ss << *valIt << " ";
+      }
+      ss << "\n";
+      */
+      int firstIndex = -1;
+      double max = 0.0;
+      for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
+      {
+          ss << *valIt << " ";
+          if (*valIt != 0.0 && *valIt > max)
+          {
+              max = *valIt;
+              firstIndex = k;
+          }
+      }
+
+      channel = firstIndex / ((k-1)/4);
+
+      //std::cout << "PU channel " << channel << " index " << firstIndex << " k " << k << std::endl;
+
+      //ss << "\n";
+      //std::cout << ss.str() << std::endl;
+
+      //Second attempt to find which subchannel the PU is transmitting
+      /*
+      double max = -100;
+      int maxId = -1;
+      for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
+      {
+          if(*valIt > max)
+          {
+              max = *valIt;
+              maxId = k;
+          }
+      }
 
 
+      int channelD = maxId/25;
+      k = 0;
+      */
+
+      //First attempt to find which subchannel the PU is transmitting
+      /*
       //Calculate distance of current PU based on groupSinrHistory
       std::vector<double> currentGroupSinrHistory;
       double avgSinrSubchannel = 0.0;
       int rbsPerSubchannel = 25;
-      int i = 1, k = 0;
+      int i = 1;
 
       //Retrieve SINR
       for (auto it = m_sinrPerceived.ConstValuesBegin(); it < m_sinrPerceived.ConstValuesEnd(); it++, i++)
@@ -773,8 +823,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       }
       //std::cout << std::endl;
 
-      double maxDiff = 0.0;
-      int channel = -1;
+      double maxDiff = 0.0;//0.0 for no lower threshold of difference
       i = 0;
       for (auto it = currentGroupSinrHistory.begin(); it < currentGroupSinrHistory.end(); it++)
       {
@@ -789,8 +838,10 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
           }
           i++;
       }
-      //std::cout << Simulator::Now() << ": PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
 
+      //std::cout << Simulator::Now() << ": PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
+      */
+      //std::cout << firstIndex << " vs " << channelD << " vs " << channel << std::endl;
       //Schedule event to store PU presence
       Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
@@ -879,15 +930,16 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
 {
     if (state)
     {
-        bool existent = false;
-        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
-        {
-            if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
-            {
-                existent = true;
-            }
-        }
-        if(!existent)
+        //bool existent = false;
+        //for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        //{
+        //    if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
+        //    {
+        //        existent = true;
+        //        break;
+        //    }
+        //}
+        //if(!existent)
             PUsDistance.emplace_back(distance,channel);
         PU_presence = true;
     }
@@ -898,6 +950,7 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
             if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
             {
                 PUsDistance.erase(it);
+                break;
             }
         }
         if (PUsDistance.size()==0)
@@ -1214,7 +1267,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //if (occupied_RB_indexes.at(i))
         //    continue;
 
-        double distance = 10e10;
+        double distance = 10.0e10;
+
         for (auto itPU = PUsDistance.begin(); itPU < PUsDistance.end(); itPU++)
             if (std::get<1>(*itPU) == k)
             {
@@ -1226,14 +1280,23 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                 }
             }
 
+        //Mark PU_presence with the current channel PU presence
+        double PU_presence_backup = PU_presence;
+        if (distance == 10.0e10)
+            PU_presence = false;
+
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
 
-        //ss << *groupSNR << " " << distance << " " << prob << "\n";
-        //ss << distance << " " << prob << "\n";
+        //ss << Simulator::Now() << ": " << *groupSNR << " " << distance << " " << prob << "\n";
+        //if (distance != 10e10)
+        //  ss << "channel=" << k << " PU distance=" << distance << " Detection Pb=" << prob << "\n";
         //if (prob == 0.1)
         //    prob = 0.184; // For a total Pfa=0.1, with K tests, you need P*(1-P)^(K-1)=0.1. When K = 4, P = 0.184.
 
+
+        //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
         bool answer = checkPUPresence(prob);
+
 
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
@@ -1245,11 +1308,20 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
             PU_detected = true;
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
+        //ss << Simulator::Now() << " : " << this << " channel " << k << " PU_presence " << PU_presence << " answer " << answer << "\n";
         k++;
-    }
-    //std::cout << ss.str() << "\n";
-    UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
 
+        //Restore PU_presence value, indicating the presence of at least one PU in one of the subchannels
+        PU_presence = PU_presence_backup;
+    }
+
+    if (ss.str().size() > 3)
+    {
+        //ss << std::bitset<50>(UnexpectedAccessBitmap) << "\n";
+        std::cout << ss.str() << "\n";
+    }
+
+    UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
 }
 
 

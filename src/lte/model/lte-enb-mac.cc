@@ -1566,7 +1566,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         }
 
 
-                        int kConfirmed = 0;
+                        std::vector<int> kConfirmed = {0,0,0,0};
 
                         //Merge their reports
                         for (auto offset : ueOffsetsSamples)
@@ -1582,19 +1582,26 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //Check if the UE with the current RNTI reported something
                             if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                             {
-                                kConfirmed += 1;
+                                for (int subchannel = 0; subchannel < 4; subchannel++)
+                                {
+                                    kConfirmed[subchannel] += ((subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap >> (13*subchannel)) & 0x01);
+                                }
                                 falsePositive |= subframeIt->second.at(ueRnti->first).falsePositive;
                             }
                         }
 
-                        if (kConfirmed == k)
+                        for (int subchannel = 0; subchannel < 4; subchannel++)
                         {
-                            sensedBitmap |= 0xffffffffffffffff;
+                            if (kConfirmed[subchannel] == k)
+                            {
+                                sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
+                            }
+                            else
+                            {
+                                falsePositive = false;
+                            }
                         }
-                        else
-                        {
-                            falsePositive = false;
-                        }
+                        sensedBitmap &= 0x0003ffffffffffff;
                     }
                 }
                 break;
@@ -1646,23 +1653,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
     //Single channel
     //if(!senseRBs && sensedBitmap != 0)
     //    sensedBitmap = 0xffffffffffffffff;
-
-    //Multiple subchannels
-    if(!senseRBs && sensedBitmap != 0)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            uint64_t maskedBitmap = sensedBitmap & ( (uint64_t)0x01fff << 13*i );
-            //std::cout << std::hex << maskedBitmap << std::endl;
-            if (maskedBitmap != 0)
-            {
-                sensedBitmap |= ( (uint64_t)0x01fff << 13*i );
-                //std::cout << std::hex << sensedBitmap << std::endl;
-            }
-        }
-        //std::cout << std::endl;
-        sensedBitmap &= 0x3ffffffffffff; //Filter everything above bit 50
-    }
 
     //First create map for sensed frames
     unexpectedChannelAccessBitmap.emplace(m_frameNo, std::map <uint64_t, std::vector<uint64_t> > ());

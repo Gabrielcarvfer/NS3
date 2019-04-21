@@ -22,28 +22,22 @@ def set_size(w,h, ax=None):
 
 def plot_collaborative_sensing_data():
 	#Plot figure with 4 subplots sharing the x-axis
-    fig = plt.figure(figsize=(30,10))
- 
-
-    rows = []
-    rows.append(fig.add_subplot(111,projection="3d"))
-    rows.append(fig.add_subplot(212,sharex=rows[0]))
-    rows.append(fig.add_subplot(313,sharex=rows[0]))
-    rows.append(fig.add_subplot(414,sharex=rows[0]))
+    fig, rows = plt.subplots(nrows=7, sharex=True, figsize=(15,10)) 
 
     #Plot PU PSD (dBW/Hz) measured by a spectrumAnalyzer
-    plot_pu_transmission(ax1=rows[0])
+    plot_pu_transmission(axs=rows[0:4])
 
     #Plot PU detection by UEs and Average SINR
-    plot_pu_detection_by_ues(ax1=rows[1], ax2=rows[2])
+    plot_pu_detection_by_ues(ax1=rows[4], ax2=rows[5])
 
     #Plot eNB scheduler input and output
     # white: unallocated RBG and PU was not detected
     # red  : unallocated RBG, PU was detected previously by one or more UE(s)
     # blue :   allocated RBG, PU was not detected/reported yet    
-    plot_scheduler_input_n_output(ax1=rows[3])
+    plot_scheduler_input_n_output(ax1=rows[6])
 
     fig.align_labels()
+    plt.tight_layout()
     plt.show()
     pass
 

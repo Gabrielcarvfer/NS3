@@ -47,7 +47,7 @@ int main() {
     Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_OR));
+    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_1_OF_N));
 
     //60dBm = 1kW
     //38dBm = 6.3W
@@ -222,16 +222,16 @@ int main() {
     //18 add mobility model and positions to waveNodes (PUs and spectrum analyzer) to prevent errors during their setup
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
     pos->Add(Vector( 50000.0,  50000.0, 0.0));
-    pos->Add(Vector(     0.0,      0.0, 0.0));
-    pos->Add(Vector(100000.0,      0.0, 0.0));
-    pos->Add(Vector(     0.0, 100000.0, 0.0));
-    pos->Add(Vector(100000.0, 100000.0, 0.0));
+    pos->Add(Vector( 35000.0,  25000.0, 0.0));
+    pos->Add(Vector( 65000.0,  25000.0, 0.0));
+    pos->Add(Vector( 30000.0,  70000.0, 0.0));
+    pos->Add(Vector( 70000.0,  65000.0, 0.0));
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.SetPositionAllocator(pos);
     mobility.Install(waveNodes);
 
     //19 configure the interference generator (acting as a PU)
-    double basePsdWattsHz = pow (10.0, (38 - 30) / 10.0); // convert dBm to W/Hz
+    double basePsdWattsHz = pow (10.0, (50 - 30) / 10.0); // convert dBm to W/Hz
     double centralFreq = lteHelper->centralFreq;
     double channelBandwidth = 20.0e6;
     int i = 0;
