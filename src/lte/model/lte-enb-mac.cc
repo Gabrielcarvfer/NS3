@@ -432,27 +432,35 @@ LteEnbMac::~LteEnbMac ()
   }
 
 
-  uint32_t totalFusions = 0;
-  uint32_t falsePositiveReports = 0;
-  uint32_t falseNegativeFusions = 0;
+  std::vector<uint32_t> totalFusions = {0,0,0,0};
+  std::vector<uint32_t> FalseAlarmBitmapReports = {0,0,0,0};
+  std::vector<uint32_t> falseNegativeFusions = {0,0,0,0};
   for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
   {
       for(auto&& [subframe, bitmap]: subframeMap)
       {
           //Bitmap[0] contains the bitmap itself
-          //Bitmap[1] contains the false positive flag
+          //Bitmap[1] contains the false positive bitmap
+          //Bitmap[2] contains the false negative bitmap
           sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<50>(bitmap[0]);
-          totalFusions += 1;
-          falsePositiveReports += bitmap[1];
-          falseNegativeFusions += bitmap[2];
+
+          for (int subchannel = 0; subchannel < 4; subchannel++)
+          {
+              totalFusions[subchannel] += 1;
+              FalseAlarmBitmapReports[subchannel] += (bitmap[1] >> (13*subchannel)) & 0x01;
+              falseNegativeFusions[subchannel] += (bitmap[2] >> (13*subchannel)) & 0x01;
+          }
       }
   }
 
-  sensing_list_file << "\n\nFrom " << totalFusions << " fusions, " << falsePositiveReports << " were false positive and " << falseNegativeFusions << " were false negative.";
-  sensing_list_file <<   "\nFalse positives were " << 100*(double)falsePositiveReports/(double)totalFusions << "%.";
-  sensing_list_file <<   "\nFalse negatives were " << 100*(double)falseNegativeFusions/(double)totalFusions << "%.";
+  for (int subchannel = 0; subchannel < 4; subchannel++)
+  {
+      sensing_list_file << "\n\nFor subchannel "<< subchannel << ":";
+      sensing_list_file <<   "\nFrom " << totalFusions[subchannel] << " fusions, " << FalseAlarmBitmapReports[subchannel] << " were false positive and " << falseNegativeFusions[subchannel] << " were false negative.";
+      sensing_list_file <<   "\nFalse positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)totalFusions[subchannel] << "%.";
+      sensing_list_file <<   "\nFalse negatives were " << 100*(double)falseNegativeFusions[subchannel]/(double)totalFusions[subchannel] << "%.";
+  }
   sensing_list_file << std::endl;
-
 
 
 }
@@ -1458,8 +1466,8 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
 uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 {
     uint64_t sensedBitmap = 0;
-    bool falsePositive = false;
-    bool falseNegative = false;
+    uint64_t falseAlarmBitmap = 0;
+    uint64_t falseNegativeBitmap = 0;
 
     while (channelOccupation.size() > 0)//just an if with break
     {
@@ -1486,7 +1494,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap  |= origAddr.second.UnexpectedAccessBitmap;
-                            falsePositive |= origAddr.second.falsePositive;
+                            falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
                         }
                 }
                 break;
@@ -1502,7 +1510,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             {
                                 //std::cout << std::dec << frameIt->first << " " << subframeIt->first << " " << std::hex << origAddr.second.UnexpectedAccessBitmap << std::endl;
                                 sensedBitmap &= origAddr.second.UnexpectedAccessBitmap;
-                                falsePositive |= origAddr.second.falsePositive;
+                                falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
                             }
                         }
                 }
@@ -1514,7 +1522,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap ^= origAddr.second.UnexpectedAccessBitmap;
-                            falsePositive |= origAddr.second.falsePositive;
+                            falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
                         }
                 }
                 break;
@@ -1525,7 +1533,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for (auto origAddr : subframeIt->second)
                         {
                             sensedBitmap = ~(sensedBitmap ^ origAddr.second.UnexpectedAccessBitmap);
-                            falsePositive |= origAddr.second.falsePositive;
+                            falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
                         }
                 }
                 break;
@@ -1585,8 +1593,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 for (int subchannel = 0; subchannel < 4; subchannel++)
                                 {
                                     kConfirmed[subchannel] += ((subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap >> (13*subchannel)) & 0x01);
+                                    falseAlarmBitmap |= (((subframeIt->second.at(ueRnti->first).FalseAlarmBitmap >> (13*subchannel)) & 0x01fff)<<13*subchannel);
+
                                 }
-                                falsePositive |= subframeIt->second.at(ueRnti->first).falsePositive;
                             }
                         }
 
@@ -1596,12 +1605,10 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             {
                                 sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
                             }
-                            else
-                            {
-                                falsePositive = false;
-                            }
                         }
                         sensedBitmap &= 0x0003ffffffffffff;
+                        falseAlarmBitmap &= 0x0003ffffffffffff;
+
                     }
                 }
                 break;
@@ -1630,7 +1637,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             for (auto origAddr : subframeIt->second)
                             {
                                 sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
-                                falsePositive |= origAddr.second.falsePositive;
+                                falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
                             }
                         }
 
@@ -1641,11 +1648,12 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
         }
 
         //Check for false negatives
-        if(sensedBitmap == 0)
-            for (auto origAddr : subframeIt->second)
-            {
-                falseNegative |=  (origAddr.second.UnexpectedAccessBitmap != 0 && !origAddr.second.falsePositive);
-            }
+        for (auto origAddr : subframeIt->second)
+        {
+            for (int subchannel = 0; subchannel < 4; subchannel++)
+                falseNegativeBitmap |=  origAddr.second.PU_presence_V[subchannel] ? ~sensedBitmap & ((uint64_t)0x01fff << 13*subchannel) : (uint64_t) 0;
+        }
+        falseNegativeBitmap &= 0x0003ffffffffffff;
 
         break;//out of if
     }
@@ -1659,8 +1667,8 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
     std::vector<uint64_t> vet;
     vet.push_back(sensedBitmap);
-    vet.push_back(falsePositive);
-    vet.push_back(falseNegative);//For measurement only purposes. Using this in your algorithm is cheating.
+    vet.push_back(falseAlarmBitmap);
+    vet.push_back(falseNegativeBitmap);//For measurement only purposes. Using this in your algorithm is cheating.
 
     //After that, create map for sensed subframes
     unexpectedChannelAccessBitmap.at(m_frameNo).emplace(m_subframeNo, vet);

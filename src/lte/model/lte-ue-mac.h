@@ -270,7 +270,7 @@ private:
 public:
   uint32_t lastFrameNo;
   uint32_t lastSubframeNo;
-  void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint64_t UnexpectedAccessBitmap, bool falsePositive); //todo: implement this properly through the SAP
+  void SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint64_t UnexpectedAccessBitmap, uint64_t FalseAlarmBitmap, std::vector<bool> PU_presence_V); //todo: implement this properly through the SAP
   Ptr<LteSpectrumPhy> ueSpectrumPhy; //todo: implement this properly through the SAP
 
 };

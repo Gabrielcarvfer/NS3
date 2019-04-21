@@ -156,6 +156,7 @@ LteSpectrumPhy::LteSpectrumPhy ()
   sensingBudget = 0;
   PU_presence = false;
   PU_detected = false;
+  PU_presence_V = {false, false, false, false};
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -710,9 +711,10 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   {
       if (PU_detected && UnexpectedAccessBitmap != 0)
       {
-          bool falsePositive = !PU_presence;//todo: replace with a falsePositive bitmap
-          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, falsePositive);
+          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, FalseAlarmBitmap, PU_presence_V);
           UnexpectedAccessBitmap = 0;
+          FalseAlarmBitmap = 0;
+          PU_presence_V = {false, false, false, false};
       }
       PU_detected = false;
 
@@ -1244,6 +1246,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
     //Initialize variable
     UnexpectedAccessBitmap = 0;
+    FalseAlarmBitmap = 0;
 
     //Look for empty RBs SINR on the DCI
     std::vector<bool> occupied_RB_indexes;
@@ -1285,6 +1288,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         if (distance == 10.0e10)
             PU_presence = false;
 
+        PU_presence_V[k] = PU_presence;
+
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
 
         //ss << Simulator::Now() << ": " << *groupSNR << " " << distance << " " << prob << "\n";
@@ -1307,6 +1312,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         {
             PU_detected = true;
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
+            if (PU_presence)
+                FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
         //ss << Simulator::Now() << " : " << this << " channel " << k << " PU_presence " << PU_presence << " answer " << answer << "\n";
         k++;
@@ -1315,13 +1322,14 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         PU_presence = PU_presence_backup;
     }
 
-    if (ss.str().size() > 3)
-    {
-        //ss << std::bitset<50>(UnexpectedAccessBitmap) << "\n";
-        std::cout << ss.str() << "\n";
-    }
+    //if (ss.str().size() > 3)
+    //{
+    //    ss << std::bitset<50>(UnexpectedAccessBitmap) << "\n";
+    //    std::cout << ss.str() << "\n";
+    //}
 
     UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
+    FalseAlarmBitmap &= 0x0003ffffffffffff;
 }
 
 

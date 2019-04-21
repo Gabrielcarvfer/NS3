@@ -841,7 +841,7 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
-void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint64_t UnexpectedAccessBitmap, bool falsePositive)
+void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint64_t UnexpectedAccessBitmap, uint64_t FalseAlarmBitmap, std::vector<bool> PU_presence_V)
 {
     //We stopped receiving ctrl messages(not supposed to happen), so estimate frames
     //if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
@@ -866,9 +866,9 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint
     //msg << Simulator::Now() << "\n";
     //msg << m_frameNo << "\n";
     //msg << m_subframeNo << "\n";
-    //msg << std::hex << ueSpectrumPhy->UnexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
+    //msg << std::hex << ueSpectrumPhy->unexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
     //
-    //ueSpectrumPhy->UnexpectedAccessBitmap = 0;//reset bitmap
+    //ueSpectrumPhy->unexpectedAccessBitmap = 0;//reset bitmap
     //
     //msg << rxParams->duration << "\n";
     //msg << rxParams->pathLossDb << "\n";
@@ -909,7 +909,8 @@ void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, uint
     senseReport.SensedFrameNo = m_frameNo;
     senseReport.SensedSubframeNo = m_subframeNo;
     senseReport.UnexpectedAccessBitmap = UnexpectedAccessBitmap;
-    senseReport.falsePositive = falsePositive;
+    senseReport.FalseAlarmBitmap = FalseAlarmBitmap;
+    senseReport.PU_presence_V = PU_presence_V;
 
     Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
     msg->SetMessage(senseReport);

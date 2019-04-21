@@ -577,6 +577,8 @@ public:
     bool PU_presence;
     bool PU_detected;
     uint64_t UnexpectedAccessBitmap;
+    uint64_t FalseAlarmBitmap;
+    std::vector<bool> PU_presence_V;
 
 };
 

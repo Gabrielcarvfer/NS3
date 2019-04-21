@@ -157,7 +157,7 @@ int main() {
     //lteHelper->SetEnbAntennaModelAttribute ("Orientation", DoubleValue (0.0));
     //lteHelper->SetEnbAntennaModelAttribute ("Beamwidth",   DoubleValue (35.0));
     lteHelper->SetEnbAntennaModelAttribute("Gain", DoubleValue(8.0));
-    lteHelper->SetUeAntennaModelAttribute("Gain", DoubleValue(8.0));
+    lteHelper->SetUeAntennaModelAttribute("Gain", DoubleValue(2.0));
 
     //11 Installs eNB e UE network devices
     NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice(enbNodes);
@@ -231,7 +231,7 @@ int main() {
     mobility.Install(waveNodes);
 
     //19 configure the interference generator (acting as a PU)
-    double basePsdWattsHz = pow (10.0, (50 - 30) / 10.0); // convert dBm to W/Hz
+    double basePsdWattsHz = pow (10.0, (46 - 30) / 10.0); // convert dBm to W/Hz
     double centralFreq = lteHelper->centralFreq;
     double channelBandwidth = 20.0e6;
     int i = 0;
