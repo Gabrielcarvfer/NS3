@@ -310,14 +310,14 @@ void
 AsciiTraceHelper::DefaultEnqueueSinkWithoutContext (Ptr<OutputStreamWrapper> stream, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "+ " << Simulator::Now ().GetSeconds () << " " << *p << std::endl;
+  *stream->GetStream () << "+ " << Simulator::Now ().GetSeconds () << " " << *p << "\n"; //std::endl forces a flush
 }
 
 void
 AsciiTraceHelper::DefaultEnqueueSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "+ " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+  *stream->GetStream () << "+ " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << "\n"; //std::endl forces a flush
 }
 
 //
@@ -336,14 +336,14 @@ void
 AsciiTraceHelper::DefaultDropSinkWithoutContext (Ptr<OutputStreamWrapper> stream, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "d " << Simulator::Now ().GetSeconds () << " " << *p << std::endl;
+  *stream->GetStream () << "d " << Simulator::Now ().GetSeconds () << " " << *p << "\n"; //std::endl forces a flush
 }
 
 void
 AsciiTraceHelper::DefaultDropSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "d " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+  *stream->GetStream () << "d " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << "\n"; //std::endl forces a flush
 }
 
 //
@@ -363,14 +363,14 @@ void
 AsciiTraceHelper::DefaultDequeueSinkWithoutContext (Ptr<OutputStreamWrapper> stream, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "- " << Simulator::Now ().GetSeconds () << " " << *p << std::endl;
+  *stream->GetStream () << "- " << Simulator::Now ().GetSeconds () << " " << *p << "\n"; //std::endl forces a flush
 }
 
 void
 AsciiTraceHelper::DefaultDequeueSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "- " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+  *stream->GetStream () << "- " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << "\n"; //std::endl forces a flush
 }
 
 //
@@ -387,14 +387,14 @@ void
 AsciiTraceHelper::DefaultReceiveSinkWithoutContext (Ptr<OutputStreamWrapper> stream, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << *p << std::endl;
+  *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << *p << "\n"; //std::endl forces a flush
 }
 
 void
 AsciiTraceHelper::DefaultReceiveSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+  *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << "\n"; //std::endl forces a flush
 }
 
 void 

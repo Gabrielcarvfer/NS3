@@ -166,6 +166,7 @@ double LteSpectrumPhy::Pfa;
 std::bernoulli_distribution LteSpectrumPhy::bdPfa;
 std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPd;
 std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+std::ofstream LteSpectrumPhy::plot_snr_history_file;
 std::mutex LteSpectrumPhy::mut;
 
 LteSpectrumPhy::~LteSpectrumPhy ()
@@ -200,6 +201,27 @@ void LteSpectrumPhy::DoDispose ()
       for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
           plot_pu_file << *it << " ";
       plot_pu_file << "\n";//std::endl;
+
+
+
+      if(!plot_snr_history_file.is_open())
+      {
+          plot_snr_history_file.open("plot_pu_group.txt");
+      }
+
+      plot_snr_history_file << this << ": ";
+      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
+          plot_snr_history_file << *it << " ";
+      plot_snr_history_file << std::endl;
+      plot_snr_history_file << this << ": ";
+      for (auto it = this->sinrGroupHistory.begin(); it != this->sinrGroupHistory.end(); it++)
+      {
+          plot_snr_history_file << "[";
+          for (auto it2 = it->begin(); it2 != it->end(); it2++)
+              plot_snr_history_file << *it2 << " ";
+          plot_snr_history_file << "]";
+      }
+      plot_snr_history_file << "\n";//std::endl;
   }
   //End sensing
 
@@ -774,7 +796,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
           }
       }
 
-      channel = firstIndex / ((k-1)/4);
+      channel = (firstIndex+1) / ((k-1)/4);
 
       //std::cout << "PU channel " << channel << " index " << firstIndex << " k " << k << std::endl;
 
@@ -1374,7 +1396,7 @@ void LteSpectrumPhy::Sense()
     this->sensingEvents++;
 
     this->m_sensingEvent.Cancel();
-    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
     if (this->sensingBudget > 0)
     {
         //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);

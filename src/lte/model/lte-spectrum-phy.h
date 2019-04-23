@@ -572,6 +572,7 @@ private:
   void reset_PU_presence(bool state, double distance, int channel);
 
   static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+  static std::ofstream plot_snr_history_file;
   static std::mutex mut;
 public:
     bool PU_presence;

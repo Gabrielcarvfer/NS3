@@ -8,7 +8,7 @@ import decimal
 def plot_pu_transmission(standalone_plot=False, axs=None):
     bufferFileIn = ""
 
-    with open("./build/bin/spectrum-analyzer-output-17-0.tr", 'r') as file:
+    with open("./build/bin/spectrum-analyzer-output-20-0.tr", 'r') as file:
         bufferFileIn = file.readlines()
 
     plt.ioff()
@@ -39,7 +39,7 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
 
     ax = None
     if standalone_plot:
-        fig, ax = plt.subplots(nrows=4, sharex=True)
+        fig, ax = plt.subplots(nrows=4, sharex=True, sharey=True)
         #ax = Axes3D(fig)
     else:
         if axs is None:
@@ -53,15 +53,9 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
 
     msList = [float(x) for x in range(20000)]#5k ms = 5s = simulation time
 
-    #for freq in list(timestampDict.values[0].values()):
-    even = 0
     i = 0
-    for freq in list(freqs.keys()):
-        if even == 0:
-            even += 1
-            continue
-        else:
-            even = 0
+    for freq in list(freqs.keys())[1:5]:
+
 
         psd_list = []
 
@@ -79,6 +73,7 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
 
         for timestamp in orderedTimestamps:
             psd_val = timestampDict[timestamp][freq]
+            psd_val = 3.98107e-18 if psd_val < 3.98107e-18 else psd_val #if smaller than -174 dBm (noise floor)
             psd_val_adjusted = 10*math.log10(psd_val) #PSD (dBW/Hz)
             psd_list += [round(psd_val_adjusted,2)]
 
@@ -94,12 +89,13 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
         #ax[i].set_xlabel('Tempo (ms)')
 
         ax[i].tick_params('y')
-        #yticks = [-float(x) for x in range(75, 100, 5)]
+        #yticks = [-float(x) for x in range(-20, 100, 20)]
+        #ax[i].set_yticks(yticks)
 
         #ax.plot(orderedTimestampsMs, psd_list, zs=freq, label="%f" %freq)
         ax[i].plot(orderedTimestampsMs, psd_list, label="%f" %freq)
-        i +=1
         #ax.legend()
+        i+=1
         plt.show(block=False)
         pass
     #plt.tight_layout()

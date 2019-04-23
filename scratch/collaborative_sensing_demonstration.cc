@@ -212,12 +212,12 @@ int main() {
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
-    //17 Create interference generators (PUs) and spectrum analyzer
+    //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)
     NodeContainer waveformGeneratorNodes;
     waveformGeneratorNodes.Create(4);
 
     NodeContainer spectrumAnalyzer;
-    spectrumAnalyzer.Create(1);
+    spectrumAnalyzer.Create(4);
 
     NodeContainer waveNodes;
     waveNodes.Add(spectrumAnalyzer);
@@ -225,7 +225,10 @@ int main() {
 
     //18 add mobility model and positions to waveNodes (PUs and spectrum analyzer) to prevent errors during their setup
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-    pos->Add(Vector( 50000.0,  50000.0, 0.0));
+    pos->Add(Vector( 35000.0,  25000.0, 0.0));
+    pos->Add(Vector( 65000.0,  25000.0, 0.0));
+    pos->Add(Vector( 30000.0,  70000.0, 0.0));
+    pos->Add(Vector( 70000.0,  65000.0, 0.0));
     pos->Add(Vector( 35000.0,  25000.0, 0.0));
     pos->Add(Vector( 65000.0,  25000.0, 0.0));
     pos->Add(Vector( 30000.0,  70000.0, 0.0));
@@ -250,7 +253,7 @@ int main() {
 
          Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
          phy->SetAttribute("StartFrequency", DoubleValue(baseFreq));
-         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth / 4));
+         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth / 8));
          phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
          phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
          phy->CreateTvPsd();

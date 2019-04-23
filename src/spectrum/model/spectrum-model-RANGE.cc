@@ -35,7 +35,7 @@ public:
   {
 
     std::vector<double> freqs;
-    for (double f = 2.110e9; f < 2.1325e9; f+=0.0025e9)
+    for (double f = 856.5e6; f < 882e6; f+=5e6)
       {
         freqs.push_back (f);
       }
