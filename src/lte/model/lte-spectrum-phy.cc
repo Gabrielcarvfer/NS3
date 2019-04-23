@@ -196,7 +196,7 @@ void LteSpectrumPhy::DoDispose ()
       plot_pu_file << this << ": ";
       for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
           plot_pu_file << *it << " ";
-      plot_pu_file << std::endl;
+      plot_pu_file << "\n";
       plot_pu_file << this << ": ";
       for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
           plot_pu_file << *it << " ";
@@ -210,9 +210,14 @@ void LteSpectrumPhy::DoDispose ()
       }
 
       plot_snr_history_file << this << ": ";
-      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
-          plot_snr_history_file << *it << " ";
-      plot_snr_history_file << std::endl;
+      for (auto it = this->puPresence_V.begin(); it != this->puPresence_V.end(); it++)
+      {
+          plot_snr_history_file << "[";
+          for (auto it2 = it->begin(); it2 != it->end(); it2++)
+              plot_snr_history_file << *it2 << " ";
+          plot_snr_history_file << "]";
+      }
+      plot_snr_history_file << "\n";
       plot_snr_history_file << this << ": ";
       for (auto it = this->sinrGroupHistory.begin(); it != this->sinrGroupHistory.end(); it++)
       {
@@ -1269,6 +1274,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //Initialize variable
     UnexpectedAccessBitmap = 0;
     FalseAlarmBitmap = 0;
+    std::vector<bool> PU_detected_V = {false, false, false, false};
 
     //Look for empty RBs SINR on the DCI
     std::vector<bool> occupied_RB_indexes;
@@ -1334,6 +1340,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         {
             PU_detected = true;
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
+            PU_detected_V[k] = true;
             if (PU_presence)
                 FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
@@ -1349,7 +1356,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //    ss << std::bitset<50>(UnexpectedAccessBitmap) << "\n";
     //    std::cout << ss.str() << "\n";
     //}
-
+    puPresence_V.emplace_back(PU_detected_V);
     UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
     FalseAlarmBitmap &= 0x0003ffffffffffff;
 }

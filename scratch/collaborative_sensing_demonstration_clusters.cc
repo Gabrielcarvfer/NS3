@@ -1,5 +1,5 @@
 //
-// Created by Gabriel Ferreira (@gabrielcarvfer) on 21/04/2019.
+// Created by Gabriel Ferreira (@gabrielcarvfer) on 04/04/2019.
 //
 
 /*
@@ -55,7 +55,7 @@ int main() {
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
     //0.4 Configure fusion algorithm for the collaborative sensing
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_2_OF_N)); // MRG_1_OF_N = OR
+    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_1_OF_N)); // MRG_1_OF_N = OR
 
     //60dBm = 1    kW
     //53dBm = 200  kW // Taken from
@@ -212,12 +212,12 @@ int main() {
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
-    //17 Create interference generators (PUs) and spectrum analyzer
+    //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)
     NodeContainer waveformGeneratorNodes;
     waveformGeneratorNodes.Create(4);
 
     NodeContainer spectrumAnalyzer;
-    spectrumAnalyzer.Create(1);
+    spectrumAnalyzer.Create(4);
 
     NodeContainer waveNodes;
     waveNodes.Add(spectrumAnalyzer);
@@ -225,7 +225,10 @@ int main() {
 
     //18 add mobility model and positions to waveNodes (PUs and spectrum analyzer) to prevent errors during their setup
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
-    pos->Add(Vector( 50000.0,  50000.0, 0.0));
+    pos->Add(Vector( 35000.0,  25000.0, 0.0));
+    pos->Add(Vector( 65000.0,  25000.0, 0.0));
+    pos->Add(Vector( 30000.0,  70000.0, 0.0));
+    pos->Add(Vector( 70000.0,  65000.0, 0.0));
     pos->Add(Vector( 35000.0,  25000.0, 0.0));
     pos->Add(Vector( 65000.0,  25000.0, 0.0));
     pos->Add(Vector( 30000.0,  70000.0, 0.0));
@@ -245,28 +248,28 @@ int main() {
 
     for (double baseFreq = centralFreq-channelBandwidth/2; baseFreq < centralFreq+channelBandwidth/2; baseFreq+=channelBandwidth/4, i++, j+=0.1)
     {
-         //if(i!=0)
-         //    continue;
+        //if(i!=0)
+        //    continue;
 
-         Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
-         phy->SetAttribute("StartFrequency", DoubleValue(baseFreq));
-         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth / 4));
-         phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
-         phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
-         phy->CreateTvPsd();
+        Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
+        phy->SetAttribute("StartFrequency", DoubleValue(baseFreq));
+        phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth / 8));
+        phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
+        phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
+        phy->CreateTvPsd();
 
-         /* Test max PSD value */
-         Ptr<SpectrumValue> psd = phy->GetTxPsd();
+        /* Test max PSD value */
+        Ptr<SpectrumValue> psd = phy->GetTxPsd();
 
-         WaveformGeneratorHelper waveformGeneratorHelper;
-         waveformGeneratorHelper.SetChannel(lteHelper->GetDownlinkSpectrumChannel());
-         waveformGeneratorHelper.SetTxPowerSpectralDensity(psd);
+        WaveformGeneratorHelper waveformGeneratorHelper;
+        waveformGeneratorHelper.SetChannel(lteHelper->GetDownlinkSpectrumChannel());
+        waveformGeneratorHelper.SetTxPowerSpectralDensity(psd);
 
-         waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(i + 1)));   // corresponds to 60 Hz
-         waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(j));
-         waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
-         Simulator::Schedule(Seconds(2.5+i), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
-                 waveformGeneratorDevices.GetN()-1)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
+        waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(i + 1)));   // corresponds to 60 Hz
+        waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(j));
+        waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
+        Simulator::Schedule(Seconds(2.5+i), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
+                waveformGeneratorDevices.GetN()-1)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
     }
 
 

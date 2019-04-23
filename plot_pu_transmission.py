@@ -5,10 +5,12 @@ import math
 import decimal
 
 
-def plot_pu_transmission(standalone_plot=False, axs=None):
+def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None):
     bufferFileIn = ""
 
-    with open("./build/bin/spectrum-analyzer-output-20-0.tr", 'r') as file:
+    if fileName is None:
+        fileName = "./build/bin/spectrum-analyzer-output-17-0.tr"
+    with open(fileName, 'r') as file:
         bufferFileIn = file.readlines()
 
     plt.ioff()
@@ -89,7 +91,7 @@ def plot_pu_transmission(standalone_plot=False, axs=None):
         #ax[i].set_xlabel('Tempo (ms)')
 
         ax[i].tick_params('y')
-        #yticks = [-float(x) for x in range(-20, 100, 20)]
+        #yticks = [float(x) for x in range(-20, 100, 20)]
         #ax[i].set_yticks(yticks)
 
         #ax.plot(orderedTimestampsMs, psd_list, zs=freq, label="%f" %freq)

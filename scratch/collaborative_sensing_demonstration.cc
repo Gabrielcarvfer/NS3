@@ -72,7 +72,7 @@ int main() {
 
     //0.6 Configure antenna gains for UEs and eNB
     lteHelper->SetEnbAntennaModelAttribute("Gain", DoubleValue(9.0)); // Taken from
-    lteHelper->SetUeAntennaModelAttribute( "Gain", DoubleValue(0.0));  // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
+    lteHelper->SetUeAntennaModelAttribute( "Gain", DoubleValue(0.0)); // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
 
     //0.7 Select the eNB MAC Scheduler
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler

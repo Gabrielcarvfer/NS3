@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy
 
-def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
+def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=False, col=None):
     bufferFileIn = ""
     bufferFileOut = ""
 
@@ -69,10 +69,21 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
     #ax.set_ylabel('Estado do RBG')
 
     #ax.grid(True)
-    ax.tick_params('y')
-    yticks = [x for x in list(range(0, 60, 10))]
+    #ax.tick_params('y')
+    #yticks = [x for x in list(range(0, 60, 10))]
     xticks = [float(x) for x in range(20000)]
-    for i in range(50):
+
+    base = 0
+    top  = 50
+    #separate channel into subchannels for plotting
+    col -= 3
+    col = -col
+    if subchannel:
+        base = 11+(col-1)*13 if col>0 else 0
+        top  = (11+(col)*13) % 51 if col>0 else 11
+        #print("base ", base, " top ", top)
+
+    for i in range(base, top):
 
         input_barh = []
         output_barh = []
@@ -89,7 +100,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None):
 
         ax.broken_barh(input_barh,(i,1.0), facecolors="red", alpha=0.7) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
         ax.broken_barh(output_barh,(i,1.0), facecolors="blue", alpha=0.5) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
-        ax.set_yticks(yticks)
+        #ax.set_yticks(yticks)
         #ax.set_xticks(xticks)
         plt.show(block=False)
         pass

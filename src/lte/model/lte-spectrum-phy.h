@@ -549,6 +549,7 @@ private:
   std::vector< double > sinrAvgHistory; ///< holds the history of measured sinr
   std::vector<std::vector<double>> sinrGroupHistory; ///< holds the sinr history for arbitrarily sized RB groups
   std::vector<bool>   puPresence; ///< holds the history of PU detection
+  std::vector<std::vector<bool>>   puPresence_V; ///< holds the history of PU detection
 
   //Create structures to hold probabilities
   static std::vector<double> SNRdB; // Sinr (x-axis of PU detection probability table)

@@ -3,9 +3,14 @@ import matplotlib.pyplot as plt
 import numpy
 
 
-def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
+def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel=None, col=None):
     bufferFile = ""
-    with open("./build/bin/plot_pu.txt",'r') as file:
+
+    plot_pu_detection_file = "./build/bin/plot_pu.txt"
+    if subchannel:
+        plot_pu_detection_file = "./build/bin/plot_pu_group.txt"
+
+    with open(plot_pu_detection_file,'r') as file:
         bufferFile = file.readlines()
 
     plt.ioff()
@@ -13,21 +18,58 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None):
 
     ues_dict = {}
     maxSinr = -10000000
-    for ue_str in bufferFile:
-        y = ue_str.split(sep=':')
-        if y[0] not in ues_dict.keys():
-            #Create registry
-            ues_dict[y[0]] = {}
 
-            # Read PU_detected
-            ues_dict[y[0]]["PU_detected"] = [ float(k) for k in y[1].split()]
-        else:
-            #Read AvgSinr
-            ues_dict[y[0]]["AvgSinr"]    = [ float(k) for k in y[1].split()]
-            ue_max_sinr = max(ues_dict[y[0]]["AvgSinr"])
-            if ue_max_sinr > maxSinr:
-                maxSinr = ue_max_sinr
-        pass
+    if subchannel is None:
+        for ue_str in bufferFile:
+            y = ue_str.split(sep=':')
+            if y[0] not in ues_dict.keys():
+                #Create registry
+                ues_dict[y[0]] = {}
+
+                # Read PU_detected
+                ues_dict[y[0]]["PU_detected"] = [ float(k) for k in y[1].split()]
+            else:
+                #Read AvgSinr
+                ues_dict[y[0]]["AvgSinr"]    = [ float(k) for k in y[1].split()]
+                ue_max_sinr = max(ues_dict[y[0]]["AvgSinr"])
+                if ue_max_sinr > maxSinr:
+                    maxSinr = ue_max_sinr
+            pass
+    else:
+        for ue_str in bufferFile:
+            y = ue_str.split(sep=':')
+            if y[0] not in ues_dict.keys():
+                #Create registry
+                ues_dict[y[0]] = {}
+
+                detectionGroups = y[1].split('][')[1:-1]
+                # Read detection status
+                ues_dict[y[0]]["PU_detected"] = []
+                for detectionStatus in detectionGroups:
+                    ues_dict[y[0]]["PU_detected"] += [[float(k) for k in detectionStatus.split()]]
+                temp = [detectionStatus[col] for detectionStatus in ues_dict[y[0]]["PU_detected"]]
+
+                while len(temp) < 10000:
+                    temp += [temp[-1]]
+
+                ues_dict[y[0]]["PU_detected"] = temp
+            else:
+                sinrGroups = y[1].split('][')[1:-1]
+                #Read AvgSinr
+                ues_dict[y[0]]["AvgSinr"] = []
+                for sinrGroup in sinrGroups:
+                    ues_dict[y[0]]["AvgSinr"]    += [[ float(k) for k in sinrGroup.split()]]
+                temp = [sinrGroup[col] for sinrGroup in ues_dict[y[0]]["AvgSinr"]]
+
+                while len(temp) < 10000:
+                    temp += [temp[-1]]
+
+                ues_dict[y[0]]["AvgSinr"] = temp
+
+                #ue_max_sinr = max(ues_dict[y[0]]["AvgSinr"])
+                #if ue_max_sinr > maxSinr:
+                #    maxSinr = ue_max_sinr
+            pass
 
     if standalone_plot:
         fig,(ax1, ax2) = plt.subplots(nrows=2)
