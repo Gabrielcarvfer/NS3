@@ -376,7 +376,7 @@ LteEnbMac::GetTypeId (void)
              "Fusion algorithm for the collaborative sensing merge function",
              UintegerValue(3),
              MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
-             MakeUintegerChecker<uint8_t> (1,10))
+             MakeUintegerChecker<uint8_t> (1,15))//Increment range if you create new fusion algorithms
   ;
 
   return tid;

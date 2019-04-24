@@ -183,15 +183,26 @@ def generateScenario(baseFolder):
 
         simFolder = baseFolder+fusionAlgorithms[fusionAlgorithm]+"\\"
 
-        if os.path.exists(simFolder):
+        if os.path.exists(simFolder) and not os.path.exists(simFolder+"sensing.png"):
             import shutil
             shutil.rmtree(simFolder, ignore_errors=True)
 
         if not os.path.exists(simFolder):
             os.mkdir(simFolder)
 
-        with open(simFolder + "simulationParameters.json", "w") as file:
-            file.write(sim.to_json())
+        simFile = simFolder+"simulationParameters.json"
+
+        if not os.path.exists(simFile):
+            with open(simFile, "w") as file:
+                file.write(sim.to_json())
+
+    #Clean classes as processes may be recycled
+    PU_Model.PUs = {}
+    PU_Model.num_PU = 0
+    eNB_Model.eNBs = {}
+    eNB_Model.num_eNB = 0
+    UE_Model.UEs = {}
+    UE_Model.num_UE = 0
 
 def generateAndRunScenario(baseFolder):
     if not os.path.exists(baseFolder):
@@ -210,10 +221,11 @@ def generateAndRunScenario(baseFolder):
         os.chdir(fusionAlgorithms[fusionAlgorithm])
 
         #Run simulation
-        response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
+        if not os.path.exists("./sensing.png"):
+            response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
 
-        #Generate the results plot figure and save to the simulation output folder
-        response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
+            #Generate the results plot figure and save to the simulation output folder
+            response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
 
         os.chdir(baseFolder)
 
