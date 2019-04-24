@@ -3,6 +3,22 @@ import random
 from decimal import Decimal
 import os
 
+fusionAlgorithms = {
+         1: "MRG_MULTIFRAME_OR",
+         2: "MRG_MULTIFRAME_2_OF_N",
+         3: "MRG_MULTIFRAME_3_OF_N",
+         4: "MRG_MULTIFRAME_4_OF_N",
+         5: "MRG_MULTIFRAME_K_OF_N", #Don't use this one
+         6: "MRG_OR"    ,
+         7: "MRG_AND"   ,
+         8: "MRG_XOR"   ,
+         9: "MRG_XNOR"  ,
+        10: "MRG_1_OF_N",
+        11: "MRG_2_OF_N",
+        12: "MRG_3_OF_N",
+        13: "MRG_4_OF_N",
+        14: "MRG_K_OF_N" #//Don't use this one
+}
 
 class SimulationParameters():
     def __init__(self, simulation_time, base_carrier_frequency, channel_bandwidth, fusion_algorithm, propagation_model, PU_models, UE_models, eNB_model):
@@ -12,6 +28,7 @@ class SimulationParameters():
         self.dictio["SimulationParameters"]["fc"] = base_carrier_frequency
         self.dictio["SimulationParameters"]["bw"] = channel_bandwidth
         self.dictio["SimulationParameters"]["fusionAlgorithm"] = fusion_algorithm
+        self.dictio["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusion_algorithm]
         self.dictio["SimulationParameters"]["propagationModel"] = propagation_model
         self.dictio["PU"]  = PU_models
         self.dictio["eNB"] = eNB_model
@@ -158,14 +175,23 @@ def generateScenario(baseFolder):
     #for enb in range(numENBs):
     eNB_Model((50e3, 50e3, 0), eNBTxPower, eNBAntennaGain)
 
-    fusionAlgorithm = random.randrange(1, 15)
-    while fusionAlgorithm in [5, 14]:
-        fusionAlgorithm = random.randrange(1, 15)
+    sim = SimulationParameters(10, 869e6, 20e6, 1, propagationModel, PU_Model.PUs, UE_Model.UEs, eNB_Model.eNBs)
 
-    sim = SimulationParameters(10, 869e6, 20e6, fusionAlgorithm, propagationModel, PU_Model.PUs, UE_Model.UEs, eNB_Model.eNBs)
+    for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
+        sim.dictio["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
+        sim.dictio["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
 
-    with open(baseFolder + "simulationParameters.json", "w") as file:
-        file.write(sim.to_json())
+        simFolder = baseFolder+fusionAlgorithms[fusionAlgorithm]+"\\"
+
+        if os.path.exists(simFolder):
+            import shutil
+            shutil.rmtree(simFolder, ignore_errors=True)
+
+        if not os.path.exists(simFolder):
+            os.mkdir(simFolder)
+
+        with open(simFolder + "simulationParameters.json", "w") as file:
+            file.write(sim.to_json())
 
 def generateAndRunScenario(baseFolder):
     if not os.path.exists(baseFolder):
@@ -180,20 +206,25 @@ def generateAndRunScenario(baseFolder):
     #Launch a process to run the simulation at the same json folder
     import subprocess
 
-    #Run simulation
-    response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration")
+    for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
+        os.chdir(fusionAlgorithms[fusionAlgorithm])
 
-    #Generate the results plot figure and save to the simulation output folder
-    response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
+        #Run simulation
+        response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
+
+        #Generate the results plot figure and save to the simulation output folder
+        response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
+
+        os.chdir(baseFolder)
 
 
 if __name__ == "__main__":
     import multiprocessing
 
     baseDir = "F:\\sims\\"
-    with multiprocessing.Pool(processes=1) as pool:
+    with multiprocessing.Pool(processes=13) as pool:
         argList = []
-        for i in range(2):
+        for i in range(100):
             argList += [[baseDir+str(i)+"\\"]]
         #print(argList)
         pool.starmap(generateAndRunScenario, argList)
