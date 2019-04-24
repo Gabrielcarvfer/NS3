@@ -5,12 +5,11 @@ import math
 import decimal
 
 
-def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None):
+def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFolder="./build/bin/"):
     bufferFileIn = ""
-
     if fileName is None:
-        fileName = "./build/bin/spectrum-analyzer-output-17-0.tr"
-    with open(fileName, 'r') as file:
+        fileName = "spectrum-analyzer-output-17-0.tr"
+    with open(baseFolder + fileName, 'r') as file:
         bufferFileIn = file.readlines()
 
     plt.ioff()
@@ -98,7 +97,8 @@ def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None):
         ax[i].plot(orderedTimestampsMs, psd_list, label="%f" %freq)
         #ax.legend()
         i+=1
-        plt.show(block=False)
+        if(standalone_plot):
+            plt.show(block=False)
         pass
     #plt.tight_layout()
     pass

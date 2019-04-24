@@ -1207,7 +1207,7 @@ void LteSpectrumPhy::loadDetectionCurves(bool SNRsensing)
         if (!PUProbLoaded)
         {
             //Json loader to parse the file
-            picojson::object origin = load_json("../../src/lte/model/BLER/oulu_pu_probability.json");
+            picojson::object origin = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/oulu_pu_probability.json");
             picojson::object o;
             if (SNRsensing)
             {

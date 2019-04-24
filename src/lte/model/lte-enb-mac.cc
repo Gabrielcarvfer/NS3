@@ -1471,6 +1471,36 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
     while (channelOccupation.size() > 0)//just an if with break
     {
+
+        //Compute CDF
+        /*
+        int frameOffset = 0;
+        int subframeOffset = 0;
+
+        if (m_subframeNo <3)
+        {
+            frameOffset = 1;
+            subframeOffset = 5;
+        }
+        auto frameIt = channelOccupation.rbegin();
+
+        for (; frameIt != channelOccupation.rend() && frameIt->first >= (m_frameNo - frameOffset); frameIt++)//m_frameNo-1 is much more agressive
+        {
+            auto subframeIt = frameIt->second.begin();
+            std::advance(subframeIt, subframeOffset);
+
+            for (; subframeIt != frameIt->second.end(); subframeIt++)
+            {
+                for (auto origAddr : subframeIt->second)
+                {
+                    sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
+                }
+            }
+        }
+        */
+
+
+
         auto frameIt = channelOccupation.rbegin();
 
         //Check if the frame is the current or the previous
@@ -1537,18 +1567,10 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         }
                 }
                 break;
-            case MRG_1_OF_N:
-                if (k == 0)
-                    k = 1;
-            case MRG_2_OF_N:
-                if (k == 0)
-                    k = 2;
-            case MRG_3_OF_N:
-                if (k == 0)
-                    k = 3;
-            case MRG_4_OF_N:
-                if (k == 0)
-                    k = 4;
+            case MRG_1_OF_N: if (k == 0) k = 1;
+            case MRG_2_OF_N: if (k == 0) k = 2;
+            case MRG_3_OF_N: if (k == 0) k = 3;
+            case MRG_4_OF_N: if (k == 0) k = 4;
             case MRG_K_OF_N:
                 {
                     auto subframeIt = frameIt->second.rbegin();
@@ -1601,7 +1623,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                         for (int subchannel = 0; subchannel < 4; subchannel++)
                         {
-                            if (kConfirmed[subchannel] == k)
+                            if (kConfirmed[subchannel] >= k)
                             {
                                 sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
                             }
@@ -1612,12 +1634,15 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     }
                 }
                 break;
-
-            case MRG_MULTIFRAME_OR:
+            case MRG_MULTIFRAME_OR:     if (k == 0) k = 1;
+            case MRG_MULTIFRAME_2_OF_N: if (k == 0) k = 2;
+            case MRG_MULTIFRAME_3_OF_N: if (k == 0) k = 3;
+            case MRG_MULTIFRAME_4_OF_N: if (k == 0) k = 4;
+            case MRG_MULTIFRAME_K_OF_N:
             default:
                 {
 
-
+                    k = 1;
                     int frameOffset = 0;
                     int subframeOffset = 0;
 
@@ -1632,16 +1657,31 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         auto subframeIt = frameIt->second.begin();
                         std::advance(subframeIt,subframeOffset);
 
+                        std::vector<int> kConfirmed = {0,0,0,0};
+
+
                         for ( ; subframeIt != frameIt->second.end(); subframeIt++)
                         {
                             for (auto origAddr : subframeIt->second)
                             {
-                                sensedBitmap |= origAddr.second.UnexpectedAccessBitmap;
-                                falseAlarmBitmap |= origAddr.second.FalseAlarmBitmap;
+                                for (int subchannel = 0; subchannel < 4; subchannel++)
+                                {
+                                    kConfirmed[subchannel] += ((subframeIt->second.at(origAddr.first).UnexpectedAccessBitmap >> (13*subchannel)) & 0x01);
+                                    falseAlarmBitmap |= (((subframeIt->second.at(origAddr.first).FalseAlarmBitmap >> (13*subchannel)) & 0x01fff)<<13*subchannel);
+
+                                }
                             }
                         }
 
-                        subframeOffset = 0;
+                        for (int subchannel = 0; subchannel < 4; subchannel++)
+                        {
+                            if (kConfirmed[subchannel] >= k)
+                            {
+                                sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
+                            }
+                        }
+                        sensedBitmap &= 0x0003ffffffffffff;
+                        falseAlarmBitmap &= 0x0003ffffffffffff;
                     }
                 }
                 break;

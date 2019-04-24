@@ -113,7 +113,7 @@ bool LteMiErrorModel::errorDataLoaded = false;
 void LteMiErrorModel::LoadErrorData()
 {
 
-    picojson::object o = load_json("../../src/lte/model/BLER/errorData.min.json");
+    picojson::object o = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/errorData.min.json");
 
     {
         auto temp = o["BlerCurvesEcrMap"].get<picojson::array>();

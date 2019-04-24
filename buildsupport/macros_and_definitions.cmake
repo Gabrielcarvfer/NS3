@@ -1,5 +1,6 @@
 include(buildsupport/vcpkg_hunter.cmake)
 
+add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
 
 if (WIN32 AND NOT MSVC)
     #If using MSYS2

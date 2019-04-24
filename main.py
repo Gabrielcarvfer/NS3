@@ -8,19 +8,10 @@ from plot_pu_transmission import plot_pu_transmission
 from mpl_toolkits.mplot3d import Axes3D
 
 import matplotlib.pyplot as plt
+import os
 
-def set_size(w,h, ax=None):
-    """ w, h: width, height in inches """
-    if not ax: ax=plt.gca()
-    l = ax.figure.subplotpars.left
-    r = ax.figure.subplotpars.right
-    t = ax.figure.subplotpars.top
-    b = ax.figure.subplotpars.bottom
-    figw = float(w)/(r-l)
-    figh = float(h)/(t-b)
-    ax.figure.set_size_inches(figw, figh)
 
-def plot_collaborative_sensing_data():
+def plot_collaborative_sensing_data(baseFolder = "./build/bin"):
 	#Plot figure with 4 subplots sharing the x-axis
     fig, axisRows = plt.subplots(nrows=7, ncols=4, sharex="all", sharey="row", figsize=(15,10))
 
@@ -32,24 +23,28 @@ def plot_collaborative_sensing_data():
         colRows[0].set_title(label="PU in channel %d" % col)
 
         #Plot PU PSD (dBW/Hz) measured by a spectrumAnalyzer
-        plot_pu_transmission(axs=colRows[0:4], fileName="./build/bin/spectrum-analyzer-output-" + str(17+col) + "-0.tr")
+        plot_pu_transmission(axs=colRows[0:4], fileName="spectrum-analyzer-output-" + str(17+col) + "-0.tr", baseFolder=baseFolder)
 
         #Plot PU detection by UEs and Average SINR
-        plot_pu_detection_by_ues(ax1=colRows[4], ax2=colRows[5], subchannel=True, col=col)
+        plot_pu_detection_by_ues(ax1=colRows[4], ax2=colRows[5], subchannel=True, col=col, baseFolder=baseFolder)
 
         #Plot eNB scheduler input and output
         # white: unallocated RBG and PU was not detected
         # red  : unallocated RBG, PU was detected previously by one or more UE(s)
         # blue :   allocated RBG, PU was not detected/reported yet
-        plot_scheduler_input_n_output(ax1=colRows[6], subchannel=True, col=col)
+        plot_scheduler_input_n_output(ax1=colRows[6], subchannel=True, col=col, baseFolder=baseFolder)
 
     fig.align_labels()
     plt.tight_layout()
-    plt.show()
+    #plt.show(block=False)
+    fig.savefig(baseFolder + "sensing.png")
     pass
 
 
 if __name__ == "__main__":
-    plot_collaborative_sensing_data()
-    input()
+    baseFolder = os.getcwd()
+    if os.path.basename(baseFolder) in ["NS3"]:
+        baseFolder = "./build/bin/"
+    baseFolder += "\\"
+    plot_collaborative_sensing_data(baseFolder=baseFolder)
     pass

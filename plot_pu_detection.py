@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import numpy
 
 
-def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel=None, col=None):
+def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel=None, col=None, baseFolder="./build/bin/"):
     bufferFile = ""
 
-    plot_pu_detection_file = "./build/bin/plot_pu.txt"
+    plot_pu_detection_file = "plot_pu.txt"
     if subchannel:
-        plot_pu_detection_file = "./build/bin/plot_pu_group.txt"
+        plot_pu_detection_file = "plot_pu_group.txt"
 
-    with open(plot_pu_detection_file,'r') as file:
+    with open(baseFolder + plot_pu_detection_file,'r') as file:
         bufferFile = file.readlines()
 
     plt.ioff()
@@ -104,7 +104,9 @@ def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel
 
         ax1.plot(x,ues_dict[ue]['PU_detected'],alpha=0.5)
         ax2.plot(x,ues_dict[ue]["AvgSinr"],alpha=0.5)
-        plt.show(block=False)
+
+        if(standalone_plot):
+            plt.show(block=False)
         pass
 
 

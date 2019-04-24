@@ -2,14 +2,14 @@
 import matplotlib.pyplot as plt
 import numpy
 
-def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=False, col=None):
+def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=False, col=None, baseFolder="./build/bin/"):
     bufferFileIn = ""
     bufferFileOut = ""
 
-    with open("./build/bin/schedulerInput.txt",'r') as file:
+    with open(baseFolder + "schedulerInput.txt", 'r') as file:
         bufferFileIn = file.readlines()
 
-    with open("./build/bin/schedulerOutput.txt",'r') as file:
+    with open(baseFolder + "schedulerOutput.txt", 'r') as file:
         bufferFileOut = file.readlines()
 
     plt.ioff()
@@ -50,6 +50,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
             inputAndOutputBitmapPerInterval[interval][1] = int(y[1],2)
 
     ax = None
+    ax_1 = None
     if standalone_plot:
         fig, ax = plt.subplots()
     else:
@@ -76,11 +77,11 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
     base = 0
     top  = 50
     #separate channel into subchannels for plotting
-    col -= 3
-    col = -col
+    ncol = col - 3
+    ncol = -ncol
     if subchannel:
-        base = 11+(col-1)*13 if col>0 else 0
-        top  = (11+(col)*13) % 51 if col>0 else 11
+        base = 11+(ncol-1)*13 if ncol>0 else 0
+        top  = (11+(ncol)*13) % 51 if ncol>0 else 11
         #print("base ", base, " top ", top)
 
     for i in range(base, top):
@@ -102,10 +103,14 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         ax.broken_barh(output_barh,(i,1.0), facecolors="blue", alpha=0.5) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
         #ax.set_yticks(yticks)
         #ax.set_xticks(xticks)
-        plt.show(block=False)
+
+        if(standalone_plot):
+            plt.show(block=False)
         pass
     pass
 
+
+    return
 
 if __name__ == "__main__":
     plot_scheduler_input_n_output(standalone_plot=True)

@@ -55,7 +55,7 @@ int main() {
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
     //0.4 Configure fusion algorithm for the collaborative sensing
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_1_OF_N)); // MRG_1_OF_N = OR
+    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_MULTIFRAME_3_OF_N));//MRG_1_OF_N)); // MRG_1_OF_N = OR
 
     //60dBm = 1    kW
     //53dBm = 200  kW // Taken from
@@ -78,7 +78,7 @@ int main() {
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
 
     //0.8 Select the propagation loss model
-    Config::SetDefault("ns3::FriisPropagationLossModel::Frequency", DoubleValue(8.69e8));
+    Config::SetDefault("ns3::FriisPropagationLossModel::Frequency", DoubleValue(869e6));
     lteHelper->SetAttribute("PathlossModel", StringValue("ns3::FriisPropagationLossModel"));
     //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
 
