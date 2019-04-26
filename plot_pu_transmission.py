@@ -9,6 +9,7 @@ def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFol
     bufferFileIn = ""
     if fileName is None:
         fileName = "spectrum-analyzer-output-17-0.tr"
+
     with open(baseFolder + fileName, 'r') as file:
         bufferFileIn = file.readlines()
 

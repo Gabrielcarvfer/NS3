@@ -154,8 +154,8 @@ def generatePosition(xRange, yRange, zRange):
     return (x,y,z)
 
 def generateScenario(baseFolder):
-    xRange = (0, 100e3),  # m
-    yRange = (0, 100e3),  # m
+    xRange = (10e3, 90e3),  # m
+    yRange = (10e3, 90e3),  # m
     zRange = (0,   0.1),  # m
 
     generateRandomPUs(numPUs=4, central_frequency=869e6, bandwidth=20e6, txPowerRange=(30, 40), txPeriodRange=(1, 5), xRange=xRange, yRange=yRange, zRange=zRange)
@@ -163,11 +163,11 @@ def generateScenario(baseFolder):
     numUEs = 10
     numENBs = 1
 
-    ueTxPower      = 45 #dBm
+    ueTxPower      = 25 #dBm
     ueAntennaGain  = 9  #dBi
     eNBTxPower     = 53 #dBm
     eNBAntennaGain = 9  #dBi
-    propagationModel = "ns3::RANGEPropagationLossModel"#"ns3::FriisPropagationLossModel"
+    propagationModel = "ns3::FriisPropagationLossModel"#"ns3::RANGEPropagationLossModel"
 
     for ue in range(numUEs):
         UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
