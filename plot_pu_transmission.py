@@ -105,6 +105,6 @@ def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFol
 
 
 if __name__ == "__main__":
-    plot_pu_transmission(standalone_plot=True)
+    plot_pu_transmission(standalone_plot=True, fileName="spectrum-analyzer-output-14-0.tr")
     input()
     pass

@@ -319,8 +319,8 @@ int main() {
     spectrumAnalyzer.Create(puParameters.size());
 
     NodeContainer waveNodes;
-    waveNodes.Add(spectrumAnalyzer);
     waveNodes.Add(waveformGeneratorNodes);
+    waveNodes.Add(spectrumAnalyzer);
 
     //18 add mobility model and positions to waveNodes (PUs and spectrum analyzer) to prevent errors during their setup
     Ptr<ListPositionAllocator> pos = CreateObject<ListPositionAllocator>();
@@ -328,9 +328,13 @@ int main() {
     for (auto & puData : puParameters)
     {
         pos->Add(Vector( puData.second[0], puData.second[1], puData.second[2])); //  PU
-        pos->Add(Vector( puData.second[0], puData.second[1], puData.second[2])); //  companion spectrumAnalyzer
-
     }
+
+    for (auto & puData : puParameters)
+    {
+        pos->Add(Vector( puData.second[0], puData.second[1], puData.second[2])); //  PU companion / spectrum analyzer
+    }
+
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.SetPositionAllocator(pos);
     mobility.Install(waveNodes);
@@ -364,6 +368,7 @@ int main() {
          waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
          Simulator::Schedule(Seconds(2.5)+Seconds(puData.second[7]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
                  waveformGeneratorDevices.GetN()-1)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
+         i++;
     }
 
 

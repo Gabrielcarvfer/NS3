@@ -13,11 +13,11 @@ import os
 
 def plot_collaborative_sensing_data(baseFolder = "./build/bin"):
 	#Plot figure with 4 subplots sharing the x-axis
-    fig, axisRows = plt.subplots(nrows=7, ncols=4, sharex="all", sharey="row", figsize=(15,10))
+    fig, axisRows = plt.subplots(nrows=6, ncols=4, sharex="all", sharey="row", figsize=(15,10))
 
     #For each PU
     for col in range(4):
-        colRows = [axisRows[row][col] for row in range(7)]
+        colRows = [axisRows[row][col] for row in range(6)]
 
         #Set channel name
         colRows[0].set_title(label="PU in channel %d" % col)
@@ -26,13 +26,13 @@ def plot_collaborative_sensing_data(baseFolder = "./build/bin"):
         plot_pu_transmission(axs=colRows[0:4], fileName="spectrum-analyzer-output-" + str(17+col) + "-0.tr", baseFolder=baseFolder)
 
         #Plot PU detection by UEs and Average SINR
-        plot_pu_detection_by_ues(ax1=colRows[4], ax2=colRows[5], subchannel=True, col=col, baseFolder=baseFolder)
+        plot_pu_detection_by_ues(ax2=colRows[4], subchannel=True, col=col, baseFolder=baseFolder)
 
         #Plot eNB scheduler input and output
         # white: unallocated RBG and PU was not detected
         # red  : unallocated RBG, PU was detected previously by one or more UE(s)
         # blue :   allocated RBG, PU was not detected/reported yet
-        plot_scheduler_input_n_output(ax1=colRows[6], subchannel=True, col=col, baseFolder=baseFolder)
+        plot_scheduler_input_n_output(ax1=colRows[5], subchannel=True, col=col, baseFolder=baseFolder)
 
     fig.align_labels()
     plt.tight_layout()

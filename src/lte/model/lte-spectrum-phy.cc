@@ -736,7 +736,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
   if (dev != 0)
   {
-      if (PU_detected && UnexpectedAccessBitmap != 0)
+      if (UnexpectedAccessBitmap != 0 || FalseAlarmBitmap != 0)
       {
           dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, FalseAlarmBitmap, PU_presence_V);
           UnexpectedAccessBitmap = 0;
@@ -793,7 +793,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       double max = 0.0;
       for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
       {
-          ss << *valIt << " ";
+          //ss << *valIt << " ";
           if (*valIt != 0.0 && *valIt > max)
           {
               max = *valIt;
@@ -803,7 +803,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
       channel = (firstIndex+1) / ((k-1)/4);
 
-      //std::cout << "PU channel " << channel << " index " << firstIndex << " k " << k << std::endl;
+      //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
 
       //ss << "\n";
       //std::cout << ss.str() << std::endl;
@@ -872,7 +872,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       */
       //std::cout << firstIndex << " vs " << channelD << " vs " << channel << std::endl;
       //Schedule event to store PU presence
-      Simulator::Schedule(detectionDelay, &LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
+      Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
       PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance, channel); //Set PU_presence to false after transmission finishes
 
@@ -959,17 +959,14 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
 {
     if (state)
     {
-        //bool existent = false;
-        //for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
-        //{
-        //    if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
-        //    {
-        //        existent = true;
-        //        break;
-        //    }
-        //}
-        //if(!existent)
-            PUsDistance.emplace_back(distance,channel);
+        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        {
+            if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
+            {
+                PUsDistance.erase(it);
+            }
+        }
+        PUsDistance.emplace_back(distance,channel);
         PU_presence = true;
     }
     else
@@ -979,7 +976,6 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
             if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
             {
                 PUsDistance.erase(it);
-                break;
             }
         }
         if (PUsDistance.size()==0)
@@ -1341,10 +1337,14 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
             PU_detected = true;
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
             PU_detected_V[k] = true;
-            if (PU_presence)
+            if (!PU_presence)
                 FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
-        //ss << Simulator::Now() << " : " << this << " channel " << k << " PU_presence " << PU_presence << " answer " << answer << "\n";
+        else
+        {
+            if(PU_presence)
+                FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
+        }
         k++;
 
         //Restore PU_presence value, indicating the presence of at least one PU in one of the subchannels

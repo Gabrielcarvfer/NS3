@@ -407,12 +407,14 @@ LteEnbMac::~LteEnbMac ()
   std::ofstream sensing_list_file;
   sensing_list_file.open("sensing_list.txt");
 
+  std::vector<uint32_t> puSubframePresence = {0,0,0,0};
   std::map<uint16_t,uint64_t> sensingUesAndEventsMap;
   for (auto&& [frame,subframeMap]: channelOccupation)
   {
       sensing_list_file << "frame " << frame << " reported \n{";
       for(auto&& [subframe, ueMap]: subframeMap)
       {
+          std::vector<uint32_t> subframePresence = {0,0,0,0};
           sensing_list_file << "\n\tsubframe " << subframe << " reported \n\t[";
           for (auto&& [ue, cognitiveReg]: ueMap)
           {
@@ -420,8 +422,15 @@ LteEnbMac::~LteEnbMac ()
               if(sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
                   sensingUesAndEventsMap.emplace(ue,0);
               sensingUesAndEventsMap.at(ue) += 1;
+
+              for (int subchannel = 0; subchannel < 4; subchannel++)
+                subframePresence[subchannel] |= cognitiveReg.PU_presence_V[subchannel];
           }
+          
           sensing_list_file << "\n\t]";
+          for (int subchannel = 0; subchannel < 4; subchannel++)
+              if (subframePresence[subchannel] != 0)
+                  puSubframePresence[subchannel] += 1;
       }
       sensing_list_file << "\n}";
   }
@@ -456,9 +465,13 @@ LteEnbMac::~LteEnbMac ()
   for (int subchannel = 0; subchannel < 4; subchannel++)
   {
       sensing_list_file << "\n\nFor subchannel "<< subchannel << ":";
-      sensing_list_file <<   "\nFrom " << totalFusions[subchannel] << " fusions, " << FalseAlarmBitmapReports[subchannel] << " were false positive and " << falseNegativeFusions[subchannel] << " were false negative.";
-      sensing_list_file <<   "\nFalse positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)totalFusions[subchannel] << "%.";
-      sensing_list_file <<   "\nFalse negatives were " << 100*(double)falseNegativeFusions[subchannel]/(double)totalFusions[subchannel] << "%.";
+      sensing_list_file <<   "\nFrom " << totalFusions[subchannel] << " fusions,";
+      sensing_list_file <<   " " << FalseAlarmBitmapReports[subchannel] << " were false positive and";
+      sensing_list_file <<   " " << falseNegativeFusions[subchannel] << " were false negative.";
+      sensing_list_file <<   "\nTotal false positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)totalFusions[subchannel] << "%.";
+      sensing_list_file <<   "\nTotal false negatives were " << 100*(double)falseNegativeFusions[subchannel]/(double)totalFusions[subchannel] << "%.";
+      sensing_list_file <<   "\nDuring PU transmissions, false positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)puSubframePresence[subchannel] << "%.";
+      sensing_list_file <<   "\nDuring PU transmissions, false negatives were " << 100*(double)falseNegativeFusions[subchannel]/   (double)puSubframePresence[subchannel] << "%.";
   }
   sensing_list_file << std::endl;
 
@@ -1596,7 +1609,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         }
 
 
-                        std::vector<int> kConfirmed = {0,0,0,0};
+                        std::vector<int> kConfirmed     = {0,0,0,0};
+                        std::vector<int> kFalseAlarm    = {0,0,0,0};
+                        std::vector<int> kFalseNegative = {0,0,0,0};
 
                         //Merge their reports
                         for (auto offset : ueOffsetsSamples)
@@ -1612,25 +1627,46 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //Check if the UE with the current RNTI reported something
                             if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                             {
+
+                                auto unexpectedBitmap =  subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap
+                                ;
+                                auto falseBitmap = subframeIt->second.at(ueRnti->first).FalseAlarmBitmap;
+
                                 for (int subchannel = 0; subchannel < 4; subchannel++)
                                 {
-                                    kConfirmed[subchannel] += ((subframeIt->second.at(ueRnti->first).UnexpectedAccessBitmap >> (13*subchannel)) & 0x01);
-                                    falseAlarmBitmap |= (((subframeIt->second.at(ueRnti->first).FalseAlarmBitmap >> (13*subchannel)) & 0x01fff)<<13*subchannel);
+                                    uint64_t sensed_channel = (unexpectedBitmap >> 13*subchannel) & 0x01fff;
+                                    uint64_t false_alarm = (falseBitmap >> 13*subchannel) & 0x01fff;
+                                    int PU_detected = sensed_channel != 0;
+                                    kConfirmed[subchannel] += PU_detected;
+
+                                    if(PU_detected != 0)
+                                        kFalseAlarm[subchannel]    += (sensed_channel & false_alarm) != 0;
+                                    else
+                                        kFalseNegative[subchannel] += (~sensed_channel & false_alarm) != 0;
 
                                 }
+
                             }
                         }
 
                         for (int subchannel = 0; subchannel < 4; subchannel++)
                         {
+                            uint64_t bitmask = ((uint64_t)0x01fff << 13*subchannel);
                             if (kConfirmed[subchannel] >= k)
                             {
-                                sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
-                            }
-                        }
-                        sensedBitmap &= 0x0003ffffffffffff;
-                        falseAlarmBitmap &= 0x0003ffffffffffff;
+                                sensedBitmap |= bitmask;
 
+                                if ((kConfirmed[subchannel] - kFalseAlarm[subchannel]) >= k)
+                                    falseAlarmBitmap |= bitmask;
+                            }
+                            else
+                            if ((kConfirmed[subchannel] + kFalseNegative[subchannel]) >= k)
+                                falseNegativeBitmap |= bitmask;
+
+                        }
+                        sensedBitmap        &= 0x0003ffffffffffff;
+                        falseAlarmBitmap    &= 0x0003ffffffffffff;
+                        falseNegativeBitmap &= 0x0003ffffffffffff;
                     }
                 }
                 break;
@@ -1657,17 +1693,29 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         auto subframeIt = frameIt->second.begin();
                         std::advance(subframeIt,subframeOffset);
 
-                        std::vector<int> kConfirmed = {0,0,0,0};
+                        std::vector<int> kConfirmed     = {0,0,0,0};
+                        std::vector<int> kFalseAlarm    = {0,0,0,0};
+                        std::vector<int> kFalseNegative = {0,0,0,0};
 
 
                         for ( ; subframeIt != frameIt->second.end(); subframeIt++)
                         {
                             for (auto origAddr : subframeIt->second)
                             {
+                                auto unexpectedBitmap = subframeIt->second.at(origAddr.first).UnexpectedAccessBitmap;
+                                auto falseBitmap = subframeIt->second.at(origAddr.first).FalseAlarmBitmap;
+
                                 for (int subchannel = 0; subchannel < 4; subchannel++)
                                 {
-                                    kConfirmed[subchannel] += ((subframeIt->second.at(origAddr.first).UnexpectedAccessBitmap >> (13*subchannel)) & 0x01);
-                                    falseAlarmBitmap |= (((subframeIt->second.at(origAddr.first).FalseAlarmBitmap >> (13*subchannel)) & 0x01fff)<<13*subchannel);
+                                    uint64_t sensed_channel = (unexpectedBitmap >> 13*subchannel) & 0x01fff;
+                                    uint64_t false_alarm = (falseBitmap >> 13*subchannel) & 0x01fff;
+                                    int PU_detected = sensed_channel != 0;
+                                    kConfirmed[subchannel] += PU_detected;
+
+                                    if(PU_detected != 0)
+                                        kFalseAlarm[subchannel]    += (sensed_channel & false_alarm) != 0;
+                                    else
+                                        kFalseNegative[subchannel] += (~sensed_channel & false_alarm) != 0;
 
                                 }
                             }
@@ -1675,25 +1723,35 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                         for (int subchannel = 0; subchannel < 4; subchannel++)
                         {
+                            uint64_t bitmask = ((uint64_t)0x01fff << 13*subchannel);
                             if (kConfirmed[subchannel] >= k)
                             {
-                                sensedBitmap |= ((uint64_t)0x01fff << 13*subchannel);
+                                sensedBitmap |= bitmask;
+
+                                if ((kConfirmed[subchannel] - kFalseAlarm[subchannel]) >= k)
+                                    falseAlarmBitmap |= bitmask;
                             }
+                            else
+                                if ((kConfirmed[subchannel] + kFalseNegative[subchannel]) >= k)
+                                    falseNegativeBitmap |= bitmask;
+
                         }
-                        sensedBitmap &= 0x0003ffffffffffff;
-                        falseAlarmBitmap &= 0x0003ffffffffffff;
+                        sensedBitmap        &= 0x0003ffffffffffff;
+                        falseAlarmBitmap    &= 0x0003ffffffffffff;
+                        falseNegativeBitmap &= 0x0003ffffffffffff;
+
                     }
                 }
                 break;
         }
 
         //Check for false negatives
-        for (auto origAddr : subframeIt->second)
-        {
-            for (int subchannel = 0; subchannel < 4; subchannel++)
-                falseNegativeBitmap |=  origAddr.second.PU_presence_V[subchannel] ? ~sensedBitmap & ((uint64_t)0x01fff << 13*subchannel) : (uint64_t) 0;
-        }
-        falseNegativeBitmap &= 0x0003ffffffffffff;
+        //for (auto origAddr : subframeIt->second)
+        //{
+        //    for (int subchannel = 0; subchannel < 4; subchannel++)
+        //        falseNegativeBitmap |=  origAddr.second.PU_presence_V[subchannel] ? ~sensedBitmap & ((uint64_t)0x01fff << 13*subchannel) : (uint64_t) 0;
+        //}
+        //falseNegativeBitmap &= 0x0003ffffffffffff;
 
         break;//out of if
     }

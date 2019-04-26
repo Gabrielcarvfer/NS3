@@ -265,10 +265,10 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           if (rxConverterIterator == txInfoIteratorerator->second.m_spectrumConverterMap.end ())
           {
               // No converter means TX SpectrumModel is orthogonal to RX SpectrumModel
-              //continue;
+              continue;
 
               //force conversion to receive other transmissions
-              convertedTxPowerSpectrum = txParams->psd;
+              //convertedTxPowerSpectrum = txParams->psd;
           }
           else
           {
@@ -276,13 +276,14 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           }
         }
 
-
       for (std::set<Ptr<SpectrumPhy> >::const_iterator rxPhyIterator = rxInfoIterator->second.m_rxPhySet.begin ();
            rxPhyIterator != rxInfoIterator->second.m_rxPhySet.end ();
            ++rxPhyIterator)
         {
+
           NS_ASSERT_MSG ((*rxPhyIterator)->GetRxSpectrumModel ()->GetUid () == rxSpectrumModelUid,
                          "SpectrumModel change was not notified to MultiModelSpectrumChannel (i.e., AddRx should be called again after model is changed)");
+
 
           if ((*rxPhyIterator) != txParams->txPhy)
             {
@@ -316,7 +317,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       double propagationGainDb = m_propagationLoss->CalcRxPower (0, txMobility, receiverMobility);
                       NS_LOG_LOGIC ("propagationGainDb = " << propagationGainDb << " dB");
                       pathLossDb -= propagationGainDb;
-                    }                    
+                    }
                   NS_LOG_LOGIC ("total pathLoss = " << pathLossDb << " dB");    
                   m_pathLossTrace (txParams->txPhy, *rxPhyIterator, pathLossDb);
                   if ( pathLossDb > m_maxLossDb)
@@ -342,9 +343,9 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       auto rxPos = receiverMobility->GetPosition();
                       double diffx = txPos.x-rxPos.x;
                       double diffy = txPos.y-rxPos.y;
-                      double diffz = txPos.z-rxPos.z;
-                      rxParams->distance = sqrt(pow(diffx,2)+pow(diffy,2)+pow(diffz,2));
-                      //std::cout << rxParams->distance << " m" << std::endl;
+                      //double diffz = txPos.z-rxPos.z;
+                      rxParams->distance = sqrt(pow(diffx,2)+pow(diffy,2));//+pow(diffz,2));
+                      //std::cout << "[" << txPos.x << ","<<txPos.y<<"] & ["<<rxPos.x<<","<<rxPos.y<<"] distance=" << rxParams->distance << "m diffx " << diffx << " diffy " << diffy << std::endl;
                   }
                 }
 
@@ -366,7 +367,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
         }
 
     }
-
+    return;
 }
 
 void

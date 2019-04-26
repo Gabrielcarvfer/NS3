@@ -91,12 +91,12 @@ class PU_Model():
 
 def generateRandomPUs(
                       numPUs         = 4,           #
-                      xRange         = (0, 50e3),  # m
-                      yRange         = (0, 50e3),  # m
-                      zRange         = (0, 0.1),    # m
-                      txPowerRange   = (0, 60),     # dBm
+                      xRange         = (0, 100e3),  # m
+                      yRange         = (0, 100e3),  # m
+                      zRange         = (0,   0.1),  # m
+                      txPowerRange   = (30,   40),  # dBm
                       numSubChannels = 4,           #
-                      dutyCycleRange = (0.1, 0.2),  # percentage of period to transmit and precision
+                      dutyCycleRange = (0.1, 0.4),  # percentage of period to transmit and precision
                       txPeriodRange  = (1, 5),      # period between Txs
                       central_frequency = 869e6,
                       bandwidth         = 20e6
@@ -112,7 +112,7 @@ def generateRandomPUs(
         low_freq_channel = carrier_frequency - (channel_bandwidth / 2)
 
         for channel in range(numSubChannels):
-            subchannel_carrier_freq[channel] = {"freq": low_freq_channel + (subchannel_bandwidth / 2), "bw": subchannel_bandwidth}
+            subchannel_carrier_freq[channel] = {"freq": low_freq_channel + (subchannel_bandwidth / 4), "bw": subchannel_bandwidth/2}
             low_freq_channel += subchannel_bandwidth
     else:
         for channel in range(numSubChannels):
@@ -141,16 +141,16 @@ def generateRandomPUs(
         dutyCycle         = round( random.uniform(*dutyCycleRange)  , 2)
         txPeriod          = round( random.uniform(*txPeriodRange)   , 2)
 
-        channel           = random.randrange(0, numSubChannels-1)
+        channel           = pu % numPUs
         carrier_frequency = round( subchannel_carrier_freq[channel]["freq"] , 2)
         bandwidth         = round( subchannel_carrier_freq[channel]["bw"]   , 2)
 
         PU_Model(generatePosition(xRange, yRange, zRange), txPower, bandwidth, carrier_frequency, dutyCycle, txPeriod)
 
 def generatePosition(xRange, yRange, zRange):
-    x = round(random.uniform(xRange[0][0],xRange[0][1]), 2)
-    y = round(random.uniform(yRange[0][0],yRange[0][1]), 2)
-    z = round(random.uniform(zRange[0][0],zRange[0][1]), 2)
+    x = round(random.uniform(xRange[0][0], xRange[0][1]), 2)
+    y = round(random.uniform(yRange[0][0], yRange[0][1]), 2)
+    z = round(random.uniform(zRange[0][0], zRange[0][1]), 2)
     return (x,y,z)
 
 def generateScenario(baseFolder):
@@ -158,16 +158,16 @@ def generateScenario(baseFolder):
     yRange = (0, 100e3),  # m
     zRange = (0,   0.1),  # m
 
-    generateRandomPUs(numPUs=4, central_frequency=869e6, bandwidth=20e6, txPowerRange=(40, 60), txPeriodRange=(1, 3), xRange=xRange, yRange=yRange, zRange=zRange)
+    generateRandomPUs(numPUs=4, central_frequency=869e6, bandwidth=20e6, txPowerRange=(30, 40), txPeriodRange=(1, 5), xRange=xRange, yRange=yRange, zRange=zRange)
 
     numUEs = 10
     numENBs = 1
 
-    ueTxPower      = 10 #dBm
-    ueAntennaGain  = 0  #dBi
-    eNBTxPower     = 53 #dBM
+    ueTxPower      = 45 #dBm
+    ueAntennaGain  = 9  #dBi
+    eNBTxPower     = 53 #dBm
     eNBAntennaGain = 9  #dBi
-    propagationModel = "ns3::FriisPropagationLossModel"
+    propagationModel = "ns3::RANGEPropagationLossModel"#"ns3::FriisPropagationLossModel"
 
     for ue in range(numUEs):
         UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
@@ -204,41 +204,45 @@ def generateScenario(baseFolder):
     UE_Model.UEs = {}
     UE_Model.num_UE = 0
 
-def generateAndRunScenario(baseFolder):
+def generateScenarios(baseFolder):
     if not os.path.exists(baseFolder):
         os.mkdir(baseFolder)
 
     #Create json file for simulation
     generateScenario(baseFolder)
 
+def runScenario(baseFolder):
     #Move python to the target folder
     os.chdir(baseFolder)
 
     #Launch a process to run the simulation at the same json folder
     import subprocess
 
-    for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
-        os.chdir(fusionAlgorithms[fusionAlgorithm])
+    #Run simulation
+    if not os.path.exists("./sensing.png"):
+        response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
 
-        #Run simulation
-        if not os.path.exists("./sensing.png"):
-            response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
-
-            #Generate the results plot figure and save to the simulation output folder
-            response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
-
-        os.chdir(baseFolder)
-
+        #Generate the results plot figure and save to the simulation output folder
+        response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
 
 if __name__ == "__main__":
     import multiprocessing
 
     baseDir = "F:\\sims\\"
     with multiprocessing.Pool(processes=13) as pool:
-        argList = []
-        for i in range(100):
-            argList += [[baseDir+str(i)+"\\"]]
-        #print(argList)
-        pool.starmap(generateAndRunScenario, argList)
+        for i in range(10):
+            # Prepare the simulationParameter json files for all simulations
+            generateScenarios(baseDir+str(i)+"\\")
+
+
+            argList = []
+
+            # Run simulation with a few fusion algorithms
+            for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
+                argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
+
+            # Run simulations in parallel
+            pool.starmap(runScenario, argList)
+
 
     pass

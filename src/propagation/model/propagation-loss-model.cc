@@ -270,6 +270,7 @@ FriisPropagationLossModel::DoCalcRxPower (double txPowerDbm,
   double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
   double lossDb = -10 * log10 (numerator / denominator);
   NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
+  //std::cout << this << ": " << txPowerDbm << " " << txPowerDbm - std::max (lossDb, m_minLoss) << std::endl;
   return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 
@@ -1042,10 +1043,12 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
     double shadow = m_normalGen->GetValue();
     double lossDb = -10 * log10 (numerator / denominator);
-    lossDb += m_kValue + shadow;
+    double lossDb1 = lossDb;
+    lossDb += (m_kValue + shadow);
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
     //Print RANGE pathloss and shadowing
-    // std::cout << this << ": " << lossDb << " " << shadow << "\n";
+    //std::cout << this << ": " << lossDb1 << " " << lossDb << " " << shadow << "\n";
+    //std::cout << this << ": " << txPowerDbm << " " << txPowerDbm - std::max (lossDb, m_minLoss) << std::endl;
     return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 

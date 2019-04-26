@@ -76,13 +76,16 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
 
     base = 0
     top  = 50
+    ncol = col
     #separate channel into subchannels for plotting
-    ncol = col - 3
-    ncol = -ncol
-    if subchannel:
-        base = 11+(ncol-1)*13 if ncol>0 else 0
-        top  = (11+(ncol)*13) % 51 if ncol>0 else 11
-        #print("base ", base, " top ", top)
+    if not standalone_plot:
+	    ncol = col - 3
+	    ncol = -ncol
+
+	    if subchannel:
+	        base = 11+(ncol-1)*13 if ncol>0 else 0
+	        top  = (11+(ncol)*13) % 51 if ncol>0 else 11
+	        #print("base ", base, " top ", top)
 
     for i in range(base, top):
 
