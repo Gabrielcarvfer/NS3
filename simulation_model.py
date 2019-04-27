@@ -177,7 +177,7 @@ def generateScenario(baseFolder):
 
     sim = SimulationParameters(10, 869e6, 20e6, 1, propagationModel, PU_Model.PUs, UE_Model.UEs, eNB_Model.eNBs)
 
-    for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
+    for fusionAlgorithm in [1, 10, 11, 12, 13]:
         sim.dictio["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
         sim.dictio["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
 
@@ -223,26 +223,72 @@ def runScenario(baseFolder):
         response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
 
         #Generate the results plot figure and save to the simulation output folder
-        response = subprocess.run("python F:\\tools\\source\\NS3\\main.py")
+        response = subprocess.run("python F:\\tools\\source\\NS3\\plot_main.py")
 
 if __name__ == "__main__":
     import multiprocessing
 
+    #Select if you want to generate new simulation scenarios or run manually created ones
+    createAndRunScenarios = False
+
     baseDir = "F:\\sims\\"
     with multiprocessing.Pool(processes=13) as pool:
-        for i in range(10):
-            # Prepare the simulationParameter json files for all simulations
-            generateScenarios(baseDir+str(i)+"\\")
 
+        if createAndRunScenarios:
+            #Prepare and run n simulations
+            for i in range(6):
+                # Prepare the simulationParameter json files for all simulations
+                #generateScenarios(baseDir+str(i)+"\\")
 
-            argList = []
+                #Run simulation if the scenario exists
+                if (os.path.exists(baseDir+str(i))):
 
-            # Run simulation with a few fusion algorithms
-            for fusionAlgorithm in [1, 2, 3, 10, 11, 12, 13]:
-                argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
+                    argList = []
 
-            # Run simulations in parallel
-            pool.starmap(runScenario, argList)
+                    # Run simulation with a few fusion algorithms
+                    for fusionAlgorithm in [1, 10, 11, 12, 13]:
+                        argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
+
+                    # Run simulations in parallel
+                    pool.starmap(runScenario, argList)
+        else:
+            simulationScenarios = os.listdir(baseDir)
+            #print (simulationScenarios)
+
+            for scenario in simulationScenarios:
+                scenarioDict = {}
+                argList = []
+
+                #Load base scenario
+                with open(baseDir+scenario+"\\simulationParameters.json","r") as file:
+                    scenarioDict = json.load(file)
+
+                #Save a new copy for each fusion
+                for fusionAlgorithm in [1, 10, 11, 12, 13]:
+                    scenarioDict["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
+                    scenarioDict["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
+
+                    simFolder = baseDir + scenario + "\\" + fusionAlgorithms[fusionAlgorithm] + "\\"
+                    argList += [[simFolder]]
+
+                    if os.path.exists(simFolder) and not os.path.exists(simFolder + "sensing.png"):
+                        import shutil
+
+                        shutil.rmtree(simFolder, ignore_errors=True)
+
+                    if not os.path.exists(simFolder):
+                        os.mkdir(simFolder)
+
+                    simFile = simFolder + "simulationParameters.json"
+
+                    if not os.path.exists(simFile):
+                        with open(simFile, "w") as file:
+                            file.write(json.dumps(scenarioDict, indent=4))
+
+                #Run simulation
+                pool.starmap(runScenario, argList)
+
+            #Replicate a single base scenario (simulationParameters.json) with all fusion
 
 
     pass

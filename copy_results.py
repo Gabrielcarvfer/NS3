@@ -9,7 +9,8 @@ if os.path.exists("latest_results"):
 	timestamp = time.strftime('%Y_%m_%d_%H_%M', time.gmtime(os.path.getmtime("latest_results")))
 	shutil.move("latest_results", timestamp +"_old_results")
 
-for sim in range(100):
+simulationScenarios = os.listdir(baseFolder)
+for sim in simulationScenarios:
 	for fusionAlgorithm in ["MRG_MULTIFRAME_OR",
 							"MRG_MULTIFRAME_2_OF_N",
 							"MRG_MULTIFRAME_3_OF_N",
@@ -19,13 +20,13 @@ for sim in range(100):
 							"MRG_3_OF_N",
 							"MRG_4_OF_N"]:
 
-		sourceFolder = baseFolder+str(sim)+"\\"+fusionAlgorithm
+		sourceFolder = baseFolder+sim+"\\"+fusionAlgorithm
 
 		if os.path.exists(sourceFolder):
 			os.chdir(sourceFolder)
 			
 			if os.path.exists("sensing.png"):
-				targetFolder = currentFolder+"\\latest_results\\"+str(sim)+"\\"+fusionAlgorithm
+				targetFolder = currentFolder+"\\latest_results\\"+sim+"\\"+fusionAlgorithm
 
 				if not os.path.exists(targetFolder):
 					os.makedirs(targetFolder)

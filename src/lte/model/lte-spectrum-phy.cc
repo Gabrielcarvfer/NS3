@@ -982,7 +982,6 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
             PU_presence = false;
 
     }
-  PU_presence = state;
 }
 
 
