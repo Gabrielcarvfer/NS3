@@ -10,7 +10,7 @@
 # 4.1 : Windows,   use "docker run -i -t -v %cd%\:/NS3 --name ns3_container ns3"
 # 4.2 : Unix-like, use "docker run -i -t -v `cwd`\:/NS3 --name ns3_container ns3"
 
-FROM ubuntu:18.10
+FROM ubuntu:19.04
 
 #Uncomment the following lines if using the apt-cacher container
 #Use docker apt-get caching to prevent redownloads
