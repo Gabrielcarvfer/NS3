@@ -53,6 +53,7 @@ NS_LOG_COMPONENT_DEFINE ("LteEnbMac");
 NS_OBJECT_ENSURE_REGISTERED (LteEnbMac);
 
 
+std::vector<int> LteEnbMac::nonDSAChannels;
 
 // //////////////////////////////////////
 // member SAP forwarders
@@ -671,7 +672,14 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   bool senseRBs = false;
   dlparams.sensedBitmap = mergeSensingReports(FusionAlgorithm, senseRBs);
 
-  //Calls for the scheduler
+  for (auto & channel: nonDSAChannels)
+  {
+      dlparams.sensedBitmap |= (uint64_t) 0x01fff << channel;
+  }
+  dlparams.sensedBitmap &= (uint64_t) 0x03ffffffffffff;
+
+
+    //Calls for the scheduler
   m_schedSapProvider->SchedDlTriggerReq (dlparams);
 
 

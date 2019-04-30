@@ -168,6 +168,8 @@ std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPd;
 std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
 std::ofstream LteSpectrumPhy::plot_snr_history_file;
 std::mutex LteSpectrumPhy::mut;
+bool LteSpectrumPhy::SNRsensing;
+
 
 LteSpectrumPhy::~LteSpectrumPhy ()
 {
@@ -967,7 +969,6 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
             }
         }
         PUsDistance.emplace_back(distance,channel);
-        PU_presence = true;
     }
     else
     {
@@ -978,8 +979,7 @@ void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
                 PUsDistance.erase(it);
             }
         }
-        if (PUsDistance.size()==0)
-            PU_presence = false;
+
 
     }
 }
@@ -1072,7 +1072,7 @@ double LteSpectrumPhy::interpolateProbabilityDistance(double distance)
 std::minstd_rand0 gen;
 std::mutex mutex;
 
-bool LteSpectrumPhy::checkPUPresence(double prob)
+bool LteSpectrumPhy::checkPUPresence(double prob, bool PU_presence)
 {
     bool answer = false;
     if (PU_presence)
@@ -1269,6 +1269,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //Initialize variable
     UnexpectedAccessBitmap = 0;
     FalseAlarmBitmap = 0;
+    PU_presence_V = {false, false, false, false};
     std::vector<bool> PU_detected_V = {false, false, false, false};
 
     //Look for empty RBs SINR on the DCI
@@ -1307,11 +1308,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
             }
 
         //Mark PU_presence with the current channel PU presence
-        double PU_presence_backup = PU_presence;
-        if (distance == 10.0e10)
-            PU_presence = false;
+        PU_presence_V[k] = distance != 10e10;
 
-        PU_presence_V[k] = PU_presence;
 
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
 
@@ -1323,12 +1321,12 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
 
         //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
-        bool answer = checkPUPresence(prob);
+        bool answer = checkPUPresence(prob, PU_presence_V[k]);
 
 
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
-        if (!PU_presence && PU_detected && answer)
+        if (!PU_presence_V[k] && PU_detected && answer)
             answer = false; //Don't allow more than a false positive per UE
 
         if (answer)
@@ -1336,18 +1334,15 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
             PU_detected = true;
             UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
             PU_detected_V[k] = true;
-            if (!PU_presence)
+            if (!PU_presence_V[k])
                 FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
         else
         {
-            if(PU_presence)
+            if(PU_presence_V[k])
                 FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
         }
         k++;
-
-        //Restore PU_presence value, indicating the presence of at least one PU in one of the subchannels
-        PU_presence = PU_presence_backup;
     }
 
     //if (ss.str().size() > 3)
@@ -1376,7 +1371,6 @@ void LteSpectrumPhy::Sense()
     double avgSinr = 0;
     std::vector<double> historicalSNR;
     bool senseRBs = false;
-    bool SNRsensing = false;
     int rbgSize = 2;
     int groupingSize;
 

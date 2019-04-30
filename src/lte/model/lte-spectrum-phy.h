@@ -564,7 +564,7 @@ private:
   double interpolateProbabilitySNR(double sinrVal);
   double interpolateProbabilityDistance(double distance);
   int verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize);
-  bool checkPUPresence(double prob);
+  bool checkPUPresence(double prob, bool PU_presence);
   void Sense();
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
@@ -581,6 +581,8 @@ public:
     uint64_t UnexpectedAccessBitmap;
     uint64_t FalseAlarmBitmap;
     std::vector<bool> PU_presence_V;
+    static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
+
 
 };
 

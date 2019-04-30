@@ -46,6 +46,10 @@ int main() {
     double ueGain                  =   0.0; //dBi
     double carrierFrequency        = 869e6; //Hz
     double channelBandwidth        =  20e6; //Hz
+    double ueTxPeriodSec           =   0.1; //sec     | 48Mbps throughput at the LTE uplink
+    int    ueTxSizeBytes           =   6e5; //bytes  /
+    bool   enableDSA               =  true; //if false, channels with PUs will be automatically flagged not to be used
+    bool   SNRSensing              =  true; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
     int    fusionAlgorithm         = LteEnbMac::MRG_1_OF_N;
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGEPropagationLossModel
 
@@ -67,6 +71,12 @@ int main() {
         channelBandwidth = parameters["bw"].get<double>();
         fusionAlgorithm  = (int)parameters["fusionAlgorithm"].get<double>();
         propagationModel = parameters["propagationModel"].get<std::string>();
+        enableDSA        = parameters["enableDSA"].get<bool>();
+        SNRSensing       = parameters["SNRSensing"].get<bool>();
+        ueTxPeriodSec    = parameters["ueTxPeriodSec"].get<double>();
+        ueTxSizeBytes    = (int) parameters["ueTxSizeBytes"].get<double>();
+
+        LteSpectrumPhy::SNRsensing = SNRSensing;
 
         //Load PU data
         picojson::object PUjson = inputJson["PU"].get<picojson::object>();
@@ -85,14 +95,18 @@ int main() {
                 coordinatesVector.push_back(it->get<double>());
 
             //Read PU tx power, bw, fc, duty and period
-            double txPower          = puContents["tx_power"].get<double>();
-            double bandwidth        = puContents["bw"].get<double>();
-            double carrierFrequency = puContents["fc"].get<double>();
-            double dutyCycle        = puContents["duty_cycle"].get<double>();
-            double period           = puContents["period"].get<double>();
-            puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, carrierFrequency, bandwidth, dutyCycle, period});
-        }
+            double txPower            = puContents["tx_power"].get<double>();
+            double bandwidth          = puContents["bw"].get<double>();
+            double puCarrierFrequency = puContents["fc"].get<double>();
+            double dutyCycle          = puContents["duty_cycle"].get<double>();
+            double period             = puContents["period"].get<double>();
+            puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, puCarrierFrequency, bandwidth, dutyCycle, period});
 
+            int puSubchannel = (int) (puCarrierFrequency-(carrierFrequency-channelBandwidth/2))/(channelBandwidth/4);
+            if(!enableDSA)
+                LteEnbMac::nonDSAChannels.push_back(puSubchannel);
+        }
+        
         //Load eNB data
         picojson::object eNBjson = inputJson["eNB"].get<picojson::object>();
         for (picojson::value::object::const_iterator i = eNBjson.begin(); i != eNBjson.end(); i++)
@@ -297,8 +311,8 @@ int main() {
     Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(MicroSeconds(100)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(6000));
+    echoClient.SetAttribute("Interval", TimeValue(Seconds(ueTxPeriodSec)));
+    echoClient.SetAttribute("PacketSize", UintegerValue(ueTxSizeBytes));
 
     ApplicationContainer clientApps;
     clientApps.Add(echoClient.Install(ueNodes));

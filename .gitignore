@@ -58,3 +58,7 @@ cmake-build-relwithdebinfo/
 cmake-cache/
 
 cmake-build-release/
+
+3rd-party/libtorch/
+
+3rd-party/libtorch\.zip

@@ -489,12 +489,14 @@ public://todo: implement this properly through the SAP
         uint64_t FalseAlarmBitmap; //For measurements only, using this in your algorithm is cheating
         std::vector<bool> PU_presence_V;
     } CognitiveReg;
-    std::map< uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
+    std::map <uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
     std::map <uint64_t, std::map<uint64_t, std::vector<uint64_t> > > unexpectedChannelAccessBitmap;
     std::map <uint16_t, bool> UeRntiMap;
     void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
     uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);
+
+    static std::vector<int> nonDSAChannels;
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;

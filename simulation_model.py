@@ -30,6 +30,10 @@ class SimulationParameters():
         self.dictio["SimulationParameters"]["fusionAlgorithm"] = fusion_algorithm
         self.dictio["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusion_algorithm]
         self.dictio["SimulationParameters"]["propagationModel"] = propagation_model
+        self.dictio["SimulationParameters"]["ueTxPeriodSec"] = 1
+        self.dictio["SimulationParameters"]["ueTxSizeBytes"] = 6000000
+        self.dictio["SimulationParameters"]["enableDSA"] = True
+        self.dictio["SimulationParameters"]["SNRSensing"] = True #if false, distance-based detection curves will be loaded
         self.dictio["PU"]  = PU_models
         self.dictio["eNB"] = eNB_model
         self.dictio["UE"]  = UE_models
