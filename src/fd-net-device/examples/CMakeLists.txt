@@ -31,7 +31,7 @@ if(${NS3_LIBRT})
 
 endif()
 
-if(${NS3_TAP})
+if(${NS3_EMU})
     set(name fd-emu-ping)
     set(source_files ${name}.cc)
     set(header_files)
@@ -51,8 +51,9 @@ if(${NS3_TAP})
     set(header_files)
     set(libraries_to_link ${libfd-net-device} ${libinternet} ${libapplications})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
+endif()
 
-
+if(${NS3_TAP})
     set(name fd-tap-ping)
     set(source_files ${name}.cc)
     set(header_files)
@@ -65,8 +66,6 @@ if(${NS3_TAP})
     set(header_files)
     set(libraries_to_link ${libfd-net-device} ${libinternet} ${libinternet-apps} ${libcsma})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
-
-
 endif()
 
 if(${NS3_PLANETLAB})
@@ -75,6 +74,4 @@ if(${NS3_PLANETLAB})
     set(header_files)
     set(libraries_to_link ${libfd-net-device} ${libinternet} ${libinternet-apps})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
-
-
 endif()
