@@ -81,39 +81,49 @@ set(NS3_PTHREAD ON)
 
 option(NS3_STATIC "Build static library" OFF)
 
-option(NS3_fd-net-device ON)
+option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
+set(AUTOINSTALL_DEPENDENCIES ON)
+
+option(NS3_fd-net-device "Build fd-net-device" ON)
+set(NS3_fd-net-device ON)
 
 
 if(MSVC)
 	set(NS3_NETANIM OFF)
 endif()
 
-option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
-set(AUTOINSTALL_DEPENDENCIES ON)
-
 set(build_openflow)
 if(${NS3_OPENFLOW})
     set(build_openflow openflow)
 endif()
 
+set(build_visualizer)
+if(${NS3_PYTHON})
+    set(build_bisualizer visualizer)
+endif()
+
 set(build_brite)
-if(${NS3_BRITE} AND WIN32)
-    set(NS3_BRITE OFF)
-endif()
-
-if(${NS3_BRITE} AND NOT WIN32)
-    set(build_brite brite)
-endif()
-
 set(build_fd-net-device)
-if(${NS3_fd-net-device} AND NOT WIN32)
-    set(build_fd-net-device fd-net-device)
+set(build_tap-bridge)
+
+if (WIN32)
+    if(${NS3_BRITE})
+        set(NS3_BRITE OFF)
+    endif()
+else()
+    if(${NS3_BRITE})
+        set(build_brite brite)
+    endif()
+    if(${NS3_fd-net-device})
+        set(build_fd-net-device fd-net-device)
+    endif()
+    if(${NS3_TAP})
+        set(build_tap-bridge tap-bridge)
+    endif()
 endif()
 
-set(build_tap-bridge)
-if(${NS3_TAP} AND NOT WIN32)
-    set(build_tap-bridge tap-bridge)
-endif()
+
+
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
@@ -158,7 +168,7 @@ set(libs_to_build
         traffic-control       #
         uan                   #
         virtual-net-device    #
-        visualizer
+        ${build_visualizer}
         wave                  #
         wifi                  #
         wimax                 #
