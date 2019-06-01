@@ -62,3 +62,6 @@ cmake-build-release/
 ns3module.cc
 
 ns3module.h
+
+3rd-party/libtorch.zip
+3rd-party/libtorch
