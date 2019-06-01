@@ -21,7 +21,7 @@ if(${NS3_TAP})
         set(tap_dev_creator tap-device-creator)
     endif()
     add_definitions(-DTAP_DEV_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${tap_dev_creator}")
-    set(fd-net-device_creators ${fd-net-device_creators} tap-device-creator)
+    list(APPEND fd-net-device_creators tap-device-creator)
 endif()
 
 if(${NS3_EMU})
@@ -43,7 +43,7 @@ if(${NS3_EMU})
     endif()
     add_definitions(-DRAW_SOCK_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${raw_sock_creator}")
 
-    set(fd-net-device_creators ${fd-net-device_creators} raw-sock-creator)
+    list(APPEND fd-net-device_creators raw-sock-creator)
 endif()
 
 if(${NS3_PLANETLAB})
@@ -66,7 +66,7 @@ if(${NS3_PLANETLAB})
     add_definitions(-DPLANETLAB_TAP_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${planet_tap_creator}")
     target_link_libraries(planetlab-tap-creator ${PLANETLAB_LIBRARIES})
 
-    set(fd-net-device_creators ${fd-net-device_creators} planetlab-tap-creator)
+    list(APPEND fd-net-device_creators planetlab-tap-creator)
 endif()
 
 set(source_files
@@ -93,8 +93,10 @@ set(test_sources)
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-add_dependencies(${libfd-net-device} "${fd-net-device_creators}")
-
+list(LENGTH fd-net-device_creators num_creators)
+if(${num_creators} GREATER 0)
+    add_dependencies(${libfd-net-device} "${fd-net-device_creators}")
+endif()
 
 
 
