@@ -154,9 +154,8 @@ LteSpectrumPhy::LteSpectrumPhy ()
 
   sensingEvents = 0;
   sensingBudget = 0;
-  PU_presence = false;
   PU_detected = false;
-  PU_presence_V = {false, false, false, false};
+  PU_presence_V = std::vector<bool>(4);
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -738,15 +737,8 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
   if (dev != 0)
   {
-      if (UnexpectedAccessBitmap != 0 || FalseAlarmBitmap != 0)
-      {
-          dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccessBitmap, FalseAlarmBitmap, PU_presence_V);
-          UnexpectedAccessBitmap = 0;
-          FalseAlarmBitmap = 0;
-          PU_presence_V = {false, false, false, false};
-      }
+      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
       PU_detected = false;
-
   }
 
   // the device might start RX only if the signal is of a type
@@ -783,14 +775,6 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       int channel = -1;
 
       //Third attempt to find which subchannel the PU is transmitting
-      /*
-      Ptr<const SpectrumValue> allSigSpectrum = m_interferenceData->GetAllSignals();
-      for (auto valIt = allSigSpectrum->ConstValuesBegin(); valIt != allSigSpectrum->ConstValuesEnd(); valIt++)
-      {
-        ss << *valIt << " ";
-      }
-      ss << "\n";
-      */
       int firstIndex = -1;
       double max = 0.0;
       for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
@@ -807,72 +791,6 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
       //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
 
-      //ss << "\n";
-      //std::cout << ss.str() << std::endl;
-
-      //Second attempt to find which subchannel the PU is transmitting
-      /*
-      double max = -100;
-      int maxId = -1;
-      for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
-      {
-          if(*valIt > max)
-          {
-              max = *valIt;
-              maxId = k;
-          }
-      }
-
-
-      int channelD = maxId/25;
-      k = 0;
-      */
-
-      //First attempt to find which subchannel the PU is transmitting
-      /*
-      //Calculate distance of current PU based on groupSinrHistory
-      std::vector<double> currentGroupSinrHistory;
-      double avgSinrSubchannel = 0.0;
-      int rbsPerSubchannel = 25;
-      int i = 1;
-
-      //Retrieve SINR
-      for (auto it = m_sinrPerceived.ConstValuesBegin(); it < m_sinrPerceived.ConstValuesEnd(); it++, i++)
-      {
-          if (*it != 0)
-              avgSinrSubchannel += 10 * log10(*it);
-
-          if (i/rbsPerSubchannel != k)
-          {
-
-              avgSinrSubchannel /= rbsPerSubchannel;
-              currentGroupSinrHistory.push_back(avgSinrSubchannel);
-              //std::cout << "*"<<avgSinrSubchannel << std::endl;
-              avgSinrSubchannel = 0.0;
-              k++;
-          }
-      }
-      //std::cout << std::endl;
-
-      double maxDiff = 0.0;//0.0 for no lower threshold of difference
-      i = 0;
-      for (auto it = currentGroupSinrHistory.begin(); it < currentGroupSinrHistory.end(); it++)
-      {
-          double currSinr = *it;
-          double historySinr = sinrGroupHistory.back()[i];
-          double diff = sqrt(pow(currSinr - historySinr, 2));//absolute difference
-          //std::cout << this << " " << sinrGroupHistory.back().size() << " " << diff << " " << currSinr << " " << historySinr << std::endl;
-          if (diff > maxDiff)
-          {
-              maxDiff = diff;
-              channel = i;
-          }
-          i++;
-      }
-
-      //std::cout << Simulator::Now() << ": PU transmitting in channel " << channel << " with distance " << spectrumRxParams->distance << std::endl;
-      */
-      //std::cout << firstIndex << " vs " << channelD << " vs " << channel << std::endl;
       //Schedule event to store PU presence
       Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
       PU_event.Cancel();
@@ -1267,16 +1185,16 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //    return;
 
     //Initialize variable
-    UnexpectedAccessBitmap = 0;
-    FalseAlarmBitmap = 0;
-    PU_presence_V = {false, false, false, false};
-    std::vector<bool> PU_detected_V = {false, false, false, false};
+    int num_channels = sinrGroupHistory.back().size()/groupingSize;
+    UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
+    for (auto unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+        unexpectedAccessRegistry = std::vector<bool>(3);
+
+    PU_presence_V = std::vector<bool>(num_channels);
+    std::vector<bool> PU_detected_V(num_channels);
 
     //Look for empty RBs SINR on the DCI
-    std::vector<bool> occupied_RB_indexes;
-
-    for(int i = 0; i < 64; i++)
-        occupied_RB_indexes.push_back(false);
+    std::vector<bool> occupied_RB_indexes(64);
 
     int dci_count = 0;
 
@@ -1313,46 +1231,33 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
 
-        //ss << Simulator::Now() << ": " << *groupSNR << " " << distance << " " << prob << "\n";
-        //if (distance != 10e10)
-        //  ss << "channel=" << k << " PU distance=" << distance << " Detection Pb=" << prob << "\n";
-        //if (prob == 0.1)
-        //    prob = 0.184; // For a total Pfa=0.1, with K tests, you need P*(1-P)^(K-1)=0.1. When K = 4, P = 0.184.
-
-
         //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
         bool answer = checkPUPresence(prob, PU_presence_V[k]);
 
 
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
-        if (!PU_presence_V[k] && PU_detected && answer)
-            answer = false; //Don't allow more than a false positive per UE
-
         if (answer)
         {
+            //Detection
             PU_detected = true;
-            UnexpectedAccessBitmap |= ((uint64_t) 0x01fff << (13 * k));
+            UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][0] = true;
             PU_detected_V[k] = true;
-            if (!PU_presence_V[k])
-                FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
+
+            //False alarm
+            if(!PU_presence_V[k])
+                UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][1] = true;
         }
         else
         {
+            //False negative
             if(PU_presence_V[k])
-                FalseAlarmBitmap |= ((uint64_t) 0x01fff << (13 * k));
+                UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][2] = true;
         }
         k++;
     }
 
-    //if (ss.str().size() > 3)
-    //{
-    //    ss << std::bitset<50>(UnexpectedAccessBitmap) << "\n";
-    //    std::cout << ss.str() << "\n";
-    //}
     puPresence_V.emplace_back(PU_detected_V);
-    UnexpectedAccessBitmap &= 0x0003ffffffffffff; //filter everything above bit 50
-    FalseAlarmBitmap &= 0x0003ffffffffffff;
 }
 
 

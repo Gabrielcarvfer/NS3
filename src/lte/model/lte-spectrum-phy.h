@@ -576,10 +576,8 @@ private:
   static std::ofstream plot_snr_history_file;
   static std::mutex mut;
 public:
-    bool PU_presence;
     bool PU_detected;
-    uint64_t UnexpectedAccessBitmap;
-    uint64_t FalseAlarmBitmap;
+    std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
     std::vector<bool> PU_presence_V;
     static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
 

@@ -472,7 +472,8 @@ public://todo: implement this properly through the SAP
         MRG_2_OF_N,
         MRG_3_OF_N,
         MRG_4_OF_N,
-        MRG_K_OF_N //Don't use this one
+        MRG_K_OF_N, //Don't use this one
+        MRG_NN
     };
 
     typedef struct cognitive_reg
@@ -485,16 +486,16 @@ public://todo: implement this properly through the SAP
         uint64_t SensedSubframeNo;
         uint64_t ReceivedFrameNo;
         uint64_t ReceivedSubframeNo;
-        uint64_t UnexpectedAccessBitmap;
-        uint64_t FalseAlarmBitmap; //For measurements only, using this in your algorithm is cheating
+        std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap; // Use only the first element of each subvector. Others are for measurements only, and using them means you are cheating
         std::vector<bool> PU_presence_V;
     } CognitiveReg;
     std::map <uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
-    std::map <uint64_t, std::map<uint64_t, std::vector<uint64_t> > > unexpectedChannelAccessBitmap;
+    std::map <uint64_t, std::map<uint64_t, std::vector<std::vector<bool>> > > unexpectedChannelAccessBitmap;
     std::map <uint16_t, bool> UeRntiMap;
-    void RecvCognitiveMessage(Ptr<Packet> p);
+    //void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
     uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);
+    uint16_t bandwidth;
 
     static std::vector<int> nonDSAChannels;
 
