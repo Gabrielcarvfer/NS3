@@ -1185,9 +1185,9 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //    return;
 
     //Initialize variable
-    int num_channels = sinrGroupHistory.back().size()/groupingSize;
+    int num_channels = 4;//sinrGroupHistory.back().size()/groupingSize;
     UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
-    for (auto unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+    for (auto &unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
         unexpectedAccessRegistry = std::vector<bool>(3);
 
     PU_presence_V = std::vector<bool>(num_channels);
@@ -1207,7 +1207,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     std::stringstream ss;
     int k = 0;
     //Calculate the probability of PU detection on given RBs
-    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
+    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++)
+    {
         //Skip if the RB is supposed to be occupied by an UE transmission
         //if (occupied_RB_indexes.at(i))
         //    continue;
@@ -1270,7 +1271,7 @@ void LteSpectrumPhy::Sense()
       sinrHistory.push_back(m_sinrPerceived.Copy());
   }
 
-  if (sinrHistory.size() > 0)
+  if (!sinrHistory.empty())
   {
     sinrHistory.push_back(m_sinrPerceived.Copy());
     double avgSinr = 0;

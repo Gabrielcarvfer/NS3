@@ -404,12 +404,11 @@ m_ccmMacSapUser (0)
 LteEnbMac::~LteEnbMac ()
 {
   NS_LOG_FUNCTION (this);
-
   //print sensing list
   std::ofstream sensing_list_file;
   sensing_list_file.open("sensing_list.txt");
 
-  std::vector<uint32_t> puSubframePresence = {0,0,0,0};
+  std::vector<int> puSubframePresence(4);
   std::map<uint16_t,uint64_t> sensingUesAndEventsMap;
   for (auto&& [frame,subframeMap]: channelOccupation)
   {
@@ -420,14 +419,28 @@ LteEnbMac::~LteEnbMac ()
           sensing_list_file << "\n\tsubframe " << subframe << " reported \n\t[";
           for (auto&& [ue, cognitiveReg]: ueMap)
           {
-              uint32_t unexpectedAccessbitmap = 0;
+              //Prepare bitmap for sensed stuff
               int k = 0;
-              for (auto & sensingResult : cognitiveReg.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+              int numRbsPerChannel = (bandwidth/cognitiveReg.UnexpectedAccess_FalseAlarm_FalseNegBitmap.size())+1;
+              int i = 0;
+              uint64_t sensedBitmap = 0;
+              for (int k = bandwidth; k > 0; k-=numRbsPerChannel,i++)
               {
-                  unexpectedAccessbitmap += int(pow(sensingResult[0]*2, k));
-                  k++;
+                  if (k < numRbsPerChannel)
+                      numRbsPerChannel = k;
+
+                  if(!cognitiveReg.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][0])
+                      continue;
+
+                  uint64_t sensedBitmapChannel = 0;
+                  for(int j = 0; j < numRbsPerChannel; j++)
+                  {
+                      sensedBitmapChannel |= ((uint64_t)0x01)<<j;
+                  }
+                  sensedBitmap |= (sensedBitmapChannel << (bandwidth-k));
               }
-              sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(unexpectedAccessbitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe " << cognitiveReg.SensedSubframeNo;
+              //Print sensedBitmap
+              sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(sensedBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe " << cognitiveReg.SensedSubframeNo;
               if(sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
                   sensingUesAndEventsMap.emplace(ue,0);
               sensingUesAndEventsMap.at(ue) += 1;
@@ -450,9 +463,9 @@ LteEnbMac::~LteEnbMac ()
   }
 
 
-  std::vector<uint32_t> totalFusions = {0,0,0,0};
-  std::vector<uint32_t> FalseAlarmBitmapReports = {0,0,0,0};
-  std::vector<uint32_t> falseNegativeFusions = {0,0,0,0};
+  std::vector<int> totalFusions(4);
+  std::vector<int> FalseAlarmBitmapReports(4);
+  std::vector<int> falseNegativeFusions(4);
   for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
   {
       for(auto&& [subframe, bitmap]: subframeMap)
@@ -460,13 +473,33 @@ LteEnbMac::~LteEnbMac ()
           //Bitmap[0] contains the bitmap itself
           //Bitmap[1] contains the false positive bitmap
           //Bitmap[2] contains the false negative bitmap
-          sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t";//todo:fix << std::bitset<50>(bitmap[0]);
+
+          int k = 0;
+          int numRbsPerChannel = (bandwidth/bitmap.size())+1;
+          int i = 0;
+          uint64_t sensedBitmap = 0;
+          for (int k = bandwidth; k > 0; k-=numRbsPerChannel,i++)
+          {
+              if (k < numRbsPerChannel)
+                  numRbsPerChannel = k;
+
+              if(!bitmap[i][0])
+                  continue;
+
+              uint64_t sensedBitmapChannel = 0;
+              for(int j = 0; j < numRbsPerChannel; j++)
+              {
+                  sensedBitmapChannel |= ((uint64_t)0x01)<<j;
+              }
+              sensedBitmap |= (sensedBitmapChannel << (bandwidth-k));
+          }
+          sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<50>(sensedBitmap);
 
           for (int subchannel = 0; subchannel < 4; subchannel++)
           {
               totalFusions[subchannel] += 1;
-              //todo: fix FalseAlarmBitmapReports[subchannel] += (bitmap[1] >> (13*subchannel)) & 0x01;
-              //todo: fix falseNegativeFusions[subchannel] += (bitmap[2] >> (13*subchannel)) & 0x01;
+              FalseAlarmBitmapReports[subchannel] += bitmap[subchannel][1];
+              falseNegativeFusions[subchannel] += bitmap[subchannel][2];
           }
       }
   }
@@ -1751,7 +1784,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
     }
 
     //No entries to fuse
-    if(fusedResults.size() == 0)
+    if(fusedResults.empty())
         return (uint64_t) 0x0;
 
     //First create map for sensed frames
@@ -1762,19 +1795,29 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
 
     //Create bitmap to feed the scheduler
-    int numRbsPerChannel = bandwidth/fusedResults.size() + (bandwidth % fusedResults.size()) != 0 ? 1 : 0;
+    int numRbsPerChannel = (bandwidth/fusedResults.size())+1;
     int i = 0;
     uint64_t sensedBitmap = 0;
-    for (int k = bandwidth; k > 0; k-=numRbsPerChannel)
+    for (int k = bandwidth; k > 0; k-=numRbsPerChannel,i++)
     {
-        uint64_t sensedBitmapChannel = 0;
-        for(int j = 0; j < numRbsPerChannel; j++)
-            sensedBitmapChannel |= ((uint64_t)0x01)<<j;
-        sensedBitmap |= sensedBitmapChannel << (bandwidth-k);
-
         if (k < numRbsPerChannel)
             numRbsPerChannel = k;
+
+        if(!fusedResults[i][0])
+            continue;
+
+        //std::cout << "k=" << k << std::endl;
+        uint64_t sensedBitmapChannel = 0;
+        for(int j = 0; j < numRbsPerChannel; j++)
+        {
+            sensedBitmapChannel |= ((uint64_t)0x01)<<j;
+            //std::cout << "j=" << j << " sensedBitmapChannel " << std::bitset<50>(sensedBitmapChannel)  << std::endl;
+        }
+        sensedBitmap |= (sensedBitmapChannel << (bandwidth-k));
+        //std::cout << "k=" << k << " sensedBitmap " << std::bitset<50>(sensedBitmap)  << std::endl;
+
     }
+
     return sensedBitmap;
 }
 
