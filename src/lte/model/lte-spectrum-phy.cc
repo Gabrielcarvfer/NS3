@@ -154,7 +154,6 @@ LteSpectrumPhy::LteSpectrumPhy ()
 
   sensingEvents = 0;
   sensingBudget = 0;
-  PU_detected = false;
   PU_presence_V = std::vector<bool>(4);
 }
 
@@ -738,7 +737,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   if (dev != 0)
   {
       dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
-      PU_detected = false;
+      resetSensingStatus();
   }
 
   // the device might start RX only if the signal is of a type
@@ -1175,6 +1174,17 @@ void LteSpectrumPhy::loadDetectionCurves(bool SNRsensing)
         }
     }
 }
+
+void LteSpectrumPhy::resetSensingStatus()
+{
+    int num_channels = 4;//sinrGroupHistory.back().size()/groupingSize;
+    UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
+    for (auto &unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+        unexpectedAccessRegistry = std::vector<bool>(3);
+
+    PU_presence_V = std::vector<bool>(num_channels);
+}
+
 void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing)
 {
     //Make sure detection probability curves have been loaded
@@ -1185,13 +1195,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //    return;
 
     //Initialize variable
-    int num_channels = 4;//sinrGroupHistory.back().size()/groupingSize;
-    UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
-    for (auto &unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-        unexpectedAccessRegistry = std::vector<bool>(3);
-
-    PU_presence_V = std::vector<bool>(num_channels);
-    std::vector<bool> PU_detected_V(num_channels);
+    resetSensingStatus();
+    std::vector<bool> PU_detected_V(PU_presence_V.size());
 
     //Look for empty RBs SINR on the DCI
     std::vector<bool> occupied_RB_indexes(64);
@@ -1222,10 +1227,10 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                 if (dis < distance)
                 {
                     distance = dis;
-                    //ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
+                    ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
                 }
             }
-
+        std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
         //Mark PU_presence with the current channel PU presence
         PU_presence_V[k] = distance != 10e10;
 
@@ -1241,7 +1246,6 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         if (answer)
         {
             //Detection
-            PU_detected = true;
             UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][0] = true;
             PU_detected_V[k] = true;
 
@@ -1264,9 +1268,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
 void LteSpectrumPhy::Sense()
 {
-
   //Collect interference data
-  if (m_sinrPerceived.GetSpectrumModel() != 0)
+  if (m_sinrPerceived.GetSpectrumModel() != nullptr)
   {
       sinrHistory.push_back(m_sinrPerceived.Copy());
   }
@@ -1293,15 +1296,12 @@ void LteSpectrumPhy::Sense()
     //Execute sensing procedure
     sensingProcedure(m_rxControlMessageListCopy, rbgSize, groupingSize, SNRsensing);
 
-    //Save detection result
-    puPresence.push_back(PU_detected);
-
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
     //Count the sensing event and reschedule the next one
     this->sensingBudget--;
     this->sensingEvents++;
 
-    this->m_sensingEvent.Cancel();
+    //this->m_sensingEvent.Cancel();
     this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
     if (this->sensingBudget > 0)
     {
@@ -1380,7 +1380,8 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               }
 
               // schedule sensing events
-              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
+              if (this->m_sensingEvent.IsExpired())
+                this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
 
 
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);

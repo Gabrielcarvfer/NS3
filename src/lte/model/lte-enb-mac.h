@@ -40,6 +40,9 @@
 #include <ns3/packet-burst.h>
 #include <ns3/lte-ccm-mac-sap.h>
 
+#include <memory>
+#include <torch/script.h>
+
 namespace ns3 {
 
 class DlCqiLteControlMessage;
@@ -498,6 +501,9 @@ public://todo: implement this properly through the SAP
     uint16_t bandwidth;
 
     static std::vector<int> nonDSAChannels;
+
+    static std::shared_ptr<torch::jit::script::Module> nn_module;
+
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;

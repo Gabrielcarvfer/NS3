@@ -1,6 +1,16 @@
 
 set(name lte)
 
+
+set(nn_libraries
+        )
+
+if(${TORCH_FOUND})
+    set(nn_libraries
+            "${TORCH_LIBRARIES}"
+            )
+endif()
+
 set(source_files
         model/lte-common.cc
         model/lte-spectrum-phy.cc
@@ -280,6 +290,7 @@ set(libraries_to_link
         ${libapplications}
         ${libinternet}
         ${libcsma}
+        "${nn_libraries}"
         )
 
 set(test_sources

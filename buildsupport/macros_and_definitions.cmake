@@ -2,6 +2,7 @@ include(buildsupport/vcpkg_hunter.cmake)
 
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
 
+
 if (WIN32 AND NOT MSVC)
     #If using MSYS2
     set(MSYS2_PATH "F:\\tools\\msys64\\mingw64")
@@ -23,6 +24,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
+set(THIRD_PARTY_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party)
 #add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
@@ -41,7 +43,7 @@ ProcessorCount(NumThreads)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # using Clang
-    set(LIB_AS_NEEDED_PRE -Wl,-all_load)
+    set(LIB_AS_NEEDED_PRE -all_load)
     set(LIB_AS_NEEDED_POST             )
     set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -49,24 +51,16 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
     set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
-    add_compile_options(-fstack-protector)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # using Visual Studio C++
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
     set(BUILD_SHARED_LIBS TRUE)
-    set(CMake_MSVC_PARALLEL ${NumThreads})
+    set(CMAKE_MSVC_PARALLEL ${NumThreads})
 endif()
 
-#Used in build-profile-test-suite
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
-elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
-    add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
-else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-    add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
-endif()
+
 
 
 #3rd party libraries with sources shipped in 3rd-party folder
@@ -79,6 +73,18 @@ set(3rdPartyLibraries
 
 #process all options passed in main cmakeLists
 macro(process_options)
+    #process debug switch
+    #Used in build-profile-test-suite
+    if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+        add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
+        set(build_type "deb")
+    elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+        add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
+        set(build_type "reldeb")
+    else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+        add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
+        set(build_type "rel")
+    endif()
 
     #Copy all header files to outputfolder/include/
     file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
@@ -122,12 +128,19 @@ macro(process_options)
         setup_vcpkg()
     endif()
 
+    #PyTorch still need some fixes on Windows
+    if(WIN32 AND ${NS3_PYTORCH})
+        message(WARNING "Libtorch linkage on Windows still requires some fixes. The build will continue without it.")
+        set(NS3_PYTORCH OFF)
+    endif()
+
     #Set C++ standard
     if(${NS3_PYTORCH})
         set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
-        #set(CMAKE_CXX_STANDARD_REQUIRED ON) #ABI requirements for PyTorch affect this
+        set(CMAKE_CXX_STANDARD_REQUIRED OFF) #ABI requirements for PyTorch affect this
+        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS)
     else()
-        set(CMAKE_CXX_STANDARD 17) #c++17 for inline variables in Windows
+        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
         set(CMAKE_CXX_STANDARD_REQUIRED ON)
     endif()
 
@@ -181,7 +194,7 @@ macro(process_options)
                 )
         include_directories(3rd-party/openflow/include)
         #if (WIN32)
-            set(OPENFLOW_LIBRARIES openflow)
+        set(OPENFLOW_LIBRARIES openflow)
         #else()
         #    set(OPENFLOW_LIBRARIES libopenflow.a)
         #endif()
@@ -193,44 +206,44 @@ macro(process_options)
     if(${NS3_BOOST})
         #find_package(Boost)
         #if(NOT ${BOOST_FOUND})
-            if (NOT ${AUTOINSTALL_DEPENDENCIES})
-                message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
-            else()
-                #add_package(boost) #this will install all the boost libraries and was a bad idea
+        if (NOT ${AUTOINSTALL_DEPENDENCIES})
+            message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
+        else()
+            #add_package(boost) #this will install all the boost libraries and was a bad idea
 
-                set(requiredBoostLibraries
-                        ${OPENFLOW_REQUIRED_BOOST_LIBRARIES}
-                        )
+            set(requiredBoostLibraries
+                    ${OPENFLOW_REQUIRED_BOOST_LIBRARIES}
+                    )
 
-                #Holds libraries to link later
-                set(BOOST_LIBRARIES
-                        )
-                set(BOOST_INCLUDES
-                        )
+            #Holds libraries to link later
+            set(BOOST_LIBRARIES
+                    )
+            set(BOOST_INCLUDES
+                    )
 
-                #For each of the required boost libraries
-                foreach(requiredBoostLibrary ${requiredBoostLibraries})
-                    set(boostLib boost-${requiredBoostLibrary})
-                    add_package(${boostLib})
-                    get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
-                    #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
-                    list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
+            #For each of the required boost libraries
+            foreach(requiredBoostLibrary ${requiredBoostLibraries})
+                set(boostLib boost-${requiredBoostLibrary})
+                add_package(${boostLib})
+                get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
+                #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
+                list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
 
-                    #Some boost libraries (e.g. static-assert) don't have an associated library
-                    if (EXISTS ${${boostLib}_dir}/lib)
-                        link_directories(${${boostLib}_dir}/lib)
+                #Some boost libraries (e.g. static-assert) don't have an associated library
+                if (EXISTS ${${boostLib}_dir}/lib)
+                    link_directories(${${boostLib}_dir}/lib)
 
-                        if (WIN32)
-                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
-                        else()
-                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
-                        endif()
+                    if (WIN32)
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
+                    else()
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
                     endif()
-                endforeach()
+                endif()
+            endforeach()
 
 
-                set(BOOST_FOUND TRUE)
-            endif()
+            set(BOOST_FOUND TRUE)
+        endif()
         #else()
         #    link_directories(${BOOST_LIBRARY_DIRS})
         #    include_directories( ${BOOST_INCLUDE_DIR})
@@ -326,10 +339,10 @@ macro(process_options)
         if(NOT ${MPI_FOUND})
             message(FATAL_ERROR "MPI not found")
         else()
-            include_directories( ${MPI_CXX_INCLUDE_PATH}) 
-            add_definitions(${MPI_CXX_COMPILE_FLAGS} ${MPI_CXX_LINK_FLAGS} -DNS3_MPI) 
-            link_libraries(${MPI_CXX_LIBRARIES}) 
-            #set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER}) 
+            include_directories( ${MPI_CXX_INCLUDE_PATH})
+            add_definitions(${MPI_CXX_COMPILE_FLAGS} ${MPI_CXX_LINK_FLAGS} -DNS3_MPI)
+            link_libraries(${MPI_CXX_LIBRARIES})
+            #set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
         endif()
     endif()
 
@@ -378,46 +391,104 @@ macro(process_options)
             #Hard way
             # Spent 4h trying to discover what caused a shared library not to be found.
             # Ended up being a WSL bug https://github.com/Microsoft/WSL/issues/3023 https://superuser.com/a/1348051/691447
-                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+            #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
 
-                #include_directories(${Qt5Core_INCLUDE_DIRS}
-                #        ${Qt5Widgets_INCLUDE_DIRS}
-                #        ${Qt5PrintSupport_INCLUDE_DIRS}
-                #        )
+            #include_directories(${Qt5Core_INCLUDE_DIRS}
+            #        ${Qt5Widgets_INCLUDE_DIRS}
+            #        ${Qt5PrintSupport_INCLUDE_DIRS}
+            #        )
 
-                #Fetch the library path to Qt core lib
-                #get_target_property(Qt5Core_location Qt5::Core LOCATION)
+            #Fetch the library path to Qt core lib
+            #get_target_property(Qt5Core_location Qt5::Core LOCATION)
 
-                ##Get the directory with the Qt core library
-                #get_filename_component(QT_PATH ${Qt5Core_location} DIRECTORY)
+            ##Get the directory with the Qt core library
+            #get_filename_component(QT_PATH ${Qt5Core_location} DIRECTORY)
 
-                #set(QT_VERSION ${Qt5Widgets_VERSION})
+            #set(QT_VERSION ${Qt5Widgets_VERSION})
 
-                #set(QT_LIBRARIES_N
-                #        libQt5Widgets.so.${QT_VERSION}
-                #        libQt5PrintSupport.so.${QT_VERSION}
-                #        libQt5Gui.so.${QT_VERSION}
-                #        libQt5Core.so.${QT_VERSION}
-                #        )
+            #set(QT_LIBRARIES_N
+            #        libQt5Widgets.so.${QT_VERSION}
+            #        libQt5PrintSupport.so.${QT_VERSION}
+            #        libQt5Gui.so.${QT_VERSION}
+            #        libQt5Core.so.${QT_VERSION}
+            #        )
 
-                #set(QT_LIBRARIES )
-                #foreach(qt_lib ${QT_LIBRARIES_N})
-                #    list(APPEND QT_LIBRARIES ${QT_PATH}/${qt_lib})
-                #endforeach()
+            #set(QT_LIBRARIES )
+            #foreach(qt_lib ${QT_LIBRARIES_N})
+            #    list(APPEND QT_LIBRARIES ${QT_PATH}/${qt_lib})
+            #endforeach()
 
-                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
-                #link_directories(${QT_PATH})
-                #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${QT_PATH}")
+            #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
+            #link_directories(${QT_PATH})
+            #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${QT_PATH}")
         endif()
 
     endif()
 
     if(${NS3_PYTORCH})
-        list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib/python3.6/dist-packages/torch")#installed with sudo pip3 install torch torchvision
+        #Decide which version of libtorch should be downloaded.
+        #If you change the build_type, remember to download both libtorch folder and libtorch.zip to redownload the appropriate version
+        if(WIN32)
+            if(${build_type} STREQUAL "rel")
+                set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-latest.zip)
+            else()
+                set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-debug-latest.zip)
+            endif()
+        elseif(APPLE)
+            set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-macos-latest.zip)
+        else()
+            set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-latest.zip)
+        endif()
+
+        #Define executables to download and unzip libtorch archive
+        if (WIN32)
+            set(CURL_EXE curl.exe)
+            if(MSVC)
+                set(UNZIP_EXE  powershell expand-archive)
+                set(UNZIP_POST .\\)
+            else()
+                set(UNZIP_EXE unzip.exe)
+                set(UNZIP_POST )
+            endif()
+        else()
+            set(CURL_EXE curl)
+            set(UNZIP_EXE unzip)
+            set(UNZIP_POST )
+        endif()
+
+        #Download libtorch archive if not already downloaded
+        if (EXISTS ${THIRD_PARTY_DIRECTORY}/libtorch.zip)
+            message(STATUS "Libtorch already downloaded")
+        else()
+            message(STATUS "Downloading libtorch files ${libtorch_url}")
+            execute_process(COMMAND ${CURL_EXE} ${libtorch_url} --output libtorch.zip
+                    WORKING_DIRECTORY ${THIRD_PARTY_DIRECTORY})
+        endif()
+
+        #Extract libtorch.zip into the libtorch folder
+        if (EXISTS ${THIRD_PARTY_DIRECTORY}/libtorch)
+            message(STATUS "Libtorch folder already unzipped")
+        else()
+            message(STATUS "Unzipping libtorch files")
+            execute_process(COMMAND ${UNZIP_EXE} libtorch.zip ${UNZIP_POST}
+                    WORKING_DIRECTORY ${THIRD_PARTY_DIRECTORY})
+        endif()
+
+        #Append the libtorch cmake folder to the CMAKE_PREFIX_PATH (enables FindTorch.cmake)
+        list(APPEND CMAKE_PREFIX_PATH "${THIRD_PARTY_DIRECTORY}/libtorch/share/cmake")
+
+        #Torch automatically includes the GNU ABI thing that causes problems (look for PYTORCH references above)
+        set(backup_cxx_flags ${CMAKE_CXX_FLAGS})
         find_package(Torch REQUIRED)
+        set(CMAKE_CXX_FLAGS ${backup_cxx_flags})
+
+        #Include the libtorch includes and libraries folders
         include_directories(${TORCH_INCLUDE_DIRS})
-        #link_directories(${TORCH_LIBDIR})
-        add_definitions(${TORCH_CXX_FLAGS})
+        link_directories(${THIRD_PARTY_DIRECTORY}/libtorch/lib)
+
+        #Torch flags may cause problems to other libraries, so undo them (TorchConfig.cmake)
+        set(TORCH_CXX_FLAGS)
+        set_property(TARGET torch PROPERTY INTERFACE_COMPILE_OPTIONS)
     endif()
 
     #if(${NS3_GNUPLOT})
@@ -430,19 +501,11 @@ macro(process_options)
     #    endif()
     #endif()
 
-    #process debug switch
-    if(${NS3_DEBUG})
-        set(CMAKE_BUILD_TYPE Debug)
-        set(build_type "debug")
-        set(CMAKE_SKIP_RULE_DEPENDENCY TRUE)
-    else()
-        set(CMAKE_BUILD_TYPE Release)
-        set(build_type "release")
-        set(CMAKE_SKIP_RULE_DEPENDENCY FALSE)
-    endif()
+
+
 
     #Process core-config
-    set(INT64X64 "128")
+    set(INT64X64 "DOUBLE")
 
     if( NOT (${INT64X64} STREQUAL "DOUBLE") )
         if (${CMAKE_CXX_COMPILER_ID} EQUAL "MSVC")
@@ -518,7 +581,7 @@ macro(process_options)
     #string (REPLACE ";" " " libs_to_build_txt "${libs_to_build}")
     #add_definitions(-DNS3_MODULES_PATH=${libs_to_build_txt})
 
-	#Dump definitions for later use
+    #Dump definitions for later use
     get_directory_property( ADDED_DEFINITIONS COMPILE_DEFINITIONS )
     file(WRITE ${CMAKE_HEADER_OUTPUT_DIRECTORY}/ns3-definitions "${ADDED_DEFINITIONS}")
 
@@ -547,7 +610,7 @@ macro (write_module_header name header_files)
         list(APPEND contents
                 "
     #include <ns3/${head}>")
-    ##include \"ns3/${head}\"")
+        ##include \"ns3/${head}\"")
     endforeach()
 
     #Common module footer
@@ -566,7 +629,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     add_library(${lib${libname}} SHARED $<TARGET_OBJECTS:${lib${libname}-obj}>)
 
     #Link the shared library with the libraries passed
-    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+    target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
     if(MSVC)
         target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
     endif()
@@ -593,7 +656,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
                 add_library(${test${libname}} SHARED "${test_sources}")
 
                 #Link test library to the module library
-                target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+                target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
             endif()
         endif()
     endif()
@@ -603,9 +666,9 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
         if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/examples)
             add_subdirectory(examples)
         endif()
-        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/example) 
-            add_subdirectory(example) 
-        endif() 
+        if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/example)
+            add_subdirectory(example)
+        endif()
     endif()
 
     #Build pybindings if requested and if bindings subfolder exists in NS3/src/libname

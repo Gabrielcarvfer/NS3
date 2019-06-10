@@ -45,7 +45,6 @@
 #include <bitset> //binary bitstream
 #include <fstream>
 
-
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteEnbMac");
@@ -54,6 +53,7 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbMac);
 
 
 std::vector<int> LteEnbMac::nonDSAChannels;
+std::shared_ptr<torch::jit::script::Module> LteEnbMac::nn_module = nullptr;
 
 // //////////////////////////////////////
 // member SAP forwarders
@@ -398,6 +398,12 @@ m_ccmMacSapUser (0)
   unexpectedChannelAccessBitmap.at(0).emplace(0, std::vector<std::vector<bool>>(4));
   for(auto & channelReg : unexpectedChannelAccessBitmap.at(0).at(0))
     channelReg = std::vector<bool>(3);
+
+  std::string fusion_model = PROJECT_SOURCE_PATH"/scratch/fusion_model.pt";
+  if (LteEnbMac::nn_module == nullptr)
+    LteEnbMac::nn_module = torch::jit::load(fusion_model);
+  if (LteEnbMac::nn_module == nullptr)
+      exit(-10);
 }
 
 
@@ -1640,12 +1646,31 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     auto subframeIt = frameIt->second.rbegin();
                     if (m_frameNo <= frameIt->first + 1)
                     {
+                        //Prepare the nn input
+                        std::vector<float> encodedData;
                         for (auto &ue : subframeIt->second)
-                        {
+                            {
                             auto ueRnti = ue.first;
+                            for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                                encodedData.push_back(channelReg[0]);
+                            //m_dlCqiReceived.find(ue.first);
                             //auto sensed = ue.second.UnexpectedAccessBitmap;
                             //auto falseAlarm = ue.second.FalseAlarmBitmap;
                         }
+
+                        at::Tensor f = torch::tensor(encodedData);
+                        std::vector<torch::jit::IValue> inputs;
+                        inputs.push_back(f);
+
+                        //Feed the nn
+                        at::Tensor output = nn_module->forward(inputs).toTensor();
+
+                        //Decode the nn output
+                        std::cout << "ArgMax:" << output.slice(0, 0, 16).argmax().item<int>() <<" Max:" <<  output.slice(0, 0, 16).max().item<float>() << std::endl;
+
+
+
+
                         //Checking for false positives and negatives is made in the end
                     }
                 }

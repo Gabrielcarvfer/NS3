@@ -558,6 +558,7 @@ private:
   static std::bernoulli_distribution bdPfa;
   static std::map<double, std::bernoulli_distribution> bdPd;
   static bool PUProbLoaded;
+  void resetSensingStatus();
   void calculateAvgSinr(Ptr<SpectrumValue> sinr, int groupingSize, double * avgChannelSinr, std::vector<double> *historicalGroupSinr);
   static void loadDetectionCurves(bool SNRsensing);
   void sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing);
@@ -576,7 +577,6 @@ private:
   static std::ofstream plot_snr_history_file;
   static std::mutex mut;
 public:
-    bool PU_detected;
     std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
     std::vector<bool> PU_presence_V;
     static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
