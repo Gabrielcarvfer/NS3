@@ -1230,7 +1230,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                     ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
                 }
             }
-        std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
+        //std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
         //Mark PU_presence with the current channel PU presence
         PU_presence_V[k] = distance != 10e10;
 

@@ -503,6 +503,8 @@ public://todo: implement this properly through the SAP
     static std::vector<int> nonDSAChannels;
 
     static std::shared_ptr<torch::jit::script::Module> nn_module;
+    std::vector <CqiListElement_s> tempCqi;
+
 
 
 private:

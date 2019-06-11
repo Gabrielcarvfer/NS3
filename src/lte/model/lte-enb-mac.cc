@@ -643,6 +643,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
       FfMacSchedSapProvider::SchedDlCqiInfoReqParameters dlcqiInfoReq;
       dlcqiInfoReq.m_sfnSf = ((0x3FF & frameNo) << 4) | (0xF & subframeNo);
       dlcqiInfoReq.m_cqiList.insert (dlcqiInfoReq.m_cqiList.begin (), m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
+      tempCqi = m_dlCqiReceived;
       m_dlCqiReceived.erase (m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
       m_schedSapProvider->SchedDlCqiInfoReq (dlcqiInfoReq);
     }
@@ -1646,16 +1647,43 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     auto subframeIt = frameIt->second.rbegin();
                     if (m_frameNo <= frameIt->first + 1)
                     {
+                        //Prepare A30 cqi list
+                        std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+                        for (auto & cqiEntry : tempCqi)
+                        {
+                            if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
+                                continue;
+                            //A30 CQIs at this point
+                            std::vector<uint8_t> cqisList;
+                            for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
+                            {
+                                cqisList.push_back(rbEntry.m_sbCqi.at(0));
+                            }
+                            ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
+                        }
+
+                        //Prepare P10 cqi list
+                        //std::map<uint16_t, unsigned char> ue_to_cqi_map;
+                        //for (auto & cqiEntry : tempCqi)
+                        //{
+                        //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
+                        //        continue;
+                        //    //P10 CQIs at this point
+                        //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
+                        //}
+
                         //Prepare the nn input
                         std::vector<float> encodedData;
                         for (auto &ue : subframeIt->second)
-                            {
+                        {
                             auto ueRnti = ue.first;
+                            int i = 0;
                             for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                            {
                                 encodedData.push_back(channelReg[0]);
-                            //m_dlCqiReceived.find(ue.first);
-                            //auto sensed = ue.second.UnexpectedAccessBitmap;
-                            //auto falseAlarm = ue.second.FalseAlarmBitmap;
+                                encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
+                                i += bandwidth/4;
+                            }
                         }
 
                         at::Tensor f = torch::tensor(encodedData);
@@ -1666,11 +1694,16 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         at::Tensor output = nn_module->forward(inputs).toTensor();
 
                         //Decode the nn output
-                        std::cout << "ArgMax:" << output.slice(0, 0, 16).argmax().item<int>() <<" Max:" <<  output.slice(0, 0, 16).max().item<float>() << std::endl;
-
-
-
-
+                        //std::cout << "ArgMax:" << output.slice(0, 0, 16).argmax().item<int>() <<" Max:" <<  output.slice(0, 0, 16).max().item<float>() << std::endl;
+                        uint16_t nn_output = output.slice(0, 0, 16).argmax().item<int>();
+                        int i = 0;
+                        for(auto & channelReg : fusedResults)
+                        {
+                            fusedResults[i][0] = nn_output % 2;
+                            nn_output /= 2;
+                            i++;
+                        }
+                        
                         //Checking for false positives and negatives is made in the end
                     }
                 }
