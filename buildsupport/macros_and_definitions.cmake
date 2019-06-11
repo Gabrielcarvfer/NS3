@@ -103,6 +103,7 @@ macro(process_options)
     #3rd party libraries with sources shipped in 3rd-party folder
     set(3rdPartyLibraries
             netanim
+            kalman
             ${build_lib_brite}
             ${build_lib_openflow}
             )
@@ -501,6 +502,9 @@ macro(process_options)
     #    endif()
     #endif()
 
+    add_package(eigen3)
+    get_property(eigen3_dir GLOBAL PROPERTY DIR_eigen3)
+    include_directories(${eigen3_dir}/include)
 
 
 

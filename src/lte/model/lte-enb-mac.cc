@@ -45,6 +45,8 @@
 #include <bitset> //binary bitstream
 #include <fstream>
 
+
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteEnbMac");
@@ -399,11 +401,55 @@ m_ccmMacSapUser (0)
   for(auto & channelReg : unexpectedChannelAccessBitmap.at(0).at(0))
     channelReg = std::vector<bool>(3);
 
+  //Prepare neural network for fusion
   std::string fusion_model = PROJECT_SOURCE_PATH"/scratch/fusion_model.pt";
   if (LteEnbMac::nn_module == nullptr)
     LteEnbMac::nn_module = torch::jit::load(fusion_model);
   if (LteEnbMac::nn_module == nullptr)
       exit(-10);
+
+  //Prepare kalman filter for fusion
+  int n = 4; // Number of states
+  int m = 80; // Number of measurements
+  double dt = 1.0/100; // Time step
+
+  Eigen::MatrixXd A(n, n); // System dynamics matrix
+  Eigen::MatrixXd C(m, n); // Output matrix
+  Eigen::MatrixXd Q(n, n); // Process noise covariance
+  Eigen::MatrixXd R(m, m); // Measurement noise covariance
+  Eigen::MatrixXd P(n, n); // Estimate error covariance
+
+  // Discrete LTI projectile motion, measuring position only
+  A << 1, dt, 0, 0, 0, 1, dt, 0, 0, 0, 1, dt, dt, 0, 0, 1;
+  for(int col = 0; col < m; col++)
+      for (int row = 0; row < n; row++)
+          C(col,row) = 0;
+
+  // Reasonable covariance matrices
+  for(int col = 0; col < n; col++)
+      for (int row = 0; row < n; row++)
+      {
+          Q(col, row) = (col == row) ? 0.5 :  0;
+          P(col, row) = (col == row) ? 0.1 : 10;
+      }
+  for(int col = 0; col < n; col++)
+      for (int row = 0; row < n; row++)
+          R(col, row) = 5;
+
+  //std::cout << "A: \n" << A << std::endl;
+  //std::cout << "C: \n" << C << std::endl;
+  //std::cout << "Q: \n" << Q << std::endl;
+  //std::cout << "R: \n" << R << std::endl;
+  //std::cout << "P: \n" << P << std::endl;
+
+  // Construct the filter
+  kf = KalmanFilter(dt, A, C, Q, R, P);
+
+  // Best guess of initial states
+  Eigen::VectorXd x0(n);
+  for(int i = 0; i < n; i++)
+      x0(i) = 0.0;
+  kf.init(0, x0);
 }
 
 
@@ -1703,7 +1749,89 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             nn_output /= 2;
                             i++;
                         }
-                        
+
+                        //Checking for false positives and negatives is made in the end
+                    }
+                }
+                break;
+            case MRG_KALMAN:
+                {
+                    auto subframeIt = frameIt->second.rbegin();
+                    if (m_frameNo <= frameIt->first + 1)
+                    {
+                        //Prepare A30 cqi list
+                        std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+                        for (auto & cqiEntry : tempCqi)
+                        {
+                            if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
+                                continue;
+                            //A30 CQIs at this point
+                            std::vector<uint8_t> cqisList;
+                            for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
+                            {
+                                cqisList.push_back(rbEntry.m_sbCqi.at(0));
+                            }
+                            ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
+                        }
+
+                        //Prepare P10 cqi list
+                        //std::map<uint16_t, unsigned char> ue_to_cqi_map;
+                        //for (auto & cqiEntry : tempCqi)
+                        //{
+                        //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
+                        //        continue;
+                        //    //P10 CQIs at this point
+                        //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
+                        //}
+
+                        //Prepare the nn input
+                        std::vector<float> encodedData;
+                        for (auto &ue : subframeIt->second)
+                        {
+                            auto ueRnti = ue.first;
+                            int i = 0;
+                            for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                            {
+                                encodedData.push_back(channelReg[0]);
+                                encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
+                                i += bandwidth/4;
+                            }
+                        }
+
+                        Eigen::VectorXd y(encodedData.size());
+
+                        int i = 0;
+                        for(auto data : encodedData)
+                        {
+                            y(i) = data;
+                            i++;
+                        }
+
+                        kf.update(y);
+                        auto kfstate = kf.state();//.transpose();
+                        std::vector<double> fusion(kfstate.data(), kfstate.data()+kfstate.rows()*kfstate.cols());
+                        double maxval = -100000;
+                        int maxindex = 0;
+
+                        i = 0;
+                        for (auto element: fusion)
+                        {
+                            if(element > maxval)
+                            {
+                                maxval = element;
+                                maxindex = i;
+                            }
+                            i++;
+                        }
+
+                        i=0;
+                        for(auto & channelReg : fusedResults)
+                        {
+                            fusedResults[i][0] = maxindex % 2;
+                            maxindex /= 2;
+                            i++;
+                        }
+
                         //Checking for false positives and negatives is made in the end
                     }
                 }

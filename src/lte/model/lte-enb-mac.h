@@ -43,6 +43,10 @@
 #include <memory>
 #include <torch/script.h>
 
+#include <Eigen/Dense>
+#include "kalman.hpp"
+
+
 namespace ns3 {
 
 class DlCqiLteControlMessage;
@@ -476,7 +480,8 @@ public://todo: implement this properly through the SAP
         MRG_3_OF_N,
         MRG_4_OF_N,
         MRG_K_OF_N, //Don't use this one
-        MRG_NN
+        MRG_NN,
+        MRG_KALMAN
     };
 
     typedef struct cognitive_reg
@@ -505,7 +510,7 @@ public://todo: implement this properly through the SAP
     static std::shared_ptr<torch::jit::script::Module> nn_module;
     std::vector <CqiListElement_s> tempCqi;
 
-
+    KalmanFilter kf;
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;

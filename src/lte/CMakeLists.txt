@@ -291,6 +291,7 @@ set(libraries_to_link
         ${libinternet}
         ${libcsma}
         "${nn_libraries}"
+        kalman
         )
 
 set(test_sources
