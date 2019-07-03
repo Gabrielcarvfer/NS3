@@ -155,6 +155,7 @@ LteSpectrumPhy::LteSpectrumPhy ()
   sensingEvents = 0;
   sensingBudget = 0;
   PU_presence_V = std::vector<bool>(4);
+  waitingForSensingReportTransmission = false;
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -184,7 +185,7 @@ void LteSpectrumPhy::DoDispose ()
   m_sensingEvent.Cancel();
 
 
-  if (puPresence.size()>1)
+  if (this->puPresence.size()>0 || this->sinrAvgHistory.size()>0)
   {
       std::lock_guard<std::mutex> protect(mut);
 
@@ -736,7 +737,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
   if (dev != 0)
   {
-      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(spectrumRxParams, UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
+      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
       resetSensingStatus();
   }
 
@@ -792,8 +793,7 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
       //Schedule event to store PU presence
       Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
-      PU_event.Cancel();
-      PU_event = Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance, channel); //Set PU_presence to false after transmission finishes
+      Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance, channel); //Set PU_presence to false after transmission finishes
 
     }    
 }
@@ -876,24 +876,44 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
 
 void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
 {
+    //if true, including a new PU entry
     if (state)
     {
-        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        //if there is no channel entry, create one
+        if (PUsDistance.find(channel) == PUsDistance.end())
         {
-            if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
-            {
-                PUsDistance.erase(it);
-            }
+            std::map<double, int> pu_entry;
+            PUsDistance.emplace(channel, pu_entry);
         }
-        PUsDistance.emplace_back(distance,channel);
+
+        //if there is no distance entry, create one
+        if (PUsDistance.at(channel).find(distance) == PUsDistance.at(channel).end())
+        {
+            PUsDistance.at(channel).emplace(distance, 0);
+        }
+
+        //increment the channel+distance counter for the number of present PUs
+        PUsDistance.at(channel).at(distance)++;
     }
+    //if false, removing a PU entry
     else
     {
-        for (auto it = PUsDistance.begin(); it < PUsDistance.end(); it++)
+        //if there still is a channel entry to remove
+        if(PUsDistance.find(channel) != PUsDistance.end())
         {
-            if (std::get<0>(*it) == distance && std::get<1>(*it) == channel)
+            //and there is still a distance entry to remove
+            if (PUsDistance.at(channel).find(distance) != PUsDistance.at(channel).end())
             {
-                PUsDistance.erase(it);
+                //decrement the PU counter
+                PUsDistance.at(channel).at(distance)--;
+
+                //if the counter reaches 0, remove the distance entry
+                if (PUsDistance.at(channel).at(distance) == 0)
+                    PUsDistance.at(channel).erase(distance);
+
+                //if there are no distance entries for a given channel, remove the channel entry
+                if (PUsDistance.at(channel).size() == 0)
+                    PUsDistance.erase(channel);
             }
         }
 
@@ -1190,10 +1210,6 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //Make sure detection probability curves have been loaded
     loadDetectionCurves(SNRsensing);
 
-    //Don't sense again if previous report hasn't been sent
-    //if (PU_detected)
-    //    return;
-
     //Initialize variable
     resetSensingStatus();
     std::vector<bool> PU_detected_V(PU_presence_V.size());
@@ -1211,25 +1227,37 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
     std::stringstream ss;
     int k = 0;
-    //Calculate the probability of PU detection on given RBs
-    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++)
+
+    int numPus = 0;
+    for (auto & channel : PUsDistance)
     {
+        for (auto & distance : channel.second)
+        {
+            numPus+=distance.second;
+            //if(distance.second <= 0)
+            //{
+            //    std::cout << "pew pew pew" << std::endl;
+            //}
+        }
+    }
+    //std::cout << Simulator::Now().GetSeconds() << " #PUs " << numPus << std::endl;
+
+    //Calculate the probability of PU detection on given RBs
+    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
         //Skip if the RB is supposed to be occupied by an UE transmission
         //if (occupied_RB_indexes.at(i))
         //    continue;
 
         double distance = 10.0e10;
+        if (PUsDistance.find(k) != PUsDistance.end())
+        {
+            double minDist = distance;
+            for (auto &dist : PUsDistance.at(k))
+                if (dist.first < minDist)
+                    minDist = dist.first;
+            distance = minDist;
+        }
 
-        for (auto itPU = PUsDistance.begin(); itPU < PUsDistance.end(); itPU++)
-            if (std::get<1>(*itPU) == k)
-            {
-                double dis =std::get<0>(*itPU);
-                if (dis < distance)
-                {
-                    distance = dis;
-                    ss << "PU ch " << std::get<1>(*itPU) << " distance " << distance << "\n";
-                }
-            }
         //std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
         //Mark PU_presence with the current channel PU presence
         PU_presence_V[k] = distance != 10e10;
@@ -1276,6 +1304,15 @@ void LteSpectrumPhy::Sense()
 
   if (!sinrHistory.empty())
   {
+    if (this->waitingForSensingReportTransmission)
+    {
+        Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+        if (dev != 0)
+        {
+            dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
+            resetSensingStatus();
+        }
+    }
     sinrHistory.push_back(m_sinrPerceived.Copy());
     double avgSinr = 0;
     std::vector<double> historicalSNR;
@@ -1296,18 +1333,20 @@ void LteSpectrumPhy::Sense()
     //Execute sensing procedure
     sensingProcedure(m_rxControlMessageListCopy, rbgSize, groupingSize, SNRsensing);
 
+    this->waitingForSensingReportTransmission = true;
+
     //std::cout << "Pu detected: " << puPresence.back() << std::endl;
     //Count the sensing event and reschedule the next one
-    this->sensingBudget--;
+    //this->sensingBudget--;
     this->sensingEvents++;
 
     //this->m_sensingEvent.Cancel();
-    this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
-    if (this->sensingBudget > 0)
-    {
-        //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
-        this->sensingBudget = 0;
-    }
+    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    //if (this->sensingBudget > 0)
+    //{
+    //    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    //    this->sensingBudget = 0;
+    //}
   }
 }
 

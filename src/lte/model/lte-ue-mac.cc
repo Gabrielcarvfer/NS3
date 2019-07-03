@@ -841,67 +841,8 @@ LteUeMac::AssignStreams (int64_t stream)
   return 1;
 }
 
-void LteUeMac::SendCognitiveMessage(Ptr<SpectrumSignalParameters> rxParams, std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V)
+void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V)
 {
-    //We stopped receiving ctrl messages(not supposed to happen), so estimate frames
-    //if (lastFrameNo == m_frameNo && lastSubframeNo == m_subframeNo)
-    //{
-    //    m_subframeNo++;
-    //    if(m_subframeNo > 9)
-    //    {
-    //        m_subframeNo = 0;
-    //        m_frameNo++;
-    //    }
-    //}
-
-    // Serialize data to send to eNB through the data channel
-    //
-    //Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (rxParams);
-    //Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (rxParams);
-    //Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (rxParams);
-    //
-    //
-    //std::stringstream msg;
-    //msg << m_rnti << "\n";
-    //msg << Simulator::Now() << "\n";
-    //msg << m_frameNo << "\n";
-    //msg << m_subframeNo << "\n";
-    //msg << std::hex << ueSpectrumPhy->unexpectedAccessBitmap << "\n";//transmit unexpected access to the eNB
-    //
-    //ueSpectrumPhy->unexpectedAccessBitmap = 0;//reset bitmap
-    //
-    //msg << rxParams->duration << "\n";
-    //msg << rxParams->pathLossDb << "\n";
-    //msg << rxParams->maxPathLossDb << "\n";
-    //msg << rxParams->psd << "\n";
-    //
-    //if (lteDataRxParams != 0)
-    //{
-    //    msg << "LteDataFrame" << "\n";
-    //}
-    //if (lteDlCtrlRxParams != 0)
-    //{
-    //    msg << "LteDlCtrlFrame" << "\n";
-    //}
-    //if (lteUlSrsRxParams != 0)
-    //{
-    //    msg << "LteUlSrsFrame" << "\n";
-    //}
-    //msg << std::endl;
-    //
-    //std::string msgStr = msg.str();
-    //Ptr<Packet> packet = Create<Packet>((const uint8_t *) msgStr.c_str(), msgStr.size()+1);
-
-    //Send report throught the data channel
-    //LteMacSapProvider::TransmitPduParameters params;
-    //params.pdu = packet;
-    //params.rnti = m_rnti;
-    //params.lcid = 0x0ff; // arbitrary number
-    //params.layer = 1; // 1-mac 2-rlc
-    //params.harqProcessId = m_harqProcessId; //todo: fix (m_harqProcessId + 1) % HARQ_PERIOD;
-    //params.componentCarrierId = m_componentCarrierId;
-    //DoTransmitPdu(params);
-
     //Send report through the control channel
     LteEnbMac::CognitiveReg senseReport;
     senseReport.OriginAddress = m_rnti;

@@ -516,7 +516,7 @@ LteEnbMac::~LteEnbMac ()
 
 
   std::vector<int> totalFusions(4);
-  std::vector<int> FalseAlarmBitmapReports(4);
+  std::vector<int> falseAlarmBitmapReports(4);
   std::vector<int> falseNegativeFusions(4);
   for (auto&& [frame,subframeMap]: unexpectedChannelAccessBitmap)
   {
@@ -550,7 +550,7 @@ LteEnbMac::~LteEnbMac ()
           for (int subchannel = 0; subchannel < 4; subchannel++)
           {
               totalFusions[subchannel] += 1;
-              FalseAlarmBitmapReports[subchannel] += bitmap[subchannel][1];
+              falseAlarmBitmapReports[subchannel] += bitmap[subchannel][1];
               falseNegativeFusions[subchannel] += bitmap[subchannel][2];
           }
       }
@@ -560,12 +560,10 @@ LteEnbMac::~LteEnbMac ()
   {
       sensing_list_file << "\n\nFor subchannel "<< subchannel << ":";
       sensing_list_file <<   "\nFrom " << totalFusions[subchannel] << " fusions,";
-      sensing_list_file <<   " " << FalseAlarmBitmapReports[subchannel] << " were false positive and";
+      sensing_list_file <<   " " << falseAlarmBitmapReports[subchannel] << " were false positive and";
       sensing_list_file <<   " " << falseNegativeFusions[subchannel] << " were false negative.";
-      sensing_list_file <<   "\nTotal false positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)totalFusions[subchannel] << "%.";
-      sensing_list_file <<   "\nTotal false negatives were " << 100*(double)falseNegativeFusions[subchannel]/(double)totalFusions[subchannel] << "%.";
-      sensing_list_file <<   "\nDuring PU transmissions, false positives were " << 100*(double)FalseAlarmBitmapReports[subchannel]/(double)puSubframePresence[subchannel] << "%.";
-      sensing_list_file <<   "\nDuring PU transmissions, false negatives were " << 100*(double)falseNegativeFusions[subchannel]/   (double)puSubframePresence[subchannel] << "%.";
+      sensing_list_file <<   "\nTotal false positives were " << 100*(double)falseAlarmBitmapReports[subchannel]/((double)totalFusions[subchannel]-(double)puSubframePresence[subchannel]) << "% (" << (double)falseAlarmBitmapReports[subchannel] << ") of " << ((double)totalFusions[subchannel]-(double)puSubframePresence[subchannel])  << " subframes.";
+      sensing_list_file <<   "\nTotal false negatives were " << 100*(double)falseNegativeFusions[subchannel]/   (double)puSubframePresence[subchannel] << "% (" << (double)falseNegativeFusions[subchannel] << ") of " << (double) puSubframePresence[subchannel] << " subframes.";
   }
   sensing_list_file << std::endl;
 
@@ -1596,7 +1594,13 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             break;//jump out of the if
 
         //Load the latest frame with registered reports
+        if (frameIt->second.size() < 1 && channelOccupation.size() > 1)
+        {
+            std::next(frameIt, 1);
+        }
+
         auto subframeIt = frameIt->second.rbegin();
+
         auto numChannels = subframeIt->second.rbegin()->second.UnexpectedAccess_FalseAlarm_FalseNegBitmap.size();
 
         fusedResults = std::vector<std::vector<bool>> (numChannels);//numChannels
@@ -1610,230 +1614,210 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
             case MRG_OR:
                 {
-                    if (m_frameNo <= frameIt->first + 1)
+
+                    for (auto origAddr : subframeIt->second)
                     {
-                        for (auto origAddr : subframeIt->second)
+                        int i = 0;
+                        for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            int i = 0;
-                            for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                            {
-                                //Or between sensing results
-                                fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
-                                i++;
-                            }
+                            //Or between sensing results
+                            fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
+                            i++;
                         }
                     }
                 }
                 break;
             case MRG_AND:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
+                    for (auto &fusedResult: fusedResults)
+                    {
+                        //Set sensing results to detecting a PU presence
+                        fusedResult[0] = true;
+                    }
 
-                    if (m_frameNo <= frameIt->first + 1)
-                        if (subframeIt->second.size()>0)
+                    for (auto origAddr : subframeIt->second)
+                    {
+                        int i = 0;
+                        for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            for (auto &fusedResult: fusedResults)
-                            {
-                                //Set sensing results to detecting a PU presence
-                                fusedResult[0] = true;
-                            }
-
-                            for (auto origAddr : subframeIt->second)
-                            {
-                                int i = 0;
-                                for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                                {
-                                    //If every UE reported the presence, keep marked as present, else mark as not present
-                                    fusedResults[i][0] = fusedResults[i][0] && channelReg[0];
-                                    i++;
-                                }
-                            }
-                            //Checking for false positives and negatives is made in the end
+                            //If every UE reported the presence, keep marked as present, else mark as not present
+                            fusedResults[i][0] = fusedResults[i][0] && channelReg[0];
+                            i++;
                         }
+                    }
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_XOR:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo <= frameIt->first + 1)
+                    for (auto origAddr : subframeIt->second)
                     {
-                        for (auto origAddr : subframeIt->second)
+                        int i = 0;
+                        for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            int i = 0;
-                            for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                            {
-                                fusedResults[i][0] = fusedResults[i][0] ^ channelReg[0];
-                                i++;
-                            }
+                            fusedResults[i][0] = fusedResults[i][0] ^ channelReg[0];
+                            i++;
                         }
-                        //Checking for false positives and negatives is made in the end
                     }
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_XNOR:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo <= frameIt->first + 1)
+                    for (auto origAddr : subframeIt->second)
                     {
-                        for (auto origAddr : subframeIt->second)
+                        int i = 0;
+                        for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            int i = 0;
-                            for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                            {
-                                fusedResults[i][0] = !(fusedResults[i][0] ^ channelReg[0]);
-                                i++;
-                            }
+                            fusedResults[i][0] = !(fusedResults[i][0] ^ channelReg[0]);
+                            i++;
                         }
-                        //Checking for false positives and negatives is made in the end
                     }
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_NN:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo <= frameIt->first + 1)
+
+                    //Prepare A30 cqi list
+                    std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+                    for (auto & cqiEntry : tempCqi)
                     {
-                        //Prepare A30 cqi list
-                        std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
-                        for (auto & cqiEntry : tempCqi)
+                        if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
+                            continue;
+                        //A30 CQIs at this point
+                        std::vector<uint8_t> cqisList;
+                        for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
                         {
-                            if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
-                                continue;
-                            //A30 CQIs at this point
-                            std::vector<uint8_t> cqisList;
-                            for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
-                            {
-                                cqisList.push_back(rbEntry.m_sbCqi.at(0));
-                            }
-                            ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
+                            cqisList.push_back(rbEntry.m_sbCqi.at(0));
                         }
-
-                        //Prepare P10 cqi list
-                        //std::map<uint16_t, unsigned char> ue_to_cqi_map;
-                        //for (auto & cqiEntry : tempCqi)
-                        //{
-                        //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
-                        //        continue;
-                        //    //P10 CQIs at this point
-                        //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
-                        //}
-
-                        //Prepare the nn input
-                        std::vector<float> encodedData;
-                        for (auto &ue : subframeIt->second)
-                        {
-                            auto ueRnti = ue.first;
-                            int i = 0;
-                            for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                            {
-                                encodedData.push_back(channelReg[0]);
-                                encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
-                                i += bandwidth/4;
-                            }
-                        }
-
-                        at::Tensor f = torch::tensor(encodedData);
-                        std::vector<torch::jit::IValue> inputs;
-                        inputs.push_back(f);
-
-                        //Feed the nn
-                        at::Tensor output = nn_module->forward(inputs).toTensor();
-
-                        //Decode the nn output
-                        //std::cout << "ArgMax:" << output.slice(0, 0, 16).argmax().item<int>() <<" Max:" <<  output.slice(0, 0, 16).max().item<float>() << std::endl;
-                        uint16_t nn_output = output.slice(0, 0, 16).argmax().item<int>();
-                        int i = 0;
-                        for(auto & channelReg : fusedResults)
-                        {
-                            fusedResults[i][0] = nn_output % 2;
-                            nn_output /= 2;
-                            i++;
-                        }
-
-                        //Checking for false positives and negatives is made in the end
+                        ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
                     }
+
+                    //Prepare P10 cqi list
+                    //std::map<uint16_t, unsigned char> ue_to_cqi_map;
+                    //for (auto & cqiEntry : tempCqi)
+                    //{
+                    //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
+                    //        continue;
+                    //    //P10 CQIs at this point
+                    //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
+                    //}
+
+                    //if there is no CQI data available, skip
+                    if (ue_to_cqi_map.empty())
+                        break;
+
+                    //Prepare the nn input
+                    std::vector<float> encodedData;
+                    for (auto &ue : subframeIt->second)
+                    {
+                        auto ueRnti = ue.first;
+                        int i = 0;
+                        for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                        {
+                            encodedData.push_back(channelReg[0]);
+                            encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
+                            i += bandwidth/4;
+                        }
+                    }
+
+                    at::Tensor f = torch::tensor(encodedData);
+                    std::vector<torch::jit::IValue> inputs;
+                    inputs.push_back(f);
+
+                    //Feed the nn
+                    at::Tensor output = nn_module->forward(inputs).toTensor();
+
+                    //Decode the nn output
+                    //std::cout << "ArgMax:" << output.slice(0, 0, 16).argmax().item<int>() <<" Max:" <<  output.slice(0, 0, 16).max().item<float>() << std::endl;
+                    uint16_t nn_output = output.slice(0, 0, 16).argmax().item<int>();
+                    int i = 0;
+                    for(auto & channelReg : fusedResults)
+                    {
+                        fusedResults[i][0] = nn_output % 2;
+                        nn_output /= 2;
+                        i++;
+                    }
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_KALMAN:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo <= frameIt->first + 1)
+                    //Prepare A30 cqi list
+                    std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+                    for (auto & cqiEntry : tempCqi)
                     {
-                        //Prepare A30 cqi list
-                        std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
-                        for (auto & cqiEntry : tempCqi)
+                        if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
+                            continue;
+                        //A30 CQIs at this point
+                        std::vector<uint8_t> cqisList;
+                        for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
                         {
-                            if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
-                                continue;
-                            //A30 CQIs at this point
-                            std::vector<uint8_t> cqisList;
-                            for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
-                            {
-                                cqisList.push_back(rbEntry.m_sbCqi.at(0));
-                            }
-                            ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
+                            cqisList.push_back(rbEntry.m_sbCqi.at(0));
                         }
-
-                        //Prepare P10 cqi list
-                        //std::map<uint16_t, unsigned char> ue_to_cqi_map;
-                        //for (auto & cqiEntry : tempCqi)
-                        //{
-                        //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
-                        //        continue;
-                        //    //P10 CQIs at this point
-                        //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
-                        //}
-
-                        //Prepare the nn input
-                        std::vector<float> encodedData;
-                        for (auto &ue : subframeIt->second)
-                        {
-                            auto ueRnti = ue.first;
-                            int i = 0;
-                            for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                            {
-                                encodedData.push_back(channelReg[0]);
-                                encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
-                                i += bandwidth/4;
-                            }
-                        }
-
-                        Eigen::VectorXd y(encodedData.size());
-
-                        int i = 0;
-                        for(auto data : encodedData)
-                        {
-                            y(i) = data;
-                            i++;
-                        }
-
-                        kf.update(y);
-                        auto kfstate = kf.state();//.transpose();
-                        std::vector<double> fusion(kfstate.data(), kfstate.data()+kfstate.rows()*kfstate.cols());
-                        double maxval = -100000;
-                        int maxindex = 0;
-
-                        i = 0;
-                        for (auto element: fusion)
-                        {
-                            if(element > maxval)
-                            {
-                                maxval = element;
-                                maxindex = i;
-                            }
-                            i++;
-                        }
-
-                        i=0;
-                        for(auto & channelReg : fusedResults)
-                        {
-                            fusedResults[i][0] = maxindex % 2;
-                            maxindex /= 2;
-                            i++;
-                        }
-
-                        //Checking for false positives and negatives is made in the end
+                        ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
                     }
+
+                    //Prepare P10 cqi list
+                    //std::map<uint16_t, unsigned char> ue_to_cqi_map;
+                    //for (auto & cqiEntry : tempCqi)
+                    //{
+                    //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)
+                    //        continue;
+                    //    //P10 CQIs at this point
+                    //    ue_to_cqi_map.emplace(cqiEntry.m_rnti, cqiEntry.m_wbCqi.at(0));
+                    //}
+
+                    //Prepare the nn input
+                    std::vector<float> encodedData;
+                    for (auto &ue : subframeIt->second)
+                    {
+                        auto ueRnti = ue.first;
+                        int i = 0;
+                        for (auto channelReg : ue.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                        {
+                            encodedData.push_back(channelReg[0]);
+                            encodedData.push_back(ue_to_cqi_map.at(ueRnti).at(i)/15);
+                            i += bandwidth/4;
+                        }
+                    }
+
+                    Eigen::VectorXd y(encodedData.size());
+
+                    int i = 0;
+                    for(auto data : encodedData)
+                    {
+                        y(i) = data;
+                        i++;
+                    }
+
+                    kf.update(y);
+                    auto kfstate = kf.state();//.transpose();
+                    std::vector<double> fusion(kfstate.data(), kfstate.data()+kfstate.rows()*kfstate.cols());
+                    double maxval = -100000;
+                    int maxindex = 0;
+
+                    i = 0;
+                    for (auto element: fusion)
+                    {
+                        if(element > maxval)
+                        {
+                            maxval = element;
+                            maxindex = i;
+                        }
+                        i++;
+                    }
+
+                    i=0;
+                    for(auto & channelReg : fusedResults)
+                    {
+                        fusedResults[i][0] = maxindex % 2;
+                        maxindex /= 2;
+                        i++;
+                    }
+
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_1_OF_N: if (k == 0) k = 1;
@@ -1842,61 +1826,59 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_4_OF_N: if (k == 0) k = 4;
             case MRG_K_OF_N:
                 {
-                    auto subframeIt = frameIt->second.rbegin();
-                    if (m_frameNo <= frameIt->first + 1)
+
+                    int numUEs = UeRntiMap.size();
+
+                    //Get size of population to be sampled(N)
+                    int n = numUEs;
+
+                    //Select (N) random UEs into a population
+                    std::map<int,bool> ueOffsetsPopulation;
+                    while(ueOffsetsPopulation.size() < n)
                     {
-                        int numUEs = UeRntiMap.size();
+                        ueOffsetsPopulation.emplace(rand() % numUEs, true);
+                    }
 
-                        //Get size of population to be sampled(N)
-                        int n = numUEs;
+                    //Select (K) random UEs to sample in the previous population
+                    std::map<int,bool> ueOffsetsSamples;
+                    while(ueOffsetsSamples.size() < k)
+                    {
+                        ueOffsetsSamples.emplace(rand() % n, true);
+                    }
 
-                        //Select (N) random UEs into a population
-                        std::map<int,bool> ueOffsetsPopulation;
-                        while(ueOffsetsPopulation.size() < n)
+
+                    std::vector<int> kConfirmed     (numChannels);
+
+                    //Merge their reports
+                    for (auto offset : ueOffsetsSamples)
+                    {
+                        //Get sampled population iterator and advance to the sampled UE
+                        auto uePopulation = ueOffsetsPopulation.begin();
+                        std::advance(uePopulation, offset.first);
+
+                        //Get global population (RNTI) and advance to the sampled UE
+                        auto ueRnti = UeRntiMap.begin();
+                        std::advance(ueRnti,uePopulation->first);
+
+                        //Check if the UE with the current RNTI reported something
+                        if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                         {
-                            ueOffsetsPopulation.emplace(rand() % numUEs, true);
-                        }
 
-                        //Select (K) random UEs to sample in the previous population
-                        std::map<int,bool> ueOffsetsSamples;
-                        while(ueOffsetsSamples.size() < k)
-                        {
-                            ueOffsetsSamples.emplace(rand() % n, true);
-                        }
-
-
-                        std::vector<int> kConfirmed     (numChannels);
-
-                        //Merge their reports
-                        for (auto offset : ueOffsetsSamples)
-                        {
-                            //Get sampled population iterator and advance to the sampled UE
-                            auto uePopulation = ueOffsetsPopulation.begin();
-                            std::advance(uePopulation, offset.first);
-
-                            //Get global population (RNTI) and advance to the sampled UE
-                            auto ueRnti = UeRntiMap.begin();
-                            std::advance(ueRnti,uePopulation->first);
-
-                            //Check if the UE with the current RNTI reported something
-                            if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
+                            int i = 0;
+                            for(auto channelReg: subframeIt->second.at(ueRnti->first).UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                             {
-
-                                int i = 0;
-                                for(auto channelReg: subframeIt->second.at(ueRnti->first).UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-                                {
-                                    kConfirmed[i] += channelReg[0] ? 1 : 0;
-                                    i++;
-                                }
+                                kConfirmed[i] += channelReg[0] ? 1 : 0;
+                                i++;
                             }
                         }
-
-                        for(int i=0; i < numChannels; i++)
-                        {
-                            fusedResults[i][0] = kConfirmed[i] >= k;
-                            i++;
-                        }
                     }
+
+                    for(int i=0; i < numChannels; i++)
+                    {
+                        fusedResults[i][0] = kConfirmed[i] >= k;
+                        i++;
+                    }
+
                 }
                 break;
             case MRG_MULTIFRAME_OR:     if (k == 0) k = 1;
@@ -1950,20 +1932,22 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
 
         //Check for false positives and false negatives
-        auto lastUeReg = subframeIt->second.rbegin()->second;
-        //Verify if results are false positives or false negatives
-        int i = 0;
-        for(auto channelReg: lastUeReg.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+        for (auto &ueReg : subframeIt->second)
         {
-            //Or between sensing results
-            if(fusedResults[i][0] != lastUeReg.PU_presence_V[i])
+            //Verify if results are false positives or false negatives
+            int i = 0;
+            for(auto channelReg: ueReg.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
             {
-                if(fusedResults[i][0])
-                    fusedResults[i][1] = true;
-                else
-                    fusedResults[i][2] = true;
+                //Or between sensing results
+                if(fusedResults[i][0] != ueReg.second.PU_presence_V[i])
+                {
+                    if(fusedResults[i][0])
+                        fusedResults[i][1] = true;
+                    else
+                        fusedResults[i][2] = true;
+                }
+                i++;
             }
-            i++;
         }
 
         break;//out of if

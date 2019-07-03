@@ -570,12 +570,13 @@ private:
   std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
 
   EventId PU_event;
-  std::vector<std::tuple<double,int>> PUsDistance;
+  std::map<int, std::map<double, int>> PUsDistance; // Addressed by channel, distance, counter
   void reset_PU_presence(bool state, double distance, int channel);
 
   static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
   static std::ofstream plot_snr_history_file;
   static std::mutex mut;
+  bool waitingForSensingReportTransmission;
 public:
     std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
     std::vector<bool> PU_presence_V;

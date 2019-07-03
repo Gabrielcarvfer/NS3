@@ -33,7 +33,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         interval = int(interval)#350000000
         interval /= 1000000 #350
 
-        inputAndOutputBitmapPerInterval[interval] = [int(y[1],2), 0]
+        inputAndOutputBitmapPerInterval[interval] = [int(y[1],2), 0x3FFFFFFFFFFFF]
 
     for intervalBitmap in bufferFileOut:
         y = intervalBitmap.split(sep=':')
@@ -44,10 +44,8 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         interval = int(interval)#350000000
         interval /= 1000000 #350
 
-        if interval not in inputAndOutputBitmapPerInterval:
-            inputAndOutputBitmapPerInterval[interval] = [0, int(y[1],2)]
-        else:
-            inputAndOutputBitmapPerInterval[interval][1] = int(y[1],2)
+
+        inputAndOutputBitmapPerInterval[interval][1] = int(y[1],2)
 
     ax = None
     ax_1 = None
