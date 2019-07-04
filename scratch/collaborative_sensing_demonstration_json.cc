@@ -37,7 +37,8 @@ using namespace ns3;
 //Simple network setup
 int main() {
     std::ios::sync_with_stdio(false);
-
+    RngSeedManager::SetSeed(1);
+    RngSeedManager::SetRun(1);
     //Default parameters
     double simTime = 10;
     double enbTxPower              =  53.0; //dBm

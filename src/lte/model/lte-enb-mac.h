@@ -481,7 +481,11 @@ public://todo: implement this properly through the SAP
         MRG_4_OF_N,
         MRG_K_OF_N, //Don't use this one
         MRG_NN,
-        MRG_KALMAN
+        MRG_KALMAN,
+        MRG_1_OF_N_RAND,
+        MRG_2_OF_N_RAND,
+        MRG_3_OF_N_RAND,
+        MRG_4_OF_N_RAND,
     };
 
     typedef struct cognitive_reg

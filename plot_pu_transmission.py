@@ -5,7 +5,7 @@ import math
 import decimal
 
 
-def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFolder="./build/bin/"):
+def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFolder="./build/bin/", col=-1):
     bufferFileIn = ""
     if fileName is None:
         fileName = "spectrum-analyzer-output-17-0.tr"
@@ -56,8 +56,11 @@ def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFol
     msList = [float(x) for x in range(20000)]#5k ms = 5s = simulation time
 
     i = 0
-    for freq in list(freqs.keys())[1:5]:
-
+    freq_list = list(freqs.keys())[1:5]
+    if col != -1:
+    	freq_list = [freq_list[col]]
+    	
+    for freq in freq_list:
 
         psd_list = []
 
@@ -80,7 +83,7 @@ def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFol
             psd_list += [round(psd_val_adjusted,2)]
 
 
-        ax[i].set_ylabel('PSD CH-%d (dBW/Hz)' % i)
+        ax[i].set_ylabel('PSD CH-%d (dBW/Hz)' % (i if col == -1 else col))
         if i != 0:
             ax[i].set_ylabel('PSD CH-%d' % i)
 

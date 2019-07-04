@@ -250,7 +250,7 @@ if __name__ == "__main__":
                     argList = []
 
                     # Run simulation with a few fusion algorithms
-                    for fusionAlgorithm in [1, 10, 11, 12, 13]:
+                    for fusionAlgorithm in [1, 6, 10, 11, 12, 13]:
                         argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
 
                     # Run simulations in parallel
@@ -268,7 +268,7 @@ if __name__ == "__main__":
                     scenarioDict = json.load(file)
 
                 #Save a new copy for each fusion
-                for fusionAlgorithm in [1, 10, 11, 12, 13]:
+                for fusionAlgorithm in [1, 6, 10, 11, 12, 13]:
                     scenarioDict["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
                     scenarioDict["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
 

@@ -734,12 +734,12 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
 
-  Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
-  if (dev != 0)
-  {
-      dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
-      resetSensingStatus();
-  }
+  //Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+  //if (dev != 0)
+  //{
+  //    dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
+  //    resetSensingStatus();
+  //}
 
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
@@ -1203,6 +1203,7 @@ void LteSpectrumPhy::resetSensingStatus()
         unexpectedAccessRegistry = std::vector<bool>(3);
 
     PU_presence_V = std::vector<bool>(num_channels);
+    waitingForSensingReportTransmission = false;
 }
 
 void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing)
@@ -1211,7 +1212,6 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     loadDetectionCurves(SNRsensing);
 
     //Initialize variable
-    resetSensingStatus();
     std::vector<bool> PU_detected_V(PU_presence_V.size());
 
     //Look for empty RBs SINR on the DCI
@@ -1268,7 +1268,8 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
         bool answer = checkPUPresence(prob, PU_presence_V[k]);
 
-
+        //if (k == 1 || k == 3)
+        //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
 
         if (answer)
@@ -1419,8 +1420,8 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               }
 
               // schedule sensing events
-              if (this->m_sensingEvent.IsExpired())
-                this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
+              //if (this->m_sensingEvent.IsExpired())
+              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
 
 
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);

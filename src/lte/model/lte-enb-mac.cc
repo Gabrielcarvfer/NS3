@@ -1609,6 +1609,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
 
         int k = 0;
+        int randomSample = true;
         switch(alg)
         {
 
@@ -1820,12 +1821,17 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Checking for false positives and negatives is made in the end
                 }
                 break;
-            case MRG_1_OF_N: if (k == 0) k = 1;
-            case MRG_2_OF_N: if (k == 0) k = 2;
-            case MRG_3_OF_N: if (k == 0) k = 3;
-            case MRG_4_OF_N: if (k == 0) k = 4;
+            case MRG_1_OF_N: if (k == 0) {k = 1; randomSample = false;}
+            case MRG_2_OF_N: if (k == 0) {k = 2; randomSample = false;}
+            case MRG_3_OF_N: if (k == 0) {k = 3; randomSample = false;}
+            case MRG_4_OF_N: if (k == 0) {k = 4; randomSample = false;}
+            case MRG_1_OF_N_RAND: if (k == 0) {k = 1; randomSample = true;}
+            case MRG_2_OF_N_RAND: if (k == 0) {k = 2; randomSample = true;}
+            case MRG_3_OF_N_RAND: if (k == 0) {k = 3; randomSample = true;}
+            case MRG_4_OF_N_RAND: if (k == 0) {k = 4; randomSample = true;}
             case MRG_K_OF_N:
                 {
+                    std::vector<int> kConfirmed     (numChannels);
 
                     int numUEs = UeRntiMap.size();
 
@@ -1841,13 +1847,10 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                     //Select (K) random UEs to sample in the previous population
                     std::map<int,bool> ueOffsetsSamples;
-                    while(ueOffsetsSamples.size() < k)
+                    while(ueOffsetsSamples.size() < (randomSample ? k : n))
                     {
                         ueOffsetsSamples.emplace(rand() % n, true);
                     }
-
-
-                    std::vector<int> kConfirmed     (numChannels);
 
                     //Merge their reports
                     for (auto offset : ueOffsetsSamples)
@@ -1859,7 +1862,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         //Get global population (RNTI) and advance to the sampled UE
                         auto ueRnti = UeRntiMap.begin();
                         std::advance(ueRnti,uePopulation->first);
-
+                        //std::cout << "RNTI " << ueRnti->first << std::endl;
                         //Check if the UE with the current RNTI reported something
                         if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                         {
@@ -1873,12 +1876,13 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         }
                     }
 
+                    //std::cout << std::endl;
+
                     for(int i=0; i < numChannels; i++)
                     {
                         fusedResults[i][0] = kConfirmed[i] >= k;
-                        i++;
                     }
-
+                    //Checking for false positives and negatives is made in the end
                 }
                 break;
             case MRG_MULTIFRAME_OR:     if (k == 0) k = 1;
@@ -1923,7 +1927,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for(int i=0; i < numChannels; i++)
                         {
                             fusedResults[i][0] = kConfirmed[i] >= k;
-                            i++;
                         }
                     }
                 }
