@@ -186,7 +186,7 @@ class AodvLoopbackTestSuite : public TestSuite
 public:
   AodvLoopbackTestSuite () : TestSuite ("routing-aodv-loopback", SYSTEM)
   {
-    SetDataDir ("./src/aodv/test");
+    SetDataDir (NS_TEST_SOURCEDIR);
     // UDP Echo loopback test case
     AddTestCase (new LoopbackTestCase (), TestCase::QUICK);
   }

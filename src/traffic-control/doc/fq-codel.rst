@@ -17,6 +17,9 @@ FqCoDel distinguishes between "new" queues (which don't build up a standing
 queue) and "old" queues, that have queued enough data to be around for more
 than one iteration of the round-robin scheduler.
 
+FqCoDel is installed by default on single-queue NetDevices (such as PointToPoint,
+Csma and Simple). Also, on multi-queue devices (such as Wifi), the default root
+qdisc is Mq with as many FqCoDel child queue discs as the number of device queues.
 
 Model Description
 *****************
@@ -68,6 +71,12 @@ The key attributes that the FqCoDelQueue class holds include the following:
 * ``Flows:`` The number of flow queues managed by FqCoDel.
 * ``DropBatchSize:`` The maximum number of packets dropped from the fat flow.
 * ``Perturbation:`` The salt used as an additional input to the hash function used to classify packets.
+
+Perturbation is an optional configuration attribute and can be used to generate
+different hash outcomes for different inputs.  For instance, the tuples
+used as input to the hash may cause hash collisions (mapping to the same
+bucket) for a given set of inputs, but by changing the perturbation value,
+the same hash inputs now map to distinct buckets.
 
 Note that the quantum, i.e., the number of bytes each queue gets to dequeue on
 each round of the scheduling algorithm, is set by default to the MTU size of the

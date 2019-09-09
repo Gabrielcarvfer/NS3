@@ -29,15 +29,16 @@
 #include "qos-utils.h"
 
 class AmpduAggregationTest;
+class TwoLevelAggregationTest;
+class HeAggregationTest;
 
 namespace ns3 {
 
 class QosBlockedDestinations;
-class MsduAggregator;
-class MpduAggregator;
 class MgtAddBaResponseHeader;
 class MgtDelBaHeader;
 class AggregationCapableTransmissionListener;
+class WifiTxVector;
 
 /**
  * Enumeration for type of station
@@ -92,6 +93,8 @@ class QosTxop : public Txop
 public:
   /// Allow test cases to access private members
   friend class ::AmpduAggregationTest;
+  friend class ::TwoLevelAggregationTest;
+  friend class ::HeAggregationTest;
 
   std::map<Mac48Address, bool> m_aMpduEnabled; //!< list containing flags whether A-MPDU is enabled for a given destination address
 
@@ -109,7 +112,7 @@ public:
    *
    * \returns true if QoS TXOP.
    */
-  bool IsQosTxop () const;
+  bool IsQosTxop (void) const;
 
   /**
    * Set WifiRemoteStationsManager this QosTxop is associated to.
@@ -131,36 +134,36 @@ public:
   TypeOfStation GetTypeOfStation (void) const;
 
   /**
-   * Returns the aggregator used to construct A-MSDU subframes.
+   * \param address recipient address of the peer station
+   * \param tid traffic ID.
    *
-   * \return the aggregator used to construct A-MSDU subframes.
-   */
-  Ptr<MsduAggregator> GetMsduAggregator (void) const;
-  /**
-   * Returns the aggregator used to construct A-MPDU subframes.
+   * \return true if a block ack agreement is established, false otherwise.
    *
-   * \return the aggregator used to construct A-MPDU subframes.
+   * Checks if a block ack agreement is established with station addressed by
+   * <i>recipient</i> for tid <i>tid</i>.
    */
-  Ptr<MpduAggregator> GetMpduAggregator (void) const;
-
+  bool GetBaAgreementEstablished (Mac48Address address, uint8_t tid) const;
   /**
    * \param address recipient address of the peer station
    * \param tid traffic ID.
    *
-   * \return true if a block ack agreement exists, false otherwise.
+   * \return the negociated buffer size during ADDBA handshake.
    *
-   * Checks if a block ack agreement exists with station addressed by
+   * Returns the negociated buffer size during ADDBA handshake with station addressed by
    * <i>recipient</i> for tid <i>tid</i>.
    */
-  bool GetBaAgreementExists (Mac48Address address, uint8_t tid) const;
+  uint16_t GetBaBufferSize (Mac48Address address, uint8_t tid) const;
   /**
-   * \param recipient address of peer station involved in block ack mechanism.
-   * \param tid Ttraffic ID of transmitted packet.
+   * \param address recipient address of the peer station
+   * \param tid traffic ID.
    *
-   * This function resets the status of OriginatorBlockAckAgreement after the transfer
-   * of an A-MPDU with ImmediateBlockAck policy (i.e. no BAR is scheduled).
+   * \return the starting sequence number of the originator transmit window.
+   *
+   * Returns the current starting sequence number of the transmit window on the
+   * originator (WinStartO) of the Block Ack agreement established with the given
+   * recipient for the given TID.
    */
-  void CompleteAmpduTransfer (Mac48Address recipient, uint8_t tid);
+  uint16_t GetBaStartingSequence (Mac48Address address, uint8_t tid) const;
 
   /* dcf notifications forwarded here */
   /**
@@ -179,8 +182,10 @@ public:
   /* Event handlers */
   /**
    * Event handler when a CTS timeout has occurred.
+   *
+   * \param mpduList the list of MPDUs that were not transmitted
    */
-  void MissedCts (void);
+  void NotifyMissedCts (std::list<Ptr<WifiMacQueueItem>> mpduList);
   /**
    * Event handler when an ACK is received.
    */
@@ -270,19 +275,6 @@ public:
   void SetAccessCategory (AcIndex ac);
 
   /**
-   * Set the aggregator used to construct A-MSDU subframes.
-   *
-   * \param aggr pointer to the MSDU aggregator.
-   */
-  void SetMsduAggregator (const Ptr<MsduAggregator> aggr);
-  /**
-   * Set the aggregator used to construct A-MPDU subframes.
-   *
-   * \param aggr pointer to the MPDU aggregator.
-   */
-  void SetMpduAggregator (const Ptr<MpduAggregator> aggr);
-
-  /**
    * \param packet packet to send.
    * \param hdr header of packet to send.
    *
@@ -330,11 +322,9 @@ public:
    * for a blockack containing the sequence number of this MPDU).
    * It also calls NotifyMpdu transmission that updates the status of OriginatorBlockAckAgreement.
    *
-   * \param packet received packet.
-   * \param hdr received Wi-Fi header.
-   * \param tstamp timestamp.
+   * \param mpdu received MPDU.
    */
-  void CompleteMpduTx (Ptr<const Packet> packet, WifiMacHeader hdr, Time tstamp);
+  void CompleteMpduTx (Ptr<WifiMacQueueItem> mpdu);
   /**
    * Return whether A-MPDU is used to transmit data to a peer station.
    *
@@ -349,6 +339,31 @@ public:
    * \param enableAmpdu flag whether A-MPDU is used or not.
    */
   void SetAmpduExist (Mac48Address dest, bool enableAmpdu);
+  /**
+   * Set the timeout to wait for ADDBA response.
+   *
+   * \param addBaResponseTimeout the timeout to wait for ADDBA response
+   */
+  void SetAddBaResponseTimeout (Time addBaResponseTimeout);
+  /**
+   * Get the timeout for ADDBA response.
+   *
+   * \returns the timeout to wait for ADDBA response
+   */
+  Time GetAddBaResponseTimeout (void) const;
+  /**
+   * Set the timeout for failed BA agreement. During the timeout period,
+   * all packets will be transmitted using normal MPDU.
+   *
+   * \param failedAddBaTimeout the timeout for failed BA agreement
+   */
+  void SetFailedAddBaTimeout (Time failedAddBaTimeout);
+  /**
+   * Get the timeout for failed BA agreement.
+   *
+   * \returns the timeout for failed BA agreement
+   */
+  Time GetFailedAddBaTimeout (void) const;
 
   /**
    * Return the next sequence number for the given header.
@@ -357,7 +372,7 @@ public:
    *
    * \return the next sequence number.
    */
-  uint16_t GetNextSequenceNumberFor (WifiMacHeader *hdr);
+  uint16_t GetNextSequenceNumberFor (const WifiMacHeader *hdr);
   /**
    * Return the next sequence number for the Traffic ID and destination, but do not pick it (i.e. the current sequence number remains unchanged).
    *
@@ -365,24 +380,51 @@ public:
    *
    * \return the next sequence number.
    */
-  uint16_t PeekNextSequenceNumberFor (WifiMacHeader *hdr);
+  uint16_t PeekNextSequenceNumberFor (const WifiMacHeader *hdr);
   /**
-   * Remove a packet after you peek in the retransmit queue and get it.
+   * Peek the next frame to transmit to the given receiver and of the given
+   * TID from the Block Ack manager retransmit queue first and, if not found, from
+   * the EDCA queue. If <i>tid</i> is equal to 8 (invalid value) and <i>recipient</i>
+   * is the broadcast address, the first available frame is returned.
+   * Note that A-MSDU aggregation is never attempted (this is relevant if the
+   * frame is peeked from the EDCA queue). If the frame is peeked from the EDCA
+   * queue, it is assigned a sequence number peeked from MacTxMiddle.
    *
-   * \param tid traffic ID of the packet to be removed.
-   * \param recipient address of the recipient the packet was intended for.
-   * \param seqnumber sequence number of the packet to be removed.
-   */
-  void RemoveRetransmitPacket (uint8_t tid, Mac48Address recipient, uint16_t seqnumber);
-  /**
-   * Peek in retransmit queue and get the next packet without removing it from the queue.
-   *
-   * \param header Wi-Fi header.
    * \param tid traffic ID.
-   * \param timestamp the timestamp.
-   * \returns the packet.
+   * \param recipient the receiver station address.
+   * \returns the peeked frame.
    */
-  Ptr<const Packet> PeekNextRetransmitPacket (WifiMacHeader &header, uint8_t tid, Time *timestamp);
+  Ptr<const WifiMacQueueItem> PeekNextFrame (uint8_t tid = 8, Mac48Address recipient = Mac48Address::GetBroadcast ());
+  /**
+   * Dequeue the frame that has been previously peeked by calling PeekNextFrame
+   * or PeekNextFrameByTidAndAddress. If the peeked frame is a QoS Data frame,
+   * it is actually dequeued if it meets the constraint on the maximum A-MPDU
+   * size (by assuming that the frame has to be aggregated to an existing A-MPDU
+   * of the given size) and its transmission time does not exceed the given
+   * PPDU duration limit (if strictly positive). If the peeked frame is a unicast
+   * QoS Data frame stored in the EDCA queue, attempt to perform A-MSDU aggregation
+   * (while meeting the constraints mentioned above) if <i>aggregate</i> is true
+   * and assign a sequence number to the dequeued frame.
+   *
+   * \param peekedItem the peeked frame.
+   * \param txVector the TX vector used to transmit the peeked frame
+   * \param ampduSize the size of the existing A-MPDU, if any
+   * \param ppduDurationLimit the limit on the PPDU duration
+   * \returns the dequeued frame.
+   */
+  Ptr<WifiMacQueueItem> DequeuePeekedFrame (Ptr<const WifiMacQueueItem> peekedItem, WifiTxVector txVector,
+                                            bool aggregate = true, uint32_t ampduSize = 0,
+                                            Time ppduDurationLimit = Seconds (0));
+  /**
+   * Compute the MacLow transmission parameters for the given frame. Allowed frames
+   * are those handled by a QosTxop (QoS data frames, BlockAckReq frames, ADDBA
+   * Request/Response, DELBA Request).
+   *
+   * \param frame the given frame
+   * \return the MacLow transmission parameters.
+   */
+  MacLowTransmissionParameters GetTransmissionParameters (Ptr<const WifiMacQueueItem> frame) const;
+
   /**
    * The packet we sent was successfully received by the receiver.
    *
@@ -430,7 +472,7 @@ private:
    *
    * \return true if we tried to set up block ACK, false otherwise.
    */
-  bool SetupBlockAckIfNeeded ();
+  bool SetupBlockAckIfNeeded (void);
   /**
    * Sends an ADDBA Request to establish a block ack agreement with sta
    * addressed by <i>recipient</i> for tid <i>tid</i>.
@@ -451,6 +493,15 @@ private:
    */
   void SendBlockAckRequest (const Bar &bar);
   /**
+   * Check if the given MPDU is to be considered old according to the current
+   * starting sequence number of the transmit window, provided that a block ack
+   * agreement has been established with the recipient for the given TID.
+   *
+   * \param mpdu the given MPDU
+   * \return true if the MPDU is to be considered old, false otherwise
+   */
+  bool IsQosOldPacket (Ptr<const WifiMacQueueItem> mpdu);
+  /**
    * For now is typically invoked to complete transmission of a packets sent with ack policy
    * Block Ack: the packet is buffered and dcf is reset.
    */
@@ -467,12 +518,9 @@ private:
    */
   Time GetTxopRemaining (void) const;
   /**
-   * Check if the station has TXOP granted for the next MPDU.
-   *
-   * \return true if the station has TXOP granted for the next MPDU,
-   *         false otherwise.
+   * Update backoff and restart access if needed.
    */
-  bool HasTxop (void) const;
+  void TerminateTxop (void);
 
   /**
    * Calculate the size of the next fragment.
@@ -506,19 +554,19 @@ private:
    * \return true if the current packet is fragmented because of an exceeded TXOP duration,
    *         false otherwise
    */
-  bool IsTxopFragmentation () const;
+  bool IsTxopFragmentation (void) const;
   /**
    * Calculate the size of the current TXOP fragment.
    *
    * \return the size of the current TXOP fragment
    */
-  uint32_t GetTxopFragmentSize () const;
+  uint32_t GetTxopFragmentSize (void) const;
   /**
    * Calculate the number of TXOP fragments needed for the transmission of the current packet.
    *
    * \return the number of TXOP fragments needed for the transmission of the current packet
    */
-  uint32_t GetNTxopFragment () const;
+  uint32_t GetNTxopFragment (void) const;
   /**
    * Calculate the size of the next TXOP fragment.
    *
@@ -533,27 +581,40 @@ private:
    * \returns the TXOP fragment offset
    */
   uint32_t GetTxopFragmentOffset (uint32_t fragmentNumber) const;
+  /**
+   * Callback when ADDBA response is not received after timeout.
+   *
+   * \param recipient MAC address of recipient
+   * \param tid traffic ID
+   */
+  void AddBaResponseTimeout (Mac48Address recipient, uint8_t tid);
+  /**
+   * Reset BA agreement after BA negotiation failed.
+   *
+   * \param recipient MAC address of recipient
+   * \param tid traffic ID
+   */
+  void ResetBa (Mac48Address recipient, uint8_t tid);
 
   void DoDispose (void);
   void DoInitialize (void);
 
-  AcIndex m_ac;                                     //!< the access category
-  Ptr<MsduAggregator> m_msduAggregator;             //!< A-MSDU aggregator
-  Ptr<MpduAggregator> m_mpduAggregator;             //!< A-MPDU aggregator
-  TypeOfStation m_typeOfStation;                    //!< the type of station
+  AcIndex m_ac;                                         //!< the access category
+  TypeOfStation m_typeOfStation;                        //!< the type of station
   Ptr<QosBlockedDestinations> m_qosBlockedDestinations; //!< QOS blocked destinations
   Ptr<BlockAckManager> m_baManager;                     //!< the Block ACK manager
-  uint8_t m_blockAckThreshold;                      //!< the Block ACK threshold
-  BlockAckType m_blockAckType;                      //!< the Block ACK type
-  Time m_currentPacketTimestamp;                    //!< the current packet timestamp
-  uint16_t m_blockAckInactivityTimeout;             //!< the Block ACK inactivity timeout
-  Bar m_currentBar;                                 //!< the current BAR
-  Time m_startTxop;                                 //!< the start TXOP time
-  bool m_isAccessRequestedForRts;                   //!< flag whether access is requested to transmit a RTS frame
-  bool m_currentIsFragmented;                       //!< flag whether current packet is fragmented
+  uint8_t m_blockAckThreshold;                          //!< the Block ACK threshold
+  BlockAckType m_blockAckType;                          //!< the Block ACK type
+  Time m_currentPacketTimestamp;                        //!< the current packet timestamp
+  uint16_t m_blockAckInactivityTimeout;                 //!< the Block ACK inactivity timeout
+  Bar m_currentBar;                                     //!< the current BAR
+  Time m_startTxop;                                     //!< the start TXOP time
+  bool m_isAccessRequestedForRts;                       //!< flag whether access is requested to transmit a RTS frame
+  bool m_currentIsFragmented;                           //!< flag whether current packet is fragmented
+  Time m_addBaResponseTimeout;                          //!< timeout for ADDBA response
+  Time m_failedAddBaTimeout;                            //!< timeout after failed BA agreement
+  bool m_useExplicitBarAfterMissedBlockAck;             //!< flag whether explicit Block Ack Request should be sent upon missed Block Ack Response
 
-  TracedValue<uint32_t> m_backoffTrace;   //!< backoff trace value
-  TracedValue<uint32_t> m_cwTrace;        //!< CW trace value
   TracedCallback<Time, Time> m_txopTrace; //!< TXOP trace callback
 };
 

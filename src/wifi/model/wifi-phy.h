@@ -23,6 +23,8 @@
 #define WIFI_PHY_H
 
 #include "ns3/event-id.h"
+#include "ns3/deprecated.h"
+#include "ns3/error-model.h"
 #include "wifi-mpdu-type.h"
 #include "wifi-phy-standard.h"
 #include "interference-helper.h"
@@ -39,8 +41,24 @@ class NetDevice;
 class MobilityModel;
 class WifiPhyStateHelper;
 class FrameCaptureModel;
+class PreambleDetectionModel;
 class WifiRadioEnergyModel;
 class UniformRandomVariable;
+
+typedef enum
+{
+  UNKNOWN = 0,
+  UNSUPPORTED_SETTINGS,
+  NOT_ALLOWED,
+  ERRONEOUS_FRAME,
+  MPDU_WITHOUT_PHY_HEADER,
+  PREAMBLE_DETECT_FAILURE,
+  L_SIG_FAILURE,
+  SIG_A_FAILURE,
+  PREAMBLE_DETECTION_PACKET_SWITCH,
+  FRAME_CAPTURE_PACKET_SWITCH,
+  OBSS_PD_CCA_RESET
+} WifiPhyRxfailureReason;
 
 /// SignalNoiseDbm structure
 struct SignalNoiseDbm
@@ -54,6 +72,13 @@ struct MpduInfo
 {
   MpduType type; ///< type
   uint32_t mpduRefNumber; ///< MPDU ref number
+};
+
+// Parameters for receive HE preamble
+struct HePreambleParameters
+{
+  double rssiW; ///< RSSI in W
+  uint8_t bssColor; ///< BSS color
 };
 
 /**
@@ -72,6 +97,13 @@ public:
 
   WifiPhy ();
   virtual ~WifiPhy ();
+
+  /**
+   * Return the WifiPhyStateHelper of this PHY
+   *
+   * \return the WifiPhyStateHelper of this PHY
+   */
+  Ptr<WifiPhyStateHelper> GetState (void) const;
 
   /**
    * \param callback the callback to invoke
@@ -105,47 +137,56 @@ public:
   void SetCapabilitiesChangedCallback (Callback<void> callback);
 
   /**
-   * Starting receiving the plcp of a packet (i.e. the first bit of the preamble has arrived).
+   * Start receiving the PHY preamble of a packet (i.e. the first bit of the preamble has arrived).
    *
    * \param packet the arriving packet
    * \param rxPowerW the receive power in W
    * \param rxDuration the duration needed for the reception of the packet
    */
-  void StartReceivePreambleAndHeader (Ptr<Packet> packet,
-                                      double rxPowerW,
-                                      Time rxDuration);
+  void StartReceivePreamble (Ptr<Packet> packet, double rxPowerW, Time rxDuration);
 
   /**
-   * Starting receiving the payload of a packet (i.e. the first bit of the packet has arrived).
+   * Start receiving the PHY header of a packet (i.e. after the end of receiving the preamble).
    *
-   * \param packet the arriving packet
-   * \param txVector the TXVECTOR of the arriving packet
-   * \param mpdutype the type of the MPDU as defined in WifiPhy::MpduType.
-   * \param event the corresponding event of the first time the packet arrives
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
+   * \param rxDuration the duration needed for the reception of the header and payload of the packet
    */
-  void StartReceivePacket (Ptr<Packet> packet,
-                           WifiTxVector txVector,
-                           MpduType mpdutype,
-                           Ptr<Event> event);
+  void StartReceiveHeader (Ptr<Event> event, Time rxDuration);
+
+  /**
+   * Continue receiving the PHY header of a packet (i.e. after the end of receiving the legacy header part).
+   *
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
+   */
+  void ContinueReceiveHeader (Ptr<Event> event);
+
+  /**
+   * Start receiving the payload of a packet (i.e. the first bit of the packet has arrived).
+   *
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
+   */
+  void StartReceivePayload (Ptr<Event> event);
 
   /**
    * The last bit of the packet has arrived.
    *
-   * \param packet the packet that the last bit has arrived
-   * \param preamble the preamble of the arriving packet
-   * \param mpdutype the type of the MPDU as defined in WifiPhy::MpduType.
-   * \param event the corresponding event of the first time the packet arrives
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
    */
-  void EndReceive (Ptr<Packet> packet, WifiPreamble preamble, MpduType mpdutype, Ptr<Event> event);
+  void EndReceive (Ptr<Event> event);
+
+  /**
+   * For HE receptions only, check and possibly modify the transmit power restriction state at
+   * the end of PPDU reception.
+   */
+  void EndReceiveInterBss (void);
 
   /**
    * \param packet the packet to send
    * \param txVector the TXVECTOR that has tx parameters such as mode, the transmission mode to use to send
    *        this packet, and txPowerLevel, a power level to use to send this packet. The real transmission
    *        power is calculated as txPowerMin + txPowerLevel * (txPowerMax - txPowerMin) / nTxLevels
-   * \param mpdutype the type of the MPDU as defined in WifiPhy::MpduType.
    */
-  void SendPacket (Ptr<const Packet> packet, WifiTxVector txVector, MpduType mpdutype = NORMAL_MPDU);
+  void SendPacket (Ptr<const Packet> packet, WifiTxVector txVector);
 
   /**
    * \param packet the packet to send
@@ -234,7 +275,8 @@ public:
    *
    * \return the total amount of time this PHY will stay busy for the transmission of these bytes.
    */
-  Time CalculateTxDuration (uint32_t size, WifiTxVector txVector, uint16_t frequency, MpduType mpdutype, uint8_t incFlag);
+  Time CalculateTxDuration (uint32_t size, WifiTxVector txVector, uint16_t frequency,
+                            MpduType mpdutype, uint8_t incFlag);
 
   /**
    * \param txVector the transmission parameters used for this packet
@@ -242,7 +284,11 @@ public:
    * \return the total amount of time this PHY will stay busy for the transmission of the PLCP preamble and PLCP header.
    */
   static Time CalculatePlcpPreambleAndHeaderDuration (WifiTxVector txVector);
-
+  /**
+   *
+   * \return the preamble detection duration, which is the time correletion needs to detect the start of an incoming frame.
+   */
+  static Time GetPreambleDetectionDuration (void);
   /**
    * \param txVector the transmission parameters used for this packet
    *
@@ -322,6 +368,12 @@ public:
    * \return the duration of the payload
    */
   Time GetPayloadDuration (uint32_t size, WifiTxVector txVector, uint16_t frequency, MpduType mpdutype, uint8_t incFlag);
+  /**
+   * \param txVector the transmission parameters used for this packet
+   *
+   * \return the duration until the start of the packet
+   */
+  static Time GetStartOfPacketDuration (WifiTxVector txVector);
 
   /**
    * The WifiPhy::GetNModes() and WifiPhy::GetMode() methods are used
@@ -396,7 +448,7 @@ public:
   * can support - a set of WifiMode objects which we call the
   * BssMembershipSelectorSet, and which is stored as WifiPhy::m_bssMembershipSelectorSet.
   *
-  * \return the memebership selector whose index is specified.
+  * \return the membership selector whose index is specified.
   */
   uint8_t GetNBssMembershipSelectors (void) const;
   /**
@@ -1054,8 +1106,9 @@ public:
    * Implemented for encapsulation purposes.
    *
    * \param packet the packet being transmitted
+   * \param txPowerW the transmit power in Watts
    */
-  void NotifyTxBegin (Ptr<const Packet> packet);
+  void NotifyTxBegin (Ptr<const Packet> packet, double txPowerW);
   /**
    * Public method used to fire a PhyTxEnd trace.
    * Implemented for encapsulation purposes.
@@ -1088,13 +1141,17 @@ public:
    * Public method used to fire a PhyRxDrop trace.
    * Implemented for encapsulation purposes.
    *
-   * \param packet the packet that was not successfully received
+   * \param packet the packet that was dropped
+   * \param reason the reason the packet was dropped
    */
-  void NotifyRxDrop (Ptr<const Packet> packet);
+  void NotifyRxDrop (Ptr<const Packet> packet, WifiPhyRxfailureReason reason);
 
   /**
    * Public method used to fire a MonitorSniffer trace for a wifi packet being received.
    * Implemented for encapsulation purposes.
+   * This method will extract all MPDUs if packet is an A-MPDU and will fire tracedCallback.
+   * The A-MPDU reference number (RX side) is set within the method. It must be a different value
+   * for each A-MPDU but the same for each subframe within one A-MPDU.
    *
    * \param packet the packet being received
    * \param channelFreqMhz the frequency in MHz at which the packet is
@@ -1105,15 +1162,14 @@ public:
    *        tuned on a given channel and still to be able to receive packets
    *        on a nearby channel.
    * \param txVector the TXVECTOR that holds rx parameters
-   * \param aMpdu the type of the packet (0 is not A-MPDU, 1 is a MPDU that is part of an A-MPDU and 2 is the last MPDU in an A-MPDU)
-   *        and the A-MPDU reference number (must be a different value for each A-MPDU but the same for each subframe within one A-MPDU)
    * \param signalNoise signal power and noise power in dBm (noise power includes the noise figure)
+   * \param statusPerMpdu reception status per MPDU
    */
   void NotifyMonitorSniffRx (Ptr<const Packet> packet,
                              uint16_t channelFreqMhz,
                              WifiTxVector txVector,
-                             MpduInfo aMpdu,
-                             SignalNoiseDbm signalNoise);
+                             SignalNoiseDbm signalNoise,
+                             std::vector<bool> statusPerMpdu);
 
   /**
    * TracedCallback signature for monitor mode receive events.
@@ -1143,18 +1199,18 @@ public:
   /**
    * Public method used to fire a MonitorSniffer trace for a wifi packet being transmitted.
    * Implemented for encapsulation purposes.
+   * This method will extract all MPDUs if packet is an A-MPDU and will fire tracedCallback.
+   * The A-MPDU reference number (RX side) is set within the method. It must be a different value
+   * for each A-MPDU but the same for each subframe within one A-MPDU.
    *
    * \param packet the packet being transmitted
    * \param channelFreqMhz the frequency in MHz at which the packet is
    *        transmitted.
    * \param txVector the TXVECTOR that holds tx parameters
-   * \param aMpdu the type of the packet (0 is not A-MPDU, 1 is a MPDU that is part of an A-MPDU and 2 is the last MPDU in an A-MPDU)
-   *        and the A-MPDU reference number (must be a different value for each A-MPDU but the same for each subframe within one A-MPDU)
    */
   void NotifyMonitorSniffTx (Ptr<const Packet> packet,
                              uint16_t channelFreqMhz,
-                             WifiTxVector txVector,
-                             MpduInfo aMpdu);
+                             WifiTxVector txVector);
 
   /**
    * TracedCallback signature for monitor mode transmit events.
@@ -1174,6 +1230,21 @@ public:
                                             MpduInfo aMpdu);
 
   /**
+   * Public method used to fire a EndOfHePreamble trace once both HE SIG fields have been received, as well as training fields.
+   *
+   * \param params the HE preamble parameters
+   */
+  void NotifyEndOfHePreamble (HePreambleParameters params);
+
+  /**
+   * TracedCallback signature for end of HE-SIG-A events.
+   *
+   *
+   * \param params the HE preamble parameters
+   */
+  typedef void (* EndOfHePreambleCallback)(HePreambleParameters params);
+
+  /**
    * Assign a fixed random variable stream number to the random variables
    * used by this model. Return the number of streams (possibly zero) that
    * have been assigned.
@@ -1189,14 +1260,24 @@ public:
    * this threshold (dbm) to allow the PHY layer to detect the signal.
    *
    * \param threshold the energy detection threshold in dBm
+   *
+   * \deprecated
    */
   void SetEdThreshold (double threshold);
   /**
-   * Return the energy detection threshold (dBm).
+   * Sets the receive sensitivity threshold (dBm).
+   * The energy of a received signal should be higher than
+   * this threshold to allow the PHY layer to detect the signal.
    *
-   * \return the energy detection threshold in dBm
+   * \param threshold the receive sensitivity threshold in dBm
    */
-  double GetEdThreshold (void) const;
+  void SetRxSensitivity (double threshold);
+  /**
+   * Return the receive sensitivity threshold (dBm).
+   *
+   * \return the receive sensitivity threshold in dBm
+   */
+  double GetRxSensitivity (void) const;
   /**
    * Sets the CCA threshold (dBm). The energy of a received signal
    * should be higher than this threshold to allow the PHY
@@ -1204,13 +1285,13 @@ public:
    *
    * \param threshold the CCA threshold in dBm
    */
-  void SetCcaMode1Threshold (double threshold);
+  void SetCcaEdThreshold (double threshold);
   /**
    * Return the CCA threshold (dBm).
    *
    * \return the CCA threshold in dBm
    */
-  double GetCcaMode1Threshold (void) const;
+  double GetCcaEdThreshold (void) const;
   /**
    * Sets the RX loss (dB) in the Signal-to-Noise-Ratio due to non-idealities in the receiver.
    *
@@ -1350,55 +1431,44 @@ public:
    * Enable or disable support for HT/VHT short guard interval.
    *
    * \param shortGuardInterval Enable or disable support for short guard interval
+   *
+   * \deprecated
    */
   void SetShortGuardInterval (bool shortGuardInterval);
   /**
    * Return whether short guard interval is supported.
    *
    * \return true if short guard interval is supported, false otherwise
+   *
+   * \deprecated
    */
   bool GetShortGuardInterval (void) const;
   /**
    * \param guardInterval the supported HE guard interval
+   *
+   * \deprecated
    */
   void SetGuardInterval (Time guardInterval);
   /**
    * \return the supported HE guard interval
+   *
+   * \deprecated
    */
   Time GetGuardInterval (void) const;
-  /**
-   * Enable or disable LDPC.
-   * \param ldpc Enable or disable LDPC
-   */
-  void SetLdpc (bool ldpc);
-  /**
-   * Return if LDPC is supported.
-   *
-   * \return true if LDPC is supported, false otherwise
-   */
-  bool GetLdpc (void) const;
-  /**
-   * Enable or disable STBC.
-   *
-   * \param stbc Enable or disable STBC
-   */
-  void SetStbc (bool stbc);
-  /**
-   * Return whether STBC is supported.
-   *
-   * \return true if STBC is supported, false otherwise
-   */
-  bool GetStbc (void) const;
   /**
    * Enable or disable Greenfield support.
    *
    * \param greenfield Enable or disable Greenfield
+   *
+   * \deprecated
    */
   void SetGreenfield (bool greenfield);
   /**
    * Return whether Greenfield is supported.
    *
    * \return true if Greenfield is supported, false otherwise
+   *
+   * \deprecated
    */
   bool GetGreenfield (void) const;
   /**
@@ -1421,11 +1491,29 @@ public:
    */
   void SetErrorRateModel (const Ptr<ErrorRateModel> rate);
   /**
+   * Attach a receive ErrorModel to the WifiPhy.
+   *
+   * The WifiPhy may optionally include an ErrorModel in
+   * the packet receive chain. The error model is additive
+   * to any modulation-based error model based on SNR, and
+   * is typically used to force specific packet losses or
+   * for testing purposes.
+   *
+   * \param em Ptr to the ErrorModel.
+   */
+  void SetPostReceptionErrorModel (const Ptr<ErrorModel> em);
+  /**
    * Sets the frame capture model.
    *
    * \param frameCaptureModel the frame capture model
    */
   void SetFrameCaptureModel (const Ptr<FrameCaptureModel> frameCaptureModel);
+  /**
+   * Sets the preamble detection model.
+   *
+   * \param preambleDetectionModel the preamble detection model
+   */
+  void SetPreambleDetectionModel (const Ptr<PreambleDetectionModel> preambleDetectionModel);
   /**
    * Sets the wifi radio energy model.
    *
@@ -1460,6 +1548,30 @@ public:
    */
   double GetPowerDbm (uint8_t power) const;
 
+  /**
+   * Reset PHY to IDLE, with some potential TX power restrictions for the next transmission.
+   *
+   * \param powerRestricted flag whether the transmit power is restricted for the next transmission
+   * \param txPowerMaxSiso the SISO transmit power retriction for the next transmission
+   * \param txPowerMaxMimo the MIMO transmit power retriction for the next transmission
+   */
+  void ResetCca (bool powerRestricted, double txPowerMaxSiso = 0, double txPowerMaxMimo = 0);
+  /**
+   * Compute the transmit power (in dBm) for the next transmission.
+   *
+   * \param txVector the TXVECTOR
+   * \return the transmit power in dBm for the next transmission
+   */
+  double GetTxPowerForTransmission (WifiTxVector txVector) const;
+  /**
+   * Notify the PHY that an access to the channel was requested.
+   * This is typically called by the channel access manager to
+   * to notify the PHY about an ongoing transmission.
+   * The PHY will use this information to determine whether
+   * it should use power restriction as imposed by OBSS_PD SR.
+   */
+  void NotifyChannelAccessRequested (void);
+
 
 protected:
   // Inherited
@@ -1491,7 +1603,7 @@ protected:
    * Check if Phy state should move to CCA busy state based on current
    * state of interference tracker.  In this model, CCA becomes busy when
    * the aggregation of all signals as tracked by the InterferenceHelper
-   * class is higher than the CcaMode1Threshold
+   * class is higher than the CcaEdThreshold
    */
   void SwitchMaybeToCcaBusy (void);
 
@@ -1499,13 +1611,13 @@ protected:
   Ptr<UniformRandomVariable> m_random; //!< Provides uniform random variables.
   Ptr<WifiPhyStateHelper> m_state;     //!< Pointer to WifiPhyStateHelper
 
-  uint16_t m_mpdusNum;                 //!< carries the number of expected mpdus that are part of an A-MPDU
-  bool m_plcpSuccess;                  //!< Flag if the PLCP of the packet or the first MPDU in an A-MPDU has been received
   uint32_t m_txMpduReferenceNumber;    //!< A-MPDU reference number to identify all transmitted subframes belonging to the same received A-MPDU
   uint32_t m_rxMpduReferenceNumber;    //!< A-MPDU reference number to identify all received subframes belonging to the same received A-MPDU
 
-  EventId m_endRxEvent;                //!< the end reeive event
-  EventId m_endPlcpRxEvent;            //!< the end PLCP receive event
+  EventId m_endRxEvent;                //!< the end of receive event
+  EventId m_endPlcpRxEvent;            //!< the end of PLCP receive event
+  EventId m_endPreambleDetectionEvent; //!< the end of preamble detection event
+
 
 private:
   /**
@@ -1604,9 +1716,10 @@ private:
 
   /**
    * Due to newly arrived signal, the current reception cannot be continued and has to be aborted
+   * \param reason the reason the reception is aborted
    *
    */
-  void AbortCurrentReception (void);
+  void AbortCurrentReception (WifiPhyRxfailureReason reason);
 
   /**
    * Eventually switch to CCA busy
@@ -1616,19 +1729,25 @@ private:
   /**
    * Starting receiving the packet after having detected the medium is idle or after a reception switch.
    *
-   * \param packet the arriving packet
-   * \param txVector the TXVECTOR of the arriving packet
-   * \param mpdutype the type of the MPDU as defined in WifiPhy::MpduType.
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
    * \param rxPowerW the receive power in W
    * \param rxDuration the duration needed for the reception of the packet
-   * \param event the corresponding event of the first time the packet arrives
    */
-  void StartRx (Ptr<Packet> packet,
-                WifiTxVector txVector,
-                MpduType mpdutype,
-                double rxPowerW,
-                Time rxDuration,
-                Ptr<Event> event);
+  void StartRx (Ptr<Event> event, double rxPowerW, Time rxDuration);
+  /**
+   * Get the reception status for the provided MPDU and notify.
+   *
+   * \param mpdu the arriving MPDU
+   * \param event the corresponding event of the first time the packet arrives (also storing packet and TxVector information)
+   * \param relativeMpduStart the relative start time of the MPDU within the A-MPDU. 0 for normal MPDUs
+   * \param mpduDuration the duration of the MPDU
+   *
+   * \return information on MPDU reception: status, signal power (dBm), and noise power (in dBm)
+   */
+  std::pair<bool, SignalNoiseDbm> GetReceptionStatus (Ptr<const Packet> mpdu,
+                                                      Ptr<Event> event,
+                                                      Time relativeMpduStart,
+                                                      Time mpduDuration);
 
   /**
    * The trace source fired when a packet begins the transmission process on
@@ -1636,7 +1755,7 @@ private:
    *
    * \see class CallBackTraceSource
    */
-  TracedCallback<Ptr<const Packet> > m_phyTxBeginTrace;
+  TracedCallback<Ptr<const Packet>, double > m_phyTxBeginTrace;
 
   /**
    * The trace source fired when a packet ends the transmission process on
@@ -1675,7 +1794,7 @@ private:
    *
    * \see class CallBackTraceSource
    */
-  TracedCallback<Ptr<const Packet> > m_phyRxDropTrace;
+  TracedCallback<Ptr<const Packet>, WifiPhyRxfailureReason > m_phyRxDropTrace;
 
   /**
    * A trace source that emulates a wifi device in monitor mode
@@ -1704,6 +1823,13 @@ private:
    * of its size.
    */
   TracedCallback<Ptr<const Packet>, uint16_t, WifiTxVector, MpduInfo> m_phyMonitorSniffTxTrace;
+
+  /**
+   * A trace source that indiates the end of both HE SIG fields as well as training fields for received 802.11ax packets
+   *
+   * \see class CallBackTraceSource
+   */
+  TracedCallback<HePreambleParameters> m_phyEndOfHePreambleTrace;
 
   /**
    * This vector holds the set of transmission modes that this
@@ -1753,21 +1879,24 @@ private:
   bool m_frequencyChannelNumberInitialized; //!< Store initialization state
   uint16_t m_channelWidth;                  //!< Channel width
 
-  double   m_edThresholdW;        //!< Energy detection threshold in watts
-  double   m_ccaMode1ThresholdW;  //!< Clear channel assessment (CCA) threshold in watts
+  double   m_rxSensitivityW;      //!< Receive sensitivity threshold in watts
+  double   m_ccaEdThresholdW;     //!< Clear channel assessment (CCA) threshold in watts
   double   m_txGainDb;            //!< Transmission gain (dB)
   double   m_rxGainDb;            //!< Reception gain (dB)
   double   m_txPowerBaseDbm;      //!< Minimum transmission power (dBm)
   double   m_txPowerEndDbm;       //!< Maximum transmission power (dBm)
   uint8_t  m_nTxPower;            //!< Number of available transmission power levels
 
-  bool     m_ldpc;               //!< Flag if LDPC is used
-  bool     m_stbc;               //!< Flag if STBC is used
-  bool     m_greenfield;         //!< Flag if GreenField format is supported
-  bool     m_shortGuardInterval; //!< Flag if HT/VHT short guard interval is supported
+  bool m_powerRestricted;  //!< Flag whether transmit power is retricted by OBSS PD SR
+  double m_txPowerMaxSiso; //!< SISO maximum transmit power due to OBSS PD SR power restriction
+  double m_txPowerMaxMimo; //!< MIMO maximum transmit power due to OBSS PD SR power restriction
+  bool m_channelAccessRequested;
+
+  bool     m_greenfield;         //!< Flag if GreenField format is supported (deprecated)
+  bool     m_shortGuardInterval; //!< Flag if HT/VHT short guard interval is supported (deprecated)
   bool     m_shortPreamble;      //!< Flag if short PLCP preamble is supported
 
-  Time m_guardInterval; //!< Supported HE guard interval
+  Time m_guardInterval; //!< Supported HE guard interval (deprecated)
 
   uint8_t m_numberOfAntennas;  //!< Number of transmitters
   uint8_t m_txSpatialStreams;  //!< Number of supported TX spatial streams
@@ -1789,7 +1918,10 @@ private:
 
   Ptr<Event> m_currentEvent; //!< Hold the current event
   Ptr<FrameCaptureModel> m_frameCaptureModel; //!< Frame capture model
+  Ptr<PreambleDetectionModel> m_preambleDetectionModel; //!< Preamble detection model
   Ptr<WifiRadioEnergyModel> m_wifiRadioEnergyModel; //!< Wifi radio energy model
+  Ptr<ErrorModel> m_postReceptionErrorModel; //!< Error model for receive packet events
+  Time m_timeLastPreambleDetected; //!< Record the time the last preamble was detected
 
   Callback<void> m_capabilitiesChangedCallback; //!< Callback when PHY capabilities changed
 };

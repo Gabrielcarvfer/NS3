@@ -27,6 +27,7 @@ set(source_files
         model/non-communicating-net-device.cc
         model/microwave-oven-spectrum-value-helper.cc
         model/tv-spectrum-transmitter.cc
+        model/trace-fading-loss-model.cc
         helper/spectrum-helper.cc
         helper/adhoc-aloha-noack-ideal-phy-helper.cc
         helper/waveform-generator-helper.cc
@@ -60,6 +61,7 @@ set(header_files
         model/non-communicating-net-device.h
         model/microwave-oven-spectrum-value-helper.h
         model/tv-spectrum-transmitter.h
+        model/trace-fading-loss-model.h
         helper/spectrum-helper.h
         helper/adhoc-aloha-noack-ideal-phy-helper.h
         helper/waveform-generator-helper.h

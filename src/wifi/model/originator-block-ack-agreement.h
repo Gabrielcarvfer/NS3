@@ -28,7 +28,27 @@ namespace ns3 {
 /**
  * \ingroup wifi
  * Maintains the state and information about transmitted MPDUs with ack policy block ack
- * for an originator station.
+ * for an originator station. The state diagram is as follows:
+ *
+   \verbatim
+    /------------\ send ADDBARequest ----------------
+    |   START    |------------------>|   PENDING    |-------
+    \------------/                   ----------------       \
+          ^            receive     /        |                \
+          |        ADDBAResponse  /         |                 \
+          |          (failure)   v          |                  \
+          |        ---------------          |                   --------------------->  ----------------
+          |        |  REJECTED   |          |          receive ADDBAResponse (success)  |  ESTABLISHED |
+          |        ---------------          |      no            -------------------->  ----------------
+          |           receive    ^          | ADDBAResponse     /
+          |        ADDBAResponse  \         |                  /
+          |          (failure)     \        v                 /
+          |                         ----------------         /
+          |-------------------------|   NO_REPLY   |---------
+            Reset after timeout     ----------------
+   \endverbatim
+ *
+ * See also OriginatorBlockAckAgreement::State
  */
 class OriginatorBlockAckAgreement : public BlockAckAgreement
 {
@@ -45,25 +65,6 @@ public:
    */
   OriginatorBlockAckAgreement (Mac48Address recipient, uint8_t tid);
   ~OriginatorBlockAckAgreement ();
-  /*                                      receive ADDBAResponse
-   *  send ADDBARequest ---------------   status code = success  ---------------
-   *  ----------------->|   PENDING    |------------------------>|  ESTABLISHED |-----
-   *                    ---------------                          ---------------      |
-   *                          |                                    /   ^    ^         |
-   *   receive ADDBAResponse  |                receive BlockAck   /    |    |         | receive BlockAck
-   *   status code = failure  |           retryPkts + queuePkts  /     |    |         | retryPkts + queuePkts
-   *                          v                     <           /      |    |         |           >=
-   *                   ---------------     blockAckThreshold   /       |    |         | blockAckThreshold
-   *                   | UNSUCCESSFUL |                       /        |    |         |
-   *                   ---------------                       v         |    ----------|
-   *                                            --------------         |
-   *                                            |  INACTIVE   |        |
-   *                                            --------------         |
-   *                        send a MPDU (Normal Ack)   |               |
-   *                        retryPkts + queuePkts      |               |
-   *                                  >=               |               |
-   *                         blockAckThreshold         |----------------
-   */
   /**
   * Represents the state for this agreement.
   *
@@ -76,31 +77,27 @@ public:
   *    The block ack is active and all packets relative to this agreement are transmitted
   *    with ack policy set to block ack.
   *
-  *  INACTIVE:
-  *    In our implementation, block ack tear-down happens only if an inactivity timeout occurs
-  *    so we could have an active block ack but a number of packets that doesn't reach the value of
-  *    m_blockAckThreshold (see ns3::BlockAckManager). In these conditions the agreement becomes
-  *    INACTIVE until that the number of packets reaches the value of m_blockAckThreshold again.
+  *  NO_REPLY
+  *    No reply after an ADDBA request. In this state the originator will send the rest of packets
+  *    in queue using normal MPDU.
   *
-  *  UNSUCCESSFUL (not used for now):
-  *    The agreement's state becomes UNSUCCESSFUL if:
+  *  RESET
+  *    A transient state to mark the agreement for reinitialzation after failed ADDBA request.
+  *    Since it is a temporary state, it is not included in the state diagram above. In this
+  *    state the next transmission will be treated as if the BA agreement is not created yet.
   *
-  *    - its previous state was PENDING and an ADDBAResponse frame wasn't received from
-  *      recipient station within an interval of time defined by m_bAckSetupTimeout attribute
-  *      in ns3::WifiMac.
-  *    - an ADDBAResponse frame is received from recipient and the Status Code field is set
-  *      to failure.
-  *
-  *    In both cases for station addressed by BlockAckAgreement::m_peer and for
-  *    TID BlockAckAgreement::m_tid block ack mechanism won't be used.
+  *  REJECTED (not used for now):
+  *    The agreement's state becomes REJECTED if an ADDBAResponse frame is received from recipient 
+  *    and the Status Code field is set to failure.
   */
   /// State enumeration
   enum State
   {
     PENDING,
     ESTABLISHED,
-    INACTIVE,
-    UNSUCCESSFUL
+    NO_REPLY,
+    RESET,
+    REJECTED
   };
   /**
    * Set the current state.
@@ -123,41 +120,29 @@ public:
    */
   bool IsEstablished (void) const;
   /**
-   * Check if the current state of this agreement is INACTIVE.
+   * Check if the current state of this agreement is NO_REPLY.
    *
-   * \return true if the current state of this agreement is INACTIVE,
+   * \return true if the current state of this agreement is NO_REPLY,
    *         false otherwise
    */
-  bool IsInactive (void) const;
+  bool IsNoReply (void) const;
   /**
-   * Check if the current state of this agreement is UNSUCCESSFUL.
+   * Check if the current state of this agreement is RESET.
    *
-   * \return true if the current state of this agreement is UNSUCCESSFUL,
+   * \return true if the current state of this agreement is RESET,
    *         false otherwise
    */
-  bool IsUnsuccessful (void) const;
+  bool IsReset (void) const;
   /**
-   * Notifies a packet's transmission with ack policy Block Ack.
+   * Check if the current state of this agreement is REJECTED.
    *
-   * \param nextSeqNumber
+   * \return true if the current state of this agreement is REJECTED,
+   *         false otherwise
    */
-  void NotifyMpduTransmission (uint16_t nextSeqNumber);
-  /**
-   * Returns true if all packets for which a block ack was negotiated have been transmitted so
-   * a block ack request is needed in order to acknowledge them.
-   *
-   * \return  true if all packets for which a block ack was negotiated have been transmitted,
-   * false otherwise
-   */
-  bool IsBlockAckRequestNeeded (void) const;
-  /// Complete exchange function
-  void CompleteExchange (void);
-
+  bool IsRejected (void) const;
 
 private:
   State m_state; ///< state
-  uint16_t m_sentMpdus; ///< sent MPDUs
-  bool m_needBlockAckReq; ///< flag whether it needs a Block ACK request
 };
 
 } //namespace ns3

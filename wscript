@@ -36,10 +36,10 @@ gcc_min_version = (4, 9, 2)
 # Bug 2181:  clang warnings about unused local typedefs and potentially
 # evaluated expressions affecting darwin clang/LLVM version 7.0.0 (Xcode 7)
 # or clang/LLVM version 3.6 or greater.  We must make this platform-specific.
-darwin_clang_version_warn_unused_local_typedefs = ('7', '0', '0')
-darwin_clang_version_warn_potentially_evaluated = ('7', '0', '0')
-clang_version_warn_unused_local_typedefs = ('3', '6', '0')
-clang_version_warn_potentially_evaluated = ('3', '6', '0')
+darwin_clang_version_warn_unused_local_typedefs = (7, 0, 0)
+darwin_clang_version_warn_potentially_evaluated = (7, 0, 0)
+clang_version_warn_unused_local_typedefs = (3, 6, 0)
+clang_version_warn_potentially_evaluated = (3, 6, 0)
 
 # Get the information out of the NS-3 configuration file.
 config_file_exists = False
@@ -138,6 +138,7 @@ def maybe_decode(input):
 
 def options(opt):
     # options provided by the modules
+    opt.load('md5_tstamp')
     opt.load('compiler_c')
     opt.load('compiler_cxx')
     opt.load('cflags')
@@ -177,6 +178,10 @@ def options(opt):
                    help=('Run a locally built program; argument can be a program name,'
                          ' or a command starting with the program name.'),
                    type="string", default='', dest='run')
+    opt.add_option('--run-no-build',
+                   help=('Run a locally built program without rebuilding the project; argument can be a program name,'
+                         ' or a command starting with the program name.'),
+                   type="string", default='', dest='run_no_build')
     opt.add_option('--visualize',
                    help=('Modify --run arguments to enable the visualizer'),
                    action="store_true", default=False, dest='visualize')
@@ -190,6 +195,11 @@ def options(opt):
                          ' argument is the path to the python program, optionally followed'
                          ' by command-line options that are passed to the program.'),
                    type="string", default='', dest='pyrun')
+    opt.add_option('--pyrun-no-build',
+                   help=('Run a python program using locally built ns3 python module without rebuilding the project;'
+                         ' argument is the path to the python program, optionally followed'
+                         ' by command-line options that are passed to the program.'),
+                   type="string", default='', dest='pyrun_no_build')
     opt.add_option('--valgrind',
                    help=('Change the default command template to run programs and unit tests with valgrind'),
                    action="store_true", default=False,
@@ -424,14 +434,14 @@ def configure(conf):
     # bug 2181 on clang warning suppressions
     if conf.env['CXX_NAME'] in ['clang']:
         if Utils.unversioned_sys_platform() == 'darwin':
-            if conf.env['CC_VERSION'] >= darwin_clang_version_warn_unused_local_typedefs:
+            if tuple(map(int, conf.env['CC_VERSION'])) >= darwin_clang_version_warn_unused_local_typedefs:
                 env.append_value('CXXFLAGS', '-Wno-unused-local-typedefs')
-            if conf.env['CC_VERSION'] >= darwin_clang_version_warn_potentially_evaluated: 
+            if tuple(map(int, conf.env['CC_VERSION'])) >= darwin_clang_version_warn_potentially_evaluated:
                 env.append_value('CXXFLAGS', '-Wno-potentially-evaluated-expression')
         else:
-            if conf.env['CC_VERSION'] >= clang_version_warn_unused_local_typedefs:
+            if tuple(map(int, conf.env['CC_VERSION'])) >= clang_version_warn_unused_local_typedefs:
                 env.append_value('CXXFLAGS', '-Wno-unused-local-typedefs')
-            if conf.env['CC_VERSION'] >= clang_version_warn_potentially_evaluated: 
+            if tuple(map(int, conf.env['CC_VERSION'])) >= clang_version_warn_potentially_evaluated:
                 env.append_value('CXXFLAGS', '-Wno-potentially-evaluated-expression')
     env['ENABLE_STATIC_NS3'] = False
     if Options.options.enable_static:
@@ -456,6 +466,19 @@ def configure(conf):
         env.append_value('CXXFLAGS', Options.options.cxx_standard)
     else:
         Logs.warn("CXX Standard flag " + Options.options.cxx_standard + " was not recognized, using compiler's default")
+
+    # Find Boost libraries by modules
+    conf.env['REQUIRED_BOOST_LIBS'] = []
+    for modules_dir in ['src', 'contrib']:
+        conf.recurse (modules_dir, name="get_required_boost_libs", mandatory=False)
+
+    if conf.env['REQUIRED_BOOST_LIBS'] is not []:
+        conf.load('boost')
+        conf.check_boost(lib=' '.join (conf.env['REQUIRED_BOOST_LIBS']), mandatory=False)
+        if not conf.env['LIB_BOOST']:
+            conf.check_boost(lib=' '.join (conf.env['REQUIRED_BOOST_LIBS']), libpath="/usr/lib64", mandatory=False)
+            if not conf.env['LIB_BOOST']:
+                conf.env['LIB_BOOST'] = []
 
     # Set this so that the lists won't be printed at the end of this
     # configure command.
@@ -617,10 +640,10 @@ def configure(conf):
                                  conf.env['ENABLE_GSL'],
                                  "GSL not found")
 
-    conf.find_program('libgcrypt-config', var='LIBGCRYPT_CONFIG', msg="python-config", mandatory=False)
+    conf.find_program('libgcrypt-config', var='LIBGCRYPT_CONFIG', msg="libgcrypt-config", mandatory=False)
     if env.LIBGCRYPT_CONFIG:
         conf.check_cfg(path=env.LIBGCRYPT_CONFIG, msg="Checking for libgcrypt", args='--cflags --libs', package='',
-                                     define_name="HAVE_CRYPTO", global_define=True, uselib_store='GCRYPT', mandatory=False)
+                                     define_name="HAVE_GCRYPT", global_define=True, uselib_store='GCRYPT', mandatory=False)
     conf.report_optional_feature("libgcrypt", "Gcrypt library",
                                  conf.env.HAVE_GCRYPT, "libgcrypt not found: you can use libgcrypt-config to find its location.")
 
@@ -666,7 +689,7 @@ def configure(conf):
 class SuidBuild_task(Task.Task):
     """task that makes a binary Suid
     """
-    after = 'link'
+    after = ['cxxprogram', 'cxxshlib', 'cxxstlib']
     def __init__(self, *args, **kwargs):
         super(SuidBuild_task, self).__init__(*args, **kwargs)
         self.m_display = 'build-suid'
@@ -707,7 +730,7 @@ def create_suid_program(bld, name):
     program.target = "%s%s-%s%s" % (wutils.APPNAME, wutils.VERSION, name, bld.env.BUILD_SUFFIX)
 
     if bld.env['ENABLE_SUDO']:
-        program.create_task("SuidBuild")
+        program.create_task("SuidBuild_task")
 
     bld.set_group(grp)
 
@@ -1036,6 +1059,18 @@ def build(bld):
         _doxygen(bld)
         raise SystemExit(0)
 
+    if Options.options.run_no_build:
+        # Check that the requested program name is valid
+        program_name, dummy_program_argv = wutils.get_run_program(Options.options.run_no_build, wutils.get_command_template(bld.env))
+        # Run the program
+        wutils.run_program(Options.options.run_no_build, bld.env, wutils.get_command_template(bld.env), visualize=Options.options.visualize)
+        raise SystemExit(0)
+
+    if Options.options.pyrun_no_build:
+        wutils.run_python_program(Options.options.pyrun_no_build, bld.env,
+                                  visualize=Options.options.visualize)
+        raise SystemExit(0)
+
 def _cleandir(name):
     try:
         shutil.rmtree(name)
@@ -1093,7 +1128,7 @@ def shutdown(ctx):
     # Write the build status file.
     build_status_file = os.path.join(bld.out_dir, 'build-status.py')
     out = open(build_status_file, 'w')
-    out.write('#! /usr/bin/env python\n')
+    out.write('#! /usr/bin/env python3\n')
     out.write('\n')
     out.write('# Programs that are runnable.\n')
     out.write('ns3_runnable_programs = ' + str(env['NS3_RUNNABLE_PROGRAMS']) + '\n')
@@ -1138,65 +1173,6 @@ class CheckContext(Context.Context):
         
         wutils.bld = bld
         wutils.run_python_program("test.py -n -c core", bld.env)
-
-
-class print_introspected_doxygen_task(Task.TaskBase):
-    after = 'cxx link'
-    color = 'BLUE'
-
-    def __init__(self, bld):
-        self.bld = bld
-        super(print_introspected_doxygen_task, self).__init__(generator=self)
-        
-    def __str__(self):
-        return 'print-introspected-doxygen\n'
-
-    def runnable_status(self):
-        return Task.RUN_ME
-
-    def run(self):
-        ## generate the trace sources list docs
-        env = wutils.bld.env
-        proc_env = wutils.get_proc_env()
-        try:
-            program_obj = wutils.find_program('print-introspected-doxygen', env)
-        except ValueError: # could happen if print-introspected-doxygen is
-                           # not built because of waf configure
-                           # --enable-modules=xxx
-            pass
-        else:
-            prog = program_obj.path.find_or_declare(ccroot.get_target_name(program_obj)).get_bld().abspath(env)
-
-            # Create a header file with the introspected information.
-            doxygen_out = open(os.path.join('doc', 'introspected-doxygen.h'), 'w')
-            if subprocess.Popen([prog], stdout=doxygen_out, env=proc_env).wait():
-                raise SystemExit(1)
-            doxygen_out.close()
-        
-            # Create a text file with the introspected information.
-            text_out = open(os.path.join('doc', 'ns3-object.txt'), 'w')
-            if subprocess.Popen([prog, '--output-text'], stdout=text_out, env=proc_env).wait():
-                raise SystemExit(1)
-            text_out.close()
-
-class run_python_unit_tests_task(Task.TaskBase):
-    after = 'cxx link'
-    color = 'BLUE'
-
-    def __init__(self, bld):
-        self.bld = bld
-        super(run_python_unit_tests_task, self).__init__(generator=self)
-        
-    def __str__(self):
-        return 'run-python-unit-tests\n'
-
-    def runnable_status(self):
-        return Task.RUN_ME
-
-    def run(self):
-        proc_env = wutils.get_proc_env()
-        wutils.run_argv([self.bld.env['PYTHON'], os.path.join("..", "utils", "python-unit-tests.py")],
-                        self.bld.env, proc_env, force_no_valgrind=True)
 
 def check_shell(bld):
     if ('NS3_MODULE_PATH' not in os.environ) or ('NS3_EXECUTABLE_PATH' not in os.environ):

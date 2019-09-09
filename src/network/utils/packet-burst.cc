@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 #include "ns3/packet.h"
 #include "packet-burst.h"

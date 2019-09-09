@@ -20,7 +20,7 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include "ss-manager.h"
 #include "ns3/log.h"
 #include "service-flow.h"

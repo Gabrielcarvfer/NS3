@@ -20,7 +20,7 @@
 #ifndef PACKET_METADATA_H
 #define PACKET_METADATA_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include <limits>
 #include "ns3/callback.h"

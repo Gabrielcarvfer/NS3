@@ -25,7 +25,7 @@
 
 #include "ns3/device-energy-model.h"
 #include <vector>
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

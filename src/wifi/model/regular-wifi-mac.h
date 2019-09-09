@@ -138,6 +138,7 @@ public:
    *
    * \param enable true if RIFS is to be supported,
    *               false otherwise
+   * \deprecated
    */
   void SetRifsSupported (bool enable);
   /**
@@ -145,9 +146,9 @@ public:
    *
    * \return true if short RIFS is supported,
    *         false otherwise.
+   * \deprecated
    */
   bool GetRifsSupported (void) const;
-
   /**
    * \return the MAC address associated to this MAC layer.
    */
@@ -514,7 +515,6 @@ protected:
    */
   bool GetHeSupported () const;
 
-
 private:
   /// type conversion operator
   RegularWifiMac (const RegularWifiMac &);
@@ -533,56 +533,6 @@ private:
    * \param ac the Access Category of the queue to initialise.
    */
   void SetupEdcaQueue (AcIndex ac);
-
-  /**
-   * Set the maximum A-MSDU size for AC_VO.
-   *
-   * \param size the maximum A-MSDU size for AC_VO.
-   */
-  void SetVoMaxAmsduSize (uint16_t size);
-  /**
-   * Set the maximum A-MSDU size for AC_VI.
-   *
-   * \param size the maximum A-MSDU size for AC_VI.
-   */
-  void SetViMaxAmsduSize (uint16_t size);
-  /**
-   * Set the maximum A-MSDU size for AC_BE.
-   *
-   * \param size the maximum A-MSDU size for AC_BE.
-   */
-  void SetBeMaxAmsduSize (uint16_t size);
-  /**
-   * Set the maximum A-MSDU size for AC_BK.
-   *
-   * \param size the maximum A-MSDU size for AC_BK.
-   */
-  void SetBkMaxAmsduSize (uint16_t size);
-
-  /**
-   * Set the maximum A-MPDU size for AC_VO.
-   *
-   * \param size the maximum A-MPDU size for AC_VO.
-   */
-  void SetVoMaxAmpduSize (uint16_t size);
-  /**
-   * Set the maximum A-MPDU size for AC_VI.
-   *
-   * \param size the maximum A-MPDU size for AC_VI.
-   */
-  void SetViMaxAmpduSize (uint16_t size);
-  /**
-   * Set the maximum A-MPDU size for AC_BE.
-   *
-   * \param size the maximum A-MPDU size for AC_BE.
-   */
-  void SetBeMaxAmpduSize (uint16_t size);
-  /**
-   * Set the maximum A-MPDU size for AC_BK.
-   *
-   * \param size the maximum A-MPDU size for AC_BK.
-   */
-  void SetBkMaxAmpduSize (uint16_t size);
 
   /**
    * Set the Block ACK threshold for AC_VO.
@@ -649,24 +599,6 @@ private:
    */
   bool m_qosSupported;
   /**
-    * This Boolean is set \c true iff this WifiMac is to model
-    * 802.11n. It is exposed through the attribute system.
-    *
-    * At the moment, this flag is the sole selection between HT and
-    * non-HT operation for the STA (whether IBSS, AP, or
-    * non-AP). Ultimately, we will want a HT-enabled STA to be able to
-    * fall back to non-HT operation with a non-HT peer. This'll
-    * require further intelligence - i.e., per-association HT
-    * state. Having a big switch seems like a good intermediate stage,
-    * however.
-    */
-  bool m_htSupported;
-  /**
-   * This Boolean is set \c true iff this WifiMac is to model
-   * 802.11ac. It is exposed through the attribute system.
-   */
-  bool m_vhtSupported;
-  /**
    * This Boolean is set \c true iff this WifiMac is to model
    * 802.11g. It is exposed through the attribute system.
    */
@@ -676,14 +608,7 @@ private:
    * 802.11b. It is exposed through the attribute system.
    */
   bool m_dsssSupported;
-  /**
-   * This Boolean is set \c true iff this WifiMac is to model
-   * 802.11ax. It is exposed through the attribute system.
-   */
-  bool m_heSupported;
 
-  /// Configure aggregation function
-  void ConfigureAggregation (void);
   /// Enable aggregation function
   void EnableAggregation (void);
   /// Disable aggregation function
@@ -694,16 +619,16 @@ private:
   uint16_t m_beMaxAmsduSize; ///< maximum A-MSDU size for AC_BE
   uint16_t m_bkMaxAmsduSize; ///< maximum A-MSDU size for AC_BK
 
-  uint16_t m_voMaxAmpduSize; ///< maximum A-MPDU size for AC_VO
-  uint16_t m_viMaxAmpduSize; ///< maximum A-MPDU size for AC_VI
-  uint16_t m_beMaxAmpduSize; ///< maximum A-MPDU size for AC_BE
-  uint16_t m_bkMaxAmpduSize; ///< maximum A-MPDU size for AC_BK
+  uint32_t m_voMaxAmpduSize; ///< maximum A-MPDU size for AC_VO
+  uint32_t m_viMaxAmpduSize; ///< maximum A-MPDU size for AC_VI
+  uint32_t m_beMaxAmpduSize; ///< maximum A-MPDU size for AC_BE
+  uint32_t m_bkMaxAmpduSize; ///< maximum A-MPDU size for AC_BK
 
   TracedCallback<const WifiMacHeader &> m_txOkCallback; ///< transmit OK callback
   TracedCallback<const WifiMacHeader &> m_txErrCallback; ///< transmit error callback
 
   bool m_shortSlotTimeSupported; ///< flag whether short slot time is supported
-  bool m_rifsSupported; ///< flag whether RIFS is supported
+  bool m_rifsSupported; ///< flag whether RIFS is supported (deprecated)
 };
 
 } //namespace ns3

@@ -35,26 +35,26 @@
 
 namespace ns3 {
 
-    NS_LOG_COMPONENT_DEFINE_MASK ("SystemMutex", ns3::LOG_PREFIX_TIME);
+NS_LOG_COMPONENT_DEFINE_MASK ("SystemMutex", ns3::LOG_PREFIX_TIME);
 
 /** System-dependent implementation of SystemMutex. */
-    class SystemMutexPrivate {
-    public:
-        SystemMutexPrivate ();
-        ~SystemMutexPrivate ();
+class SystemMutexPrivate {
+public: 
+  SystemMutexPrivate ();    
+  ~SystemMutexPrivate ();
+	
+  void Lock (void);         /**< Acquire ownership of the mutex. */
+  void Unlock (void);       /**< Release ownership of the mutex. */
+private:
+  pthread_mutex_t m_mutex;  /**< The mutex. */
+};
 
-        void Lock (void);         /**< Acquire ownership of the mutex. */
-        void Unlock (void);       /**< Release ownership of the mutex. */
-    private:
-        pthread_mutex_t m_mutex;  /**< The mutex. */
-    };
+SystemMutexPrivate::SystemMutexPrivate ()
+{
+  NS_LOG_FUNCTION (this);
 
-    SystemMutexPrivate::SystemMutexPrivate ()
-    {
-      NS_LOG_FUNCTION (this);
-
-      pthread_mutexattr_t attr;
-      pthread_mutexattr_init (&attr);
+  pthread_mutexattr_t attr;
+  pthread_mutexattr_init (&attr);
 //
 // Make this an error checking mutex.  This will check to see if the current
 // thread already owns the mutex before trying to lock it.  Instead of 
@@ -65,84 +65,84 @@ namespace ns3 {
 // error checking flags just to make life difficult.
 //
 #if defined (PTHREAD_MUTEX_ERRORCHECK_NP)
-      pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_ERRORCHECK_NP);
+  pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_ERRORCHECK_NP);
 #else
-      pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_ERRORCHECK);
+  pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_ERRORCHECK);
 #endif
-      pthread_mutex_init (&m_mutex, &attr);
-    }
+  pthread_mutex_init (&m_mutex, &attr);
+}
 
-    SystemMutexPrivate::~SystemMutexPrivate()
+SystemMutexPrivate::~SystemMutexPrivate() 
+{
+  NS_LOG_FUNCTION (this);
+  pthread_mutex_destroy (&m_mutex);
+}
+	
+void
+SystemMutexPrivate::Lock (void)
+{
+  NS_LOG_FUNCTION (this);
+
+  int rc = pthread_mutex_lock (&m_mutex);
+  if (rc != 0) 
     {
-      NS_LOG_FUNCTION (this);
-      pthread_mutex_destroy (&m_mutex);
+      NS_FATAL_ERROR ("SystemMutexPrivate::Lock()"
+                      "pthread_mutex_lock failed: " << rc << " = \"" <<
+                      std::strerror (rc) << "\"");
     }
+}
+	
+void
+SystemMutexPrivate::Unlock (void) 
+{
+  NS_LOG_FUNCTION (this);
 
-    void
-    SystemMutexPrivate::Lock (void)
+  int rc = pthread_mutex_unlock (&m_mutex);
+  if (rc != 0)
     {
-      NS_LOG_FUNCTION (this);
-
-      int rc = pthread_mutex_lock (&m_mutex);
-      if (rc != 0)
-      {
-        NS_FATAL_ERROR ("SystemMutexPrivate::Lock()"
-                        "pthread_mutex_lock failed: " << rc << " = \"" <<
-                                                      std::strerror (rc) << "\"");
-      }
+      NS_FATAL_ERROR ("SystemMutexPrivate::Unlock()"
+                      "pthread_mutex_unlock failed: " << rc << " = \"" <<
+                      std::strerror (rc) << "\"");
     }
+}
 
-    void
-    SystemMutexPrivate::Unlock (void)
-    {
-      NS_LOG_FUNCTION (this);
+SystemMutex::SystemMutex() 
+  : m_priv (new SystemMutexPrivate ())
+{
+  NS_LOG_FUNCTION (this);
+}
 
-      int rc = pthread_mutex_unlock (&m_mutex);
-      if (rc != 0)
-      {
-        NS_FATAL_ERROR ("SystemMutexPrivate::Unlock()"
-                        "pthread_mutex_unlock failed: " << rc << " = \"" <<
-                                                        std::strerror (rc) << "\"");
-      }
-    }
+SystemMutex::~SystemMutex() 
+{
+  NS_LOG_FUNCTION (this);
+  delete m_priv;
+}
 
-    SystemMutex::SystemMutex()
-            : m_priv (new SystemMutexPrivate ())
-    {
-      NS_LOG_FUNCTION (this);
-    }
+void
+SystemMutex::Lock ()
+{
+  NS_LOG_FUNCTION (this);
+  m_priv->Lock ();
+}
 
-    SystemMutex::~SystemMutex()
-    {
-      NS_LOG_FUNCTION (this);
-      delete m_priv;
-    }
+void
+SystemMutex::Unlock ()
+{
+  NS_LOG_FUNCTION (this);
+  m_priv->Unlock ();
+}
 
-    void
-    SystemMutex::Lock ()
-    {
-      NS_LOG_FUNCTION (this);
-      m_priv->Lock ();
-    }
+CriticalSection::CriticalSection (SystemMutex &mutex)
+  : m_mutex (mutex)
+{
+  NS_LOG_FUNCTION (this << &mutex);
+  m_mutex.Lock ();
+}
 
-    void
-    SystemMutex::Unlock ()
-    {
-      NS_LOG_FUNCTION (this);
-      m_priv->Unlock ();
-    }
-
-    CriticalSection::CriticalSection (SystemMutex &mutex)
-            : m_mutex (mutex)
-    {
-      NS_LOG_FUNCTION (this << &mutex);
-      m_mutex.Lock ();
-    }
-
-    CriticalSection::~CriticalSection ()
-    {
-      NS_LOG_FUNCTION (this);
-      m_mutex.Unlock ();
-    }
+CriticalSection::~CriticalSection ()
+{
+  NS_LOG_FUNCTION (this);
+  m_mutex.Unlock ();
+}
 
 } // namespace ns3

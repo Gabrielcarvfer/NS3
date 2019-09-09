@@ -27,15 +27,10 @@
 #include <map>
 #include <vector>
 
+#include "node-printer.h"
+#include "time-printer.h"
 #include "log-macros-enabled.h"
 #include "log-macros-disabled.h"
-
-#ifndef M_PI
-#define M_PI   3.14159265358979323846
-#endif
-#ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923
-#endif
 
 /**
  * \file
@@ -304,45 +299,34 @@ namespace ns3 {
 void LogComponentPrintList (void);
 
 /**
- * Function signature for prepending the simulation time
- * to a log message.
- *
- * \param [in,out] os The output stream to print on.
- */
-typedef void (*LogTimePrinter)(std::ostream &os);
-/**
- * Function signature for prepending the node id
- * to a log message.
- *
- * \param [in,out] os The output stream to print on.
- */
-typedef void (*LogNodePrinter)(std::ostream &os);
-
-/**
- * Set the LogTimePrinter function to be used
+ * Set the TimePrinter function to be used
  * to prepend log messages with the simulation time.
  *
- * \param [in] lp The LogTimePrinter function.
+ * The default is DefaultTimePrinter().
+ *
+ * \param [in] lp The TimePrinter function.
  */
-void LogSetTimePrinter (LogTimePrinter lp);
+void LogSetTimePrinter (TimePrinter lp);
 /**
  * Get the LogTimePrinter function currently in use.
- * \returns The LogTimePrinter function.
+ * \returns The current LogTimePrinter function.
  */
-LogTimePrinter LogGetTimePrinter (void);
+TimePrinter LogGetTimePrinter (void);
 
 /**
  * Set the LogNodePrinter function to be used
  * to prepend log messages with the node id.
  *
+ * The default is DefaultNodePrinter().
+ *
  * \param [in] np The LogNodePrinter function.
  */
-void LogSetNodePrinter (LogNodePrinter np);
+void LogSetNodePrinter (NodePrinter np);
 /**
  * Get the LogNodePrinter function currently in use.
- * \returns The LogNodePrinter function.
+ * \returns The current LogNodePrinter function.
  */
-LogNodePrinter LogGetNodePrinter (void);
+NodePrinter LogGetNodePrinter (void);
 
 
 /**

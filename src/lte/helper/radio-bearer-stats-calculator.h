@@ -448,11 +448,6 @@ private:
    */
   std::string m_ulPdcpOutputFilename;
 
-  std::ofstream outFileDlRlc;
-  std::ofstream outFileUlRlc;
-  std::ofstream outFileDlPdcp;
-  std::ofstream outFileUlPdcp;
-
 };
 
 } // namespace ns3

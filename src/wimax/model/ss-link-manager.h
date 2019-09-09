@@ -23,7 +23,7 @@
 #ifndef LINK_MANAGER_H
 #define LINK_MANAGER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "wimax-net-device.h"
 #include "ss-net-device.h"
 #include "ns3/event-id.h"

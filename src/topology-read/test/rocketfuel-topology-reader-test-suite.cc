@@ -24,6 +24,7 @@
 
 #include "ns3/test.h"
 #include "ns3/rocketfuel-topology-reader.h"
+#include "ns3/node-container.h"
 #include "ns3/log.h"
 #include "ns3/abort.h"
 #include "ns3/attribute.h"
@@ -62,23 +63,23 @@ RocketfuelTopologyReaderTest::DoRun (void)
   Ptr<RocketfuelTopologyReader> inFile;
   NodeContainer nodes;
 
-  std::string input ("../../src/topology-read/examples/RocketFuel_toposample_1239_weights.txt");
+  std::string input ("./src/topology-read/examples/RocketFuel_toposample_1239_weights.txt");
+
   inFile = CreateObject<RocketfuelTopologyReader> ();
   inFile->SetFileName (input);
 
   if (inFile != 0)
-  {
-    nodes = inFile->Read ();
-  }
+    {
+      nodes = inFile->Read ();
+    }
 
   NS_TEST_ASSERT_MSG_NE (nodes.GetN (), 0, "Problems reading node information the topology file..");
+
   NS_TEST_ASSERT_MSG_NE (inFile->LinksSize (), 0, "Problems reading the topology file.");
 
   NS_TEST_EXPECT_MSG_EQ (nodes.GetN (),315, "noes");
   NS_TEST_EXPECT_MSG_EQ (inFile->LinksSize (),972, "links");
-
   Simulator::Destroy ();
-
 }
 
 /**

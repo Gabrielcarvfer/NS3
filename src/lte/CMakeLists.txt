@@ -1,6 +1,11 @@
 
 set(name lte)
 
+if(${NS3_EMU})
+        set(source_files helper/emu-epc-helper.cc)
+        set(header_files helper/emu-epc-helper.cc)
+endif()
+
 set(source_files
         model/lte-common.cc
         model/lte-spectrum-phy.cc
@@ -38,6 +43,7 @@ set(source_files
         helper/lte-helper.cc
         helper/lte-stats-calculator.cc
         helper/epc-helper.cc
+        helper/no-backhaul-epc-helper.cc
         helper/point-to-point-epc-helper.cc
         helper/radio-bearer-stats-calculator.cc
         helper/radio-bearer-stats-connector.cc
@@ -79,9 +85,11 @@ set(source_files
         model/pss-ff-mac-scheduler.cc
         model/cqa-ff-mac-scheduler.cc
         model/epc-gtpu-header.cc
-        model/trace-fading-loss-model.cc
+        model/epc-gtpc-header.cc
         model/epc-enb-application.cc
-        model/epc-sgw-pgw-application.cc
+        model/epc-sgw-application.cc
+        model/epc-pgw-application.cc
+        model/epc-mme-application.cc
         model/epc-x2-sap.cc
         model/epc-x2-header.cc
         model/epc-x2.cc
@@ -95,7 +103,6 @@ set(source_files
         model/lte-as-sap.cc
         model/epc-ue-nas.cc
         model/lte-harq-phy.cc
-        model/epc-mme.cc
         model/lte-asn1-header.cc
         model/lte-rrc-header.cc
         model/lte-handover-management-sap.cc
@@ -116,20 +123,17 @@ set(source_files
         model/lte-ffr-enhanced-algorithm.cc
         model/lte-ffr-distributed-algorithm.cc
         model/lte-ue-power-control.cc
-        #helper/emu-epc-helper.c
-
-        #Added in ns3.27
-        model/component-carrier.cc
-        model/component-carrier-enb.cc
-        model/component-carrier-ue.cc
-        model/lte-ccm-mac-sap.cc
         model/lte-ccm-rrc-sap.cc
-        model/lte-enb-component-carrier-manager.cc
         model/lte-ue-ccm-rrc-sap.cc
+        model/lte-ccm-mac-sap.cc
+        model/lte-enb-component-carrier-manager.cc
         model/lte-ue-component-carrier-manager.cc
         model/no-op-component-carrier-manager.cc
         model/simple-ue-component-carrier-manager.cc
+        model/component-carrier.cc
         helper/cc-helper.cc
+        model/component-carrier-ue.cc
+        model/component-carrier-enb.cc
 
         model/BLER/json_loader.cc
         )
@@ -171,6 +175,7 @@ set(header_files
         helper/lte-helper.h
         helper/lte-stats-calculator.h
         helper/epc-helper.h
+        helper/no-backhaul-epc-helper.h
         helper/point-to-point-epc-helper.h
         helper/phy-stats-calculator.h
         helper/mac-stats-calculator.h
@@ -211,10 +216,12 @@ set(header_files
         model/tdtbfq-ff-mac-scheduler.h
         model/pss-ff-mac-scheduler.h
         model/cqa-ff-mac-scheduler.h
-        model/trace-fading-loss-model.h
         model/epc-gtpu-header.h
+        model/epc-gtpc-header.h
         model/epc-enb-application.h
-        model/epc-sgw-pgw-application.h
+        model/epc-sgw-application.h
+        model/epc-pgw-application.h
+        model/epc-mme-application.h
         model/lte-vendor-specific-parameters.h
         model/epc-x2-sap.h
         model/epc-x2-header.h
@@ -228,7 +235,6 @@ set(header_files
         model/lte-as-sap.h
         model/epc-ue-nas.h
         model/lte-harq-phy.h
-        model/epc-mme.h
         model/lte-asn1-header.h
         model/lte-rrc-header.h
         model/lte-handover-management-sap.h
@@ -249,20 +255,17 @@ set(header_files
         model/lte-ffr-enhanced-algorithm.h
         model/lte-ffr-distributed-algorithm.h
         model/lte-ue-power-control.h
-        #helper/emu-epc-helper.h
-
-        #Added in ns3.27
-        model/component-carrier.h
-        model/component-carrier-enb.h
-        model/component-carrier-ue.h
-        model/lte-ccm-mac-sap.h
         model/lte-ccm-rrc-sap.h
-        model/lte-enb-component-carrier-manager.h
         model/lte-ue-ccm-rrc-sap.h
+        model/lte-ccm-mac-sap.h
+        model/lte-enb-component-carrier-manager.h
         model/lte-ue-component-carrier-manager.h
         model/no-op-component-carrier-manager.h
         model/simple-ue-component-carrier-manager.h
         helper/cc-helper.h
+        model/component-carrier.h
+        model/component-carrier-ue.h
+        model/component-carrier-enb.h
         )
 
 set(libraries_to_link
@@ -321,6 +324,7 @@ set(test_sources
         test/test-asn1-encoding.cc
         test/lte-test-ue-measurements.cc
         test/lte-test-cell-selection.cc
+        test/lte-test-secondary-cell-selection.cc
         test/test-lte-handover-delay.cc
         test/test-lte-handover-target.cc
         test/lte-test-deactivate-bearer.cc
@@ -331,8 +335,11 @@ set(test_sources
         test/lte-test-interference-fr.cc
         test/lte-test-cqi-generation.cc
         test/lte-simple-spectrum-phy.cc
-        test/lte-test-carrier-aggregation-configuration.cc
+        test/lte-test-carrier-aggregation.cc
+        test/lte-test-aggregation-throughput-scale.cc
         test/lte-test-ipv6-routing.cc
+        test/lte-test-carrier-aggregation-configuration.cc
+        test/lte-test-radio-link-failure.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

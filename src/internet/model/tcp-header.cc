@@ -18,7 +18,7 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#include <cstdint>
+#include <stdint.h>
 #include <iostream>
 #include "tcp-header.h"
 #include "tcp-option.h"

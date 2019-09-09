@@ -56,6 +56,12 @@ MacLowTransmissionParameters::EnableCompressedBlockAck (void)
 }
 
 void
+MacLowTransmissionParameters::EnableExtendedCompressedBlockAck (void)
+{
+  m_waitAck = BLOCK_ACK_EXTENDED_COMPRESSED;
+}
+
+void
 MacLowTransmissionParameters::EnableMultiTidBlockAck (void)
 {
   m_waitAck = BLOCK_ACK_MULTI_TID;
@@ -92,21 +98,47 @@ MacLowTransmissionParameters::MustWaitNormalAck (void) const
 }
 
 bool
-MacLowTransmissionParameters::MustWaitBasicBlockAck (void) const
+MacLowTransmissionParameters::MustWaitBlockAck (void) const
 {
-  return (m_waitAck == BLOCK_ACK_BASIC) ? true : false;
+  bool ret;
+  switch (m_waitAck)
+    {
+    case BLOCK_ACK_BASIC:
+    case BLOCK_ACK_COMPRESSED:
+    case BLOCK_ACK_EXTENDED_COMPRESSED:
+    case BLOCK_ACK_MULTI_TID:
+      ret = true;
+      break;
+    default:
+      ret = false;
+      break;
+    }
+  return ret;
 }
 
-bool
-MacLowTransmissionParameters::MustWaitCompressedBlockAck (void) const
+BlockAckType
+MacLowTransmissionParameters::GetBlockAckType (void) const
 {
-  return (m_waitAck == BLOCK_ACK_COMPRESSED) ? true : false;
-}
-
-bool
-MacLowTransmissionParameters::MustWaitMultiTidBlockAck (void) const
-{
-  return (m_waitAck == BLOCK_ACK_MULTI_TID) ? true : false;
+  BlockAckType type;
+  switch (m_waitAck)
+    {
+    case BLOCK_ACK_BASIC:
+      type = BlockAckType::BASIC_BLOCK_ACK;
+      break;
+    case BLOCK_ACK_COMPRESSED:
+      type = BlockAckType::COMPRESSED_BLOCK_ACK;
+      break;
+    case BLOCK_ACK_EXTENDED_COMPRESSED:
+      type = BlockAckType::EXTENDED_COMPRESSED_BLOCK_ACK;
+      break;
+    case BLOCK_ACK_MULTI_TID:
+      type = BlockAckType::MULTI_TID_BLOCK_ACK;
+      break;
+    default:
+      NS_FATAL_ERROR ("Block ack is not used");
+      break;
+    }
+  return type;
 }
 
 bool
@@ -147,6 +179,9 @@ std::ostream &operator << (std::ostream &os, const MacLowTransmissionParameters 
       break;
     case MacLowTransmissionParameters::BLOCK_ACK_COMPRESSED:
       os << "compressed-block-ack";
+      break;
+    case MacLowTransmissionParameters::BLOCK_ACK_EXTENDED_COMPRESSED:
+      os << "extended-compressed-block-ack";
       break;
     case MacLowTransmissionParameters::BLOCK_ACK_MULTI_TID:
       os << "multi-tid-block-ack";

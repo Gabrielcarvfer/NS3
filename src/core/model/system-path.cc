@@ -21,38 +21,25 @@
 #include "fatal-error.h"
 #include "assert.h"
 #include "log.h"
-//#include "ns3/core-config.h"
+#include "ns3/core-config.h"
 #include <cstdlib>
 #include <cerrno>
 #include <cstring>
 
 
-#if defined (HAVE_DIRENT_H) and defined (HAVE_SYS_TYPES_H)
+#if defined (HAVE_DIRENT_H) && defined (HAVE_SYS_TYPES_H)
 /** Do we have an \c opendir function? */
-	#define HAVE_OPENDIR
-	#ifdef WIN32
-		#undef HAVE_OPENDIR
-		#define HAVE_FIND_FIRST_FILE
-	#endif
+#define HAVE_OPENDIR
+#include <sys/types.h>
+#include <dirent.h>
 #endif
-
-#ifdef HAVE_OPENDIR
-	#include <sys/types.h>
-	#include <dirent.h>
-#endif
-
-#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
-	/** Do we have a \c makedir function? */
-	#define HAVE_MKDIR_H
-	#if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__)
-		#include <windows.h>
-	#endif
-	#include <sys/types.h>
-	#include <sys/stat.h>
+#if defined (HAVE_SYS_STAT_H) && defined (HAVE_SYS_TYPES_H)
+/** Do we have a \c makedir function? */
+#define HAVE_MKDIR_H
+#include <sys/types.h>
+#include <sys/stat.h>
 #endif
 #include <sstream>
-#include <ctime>
-
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif /* __APPLE__ */
@@ -274,7 +261,7 @@ std::list<std::string> ReadFiles (std::string path)
   HANDLE hFind;
   WIN32_FIND_DATA fileData;
   
-  hFind = FindFirstFile (path.c_str (), &fileData);
+  hFind = FindFirstFile (path.c_str (), &FindFileData);
   if (hFind == INVALID_HANDLE_VALUE)
     {
       NS_FATAL_ERROR ("Could not open directory=" << path);
@@ -359,11 +346,7 @@ MakeDirectories (std::string path)
       bool makeDirErr = false;
       
 #if defined(HAVE_MKDIR_H)
-  #ifdef _WIN32
-        makeDirErr = (CreateDirectory(path.c_str(),NULL) == 0);
-  #else
-        makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
-  #endif
+      makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
 #endif
 
       if (makeDirErr)

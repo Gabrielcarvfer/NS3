@@ -88,7 +88,7 @@ MobilityTraceTestCase::DoRun (void)
   // Set mobility random number streams to fixed values
   mobility.AssignStreams (sta, 0);
 
-  SetDataDir ("./src/mobility/test/"); //Assumes the test runner is called from the NS3/build/bin folder (test-runner-script.py enforces this)
+  SetDataDir (NS_TEST_SOURCEDIR);
   std::string referenceMobilityFilePath = CreateDataDirFilename ("mobility-trace-example.mob");
   std::string testMobilityFilePath      = CreateTempDirFilename ("mobility-trace-test.mob");
 

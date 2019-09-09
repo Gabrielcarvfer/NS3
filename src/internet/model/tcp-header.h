@@ -21,7 +21,7 @@
 #ifndef TCP_HEADER_H
 #define TCP_HEADER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/header.h"
 #include "ns3/tcp-option.h"
 #include "ns3/buffer.h"

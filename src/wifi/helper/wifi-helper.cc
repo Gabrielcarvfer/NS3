@@ -31,6 +31,13 @@
 #include "ns3/radiotap-header.h"
 #include "ns3/config.h"
 #include "ns3/names.h"
+#include "ns3/net-device-queue-interface.h"
+#include "ns3/wifi-mac-queue.h"
+#include "ns3/qos-utils.h"
+#include "ns3/ht-configuration.h"
+#include "ns3/vht-configuration.h"
+#include "ns3/he-configuration.h"
+#include "ns3/obss-pd-algorithm.h"
 #include "wifi-helper.h"
 
 namespace ns3 {
@@ -124,6 +131,7 @@ AsciiPhyReceiveSinkWithoutContext (
 WifiPhyHelper::WifiPhyHelper ()
   : m_pcapDlt (PcapHelper::DLT_IEEE802_11)
 {
+  SetPreambleDetectionModel ("ns3::ThresholdPreambleDetectionModel");
 }
 
 WifiPhyHelper::~WifiPhyHelper ()
@@ -157,6 +165,58 @@ WifiPhyHelper::SetErrorRateModel (std::string name,
   m_errorRateModel.Set (n5, v5);
   m_errorRateModel.Set (n6, v6);
   m_errorRateModel.Set (n7, v7);
+}
+
+void
+WifiPhyHelper::SetFrameCaptureModel (std::string name,
+                                     std::string n0, const AttributeValue &v0,
+                                     std::string n1, const AttributeValue &v1,
+                                     std::string n2, const AttributeValue &v2,
+                                     std::string n3, const AttributeValue &v3,
+                                     std::string n4, const AttributeValue &v4,
+                                     std::string n5, const AttributeValue &v5,
+                                     std::string n6, const AttributeValue &v6,
+                                     std::string n7, const AttributeValue &v7)
+{
+  m_frameCaptureModel = ObjectFactory ();
+  m_frameCaptureModel.SetTypeId (name);
+  m_frameCaptureModel.Set (n0, v0);
+  m_frameCaptureModel.Set (n1, v1);
+  m_frameCaptureModel.Set (n2, v2);
+  m_frameCaptureModel.Set (n3, v3);
+  m_frameCaptureModel.Set (n4, v4);
+  m_frameCaptureModel.Set (n5, v5);
+  m_frameCaptureModel.Set (n6, v6);
+  m_frameCaptureModel.Set (n7, v7);
+}
+
+void
+WifiPhyHelper::SetPreambleDetectionModel (std::string name,
+                                          std::string n0, const AttributeValue &v0,
+                                          std::string n1, const AttributeValue &v1,
+                                          std::string n2, const AttributeValue &v2,
+                                          std::string n3, const AttributeValue &v3,
+                                          std::string n4, const AttributeValue &v4,
+                                          std::string n5, const AttributeValue &v5,
+                                          std::string n6, const AttributeValue &v6,
+                                          std::string n7, const AttributeValue &v7)
+{
+  m_preambleDetectionModel = ObjectFactory ();
+  m_preambleDetectionModel.SetTypeId (name);
+  m_preambleDetectionModel.Set (n0, v0);
+  m_preambleDetectionModel.Set (n1, v1);
+  m_preambleDetectionModel.Set (n2, v2);
+  m_preambleDetectionModel.Set (n3, v3);
+  m_preambleDetectionModel.Set (n4, v4);
+  m_preambleDetectionModel.Set (n5, v5);
+  m_preambleDetectionModel.Set (n6, v6);
+  m_preambleDetectionModel.Set (n7, v7);
+}
+
+void
+WifiPhyHelper::DisablePreambleDetectionModel ()
+{
+    m_preambleDetectionModel.SetTypeId (TypeId ());
 }
 
 void
@@ -591,7 +651,8 @@ WifiHelper::~WifiHelper ()
 }
 
 WifiHelper::WifiHelper ()
-  : m_standard (WIFI_PHY_STANDARD_80211a)
+  : m_standard (WIFI_PHY_STANDARD_80211a),
+    m_selectQueueCallback (&SelectQueueByDSField)
 {
   SetRemoteStationManager ("ns3::ArfWifiManager");
 }
@@ -620,9 +681,38 @@ WifiHelper::SetRemoteStationManager (std::string type,
 }
 
 void
+WifiHelper::SetObssPdAlgorithm (std::string type,
+                                std::string n0, const AttributeValue &v0,
+                                std::string n1, const AttributeValue &v1,
+                                std::string n2, const AttributeValue &v2,
+                                std::string n3, const AttributeValue &v3,
+                                std::string n4, const AttributeValue &v4,
+                                std::string n5, const AttributeValue &v5,
+                                std::string n6, const AttributeValue &v6,
+                                std::string n7, const AttributeValue &v7)
+{
+  m_obssPdAlgorithm = ObjectFactory ();
+  m_obssPdAlgorithm.SetTypeId (type);
+  m_obssPdAlgorithm.Set (n0, v0);
+  m_obssPdAlgorithm.Set (n1, v1);
+  m_obssPdAlgorithm.Set (n2, v2);
+  m_obssPdAlgorithm.Set (n3, v3);
+  m_obssPdAlgorithm.Set (n4, v4);
+  m_obssPdAlgorithm.Set (n5, v5);
+  m_obssPdAlgorithm.Set (n6, v6);
+  m_obssPdAlgorithm.Set (n7, v7);
+}
+
+void
 WifiHelper::SetStandard (WifiPhyStandard standard)
 {
   m_standard = standard;
+}
+
+void
+WifiHelper::SetSelectQueueCallback (SelectQueueCallback f)
+{
+  m_selectQueueCallback = f;
 }
 
 NetDeviceContainer
@@ -636,8 +726,23 @@ WifiHelper::Install (const WifiPhyHelper &phyHelper,
     {
       Ptr<Node> node = *i;
       Ptr<WifiNetDevice> device = CreateObject<WifiNetDevice> ();
+      if (m_standard >= WIFI_PHY_STANDARD_80211n_2_4GHZ)
+        {
+          Ptr<HtConfiguration> htConfiguration = CreateObject<HtConfiguration> ();
+          device->SetHtConfiguration (htConfiguration);
+        }
+      if ((m_standard == WIFI_PHY_STANDARD_80211ac) || (m_standard == WIFI_PHY_STANDARD_80211ax_5GHZ))
+        {
+          Ptr<VhtConfiguration> vhtConfiguration = CreateObject<VhtConfiguration> ();
+          device->SetVhtConfiguration (vhtConfiguration);
+        }
+      if (m_standard >= WIFI_PHY_STANDARD_80211ax_2_4GHZ)
+        {
+          Ptr<HeConfiguration> heConfiguration = CreateObject<HeConfiguration> ();
+          device->SetHeConfiguration (heConfiguration);
+        }
       Ptr<WifiRemoteStationManager> manager = m_stationManager.Create<WifiRemoteStationManager> ();
-      Ptr<WifiMac> mac = macHelper.Create ();
+      Ptr<WifiMac> mac = macHelper.Create (device);
       Ptr<WifiPhy> phy = phyHelper.Create (node, device);
       mac->SetAddress (Mac48Address::Allocate ());
       mac->ConfigureStandard (m_standard);
@@ -646,8 +751,56 @@ WifiHelper::Install (const WifiPhyHelper &phyHelper,
       device->SetPhy (phy);
       device->SetRemoteStationManager (manager);
       node->AddDevice (device);
+      if ((m_standard >= WIFI_PHY_STANDARD_80211ax_2_4GHZ) && (m_obssPdAlgorithm.IsTypeIdSet ()))
+        {
+          Ptr<ObssPdAlgorithm> obssPdAlgorithm = m_obssPdAlgorithm.Create<ObssPdAlgorithm> ();
+          device->AggregateObject (obssPdAlgorithm);
+          obssPdAlgorithm->ConnectWifiNetDevice (device);
+        }
       devices.Add (device);
       NS_LOG_DEBUG ("node=" << node << ", mob=" << node->GetObject<MobilityModel> ());
+      // Aggregate a NetDeviceQueueInterface object if a RegularWifiMac is installed
+      Ptr<RegularWifiMac> rmac = DynamicCast<RegularWifiMac> (mac);
+      if (rmac)
+        {
+          Ptr<NetDeviceQueueInterface> ndqi;
+          BooleanValue qosSupported;
+          PointerValue ptr;
+          Ptr<WifiMacQueue> wmq;
+
+          rmac->GetAttributeFailSafe ("QosSupported", qosSupported);
+          if (qosSupported.Get ())
+            {
+              ndqi = CreateObjectWithAttributes<NetDeviceQueueInterface> ("NTxQueues",
+                                                                          UintegerValue (4));
+
+              rmac->GetAttributeFailSafe ("BE_Txop", ptr);
+              wmq = ptr.Get<QosTxop> ()->GetWifiMacQueue ();
+              ndqi->GetTxQueue (0)->ConnectQueueTraces (wmq);
+
+              rmac->GetAttributeFailSafe ("BK_Txop", ptr);
+              wmq = ptr.Get<QosTxop> ()->GetWifiMacQueue ();
+              ndqi->GetTxQueue (1)->ConnectQueueTraces (wmq);
+
+              rmac->GetAttributeFailSafe ("VI_Txop", ptr);
+              wmq = ptr.Get<QosTxop> ()->GetWifiMacQueue ();
+              ndqi->GetTxQueue (2)->ConnectQueueTraces (wmq);
+
+              rmac->GetAttributeFailSafe ("VO_Txop", ptr);
+              wmq = ptr.Get<QosTxop> ()->GetWifiMacQueue ();
+              ndqi->GetTxQueue (3)->ConnectQueueTraces (wmq);
+              ndqi->SetSelectQueueCallback (m_selectQueueCallback);
+            }
+          else
+            {
+              ndqi = CreateObject<NetDeviceQueueInterface> ();
+
+              rmac->GetAttributeFailSafe ("Txop", ptr);
+              wmq = ptr.Get<Txop> ()->GetWifiMacQueue ();
+              ndqi->GetTxQueue (0)->ConnectQueueTraces (wmq);
+            }
+          device->AggregateObject (ndqi);
+        }
     }
   return devices;
 }
@@ -677,6 +830,9 @@ WifiHelper::Install (const WifiPhyHelper &phy,
 void
 WifiHelper::EnableLogComponents (void)
 {
+  LogComponentEnableAll (LOG_PREFIX_TIME);
+  LogComponentEnableAll (LOG_PREFIX_NODE);
+
   LogComponentEnable ("AarfWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("AarfcdWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("AdhocWifiMac", LOG_LEVEL_ALL);
@@ -688,6 +844,7 @@ WifiHelper::EnableLogComponents (void)
   LogComponentEnable ("BlockAckCache", LOG_LEVEL_ALL);
   LogComponentEnable ("BlockAckManager", LOG_LEVEL_ALL);
   LogComponentEnable ("CaraWifiManager", LOG_LEVEL_ALL);
+  LogComponentEnable ("ConstantObssPdAlgorithm", LOG_LEVEL_ALL);
   LogComponentEnable ("ConstantRateWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("Txop", LOG_LEVEL_ALL);
   LogComponentEnable ("ChannelAccessManager", LOG_LEVEL_ALL);
@@ -704,14 +861,17 @@ WifiHelper::EnableLogComponents (void)
   LogComponentEnable ("MpduAggregator", LOG_LEVEL_ALL);
   LogComponentEnable ("MsduAggregator", LOG_LEVEL_ALL);
   LogComponentEnable ("NistErrorRateModel", LOG_LEVEL_ALL);
+  LogComponentEnable ("ObssPdAlgorithm", LOG_LEVEL_ALL);
   LogComponentEnable ("OnoeWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("ParfWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("RegularWifiMac", LOG_LEVEL_ALL);
   LogComponentEnable ("RraaWifiManager", LOG_LEVEL_ALL);
   LogComponentEnable ("RrpaaWifiManager", LOG_LEVEL_ALL);
+  LogComponentEnable ("SimpleFrameCaptureModel", LOG_LEVEL_ALL);
   LogComponentEnable ("SpectrumWifiPhy", LOG_LEVEL_ALL);
   LogComponentEnable ("StaWifiMac", LOG_LEVEL_ALL);
   LogComponentEnable ("SupportedRates", LOG_LEVEL_ALL);
+  LogComponentEnable ("ThresholdPreambleDetectionModel", LOG_LEVEL_ALL);
   LogComponentEnable ("WifiMac", LOG_LEVEL_ALL);
   LogComponentEnable ("WifiMacQueueItem", LOG_LEVEL_ALL);
   LogComponentEnable ("WifiNetDevice", LOG_LEVEL_ALL);

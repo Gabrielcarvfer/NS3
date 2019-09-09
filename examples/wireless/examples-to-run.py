@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 ## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
 
 # A list of C++ examples to run in order to ensure that they remain
@@ -37,20 +37,22 @@ cpp_examples = [
     ("ofdm-vht-validation", "True", "True"),
     ("ofdm-he-validation", "True", "True"),
     ("80211n-mimo --simulationTime=0.1 --step=10", "True", "True"),
-    ("ht-wifi-network --simulationTime=0.1 --frequency=5 --useRts=0 --minExpectedThroughput=5 --maxExpectedThroughput=134", "True", "True"),
-    ("ht-wifi-network --simulationTime=0.1 --frequency=5 --useRts=1 --minExpectedThroughput=5 --maxExpectedThroughput=130", "True", "True"),
-    ("ht-wifi-network --simulationTime=0.1 --frequency=2.4 --useRts=0 --minExpectedThroughput=5 --maxExpectedThroughput=132", "True", "True"),
-    ("ht-wifi-network --simulationTime=0.1 --frequency=2.4 --useRts=1 --minExpectedThroughput=4.5 --maxExpectedThroughput=128", "True", "True"),
-    ("vht-wifi-network --simulationTime=0.1 --useRts=0  --minExpectedThroughput=5 --maxExpectedThroughput=555", "True", "True"),
-    ("vht-wifi-network --simulationTime=0.2 --useRts=1", "True", "True"),
-    ("he-wifi-network --simulationTime=0.25 --frequency=5 --useRts=0  --minExpectedThroughput=6 --maxExpectedThroughput=754", "True", "True"),
-    ("he-wifi-network --simulationTime=0.3 --frequency=5 --useRts=1 --minExpectedThroughput=6 --maxExpectedThroughput=639", "True", "True"),
+    ("ht-wifi-network --simulationTime=0.2 --frequency=5 --useRts=0 --minExpectedThroughput=5 --maxExpectedThroughput=134", "True", "True"),
+    ("ht-wifi-network --simulationTime=0.2 --frequency=5 --useRts=1 --minExpectedThroughput=5 --maxExpectedThroughput=129", "True", "True"),
+    ("ht-wifi-network --simulationTime=0.2 --frequency=2.4 --useRts=0 --minExpectedThroughput=5 --maxExpectedThroughput=132", "True", "True"),
+    ("ht-wifi-network --simulationTime=0.2 --frequency=2.4 --useRts=1 --minExpectedThroughput=5 --maxExpectedThroughput=127", "True", "True"),
+    ("vht-wifi-network --simulationTime=0.2 --useRts=0  --minExpectedThroughput=5 --maxExpectedThroughput=562", "True", "True"),
+    ("vht-wifi-network --simulationTime=0.2 --useRts=1  --minExpectedThroughput=5 --maxExpectedThroughput=520", "True", "True"),
+    ("he-wifi-network --simulationTime=0.25 --frequency=5 --useRts=0 --minExpectedThroughput=6 --maxExpectedThroughput=844", "True", "True"),
+    ("he-wifi-network --simulationTime=0.3 --frequency=5 --useRts=0 --useExtendedBlockAck=1 --minExpectedThroughput=6 --maxExpectedThroughput=1033", "True", "True"),
+    ("he-wifi-network --simulationTime=0.3 --frequency=5 --useRts=1 --minExpectedThroughput=6 --maxExpectedThroughput=745", "True", "True"),
     ("he-wifi-network --simulationTime=0.25 --frequency=2.4 --useRts=0 --minExpectedThroughput=6 --maxExpectedThroughput=238", "True", "True"),
-    ("he-wifi-network --simulationTime=0.3 --frequency=2.4 --useRts=1 --minExpectedThroughput=6 --maxExpectedThroughput=224", "True", "True"),
-    ("simple-ht-hidden-stations --simulationTime=1 --enableRts=0 --nMpdus=32 --minExpectedThroughput=59 --maxExpectedThroughput=60", "True", "True"),
+    ("he-wifi-network --simulationTime=0.3 --frequency=2.4 --useRts=1 --minExpectedThroughput=6 --maxExpectedThroughput=223", "True", "True"),
+    ("simple-ht-hidden-stations --simulationTime=1.5 --enableRts=0 --nMpdus=32 --minExpectedThroughput=59 --maxExpectedThroughput=60", "True", "True"),
     ("simple-ht-hidden-stations --simulationTime=1 --enableRts=1 --nMpdus=32 --minExpectedThroughput=57 --maxExpectedThroughput=58", "True", "True"),
     ("mixed-network --simulationTime=1", "True", "True"),
     ("wifi-aggregation --simulationTime=1 --verifyResults=1", "True", "True"),
+    ("wifi-txop-aggregation --simulationTime=1 --verifyResults=1", "True", "True"),
     ("80211e-txop --simulationTime=1 --verifyResults=1", "True", "True"),
     ("wifi-multi-tos --simulationTime=1 --nWifi=16 --useRts=1 --useShortGuardInterval=1", "True", "True"),
     ("wifi-tcp", "True", "True"),

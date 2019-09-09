@@ -26,24 +26,14 @@
 #include <cstdlib>
 #include <cerrno>
 #include <fcntl.h>
-
-#ifdef _WIN32
-    #include <winsock2.h>
-    #include <WS2tcpip.h>
-    #include <winsock.h>
-
-    #pragma comment (lib, "ws2_32.lib")
-
-#else
-    #include <sys/ioctl.h>
-    #include <sys/types.h>
-    #include <sys/socket.h>
-    #include <sys/un.h>
-    #include <net/if.h>
-    #include <linux/if_tun.h>
-    #include <net/route.h>
-    #include <netinet/in.h>
-#endif
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <net/if.h>
+#include <linux/if_tun.h>
+#include <net/route.h>
+#include <netinet/in.h>
 
 #include "tap-encode-decode.h"
 

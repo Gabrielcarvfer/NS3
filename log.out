@@ -1,0 +1,3410 @@
+commit 80839b33e4d977325944b152a65b514b9116a672
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 17:00:41 2019 -0700
+
+    bindings:  Rescan all APIs
+
+commit bd376b4535b26ce624232fa948c61a75a79471f3
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 16:59:59 2019 -0700
+
+    Update CHANGES.html and RELEASE_NOTES
+
+commit 40fc2d22bb6ad014763a2a1815b2d6ae29af292b
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 16:59:40 2019 -0700
+
+    build: Make wscript changes to default to Python 3
+
+commit 27067cabd9fd59d41daa4b66eca64375a083c760
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 16:58:30 2019 -0700
+
+    build: Upgrade Waf to 2.0.18
+
+commit 0258405cc6acd751f545cbab597cf1bcd5382b79
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 16:55:34 2019 -0700
+
+    build: Upgrade scripts to Python 3 (many changes due to Ankit Deepak)
+
+commit 2b10629465b9b019ac4834fae9a149e33a87adc7
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Aug 12 16:41:07 2019 -0700
+
+    bindings: Update package version numbers for API scanning
+
+commit 8a9409426d76a5d00ab20ac1acae11fa54eb35bd
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Sat Aug 10 17:03:53 2019 +0300
+
+    Partially update python bindings generation code for Python 3
+
+commit 22ddb8ce3581db4df31e98a6605312b3263700e4
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Sat Aug 10 02:35:01 2019 +0300
+
+    Fix libgcrypt-config configuration message
+
+commit 2efb7daee1d9098cb2f2b91cb4b8a90c2faeb9dd
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Thu Aug 8 12:37:17 2019 -0700
+
+    lte: Avoid valgrind warning of uninitialized value
+
+commit 5b34c908f087e09c078e7e766c7555a410c4756b
+Author: Eduardo Pinto <epmcj@hotmail.com>
+Date:   Wed Aug 7 06:02:57 2019 -0700
+
+    uan: Fix MAC address variable shadowing in subclasses
+
+commit 6f075d4949223c80b72bdf0eef95dc229fbdf9c5
+Author: Eduardo Abinader <eduardoabinader@gmail.com>
+Date:   Thu Aug 1 12:14:47 2019 +0200
+
+    documentation: correct text on building topologies section
+
+commit 109f1f909aabeec62b22fbd68ecacc545c1f9df4
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Jul 17 10:09:58 2019 -0700
+
+    visualizer: (fixes #70) Update configuration of GooCanvas.CanvasEllipse
+
+commit db572034eba5f9c9d9acc100356991b5101349c1
+Author: Muhammad Inamullah <inamullah.m@gmail.com>
+Date:   Sat Jul 6 21:35:17 2019 -0700
+
+    wifi: (fixes #30) Sequence number wrap around in MacLow::ReceiveMpdu
+
+commit ed2d7f02fcd8a664af3909f3575de8681144bf8f
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Jul 6 17:05:40 2019 -0700
+
+    aodv:  Reduce default node separation to account for wifi model changes
+    
+    The addition of a default ThresholdPreambleDetectionModel with minimum
+    RSSI of -82 dBm made it such that the default grid step size of 100
+    resulted in signals too weak to pass the detection model.
+
+commit 238a75614d5a2e9cda73adacc5f755a9fb9e0767
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Jul 6 16:44:46 2019 -0700
+
+    wifi: Fix waveform PSD in example
+
+commit f77c7ee3f4671c7430570fb7749476f2d995fd0f
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Jun 25 16:17:12 2019 -0700
+
+    flow-monitor:  Relax node spacing to account for wifi model changes
+
+commit 6c87dff0ea54188b5c67400acac8f31ca44e8d29
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Jun 25 16:15:31 2019 -0700
+
+    wifi:  Clarify behavioral change due to preamble detection model
+
+commit 8490704c6580c08af700a1cfac55a6bab64dd3b0
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Jun 18 11:49:14 2019 +0200
+
+    lte: Remove intriguing inline
+    
+    GTP-C messages are not sent very often, so no need to optimize them
+
+commit 577a15d31cac23052c280d3e355e1b8725baa055
+Merge: 04f8caa 49dd7e2
+Author: Alexander Krotov <ilabdsf@gmail.com>
+Date:   Sun Jun 16 20:59:06 2019 +0000
+
+    Merge branch 'patch-1' into 'master'
+    
+    Fix bug in AntennaModel example code.
+    
+    See merge request nsnam/ns-3-dev!71
+
+commit 49dd7e246ac13019687d268a383bd161f413c238
+Author: Aarush Ahuja <ahujaarush@gmail.com>
+Date:   Sun Jun 16 20:04:43 2019 +0000
+
+    Fix bug in AntennaModel example code.
+
+commit 04f8caadd87c46ec3e321543258d5838c9909944
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Jun 15 15:16:07 2019 -0700
+
+    wifi: Rescan python bindings
+
+commit d02406280b5cdb999438de3fca3b34c10810def8
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Jun 15 14:35:10 2019 +0200
+
+    examples: Fix regression time for wifi examples
+
+commit c2a5175b90f844fc897dd7c844ae3e980b1ee9ef
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Jun 14 19:23:35 2019 +0300
+
+    wifi: remove unused BlockAckManager::m_maxDelay
+
+commit 92929a919fe4a6ea809e3b3bc618e86284d11dd1
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Jun 9 07:29:53 2019 -0700
+
+    traffic-control:  Document Perturbation attribute in FqCoDel
+
+commit 12c5e03a37623abc7c362bcc2b5ee4a99cd2023d
+Merge: 37b502d 32feed9
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Fri Jun 7 07:15:44 2019 +0000
+
+    Merge branch 'wifi-error-model-coded-bits-vs-data-bits' into 'master'
+    
+    wifi: Pass number of data bits instead of number of coded bits to error models
+    
+    See merge request nsnam/ns-3-dev!67
+
+commit 37b502d578d54570f35a85f8a86d4d3c440cb94c
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Jun 4 21:44:04 2019 -0700
+
+    lte: rescan API definitions for bindings
+
+commit f887c118f64d5df3e3b9a377b55fd09a8c00a7c0
+Merge: dd606f7 e23e796
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Jun 4 16:06:26 2019 +0000
+
+    Merge branch 'backhaul-update' into 'master'
+    
+    lte: New customizable backhaul
+    
+    See merge request nsnam/ns-3-dev!68
+
+commit e23e796475bae1f968584c3f1cc9ce045bde8cdc
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Jun 4 17:59:07 2019 +0200
+
+    lte: Delete CsmaEpcHelper
+
+commit 565781fa413be50e44e15afc5eaebddc935585fc
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Jun 4 17:35:53 2019 +0200
+
+    lte: Clarify purpose of the example
+
+commit 32feed92ee035a11e54c366bd4b80cd90bd5a072
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat May 25 10:33:46 2019 +0200
+
+    wifi: Pass number of data bits instead of number of coded bits to error models
+
+commit dd606f711428fdd8c46a23811d2ee775a641b831
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat Jun 1 18:46:45 2019 +0200
+
+    wifi: Rescan python bindings
+
+commit 31d0003278b351d299a25ce72be1b22ed22ada23
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat Jun 1 16:29:49 2019 +0200
+
+    wifi: Move IsWithinSizeAndTimeLimits to MacLow
+
+commit 915477670f55dfa225f0100c281ff41e2e2fb363
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Fri May 31 15:58:31 2019 +0200
+
+    lte: Remove temp workaround from commit 7b1bd048
+    
+    The stats are fixed in ed411fa9
+
+commit b837ced8108e31e1990586dc3b27c98400965bfd
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed May 29 07:20:01 2019 -0700
+
+    tcp: (fixes #60) TcpSocket documentation fix
+
+commit 3c68d6b6ebfd57ca78e30604325bb85038fb61da
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue May 28 12:48:10 2019 +0200
+
+    lte: New customizable backhaul
+
+commit f039ccfe3424252817254f584f0de9dd727523ac
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri May 24 23:39:06 2019 +0200
+
+    Improve fix for optimized mode build
+
+commit 7ab4e083854e1b16b45201a67515d826f6a11193
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon May 20 23:52:26 2019 +0200
+
+    Fix build in optimized mode
+
+commit bb9cba6cd14e33117763a88e15a376ee1ee3a546
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sun May 19 20:01:17 2019 +0200
+
+    traffic-control: Rescan python bindings
+
+commit 003c0a3905e71d13187b42263b034a04e954877e
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sun May 19 20:00:27 2019 +0200
+
+    Update AUTHORS and CHANGES.html
+
+commit 01ac5aa89cf568c69590555c6af94e5099ed2e21
+Author: Daipu <jendaipoupalmei@gmail.com>
+Date:   Sat Mar 23 19:03:52 2019 +0530
+
+    traffic-control: Add COBALT documentation
+
+commit db1b21c31130de581e711735d93df97b3868fb59
+Author: shefaligupta <Shefaligups11@gmail.com>
+Date:   Sat Mar 23 19:00:36 2019 +0530
+
+    traffic-control: Add COBALT Example
+
+commit 6413053ad366bfee532aceec9be06ab1b956d54e
+Author: shefaligupta <Shefaligups11@gmail.com>
+Date:   Sat Mar 23 18:55:37 2019 +0530
+
+    traffic-control: Add COBALT TestSuite
+
+commit f8ed784721a7341978ae73c3a8f0e33e255f2db4
+Author: Daipu <jendaipoupalmei@gmail.com>
+Date:   Sat Mar 23 18:44:12 2019 +0530
+
+    traffic-control: Add COBALT QueueDisc
+
+commit c001d59336d59a5cfd3f67b5ddf2aa665144e22d
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 17 19:56:23 2019 +0200
+
+    core: Enable NS_LOG_WARN in Config::Connect/Disconnect
+    
+    see merge request nsnam/ns-3-dev!62
+
+commit eddfc3a9eb9194b3a44a813142e3261af40584ae
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu May 16 22:00:48 2019 +0200
+
+    wifi: Rescan bindings
+
+commit fcbc84cd5ae74edbb9b54851f6caee83a09a9e8a
+Merge: 6032126 48ae785
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu May 16 19:25:04 2019 +0000
+
+    Merge branch 'wifi_phy_improvements' into 'master'
+    
+    Wifi PHY extensions and fixes
+    
+    See merge request nsnam/ns-3-dev!61
+
+commit 48ae785d1659d69887dec1c13c8209013ace364f
+Author: Deronne Sebastien <s.deronne@televic.com>
+Date:   Wed May 15 12:59:50 2019 +0200
+
+    wifi: Add check on length value set in L-SIG
+
+commit 0afae8ef344293c3017509627d92ed51915cd136
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue May 14 19:39:07 2019 +0200
+
+    wifi: Enable preamble detection model by default
+
+commit 81d5ed7ce0e7e6d90638be12c51bddec2d256445
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun May 12 12:34:29 2019 +0200
+
+    wifi: LENGTH field in DSSS PHY header should be the PSDU duration in microseconds
+
+commit 0adc0996795fc66dc9a446d81927f5a522bd4e60
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 8 22:09:36 2019 +0200
+
+    wifi: Fix wrong channel width when HT, VHT or HE STA receives a legacy PPDU
+
+commit 1e6216470530001134d1e9a0c6147a951c5dbd36
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat May 4 15:44:26 2019 +0200
+
+    wifi: Various improvements in PHY headers
+
+commit 5f521f9f125484c4123f3e96a9ab14bdad2b2056
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 13:50:55 2019 +0200
+
+    mesh: Rescan pcap files
+
+commit e254af34fba029451b95c4258e6898b306bf5099
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 13:28:11 2019 +0200
+
+    wifi: Cleanup m_plcpSuccess flag in WifiPhy
+
+commit 5826c6d2c25e1281311e60a11f3ebcd1db29931d
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 13:21:48 2019 +0200
+
+    wifi: Extend tests for OBSS_PD spatial reuse
+
+commit 6626b976ca19fbcaeebff73ddbbfac879794261e
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 11:25:14 2019 +0200
+
+    wifi: Fix PHY CCA logic
+
+commit 2e29e44cdf792470929a2c5cc66962c77af053c2
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 09:47:22 2019 +0200
+
+    wifi: Add PHY header to transmited packet and recontruct TXVECTOR from received PHY header
+
+commit bf2e9d3c8444ca38ab6fdc775ece1f2b228bf9db
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 08:29:09 2019 +0200
+
+    wifi: Differenciate VHT preamble for SU and MU transmissions
+
+commit c1cc5a88acd14f00439823a8c513841161e5ef3b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed May 1 07:51:01 2019 +0200
+
+    wifi: Add PHY headers
+
+commit 6032126bf08f59e9bd1fc7a43029362ed63cb8c5
+Author: Apoorva Bhargava <apoorvabhargava13@gmail.com>
+Date:   Sun May 12 20:31:44 2019 +0530
+
+    tcp: (fixes !65) Call BytesInFlight method before processing ACK
+
+commit 0f1b1620e6a98ff2e22a599148ed611fc8e620a7
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Thu May 16 08:35:54 2019 -0700
+
+    internet:  Fix log statement and remove dead code
+
+commit eda73a35f96283c6256ade91c8265d3bd85e1d45
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu May 16 12:48:34 2019 +0200
+
+    Update RELEASE_NOTES for wifi module
+
+commit eaf6420091a8e0fa9731835a73a85763994dd8f6
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Sat May 11 21:50:16 2019 -0700
+
+    lte: Add RLF related figures
+
+commit 1c7d4f6d0e5457fecd45b3a30ca38768c83ebc0f
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat May 11 12:15:24 2019 -0700
+
+    lte: fix build by updating ofstream mode constants
+
+commit 21d35ffe01fd47020a7b5ed4800cc83e1a5bc7da
+Merge: 4d1aace c0fcc36
+Author: Stefano Avallone <stavallo@gmail.com>
+Date:   Sat May 11 16:52:47 2019 +0000
+
+    Merge branch 'wifi-fixes' into 'master'
+    
+    wifi: Misc fixes and code cleanup
+    
+    Closes #45, #33, and #27
+    
+    See merge request nsnam/ns-3-dev!56
+
+commit c0fcc365a9afb0e8bd623aa10cbd38391220ddf2
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu May 9 20:15:42 2019 +0200
+
+    wifi, wave: Rescan python bindings
+
+commit 676f876099d59fa7f1e05e7e9ac481bbdf57ae3a
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat May 11 18:45:56 2019 +0200
+
+    Update RELEASE_NOTES
+
+commit 54a0e0f467c8026e448ec8ebcbf28fb44c12ea7e
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu May 9 12:44:27 2019 +0200
+
+    wifi: Add a test for 802.11e Block Ack policy
+
+commit 7f5efd1d2dbf27f96ecb88f440e538677eb0a88e
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri May 3 13:50:58 2019 +0200
+
+    wifi: Use constants for the size and half the size of the sequence number space
+
+commit 300ae9e438d765d470721895e5af82b0b80497fd
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri May 3 13:37:17 2019 +0200
+
+    wifi: Merge Peek methods of QosTxop
+
+commit 722073c025bb6e2e0389a71ea6c45f388634309c
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Apr 15 15:29:58 2019 +0200
+
+    wifi: BlockAckManager uses the WifiMacQueue::Expired trace
+
+commit fb82040208ee2323ec4abd769ee116887e095610
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sun Apr 14 11:42:12 2019 +0200
+
+    wifi: Do not store packets if they are old or already present
+
+commit 1b337379a14cbc0194b024e850f15b1fe8696b20
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat Apr 20 09:50:11 2019 +0200
+
+    wifi: Get rid of the MacLow aggregation queue
+
+commit d6c31ad130abfe1a804310db54b14faa02ad29a4
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 19 12:03:25 2019 +0200
+
+    wifi: QosTxop does not return packets outside of the current transmit window
+    
+    Also, make use of the new variants of the WifiMacQueue methods and
+    remove unused BlockAckManager methods
+
+commit 543cf34dccf5b2662ea4debaac13b2cdcb4e2fca
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 19 20:42:45 2019 +0200
+
+    wifi: Improve handling of starting sequence number of transmit window
+
+commit 552327c4589b7b3d2d02891cb801e21a7f17a70c
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Apr 17 10:36:11 2019 +0200
+
+    wifi: Add a BA manager method to take actions upon discarding a frame
+
+commit 8612d07e8b5558e9f1c9034ca062ee22366b3c2a
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Apr 9 17:07:48 2019 +0200
+
+    wifi: Handle packets ack'ed with Normal Ack under BA agreement
+
+commit ee92df37d9e5552cc5ce790d81b8bcc3ff26dd12
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 12 19:04:59 2019 +0200
+
+    wifi: Convert BA retransmit queue to WifiMacQueue
+    
+    Also, remove a few unused methods
+
+commit 99feb162fbd09cb874dac0e9e416914bc92ff1f9
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 12 12:18:00 2019 +0200
+
+    wifi: Add more methods to WifiMacQueue
+    
+    - Insert/Dequeue/Remove from specific positions in the queue
+    - Peek methods are const and return a ConstIterator
+    - Added a trace for expired MPDUs
+
+commit dc074293d53d9542919bc53cffbe978a8f5bf2ed
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Apr 11 16:18:05 2019 +0200
+
+    network: Rename Queue methods to allow range based for loops
+
+commit b8130644e8bd5ca76831b1f20d599f1be5b306a9
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sun Mar 31 23:18:27 2019 +0200
+
+    wifi: Add methods to return WinStartO
+
+commit 3445d3e921c758de3902e62e7a5c759f4b1ccff7
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Mar 18 19:25:40 2019 +0100
+
+    wifi: The state of an OriginatorBlockAckAgreement is never set to INACTIVE
+    
+    Hence, remove the INACTIVE state. Actually, there is no point
+    in having such a state. If the inactivity timeout expires, the
+    block ack agreement is torn down. If the originator decides to
+    switch to Normal Ack policy, there is no need for the block ack
+    agreement to change state ("The block ack record shall be updated
+    irrespective of the acknowledgment type (Normal or Block Ack) for
+    the TID with a block ack agreement" - Section 10.24.3 of 802.11-2016).
+
+commit b88dbf550508e87ec8a12f3f5119c79f6055a1bd
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Mar 18 18:27:29 2019 +0100
+
+    wifi: Further cleanup of the OriginatorBlockAckAgreement class
+    
+    The m_sentMpdus and m_needBlockAckReq members of the
+    OriginatorBlockAckAgreement class are not actually used.
+    Consequently, remove the NotifyMpduTransmission and
+    CompleteExchange methods of the same class and various
+    other methods that only call the removed methods.
+
+commit 3a6802e752aa3a4bfd680ab6f8c8e0e8a6e75085
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Mar 18 17:51:13 2019 +0100
+
+    wifi: OriginatorBlockAckAgreement::IsBlockAckRequestNeeded is never used
+
+commit 88781e4cfa0159f115d92289a601ddc980e4c99b
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon May 6 23:42:04 2019 +0200
+
+    wifi: Extend tests to check that TXOP limit is not exceeded
+
+commit 6fba6dda4e797232e946d78ea7ff6bdc83737037
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Mar 7 17:14:56 2019 +0100
+
+    wifi: Improve handling of transmission opportunities
+
+commit e9c69916c9dd05f6b6a1dda63568793e22e3f2e7
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Mar 5 20:12:49 2019 +0100
+
+    wifi: Add a QosTxop method to compute MacLow transmission parameters
+
+commit 5f76fd45e0882158bb36dca76036d70543e68cb2
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Mar 5 15:48:50 2019 +0100
+
+    wifi: Add a parameter to HasBar to remove the BAR from the queue
+
+commit ecd6d45dc2dfb4919c64dfdd259c0ee404a132ea
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Mar 5 14:42:08 2019 +0100
+
+    wifi: Have a unique MustWaitBlockAck method in MacLowTransmissionParameters
+    
+    ...and another method to return the Block Ack type
+
+commit 5c197ca1e2c23860d443a08964f41eee53ffe1e8
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Mar 4 09:10:28 2019 +0100
+
+    wifi: Keep the timestamp when passing MPDUs to MacLow
+
+commit c96d4b6152ea7df020f43366e30b57b6d70acbbc
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Feb 21 18:44:24 2019 +0100
+
+    wifi: MacLow::m_ampdu is not needed anymore
+
+commit df5ceef9a9275ac956a357fa1dce27544a6b9cce
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat Mar 2 22:27:55 2019 +0100
+
+    wifi: Improve logic when RTS/CTS exchange fails
+    
+    See issue #27
+    
+    Also, regenerate data files used by devices-mesh-dot11s-regression
+
+commit 94cc4b70dd8fdbf893c870979ee8a0c67ad2dd4c
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Sat Mar 2 20:24:05 2019 +0100
+
+    wifi: Add methods to WifiMacQueue to peek and dequeue by TID
+
+commit 72739ad28822b004b7620d94f7565149f0e7b272
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Feb 28 18:24:31 2019 +0100
+
+    wifi: MacLow makes more use of WifiMacQueueItem
+
+commit 07cb1e0bf184dfa99decfafadda67ad148ab704d
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Feb 27 17:13:24 2019 +0100
+
+    wifi: Make use of the new QosTxop methods
+    
+    Also, attempt to fix the issues listed in #33
+
+commit 2667c3135de5e6340c113b9497819387b921bcb4
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Feb 27 16:44:32 2019 +0100
+
+    wifi: Add QosTxop methods to peek and dequeue the next frame to transmit
+    
+    ...by searching through both the BA Manager retransmit queue and the EDCA queue
+
+commit ad12ef9d993a7577018022c239a60e1334d0b2fd
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Feb 27 15:16:32 2019 +0100
+
+    wifi: Add a MacLow method to compute the overhead time
+
+commit 4d1aace92064ccbc0c632a3b0680b84eab840e5a
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 10 21:04:36 2019 +0200
+
+    Update CHANGES.html and RELEASE_NOTES
+
+commit d4d7dacc7e67c5b89d3b38db3fab3a3b1ba69271
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 10 19:45:14 2019 +0200
+
+    lte: Rescan python bindings
+
+commit 7ab63975b8cabcd9d51f47195c96b6e0c42e3b86
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 10 16:02:18 2019 +0200
+
+    lte: Add modified by line for RLF extensions
+    
+    Starting from this commit till e49cf80 are part of RLF implementation.
+    
+    see merge request nsnam/ns-3-dev!58
+
+commit 49da14f52275faa9d7c65dd6f1ae2cb7a23e7d05
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Sat May 4 15:55:51 2019 +0200
+
+    lte: Resolve doxygen warnings
+
+commit 06601b202591f7c24a7d1ec0549c9dd95d81aad8
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Sat May 4 15:21:36 2019 +0200
+
+    lte: Limit T300, T310, N310 and N311 to the standard min and max values
+    
+    see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
+
+commit 0702fd3d11098cbc7e3bfcce8a595e076a8077bf
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 3 16:59:00 2019 +0200
+
+    lte: Verify that the num of SF used for in/out of Sync evaluation are multiple of 10
+
+commit c05e3fc0684256ebedc96f5e8b9ef132cd01e44c
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 3 11:33:37 2019 +0200
+
+    lte: Update copyright for RLF extensions
+
+commit 3387ea0361a7204e78a6e0eed184fa6be56ff24a
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 3 11:28:06 2019 +0200
+
+    lte: Correct typos
+
+commit a6afb989f36966c8677c1a829614d04c8c63b284
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Thu May 2 12:18:46 2019 +0200
+
+    lte: Improve the doc related to ConnEstFailCount
+
+commit 3b3f3881099fc17f552b62476c177db7e0e61ccb
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri Apr 26 11:26:17 2019 +0200
+
+    lte: Remove unnecessary spaces from the docs
+
+commit 91eec88ad6260181da00d39f857784603c88c1de
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri Apr 26 11:11:06 2019 +0200
+
+    lte: Improve RLF design doc to cover multiple carrier case
+
+commit 81bcc67bb02c7cfebeaf22b13595ab4d86840ad5
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 17:30:35 2019 +0200
+
+    lte: Add Fraunhofer copyright for RLF
+
+commit bd83bb19fb0e8d147641146adb42319df988c0b0
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 17:14:46 2019 +0200
+
+    lte: Add RLF related documentation
+
+commit 1759b8ac997250e06ca9dcfb948deb69c415f705
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 15:51:49 2019 +0200
+
+    lte: Add attribute to enable/disable RLF detection
+
+commit 955e76831544f3e1be89b913c43e52df4be27662
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 15:11:29 2019 +0200
+
+    lte: Add instantaneous thrput computation and include more traces
+
+commit b2be59c398815ad26d799954f8aba2a77186cc15
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 15:09:35 2019 +0200
+
+    lte: Add modified by line for the new code
+
+commit bcc537561b2a9f4eb3c3cb51c189ef6cfcc175d9
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 10:30:10 2019 +0200
+
+    lte: Add new RaResponseTimeout trace source in LteUeMac
+
+commit dac14cf60fe486bd2e40b68d99b283d6e92db47f
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 10:03:16 2019 +0200
+
+    lte: Communicate the IMSI to UE MAC and PHY
+
+commit f3d720b166f6ffaa7cc0ffd7520ed6c459fc3d63
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 09:37:46 2019 +0200
+
+    lte: Reset the RNTI at UE MAC upon reset
+
+commit 76d1aa1a23663df28e8eb271c1807faf5b2e93aa
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 24 09:36:01 2019 +0200
+
+    lte: Init the RNTI to 0 without using DoSetTemporaryCellRnti
+
+commit 73d42fac712538b0afb0d41a7d22cccd3188b54b
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Apr 23 16:21:07 2019 +0200
+
+    lte: Discard packets arriving after UE context removal at EpcEnbApplication
+    
+    Due to RLF the UE context deletion might get triggered during the reception of a packet by EpcEnbApplication from EpcSgwApplication. This patch will enable  EpcEnbApplication  to discard  such packets.
+
+commit 7ba7fd64dc3db38e6c33b5cac24e57c60b49e7f8
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Mon Apr 22 19:26:00 2019 +0200
+
+    lte: Avoid checking for connection established in RrcConnectionEstablishmentErrorTestCase
+    
+    After the RLF implementation, the UE state upon jumping at a far away location will not be in connected state anymore, thus, we should only check for not connected state.
+
+commit 7284b3ab4d6d58eb3f24dd4810bb65a28bb9bb6a
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Mon Apr 22 18:47:21 2019 +0200
+
+    lte: Add TxFailParam in RachConfigCommon
+    
+    This patch adds TxFailParam in RachConfigCommon, which enables the eNB to indicate how many times T300 timer can expire at the UE. Upon reaching this count, the UE aborts the connection establishment, and performs the cell selection again. See TS 36.331 5.3.3.6.
+    Thanks to Sandra Lagen <sandra.lagen@cttc.cat>
+
+commit 42111179a31b8461b6750b5b86ed644d51fb2a38
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Thu Apr 18 14:56:39 2019 +0200
+
+    lte: Use only CTRL SINR for RLF detection
+
+commit 31085133ee0d285c617e20481876539820e931fb
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Tue Apr 16 21:09:37 2019 +0200
+
+    lte: Add example and test for RLF
+
+commit fc8dfc0e4497455210d3edaaf01e63dabdd88ee4
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Apr 16 16:32:27 2019 +0200
+
+    lte: Set cell id to 0 in UE RRC and PHY upon RLF
+
+commit f7dff4d870ea59cb95fd3d552672493c92d7248d
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Apr 16 16:24:55 2019 +0200
+
+    lte: Store the cell id before leaving the cell
+
+commit 643192fd07706da3cc81572c69bfa215c03a16e6
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Apr 16 14:24:08 2019 +0200
+
+    lte: Do not generate CQI reports & UE measurements if the UE is not in synch with any cell
+    
+    We do not generate the CQI report when the UE is not synchronized to any cell. Also, the RLF is detected after the DL CTRL is received by the UE,therefore, we do not need to generate the CQI reports and the UE measurements for a CTRL for which the RLF has been detected.
+
+commit 7f096c544bcad354201212c57f894991e5686acc
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Apr 16 11:44:10 2019 +0200
+
+    lte: Reset PSS received flag while resetting PHY of a UE
+
+commit 14fe5057b8964ffd7801d0a709adb549fcad0261
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Sun Apr 14 11:17:01 2019 +0200
+
+    lte: Remove wrongly used call to CancelEnteringTrigger while leaving connected mode
+
+commit 176bd08116c2e184236f55b759815f62c1df8cb0
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 15:57:51 2019 +0200
+
+    lte: Enable UE to send context remove request to the eNB upon RLF
+
+commit 74baf6f8ab92e415ba08e4d07fe18f96784501a5
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 15:55:47 2019 +0200
+
+    lte: Add new trace RrcTimeout to trace RRC timeouts at eNB
+
+commit 5caacaf1b626a4a7189f7f4ea0962e19801e806c
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri Apr 12 15:46:00 2019 +0200
+
+    lte: Log time of sync indications from UE PHY to UE RRC
+
+commit ba4ff50a4b6829c41412576e9e34e9032a8f6eb9
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri May 10 18:23:22 2019 +0200
+
+    lte: Add new trace source NotifyConnectionRelease
+
+commit 57160aa7e20eb2e33232673f9a6fe7c807534265
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 15:29:20 2019 +0200
+
+    lte: Allocate non-contention based preamble only if its free
+    
+    The non-contention preamble assigned to UE during handover or PDCCH order is valid only until the time duration of the “expiryTime” of the preamble is reached. This timer value is only maintained at the eNodeB and the UE has no way of knowing if this timer has expired. If the UE tries to send the preamble again after the expiryTime and the preamble is re-assigned to another UE, it results in errors. This has been solved by re-assigning the preamble to another UE only if it is not being used (An UE can be using the preamble even after the expiryTime duration).
+
+commit bfdbffc215d4fe4d76fde34b9cc50d0c38c6754a
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 14:30:10 2019 +0200
+
+    lte: Extend EpcMme, EpcSgw and EpcPgw App to remove UE context
+
+commit 38563513361f4c20ebcffaff5591f427d1e58608
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 14:28:54 2019 +0200
+
+    lte: Cancel the pending events while removing the UE at the eNB
+
+commit 39954213b671dd3c6cae2de15f459feb1a5ccbe0
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 14:27:22 2019 +0200
+
+    lte: eNB MAC to remove unprocessed preambles and BSRs upon UE removal
+
+commit 4d8af3d714d84c030e22248e3c7d60cd468c55e7
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 14:22:48 2019 +0200
+
+    lte: eNB PHY to remove Tbs, SRS and Dl/UL DCIs upon UE removal
+
+commit b1ebdc7d812cd8f9bc5d6670783908b4b2996b3e
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri Apr 12 13:59:57 2019 +0200
+
+    lte: Init RNTI in UE RRC protocol before sending the UE context remove request
+
+commit 5a540e93e4a9df7d78aa866cdf3bdfe1b78ff2e6
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 13:58:42 2019 +0200
+
+    lte: Remove UE from RRC protocol upon UE removal
+
+commit 664910c572f4f9e1e9ba1e66e621005ef8488d21
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Fri Apr 12 12:55:04 2019 +0200
+
+    lte: Extend eNB RRC and SAPs to RX & UE RRC SAPs to TX ideal UE context remove request
+
+commit 4bd8a6df41e1389c00dfb363d4ff85898a63609d
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 10 16:43:23 2019 +0200
+
+    lte: Erase all the maps in eNB CC manger upon UE removel
+
+commit 953b1532476824ab529fc21dc3114018b5618b92
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Wed Apr 10 16:42:41 2019 +0200
+
+    lte: Add method to remove TBs from the eNB expected list upon RLF
+
+commit e5b1eeb9a7a8e4ec5fe0cd3dc4b64ccfdb03e01d
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Apr 10 16:41:19 2019 +0200
+
+    lte: UE to ignore cells with RSRP less than -140 dBm
+
+commit 737c80a9ecf1e0dacff8eca0eb1998c62223fe57
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Wed Apr 10 16:40:28 2019 +0200
+
+    lte: Remove TFTs and restore bearer list upon RRC connection release
+
+commit 9bad25576f4cbcf2014152a5059992377a5ec9ef
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Wed Apr 10 16:38:15 2019 +0200
+
+    lte: Store bearers to be used for reconnecting an out-of-covrg UE
+
+commit 03256ff720136a61d0deadf9fbb4af01c2f3d3a9
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Wed Apr 10 16:36:29 2019 +0200
+
+    lte: Extend UE PHY and RRC for RLF detection
+    
+    This commit extends UE PHY, RRC and the control SAP between these layers for RLF detection purposes
+
+commit b0135201332c7c8eccfcdc1c3f8014a3868bdccb
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Mon Mar 18 11:38:45 2019 +0100
+
+    lte: Add method to flush DL HARQ buffer
+
+commit e8319c36dd3f695b857d0486c0526e1e88311bd5
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Sat Feb 2 13:59:36 2019 +0100
+
+    lte: Call EndRx () of interference model upon PHY reset
+
+commit 5c2d07aa47e025dfdbf32ee5ef05c2aefac667dd
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Sat Feb 2 13:58:07 2019 +0100
+
+    lte: Clear the previously received PSSs upon PHY reset
+
+commit c7c1b23a306457e7947026a0b844ac4c6a9e0a18
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Sat Feb 2 13:56:25 2019 +0100
+
+    lte: Make m_isConnected false upon PHY reset
+
+commit 43a649a3864ccd01f7e7cb340a3b2078bd92e33b
+Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
+Date:   Thu Feb 28 12:46:07 2019 +0100
+
+    lte: Notify UE MAC and PHY upon successful RRC connection establishment
+
+commit e49cf80f51fd45ab8b8a9bdf751b7741e54dab58
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Sat Feb 2 13:51:38 2019 +0100
+
+    lte: Change NS_ASSERT to NS_ASSERT_MSG to include cell id of the eNB
+
+commit e3a84e0354939aaa075dad7a925362b2cb744b5b
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri May 10 12:52:55 2019 +0200
+
+    Update CHANGES.html and RELEASE_NOTES
+
+commit ed411fa9c033bcbcf8b2a44e75c01982848f0df1
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Fri May 10 11:10:29 2019 +0200
+
+    lte: Update RadioBearerStats connector and eNB/UE RRC
+    
+    see merge request nsnam/ns-3-dev!64 and issue nsnam/ns-3-dev!54
+
+commit f7f0fe435ec8b391ec9088ccf0cb9009de8bbe8c
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Thu May 9 21:45:23 2019 +0200
+
+    lte: Avoid scheduling the UE whose TB size is greater than the budget of the scheduler
+    
+    see merge request nsnam/ns-3-dev!63 and issue nsnam/ns-3-dev#53
+
+commit f1abedfab5c8babe81953c47867b19f17ad78a74
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Thu May 9 21:44:05 2019 +0200
+
+    lte: Assign QoS param to the default bearer to be used in Token Bank Fair Queue Scheduler
+
+commit 3129877db079f43aed7840eb36c9d1cdad053c2e
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Fri May 10 09:49:53 2019 +0200
+
+    lte: Remove unnecessary fake header
+    
+    This patch removes the fake RlcSm header introduced in a5fa8efd.
+    See merge request nsnam/ns-3-dev!60
+
+commit a9fc5ee9e122036147b2ea4507023cb92b013146
+Merge: caabc65 3253135
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Fri May 3 08:33:24 2019 +0000
+
+    Merge branch 'fix-handover-buffering' into 'master'
+    
+    Fix handover buffering
+    
+    See merge request nsnam/ns-3-dev!39
+
+commit caabc659b07c04ba4cfeafc34d521408ce4ca035
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Apr 28 22:43:27 2019 +0200
+
+    wifi: Rescan bindings
+
+commit 93651321a475ab7744e24951c6ad2634b2f58bba
+Merge: fe0ca00 9f1b433
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Apr 27 20:50:03 2019 +0000
+
+    Merge branch '11ax_obss_pd_spatial_reuse' into 'master'
+    
+    wifi: Add first 802.11ax OBSS_PD SR algorithm
+    
+    See merge request nsnam/ns-3-dev!42
+
+commit 9f1b4331eb209106d0251d38da206e253587e8fc
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Apr 27 20:50:03 2019 +0000
+
+    wifi: Add first 802.11ax OBSS_PD SR algorithm
+
+commit fe0ca005353ff85fd6f3230e2539d34cfc9486a9
+Merge: e6c7376 ee7fcf4
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Apr 27 09:17:56 2019 +0000
+
+    Merge branch 'fix_issue_32' into 'master'
+    
+    examples: Update comments in rate-adaptation-distance
+    
+    Closes #32
+    
+    See merge request nsnam/ns-3-dev!45
+
+commit e6c73760568856474ce7bacde212c77e155645e2
+Merge: ced0ff6 a5fa8ef
+Author: N <natale.patriciello@gmail.com>
+Date:   Thu Apr 25 13:50:08 2019 +0000
+
+    Merge branch 'header-tag-dev' into 'master'
+    
+    Extend core API to tag byte ranges -- first use case: Avoid the use of PacketTag in LTE PDCP and RLC, ByteTagging only their headers
+    
+    See merge request nsnam/ns-3-dev!32
+
+commit a5fa8efd130529fe5ea9b1ed82890d7379735258
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Mar 20 18:41:46 2019 +0100
+
+    lte: Added a fake header to RLC SM to be able to measure the layer-to-layer delay
+
+commit f20674cead922ba4c5b105a8384f9a0986c4fa38
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Feb 28 10:20:42 2019 +0100
+
+    lte: Updating CHANGES.html to reflect trace changes in RLC TM mode
+
+commit 4394583f3a016068f330caf9727b4396567be184
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Feb 27 10:33:56 2019 +0100
+
+    lte pdcp: Do not use a PacketTag to store the arrival time
+
+commit f2d3ffed57b8ec764ccd870ed6782d50fd28cd13
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Feb 27 10:33:41 2019 +0100
+
+    lte rlc tm: Disable delay measurements
+
+commit 66f1e9198cc3bbc69bb5f24e517fe10b7fead142
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Feb 27 09:55:23 2019 +0100
+
+    lte rlc um: Do not use a PacketTag to store the arrival time
+
+commit c3030960024963223c7b6f088fc80a1b9aac6467
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Feb 25 16:48:15 2019 +0100
+
+    lte rlc am: Do not use a PacketTag to store the arrival time
+
+commit b55086476cb8c0464dc4a4c44d126b11f3e787f8
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Feb 26 12:11:38 2019 +0100
+
+    network: Added API to be able to tag only some bytes
+
+commit ced0ff69d9ce2d8915754c4b0eda770b8845c0fe
+Merge: 8c39f4d 804b765
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Apr 25 10:09:56 2019 +0000
+
+    Merge branch 'wifi-needbarretransmission' into 'master'
+    
+    wifi: fix condition for old packets in BlockAckManager::NeedBarRetransmission
+    
+    Closes #48
+    
+    See merge request nsnam/ns-3-dev!52
+
+commit 8c39f4d43a149f9c690f58d24c0d374f82a6ae88
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Apr 15 13:31:55 2019 -0700
+
+    visualizer: Additional print function portability
+
+commit fe51d8c7c7f644ca593abfd861d745a7fda52b69
+Author: Tinghui Wang <tinghui.wang@wsu.edu>
+Date:   Mon Apr 15 12:09:17 2019 -0700
+
+    visualizer: Fix AttributeError X11Display object has no get_primary_monitor
+    
+    In operating systems with older version of X server, such as
+    Ubuntu 16.04 or Xming 6.9 for windows, `get_primary_monitor` does
+    not exist in the `X11Display` object acquired by
+    `Gdk.Display.get_default()`. To solve the problem, alternative
+    method is provided to acquire the scale factor and the geometry
+    of the primary monitor.
+
+commit fab81fc3afa98f2f3e4077a218a006baf1d846a4
+Author: Tinghui Wang <tinghui.wang@wsu.edu>
+Date:   Mon Apr 15 12:07:37 2019 -0700
+
+    visualizer: Fix circular imports in Python2
+
+commit c189ab5ce1d28dc9c5d0bd092183e69d73b33345
+Author: Micolaj Chwalisz <chwalisz@tkn.tu-berlin.de>
+Date:   Mon Apr 15 12:00:57 2019 -0700
+
+    visualizer: Python 3 compatibility fixes
+
+commit 5396fc911e1bd06e1bb44fbb9491fce80d8f89ea
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Apr 21 11:52:53 2019 -0700
+
+    build: (fixes #15) Fix build erroneous order constraint warnings
+    
+    Patch based on original suggestion from ita1024 on updated constraints
+
+commit b8237493256e0a263fc711f327e71f54520caef2
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Fri Apr 19 14:11:03 2019 -0700
+
+    build: (fixes #14) Check file timestamps instead of hashes for changes
+    
+    Credit to Waf maintainer ita1024 for this fix.
+    
+    See also:  https://gitlab.com/ita1024/waf/issues/2231
+
+commit 42541d6cba5de572d23aa1f2498ba938a8bdcaab
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Apr 17 09:39:15 2019 -0700
+
+    internet: (fixes #46) Export headers for transport protocol modularity
+
+commit af441e7b69e482fb3089d047b17284dc2f32f0e0
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 12 19:08:38 2019 +0200
+
+    wave, wifi: Rescan python bindings
+
+commit c407cf239aa9e7b433fd600a59daaa2a86c2b149
+Merge: 82b0385 95de59a
+Author: Peter Barnes <barnes26@llnl.gov>
+Date:   Fri Apr 12 17:06:08 2019 +0000
+
+    Merge branch 'ptr-const-dereference' into 'master'
+    
+    core: return non-const reference when a const Ptr is dereferenced
+    
+    See merge request nsnam/ns-3-dev!53
+
+commit 82b03856c67de923bb3758b0acfb865da98827db
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Fri Apr 12 16:58:49 2019 +0200
+
+    lte: Reset preamble transmission count before starting NC based RACH
+    
+    see merge request !55
+
+commit 95de59adaee8d06889e0618e348520bf68f94635
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Apr 12 00:51:25 2019 +0300
+
+    core: return non-const reference when a const Ptr is dereferenced
+    
+    Address issue #47
+
+commit 804b76574b2b2e8337231a3329041ff6e783d85c
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Apr 11 14:22:45 2019 +0300
+
+    wifi: fix condition for old packets in BlockAckManager::NeedBarRetransmission
+    
+    Sequence numbers should be compared modulo 4096.
+    Also, window size may not be equal to 64.
+    
+    Fixes issue #48
+
+commit c167fbd77165d30eb232f68a1664767d2dc2d316
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Tue Apr 2 09:30:03 2019 +0200
+
+    wifi: Clean up WifiPhy methods' signatures by relying on Event
+
+commit 4108522341630d40e0b4c09991154a8646590674
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Mon Apr 1 14:52:09 2019 +0200
+
+    wifi: Clean up WIFI_PREAMBLE_NONE
+    
+    Done by having more detailed MpduType enum
+
+commit ebdb0812d95d3778657eb49c73fb8e4b59f2b72c
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Mon Apr 1 11:28:49 2019 +0200
+
+    wifi: Consider A-MPDU as single packet for PHY processing
+
+commit 139264fb9b26cca6f3b717c8de93f291d6deba8f
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Fri Mar 29 17:05:13 2019 +0100
+
+    wifi: Correct formatting in debug output for MacRxMiddle
+
+commit ff53bdf2df36635892d400e832025183d7d51218
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Wed Mar 27 16:11:32 2019 +0100
+
+    wifi: Return correct serialized size for AmpduTag
+
+commit 96774d6d67e4fb69a63535f6901e7de77079bf4a
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Mon Apr 1 11:10:25 2019 +0200
+
+    wifi: Add a method to check whether packet is an A-MPDU
+
+commit 647c36848ca23968316f33578b1fa48786eec5e4
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Mon Apr 1 11:09:41 2019 +0200
+
+    wifi: Add delimiter signature check to AmpduSubframeHeader
+
+commit 9039b59fd2bb41432f9c15d7ecb80b19c2632232
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Tue Mar 26 16:49:19 2019 +0100
+
+    wifi: Add method to peek A-MPDU subframes and MPDUs from A-MPDU
+
+commit 3bd5db3da4dbb1dbd58f11748ea6d1c2c752dba8
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Tue Mar 26 15:21:31 2019 +0100
+
+    wifi: Add per-MPDU reception status to NotifyMonitorSniffRx
+
+commit 1de371914fc253913f4c22c314bf17802c6fa35f
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Tue Mar 26 13:44:14 2019 +0100
+
+    wifi: Make MpduAggregator::AddHeaderAndPad static
+
+commit a47a047c520af269b76ee7e03230b6191714425f
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Tue Mar 26 09:23:46 2019 +0100
+
+    wifi: Add per-MPDU reception status to RxOkCallback
+    
+    RxOkCallback will be triggered if at least one MPDU of the A-MPDU is successfully received.
+    That's why per-MPDU reception status is also provided.
+
+commit dfc7f88c1e151e9d0ab19bc76cfb92e65e4869d5
+Author: Rediet <getachew.redieteab@orange.com>
+Date:   Mon Mar 25 17:48:03 2019 +0100
+
+    wifi: Enable windowed PER for PLCP payload
+    
+    Enables to compute per MPDU PER. Also add a method to get SNR over whole event.
+
+commit 90ea875b587ba9de18e57ca546df21ea1460383d
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Feb 7 20:02:06 2019 +0100
+
+    wifi: Make use of the WifiPsdu class
+
+commit 53cd72932388bc85acf820a64090b7bd628e4168
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Feb 6 18:37:23 2019 +0100
+
+    wifi: Remove the priority tag earlier
+    
+    The priority tag can be removed as soon as a packet is enqueued
+    in the DCF/EDCA queue, because its TID will be used afterwards
+    to determine its priority.
+
+commit 769affa6d51e490736824bff50bb0bdf1682f288
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Feb 5 23:47:02 2019 +0100
+
+    wifi: Introduce the WifiPsdu class
+
+commit 7bc3cfc58200a4df36b13da24057dc2ddd51d475
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Apr 8 14:08:18 2019 -0700
+
+    Update CHANGES.html
+
+commit 9a34eb912d06f379c6eddf047b9ff37c8507db86
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Apr 8 14:02:41 2019 -0700
+
+    build: update waf to version 2.0.15
+
+commit ac64e2e17c49c44db7c7505520767ae66b8e08d3
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Mon Apr 8 02:26:09 2019 +0300
+
+    internet: remove unused Ipv4Header object
+
+commit a7b7de4d46de8faf280674a4c2d74c365b8860b5
+Author: mychele <michele.polese@gmail.com>
+Date:   Wed Jan 9 17:53:22 2019 +0100
+
+    mobility: (fixes #11) Rectangle::GetClosestSide works for exterior points
+
+commit 661c12280bc38128010b4b643222b8687ea2697d
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Mar 29 20:05:05 2019 +0100
+
+    traffic-control: Install FqCoDelQueueDisc by default
+    
+     Fixes issue #35
+
+commit 711be0f661fc097deba85a81e3367246ef6381c5
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Apr 5 17:38:39 2019 +0300
+
+    wifi: add NS_FATAL_ERROR for unhandled case
+    
+    There is a \todo below
+
+commit 05b04146a32d6489897b64f4db45d06fab9c844e
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Fri Apr 5 14:07:57 2019 +0200
+
+    wave, wifi: Rescan python bindings
+
+commit 3253135a6570d2ab5f66e6de3f37756c81f07c56
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Fri Apr 5 09:56:35 2019 +0200
+
+    lte: Add doxygen doc
+
+commit 1565d97cdcb83a81d10aaac6873631f5c6d17376
+Merge: 96ea5ea a85bcf0
+Author: Stefano Avallone <stavallo@gmail.com>
+Date:   Thu Apr 4 16:15:17 2019 +0000
+
+    Merge branch 'wifi-fixes' into 'master'
+    
+    Wifi MSDU and MPDU aggregation rework
+    
+    See merge request nsnam/ns-3-dev!19
+
+commit a85bcf08f37c11151a93ca23578a3a15b856afc3
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 19:49:29 2019 +0100
+
+    wifi: Remove unused functions
+
+commit 6dd9a14f6c6ac4f7f57a14ab49b80ad6896a9eb5
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Mar 27 22:57:50 2019 +0100
+
+    wifi: Avoid calling the old MacLow::GetMaxAmpduSize if not necessary
+
+commit 309f33884f792385052a53c4a3caa86ce760cb09
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 18:22:20 2019 +0100
+
+    wifi: Make use of the new MSDU and MPDU aggregators
+
+commit 70fb8dd5c5fd978755eceb5c2f7be4c9df2d25ff
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 17:25:41 2019 +0100
+
+    wifi: MacLow makes more use of WifiMacQueueItem
+
+commit aa998ec2022ece3dfe4b7e8c983520a7e81d444a
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 16:06:25 2019 +0100
+
+    wifi: Rework MSDU and MPDU aggregation
+
+commit 505e68ddb2323a4cdcefd798137f5f93461446ed
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 14:31:44 2019 +0100
+
+    wifi: Make BlockAckManager use WifiMacQueueItem
+
+commit ded08c6ac042bf419db6bd23bd3b326b00c0e484
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 29 13:04:15 2019 +0100
+
+    wifi: Make WifiMacQueueItem more useful
+
+commit 2e370e908516d3266e4c7d938fcda3e308784475
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Jan 28 19:56:29 2019 +0100
+
+    wifi: Install one MsduAggregator and MpduAggregator per station
+    
+    Hence, have them stored by the unique MacLow object
+
+commit 7e5917c6d0c2c15676daf51a99114bd35bff15f8
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Jan 24 23:16:44 2019 +0100
+
+    wifi: Add a method to get the max PPDU duration
+
+commit 47241121664ec5e0bd6192a382b1e37ca4d8d549
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Jan 16 00:17:30 2019 +0100
+
+    wifi: Remove max A-MPDU and A-MSDU size attributes from configuration objects
+
+commit ae683546e00f1a82dffe5a5bb1e139b284377ded
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 15 17:21:17 2019 +0100
+
+    wifi: Use std::initializer_list to have a single MostRecent method
+
+commit 040ee160019dae8a21ac1ffd7f98e7d56eb7b474
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Jan 15 14:19:54 2019 +0100
+
+    wifi: WifiRemoteStationState stores the station capabilities
+    
+    Also, remove m_ldpc and m_stbc, as they can be obtained via
+    the VHT capabilities, and m_shortGuardInterval, m_streams and m_greenfield,
+    as they can be obtained via the HT capabilities.
+
+commit c8ee31a0cefe663d0bae93efa2bd8cff4db65b1d
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Apr 4 17:19:18 2019 +0200
+
+    lte: Remove useUdp variable. TCP was not used in the test
+
+commit 96ea5eac6462dd18f802cee40a54b0d141f45e06
+Merge: c0997bc 99430f7
+Author: Alexander Krotov <ilabdsf@gmail.com>
+Date:   Thu Apr 4 13:16:07 2019 +0000
+
+    Merge branch 'energy-update' into 'master'
+    
+    BasicEnergySource::UpdateEnergySource
+    
+    See merge request nsnam/ns-3-dev!48
+
+commit 99430f7a7751a5f3582b1b8cc2dba7483e8e9d9c
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Apr 4 14:56:02 2019 +0300
+
+    energy: increase tolerance in BasicEnergyUpdateTest
+
+commit 9eacf6bc38b67f503927f467f65367ba878337cd
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Apr 4 14:18:54 2019 +0300
+
+    Reduce simulation time to 1 second in AnimationRemainingEnergyTestCase
+    
+    Otherwise remaining energy goes below zero.
+
+commit c0997bc821012102d360fa3e5faf0df4c6641e39
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Apr 3 15:34:32 2019 -0700
+
+    build: (works around #14) add Waf option to run without building
+
+commit 5623f8ef82b768b9468a4e6e41c43391e77172ba
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Mar 30 18:32:00 2019 -0700
+
+    wifi (fixes #42) Check configured capture window for capture
+
+commit 1f1f10e13a24b8b01d0e295325f6a72a3bf0bbcd
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Apr 3 20:03:42 2019 +0300
+
+    energy: reschedule UpdateEnergySource only if it has already expired
+    
+    Otherwise, if energy consumption is queried frequently, canceled events are produced.
+    These events take up memory and slow down the simulator.
+
+commit 9cd441a0b06f00af5296c74d394770dc2fea4ae7
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Apr 3 19:59:07 2019 +0300
+
+    energy: update remaining energy even if the simulation has finished
+    
+    Otherwise consumed energy may be estimated incorrectly if it is queried at the end of simulation.
+
+commit 30e214a2c3f69c36a1495f52469feec993d0030a
+Merge: 63ce6b6 d4cd46f
+Author: Peter Barnes <barnes26@llnl.gov>
+Date:   Tue Apr 2 05:05:19 2019 +0000
+
+    Merge branch 'object-factory-check' into 'master'
+    
+    core: (fixes #43) Check if ObjectFactory has been configured
+    
+    Closes #43
+    
+    See merge request nsnam/ns-3-dev!46
+
+commit d4cd46fbfef5fcd00bcfd000a76483d2ffff6e10
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Mar 31 09:54:35 2019 -0700
+
+    core: (fixes #43) Check if ObjectFactory has been configured
+
+commit ee7fcf4d11c347e34879c95f7bf1731087b5f260
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Mar 31 14:03:06 2019 +0200
+
+    examples: Update comments in rate-adaptation-distance
+
+commit 63ce6b6869eabd03a1eeddc45514ffa66c9b99da
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Sat Mar 30 20:32:57 2019 -0700
+
+    lte: Remove test disabled from build for several years
+
+commit dba4333f85ebc4591c4679c309e35724d7bc30bc
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Sat Mar 30 20:30:18 2019 -0700
+
+    Fix various typos
+
+commit 7112e718dc1ccc80a745d3fd5cc34718f48b0842
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Feb 6 21:30:23 2019 +0100
+
+    wifi: Revert a previous change in IdealWifiManager that is causing much lower performance and irregularities
+    
+    (cherry picked from commit 8d5cd31b78fb862d7e9280ca3bc7468306ab6168)
+
+commit de7fc0096c0bb63bf51c4192a0627d6d262db83b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Feb 4 17:30:23 2019 +0100
+
+    wifi: Small changes for 11ac/11ax
+    
+    (cherry picked from commit 0684a0083da975bbe2965a1380064ef263a870b0)
+
+commit 996d408734243ac49b6d89ce6e08545587aa9e78
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Fri Mar 22 12:59:15 2019 +0100
+
+    lte: all bytes are received now
+
+commit ddd226ce5aa99d0abc5059d10b870d5420142e6e
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Mar 20 10:14:10 2019 +0100
+
+    lte: Implement packet buffering in handover procedure
+
+commit e42deb49dbc7c742fd697e23cf778018906cd865
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Mar 20 10:13:11 2019 +0100
+
+    lte: Adjust handover test parameters
+
+commit 5c0b2af65dacde2d2ece7525425ab66dd3cc23be
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Mar 19 12:55:10 2019 +0100
+
+    lte: Fix some logs
+
+commit 33819683896c12c906fac59b04ab0d78f7484654
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Mar 14 16:03:07 2019 +0300
+
+    wifi: connect to MacTxRtsFailed in AthstatsHelper::EnableAthstats
+    
+    TxRtsFailed trace does not exist
+
+commit 2518b032f86253cf62719f5e3e16ec8f0c249aef
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Mar 12 14:41:44 2019 -0700
+
+    spectrum: rescan API definitions for bindings
+
+commit 4e72a8dc7d53f8f54d9030243d7f1f33645ee135
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Mar 12 14:41:10 2019 -0700
+
+    lte: rescan API definitions for bindings
+
+commit 3ee1512428c60b6f2bb3885646c42f6283e9177a
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Tue Mar 12 16:19:07 2019 +0300
+
+    core: fix return value documentation for TraceConnect/Disconnect
+
+commit c8c919d1baf05a69aee4895421db507db92d82b6
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Tue Mar 12 09:50:38 2019 +0100
+
+    lte: Fix EPC test crashes by removing an assert
+    
+    That's bad, usually the test must be reworked to not fail the assert.
+    However, there's no time in fixing a decade-old test, and also the code
+    worked like this since... forever. My fault was to add the assert in the first
+    instance, thinking that it would be a good service to the users. I was wrong.
+
+commit 79f127cc3f3a39b2b2dfcc1e9036400777db8968
+Merge: 5b5282f 4227f89
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Mar 11 16:54:28 2019 +0100
+
+    Merge branch 'link2xt/ns-3-dev-trace-fading-loss-model-spectrum' MR !33
+    
+    * link2xt/ns-3-dev-trace-fading-loss-model-spectrum:
+      Move TraceFadingLossModel from lte to spectrum module
+    
+    Thanks Alexander
+
+commit 4227f89ec774ccd00b73e64b6f2d9b171ba3f044
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Mar 1 14:24:24 2019 +0300
+
+    Move TraceFadingLossModel from lte to spectrum module
+
+commit 5b5282f0668eb3611f6908e0db2687ca53eef83e
+Merge: e7c1c39 8cbec72
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Mar 11 16:17:07 2019 +0100
+
+    Merge branch 'lte-p2p-helper-dev', as per MR !38
+    
+    * lte-p2p-helper-dev:
+      lte: fixed reviewer comments for p2p helper
+      lte: Make point-to-point-epc-helper inheritable
+    
+    Thanks Zoraze for the review.
+
+commit 8cbec725118df81008c326bd6e7dfd62182560fc
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Mar 11 16:16:11 2019 +0100
+
+    lte: fixed reviewer comments for p2p helper
+
+commit dd495a9da8cd7b4ffc7071bb43a67be948c2ca96
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Mar 8 15:41:59 2019 +0100
+
+    lte: Make point-to-point-epc-helper inheritable
+
+commit e7c1c390b21550dc0d149826d1c7ed482424fb2b
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Mar 9 16:51:03 2019 -0800
+
+    lte: rescan API definitions for bindings
+
+commit 119fde090e785f5bdf01bad78631750e6eeb404b
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Mar 8 11:15:04 2019 +0100
+
+    Revert "lte: Merge branch 'lte-rlc-fix-pdu-delivering', MR !30"
+    
+    This reverts commit 50cfb45bd126fed8936b204c7ad02ecc1d6cba4c, reversing
+    changes made to ae2f33cf73256fd20419507f96705df6eb884eba.
+    
+    The commit is faulty because it does not consider LTE HARQ timings.
+    So, in LTE, would happen that a packet is delivered even in the case that the
+    previous packet is under HARQ retransmission.
+    
+    We will check the standard and see what does apply in this case.
+    
+    Natale
+
+commit 50cfb45bd126fed8936b204c7ad02ecc1d6cba4c
+Merge: ae2f33c c43eaac
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Mar 7 22:07:57 2019 +0100
+
+    lte: Merge branch 'lte-rlc-fix-pdu-delivering', MR !30
+    
+    * lte-rlc-fix-pdu-delivering:
+      lte: Fix PDU delivering at the edge of reordering window
+
+commit c43eaacdf0f162aee9af0b054b0f56943c4c6aa4
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Tue Feb 26 15:11:22 2019 +0100
+
+    lte: Fix PDU delivering at the edge of reordering window
+    
+    If we update the window and THEN we try to reassemble the PDU,
+    the frame that at the beginning (I mean the frame thanks to which we entered
+    the if) was inside the window can be "magically" outside, therefore in
+    the reassembly function, that segment is not delivered.
+    
+    When the timer expires, everything is then delivered correctly, but waiting
+    the timer adds 10 ms of unwanted delay.
+
+commit ae2f33cf73256fd20419507f96705df6eb884eba
+Merge: 4d0b536 da994d5
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Mar 7 22:01:51 2019 +0100
+
+    lte: merge branch 'lte-nr-prereq-v2' (MR !31)
+    
+    * lte-nr-prereq-v2:
+      spectrum: Add API to retrieve Values size and a single value at any position
+      lte: Managing SR at SAP interface level.
+      lte: Making SimpleUeComponentCarrierManager inheritable
+      lte: Do not assume that the helper is setting all the vectors
+      lte: ComponentCarrier subclasses can override Set{Dl,Ul}Bandwidth
+      lte: ComponentCarrier with cellId is now ComponentCarrierBaseStation
+      lte: LteMacSap constructors for ReceivePduParameters and TxOpportunityParameters created
+      lte: (fixed #2893) GetPgw in helpers must be const
+      lte: EpsBearer support run-time switching between Rel. 11 and Rel. 15
+      lte: Added EpsBearer new values (updating it to Rel. 15)
+      lte: EpsBearer uses a lookup table
+
+commit da994d51c1f2b5846e17581f96c4389b8a8a3c68
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Nov 15 18:12:12 2018 +0100
+
+    spectrum: Add API to retrieve Values size and a single value at any position
+    
+    Values are stored as std::vector of double, but this vector can't be accessed,
+    even read-only. With this addition, it is possible to know how many elements
+    are inside the vector, and also to get a const reference to any element.
+
+commit 05dd0e53d302842c66f8b1a9c0dcf15d3e8c93d7
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Nov 9 12:15:24 2018 +0100
+
+    lte: Managing SR at SAP interface level.
+    
+    SR is implemented in the NR module; for the moment, just add the possibility at
+    the interface level. LTE module will not do anything for the moment, waiting for
+    a feature addition at a later stage.
+
+commit 4bcf5feb5049551fd1c6c8fbbf3f3ae53956a364
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Nov 7 08:02:23 2018 +0100
+
+    lte: Making SimpleUeComponentCarrierManager inheritable
+    
+    In this way it is possible to write extensions at UE side for deciding what
+    carrier has to be used.
+
+commit 6435c6d894fd6b67df055df4c7db3d4bb2464ce7
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Oct 25 16:36:24 2018 +0200
+
+    lte: Do not assume that the helper is setting all the vectors
+    
+    In lte-enb-rrc, in a lot of places there is the assumption that
+    vectors such as m_cphySapProvider, m_cmacSapProvider, m_ffrRrcSapProvider, are
+    filled by the helper.
+    
+    That assumption does not hold with external modules: therefore, for a better
+    coexistence, check the size of these vector before doing any operation.
+    If there are elements in it, then execute; otherwise, just ignore.
+
+commit 12e7e16754cb7594c70a4f027bc71cb2eb137314
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 20:15:56 2018 +0200
+
+    lte: ComponentCarrier subclasses can override Set{Dl,Ul}Bandwidth
+    
+    These two methos are changed by the subclass in NR and mmWave module.
+
+commit 90966b91267343a3b0b1b13d13e73f9c769ed63c
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 15:07:52 2018 +0200
+
+    lte: ComponentCarrier with cellId is now ComponentCarrierBaseStation
+    
+    For the NR module we have the necessity of implementing a different type of
+    ComponentCarrierEnb, which will be ComponentCarrierGnb. But, in some methods of
+    RRC, it is accepted only a pointer to ComponentCarrierEnb.
+    
+    To solve this situation, since the only needed method from ComponentCarrierEnb
+    is GetCellId (), this commit creates a new class (ComponentCarrierBaseStation)
+    that provides the interface for setting and retrieving the cell id. Then, both
+    ComponentCarrier{Enb,Gnb} derives from ComponentCarrierBaseStation and everyone
+    is happy. I had to introduce DynamicCast all over the helper to make everything
+    working.
+
+commit 8fb0649c2bd4061a3ff88abd32fe6e8dd1f37476
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 15:00:48 2018 +0200
+
+    lte: LteMacSap constructors for ReceivePduParameters and TxOpportunityParameters created
+    
+    Thanks to constructors, it is easier to create these structs. In particular, code like this
+    
+    MyAwesomeStruct x;
+    x.value = 10;
+    x.another = 200;
+    ...
+    
+    AMethod (x);
+    
+    can be replaced with
+    
+    AMethod (MyAwesomeStruct (10, 200));
+    
+    Reducing the amount of needed lines.
+
+commit dab08d714dbc3c9925b00efe71f42edcf190afec
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 14:59:36 2018 +0200
+
+    lte: (fixed #2893) GetPgw in helpers must be const
+    
+    Simple const-correctness enforcing.
+
+commit d3da3b8628d997d9a2beac1fced334b1d805cf11
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Oct 25 15:20:47 2018 +0200
+
+    lte: EpsBearer support run-time switching between Rel. 11 and Rel. 15
+    
+    EpsBearer is now a ns-3 Object, and carries an attribute, "Release",
+    to switch between releases.
+
+commit 6674e88fd6a0ef646b35899d8c42fe75c081bc75
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 10:38:53 2018 +0200
+
+    lte: Added EpsBearer new values (updating it to Rel. 15)
+    
+    Between Rel. x and Rel. 15 (Rel. x being the current one) some values have been
+    added. This commit adds these missing values.
+
+commit 0273d706b04349b767c0afd596ab8fefc8b50f28
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Oct 24 10:38:03 2018 +0200
+
+    lte: EpsBearer uses a lookup table
+    
+    Moving the existing switch/cases statement to a lookup in a lookup-table,
+    created with an unordered_map at compile time. The default values for the
+    lookup table are taken from Rel. 11, as they were in previous ns-3 releases.
+
+commit 4d0b5369c20fb14e0cf351f6fc0874a6fc2f96ae
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Mar 7 17:26:49 2019 +0100
+
+    ci: Use nsnam worker for very long tasks
+
+commit bddff8ee9011b6aaca01e0ae53229ba50819cec4
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Feb 28 12:23:23 2019 +0300
+
+    lte: rename m_fadingModule to m_fadingModel
+
+commit 6eae98fbca5fca5964cea8341a59cd9f12d5e7b8
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Feb 26 08:12:32 2019 +0100
+
+    lte: Refactor DoInitialize methods of LteEnbPhy and LteUePhy
+    
+    see merge request !29
+
+commit b58cac8135e348f0a6f43a9fc37d5cc36908bc31
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Tue Feb 26 09:26:56 2019 +0100
+
+    spectrum: rescan bindings
+
+commit b7465369aea64225e250beac080d835e7680cf29
+Author: ZorazeAli <zoraze.ali@cttc.es>
+Date:   Wed Feb 20 14:50:49 2019 +0100
+
+    lte: Init DL and UL EARFCN to solve valgrind error
+    
+    see pull request !26
+
+commit 624d322466a0f358ed53c4c42962a7487c4f0f4c
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Jan 27 11:58:39 2019 +0100
+
+    spectrum: Fix order of PHYs stored in MultiModelSpectrumChannel
+    
+    See merge request nsnam/ns-3-dev!22
+
+commit 921b47d0aa71de0e5ccfad1d29ad94dfa27842bb
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Feb 18 09:18:00 2019 +0100
+
+    ci: Fix pacman error while updating
+
+commit e6600bb59851c36a3ee43f2211c3f3770efe59ae
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Feb 14 11:16:16 2019 +0100
+
+    test: Add CI for valgrind tests
+
+commit b055fd9138db2d987ab8b41b9b3c2d4c9814c3c4
+Merge: c466278 61cbb19
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Feb 17 22:01:05 2019 +0100
+
+    Merge branch 'master' of gitlab.com:nsnam/ns-3-dev
+    
+    * 'master' of gitlab.com:nsnam/ns-3-dev:
+      wifi: (fixes #26) Update detection threshold documentation
+
+commit c466278f053b6af3d2fb9df20de9df2956f85c4f
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Feb 17 22:00:18 2019 +0100
+
+    ci: Removed 'y', as per update database, from the CI script for archlinux
+
+commit 61cbb19e84ee497a238c750bc1820db87b3e1da9
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Feb 16 09:34:08 2019 -0800
+
+    wifi: (fixes #26) Update detection threshold documentation
+
+commit 9e1d40a85b266ad6a2d378fa01465401dd62cc44
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Wed Feb 13 07:30:05 2019 -0800
+
+    lte: Fix typos and some header spacings
+
+commit 648b4404085115fad855e851f535bab0c4c9ea31
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Sun Feb 10 21:14:30 2019 -0800
+
+    wifi: Fix typo
+
+commit 24212d831be98af88d92501a6ff64bb9483f2300
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Sun Feb 10 21:12:07 2019 -0800
+
+    mpi: Remove redundant statement
+
+commit f6c49ef713bf213883b187c502d77f551f939df4
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sat Feb 9 10:02:01 2019 +0100
+
+    ci: Updated docker image to archlinux/base
+
+commit b4cd4aa869268d816344534b9df727a3e7554260
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Feb 4 19:26:02 2019 -0800
+
+    wifi, wave, mesh: Update API definitions
+
+commit 34a79a74ae9385decd4b48fc8daed83921863b8d
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Feb 4 19:25:20 2019 -0800
+
+    wifi: beacon interval should be multiple of 1024us
+
+commit a762d9a3d261ae0ad12f2a06afae4a90716deb1d
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Feb 3 16:46:43 2019 +0100
+
+    Update CHANGES.html to reflect changes in wifi model
+
+commit 93f6d0a2fc6bc3bdf516125fc736c592c0e6a693
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Feb 3 16:31:20 2019 +0100
+
+    wifi: Small update for 11ax in Ideal wifi manager
+
+commit 46cb149f4d7d6fbcd034a3afd3b9643b44a5cb75
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Jan 31 22:00:57 2019 +0100
+
+    wifi: Minor comment update
+
+commit ad9735bffaf4db3982860fe4398a183c6a8e2b8b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Jan 31 22:00:32 2019 +0100
+
+    wifi: Fix PHY reset for A-MPDU
+
+commit 5fdef8761e5318e5af52f80834da367db59c8928
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Jan 27 22:45:07 2019 +0100
+
+    wifi: Fix crashing simulations
+
+commit f0e48d792bfcfe915b11e7dd57f80a21f08d1019
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Jan 24 14:44:23 2019 +0100
+
+    wifi: Fix valgrind errors
+
+commit 017cfaa77004da41d2328c9546c9a9bbaa6932e4
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Jan 23 22:29:15 2019 +0100
+
+    wifi: Make sure correct beacon interval is set
+
+commit 04682bb62e8203b23da4004db81672c501c8a4cf
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Jan 23 13:56:37 2019 +0100
+
+    wifi: Fix update of the starting sequence in BlockAckManager
+
+commit dcbf7b94aa0c8e403fd43e415b2f93203c21ab98
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Jan 12 10:09:31 2019 +0100
+
+    wifi: Move to established state if successful ADDBA response is received after timeout expired (avoid inconsistency between transmitter and receiver)
+
+commit 549a162b4b4a108fbf5cdcc905f0d927262bfe98
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Jan 2 10:48:50 2019 +0100
+
+    wifi: Set default attributes for wifi-phy-reception tests
+
+commit c998480b2cd9a265990795749a5736b17874d7b1
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Jan 1 18:17:53 2019 +0100
+
+    wifi: Split reception of L-SIG and reception of non legacy PHY header
+
+commit 57e69a5366ea614b2939dc2bb161ef69dc0c1616
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Dec 31 13:53:15 2018 +0100
+
+    wifi: Add tests for A-MPDU reception
+
+commit 8004dd72eab38b09b36a084e784d35fce42284e7
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 30 20:49:44 2018 +0100
+
+    wifi: Fix frame capture for A-MPDUs
+
+commit eeee68407b22fdfe19fe9a2b1500f25bbb3bd5b6
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 30 12:25:50 2018 +0100
+
+    wifi: Extend helper to set preamble detection model
+
+commit 902d27bff3b8d79d80d01da9170b04fd4d3843e7
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 30 11:59:16 2018 +0100
+
+    wifi: Add SimpleFrameCaptureModel to WifiHelper::EnableLogComponents
+
+commit 84768dcbbe80002c4b495c02ce67ca07dda53dbd
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 30 11:55:33 2018 +0100
+
+    wifi: Extend helper to set frame capture model
+
+commit f2ccb30c6a3f8266c849ce91fc51783fdb5efe9b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 30 09:02:15 2018 +0100
+
+    wifi: Add tests for frame capture
+
+commit 4370ebcbddeddf6ddf631efc828924692c34302d
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 12:53:24 2018 +0100
+
+    wifi: Extend preamble detection tests to consider frame capture effects
+
+commit 087a85eeb2a400fb570fe333cc68ded7bd98c1b5
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 12:52:19 2018 +0100
+
+    wifi: Fix SNR calculation when packet switch occured during preamble detection
+
+commit 6f2f186c683bc984cf99cc8954500d06e9b48c10
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 11:32:34 2018 +0100
+
+    wifi: Rename preamble-detection-test to wifi-phy-reception-test
+
+commit 6e6868f3838a5fa96da6a8684b665df0aecd42c3
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 11:03:38 2018 +0100
+
+    wifi: Do not switch reception if the received packet arrived after the capture window duration
+
+commit 48f5082c068354aba8589c3b3c969a9cb1702fa8
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 10:37:52 2018 +0100
+
+    wifi: Change default value for Margin attribute in SimpleFrameCaptureModel
+
+commit 8a527ae47a6519f63071645955b7b46325a9a291
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Dec 27 18:39:42 2018 +0100
+
+    wifi: Switch to stronger packet if PHY is busy detecting a preamble and has a frame capture model attached
+
+commit a1918dbc15369adf5097ca0193448888f4202e27
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 29 10:04:02 2018 +0100
+
+    wifi: Reset m_plcpSuccess when starting preamble detection in WifiPhy
+
+commit f2b5a1aa241ea146e777ce90e8789512e26a3a29
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Fri Dec 28 22:21:40 2018 +0100
+
+    wifi: Fix issues when MSDU lifetime is expired
+
+commit 011a918779a9d5c3463b323779f84215946abfec
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Fri Dec 28 14:26:11 2018 +0100
+
+    wifi: Fix duplicate MPDUs sent in an A-MPDU when explicit BARs are disabled
+
+commit 5a90205b73eb4d1a0042b7d1197c8438dfc75c94
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Dec 26 14:53:56 2018 +0100
+
+    wifi: Add option to disable explicit Block Ack Request when a Block Ack Response is missed
+
+commit e2e9793546b57610a36d9c3f83bdfb1ad5360aff
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Dec 24 10:20:53 2018 +0100
+
+    wifi: Fix A-MPDU reception logic
+
+commit fb58f9a77437a3eb9c7900a0cb25666870383801
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Feb 2 19:23:49 2019 +0100
+
+    wifi: Change to CwTrace and BackoffTrace (patch from Tom Henderson) - part 2
+
+commit e5e308b34eb848caddd93374d783c8592d39f9a7
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Feb 2 19:14:45 2019 +0100
+
+    wifi: Change to CwTrace and BackoffTrace (patch from Tom Henderson)
+
+commit 647218de176c1e5f5911345a4bb349f8dd516c61
+Merge: eb245ab 740e5a7
+Author: N <natale.patriciello@gmail.com>
+Date:   Wed Jan 30 15:59:21 2019 +0000
+
+    Merge branch 'ci' into 'master'
+    
+    Example CI for ns-3 and Gitlab
+    
+    See merge request nsnam/ns-3-dev!7
+
+commit eb245abdd15f4c1e0949f9fd4b2d8d79ef9a1d54
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Jan 24 18:10:33 2019 +0100
+
+    Update reference data files for tests
+
+commit f532952b242e59662aa4055b7d16b59c3f8a99f9
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Thu Jan 24 18:09:32 2019 +0100
+
+    wifi: Do not call ReportDataFailed if retransmission is not needed
+
+commit 540a890546fe45d73eada101087a1bfc06f6f644
+Merge: 1dfef4d 1d9bfae
+Author: Sebastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Jan 29 21:21:25 2019 +0000
+
+    Merge branch 'check-probe-request-ssid' into 'master'
+    
+    wifi: check that SSID in probe requests is either broadcast or corresponds to AP SSID
+    
+    See merge request nsnam/ns-3-dev!16
+
+commit 1dfef4dcc10e924d277c22f3009bcd829d3ed806
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Jan 29 10:27:12 2019 -0800
+
+    Add logging statements to FlowMonitor
+
+commit f9e730248429f40ae74e566e639119dad65810b6
+Merge: d2a2e53 e0f2f45
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Jan 29 09:22:15 2019 -0800
+
+    Merge branch 'pedrobellotti/ns-3-dev-flowmonitor-fix'
+
+commit e0f2f451ffe7198d76a64e025b1ee06454861a85
+Author: Pedro Bellotti <pedro177@gmail.com>
+Date:   Thu Jan 24 14:42:23 2019 -0200
+
+    flow-monitor: Fix FlowMonitor::Stop () method
+
+commit d2a2e53366cabdacf9ebbe5ec96670abf244b425
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Tue Jan 29 16:17:45 2019 +0300
+
+    Fix libgcrypt detection
+    
+    Fixes #24
+
+commit 1c7152511e2ae533fe854f80e4116847b6b2368d
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Jan 29 10:55:06 2019 +0100
+
+    lte: Fix figures size in doc
+
+commit 1d9bfae669593f91a2c5263b49124c1dbbd8f367
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Jan 23 16:41:54 2019 +0300
+
+    wifi: check that SSID in probe requests is either broadcast or corresponds to AP SSID
+
+commit 71247a83f74d98e6145ea25b663532a774b7fcd0
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Jan 23 16:37:09 2019 +0300
+
+    wifi: fix comment typos
+
+commit d13ed911e2eecade6c74362105b92948f4e6faa0
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Fri Jan 18 13:25:03 2019 -0800
+
+    lte:  Add missing figure reference
+
+commit c2b2dfdfac0645d950178222c13ddef1a1912b80
+Author: Manuel Requena <manuel.requena@gmail.com>
+Date:   Thu Jan 17 16:45:15 2019 +0100
+
+    lte: Add missing dia figures as uncompressed
+
+commit d23b509c323d55ebeac1b786598516f743d67c40
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Jan 16 10:29:36 2019 -0800
+
+    wifi: Resolve valgrind issue in test case
+
+commit c425b41d4ea99d38b1cf4b79b5d3a1e017cfd341
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Jan 14 17:14:42 2019 -0800
+
+    lte: Remove unused variable
+
+commit cf4ec104bc97625058e742d41bd367fe6bbdd9e8
+Merge: 9daacc6 3da19ce
+Author: Peter Barnes <barnes26@llnl.gov>
+Date:   Mon Jan 14 19:03:11 2019 +0000
+
+    Merge branch 'develop' into 'master'
+    
+    Ignore contrib directories in git
+    
+    See merge request nsnam/ns-3-dev!11
+
+commit 9daacc6d1b2796112893d76dc0c6e7fe5e4b781b
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Mon Jan 14 09:48:36 2019 +0300
+
+    Add .mailmap
+
+commit f2fa869597aaef34d4d490f1baf029f79e499675
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Jan 13 21:01:43 2019 -0800
+
+    build: (fixes #17) Fix string type consistency issue
+
+commit 3581c5c07c25157d91e018e363f7d341ee7f0c2f
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Jan 12 21:35:44 2019 -0800
+
+    lte: rescan API definitions for bindings
+
+commit 4dd0821ed6b726d033f108703957e4349adb9a02
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Sat Jan 12 17:51:17 2019 -0800
+
+    lte:  EPC upgrade
+    
+    The LTE/EPC model has been enhanced with new features:
+        * SGW, PGW and MME are full nodes.
+        * There are P2P links between core network nodes.
+        * New S5 interface between SGW and PGW nodes based on GTPv2-C protocol.
+        * Allow simulations with multiple SGWs and PGWs.
+    
+    LTE eNB RRC is extended to support:
+        * S1 signalling with the core network is initiated after the
+          RRC connection establishment procedure is finished.
+        * New ATTACH_REQUEST state to wait for finalization of the S1
+          signalling with the core network.
+        * New InitialContextSetupRequest primitive of the S1 SAP that is
+          received by the eNB RRC when the S1 signalling from the core network
+          is finished.
+    
+    Squashed commit of the following from mrequena:epc-upgrade:
+    
+        lte: Clarify that e2e is IPv4/IPv6 and core network is IPv4-only
+        lte: Remove duplicated example from wscript
+        lte: Add new features of the EPC upgrade to CHANGES.html
+        lte: Remove duplicated example
+        lte: (fixes #3027) S1 signalling is done before RRC connection establishment is finished
+        lte: Add new ATTACH_REQUEST state in eNB RRC
+        lte: cast a uint8_t when logging
+        lte: Fix doxygen comments and doc typos
+        lte: Add documentation for EPC split
+        lte: Use protocolNumber in new EpcPgwApplication
+        lte: Add doxygen doc for EpcSgwApplication class
+        lte: Add doxygen doc for EpcPgwApplication class
+        lte: Add doxygen doc for EpcMmeApplication class
+        lte: PreSerialize/PreDesearialize are only used in the derived messages
+        lte: Command line parameters take precedence over parameters in config file
+        lte: Rename number of node pairs variable
+        lte: Add IPv6 support to new PgwApplication
+        lte: Change to new pgw node
+        lte: Number of nodes has changed after EPC split
+        lte: InitialUeMessage cannot be called if simulation is not started
+        lte: Change some names of addresses and clean debug code
+        lte: New GetPacketFilters method
+        lte: Add new files to build system
+        lte: Don't need to build the GtpcHeader by hand, just the message
+        lte: GTPC messages derived from GtpcHeader
+        lte: Add new PGW Application
+        lte: Add new SGW Application
+        lte: Add new MME Application
+        lte: Add new GTP-C protocol header
+        lte: Split SGW/PGW/MME in different nodes
+        lte: Add new example
+
+commit bba146ea3931054ff30f0fe4416a3aacb6d11e1a
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Thu Jan 10 14:20:39 2019 -0800
+
+    Remove reference to Mercurial
+
+commit 3da19ce5785f126b2fc57565cb13d96428f330fa
+Author: Steven Smith <smith84@llnl.gov>
+Date:   Wed Oct 3 16:12:21 2018 -0700
+
+    Ignore contrib directories in git
+
+commit 9548c0ce9bd09225bb2f312a69cdea2b9fa8f7c0
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Jan 7 15:27:20 2019 -0800
+
+    documentation: Update tutorial to ns-3.29 and conversion to git
+
+commit d82d059ab4f01ffe3e6d11f913f22b205f766c24
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Jan 7 13:22:18 2019 -0800
+
+    documentation:  Fix block formatting
+
+commit 10b6f9daff4141a5470a97bacfe34f8c0fd8001c
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Jan 7 13:21:55 2019 -0800
+
+    documentation: avoid prepended character on version string
+
+commit 2d28afb767db122329a12b72694127795435d359
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Jan 7 13:05:04 2019 -0800
+
+    documentation: Update get_version.sh script for git
+
+commit 740e5a79de541201036f77644bf35adea132afa4
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Jan 4 09:03:56 2019 +0100
+
+    utils: Added section for running test as users
+
+commit 6bf161b3396fbbf66d2847790269da49e1ea1972
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Jan 4 08:51:27 2019 +0100
+
+    utils: Compile the tutorial during CI builds
+
+commit 441ae70c64979b9082a0df36b2f0becd5c93c0d3
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Wed Jun 20 19:36:03 2018 +0200
+
+    Example CI for ns-3 and Gitlab
+
+commit db1ad997e3b5c530db9615c7e44b8b161530e4bf
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Jan 6 21:04:55 2019 -0800
+
+    documentation: Update Sphinx math extensions
+
+commit f47587f29bbeba85bffd33f0987616662918348f
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 16 10:46:10 2018 +0100
+
+    wifi: Add trace source on BlockAckManager to trace ADDBA state transitions
+
+commit efc9d737e25e4e4157d4914c21e9d1ed5569dce4
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 15 18:26:36 2018 +0100
+
+    wifi: Fix rate used to send Block Ack Request frames
+
+commit 834f6c66276eed2e769dce026b1ad37fd86354e0
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Jan 2 22:44:55 2019 +0100
+
+    wifi: Fix logic in InterferenceHelper::CalculateNoiseInterferenceW
+
+commit cf032c55198106b681e1e040732e48c20ae7fed0
+Author: Getachew Redieteab <redieteab.orange@gmail.com>
+Date:   Wed Jan 2 21:11:53 2019 +0100
+
+    mesh: Introduction of Ht/Vht/HeConfiguration not accounted for in MeshHelper
+
+commit 66f7d806abc8ce8bca13830888fea1c62983b4b0
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Dec 27 16:26:01 2018 +0300
+
+    internet: update comments for ::NotifyNewAggregate
+    
+    There is no "AddAgregate" anymore.
+
+commit 6f54f2c34765467e55949faad333c2bfb69776dd
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Dec 27 12:59:23 2018 +0300
+
+    test.py: style fixes
+
+commit 4cd771c0c417c3474e8f52e80ff4a2dffc20738f
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Dec 27 12:24:03 2018 +0300
+
+    test.py: remove trailing whitespace
+
+commit cb13e3aee8adf8185c0ffd48b73683dcef1a9aa7
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Dec 27 12:22:49 2018 +0300
+
+    wifi: avoid unnecessary DbmToW conversions for CCA ED threshold
+
+commit 94cf9841190e55d447a69605c28688e6b5ffe73d
+Merge: bcad690 b08b3de
+Author: Alexander Krotov <ilabdsf@gmail.com>
+Date:   Sun Dec 23 19:03:42 2018 +0000
+
+    Merge branch 'fix-empty-compile-commands-file' into 'master'
+    
+    Fix empty compile_commands.json
+    
+    See merge request nsnam/ns-3-dev!5
+
+commit bcad690dc1cd8babd1028bf42a2d3028999867ce
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Fri Dec 21 15:08:01 2018 -0800
+
+    internet:  Update comment in tcp-ecn-test.cc (reported by ajupazhamayil)
+
+commit bf5f1ee34334a8d90d6d5ee67b43c733947edfef
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Dec 21 15:58:47 2018 +0300
+
+    wifi: fix frequencies for channels 54 and 126
+    
+    Checked against https://en.wikipedia.org/wiki/List_of_WLAN_channels
+
+commit 96b056cfd0bedddaad6a34663f81d20075022f01
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Dec 21 13:28:39 2018 +0300
+
+    Remove .hgignore and .hgtags
+
+commit b08b3de6707fd9ec2ce76343aac9e7721ed1e407
+Author: Davide Magrin <magrin.davide@gmail.com>
+Date:   Thu Dec 20 14:39:39 2018 +0100
+
+    Fix empty compile_commands.json
+    
+    This commit re-enables the keep_last_cmd member variable in the TaskBase class
+    (which was disabled by default in Waf 2.0.9) when clang_compilation_database.py
+    is used. The clang_compilation_database.py file was correctly updated in the
+    relevant Waf commit introducing the change [1], but is missing in ns-3's bundled
+    version of Waf.
+    
+    [1] https://gitlab.com/ita1024/waf/commit/7778868718333932708a3915825f5c3f4ac53341
+
+commit 1512928b85e09c732b02fcdd1c59f9136aaefd4e
+Author: Alexander Krotov <ilabdsf@gmail.com>
+Date:   Thu Dec 20 13:28:45 2018 +0000
+
+    CONTRIBUTING.md: update table of contents
+
+commit 859409fa5246508e1552d333472abd6a40c723f3
+Merge: 9d7411b 6d1405b
+Author: N <natale.patriciello@gmail.com>
+Date:   Tue Dec 18 16:42:16 2018 +0000
+
+    Merge branch 'review-working-with-git-doc' into 'master'
+    
+    doc: fix some typos
+    
+    See merge request nsnam/ns-3-dev!4
+
+commit 6d1405bda61ab4626306c881e814bd09ca672111
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Dec 18 17:20:44 2018 +0100
+
+    doc: fix some typos
+
+commit 9d7411b4ae3aa8518cc44a2b3ca95e0771e518eb
+Merge: caa195a 3329e87
+Author: N <natale.patriciello@gmail.com>
+Date:   Tue Dec 18 10:47:21 2018 +0000
+
+    Merge branch 'git-migration-documentation-update' into 'master'
+    
+    Git migration documentation update. Added CONTRIBUTING.md, modified README.md, and added a section on the manual "Working with git".
+    
+    See merge request nsnam/ns-3-dev!3
+
+commit 3329e8737b2f1c590a9339f1af67df90f7d717e0
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Dec 17 11:31:19 2018 +0100
+
+    doc: finished last things
+
+commit 79fd0747ac0b3bb2fe87afa0b4c4e6414ec75295
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Mon Dec 17 11:09:02 2018 +0100
+
+    doc: Fixed Contributing.md
+
+commit 7c3388f09f282006a3bc0afddba46f25a22780ba
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Dec 16 18:24:36 2018 +0100
+
+    doc: updated manual git section
+
+commit 23f8ea7ebf67d5a01fa63036a50bece998ea389d
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Dec 16 11:25:48 2018 +0100
+
+    doc: Contributing added explicit ACK to Atom
+
+commit a9f19edb3b1d959b88b4c658406b4c26083cfc04
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Dec 16 11:24:14 2018 +0100
+
+    doc: moved contributing-with-git to working-with-git
+
+commit 9784271f51699ed756ee1a34e2547af71ad8ebf6
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Sun Dec 16 11:20:00 2018 +0100
+
+    doc: finished manual
+
+commit 52fb6a6e5493160c3832ec0a514ed85dd80590ec
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Dec 14 12:35:13 2018 +0100
+
+    doc: [WIP] Section on the manual for git
+
+commit a25e09ca099f1e1d37799bf89eed2b758990b240
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Fri Dec 14 12:31:45 2018 +0100
+
+    doc: added CONTRIBUTING.md, references to git
+
+commit faa2bb23dd93fd17ee72437750c02d23d008e38f
+Author: Natale Patriciello <natale.patriciello@gmail.com>
+Date:   Thu Dec 13 18:21:03 2018 +0100
+
+    doc: Move README to README.md (With formatting update)
+    
+    The markdown syntax is more web-friendly for the platform
+    we are currently using as code repository.
+
+commit caa195a49ba52e19b54b150cefa981a2bea8c827
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Dec 9 20:56:55 2018 -0800
+
+    bindings:  Rescan all APIs
+
+commit 916cd53bfa6a4206f3e6f1519bddc0b75565a24c
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Dec 9 12:14:03 2018 +0100
+
+    wifi: Do not allow S-MPDU transmissions as long as ADDBA handshake is not established
+
+commit 1e50fef75b040cb62f639c04dccf02bef4e55036
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 8 19:31:47 2018 +0100
+
+    wifi: Fix noise interference calculation
+
+commit 587c94f17a43e54cbebea6cbfd7803c2c3653d69
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 8 16:56:04 2018 +0100
+
+    wifi: Improve readibility of collected logs when WifiHelper::EnableLogComponents is used
+
+commit 7c3ccdfba02b29f4b76886fc0608616a175bee50
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 8 16:52:32 2018 +0100
+
+    wifi: wifi: Add ThresholdPreambleDetectionModel logs in WifiHelper::EnableLogComponents
+
+commit 9125acbb1cbcc10bd54cbc734698a4b67d4a2d89
+Author: Ryan Mast <mast9@llnl.gov>
+Date:   Thu Dec 6 17:43:16 2018 -0800
+
+    build: (fixes #3007) Boost library configuration in contrib
+
+commit 86b4631a32fe6c54ad795c6f90a3a47f2cafd222
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Thu Dec 6 22:35:26 2018 +0100
+
+    wifi: Fix reception logic due to A-MPDU parameters that are not correctly reset
+
+commit 4688a3d9649a354e7d2949aecd486fc6526caa06
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Dec 5 21:47:12 2018 +0100
+
+    wifi: Fix WifiMode::IsAllowed for non-VHT mode
+
+commit 61ae08d0b09963699b319da91f266debce7257c8
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Dec 5 01:16:07 2018 +0300
+
+    wifi: document InterferenceHelper::CalculateSnr parameters
+
+commit 91230fbd4cab294d84a02e3c0158894be0739cb7
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Dec 5 01:14:38 2018 +0300
+
+    wifi: remove outdated comment
+
+commit 88f503e96fbad8682cb1ef175ba1c6c668982c78
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Dec 5 01:14:17 2018 +0300
+
+    wifi: fix typo ("liear")
+
+commit fb91059cf0b1d60348aa099f919755cd2999eee5
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Dec 4 21:19:50 2018 +0100
+
+    wifi: Fix potential issue in IdealWifiManager
+
+commit 73074f6046528c5604778aa8d935c02d4d4a4c7c
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Dec 4 21:17:40 2018 +0100
+
+    wifi: Improve wifi-manager-example
+
+commit 0a6fbc880afde941c8ae4f76b81a51bc829d7456
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Dec 4 21:07:17 2018 +0100
+
+    wifi: Rename functions in preamble-detection-test
+
+commit 71f95bb447ec374edce1a0d24d5411b502019805
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Dec 4 20:52:43 2018 +0100
+
+    core: Fix potential compilation issue
+
+commit 6ffe423e19a837c6e9e4ca42e00759ab5ca70759
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Tue Dec 4 22:12:30 2018 +0300
+
+    wifi: rename Bug2483TestCase into Bug2843TestCase
+    
+    The typo comes from the patch provided for https://www.nsnam.org/bugzilla/show_bug.cgi?id=2843
+
+commit 83a27c361e62c531b5790d20ddebf3203ae01add
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Mon Dec 3 18:04:57 2018 -0800
+
+    docs: sphinx: fix various errors
+
+commit c2f80979d8c10f3f0f590af9d1a9de5759aa5de2
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Dec 3 22:41:20 2018 +0100
+
+    wifi: Rescan bindings
+
+commit 90ec7fb73ceb43bd5030f4b99a5d3bb316df111b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Dec 3 21:48:44 2018 +0100
+
+    wifi: Fill BSS color in TxVector and add trace source to be fired at the end of 802.11ax preamble
+
+commit 2bd74fdbd7c33fc89f7b28fb563db07fca7c836e
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Dec 3 21:18:05 2018 +0100
+
+    wifi: Add threshold-based preamble detection model
+
+commit b3e470c64f2a26946f75ef0b392751db1dc1449e
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Mon Dec 3 11:04:49 2018 +0100
+
+    traffic-control: Make NetDeviceQueueInterface independent of Queue
+
+commit 86ae15b0e856b5c19100d51a7f065e7d1821432b
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Dec 1 15:14:31 2018 -0800
+
+    wifi: Increase SNR range for 802.11ac in wifi-manager-example
+
+commit 8f81e6c0009cdb6c84155a2be4f4518d052fbbde
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Dec 1 09:54:07 2018 +0100
+
+    wifi: Fix warning message for deprecated attribute EnergyDetectionThreshold
+
+commit d923dff29ae11d61d5723666de0236c58871cc30
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Fri Nov 30 17:02:35 2018 +0300
+
+    wifi: remove unused m_operationalChannelList from SpectrumWifiPhy
+
+commit ba512832f16564083c4235e27d716c4f92bd2f12
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Nov 29 15:15:22 2018 +0100
+
+    lte: Fix type of the m_rapIdRntiMap key. Thanks to Fraunhofer
+
+commit a890378d968361cf6910a7a294ca03063201cc84
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Nov 28 20:26:09 2018 +0100
+
+    wifi: Fix missing Doxygen in MacLow
+
+commit b20186b6a32abf23578d50e689948bcee9b5c060
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Nov 27 22:33:22 2018 +0100
+
+    wifi: Rescan bindings
+
+commit c0ce2437602445122008135d3fce03bf27556481
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Nov 27 20:44:41 2018 +0100
+
+    wifi: Extend support of up to 256 MPDUs in A-MPDUs for 802.11ax
+
+commit 0b9031f986e6b05dfc884cbf53472a1ac940731b
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Nov 27 18:54:59 2018 +0100
+
+    wifi: Fix wrong recipient address when scheduling QosTxop::ResetBa
+
+commit d8563a55fcef99fbed022cb3d4abe25914500e01
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Nov 26 22:17:18 2018 +0100
+
+    wifi: Rescan bindings
+
+commit 822d5a10e4e5354bbec28dfb9d4d7331b900128c
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Mon Nov 26 20:01:12 2018 +0100
+
+    wifi: Refactor detection thresholds in WifiPhy
+
+commit 7b00f778cd95ccc3c71b854c63d6ab050f301299
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sat Nov 24 15:05:20 2018 -0800
+
+    virtual-net-device:  Remove stale comments
+
+commit 99affcc789a69c861f52bca49c15375c142c3871
+Author: Richard Sailer <richard_sailer@systemli.org>
+Date:   Sat Nov 24 14:59:07 2018 -0800
+
+    virtual-net-device: Update and clarify documentation for example
+
+commit 9d5db86a64c3f0b33e4a55635a6a092905d585df
+Author: Gabriel Arrobo <gab.arrobo@gmail.com>
+Date:   Sat Nov 24 13:56:28 2018 -0800
+
+    lte:  Fix some typos and style issues
+
+commit ddc2ce8963233de07c251f9293247fb3353ee3f9
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Mon Nov 19 11:59:17 2018 +0100
+
+    lte: Update AUTHORS
+
+commit 7d8c9fd413074e593cb60bda984827e02a7bb569
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Mon Nov 19 12:41:19 2018 +0300
+
+    wifi: simplify WifiSpectrumValueHelper::DbmToW
+
+commit 0684171a6dfb94c5f6090c1df16a29ad9ceb8d6a
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Nov 18 10:37:43 2018 +0100
+
+    wifi: rescan bindings
+
+commit f557381d8bc914d7d5d12dd06b2ba5bdfcfac3c4
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Nov 18 09:17:14 2018 +0100
+
+    wifi: Move GetControlAnswerMode to MacLow
+
+commit e05d210f6766344a350e09658b23e79ffcde8569
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Nov 18 09:11:25 2018 +0100
+
+    wifi: Reduce WifiRemoteStationManager code size by removing what we can outside of the class
+
+commit 3a7f6a1c06586cd9d2d8705876388aaf07ebfd9c
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Nov 14 11:53:21 2018 -0800
+
+    bindings:  Rescan all APIs
+
+commit 86a26927ae5fb044e895f87b1e2c48355ee1f3c5
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Wed Nov 14 13:08:46 2018 +0100
+
+    wifi: Avoid a potential segfault in WifiNetDevice::DoDispose
+
+commit 99fa3f9578e483b126d2eccdbc4e3d4248aacb91
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Nov 13 11:12:00 2018 -0800
+
+    build: (fixes #2637) macOS SDK headers in non-standard place
+
+commit 5bed6d3355ecb0b2e8117a08b6f06347809ecd8e
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Tue Nov 13 18:06:30 2018 +0300
+
+    spectrum: Fix fatal error message
+
+commit b469c1c84c690b211583588f8070a922cb0b63ae
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Tue Nov 13 18:04:38 2018 +0300
+
+    Initialize MultiModelSpectrumChannel::m_numDevices
+
+commit 2045e256d826042410733e8e8edb039b95da7c4a
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Nov 13 11:30:11 2018 +0100
+
+    lte: fix memory issue
+
+commit 4a19cc879ea5cff2bcde797c0620d6663d7d4604
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Nov 11 08:14:01 2018 +0100
+
+    wifi: rescan bindings
+
+commit b3ce7e562836e256b9d1062a248d0be3cf4c1a55
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Nov 10 19:37:36 2018 +0100
+
+    wifi: (fixes #2470) Protect ADDBA handshake
+
+commit a6e4169bee0d165a9b4b10d491da35a074e65e37
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Nov 8 14:41:55 2018 +0100
+
+    lte: Use Time instead of double
+
+commit 0b94b9de0679dd45dc7575fb62742c3d57b06824
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Nov 8 14:28:29 2018 +0100
+
+    lte: Change some parameters to get clearer lte traces
+
+commit 9813c0c742e9a24d0a8457cc733f7a94453c2396
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Nov 8 14:27:41 2018 +0100
+
+    lte: Add command line options to disable some data flows
+
+commit af7f2c274cc17e8514c3c5088b6698f87b4d7ca7
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Wed Nov 7 21:14:38 2018 +0100
+
+    examples: Fix typo in he-wifi-network
+
+commit c8a500f5a8ebafe3f7832545f97d2f66f65c0bfc
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Nov 7 16:54:53 2018 +0300
+
+    Remove duplicate semicolons
+
+commit 48157d84b125f58a1775e9722e0575cf69bb6414
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Nov 7 12:31:02 2018 +0100
+
+    lte: Use Time instead of double
+
+commit 7006c2e6c278215ed50606f2d3c046329243290f
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Nov 7 12:26:58 2018 +0100
+
+    lte: Add command line options to disable some data flows and fix typos
+
+commit d7c34ca9478d7c080c8f797d38a859ff070c3c5c
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Nov 7 11:09:28 2018 +0100
+
+    lte: use Time instead of string
+
+commit 91a5fa510af1607e1c8e6290b8c2e56a1207335a
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Tue Nov 6 12:30:43 2018 -0800
+
+    test: show reason a test/example was skipped
+
+commit 5e8acd14252b15cd2d9faf475df6081f04b63ffb
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Tue Nov 6 12:29:41 2018 -0800
+
+    nix: use C++ 11 assign() to initialize the BFS
+
+commit f6ac43155586b8b0dcc4ee4273001d595cfe2ef3
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Tue Nov 6 16:57:56 2018 +0100
+
+    lte: Add simTime command line parameter and fix some typos
+
+commit f6a1b295ceac1b8923651020270750bf3738e1e6
+Author: Parth Pratim Chatterjee <unknown>
+Date:   Mon Nov 5 11:48:13 2018 -0800
+
+    bug:3001 mpi: fix comment
+
+commit f9d5949735ebcc0eea2ee8a8ec6aaf60f2d0e688
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Nov 4 16:21:09 2018 +0100
+
+    wifi: Add transport of 802.11ax BSS coloring field (with contributions from Tom Henderson)
+
+commit 0b53cfc45b25560185948b27c72c759418f4e6fa
+Author: Shikha Bakshi <shikhabakshi912@gmail.com>
+Date:   Wed Oct 31 12:53:22 2018 +0100
+
+    tcp: Add GetTxBuffer API for TCP test
+
+commit e3865b7137045b78986afd3d50a6d045fb0f0227
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Oct 30 18:42:23 2018 +0100
+
+    Rescan wifi and wave bindings
+
+commit 289057719f4ec5aca834bea711356ef995c8e96a
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Tue Oct 30 13:42:31 2018 +0100
+
+    wifi: Add configuration objects for 802.11n/ac/ax
+
+commit fdc275f3ada9c9a4ca71adeff0d6fc949905a71e
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Mon Oct 29 16:00:09 2018 +0300
+
+    Replace NS_LOG_ERROR and exit(1) with NS_FATAL_ERROR in ht-wifi-network example
+
+commit a76867cf4dc619c5778b96fb42c2bd1175d7bdb4
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Mon Oct 29 11:52:09 2018 +0300
+
+    core: fix some documentation typos
+
+commit ea4de5fceca4c3fe60ebc859b60e49fca271cb6e
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Sun Oct 21 15:33:48 2018 -0700
+
+    Fix typos
+
+commit 1edcd5ecd40ffaec754f75a46bc2f58c55600a22
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Fri Oct 19 01:09:56 2018 -0400
+
+    core: periodically show progress by elapsed simulation time, executed event count
+
+commit 05cb0757bc7a23b12fc8d6d729816ef720a5874f
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Fri Oct 19 00:59:43 2018 -0400
+
+    core: Simulator::GetEventCount()
+
+commit 4ed398715110f6338b13c73db738df9652a013f8
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Fri Oct 19 00:48:53 2018 -0400
+
+    core: refactor LogTimePrinter, LogNodePrinter
+
+commit dff56925e55d6ebf62abf3078fcfe4e9cd7de6c6
+Author: Peter D. Barnes, Jr. <barnes26@llnl.gov>
+Date:   Fri Oct 19 00:03:07 2018 -0400
+
+    core: time: replace int64_t operator/(Time,Time) with exact int64x64_t version,
+    add int64x64_t scaling.
+
+commit 1d5ce0430fc18da81a81c112eb84ee75015a3ee9
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Oct 18 12:03:57 2018 +0200
+
+    lte: Improve doxygen
+
+commit cb955087b7190c6f906ea97a3e3a3e19658915f5
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Oct 15 20:13:04 2018 -0700
+
+    Remove deprecated method and misspelling
+
+commit 4ebc14d7dcc86c4d620a69e1eb9eaa28167e853b
+Author: Michele Polese <michele.polese@gmail.com>
+Date:   Fri Oct 12 13:22:49 2018 +0200
+
+    mobility: (fixes #2860) set z coordinate for many position-allocation classes
+
+commit b76d07d9e6d8f3236867fc4d5bd0de90665837f7
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Oct 11 19:21:39 2018 +0200
+
+    lte: rescan bindings
+
+commit 695ba0c15f8d08821333e33597ad54d2cdddd7ff
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Oct 11 17:57:59 2018 +0200
+
+    lte: fix some logs in EpcTft
+
+commit a305683f5d0ec0f7085f432306fd658978aac90b
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Oct 11 17:55:02 2018 +0200
+
+    lte: (fixes #2997) EpcTft::PacketFilter::Matches does not use ipv6 address to match an IP packet
+
+commit e548c59611b4f458a57243808b533a8d1abc4018
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Oct 11 16:44:12 2018 +0200
+
+    lte: create testcases to test IPv6 addresses of EpcTftClassifier
+
+commit 2a41a58e6d42bf098b6d668286d78bd120508775
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Fri Oct 5 23:11:29 2018 +0200
+
+    wifi: Fix minor typos
+
+commit 0a63b695dadc59db2aa59c8a648fb7d5f9a40096
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Thu Oct 4 16:27:38 2018 -0700
+
+    build: (fixes #2993) Waf --enable-sudo option broken
+
+commit e48d750b340045698ddee65472cc885480766ca7
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Oct 2 16:39:28 2018 -0700
+
+    network: Clarify some Queue documentation
+
+commit 59ac9554e35596e49f17b5e9983c47fb04a2460a
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Tue Oct 2 12:04:23 2018 -0700
+
+    bindings: Update pybindgen version
+
+commit dddf8aa294a15e97d387f94e84341f301178859f
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Tue Oct 2 14:04:34 2018 +0200
+
+    lte: rescan bindings
+
+commit b9b0e8c78b10f5fc13e1abe8164603aa3d51d634
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Tue Oct 2 14:02:39 2018 +0200
+
+    lte: Add struct for the parameters of TxOpportunity and ReceivePdu
+
+commit 72d87c58da4aa4ab85447045e28a6179df798ea4
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Tue Oct 2 12:40:15 2018 +0200
+
+    lte: rescan bindings
+
+commit 0b3a603f7de1f850d28fd5f2b85c876ccefe617b
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Tue Oct 2 12:29:39 2018 +0200
+
+    lte: Add attribute to configure the periodicity of DL CQI reports
+
+commit 1e986d449cce0844fc03fa5337bea17bd931eb06
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Oct 1 19:36:14 2018 -0700
+
+    mobility: Allow AssignStreams after construction for SteadyStateRwpMobility
+    
+    The SteadyStateRandomWaypointMobilityModel should support AssignStreams()
+    after object construction, but prior to this patch, it would cause a
+    segmentation fault until after initialization.  The initial benefit is
+    the prevention of test suite failures due to random stream assignment.
+
+commit 8127d797903b9314bae11f19599329e3ebc86bd5
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Mon Oct 1 18:19:07 2018 -0700
+
+    lte: Rescan bindings
+
+commit 1e8ea7601ed635ebd8b6eb4675078902d5124d33
+Author: Manuel Requena <manuel.requena@cttc.es>
+Date:   Wed Sep 26 18:47:36 2018 +0200
+
+    lte: (fixes #2992) Send method of the LteUeNetDevice doesn't use protocolNumber parameter
+
+commit 2309227d06051fe75c505eda44f62e2378726e7d
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Sep 22 21:46:46 2018 +0200
+
+    wifi: rescan bindings
+
+commit 618cabe46d9a217721a85d2562e490020ad2b7ab
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Sep 22 17:56:59 2018 +0200
+
+    wifi: Remove unused parameters in MacLow::ReceiveError
+
+commit 6c960f977850ce03e8a50972b7fb6ed2e864bb55
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Sep 22 17:29:39 2018 +0200
+
+    wifi: Rename functions in ChannelAccessManager to differentiate DCF and PCF
+
+commit 29dcbd175f7431664eb8c273e7a7fb87abfffd83
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sat Sep 22 13:56:54 2018 +0200
+
+    wifi: Cleanup unused address field in WifiRemoteStationManager::GetControlAnswerMode
+
+commit 1e922186d1adceefa791c112e9e120c42585907d
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Thu Sep 20 21:17:26 2018 -0700
+
+    build: (fixes #2181) Compare tuples numerically
+
+commit 96b8d1d7a59687dd1ed7a213a3f3f82ef1415b3d
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Sep 18 15:50:27 2018 +0200
+
+    Rescan python bindings
+
+commit d4f5759959b96f97baff829970ab7bf4bfe67326
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Sep 18 15:50:15 2018 +0200
+
+    traffic-control: QueueDiscs do not assume that the receiving object is a NetDevice
+
+commit 1abd8331b808cd4a1b12c50d4b2fba28008953f6
+Author: Stefano Avallone <stavallo@unina.it>
+Date:   Tue Sep 18 15:50:02 2018 +0200
+
+    traffic-control: the NetDeviceQueueInterface object is created by NetDevice helpers
+
+commit a631096ef0197eaa15656ffa82fa725454a8fc7d
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Fri Sep 14 11:10:09 2018 +0200
+
+    lte: update doxygen
+
+commit edc72059a4271e345da8c92ebcf8a52664fc224a
+Author: Alfonso Oliveira <af.oliveira.16@gmail.com>
+Date:   Fri Sep 7 23:57:41 2018 +0200
+
+    internet: (fixes #2990) Ipv6 packet shouldn't be marked with SocketIpTtlTag
+
+commit 5f7166331a2c7ee527149fb231bb90dbdc7060f9
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Fri Sep 7 13:57:29 2018 +0200
+
+    lte: rescan bindings
+
+commit 4dc21aa71594b890d22ab6c45839afbc7a44b2b0
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Fri Sep 7 13:53:21 2018 +0200
+
+    lte: (fixes #2988) correction in L3 filtering formula used for UL power control
+
+commit 09f89c07e4bd31adbda5305c530e2fa8ea0cdfac
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Fri Sep 7 12:13:43 2018 +0200
+
+    lte: (fixes #2339) use only the active RBs for uplink PSD computation
+    Thanks to:
+    Alexander Krotov <krotov@iitp.ru> for reporting
+    NIST to provide CreateUlTxPowerSpectralDensity function
+
+commit ee06a328796f9c33ea12a906a764da2be1787efe
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 16:16:38 2018 +0200
+
+    lte: update design documentation after removing ALL_UL_CQI filter
+
+commit 9d5d5ecd19b75dd5406ecaddad387f59a0073174
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 16:10:12 2018 +0200
+
+    lte: update tests after removing ALL_UL_CQI filter
+
+commit 9a9f34a12799c49a340f8b1c34d5d1237244a2ec
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 15:57:44 2018 +0200
+
+    lte: rescan bindings
+
+commit c3fd1871804d3c82094f65834346153bd15ee9d4
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 15:56:59 2018 +0200
+
+    lte: remove ALL_UL_CQI filter and update all the schedulers
+
+commit 2cde278b061b489f4aa1b1f4640933d00e87c3f1
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:38:55 2018 +0200
+
+    lte: (fixes #2861) forward TXOPs to the RLCs of SCCs
+    Thanks to:
+    - Michele Polese <michele.polese@gmail.com>
+    - Tommaso Zugno <tommasozugno@gmail.com>
+
+commit 144ec30b445e314051084d34d81977686b310105
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:15:59 2018 +0200
+
+    lte: (fixes #2982) configure UE MAC SAP LteMacSapUser properly
+
+commit 52ba3734e30e185fc7a678ffa624dfcd7d35aa6c
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:14:51 2018 +0200
+
+    lte: (fixes #2980) reset MAC and PHY of secondary carriers upon handover
+
+commit 18a087866c7248a3cecaedcc838bbcd75945a36b
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:05:17 2018 +0200
+
+    lte: eNB CCM should not have a direct pointer to the eNB RRC
+
+commit fd84244d253d3e3ce0b08e115f7cdb40dfcb0819
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:04:03 2018 +0200
+
+    lte: rescan API definitions for bindings
+
+commit c52aebdb492d9c2c8e6125b12b0b958e4fefbad7
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 14:01:00 2018 +0200
+
+    lte: set number of component carriers in RRC through CCM
+
+commit eea6a766de86660e8876410df30777b66753a5ea
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Thu Sep 6 12:08:35 2018 +0200
+
+    spectrum: trigger the new Gain trace for every transmission
+
+commit 82d586616647c4753b9507534498c286ac1f94e8
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Sep 6 12:01:06 2018 +0300
+
+    wifi: use Seconds() instead of multiplying by 1e9 and using NanoSeconds()
+
+commit d2b32d98ac0f756ca416550119fa23d83eb0a8ce
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Sep 6 12:00:31 2018 +0300
+
+    wifi: use Time::IsPositive
+
+commit 66ce420f4238ee0dcf1b6b706152bce5b96ad31a
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Thu Sep 6 11:33:15 2018 +0300
+
+    wifi: fix IdleCurrent attribute description
+    
+    Current is measured in Amps, not Watts
+
+commit 576d5b329fde9265fa0f1a3025273e081960e9cb
+Author: Alexander Krotov <krotov@iitp.ru>
+Date:   Wed Sep 5 18:45:52 2018 +0300
+
+    wifi: move duplicate code to WifiRadioEnergyModel::GetStateA
+
+commit c8a007b5eab55d7117cd88469f4dae0ac24acc9c
+Author: Zoraze Ali <zoraze.ali@cttc.es>
+Date:   Wed Sep 5 15:54:52 2018 +0200
+
+    lte: (fixes #2979) remove unused variables and functions from UE RRC and UE CCM
+
+commit bf977036c2a1be63c626669113dde890f844b529
+Author: Tom Henderson <tomh@tomh.org>
+Date:   Wed Sep 5 06:34:54 2018 -0700
+
+    Add release dedication
+
+commit 96b970f1b192529437bf4bf509df48d02a49d8ac
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Sep 2 22:40:21 2018 +0200
+
+    wifi: Fix supported streams in VHT operation and HE operation IEs
+
+commit 40b1dc2db87591f7d37ad93e9f8a7afc38d26930
+Author: Sébastien Deronne <sebastien.deronne@gmail.com>
+Date:   Sun Sep 2 22:39:12 2018 +0200
+
+    wifi: Add support for IE_EXTENSION and fix 802.11ax information elements
+
+commit 534f28383bd3ad8d30d8e20fe5dc2cdfbd1e317d
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Sun Sep 2 01:20:09 2018 +0200
+
+    internet-apps: rescan bindings
+
+commit 95bb72b5b49d29b2fcf8d8b3502a67903e26eac4
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Sun Sep 2 01:20:09 2018 +0200
+
+    sixlowpan: rescan bindings
+
+commit 4c9c7c121e9cd61ee84b96eac1d7f604c477e3c5
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Sun Sep 2 01:20:09 2018 +0200
+
+    topology-read: rescan bindings
+
+commit ab925e6c96a59e72c4906b9179c5787601089bfb
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 21:53:46 2018 +0200
+
+    internet-apps: rescan bindings
+
+commit 6228dd3ec38880c00c099e7801aacd0ecada3acd
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 22:20:06 2018 +0200
+
+    internet-apps: remove unused includes
+
+commit dc67e4a6b65d9bb878cd241aa03b29501ff920f4
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 19:52:39 2018 +0200
+
+    topology-read: rescan bindings
+
+commit 25aadcfc12515cf038e462f5425fd9b0c99df732
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 19:43:49 2018 +0200
+
+    topology-read: remove unused includes
+
+commit de1fdb76730de459ccf6cd4143618607379b026a
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 17:25:51 2018 +0200
+
+    manual: revert unwanted change in changeset 13768:cedfa3990e73
+
+commit 0ce701b2c643b0eefa7a7beaeac229ba871ff80a
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Fri Aug 31 16:58:43 2018 +0200
+
+    manual: fix sphinx code highlighting
+
+commit dac342dff16a95b32b28efa84d2517c1d2e7592b
+Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
+Date:   Wed Apr 25 22:34:07 2018 -0500
+
+    sixlowpan: remove unused includes
+

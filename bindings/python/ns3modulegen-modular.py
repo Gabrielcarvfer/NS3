@@ -32,7 +32,7 @@ class ErrorHandler(pybindgen.settings.ErrorHandler):
 
 
 #print >> sys.stderr, ">>>>>>>>>>>>>>>>>>>>>>>>>>>> ", bool(eval(os.environ["GCC_RTTI_ABI_COMPLETE"]))
-pybindgen.settings.gcc_rtti_abi_complete = True #bool(eval(os.environ["GCC_RTTI_ABI_COMPLETE"]))
+pybindgen.settings.gcc_rtti_abi_complete = bool(eval(os.environ["GCC_RTTI_ABI_COMPLETE"]))
 
 class MyMultiSectionFactory(MultiSectionFactory):
     def __init__(self, main_file_name):

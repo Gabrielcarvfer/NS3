@@ -19,7 +19,6 @@
  */
 #include "watchdog.h"
 #include "log.h"
-#include <algorithm> //std::max
 
 
 /**

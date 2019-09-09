@@ -108,22 +108,21 @@ VisualSimulatorImpl::IsFinished (void) const
 {
   return m_simulator->IsFinished ();
 }
-#ifdef PYTHON3
-#define PYTHON_EXEC "python3"
-#elif PYTHON2
-#define PYTHON_EXEC "python2"
-#endif
 
 void
 VisualSimulatorImpl::Run (void)
 {
-  if (!Py_IsInitialized ()) 
+  if (!Py_IsInitialized ())
     {
-      //Python3: const wchar_t *argv[] = {L"python", NULL};
-      const char *argv[] = {PYTHON_EXEC, NULL};
-      Py_Initialize ();
-      //Python3: PySys_SetArgv (1, (wchar_t **)argv);
-      PySys_SetArgv (1, (char **)argv);
+      #if PY_MAJOR_VERSION >= 3
+        const wchar_t *argv[] = { L"python", NULL};
+        Py_Initialize ();
+        PySys_SetArgv (1, (wchar_t**) argv);
+      #else
+        const char *argv[] = { "python", NULL};
+        Py_Initialize ();
+        PySys_SetArgv (1, (char**) argv);
+      #endif
       PyRun_SimpleString (
                           "import visualizer\n"
                           "visualizer.start();\n"
@@ -221,6 +220,12 @@ uint32_t
 VisualSimulatorImpl::GetContext (void) const
 {
   return m_simulator->GetContext ();
+}
+
+uint64_t
+VisualSimulatorImpl::GetEventCount (void) const
+{
+  return m_simulator->GetEventCount ();
 }
 
 void

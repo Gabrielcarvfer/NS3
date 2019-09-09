@@ -30,6 +30,7 @@
 #include "ns3/unused.h"
 #include "ns3/log.h"
 #include "ns3/queue-size.h"
+#include "ns3/queue-item.h"
 #include <string>
 #include <sstream>
 #include <list>
@@ -232,7 +233,10 @@ private:
  * Queue is a template class. The type of the objects stored within the queue
  * is specified by the type parameter, which can be any class providing a
  * GetSize () method (e.g., Packet, QueueDiscItem, etc.). Subclasses need to
- * implement the DoEnqueue, DoDequeue, DoRemove and DoPeek methods.
+ * implement the Enqueue, Dequeue, Remove and Peek methods, and are
+ * encouraged to leverage the DoEnqueue, DoDequeue, DoRemove, and DoPeek
+ * methods in doing so, to ensure that appropriate trace sources are called
+ * and statistics are maintained.
  *
  * Users of the Queue template class usually hold a queue through a smart pointer,
  * hence forward declaration is recommended to avoid pulling the implementation
@@ -291,42 +295,79 @@ public:
    */
   void Flush (void);
 
+  /// Define ItemType as the type of the stored elements
+  typedef Item ItemType;
+
 protected:
 
   /// Const iterator.
   typedef typename std::list<Ptr<Item> >::const_iterator ConstIterator;
+  /// Iterator.
+  typedef typename std::list<Ptr<Item> >::iterator Iterator;
 
   /**
    * \brief Get a const iterator which refers to the first item in the queue.
    *
-   * Subclasses can browse the items in the queue by using an iterator
+   * Subclasses can browse the items in the queue by using a const iterator
    *
    * \code
-   *   for (auto i = Head (); i != Tail (); ++i)
+   *   for (auto i = begin (); i != end (); ++i)
    *     {
-   *       (*i)->method ();  // some method of the Item class
+   *       (*i)->method ();  // some const method of the Item class
    *     }
    * \endcode
    *
    * \returns a const iterator which refers to the first item in the queue.
    */
-  ConstIterator Head (void) const;
+  ConstIterator begin (void) const;
 
   /**
-   * \brief Get a const iterator which indicates past-the-last item in the queue.
+   * \brief Get an iterator which refers to the first item in the queue.
    *
    * Subclasses can browse the items in the queue by using an iterator
    *
    * \code
-   *   for (auto i = Head (); i != Tail (); ++i)
+   *   for (auto i = begin (); i != end (); ++i)
    *     {
    *       (*i)->method ();  // some method of the Item class
    *     }
    * \endcode
    *
+   * \returns an iterator which refers to the first item in the queue.
+   */
+  Iterator begin (void);
+
+  /**
+   * \brief Get a const iterator which indicates past-the-last item in the queue.
+   *
+   * Subclasses can browse the items in the queue by using a const iterator
+   *
+   * \code
+   *   for (auto i = begin (); i != end (); ++i)
+   *     {
+   *       (*i)->method ();  // some const method of the Item class
+   *     }
+   * \endcode
+   *
    * \returns a const iterator which indicates past-the-last item in the queue.
    */
-  ConstIterator Tail (void) const;
+  ConstIterator end (void) const;
+
+  /**
+   * \brief Get an iterator which indicates past-the-last item in the queue.
+   *
+   * Subclasses can browse the items in the queue by using an iterator
+   *
+   * \code
+   *   for (auto i = begin (); i != end (); ++i)
+   *     {
+   *       (*i)->method ();  // some method of the Item class
+   *     }
+   * \endcode
+   *
+   * \returns an iterator which indicates past-the-last item in the queue.
+   */
+  Iterator end (void);
 
   /**
    * Push an item in the queue
@@ -552,15 +593,27 @@ Queue<Item>::DoPeek (ConstIterator pos) const
 }
 
 template <typename Item>
-typename Queue<Item>::ConstIterator Queue<Item>::Head (void) const
+typename Queue<Item>::ConstIterator Queue<Item>::begin (void) const
 {
   return m_packets.cbegin ();
 }
 
 template <typename Item>
-typename Queue<Item>::ConstIterator Queue<Item>::Tail (void) const
+typename Queue<Item>::Iterator Queue<Item>::begin (void)
+{
+  return m_packets.begin ();
+}
+
+template <typename Item>
+typename Queue<Item>::ConstIterator Queue<Item>::end (void) const
 {
   return m_packets.cend ();
+}
+
+template <typename Item>
+typename Queue<Item>::Iterator Queue<Item>::end (void)
+{
+  return m_packets.end ();
 }
 
 template <typename Item>
@@ -594,6 +647,15 @@ Queue<Item>::DropAfterDequeue (Ptr<Item> item)
   m_traceDrop (item);
   m_traceDropAfterDequeue (item);
 }
+
+// The following explicit template instantiation declarations prevent all the
+// translation units including this header file to implicitly instantiate the
+// Queue<Packet> class and the Queue<QueueDiscItem> class. The unique instances
+// of these classes are explicitly created through the macros
+// NS_OBJECT_TEMPLATE_CLASS_DEFINE (Queue,Packet) and
+// NS_OBJECT_TEMPLATE_CLASS_DEFINE (Queue,QueueDiscItem), which are included in queue.cc
+extern template class Queue<Packet>;
+extern template class Queue<QueueDiscItem>;
 
 } // namespace ns3
 

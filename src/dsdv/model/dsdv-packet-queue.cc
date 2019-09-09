@@ -94,8 +94,7 @@ PacketQueue::DropPacketWithDst (Ipv4Address dst)
         }
     }
   m_queue.erase (std::remove_if (m_queue.begin (), m_queue.end (),
-          std::bind (std::cref (PacketQueue::IsEqual), std::placeholders::_1, dst)), //replaced bind2nd to bind and ptr_fun with cref
-                 m_queue.end ());
+                                 std::bind2nd (std::ptr_fun (PacketQueue::IsEqual), dst)), m_queue.end ());
 }
 
 bool

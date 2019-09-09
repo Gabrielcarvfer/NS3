@@ -25,7 +25,7 @@
 \brief  Defines a linked list of Packet tags, including copy-on-write semantics.
 */
 
-#include <cstdint>
+#include <stdint.h>
 #include <ostream>
 #include "ns3/type-id.h"
 

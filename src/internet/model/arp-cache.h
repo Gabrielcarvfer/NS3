@@ -20,7 +20,7 @@
 #ifndef ARP_CACHE_H
 #define ARP_CACHE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 #include "ns3/simulator.h"
 #include "ns3/callback.h"
@@ -34,8 +34,6 @@
 #include "ns3/traced-callback.h"
 #include "ns3/sgi-hashmap.h"
 #include "ns3/output-stream-wrapper.h"
-#include <unordered_map>
-
 
 namespace ns3 {
 
@@ -244,12 +242,6 @@ public:
     Ipv4Address GetIpv4Address (void) const;
     /**
      * \param macAddress The MacAddress for this entry
-     * \deprecated This (misspelled) method will go away in future versions of ns-3, in favor of the correctly spelled version.
-     */
-    NS_DEPRECATED
-    void SetMacAddresss (Address macAddress);
-    /**
-     * \param macAddress The MacAddress for this entry
      */
     void SetMacAddress (Address macAddress);
     /**
@@ -321,11 +313,11 @@ private:
   /**
    * \brief ARP Cache container
    */
-  typedef std::unordered_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash> Cache;
+  typedef sgi::hash_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash> Cache;
   /**
    * \brief ARP Cache container iterator
    */
-  typedef std::unordered_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash>::iterator CacheI;
+  typedef sgi::hash_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash>::iterator CacheI;
 
   virtual void DoDispose (void);
 

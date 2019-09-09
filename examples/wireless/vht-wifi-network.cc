@@ -129,9 +129,6 @@ int main (int argc, char *argv[])
               YansWifiPhyHelper phy = YansWifiPhyHelper::Default ();
               phy.SetChannel (channel.Create ());
 
-              // Set guard interval
-              phy.Set ("ShortGuardEnabled", BooleanValue (sgi));
-
               WifiHelper wifi;
               wifi.SetStandard (WIFI_PHY_STANDARD_80211ac);
               WifiMacHelper mac;
@@ -158,6 +155,9 @@ int main (int argc, char *argv[])
 
               // Set channel width
               Config::Set ("/NodeList/*/DeviceList/*/$ns3::WifiNetDevice/Phy/ChannelWidth", UintegerValue (channelWidth));
+
+              // Set guard interval
+              Config::Set ("/NodeList/*/DeviceList/*/$ns3::WifiNetDevice/HtConfiguration/ShortGuardIntervalSupported", BooleanValue (sgi));
 
               // mobility.
               MobilityHelper mobility;
@@ -198,7 +198,7 @@ int main (int argc, char *argv[])
 
                   UdpClientHelper client (staNodeInterface.GetAddress (0), port);
                   client.SetAttribute ("MaxPackets", UintegerValue (4294967295u));
-                  client.SetAttribute ("Interval", TimeValue (Time ("0.00001"))); //packets/s
+                  client.SetAttribute ("Interval", TimeValue (Time ("0.00002"))); //packets/s
                   client.SetAttribute ("PacketSize", UintegerValue (payloadSize));
                   ApplicationContainer clientApp = client.Install (wifiApNode.Get (0));
                   clientApp.Start (Seconds (1.0));

@@ -21,7 +21,7 @@
 #ifndef IPV6_STATIC_ROUTING_H
 #define IPV6_STATIC_ROUTING_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include <list>
 

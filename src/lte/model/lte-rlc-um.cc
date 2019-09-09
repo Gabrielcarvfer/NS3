@@ -88,18 +88,13 @@ LteRlcUm::DoTransmitPdcpPdu (Ptr<Packet> p)
 
   if (m_txBufferSize + p->GetSize () <= m_maxTxBufferSize)
     {
-      /** Store arrival time */
-      RlcTag timeTag (Simulator::Now ());
-      p->AddPacketTag (timeTag);
-
       /** Store PDCP PDU */
-
       LteRlcSduStatusTag tag;
       tag.SetStatus (LteRlcSduStatusTag::FULL_SDU);
       p->AddPacketTag (tag);
 
       NS_LOG_LOGIC ("Tx Buffer: New packet added");
-      m_txBuffer.push_back (p);
+      m_txBuffer.push_back (TxPdu (p, Simulator::Now ()));
       m_txBufferSize += p->GetSize ();
       NS_LOG_LOGIC ("NumOfBuffers = " << m_txBuffer.size() );
       NS_LOG_LOGIC ("txBufferSize = " << m_txBufferSize);
@@ -124,14 +119,14 @@ LteRlcUm::DoTransmitPdcpPdu (Ptr<Packet> p)
  */
 
 void
-LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, uint8_t componentCarrierId, uint16_t rnti, uint8_t lcid)
+LteRlcUm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpParams)
 {
-  NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << bytes);
+  NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << txOpParams.bytes);
 
-  if (bytes <= 2)
+  if (txOpParams.bytes <= 2)
     {
       // Stingy MAC: Header fix part is 2 bytes, we need more bytes for the data
-      NS_LOG_LOGIC ("TX opportunity too small = " << bytes);
+      NS_LOG_LOGIC ("TX opportunity too small = " << txOpParams.bytes);
       return;
     }
 
@@ -139,7 +134,7 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
   LteRlcHeader rlcHeader;
 
   // Build Data field
-  uint32_t nextSegmentSize = bytes - 2;
+  uint32_t nextSegmentSize = txOpParams.bytes - 2;
   uint32_t nextSegmentId = 1;
   uint32_t dataFieldTotalSize = 0;
   uint32_t dataFieldAddedSize = 0;
@@ -153,13 +148,15 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
       return;
     }
 
+  Ptr<Packet> firstSegment = m_txBuffer.begin ()->m_pdu->Copy ();
+  Time firstSegmentTime = m_txBuffer.begin ()->m_waitingSince;
+
   NS_LOG_LOGIC ("SDUs in TxBuffer  = " << m_txBuffer.size ());
-  NS_LOG_LOGIC ("First SDU buffer  = " << *(m_txBuffer.begin()));
-  NS_LOG_LOGIC ("First SDU size    = " << (*(m_txBuffer.begin()))->GetSize ());
+  NS_LOG_LOGIC ("First SDU buffer  = " << firstSegment);
+  NS_LOG_LOGIC ("First SDU size    = " << firstSegment->GetSize ());
   NS_LOG_LOGIC ("Next segment size = " << nextSegmentSize);
   NS_LOG_LOGIC ("Remove SDU from TxBuffer");
-  Ptr<Packet> firstSegment = (*(m_txBuffer.begin ()))->Copy ();
-  m_txBufferSize -= (*(m_txBuffer.begin()))->GetSize ();
+  m_txBufferSize -= firstSegment->GetSize ();
   NS_LOG_LOGIC ("txBufferSize      = " << m_txBufferSize );
   m_txBuffer.erase (m_txBuffer.begin ());
 
@@ -209,12 +206,12 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
             {
               firstSegment->AddPacketTag (oldTag);
 
-              m_txBuffer.insert (m_txBuffer.begin (), firstSegment);
-              m_txBufferSize += (*(m_txBuffer.begin()))->GetSize ();
+              m_txBuffer.insert (m_txBuffer.begin (), TxPdu (firstSegment, firstSegmentTime));
+              m_txBufferSize += m_txBuffer.begin()->m_pdu->GetSize ();
 
               NS_LOG_LOGIC ("    TX buffer: Give back the remaining segment");
               NS_LOG_LOGIC ("    TX buffers = " << m_txBuffer.size ());
-              NS_LOG_LOGIC ("    Front buffer size = " << (*(m_txBuffer.begin()))->GetSize ());
+              NS_LOG_LOGIC ("    Front buffer size = " << m_txBuffer.begin()->m_pdu->GetSize ());
               NS_LOG_LOGIC ("    txBufferSize = " << m_txBufferSize );
             }
           else
@@ -275,8 +272,8 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
           NS_LOG_LOGIC ("        SDUs in TxBuffer  = " << m_txBuffer.size ());
           if (m_txBuffer.size () > 0)
             {
-              NS_LOG_LOGIC ("        First SDU buffer  = " << *(m_txBuffer.begin()));
-              NS_LOG_LOGIC ("        First SDU size    = " << (*(m_txBuffer.begin()))->GetSize ());
+              NS_LOG_LOGIC ("        First SDU buffer  = " << m_txBuffer.begin()->m_pdu);
+              NS_LOG_LOGIC ("        First SDU size    = " << m_txBuffer.begin()->m_pdu->GetSize ());
             }
           NS_LOG_LOGIC ("        Next segment size = " << nextSegmentSize);
 
@@ -305,15 +302,16 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
           NS_LOG_LOGIC ("        SDUs in TxBuffer  = " << m_txBuffer.size ());
           if (m_txBuffer.size () > 0)
             {
-              NS_LOG_LOGIC ("        First SDU buffer  = " << *(m_txBuffer.begin()));
-              NS_LOG_LOGIC ("        First SDU size    = " << (*(m_txBuffer.begin()))->GetSize ());
+              NS_LOG_LOGIC ("        First SDU buffer  = " << m_txBuffer.begin()->m_pdu);
+              NS_LOG_LOGIC ("        First SDU size    = " << m_txBuffer.begin()->m_pdu->GetSize ());
             }
           NS_LOG_LOGIC ("        Next segment size = " << nextSegmentSize);
           NS_LOG_LOGIC ("        Remove SDU from TxBuffer");
 
           // (more segments)
-          firstSegment = (*(m_txBuffer.begin ()))->Copy ();
-          m_txBufferSize -= (*(m_txBuffer.begin()))->GetSize ();
+          firstSegment = m_txBuffer.begin ()->m_pdu->Copy ();
+          firstSegmentTime = m_txBuffer.begin ()->m_waitingSince;
+          m_txBufferSize -= firstSegment->GetSize ();
           m_txBuffer.erase (m_txBuffer.begin ());
           NS_LOG_LOGIC ("        txBufferSize = " << m_txBufferSize );
         }
@@ -379,7 +377,7 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
 
   // Sender timestamp
   RlcTag rlcTag (Simulator::Now ());
-  packet->ReplacePacketTag (rlcTag);
+  packet->AddByteTag (rlcTag, 1, rlcHeader.GetSerializedSize ());
   m_txPdu (m_rnti, m_lcid, packet->GetSize ());
 
   // Send RLC PDU to MAC layer
@@ -387,9 +385,9 @@ LteRlcUm::DoNotifyTxOpportunity (uint32_t bytes, uint8_t layer, uint8_t harqId, 
   params.pdu = packet;
   params.rnti = m_rnti;
   params.lcid = m_lcid;
-  params.layer = layer;
-  params.harqProcessId = harqId;
-  params.componentCarrierId = componentCarrierId;
+  params.layer = txOpParams.layer;
+  params.harqProcessId = txOpParams.harqId;
+  params.componentCarrierId = txOpParams.componentCarrierId;
 
   m_macSapProvider->TransmitPdu (params);
 
@@ -407,23 +405,25 @@ LteRlcUm::DoNotifyHarqDeliveryFailure ()
 }
 
 void
-LteRlcUm::DoReceivePdu (Ptr<Packet> p, uint16_t rnti, uint8_t lcid)
+LteRlcUm::DoReceivePdu (LteMacSapUser::ReceivePduParameters rxPduParams)
 {
-  NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << p->GetSize ());
+  NS_LOG_FUNCTION (this << m_rnti << (uint32_t) m_lcid << rxPduParams.p->GetSize ());
 
   // Receiver timestamp
   RlcTag rlcTag;
   Time delay;
-  NS_ASSERT_MSG (p->PeekPacketTag (rlcTag), "RlcTag is missing");
-  p->RemovePacketTag (rlcTag);
+
+  bool ret = rxPduParams.p->FindFirstMatchingByteTag (rlcTag);
+  NS_ASSERT_MSG (ret, "RlcTag is missing");
+
   delay = Simulator::Now() - rlcTag.GetSenderTimestamp ();
-  m_rxPdu (m_rnti, m_lcid, p->GetSize (), delay.GetNanoSeconds ());
+  m_rxPdu (m_rnti, m_lcid, rxPduParams.p->GetSize (), delay.GetNanoSeconds ());
 
   // 5.1.2.2 Receive operations
 
   // Get RLC header parameters
   LteRlcHeader rlcHeader;
-  p->PeekHeader (rlcHeader);
+  rxPduParams.p->PeekHeader (rlcHeader);
   NS_LOG_LOGIC ("RLC header: " << rlcHeader);
   SequenceNumber10 seqNumber = rlcHeader.GetSequenceNumber ();
 
@@ -460,13 +460,13 @@ LteRlcUm::DoReceivePdu (Ptr<Packet> p, uint16_t rnti, uint8_t lcid)
      )
     {
       NS_LOG_LOGIC ("PDU discarded");
-      p = 0;
+      rxPduParams.p = 0;
       return;
     }
   else
     {
       NS_LOG_LOGIC ("Place PDU in the reception buffer");
-      m_rxBuffer[seqNumber.GetValue ()] = p;
+      m_rxBuffer[seqNumber.GetValue ()] = rxPduParams.p;
     }
 
 
@@ -1123,10 +1123,7 @@ LteRlcUm::DoReportBufferStatus (void)
 
   if (! m_txBuffer.empty ())
     {
-      RlcTag holTimeTag;
-      NS_ASSERT_MSG (m_txBuffer.front ()->PeekPacketTag (holTimeTag), "RlcTag is missing");
-      m_txBuffer.front ()->PeekPacketTag (holTimeTag);
-      holDelay = Simulator::Now () - holTimeTag.GetSenderTimestamp ();
+      holDelay = Simulator::Now () - m_txBuffer.front().m_waitingSince;
 
       queueSize = m_txBufferSize + 2 * m_txBuffer.size (); // Data in tx queue + estimated headers size
     }
