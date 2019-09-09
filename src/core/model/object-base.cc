@@ -22,7 +22,7 @@
 #include "trace-source-accessor.h"
 #include "attribute-construction-list.h"
 #include "string.h"
-//#include "ns3/core-config.h"
+#include "ns3/core-config.h"
 #ifdef HAVE_STDLIB_H
 #include <cstdlib>
 #endif

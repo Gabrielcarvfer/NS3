@@ -26,6 +26,10 @@
 #include "infrastructure-wifi-mac.h"
 #include "mgt-headers.h"
 
+class TwoLevelAggregationTest;
+class AmpduAggregationTest;
+class HeAggregationTest;
+
 namespace ns3  {
 
 class SupportedRates;
@@ -102,6 +106,12 @@ struct ApInfo
 class StaWifiMac : public InfrastructureWifiMac
 {
 public:
+  /// Allow test cases to access private members
+  friend class ::TwoLevelAggregationTest;
+  /// Allow test cases to access private members
+  friend class ::AmpduAggregationTest;
+  /// Allow test cases to access private members
+  friend class ::HeAggregationTest;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -132,6 +142,13 @@ public:
    * \param phy the physical layer attached to this MAC.
    */
   void SetWifiPhy (const Ptr<WifiPhy> phy);
+
+  /**
+   * Return whether we are associated with an AP.
+   *
+   * \return true if we are associated with an AP, false otherwise
+   */
+  bool IsAssociated (void) const;
 
 
 private:
@@ -240,12 +257,6 @@ private:
    * gathered while scanning.
    */
   void ScanningTimeout (void);
-  /**
-   * Return whether we are associated with an AP.
-   *
-   * \return true if we are associated with an AP, false otherwise
-   */
-  bool IsAssociated (void) const;
   /**
    * Return whether we are waiting for an association response from an AP.
    *

@@ -273,7 +273,7 @@ EmuFdNetDeviceHelper::CreateFileDescriptor (void) const
       //
       status = ::execlp (RAW_SOCK_CREATOR,
                          RAW_SOCK_CREATOR,                            // argv[0] (filename)
-                         oss.str ().c_str (),                         // argv[1] (-p<path?
+                         oss.str ().c_str (),                           // argv[1] (-p<path?
                          (char *)NULL);
 
       //

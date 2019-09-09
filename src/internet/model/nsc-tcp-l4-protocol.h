@@ -17,7 +17,7 @@
 #ifndef NSC_TCP_L4_PROTOCOL_H
 #define NSC_TCP_L4_PROTOCOL_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "ns3/packet.h"
 #include "ns3/ipv4-address.h"

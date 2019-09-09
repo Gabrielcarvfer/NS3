@@ -24,7 +24,7 @@
 #include "uinteger.h"
 #include "log.h"
 
-//#include "ns3/core-config.h"
+#include "ns3/core-config.h"
 #ifdef HAVE_STDLIB_H
 #include <cstdlib>
 #endif

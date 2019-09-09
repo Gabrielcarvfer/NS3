@@ -21,7 +21,7 @@
 #ifndef TCP_SOCKET_BASE_H
 #define TCP_SOCKET_BASE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <queue>
 #include "ns3/traced-value.h"
 #include "ns3/tcp-socket.h"

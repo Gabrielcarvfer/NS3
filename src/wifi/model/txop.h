@@ -21,6 +21,7 @@
 #ifndef TXOP_H
 #define TXOP_H
 
+#include "ns3/traced-value.h"
 #include "mac-low-transmission-parameters.h"
 #include "wifi-mac-header.h"
 
@@ -305,12 +306,15 @@ public:
   virtual void EndTxNoAck (void);
 
   /**
-   * Check if the station has TXOP granted for the next MPDU.
+   * Return the remaining duration in the current TXOP.
    *
-   * \return true if the station has TXOP granted for the next MPDU,
-   *         false otherwise
+   * \return the remaining duration in the current TXOP.
    */
-  virtual bool HasTxop (void) const;
+  virtual Time GetTxopRemaining (void) const;
+  /**
+   * Update backoff and restart access if needed.
+   */
+  virtual void TerminateTxop (void);
 
   /**
    * Check if the next PCF transmission can fit in the remaining CFP duration.
@@ -506,6 +510,7 @@ protected:
   uint32_t m_cwMin;       //!< the CW minimum
   uint32_t m_cwMax;       //!< the CW maximum
   uint32_t m_cw;          //!< the current CW
+  uint32_t m_backoff;     //!< the current backoff
   bool m_accessRequested; //!< flag whether channel access is already requested
   uint32_t m_backoffSlots; //!< the backoff slots
   /**
@@ -522,6 +527,8 @@ protected:
   WifiMacHeader m_currentHdr; //!< the current header
   MacLowTransmissionParameters m_currentParams; ///< current transmission parameters
   uint8_t m_fragmentNumber; //!< the fragment number
+  TracedCallback<uint32_t> m_backoffTrace; //!< backoff trace value
+  TracedValue<uint32_t> m_cwTrace;         //!< CW trace value
 };
 
 } //namespace ns3

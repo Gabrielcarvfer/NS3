@@ -98,6 +98,19 @@ set(source_files
         model/infrastructure-wifi-mac.cc
         model/qos-txop.cc
         model/txop.cc
+
+        #Added in ns3.30
+        model/constant-obss-pd-algorithm.cc
+        model/he-configuration.cc
+        model/ht-configuration.cc
+        model/obss-pd-algorithm.cc
+        model/preamble-detection-model.cc
+        model/threshold-preamble-detection-model.cc
+        model/tx-vector-tag.cc
+        model/vht-configuration.cc
+        model/wifi-phy-header.cc
+        model/wifi-psdu.cc
+        model/wifi-remote-station-info.cc
         )
 
 set(header_files
@@ -202,6 +215,19 @@ set(header_files
         model/qos-txop.h
         model/txop.h
         model/wifi-mpdu-type.h
+
+        #Added in ns3.30
+        model/constant-obss-pd-algorithm.h
+        model/he-configuration.h
+        model/ht-configuration.h
+        model/obss-pd-algorithm.h
+        model/preamble-detection-model.h
+        model/threshold-preamble-detection-model.h
+        model/tx-vector-tag.h
+        model/vht-configuration.h
+        model/wifi-phy-header.h
+        model/wifi-psdu.h
+        model/wifi-remote-station-info.h
         )
 
 set(libraries_to_link
@@ -215,14 +241,14 @@ set(libraries_to_link
 
 set(test_sources
         test/block-ack-test-suite.cc
-        test/tx-duration-test.cc
+        test/inter-bss-test-suite.cc
         test/power-rate-adaptation-test.cc
-        test/wifi-test.cc
         test/spectrum-wifi-phy-test.cc
+        test/tx-duration-test.cc
         test/wifi-aggregation-test.cc
-        test/wifi-error-rate-models-test.cc
-        test/wifi-transmit-mask-test.cc
-        test/channel-access-manager-test.cc
+        test/wifi-phy-reception-test.cc
+        test/wifi-phy-thresholds-test.cc
+        test/wifi-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

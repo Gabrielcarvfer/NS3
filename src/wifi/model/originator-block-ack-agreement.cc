@@ -25,9 +25,7 @@ namespace ns3 {
 
 OriginatorBlockAckAgreement::OriginatorBlockAckAgreement (Mac48Address recipient, uint8_t tid)
   : BlockAckAgreement (recipient, tid),
-    m_state (PENDING),
-    m_sentMpdus (0),
-    m_needBlockAckReq (false)
+    m_state (PENDING)
 {
 }
 
@@ -39,11 +37,6 @@ void
 OriginatorBlockAckAgreement::SetState (State state)
 {
   m_state = state;
-  if (state == INACTIVE)
-    {
-      m_needBlockAckReq = false;
-      m_sentMpdus = 0;
-    }
 }
 
 bool
@@ -59,41 +52,21 @@ OriginatorBlockAckAgreement::IsEstablished (void) const
 }
 
 bool
-OriginatorBlockAckAgreement::IsInactive (void) const
+OriginatorBlockAckAgreement::IsRejected (void) const
 {
-  return (m_state == INACTIVE) ? true : false;
+  return (m_state == REJECTED) ? true : false;
 }
 
 bool
-OriginatorBlockAckAgreement::IsUnsuccessful (void) const
+OriginatorBlockAckAgreement::IsNoReply (void) const
 {
-  return (m_state == UNSUCCESSFUL) ? true : false;
-}
-
-void
-OriginatorBlockAckAgreement::NotifyMpduTransmission (uint16_t nextSeqNumber)
-{
-  NS_ASSERT (m_sentMpdus < m_bufferSize);
-  m_sentMpdus++;
-  uint16_t delta = (nextSeqNumber - m_startingSeq + 4096) % 4096;
-  uint16_t min = m_bufferSize < 64 ? m_bufferSize : 64;
-  if (delta >= min || m_sentMpdus == m_bufferSize)
-    {
-      m_needBlockAckReq = true;
-    }
+  return (m_state == NO_REPLY) ? true : false;
 }
 
 bool
-OriginatorBlockAckAgreement::IsBlockAckRequestNeeded (void) const
+OriginatorBlockAckAgreement::IsReset (void) const
 {
-  return m_needBlockAckReq;
-}
-
-void
-OriginatorBlockAckAgreement::CompleteExchange (void)
-{
-  m_needBlockAckReq = false;
-  m_sentMpdus = 0;
+  return (m_state == RESET) ? true : false;
 }
 
 } //namespace ns3

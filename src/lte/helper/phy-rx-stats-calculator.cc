@@ -42,8 +42,6 @@ PhyRxStatsCalculator::PhyRxStatsCalculator ()
 PhyRxStatsCalculator::~PhyRxStatsCalculator ()
 {
   NS_LOG_FUNCTION (this);
-  outFileDlRx.close();
-  outFileUlRx.close();
 }
 
 TypeId
@@ -71,18 +69,6 @@ void
 PhyRxStatsCalculator::SetUlRxOutputFilename (std::string outputFilename)
 {
   LteStatsCalculator::SetUlOutputFilename (outputFilename);
-
-  if(outFileUlRx.is_open())
-      outFileUlRx.close();
-
-  outFileUlRx.open (GetUlOutputFilename ().c_str ());
-  if (!outFileUlRx.is_open ())
-  {
-      NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
-      return;
-  }
-
-  m_ulRxFirstWrite = true;
 }
 
 std::string
@@ -95,18 +81,6 @@ void
 PhyRxStatsCalculator::SetDlRxOutputFilename (std::string outputFilename)
 {
   LteStatsCalculator::SetDlOutputFilename (outputFilename);
-
-  if(outFileDlRx.is_open())
-      outFileDlRx.close();
-
-  outFileDlRx.open (GetDlOutputFilename ().c_str ());
-  if (!outFileDlRx.is_open ())
-  {
-      NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
-      return;
-  }
-
-  m_dlRxFirstWrite = true;
 }
 
 std::string
@@ -121,26 +95,43 @@ PhyRxStatsCalculator::DlPhyReception (PhyReceptionStatParameters params)
   NS_LOG_FUNCTION (this << params.m_cellId << params.m_imsi << params.m_timestamp << params.m_rnti << params.m_layer << params.m_mcs << params.m_size << params.m_rv << params.m_ndi << params.m_correctness);
   NS_LOG_INFO ("Write DL Rx Phy Stats in " << GetDlRxOutputFilename ().c_str ());
 
+  std::ofstream outFile;
   if ( m_dlRxFirstWrite == true )
-  {
-    m_dlRxFirstWrite = false;
-    outFileDlRx << "% time\tcellId\tIMSI\tRNTI\ttxMode\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
-    outFileDlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
-  }
+    {
+      outFile.open (GetDlRxOutputFilename ().c_str ());
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetDlRxOutputFilename ().c_str ());
+          return;
+        }
+      m_dlRxFirstWrite = false;
+      outFile << "% time\tcellId\tIMSI\tRNTI\ttxMode\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
+      outFile << std::endl;
+    }
+  else
+    {
+      outFile.open (GetDlRxOutputFilename ().c_str (),  std::ios_base::app);
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetDlRxOutputFilename ().c_str ());
+          return;
+        }
+    }
 
-//   outFileDlRx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFileDlRx << params.m_timestamp << "\t";
-  outFileDlRx << (uint32_t) params.m_cellId << "\t";
-  outFileDlRx << params.m_imsi << "\t";
-  outFileDlRx << params.m_rnti << "\t";
-  outFileDlRx << (uint32_t) params.m_txMode << "\t";
-  outFileDlRx << (uint32_t) params.m_layer << "\t";
-  outFileDlRx << (uint32_t) params.m_mcs << "\t";
-  outFileDlRx << params.m_size << "\t";
-  outFileDlRx << (uint32_t) params.m_rv << "\t";
-  outFileDlRx << (uint32_t) params.m_ndi << "\t";
-  outFileDlRx << (uint32_t) params.m_correctness << "\t";
-  outFileDlRx << (uint32_t) params.m_ccId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
+//   outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFile << params.m_timestamp << "\t";
+  outFile << (uint32_t) params.m_cellId << "\t";
+  outFile << params.m_imsi << "\t";
+  outFile << params.m_rnti << "\t";
+  outFile << (uint32_t) params.m_txMode << "\t";
+  outFile << (uint32_t) params.m_layer << "\t";
+  outFile << (uint32_t) params.m_mcs << "\t";
+  outFile << params.m_size << "\t";
+  outFile << (uint32_t) params.m_rv << "\t";
+  outFile << (uint32_t) params.m_ndi << "\t";
+  outFile << (uint32_t) params.m_correctness << "\t";
+  outFile << (uint32_t) params.m_ccId << std::endl;
+  outFile.close ();
 }
 
 void
@@ -149,25 +140,42 @@ PhyRxStatsCalculator::UlPhyReception (PhyReceptionStatParameters params)
   NS_LOG_FUNCTION (this << params.m_cellId << params.m_imsi << params.m_timestamp << params.m_rnti << params.m_layer << params.m_mcs << params.m_size << params.m_rv << params.m_ndi << params.m_correctness);
   NS_LOG_INFO ("Write UL Rx Phy Stats in " << GetUlRxOutputFilename ().c_str ());
 
+  std::ofstream outFile;
   if ( m_ulRxFirstWrite == true )
-  {
-    m_ulRxFirstWrite = false;
-    outFileUlRx << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
-    outFileUlRx << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
-  }
+    {
+      outFile.open (GetUlRxOutputFilename ().c_str ());
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetUlRxOutputFilename ().c_str ());
+          return;
+        }
+      m_ulRxFirstWrite = false;
+      outFile << "% time\tcellId\tIMSI\tRNTI\tlayer\tmcs\tsize\trv\tndi\tcorrect\tccId";
+      outFile << std::endl;
+    }
+  else
+    {
+      outFile.open (GetUlRxOutputFilename ().c_str (),  std::ios_base::app);
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetUlRxOutputFilename ().c_str ());
+          return;
+        }
+    }
 
-//   outFileUlRx << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFileUlRx << params.m_timestamp << "\t";
-  outFileUlRx << (uint32_t) params.m_cellId << "\t";
-  outFileUlRx << params.m_imsi << "\t";
-  outFileUlRx << params.m_rnti << "\t";
-  outFileUlRx << (uint32_t) params.m_layer << "\t";
-  outFileUlRx << (uint32_t) params.m_mcs << "\t";
-  outFileUlRx << params.m_size << "\t";
-  outFileUlRx << (uint32_t) params.m_rv << "\t";
-  outFileUlRx << (uint32_t) params.m_ndi << "\t";
-  outFileUlRx << (uint32_t) params.m_correctness << "\t";
-  outFileUlRx << (uint32_t) params.m_ccId <<"\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
+//   outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFile << params.m_timestamp << "\t";
+  outFile << (uint32_t) params.m_cellId << "\t";
+  outFile << params.m_imsi << "\t";
+  outFile << params.m_rnti << "\t";
+  outFile << (uint32_t) params.m_layer << "\t";
+  outFile << (uint32_t) params.m_mcs << "\t";
+  outFile << params.m_size << "\t";
+  outFile << (uint32_t) params.m_rv << "\t";
+  outFile << (uint32_t) params.m_ndi << "\t";
+  outFile << (uint32_t) params.m_correctness << "\t";
+  outFile << (uint32_t) params.m_ccId <<std::endl;
+  outFile.close ();
 }
 
 void

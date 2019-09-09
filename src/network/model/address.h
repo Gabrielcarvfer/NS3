@@ -21,22 +21,13 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
-#include <cstdint>
-#include <cinttypes>
+#include <stdint.h>
 #include <ostream>
 #include "ns3/attribute.h"
 #include "ns3/attribute-helper.h"
 #include "ns3/tag-buffer.h"
 
 namespace ns3 {
-
-//std::unary_function got deprecated, replaced with the following (https://github.com/greg7mdp/sparsepp/commit/1ca7189fe81ee8c59bf08196852f70843a68a63a)
-template <class ArgumentType, class ResultType>
-struct spp_unary_function
-{
-  typedef ArgumentType argument_type;
-  typedef ResultType result_type;
-};
 
 /**
  * \ingroup network

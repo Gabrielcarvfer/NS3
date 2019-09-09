@@ -21,7 +21,7 @@
 #ifndef IPV4_END_POINT_DEMUX_H
 #define IPV4_END_POINT_DEMUX_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 #include "ns3/ipv4-address.h"
 #include "ipv4-interface.h"

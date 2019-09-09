@@ -21,7 +21,7 @@
 
 #include "ss-record.h"
 #include "service-flow.h"
-#include <cstdint>
+#include <stdint.h>
 
 namespace ns3 {
 

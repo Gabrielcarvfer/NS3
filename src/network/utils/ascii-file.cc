@@ -95,7 +95,6 @@ AsciiFile::Diff (std::string const & f1,
 
   std::string line1;
   std::string line2;
-
   lineNumber = 0;
   bool diff = false;
 
@@ -105,13 +104,6 @@ AsciiFile::Diff (std::string const & f1,
       ascii2.Read (line2);
 
       lineNumber++;
-
-
-      //CR;LF still is a nightmare
-      if (line1[line1.size()-1] == '\r')
-          line1 = std::string(line1.begin(), line1.end()-1);
-      if (line2[line2.size()-1] == '\r')
-          line2 = std::string(line2.begin(), line2.end()-1);
 
       bool same = ascii1.Fail () == ascii2.Fail ();
       if (!same)

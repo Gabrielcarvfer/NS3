@@ -102,7 +102,7 @@ DsrErrorBuffer::DropPacketForErrLink (Ipv4Address source, Ipv4Address nextHop)
         }
     }
   m_errorBuffer.erase (std::remove_if (m_errorBuffer.begin (), m_errorBuffer.end (),
-                      std::bind (std::cref (DsrErrorBuffer::LinkEqual), std::placeholders::_1, link)), m_errorBuffer.end ());
+                                       std::bind2nd (std::ptr_fun (DsrErrorBuffer::LinkEqual), link)), m_errorBuffer.end ());
 }
 
 bool

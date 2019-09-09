@@ -18,7 +18,7 @@
 #define NS3_CHANNEL_H
 
 #include <string>
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/object.h"
 #include "ns3/ptr.h"
 

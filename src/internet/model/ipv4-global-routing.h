@@ -21,7 +21,7 @@
 #define IPV4_GLOBAL_ROUTING_H
 
 #include <list>
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ipv4-address.h"
 #include "ns3/ipv4-header.h"
 #include "ns3/ptr.h"

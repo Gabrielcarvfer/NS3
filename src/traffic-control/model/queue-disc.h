@@ -23,7 +23,6 @@
 #include "ns3/object.h"
 #include "ns3/traced-value.h"
 #include "ns3/traced-callback.h"
-#include "ns3/net-device.h"
 #include "ns3/queue-item.h"
 #include "ns3/queue-size.h"
 #include <vector>
@@ -339,16 +338,39 @@ public:
   const Stats& GetStats (void);
 
   /**
-   * \brief Set the NetDevice on which this queue discipline is installed.
-   * \param device the NetDevice on which this queue discipline is installed.
+   * \param ndqi the NetDeviceQueueInterface aggregated to the receiving object.
+   *
+   * Set the pointer to the NetDeviceQueueInterface object aggregated to the
+   * object receiving the packets dequeued from this queue disc.
    */
-  void SetNetDevice (Ptr<NetDevice> device);
+  void SetNetDeviceQueueInterface (Ptr<NetDeviceQueueInterface> ndqi);
 
   /**
-   * \brief Get the NetDevice on which this queue discipline is installed
-   * \return the NetDevice on which this queue discipline is installed.
+   * \return the NetDeviceQueueInterface aggregated to the receiving object.
+   *
+   * Get the pointer to the NetDeviceQueueInterface object aggregated to the
+   * object receiving the packets dequeued from this queue disc.
    */
-  Ptr<NetDevice> GetNetDevice (void) const;
+  Ptr<NetDeviceQueueInterface> GetNetDeviceQueueInterface (void) const;
+
+  /// Callback invoked to send a packet to the receiving object when Run is called
+  typedef std::function<void (Ptr<QueueDiscItem>)> SendCallback;
+
+  /**
+   * \param func the callback to send a packet to the receiving object.
+   *
+   * Set the callback used by the Transmit method (called eventually by the Run
+   * method) to send a packet to the receiving object.
+   */
+  void SetSendCallback (SendCallback func);
+
+  /**
+   * \return the callback to send a packet to the receiving object.
+   *
+   * Get the callback used by the Transmit method (called eventually by the Run
+   * method) to send a packet to the receiving object.
+   */
+  SendCallback GetSendCallback (void) const;
 
   /**
    * \brief Set the maximum number of dequeue operations following a packet enqueue
@@ -671,8 +693,8 @@ private:
 
   Stats m_stats;                    //!< The collected statistics
   uint32_t m_quota;                 //!< Maximum number of packets dequeued in a qdisc run
-  Ptr<NetDevice> m_device;          //!< The NetDevice on which this queue discipline is installed
   Ptr<NetDeviceQueueInterface> m_devQueueIface;   //!< NetDevice queue interface
+  SendCallback m_send;              //!< Callback used to send a packet to the receiving object
   bool m_running;                   //!< The queue disc is performing multiple dequeue operations
   Ptr<QueueDiscItem> m_requeued;    //!< The last packet that failed to be transmitted
   bool m_peeked;                    //!< A packet was dequeued because Peek was called

@@ -33,8 +33,8 @@
 #include "ns3/kun-2600-mhz-propagation-loss-model.h"
 #include <ns3/mobility-building-info.h>
 #include "ns3/enum.h"
+
 #include "hybrid-buildings-propagation-loss-model.h"
-#include <algorithm> //std::max
 
 
 namespace ns3 {
@@ -213,7 +213,7 @@ HybridBuildingsPropagationLossModel::GetLoss (Ptr<MobilityModel> a, Ptr<Mobility
           if (a1->GetBuilding () == b1->GetBuilding ())
             {
               // nodes are in same building -> indoor communication ITU-R P.1238
-              loss = ItuR1238 (a, b) + InternalWallsLoss (a1, b1);;
+              loss = ItuR1238 (a, b) + InternalWallsLoss (a1, b1);
               NS_LOG_INFO (this << " I-I (same building) ITUR1238 : " << loss);
 
             }

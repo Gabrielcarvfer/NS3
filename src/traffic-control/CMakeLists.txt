@@ -22,6 +22,9 @@ set(source_files
 
         #Added in ns3.29
         model/prio-queue-disc.cc
+
+        #added in ns3.30
+        model/cobalt-queue-disc.cc
         )
 
 set(header_files
@@ -45,6 +48,9 @@ set(header_files
 
         #Added in ns3.29
         model/prio-queue-disc.h
+
+        #added in ns3.30
+        model/cobalt-queue-disc.h
         )
 
 set(libraries_to_link
@@ -53,15 +59,16 @@ set(libraries_to_link
         )
 
 set(test_sources
-        test/red-queue-disc-test-suite.cc
-        test/codel-queue-disc-test-suite.cc
-        test/adaptive-red-queue-disc-test-suite.cc
-        test/pie-queue-disc-test-suite.cc
-        test/fifo-queue-disc-test-suite.cc
-        test/tbf-queue-disc-test-suite.cc
-        test/tc-flow-control-test-suite.cc
-        test/prio-queue-disc-test-suite.cc
-        test/queue-disc-traces-test-suite.cc
+	    test/red-queue-disc-test-suite.cc
+	    test/codel-queue-disc-test-suite.cc
+	    test/adaptive-red-queue-disc-test-suite.cc
+	    test/pie-queue-disc-test-suite.cc
+	    test/fifo-queue-disc-test-suite.cc
+	    test/prio-queue-disc-test-suite.cc
+	    test/queue-disc-traces-test-suite.cc
+	    test/tbf-queue-disc-test-suite.cc
+	    test/tc-flow-control-test-suite.cc
+	    test/cobalt-queue-disc-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

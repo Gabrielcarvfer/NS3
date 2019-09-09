@@ -20,7 +20,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include <ostream>
 #include "ns3/assert.h"

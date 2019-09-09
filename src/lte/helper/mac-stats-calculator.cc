@@ -42,8 +42,6 @@ MacStatsCalculator::MacStatsCalculator ()
 MacStatsCalculator::~MacStatsCalculator ()
 {
   NS_LOG_FUNCTION (this);
-  outFileDl.close();
-  outFileUl.close();
 }
 
 TypeId
@@ -71,18 +69,6 @@ void
 MacStatsCalculator::SetUlOutputFilename (std::string outputFilename)
 {
   LteStatsCalculator::SetUlOutputFilename (outputFilename);
-
-  if(outFileUl.is_open())
-      outFileUl.close();
-
-  outFileUl.open (GetUlOutputFilename ().c_str ());
-  if (!outFileUl.is_open ())
-  {
-      NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
-      return;
-  }
-
-  m_ulFirstWrite = true;
 }
 
 std::string
@@ -95,18 +81,6 @@ void
 MacStatsCalculator::SetDlOutputFilename (std::string outputFilename)
 {
   LteStatsCalculator::SetDlOutputFilename (outputFilename);
-
-  if(outFileDl.is_open())
-      outFileDl.close();
-
-  outFileDl.open (GetDlOutputFilename ().c_str ());
-  if (!outFileDl.is_open ())
-  {
-      NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
-      return;
-  }
-
-  m_dlFirstWrite = true;
 }
 
 std::string
@@ -122,24 +96,41 @@ MacStatsCalculator::DlScheduling (uint16_t cellId, uint64_t imsi, DlSchedulingCa
 		  dlSchedulingCallbackInfo.rnti << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << dlSchedulingCallbackInfo.sizeTb1 << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << dlSchedulingCallbackInfo.sizeTb2);
   NS_LOG_INFO ("Write DL Mac Stats in " << GetDlOutputFilename ().c_str ());
 
+  std::ofstream outFile;
   if ( m_dlFirstWrite == true )
-  {
-    m_dlFirstWrite = false;
-    outFileDl << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcsTb1\tsizeTb1\tmcsTb2\tsizeTb2\tccId";
-    outFileDl << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
-  }
+    {
+      outFile.open (GetDlOutputFilename ().c_str ());
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
+          return;
+        }
+      m_dlFirstWrite = false;
+      outFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcsTb1\tsizeTb1\tmcsTb2\tsizeTb2\tccId";
+      outFile << std::endl;
+    }
+  else
+    {
+      outFile.open (GetDlOutputFilename ().c_str (),  std::ios_base::app);
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
+          return;
+        }
+    }
 
-  outFileDl << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFileDl << (uint32_t) cellId << "\t";
-  outFileDl << imsi << "\t";
-  outFileDl << dlSchedulingCallbackInfo.frameNo << "\t";
-  outFileDl << dlSchedulingCallbackInfo.subframeNo << "\t";
-  outFileDl << dlSchedulingCallbackInfo.rnti << "\t";
-  outFileDl << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << "\t";
-  outFileDl << dlSchedulingCallbackInfo.sizeTb1 << "\t";
-  outFileDl << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << "\t";
-  outFileDl << dlSchedulingCallbackInfo.sizeTb2 << "\t";
-  outFileDl << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
+  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFile << (uint32_t) cellId << "\t";
+  outFile << imsi << "\t";
+  outFile << dlSchedulingCallbackInfo.frameNo << "\t";
+  outFile << dlSchedulingCallbackInfo.subframeNo << "\t";
+  outFile << dlSchedulingCallbackInfo.rnti << "\t";
+  outFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << "\t";
+  outFile << dlSchedulingCallbackInfo.sizeTb1 << "\t";
+  outFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << "\t";
+  outFile << dlSchedulingCallbackInfo.sizeTb2 << "\t";
+  outFile << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << std::endl;
+  outFile.close ();
 }
 
 void
@@ -149,22 +140,39 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
   NS_LOG_FUNCTION (this << cellId << imsi << frameNo << subframeNo << rnti << (uint32_t) mcsTb << size);
   NS_LOG_INFO ("Write UL Mac Stats in " << GetUlOutputFilename ().c_str ());
 
+  std::ofstream outFile;
   if ( m_ulFirstWrite == true )
-  {
+    {
+      outFile.open (GetUlOutputFilename ().c_str ());
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
+          return;
+        }
       m_ulFirstWrite = false;
-      outFileUl << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcs\tsize\tccId";
-      outFileUl << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
-  }
+      outFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcs\tsize\tccId";
+      outFile << std::endl;
+    }
+  else
+    {
+      outFile.open (GetUlOutputFilename ().c_str (),  std::ios_base::app);
+      if (!outFile.is_open ())
+        {
+          NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
+          return;
+        }
+    }
 
-  outFileUl << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFileUl << (uint32_t) cellId << "\t";
-  outFileUl << imsi << "\t";
-  outFileUl << frameNo << "\t";
-  outFileUl << subframeNo << "\t";
-  outFileUl << rnti << "\t";
-  outFileUl << (uint32_t) mcsTb << "\t";
-  outFileUl << size << "\t";
-  outFileUl << (uint32_t) componentCarrierId << "\n"; //std::endl; //endl forces flush and blocks main thread, which severely impacts performance
+  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  outFile << (uint32_t) cellId << "\t";
+  outFile << imsi << "\t";
+  outFile << frameNo << "\t";
+  outFile << subframeNo << "\t";
+  outFile << rnti << "\t";
+  outFile << (uint32_t) mcsTb << "\t";
+  outFile << size << "\t";
+  outFile << (uint32_t) componentCarrierId << std::endl;
+  outFile.close ();
 }
 
 void

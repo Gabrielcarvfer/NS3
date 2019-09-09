@@ -21,13 +21,13 @@
 #ifndef CALLBACK_H
 #define CALLBACK_H
 
-#include "ns3/ptr.h"
-#include "ns3/fatal-error.h"
-#include "ns3/empty.h"
-#include "ns3/type-traits.h"
-#include "ns3/attribute.h"
-#include "ns3/attribute-helper.h"
-#include "ns3/simple-ref-count.h"
+#include "ptr.h"
+#include "fatal-error.h"
+#include "empty.h"
+#include "type-traits.h"
+#include "attribute.h"
+#include "attribute-helper.h"
+#include "simple-ref-count.h"
 #include <typeinfo>
 
 /**
@@ -1444,11 +1444,9 @@ private:
       {
         std::string othTid = other->GetTypeid ();
         std::string myTid = CallbackImpl<R,T1,T2,T3,T4,T5,T6,T7,T8,T9>::DoGetTypeid ();
-        std::stringstream error_msg;
-        error_msg << "Incompatible types. (feed to \"c++filt -t\" if needed)" << std::endl <<
-                  "got=" << othTid << std::endl <<
-                  "expected=" << myTid;
-        NS_FATAL_ERROR (error_msg.str());
+        NS_FATAL_ERROR_CONT ("Incompatible types. (feed to \"c++filt -t\" if needed)" << std::endl <<
+                        "got=" << othTid << std::endl <<
+                        "expected=" << myTid);
         return false;
       }
     m_impl = const_cast<CallbackImplBase *> (PeekPointer (other));

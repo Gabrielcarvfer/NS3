@@ -192,6 +192,10 @@ set(source_files
         model/hash-fnv.cc
         model/hash.cc
         model/des-metrics.cc
+        model/node-printer.cc
+        model/show-progress.cc
+        model/time-printer.cc
+
         )
 
 #Define core lib headers
@@ -282,6 +286,9 @@ set (header_files
         model/non-copyable.h
         model/build-profile.h
         model/des-metrics.h
+        model/node-printer.h
+        model/show-progress.h
+        model/time-printer.h
         )
 
 set(test_sources

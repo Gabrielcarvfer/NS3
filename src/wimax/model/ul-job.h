@@ -22,7 +22,7 @@
 #ifndef UL_JOB_H
 #define UL_JOB_H
 
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/header.h"
 #include "ss-record.h"
 #include "service-flow.h"

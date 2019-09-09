@@ -142,9 +142,6 @@ private:
    */
   bool m_ulRxFirstWrite;
 
-  std::ofstream outFileDlRx;
-  std::ofstream outFileUlRx;
-
 };
 
 } // namespace ns3

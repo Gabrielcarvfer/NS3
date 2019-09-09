@@ -1,0 +1,782 @@
+    ...
+    - Added a trace for expired MPDUs
+    add int64x64_t scaling.
+    Add logging statements to FlowMonitor
+    Add .mailmap
+    Add release dedication
+    Address issue #47
+    a feature addition at a later stage.
+    after object construction, but prior to this patch, it would cause a
+    After the RLF implementation, the UE state upon jumping at a far away location will not be in connected state anymore, thus, we should only check for not connected state.
+    agreement to change state ("The block ack record shall be updated
+    Alexander Krotov <krotov@iitp.ru> for reporting
+        * Allow simulations with multiple SGWs and PGWs.
+    Also, attempt to fix the issues listed in #33
+    Also, make use of the new variants of the WifiMacQueue methods and
+    Also, regenerate data files used by devices-mesh-dot11s-regression
+    Also, remove a few unused methods
+    Also, remove m_ldpc and m_stbc, as they can be obtained via
+    Also, window size may not be equal to 64.
+    AMethod (MyAwesomeStruct (10, 200));
+    AMethod (x);
+    ...and another method to return the Block Ack type
+    aodv:  Reduce default node separation to account for wifi model changes
+    are inside the vector, and also to get a const reference to any element.
+    as they can be obtained via the HT capabilities.
+    BasicEnergySource::UpdateEnergySource
+    Between Rel. x and Rel. 15 (Rel. x being the current one) some values have been
+    bindings:  Rescan all APIs
+    bindings:  Rescan all APIs
+    bindings:  Rescan all APIs
+    bindings: Update package version numbers for API scanning
+    bindings: Update pybindgen version
+    block ack agreement is torn down. If the originator decides to
+    bug:3001 mpi: fix comment
+    build: (fixes #14) Check file timestamps instead of hashes for changes
+    build: (fixes #15) Fix build erroneous order constraint warnings
+    build: (fixes #17) Fix string type consistency issue
+    build: (fixes #2181) Compare tuples numerically
+    build: (fixes #2637) macOS SDK headers in non-standard place
+    build: (fixes #2993) Waf --enable-sudo option broken
+    build: (fixes #3007) Boost library configuration in contrib
+    build: Make wscript changes to default to Python 3
+    build: update waf to version 2.0.15
+    build: Upgrade scripts to Python 3 (many changes due to Ankit Deepak)
+    build: Upgrade Waf to 2.0.18
+    build: (works around #14) add Waf option to run without building
+    ...by searching through both the BA Manager retransmit queue and the EDCA queue
+    can be replaced with
+    carrier has to be used.
+    changes made to ae2f33cf73256fd20419507f96705df6eb884eba.
+    Checked against https://en.wikipedia.org/wiki/List_of_WLAN_channels
+    ci: Fix pacman error while updating
+    ci: Removed 'y', as per update database, from the CI script for archlinux
+    ci: Updated docker image to archlinux/base
+    ci: Use nsnam worker for very long tasks
+    Closes #32
+    Closes #43
+    Closes #45, #33, and #27
+    Closes #48
+    coexistence, check the size of these vector before doing any operation.
+    CompleteExchange methods of the same class and various
+    ComponentCarrier{Enb,Gnb} derives from ComponentCarrierBaseStation and everyone
+    ComponentCarrierEnb, which will be ComponentCarrierGnb. But, in some methods of
+    Consequently, remove the NotifyMpduTransmission and
+    CONTRIBUTING.md: update table of contents
+    core: Enable NS_LOG_WARN in Config::Connect/Disconnect
+    core: (fixes #43) Check if ObjectFactory has been configured
+    core: (fixes #43) Check if ObjectFactory has been configured
+    core: Fix potential compilation issue
+    core: fix return value documentation for TraceConnect/Disconnect
+    core: fix some documentation typos
+    core: periodically show progress by elapsed simulation time, executed event count
+    core: refactor LogTimePrinter, LogNodePrinter
+    core: return non-const reference when a const Ptr is dereferenced
+    core: return non-const reference when a const Ptr is dereferenced
+    core: Simulator::GetEventCount()
+    core: time: replace int64_t operator/(Time,Time) with exact int64x64_t version,
+    created with an unordered_map at compile time. The default values for the
+    Credit to Waf maintainer ita1024 for this fix.
+    Current is measured in Amps, not Watts
+    doc: added CONTRIBUTING.md, references to git
+    doc: Contributing added explicit ACK to Atom
+    doc: finished last things
+    doc: finished manual
+    doc: Fixed Contributing.md
+    doc: fix some typos
+    doc: fix some typos
+    doc: moved contributing-with-git to working-with-git
+    doc: Move README to README.md (With formatting update)
+    docs: sphinx: fix various errors
+    documentation: avoid prepended character on version string
+    documentation: correct text on building topologies section
+    documentation:  Fix block formatting
+    documentation: Update get_version.sh script for git
+    documentation: Update Sphinx math extensions
+    documentation: Update tutorial to ns-3.29 and conversion to git
+    doc: updated manual git section
+    doc: [WIP] Section on the manual for git
+    Done by having more detailed MpduType enum
+    Due to RLF the UE context deletion might get triggered during the reception of a packet by EpcEnbApplication from EpcSgwApplication. This patch will enable  EpcEnbApplication  to discard  such packets.
+    Enables to compute per MPDU PER. Also add a method to get SNR over whole event.
+    energy: increase tolerance in BasicEnergyUpdateTest
+    energy: reschedule UpdateEnergySource only if it has already expired
+    energy: update remaining energy even if the simulation has finished
+    EpsBearer is now a ns-3 Object, and carries an attribute, "Release",
+    even read-only. With this addition, it is possible to know how many elements
+    Example CI for ns-3 and Gitlab
+    Example CI for ns-3 and Gitlab
+    examples: Fix regression time for wifi examples
+    examples: Fix typo in he-wifi-network
+    examples: Update comments in rate-adaptation-distance
+    examples: Update comments in rate-adaptation-distance
+    Extend core API to tag byte ranges -- first use case: Avoid the use of PacketTag in LTE PDCP and RLC, ByteTagging only their headers
+    filled by the helper.
+    Fix bug in AntennaModel example code.
+    Fix bug in AntennaModel example code.
+    Fix build in optimized mode
+    Fix empty compile_commands.json
+    Fix empty compile_commands.json
+    Fixes #24
+     Fixes issue #35
+    Fixes issue #48
+    Fix handover buffering
+    Fix libgcrypt-config configuration message
+    Fix libgcrypt detection
+    Fix typos
+    Fix various typos
+    flow-monitor: Fix FlowMonitor::Stop () method
+    flow-monitor:  Relax node spacing to account for wifi model changes
+    For the NR module we have the necessity of implementing a different type of
+    `Gdk.Display.get_default()`. To solve the problem, alternative
+    Git migration documentation update. Added CONTRIBUTING.md, modified README.md, and added a section on the manual "Working with git".
+    GTP-C messages are not sent very often, so no need to optimize them
+    Hence, have them stored by the unique MacLow object
+    Hence, remove the INACTIVE state. Actually, there is no point
+    However, there's no time in fixing a decade-old test, and also the code
+    If there are elements in it, then execute; otherwise, just ignore.
+    If we update the window and THEN we try to reassemble the PDU,
+    Ignore contrib directories in git
+    Ignore contrib directories in git
+    Improve fix for optimized mode build
+    in having such a state. If the inactivity timeout expires, the
+    Initialize MultiModelSpectrumChannel::m_numDevices
+    In lte-enb-rrc, in a lot of places there is the assumption that
+    In operating systems with older version of X server, such as
+    - Insert/Dequeue/Remove from specific positions in the queue
+    instance, thinking that it would be a good service to the users. I was wrong.
+    internet-apps: remove unused includes
+    internet-apps: rescan bindings
+    internet-apps: rescan bindings
+    internet: (fixes #2990) Ipv6 packet shouldn't be marked with SocketIpTtlTag
+    internet: (fixes #46) Export headers for transport protocol modularity
+    internet:  Fix log statement and remove dead code
+    internet: remove unused Ipv4Header object
+    internet:  Update comment in tcp-ecn-test.cc (reported by ajupazhamayil)
+    internet: update comments for ::NotifyNewAggregate
+    in the DCF/EDCA queue, because its TID will be used afterwards
+    In this way it is possible to write extensions at UE side for deciding what
+    irrespective of the acknowledgment type (Normal or Block Ack) for
+          is finished.
+    is happy. I had to introduce DynamicCast all over the helper to make everything
+    is used. The clang_compilation_database.py file was correctly updated in the
+    * link2xt/ns-3-dev-trace-fading-loss-model-spectrum:
+    lookup table are taken from Rel. 11, as they were in previous ns-3 releases.
+    lte: Add attribute to configure the periodicity of DL CQI reports
+    lte: Add attribute to enable/disable RLF detection
+    lte: Add command line options to disable some data flows
+    lte: Add command line options to disable some data flows and fix typos
+        lte: Add documentation for EPC split
+    lte: Add doxygen doc
+        lte: Add doxygen doc for EpcMmeApplication class
+        lte: Add doxygen doc for EpcPgwApplication class
+        lte: Add doxygen doc for EpcSgwApplication class
+    lte: Added a fake header to RLC SM to be able to measure the layer-to-layer delay
+      lte: Added EpsBearer new values (updating it to Rel. 15)
+    lte: Added EpsBearer new values (updating it to Rel. 15)
+    lte: Add example and test for RLF
+    lte: Add Fraunhofer copyright for RLF
+    lte: Add instantaneous thrput computation and include more traces
+        lte: Add IPv6 support to new PgwApplication
+    lte: Add method to flush DL HARQ buffer
+    lte: Add method to remove TBs from the eNB expected list upon RLF
+    lte: Add missing dia figures as uncompressed
+    lte:  Add missing figure reference
+    lte: Add modified by line for RLF extensions
+    lte: Add modified by line for the new code
+        lte: Add new ATTACH_REQUEST state in eNB RRC
+        lte: Add new example
+        lte: Add new features of the EPC upgrade to CHANGES.html
+        lte: Add new files to build system
+        lte: Add new GTP-C protocol header
+        lte: Add new MME Application
+        lte: Add new PGW Application
+    lte: Add new RaResponseTimeout trace source in LteUeMac
+        lte: Add new SGW Application
+    lte: Add new trace RrcTimeout to trace RRC timeouts at eNB
+    lte: Add new trace source NotifyConnectionRelease
+    lte: Add RLF related documentation
+    lte: Add RLF related figures
+    lte: Add simTime command line parameter and fix some typos
+    lte: Add struct for the parameters of TxOpportunity and ReceivePdu
+    lte: Add TxFailParam in RachConfigCommon
+    lte: Adjust handover test parameters
+    lte: all bytes are received now
+    lte: Allocate non-contention based preamble only if its free
+    lte: Assign QoS param to the default bearer to be used in Token Bank Fair Queue Scheduler
+    lte: Avoid checking for connection established in RrcConnectionEstablishmentErrorTestCase
+    lte: Avoid scheduling the UE whose TB size is greater than the budget of the scheduler
+    lte: Avoid valgrind warning of uninitialized value
+    lte: Call EndRx () of interference model upon PHY reset
+    lte: Cancel the pending events while removing the UE at the eNB
+        lte: cast a uint8_t when logging
+    lte: Change NS_ASSERT to NS_ASSERT_MSG to include cell id of the eNB
+        lte: Change some names of addresses and clean debug code
+    lte: Change some parameters to get clearer lte traces
+        lte: Change to new pgw node
+    lte: Clarify purpose of the example
+        lte: Clarify that e2e is IPv4/IPv6 and core network is IPv4-only
+    lte: Clear the previously received PSSs upon PHY reset
+        lte: Command line parameters take precedence over parameters in config file
+    lte: Communicate the IMSI to UE MAC and PHY
+      lte: ComponentCarrier subclasses can override Set{Dl,Ul}Bandwidth
+    lte: ComponentCarrier subclasses can override Set{Dl,Ul}Bandwidth
+      lte: ComponentCarrier with cellId is now ComponentCarrierBaseStation
+    lte: ComponentCarrier with cellId is now ComponentCarrierBaseStation
+    lte: Correct typos
+    lte: create testcases to test IPv6 addresses of EpcTftClassifier
+    lte: Delete CsmaEpcHelper
+    lte: Discard packets arriving after UE context removal at EpcEnbApplication
+      lte: Do not assume that the helper is setting all the vectors
+    lte: Do not assume that the helper is setting all the vectors
+    lte: Do not generate CQI reports & UE measurements if the UE is not in synch with any cell
+        lte: Don't need to build the GtpcHeader by hand, just the message
+    lte: Enable UE to send context remove request to the eNB upon RLF
+    lte: eNB CCM should not have a direct pointer to the eNB RRC
+    lte: eNB MAC to remove unprocessed preambles and BSRs upon UE removal
+    lte: eNB PHY to remove Tbs, SRS and Dl/UL DCIs upon UE removal
+    LTE eNB RRC is extended to support:
+    lte:  EPC upgrade
+      lte: EpsBearer support run-time switching between Rel. 11 and Rel. 15
+    lte: EpsBearer support run-time switching between Rel. 11 and Rel. 15
+      lte: EpsBearer uses a lookup table
+    lte: EpsBearer uses a lookup table
+    lte: Erase all the maps in eNB CC manger upon UE removel
+    lte: Extend eNB RRC and SAPs to RX & UE RRC SAPs to TX ideal UE context remove request
+    lte: Extend EpcMme, EpcSgw and EpcPgw App to remove UE context
+    lte: Extend UE PHY and RRC for RLF detection
+    lte: fix build by updating ofstream mode constants
+        lte: Fix doxygen comments and doc typos
+      lte: (fixed #2893) GetPgw in helpers must be const
+    lte: (fixed #2893) GetPgw in helpers must be const
+      lte: fixed reviewer comments for p2p helper
+    lte: fixed reviewer comments for p2p helper
+    lte: Fix EPC test crashes by removing an assert
+    lte: (fixes #2339) use only the active RBs for uplink PSD computation
+    lte: (fixes #2861) forward TXOPs to the RLCs of SCCs
+    lte: (fixes #2979) remove unused variables and functions from UE RRC and UE CCM
+    lte: (fixes #2980) reset MAC and PHY of secondary carriers upon handover
+    lte: (fixes #2982) configure UE MAC SAP LteMacSapUser properly
+    lte: (fixes #2988) correction in L3 filtering formula used for UL power control
+    lte: (fixes #2992) Send method of the LteUeNetDevice doesn't use protocolNumber parameter
+    lte: (fixes #2997) EpcTft::PacketFilter::Matches does not use ipv6 address to match an IP packet
+        lte: (fixes #3027) S1 signalling is done before RRC connection establishment is finished
+    lte: Fix figures size in doc
+    lte: fix memory issue
+      lte: Fix PDU delivering at the edge of reordering window
+    lte: Fix PDU delivering at the edge of reordering window
+    lte: Fix some logs
+    lte: fix some logs in EpcTft
+    lte:  Fix some typos and style issues
+    lte: Fix type of the m_rapIdRntiMap key. Thanks to Fraunhofer
+    lte: Fix typos and some header spacings
+        lte: GTPC messages derived from GtpcHeader
+    lte: Implement packet buffering in handover procedure
+    lte: Improve doxygen
+    lte: Improve RLF design doc to cover multiple carrier case
+    lte: Improve the doc related to ConnEstFailCount
+    lte: Init DL and UL EARFCN to solve valgrind error
+        lte: InitialUeMessage cannot be called if simulation is not started
+    lte: Init RNTI in UE RRC protocol before sending the UE context remove request
+    lte: Init the RNTI to 0 without using DoSetTemporaryCellRnti
+    lte: Limit T300, T310, N310 and N311 to the standard min and max values
+    lte: Log time of sync indications from UE PHY to UE RRC
+      lte: LteMacSap constructors for ReceivePduParameters and TxOpportunityParameters created
+    lte: LteMacSap constructors for ReceivePduParameters and TxOpportunityParameters created
+    lte: Make m_isConnected false upon PHY reset
+      lte: Make point-to-point-epc-helper inheritable
+    lte: Make point-to-point-epc-helper inheritable
+      lte: Making SimpleUeComponentCarrierManager inheritable
+    lte: Making SimpleUeComponentCarrierManager inheritable
+      lte: Managing SR at SAP interface level.
+    lte: Managing SR at SAP interface level.
+    lte: merge branch 'lte-nr-prereq-v2' (MR !31)
+    lte: Merge branch 'lte-rlc-fix-pdu-delivering', MR !30
+    lte: New customizable backhaul
+    lte: New customizable backhaul
+        lte: New GetPacketFilters method
+    lte: Notify UE MAC and PHY upon successful RRC connection establishment
+    * lte-nr-prereq-v2:
+        lte: Number of nodes has changed after EPC split
+    * lte-p2p-helper-dev:
+    lte pdcp: Do not use a PacketTag to store the arrival time
+        lte: PreSerialize/PreDesearialize are only used in the derived messages
+    lte: Refactor DoInitialize methods of LteEnbPhy and LteUePhy
+    lte: remove ALL_UL_CQI filter and update all the schedulers
+        lte: Remove duplicated example
+        lte: Remove duplicated example from wscript
+    lte: Remove intriguing inline
+    lte: Remove test disabled from build for several years
+    lte: Remove TFTs and restore bearer list upon RRC connection release
+    lte: Remove UE from RRC protocol upon UE removal
+    lte: Remove unnecessary fake header
+    lte: Remove unnecessary spaces from the docs
+    lte: Remove unused variable
+    lte: Remove useUdp variable. TCP was not used in the test
+    lte: Remove wrongly used call to CancelEnteringTrigger while leaving connected mode
+    lte: rename m_fadingModule to m_fadingModel
+        lte: Rename number of node pairs variable
+    lte: rescan API definitions for bindings
+    lte: rescan API definitions for bindings
+    lte: rescan API definitions for bindings
+    lte: rescan API definitions for bindings
+    lte: rescan API definitions for bindings
+    lte: rescan bindings
+    lte: rescan bindings
+    lte: rescan bindings
+    lte: rescan bindings
+    lte: rescan bindings
+    lte: Rescan bindings
+    lte: Rescan python bindings
+    lte: Reset preamble transmission count before starting NC based RACH
+    lte: Reset PSS received flag while resetting PHY of a UE
+    lte: Reset the RNTI at UE MAC upon reset
+    lte: Resolve doxygen warnings
+    lte rlc am: Do not use a PacketTag to store the arrival time
+    * lte-rlc-fix-pdu-delivering:
+    lte rlc tm: Disable delay measurements
+    lte rlc um: Do not use a PacketTag to store the arrival time
+    lte: Set cell id to 0 in UE RRC and PHY upon RLF
+    lte: set number of component carriers in RRC through CCM
+        lte: Split SGW/PGW/MME in different nodes
+    lte: Store bearers to be used for reconnecting an out-of-covrg UE
+    lte: Store the cell id before leaving the cell
+    lte: UE to ignore cells with RSRP less than -140 dBm
+    lte: Update AUTHORS
+    lte: Update copyright for RLF extensions
+    lte: update design documentation after removing ALL_UL_CQI filter
+    lte: update doxygen
+    lte: Update RadioBearerStats connector and eNB/UE RRC
+    lte: update tests after removing ALL_UL_CQI filter
+    lte: Updating CHANGES.html to reflect trace changes in RLC TM mode
+    lte: Use only CTRL SINR for RLF detection
+        lte: Use protocolNumber in new EpcPgwApplication
+    lte: Use Time instead of double
+    lte: Use Time instead of double
+    lte: use Time instead of string
+    lte: Verify that the num of SF used for in/out of Sync evaluation are multiple of 10
+    manual: fix sphinx code highlighting
+    manual: revert unwanted change in changeset 13768:cedfa3990e73
+    * 'master' of gitlab.com:nsnam/ns-3-dev:
+Merge: 04f8caa 49dd7e2
+Merge: 1dfef4d 1d9bfae
+Merge: 37b502d 32feed9
+Merge: 4d0b536 da994d5
+Merge: 4d1aace c0fcc36
+Merge: 5b5282f 4227f89
+Merge: 6032126 48ae785
+Merge: 63ce6b6 d4cd46f
+Merge: 82b0385 95de59a
+Merge: 8c39f4d 804b765
+Merge: 96ea5ea a85bcf0
+Merge: 9d7411b 6d1405b
+Merge: 9daacc6 3da19ce
+Merge: ae2f33c c43eaac
+Merge: bcad690 b08b3de
+    Merge branch '11ax_obss_pd_spatial_reuse' into 'master'
+    Merge branch 'backhaul-update' into 'master'
+    Merge branch 'check-probe-request-ssid' into 'master'
+    Merge branch 'ci' into 'master'
+    Merge branch 'develop' into 'master'
+    Merge branch 'energy-update' into 'master'
+    Merge branch 'fix-empty-compile-commands-file' into 'master'
+    Merge branch 'fix-handover-buffering' into 'master'
+    Merge branch 'fix_issue_32' into 'master'
+    Merge branch 'git-migration-documentation-update' into 'master'
+    Merge branch 'header-tag-dev' into 'master'
+    Merge branch 'link2xt/ns-3-dev-trace-fading-loss-model-spectrum' MR !33
+    Merge branch 'lte-p2p-helper-dev', as per MR !38
+    Merge branch 'master' of gitlab.com:nsnam/ns-3-dev
+    Merge branch 'object-factory-check' into 'master'
+    Merge branch 'patch-1' into 'master'
+    Merge branch 'pedrobellotti/ns-3-dev-flowmonitor-fix'
+    Merge branch 'ptr-const-dereference' into 'master'
+    Merge branch 'review-working-with-git-doc' into 'master'
+    Merge branch 'wifi-error-model-coded-bits-vs-data-bits' into 'master'
+    Merge branch 'wifi-fixes' into 'master'
+    Merge branch 'wifi-fixes' into 'master'
+    Merge branch 'wifi-needbarretransmission' into 'master'
+    Merge branch 'wifi_phy_improvements' into 'master'
+Merge: c0997bc 99430f7
+Merge: c466278 61cbb19
+Merge: caa195a 3329e87
+Merge: caabc65 3253135
+Merge: ced0ff6 a5fa8ef
+Merge: d2a2e53 e0f2f45
+Merge: dd606f7 e23e796
+Merge: e6c7376 ee7fcf4
+Merge: e7c1c39 8cbec72
+Merge: eb245ab 740e5a7
+Merge: fe0ca00 9f1b433
+    mesh: Introduction of Ht/Vht/HeConfiguration not accounted for in MeshHelper
+    mesh: Rescan pcap files
+    method is provided to acquire the scale factor and the geometry
+    - Michele Polese <michele.polese@gmail.com>
+    mobility: Allow AssignStreams after construction for SteadyStateRwpMobility
+    mobility: (fixes #11) Rectangle::GetClosestSide works for exterior points
+    mobility: (fixes #2860) set z coordinate for many position-allocation classes
+      Move TraceFadingLossModel from lte to spectrum module
+    Move TraceFadingLossModel from lte to spectrum module
+    Moving the existing switch/cases statement to a lookup in a lookup-table,
+    mpi: Remove redundant statement
+    MyAwesomeStruct x;
+    Natale
+    network: Added API to be able to tag only some bytes
+    network: Clarify some Queue documentation
+    network: Rename Queue methods to allow range based for loops
+        * New ATTACH_REQUEST state to wait for finalization of the S1
+        * New InitialContextSetupRequest primitive of the S1 SAP that is
+        * New S5 interface between SGW and PGW nodes based on GTPv2-C protocol.
+    NIST to provide CreateUlTxPowerSpectralDensity function
+    nix: use C++ 11 assign() to initialize the BFS
+    not exist in the `X11Display` object acquired by
+    of the primary monitor.
+    OriginatorBlockAckAgreement class are not actually used.
+    other methods that only call the removed methods.
+    Otherwise consumed energy may be estimated incorrectly if it is queried at the end of simulation.
+    Otherwise, if energy consumption is queried frequently, canceled events are produced.
+    Otherwise remaining energy goes below zero.
+    Partially update python bindings generation code for Python 3
+    Patch based on original suggestion from ita1024 on updated constraints
+    - Peek methods are const and return a ConstIterator
+    previous packet is under HARQ retransmission.
+          received by the eNB RRC when the S1 signalling from the core network
+    Reduce simulation time to 1 second in AnimationRemainingEnergyTestCase
+    Reducing the amount of needed lines.
+    Remove deprecated method and misspelling
+    Remove duplicate semicolons
+    Remove .hgignore and .hgtags
+    Remove reference to Mercurial
+    remove unused BlockAckManager methods
+    Replace NS_LOG_ERROR and exit(1) with NS_FATAL_ERROR in ht-wifi-network example
+    Rescan python bindings
+    Rescan wifi and wave bindings
+    resulted in signals too weak to pass the detection model.
+    Revert "lte: Merge branch 'lte-rlc-fix-pdu-delivering', MR !30"
+          RRC connection establishment procedure is finished.
+    RRC, it is accepted only a pointer to ComponentCarrierEnb.
+    RSSI of -82 dBm made it such that the default grid step size of 100
+    RxOkCallback will be triggered if at least one MPDU of the A-MPDU is successfully received.
+        * S1 signalling with the core network is initiated after the
+    see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
+    See also:  https://gitlab.com/ita1024/waf/issues/2231
+    See issue #27
+    see merge request !29
+    see merge request !55
+    See merge request nsnam/ns-3-dev!11
+    See merge request nsnam/ns-3-dev!16
+    See merge request nsnam/ns-3-dev!19
+    See merge request nsnam/ns-3-dev!22
+    See merge request nsnam/ns-3-dev!3
+    See merge request nsnam/ns-3-dev!32
+    See merge request nsnam/ns-3-dev!39
+    See merge request nsnam/ns-3-dev!4
+    See merge request nsnam/ns-3-dev!42
+    See merge request nsnam/ns-3-dev!45
+    See merge request nsnam/ns-3-dev!46
+    See merge request nsnam/ns-3-dev!48
+    See merge request nsnam/ns-3-dev!5
+    See merge request nsnam/ns-3-dev!52
+    See merge request nsnam/ns-3-dev!53
+    See merge request nsnam/ns-3-dev!56
+    see merge request nsnam/ns-3-dev!58
+    See merge request nsnam/ns-3-dev!60
+    See merge request nsnam/ns-3-dev!61
+    see merge request nsnam/ns-3-dev!62
+    see merge request nsnam/ns-3-dev!63 and issue nsnam/ns-3-dev#53
+    see merge request nsnam/ns-3-dev!64 and issue nsnam/ns-3-dev!54
+    See merge request nsnam/ns-3-dev!67
+    See merge request nsnam/ns-3-dev!68
+    See merge request nsnam/ns-3-dev!7
+    See merge request nsnam/ns-3-dev!71
+    see pull request !26
+    segmentation fault until after initialization.  The initial benefit is
+    Sequence numbers should be compared modulo 4096.
+        * SGW, PGW and MME are full nodes.
+          signalling with the core network.
+    Simple const-correctness enforcing.
+    sixlowpan: remove unused includes
+    sixlowpan: rescan bindings
+    So, in LTE, would happen that a packet is delivered even in the case that the
+      spectrum: Add API to retrieve Values size and a single value at any position
+    spectrum: Add API to retrieve Values size and a single value at any position
+    spectrum: Fix fatal error message
+    spectrum: Fix order of PHYs stored in MultiModelSpectrumChannel
+    spectrum: rescan API definitions for bindings
+    spectrum: rescan bindings
+    spectrum: trigger the new Gain trace for every transmission
+    SR is implemented in the NR module; for the moment, just add the possibility at
+    switch to Normal Ack policy, there is no need for the block ack
+    tcp: Add GetTxBuffer API for TCP test
+    tcp: (fixes #60) TcpSocket documentation fix
+    tcp: (fixes !65) Call BytesInFlight method before processing ACK
+    test: Add CI for valgrind tests
+    test.py: remove trailing whitespace
+    test.py: style fixes
+    test: show reason a test/example was skipped
+    Thanks Alexander
+    Thanks to:
+    Thanks to:
+    Thanks to constructors, it is easier to create these structs. In particular, code like this
+    Thanks to Sandra Lagen <sandra.lagen@cttc.cat>
+    Thanks Zoraze for the review.
+    That assumption does not hold with external modules: therefore, for a better
+    that provides the interface for setting and retrieving the cell id. Then, both
+    That's bad, usually the test must be reworked to not fail the assert.
+    That's why per-MPDU reception status is also provided.
+    The addition of a default ThresholdPreambleDetectionModel with minimum
+    the frame that at the beginning (I mean the frame thanks to which we entered
+    the if) was inside the window can be "magically" outside, therefore in
+    the interface level. LTE module will not do anything for the moment, waiting for
+    The LTE/EPC model has been enhanced with new features:
+    The markdown syntax is more web-friendly for the platform
+    The m_sentMpdus and m_needBlockAckReq members of the
+    The non-contention preamble assigned to UE during handover or PDCCH order is valid only until the time duration of the “expiryTime” of the preamble is reached. This timer value is only maintained at the eNodeB and the UE has no way of knowing if this timer has expired. If the UE tries to send the preamble again after the expiryTime and the preamble is re-assigned to another UE, it results in errors. This has been solved by re-assigning the preamble to another UE only if it is not being used (An UE can be using the preamble even after the expiryTime duration).
+    the prevention of test suite failures due to random stream assignment.
+    The priority tag can be removed as soon as a packet is enqueued
+        * There are P2P links between core network nodes.
+    the reassembly function, that segment is not delivered.
+    There is a \todo below
+    There is no "AddAgregate" anymore.
+    These events take up memory and slow down the simulator.
+    These two methos are changed by the subclass in NR and mmWave module.
+    The stats are fixed in ed411fa9
+    The SteadyStateRandomWaypointMobilityModel should support AssignStreams()
+    the TID with a block ack agreement" - Section 10.24.3 of 802.11-2016).
+    the timer adds 10 ms of unwanted delay.
+    The typo comes from the patch provided for https://www.nsnam.org/bugzilla/show_bug.cgi?id=2843
+    the VHT capabilities, and m_shortGuardInterval, m_streams and m_greenfield,
+    This patch adds TxFailParam in RachConfigCommon, which enables the eNB to indicate how many times T300 timer can expire at the UE. Upon reaching this count, the UE aborts the connection establishment, and performs the cell selection again. See TS 36.331 5.3.3.6.
+    This patch removes the fake RlcSm header introduced in a5fa8efd.
+    to determine its priority.
+    - Tommaso Zugno <tommasozugno@gmail.com>
+    topology-read: remove unused includes
+    topology-read: rescan bindings
+    topology-read: rescan bindings
+    To solve this situation, since the only needed method from ComponentCarrierEnb
+    to switch between releases.
+    traffic-control: Add COBALT documentation
+    traffic-control: Add COBALT Example
+    traffic-control: Add COBALT QueueDisc
+    traffic-control: Add COBALT TestSuite
+    traffic-control:  Document Perturbation attribute in FqCoDel
+    traffic-control: Install FqCoDelQueueDisc by default
+    traffic-control: Make NetDeviceQueueInterface independent of Queue
+    traffic-control: QueueDiscs do not assume that the receiving object is a NetDevice
+    traffic-control: Rescan python bindings
+    traffic-control: the NetDeviceQueueInterface object is created by NetDevice helpers
+    TxRtsFailed trace does not exist
+    uan: Fix MAC address variable shadowing in subclasses
+    Ubuntu 16.04 or Xming 6.9 for windows, `get_primary_monitor` does
+    Update AUTHORS and CHANGES.html
+    Update CHANGES.html
+    Update CHANGES.html and RELEASE_NOTES
+    Update CHANGES.html and RELEASE_NOTES
+    Update CHANGES.html and RELEASE_NOTES
+    Update CHANGES.html to reflect changes in wifi model
+    Update reference data files for tests
+    Update RELEASE_NOTES
+    Update RELEASE_NOTES for wifi module
+    utils: Added section for running test as users
+    utils: Compile the tutorial during CI builds
+    Values are stored as std::vector of double, but this vector can't be accessed,
+    vectors such as m_cphySapProvider, m_cmacSapProvider, m_ffrRrcSapProvider, are
+    version of Waf.
+    virtual-net-device:  Remove stale comments
+    virtual-net-device: Update and clarify documentation for example
+    visualizer: Additional print function portability
+    visualizer: Fix AttributeError X11Display object has no get_primary_monitor
+    visualizer: Fix circular imports in Python2
+    visualizer: (fixes #70) Update configuration of GooCanvas.CanvasEllipse
+    visualizer: Python 3 compatibility fixes
+    wave, wifi: Rescan python bindings
+    wave, wifi: Rescan python bindings
+    we are currently using as code repository.
+    We do not generate the CQI report when the UE is not synchronized to any cell. Also, the RLF is detected after the DL CTRL is received by the UE,therefore, we do not need to generate the CQI reports and the UE measurements for a CTRL for which the RLF has been detected.
+    We will check the standard and see what does apply in this case.
+    When the timer expires, everything is then delivered correctly, but waiting
+    (which was disabled by default in Waf 2.0.9) when clang_compilation_database.py
+    wifi: Add a BA manager method to take actions upon discarding a frame
+    wifi: Add a MacLow method to compute the overhead time
+    wifi: Add a method to check whether packet is an A-MPDU
+    wifi: Add a method to get the max PPDU duration
+    wifi: Add a parameter to HasBar to remove the BAR from the queue
+    wifi: Add a QosTxop method to compute MacLow transmission parameters
+    wifi: Add a test for 802.11e Block Ack policy
+    wifi: Add check on length value set in L-SIG
+    wifi: Add configuration objects for 802.11n/ac/ax
+    wifi: Add delimiter signature check to AmpduSubframeHeader
+    wifi: Add first 802.11ax OBSS_PD SR algorithm
+    wifi: Add first 802.11ax OBSS_PD SR algorithm
+    wifi: Add methods to return WinStartO
+    wifi: Add methods to WifiMacQueue to peek and dequeue by TID
+    wifi: Add method to peek A-MPDU subframes and MPDUs from A-MPDU
+    wifi: Add more methods to WifiMacQueue
+    wifi: add NS_FATAL_ERROR for unhandled case
+    wifi: Add option to disable explicit Block Ack Request when a Block Ack Response is missed
+    wifi: Add per-MPDU reception status to NotifyMonitorSniffRx
+    wifi: Add per-MPDU reception status to RxOkCallback
+    wifi: Add PHY headers
+    wifi: Add PHY header to transmited packet and recontruct TXVECTOR from received PHY header
+    wifi: Add QosTxop methods to peek and dequeue the next frame to transmit
+    wifi: Add SimpleFrameCaptureModel to WifiHelper::EnableLogComponents
+    wifi: Add support for IE_EXTENSION and fix 802.11ax information elements
+    wifi: Add tests for A-MPDU reception
+    wifi: Add tests for frame capture
+    wifi: Add threshold-based preamble detection model
+    wifi: Add trace source on BlockAckManager to trace ADDBA state transitions
+    wifi: Add transport of 802.11ax BSS coloring field (with contributions from Tom Henderson)
+    wifi: Avoid a potential segfault in WifiNetDevice::DoDispose
+    wifi: Avoid calling the old MacLow::GetMaxAmpduSize if not necessary
+    wifi: avoid unnecessary DbmToW conversions for CCA ED threshold
+    wifi: beacon interval should be multiple of 1024us
+    wifi: BlockAckManager uses the WifiMacQueue::Expired trace
+    wifi: Change default value for Margin attribute in SimpleFrameCaptureModel
+    wifi: Change to CwTrace and BackoffTrace (patch from Tom Henderson)
+    wifi: Change to CwTrace and BackoffTrace (patch from Tom Henderson) - part 2
+    wifi: check that SSID in probe requests is either broadcast or corresponds to AP SSID
+    wifi: check that SSID in probe requests is either broadcast or corresponds to AP SSID
+    wifi:  Clarify behavioral change due to preamble detection model
+    wifi: Cleanup m_plcpSuccess flag in WifiPhy
+    wifi: Cleanup unused address field in WifiRemoteStationManager::GetControlAnswerMode
+    wifi: Clean up WifiPhy methods' signatures by relying on Event
+    wifi: Clean up WIFI_PREAMBLE_NONE
+    wifi: connect to MacTxRtsFailed in AthstatsHelper::EnableAthstats
+    wifi: Consider A-MPDU as single packet for PHY processing
+    wifi: Convert BA retransmit queue to WifiMacQueue
+    wifi: Correct formatting in debug output for MacRxMiddle
+    wifi: Differenciate VHT preamble for SU and MU transmissions
+    wifi: document InterferenceHelper::CalculateSnr parameters
+    wifi: Do not allow S-MPDU transmissions as long as ADDBA handshake is not established
+    wifi: Do not call ReportDataFailed if retransmission is not needed
+    wifi: Do not store packets if they are old or already present
+    wifi: Do not switch reception if the received packet arrived after the capture window duration
+    wifi: Enable preamble detection model by default
+    wifi: Enable windowed PER for PLCP payload
+    wifi: Extend helper to set frame capture model
+    wifi: Extend helper to set preamble detection model
+    wifi: Extend preamble detection tests to consider frame capture effects
+    wifi: Extend support of up to 256 MPDUs in A-MPDUs for 802.11ax
+    wifi: Extend tests for OBSS_PD spatial reuse
+    wifi: Extend tests to check that TXOP limit is not exceeded
+    wifi: Fill BSS color in TxVector and add trace source to be fired at the end of 802.11ax preamble
+    wifi: Fix A-MPDU reception logic
+    wifi: fix comment typos
+    wifi: fix condition for old packets in BlockAckManager::NeedBarRetransmission
+    wifi: fix condition for old packets in BlockAckManager::NeedBarRetransmission
+    wifi: Fix crashing simulations
+    wifi: Fix duplicate MPDUs sent in an A-MPDU when explicit BARs are disabled
+    wifi: (fixes #2470) Protect ADDBA handshake
+      wifi: (fixes #26) Update detection threshold documentation
+    wifi: (fixes #26) Update detection threshold documentation
+    wifi: (fixes #30) Sequence number wrap around in MacLow::ReceiveMpdu
+    wifi (fixes #42) Check configured capture window for capture
+    wifi: Fix frame capture for A-MPDUs
+    wifi: fix frequencies for channels 54 and 126
+    wifi: fix IdleCurrent attribute description
+    wifi: Fix issues when MSDU lifetime is expired
+    wifi: Fix logic in InterferenceHelper::CalculateNoiseInterferenceW
+    wifi: Fix minor typos
+    wifi: Fix missing Doxygen in MacLow
+    wifi: Fix noise interference calculation
+    wifi: Fix PHY CCA logic
+    wifi: Fix PHY reset for A-MPDU
+    wifi: Fix potential issue in IdealWifiManager
+    wifi: Fix rate used to send Block Ack Request frames
+    wifi: Fix reception logic due to A-MPDU parameters that are not correctly reset
+    wifi: Fix SNR calculation when packet switch occured during preamble detection
+    wifi: Fix supported streams in VHT operation and HE operation IEs
+    wifi: Fix typo
+    wifi: fix typo ("liear")
+    wifi: Fix update of the starting sequence in BlockAckManager
+    wifi: Fix valgrind errors
+    wifi: Fix warning message for deprecated attribute EnergyDetectionThreshold
+    wifi: Fix waveform PSD in example
+    wifi: Fix WifiMode::IsAllowed for non-VHT mode
+    wifi: Fix wrong channel width when HT, VHT or HE STA receives a legacy PPDU
+    wifi: Fix wrong recipient address when scheduling QosTxop::ResetBa
+    wifi: Further cleanup of the OriginatorBlockAckAgreement class
+    wifi: Get rid of the MacLow aggregation queue
+    wifi: Handle packets ack'ed with Normal Ack under BA agreement
+    wifi: Have a unique MustWaitBlockAck method in MacLowTransmissionParameters
+    wifi: Improve handling of starting sequence number of transmit window
+    wifi: Improve handling of transmission opportunities
+    wifi: Improve logic when RTS/CTS exchange fails
+    wifi: Improve readibility of collected logs when WifiHelper::EnableLogComponents is used
+    wifi: Improve wifi-manager-example
+    wifi: Increase SNR range for 802.11ac in wifi-manager-example
+    wifi: Install one MsduAggregator and MpduAggregator per station
+    wifi: Introduce the WifiPsdu class
+    wifi: Keep the timestamp when passing MPDUs to MacLow
+    wifi: LENGTH field in DSSS PHY header should be the PSDU duration in microseconds
+    wifi: MacLow makes more use of WifiMacQueueItem
+    wifi: MacLow makes more use of WifiMacQueueItem
+    wifi: MacLow::m_ampdu is not needed anymore
+    wifi: Make BlockAckManager use WifiMacQueueItem
+    wifi: Make MpduAggregator::AddHeaderAndPad static
+    wifi: Make sure correct beacon interval is set
+    wifi: Make use of the new MSDU and MPDU aggregators
+    wifi: Make use of the new QosTxop methods
+    wifi: Make use of the WifiPsdu class
+    wifi: Make WifiMacQueueItem more useful
+    wifi: Merge Peek methods of QosTxop
+    wifi: Minor comment update
+    wifi: Misc fixes and code cleanup
+    wifi: move duplicate code to WifiRadioEnergyModel::GetStateA
+    wifi: Move GetControlAnswerMode to MacLow
+    wifi: Move IsWithinSizeAndTimeLimits to MacLow
+    wifi: Move to established state if successful ADDBA response is received after timeout expired (avoid inconsistency between transmitter and receiver)
+    Wifi MSDU and MPDU aggregation rework
+    wifi: OriginatorBlockAckAgreement::IsBlockAckRequestNeeded is never used
+    wifi: Pass number of data bits instead of number of coded bits to error models
+    wifi: Pass number of data bits instead of number of coded bits to error models
+    Wifi PHY extensions and fixes
+    wifi: QosTxop does not return packets outside of the current transmit window
+    wifi: Reduce WifiRemoteStationManager code size by removing what we can outside of the class
+    wifi: Refactor detection thresholds in WifiPhy
+    wifi: Remove max A-MPDU and A-MSDU size attributes from configuration objects
+    wifi: remove outdated comment
+    wifi: Remove the priority tag earlier
+    wifi: remove unused BlockAckManager::m_maxDelay
+    wifi: Remove unused functions
+    wifi: remove unused m_operationalChannelList from SpectrumWifiPhy
+    wifi: Remove unused parameters in MacLow::ReceiveError
+    wifi: rename Bug2483TestCase into Bug2843TestCase
+    wifi: Rename functions in ChannelAccessManager to differentiate DCF and PCF
+    wifi: Rename functions in preamble-detection-test
+    wifi: Rename preamble-detection-test to wifi-phy-reception-test
+    wifi: rescan bindings
+    wifi: rescan bindings
+    wifi: rescan bindings
+    wifi: Rescan bindings
+    wifi: Rescan bindings
+    wifi: Rescan bindings
+    wifi: Rescan bindings
+    wifi: Rescan bindings
+    wifi: Rescan python bindings
+    wifi: Rescan python bindings
+    wifi: Reset m_plcpSuccess when starting preamble detection in WifiPhy
+    wifi: Resolve valgrind issue in test case
+    wifi: Return correct serialized size for AmpduTag
+    wifi: Revert a previous change in IdealWifiManager that is causing much lower performance and irregularities
+    wifi: Rework MSDU and MPDU aggregation
+    wifi: Set default attributes for wifi-phy-reception tests
+    wifi: simplify WifiSpectrumValueHelper::DbmToW
+    wifi: Small changes for 11ac/11ax
+    wifi: Small update for 11ax in Ideal wifi manager
+    wifi: Split reception of L-SIG and reception of non legacy PHY header
+    wifi: Switch to stronger packet if PHY is busy detecting a preamble and has a frame capture model attached
+    wifi: The state of an OriginatorBlockAckAgreement is never set to INACTIVE
+    wifi: Use constants for the size and half the size of the sequence number space
+    wifi: use Seconds() instead of multiplying by 1e9 and using NanoSeconds()
+    wifi: Use std::initializer_list to have a single MostRecent method
+    wifi: use Time::IsPositive
+    wifi: Various improvements in PHY headers
+    wifi, wave, mesh: Update API definitions
+    wifi, wave: Rescan python bindings
+    wifi: wifi: Add ThresholdPreambleDetectionModel logs in WifiHelper::EnableLogComponents
+    wifi: WifiRemoteStationState stores the station capabilities
+    worked like this since... forever. My fault was to add the assert in the first
+    working.
+    x.another = 200;
+    x.value = 10;

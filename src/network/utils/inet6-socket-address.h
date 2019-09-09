@@ -21,7 +21,7 @@
 #ifndef INET6_SOCKET_ADDRESS_H
 #define INET6_SOCKET_ADDRESS_H
 
-#include <cstdint>
+#include <stdint.h>
 
 #include "ns3/address.h"
 #include "ipv6-address.h"

@@ -60,12 +60,12 @@ WriteAveragePowerSpectralDensityReport (Ptr<OutputStreamWrapper> streamWrapper,
           NS_ASSERT (vi != avgPowerSpectralDensity->ConstValuesEnd ());
           *ostream << Now ().GetSeconds () << " "
                    << fi->fc << " "
-                   << *vi << "\n"; //std::endl; //endl triggers flushes and destroys performance
+                   << *vi << std::endl;
           ++fi;
           ++vi;
         }
       // An additional line separates different spectrums sweeps
-      *ostream << "\n"; //std::endl; //endl triggers flushes and destroys performance
+      *ostream << std::endl;
     }
 }
 

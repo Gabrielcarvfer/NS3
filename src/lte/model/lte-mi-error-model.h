@@ -44,6 +44,15 @@
 
 
 namespace ns3 {
+  
+  /// PDCCH PCFICH curve size
+  const uint16_t PDCCH_PCFICH_CURVE_SIZE = 46;
+  /// MI map QPSK size 
+  const uint16_t MI_MAP_QPSK_SIZE = 797;
+  /// MI map 16QAM size
+  const uint16_t MI_MAP_16QAM_SIZE = 994;
+  /// MI map 64QAM size
+  const uint16_t MI_MAP_64QAM_SIZE = 752;
   /// MI QPSK maximum ID
   const uint16_t MI_QPSK_MAX_ID = 9;
   /// MI 16QAM maximum ID
@@ -60,8 +69,8 @@ namespace ns3 {
 /// TbStats_t structure
 struct TbStats_t
 {
-  double tbler; ///< tbler
-  double mi; ///< mi
+  double tbler; ///< Transport block BLER
+  double mi; ///< Mutual information
 };
   
 
@@ -73,10 +82,11 @@ class LteMiErrorModel
 {
 
 public:
-  /**
+
+  /** 
    * \brief find the mmib (mean mutual information per bit) for different modulations of the specified TB
-   * \param sinr the perceived sinrs in the whole bandwidth
-   * \param map the actives RBs for the TB
+   * \param sinr the perceived sinr values in the whole bandwidth in Watt
+   * \param map the active RBs for the TB
    * \param mcs the MCS of the TB
    * \return the mmib
    */
@@ -92,31 +102,25 @@ public:
 
   /**
    * \brief run the error-model algorithm for the specified TB
-   * \param sinr the perceived sinrs in the whole bandwidth
-   * \param map the actives RBs for the TB
+   * \param sinr the perceived sinr values in the whole bandwidth in Watt
+   * \param map the active RBs for the TB
    * \param size the size in bytes of the TB
    * \param mcs the MCS of the TB
-   * \param miHistory  MI of past transmissions (in case of retx)
+   * \param miHistory MI of past transmissions (in case of retx)
    * \return the TB error rate and MI
    */
   static TbStats_t GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory);
   
   /** 
   * \brief run the error-model algorithm for the specified PCFICH+PDCCH channels
-  * \param sinr the perceived sinrs in the whole bandwidth
+  * \param sinr the perceived sinr values in the whole bandwidth in Watt
   * \return the decodification error of the PCFICH+PDCCH channels
   */  
   static double GetPcfichPdcchError (const SpectrumValue& sinr);
 
-  /**
-  * \brief load error-model data from the input json file
-  *
-  *
-  */
-  static void LoadErrorData();
 
-private:
-  static bool errorDataLoaded; 
+//private:
+
 
 
 };

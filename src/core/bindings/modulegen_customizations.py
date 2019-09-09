@@ -159,7 +159,7 @@ def post_register_types(root_module):
     TypeId_customizations(root_module)
     add_std_ofstream(root_module)
 
-    enabled_features = [] #os.environ['NS3_ENABLED_FEATURES'].split(',')
+    enabled_features = os.environ['NS3_ENABLED_FEATURES'].split(',')    
 
     if 'Threading' not in enabled_features:
         for clsname in ['SystemThread', 'SystemMutex', 'SystemCondition', 'CriticalSection',

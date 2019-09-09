@@ -21,7 +21,7 @@
 #ifndef NDISC_CACHE_H
 #define NDISC_CACHE_H
 
-#include <cstdint>
+#include <stdint.h>
 #include <list>
 
 #include "ns3/packet.h"
@@ -32,8 +32,6 @@
 #include "ns3/timer.h"
 #include "ns3/sgi-hashmap.h"
 #include "ns3/output-stream-wrapper.h"
-#include <unordered_map>
-
 
 namespace ns3
 {
@@ -408,11 +406,11 @@ private:
   /**
    * \brief Neighbor Discovery Cache container
    */
-  typedef std::unordered_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash> Cache;
+  typedef sgi::hash_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash> Cache;
   /**
    * \brief Neighbor Discovery Cache container iterator
    */
-  typedef std::unordered_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash>::iterator CacheI;
+  typedef sgi::hash_map<Ipv6Address, NdiscCache::Entry *, Ipv6AddressHash>::iterator CacheI;
 
   /**
    * \brief Copy constructor.

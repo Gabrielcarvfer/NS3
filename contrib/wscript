@@ -26,6 +26,10 @@ for dirname in os.listdir('contrib'):
         all_contrib_modules.append(dirname)
 all_contrib_modules.sort()
 
+def get_required_boost_libs(conf):
+    for module in all_contrib_modules:
+        conf.recurse (module, name="required_boost_libs", mandatory=False)
+
 def options(opt):
     for module in all_contrib_modules:
         opt.recurse(module, mandatory=False)
@@ -208,7 +212,7 @@ def ns3_python_bindings(bld):
     bindgen = bld(features='command', source=source, target=target, command=argv)
     bindgen.env['FEATURES'] = ','.join(features)
     bindgen.dep_vars = ['FEATURES', "GCC_RTTI_ABI_COMPLETE"]
-    bindgen.before = 'cxx'
+    bindgen.before = ['cxxprogram', 'cxxshlib', 'cxxstlib']
     bindgen.after = 'gen_ns3_module_header'
     bindgen.name = "pybindgen(ns3 module %s)" % module
     bindgen.install_path = None

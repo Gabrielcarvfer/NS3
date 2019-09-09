@@ -317,7 +317,7 @@ Ns3TcpInteroperabilityTestSuite::Ns3TcpInteroperabilityTestSuite ()
   : TestSuite ("ns3-tcp-interoperability", SYSTEM)
 {
   // We can't use NS_TEST_SOURCEDIR variable here because we use subdirectories
-  SetDataDir ("./src/test/ns3tcp/response-vectors");
+  SetDataDir ("src/test/ns3tcp/response-vectors");
   
   AddTestCase (new Ns3TcpInteroperabilityTestCase, TestCase::QUICK);
 }

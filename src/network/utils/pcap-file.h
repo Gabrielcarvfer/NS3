@@ -23,7 +23,7 @@
 
 #include <string>
 #include <fstream>
-#include <cstdint>
+#include <stdint.h>
 #include "ns3/ptr.h"
 
 namespace ns3 {
