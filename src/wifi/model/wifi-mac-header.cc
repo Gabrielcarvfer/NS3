@@ -979,7 +979,7 @@ case WIFI_MAC_ ## x: \
       return "ERROR";
     }
 #undef FOO
-#ifndef _WIN32
+#ifndef __WIN32__
   // needed to make gcc 4.0.1 ppc darwin happy.
   return "BIG_ERROR";
 #endif

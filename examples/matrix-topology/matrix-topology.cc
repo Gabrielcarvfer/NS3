@@ -44,6 +44,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <ctime>
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"

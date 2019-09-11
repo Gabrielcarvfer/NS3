@@ -2,10 +2,10 @@
 import subprocess, os, json
 
 runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
-dot_path = "./" if os is not "nt" else ".\\"
+dot_path = "."+ os.sep 
 
 cwd_path = os.getcwd()
-cwd_components = cwd_path.split('/')
+cwd_components = cwd_path.split(os.sep)
 
 cwd_offset_dict = { "NS3"  : len(cwd_components),
 					"utils": -1,

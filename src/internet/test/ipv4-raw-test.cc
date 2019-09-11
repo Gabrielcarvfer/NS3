@@ -44,8 +44,7 @@
 
 #include <string>
 #include <limits>
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "../model/inet-headers.h"
 #include <sys/types.h>
 
 using namespace ns3;

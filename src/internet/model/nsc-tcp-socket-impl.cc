@@ -37,7 +37,7 @@
 
 // for ntohs().
 #include <arpa/inet.h>
-#include <netinet/in.h>
+#include "../model/inet-headers.h"
 #include "sim_interface.h"
 
 #include "sim_errno.h"

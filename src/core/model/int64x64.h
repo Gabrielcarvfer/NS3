@@ -20,7 +20,7 @@
 #ifndef INT64X64_H
 #define INT64X64_H
 
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 
 // Order is important here, as it determines which implementation
 // will generate doxygen API docs.  This order mimics the
@@ -30,7 +30,7 @@
 #include "int64x64-128.h"
 #elif defined (INT64X64_USE_CAIRO) && !defined (PYTHON_SCAN)
 #include "int64x64-cairo.h"
-#elif defined (INT64X64_USE_DOUBLE) || defined (PYTHON_SCAN)
+#elif defined (INT64X64_USE_DOUBLE) || defined (PYTHON_SCAN) || defined(_WIN32_)
 #include "int64x64-double.h"
 #endif
 

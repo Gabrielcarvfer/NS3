@@ -24,7 +24,7 @@
 #include <iostream>
 #include "assert.h"
 #include <stdexcept>
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include "fatal-error.h"
 
 #ifdef HAVE_GETENV

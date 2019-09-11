@@ -35,7 +35,7 @@
 #include "ns3/enum.h"
 
 #include "hybrid-buildings-propagation-loss-model.h"
-
+#include <algorithm> //std::max
 
 namespace ns3 {
 

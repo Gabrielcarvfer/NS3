@@ -18,9 +18,9 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "../model/inet-headers.h"
 #include <sys/types.h>
+
 #include "ns3/inet6-socket-address.h"
 #include "ns3/node.h"
 #include "ns3/packet.h"

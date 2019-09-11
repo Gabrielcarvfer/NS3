@@ -1,6 +1,5 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "../model/inet-headers.h"
 #include <sys/types.h>
 #include "ipv4-raw-socket-impl.h"
 #include "ipv4-l3-protocol.h"

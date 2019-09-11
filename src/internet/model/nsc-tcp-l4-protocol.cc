@@ -42,7 +42,7 @@
 #include <dlfcn.h>
 #include <iomanip>
 
-#include <netinet/in.h>
+#include "../model/inet-headers.h"
 #include <arpa/inet.h>
 
 namespace ns3 {

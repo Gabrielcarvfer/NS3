@@ -59,7 +59,7 @@
 
 #include <string>
 #include <limits>
-#include <netinet/in.h>
+#include "../model/inet-headers.h"
 
 using namespace ns3;
 

@@ -30,7 +30,7 @@ function(setup_vcpkg)
         git_clone(
                 PROJECT_NAME    vcpkg
                 GIT_URL         https://github.com/Gabrielcarvfer/vcpkg.git
-                GIT_BRANCH      NS3
+                GIT_TAG         NS3
                 DIRECTORY       ${PROJECT_SOURCE_DIR}/3rd-party/
         )
     endif()
@@ -87,7 +87,7 @@ function(add_package package_name)
                      OUTPUT_QUIET #comment for easier debugging
             )
     message(STATUS "${package_name} was installed")
-        if (${NS3_DEBUG})
+        if (${build_type} STREQUAL "deb")
             set(TRIPLET_APP dbg)
         else()
             set(TRIPLET_APP rel)

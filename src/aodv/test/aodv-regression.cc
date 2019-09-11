@@ -53,8 +53,9 @@ class AodvRegressionTestSuite : public TestSuite
 public:
   AodvRegressionTestSuite () : TestSuite ("routing-aodv-regression", SYSTEM)
   {
-    SetDataDir (NS_TEST_SOURCEDIR);
-    // General RREQ-RREP-RRER test case
+    SetDataDir ("src/aodv/test");
+
+      // General RREQ-RREP-RRER test case
     AddTestCase (new ChainRegressionTest ("aodv-chain-regression-test"), TestCase::QUICK);
     // \bugid{606} test case, should crash if bug is not fixed
     AddTestCase (new ChainRegressionTest ("bug-606-test", Seconds (10), 3, Seconds (1)), TestCase::QUICK);

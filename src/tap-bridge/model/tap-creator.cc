@@ -34,7 +34,6 @@
 #include <linux/if_tun.h>
 #include <net/route.h>
 #include <netinet/in.h>
-
 #include "tap-encode-decode.h"
 
 #define TAP_MAGIC 95549

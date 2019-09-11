@@ -88,7 +88,7 @@ MobilityTraceTestCase::DoRun (void)
   // Set mobility random number streams to fixed values
   mobility.AssignStreams (sta, 0);
 
-  SetDataDir (NS_TEST_SOURCEDIR);
+  SetDataDir ("src/mobility/test");
   std::string referenceMobilityFilePath = CreateDataDirFilename ("mobility-trace-example.mob");
   std::string testMobilityFilePath      = CreateTempDirFilename ("mobility-trace-test.mob");
 

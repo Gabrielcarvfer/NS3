@@ -56,11 +56,11 @@ int main (int argc, char *argv[])
   lteHelper->SetAttribute ("FadingModel", StringValue ("ns3::TraceFadingLossModel"));
   
   std::ifstream ifTraceFile;
-  ifTraceFile.open ("../../src/lte/model/fading-traces/fading_trace_EPA_3kmph.fad", std::ifstream::in);
+  ifTraceFile.open ("src/lte/model/fading-traces/fading_trace_EPA_3kmph.fad", std::ifstream::in);
   if (ifTraceFile.good ())
     {
       // script launched by test.py
-      lteHelper->SetFadingModelAttribute ("TraceFilename", StringValue ("../../src/lte/model/fading-traces/fading_trace_EPA_3kmph.fad"));
+      lteHelper->SetFadingModelAttribute ("TraceFilename", StringValue ("src/lte/model/fading-traces/fading_trace_EPA_3kmph.fad"));
     }
   else
     {
