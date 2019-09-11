@@ -103,7 +103,7 @@ function(git_clone)
     cmake_parse_arguments(
             PARGS                                                               # prefix of output variables
             "QUIET"                                                             # list of names of the boolean arguments (only defined ones will be true)
-            "PROJECT_NAME;GIT_URL;GIT_TAG;GIT_BRANCH;GIT_COMMIT;DIRECTORY"      # list of names of mono-valued arguments
+            "PROJECT_NAME;GIT_URL;GIT_TAG;GIT_BRANCH;GIT_COMMIT;DIRECTORY;DEPTH"      # list of names of mono-valued arguments
             ""                                                                  # list of names of multi-valued arguments (output variables are lists)
             ${ARGN}                                                             # arguments of the function to parse, here we take the all original ones
     ) # remaining unparsed arguments can be found in PARGS_UNPARSED_ARGUMENTS
@@ -118,6 +118,10 @@ function(git_clone)
 
     if(NOT PARGS_DIRECTORY)
         set(PARGS_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif()
+
+    if(NOT PARGS_DEPTH)
+        set(PARGS_DEPTH 1)
     endif()
 
     set(${PARGS_PROJECT_NAME}_SOURCE_DIR
@@ -152,9 +156,8 @@ function(git_clone)
         if(NOT PARGS_QUIET)
             message(STATUS "${PARGS_PROJECT_NAME} directory not found, cloning...")
         endif()
-
         execute_process(
-                COMMAND             ${GIT_EXECUTABLE} clone ${PARGS_GIT_URL} --recursive
+                COMMAND             ${GIT_EXECUTABLE} clone --depth=${PARGS_DEPTH} --branch ${PARGS_GIT_TAG} ${PARGS_GIT_URL}  --recursive
                 WORKING_DIRECTORY   ${PARGS_DIRECTORY}
                 OUTPUT_VARIABLE     git_output)
     endif()
@@ -164,24 +167,24 @@ function(git_clone)
     endif()
 
     # now checkout the right commit
-    if(PARGS_GIT_TAG)
-        execute_process(
-                COMMAND             ${GIT_EXECUTABLE} fetch --all --tags --prune
-                COMMAND             ${GIT_EXECUTABLE} checkout tags/${PARGS_GIT_TAG} -b tag_${PARGS_GIT_TAG}
-                WORKING_DIRECTORY   ${${SOURCE_DIR}}
-                OUTPUT_VARIABLE     git_output)
-    elseif(PARGS_GIT_BRANCH OR PARGS_GIT_COMMIT)
-        execute_process(
-                COMMAND             ${GIT_EXECUTABLE} checkout ${PARGS_GIT_BRANCH}
-                WORKING_DIRECTORY   ${${SOURCE_DIR}}
-                OUTPUT_VARIABLE     git_output)
-    else()
-        message(STATUS "no tag specified, defaulting to master")
-        execute_process(
-                COMMAND             ${GIT_EXECUTABLE} checkout master
-                WORKING_DIRECTORY   ${${SOURCE_DIR}}
-                OUTPUT_VARIABLE     git_output)
-    endif()
+    #if(PARGS_GIT_TAG)
+    #    execute_process(
+    #            COMMAND             ${GIT_EXECUTABLE} fetch --all --tags --prune
+    #            COMMAND             ${GIT_EXECUTABLE} checkout tags/${PARGS_GIT_TAG} -b tag_${PARGS_GIT_TAG}
+    #            WORKING_DIRECTORY   ${${SOURCE_DIR}}
+    #            OUTPUT_VARIABLE     git_output)
+    #elseif(PARGS_GIT_BRANCH OR PARGS_GIT_COMMIT)
+    #    execute_process(
+    #            COMMAND             ${GIT_EXECUTABLE} checkout ${PARGS_GIT_BRANCH}
+    #            WORKING_DIRECTORY   ${${SOURCE_DIR}}
+    #            OUTPUT_VARIABLE     git_output)
+    #else()
+    #    message(STATUS "no tag specified, defaulting to master")
+    #    execute_process(
+    #            COMMAND             ${GIT_EXECUTABLE} checkout master
+    #            WORKING_DIRECTORY   ${${SOURCE_DIR}}
+    #            OUTPUT_VARIABLE     git_output)
+    #endif()
 
     if(NOT PARGS_QUIET)
         message("${git_output}")

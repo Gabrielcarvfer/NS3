@@ -1,7 +1,23 @@
 
 set(name internet)
 
+if(${NS3_NSC})
+    set(source_files
+            nsc-sysctl.cc
+            nsc-tcp-l4-protocol.cc
+            nsc-tcp-socket-factory-impl.cc
+            nsc-tcp-socket-impl.cc
+            )
+    set(header_files
+            nsc-sysctl.h
+            nsc-tcp-l4-protocol.h
+            nsc-tcp-socket-factory-impl.h
+            nsc-tcp-socket-impl.h
+            )
+endif()
+
 set(source_files
+        ${source_files}
         model/ip-l4-protocol.cc
         model/udp-header.cc
         model/tcp-header.cc
@@ -134,6 +150,7 @@ set(private_header_files
 
 set(header_files
         ${private_header_files}
+        ${header_files}
         model/udp-header.h
         model/tcp-header.h
         model/tcp-option.h

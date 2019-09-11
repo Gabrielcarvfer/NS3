@@ -20,7 +20,7 @@
  */
 
 #include "breakpoint.h"
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include "log.h"
 #ifdef HAVE_SIGNAL_H
 # include <signal.h>

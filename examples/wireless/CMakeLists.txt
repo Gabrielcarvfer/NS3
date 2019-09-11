@@ -34,7 +34,7 @@ build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_lin
 set(name multirate)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link ${libinternet} ${libwifi})
+set(libraries_to_link ${libinternet} ${libwifi} ${libolsr} ${libapplications} ${libflow-monitor})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 
@@ -123,7 +123,7 @@ build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_lin
 set(name wifi-timing-attributes)
 set(source_files ${name}.cc)
 set(header_files)
-set(libraries_to_link $${libwifi} ${libapplications})
+set(libraries_to_link ${libwifi} ${libapplications})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 

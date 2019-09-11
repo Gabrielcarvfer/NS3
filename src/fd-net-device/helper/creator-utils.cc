@@ -25,13 +25,20 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <sys/ioctl.h>
-#include <net/ethernet.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#ifdef __WIN32__
+    #include <winsock2.h>
+    #include <windows.h>
+    #include <ws2tcpip.h>
+#else
+    #include <unistd.h>
+    #include <sys/socket.h>
+    #include <sys/un.h>
+    #include <sys/ioctl.h>
+    #include <net/ethernet.h>
+    #include <net/if.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+#endif
 
 #include "creator-utils.h"
 #include "encode-decode.h"

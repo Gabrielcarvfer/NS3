@@ -53,12 +53,12 @@ Topology::Topology(Model* model)
 
 }
 
-inline int Topology::GetNumNodes() {
+int Topology::GetNumNodes() {
   assert(g != NULL);
   return g->Graph::GetNumNodes();
 }
  
-inline int Topology::GetNumEdges() { 
+int Topology::GetNumEdges() {
   assert(g != NULL);
   return g->Graph::GetNumEdges(); 
 }

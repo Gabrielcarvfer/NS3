@@ -13,7 +13,7 @@ project(NS3 CXX C)
 
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.29)
+set(NS3_VER 3.30)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
@@ -22,9 +22,6 @@ set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
 set(NS3_EXAMPLES ON)
-
-option(NS3_DEBUG "Build NS3-lib in debug mode" OFF)
-set(NS3_DEBUG ON)
 
 option(NS3_SANITIZE "Run Google sanitizers" OFF)
 #set(NS3_SANITIZE ON)
@@ -70,6 +67,9 @@ set(NS3_GNUPLOT OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
 set(NS3_BRITE ON)
+
+option(NS3_NSC "Build with NSC" OFF)
+#TODO: download, build and link sources
 
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)

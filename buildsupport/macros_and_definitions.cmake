@@ -1,19 +1,4 @@
-include(buildsupport/vcpkg_hunter.cmake)
-
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
-
-
-if (WIN32 AND NOT MSVC)
-    #If using MSYS2
-    set(MSYS2_PATH "F:\\tools\\msys64\\mingw64")
-    set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
-    set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
-    set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
-    set(QT_RCC_EXECUTABLE   "${MSYS2_PATH}\\bin\\rcc.exe")
-    set(QT_UIC_EXECUTABLE   "${MSYS2_PATH}\\bin\\uic.exe")
-    set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
-    set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
-endif()
 
 #Fixed definitions
 #unset(CMAKE_LINK_LIBRARY_SUFFIX)
@@ -31,7 +16,30 @@ link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 #fPIC and fPIE
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE -fPIC")
+
+
+if (WIN32 AND NOT MSVC)
+    #If using MSYS2
+    set(MSYS2_PATH "E:\\tools\\msys64\\mingw64")
+    set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
+    set(GTK2_GLIBCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
+    set(QT_QMAKE_EXECUTABLE "${MSYS2_PATH}\\bin\\qmake.exe")
+    set(QT_RCC_EXECUTABLE   "${MSYS2_PATH}\\bin\\rcc.exe")
+    set(QT_UIC_EXECUTABLE   "${MSYS2_PATH}\\bin\\uic.exe")
+    set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
+    set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
+    set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\bin;")          #contains std libraries
+    set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\..\\usr\\bin;") #contains unzip required for Vcpkg
+
+    #set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\lib;")
+    #set(ENV{PATH} "$ENV{PATH}${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
+    #set(ENV{PATH} "$ENV{PATH}${CMAKE_RUNTIME_OUTPUT_DIRECTORY};")
+endif()
+
+include(buildsupport/vcpkg_hunter.cmake)
+
 
 
 set(LIB_AS_NEEDED_PRE  )
@@ -45,12 +53,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # using Clang
     set(LIB_AS_NEEDED_PRE -all_load)
     set(LIB_AS_NEEDED_POST             )
-    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
-    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j${NumThreads}")
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    set(BUILD_SHARED_LIBS TRUE)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     # using Intel C++
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -156,29 +164,23 @@ macro(process_options)
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
     #Libpcre2 for regex
-    include(FindPCRE)
-    find_package(PCRE)
-    if (NOT ${PCRE_FOUND})
-        if (NOT ${AUTOINSTALL_DEPENDENCIES})
-            message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
-        else()
-            #If we don't find installed, install
-            add_package(pcre2)
-            get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-            link_directories(${pcre2_dir}/lib)
-            include_directories(${pcre2_dir}/include)
-            #stopped working for whatever reason, hardwired topology-read cmake file
-            if(WIN32)
-                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
-            else()
-                set(PCRE_LIBRARIES pcre2-posix pcre2-8)
-            endif()
-
-        endif()
+    if (NOT ${AUTOINSTALL_DEPENDENCIES})
+        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
     else()
-        link_directories(${PCRE_LIBRARY})
-        include_directories(${PCRE_INCLUDE_DIR})
+        #If we don't find installed, install
+        add_package(pcre2)
+        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+        link_directories(${pcre2_dir}/lib)
+        include_directories(${pcre2_dir}/include)
+        #stopped working for whatever reason, hardwired topology-read cmake file
+        if(WIN32)
+            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+        else()
+            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+        endif()
+        set(PCRE_FOUND True)
     endif()
+
 
 
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
@@ -347,19 +349,14 @@ macro(process_options)
     endif()
 
     if(${NS3_GSL})
-        find_package(GSL)
-        if(NOT ${GSL_FOUND})
-            #message(FATAL_ERROR GSL not found)
-            #If we don't find installed, install
-            add_package (gsl)
-            get_property(gsl_dir GLOBAL PROPERTY DIR_gsl)
-            link_directories(${gsl_dir}/lib)
-            include_directories(${gsl_dir}/include)
-            set(GSL_LIBRARIES gsl gslcblas)
-        else()
-            include_directories( ${GSL_INCLUDE_DIRS})
-            link_directories(${GSL_LIBRARY})
-        endif()
+        #message(FATAL_ERROR GSL not found)
+        #If we don't find installed, install
+        add_package (gsl)
+        get_property(gsl_dir GLOBAL PROPERTY DIR_gsl)
+        link_directories(${gsl_dir}/lib)
+        include_directories(${gsl_dir}/include)
+        set(GSL_LIBRARIES gsl gslcblas)
+        set(GSL_FOUND)
     endif()
 
     if (${NS3_NETANIM})
@@ -630,6 +627,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 
     #Link the shared library with the libraries passed
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
+
     if(MSVC)
         target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
     endif()

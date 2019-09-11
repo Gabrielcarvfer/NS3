@@ -3,6 +3,9 @@
 if(NOT WIN32)
     add_subdirectory(brite)      # http://code.nsnam.org/BRITE/file/73badd18f5cd
     add_subdirectory(openflow)   # http://code.nsnam.org/jpelkey3/openflow
+    if(${NS3_NSC})
+        add_subdirectory(nsc)        # https://code.nsnam.org/index.cgi/nsc/file/08c391d0660a
+    endif()
 endif()
 
 add_subdirectory(netanim)    # http://code.nsnam.org/netanim/rev/2ce82d2b8afd 3.108

@@ -17,7 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include "simulator.h"
 #include "simulator-impl.h"
 #include "scheduler.h"

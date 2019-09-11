@@ -29,7 +29,7 @@
 #include <ns3/mobility-building-info.h>
 #include "ns3/okumura-hata-propagation-loss-model.h"
 #include "ns3/enum.h"
-
+#include <algorithm> //std::max
 
 namespace ns3 {
 

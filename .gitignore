@@ -65,3 +65,5 @@ ns3module.h
 
 3rd-party/libtorch.zip
 3rd-party/libtorch
+
+3rd-party/nsc/

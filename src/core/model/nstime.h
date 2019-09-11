@@ -30,6 +30,7 @@
 #include <cmath>
 #include <ostream>
 #include <set>
+#include <algorithm>
 
 /**
  * \file

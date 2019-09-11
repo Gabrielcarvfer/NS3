@@ -21,25 +21,36 @@
 #include "fatal-error.h"
 #include "assert.h"
 #include "log.h"
-#include "ns3/core-config.h"
+//#include "ns3/core-config.h"
 #include <cstdlib>
 #include <cerrno>
 #include <cstring>
 
 
-#if defined (HAVE_DIRENT_H) && defined (HAVE_SYS_TYPES_H)
-/** Do we have an \c opendir function? */
-#define HAVE_OPENDIR
-#include <sys/types.h>
-#include <dirent.h>
+#if defined (HAVE_DIRENT_H) and defined (HAVE_SYS_TYPES_H)
+    /** Do we have an \c opendir function? */
+    #define HAVE_OPENDIR
+    #include <dirent.h>
 #endif
-#if defined (HAVE_SYS_STAT_H) && defined (HAVE_SYS_TYPES_H)
-/** Do we have a \c makedir function? */
-#define HAVE_MKDIR_H
-#include <sys/types.h>
-#include <sys/stat.h>
+
+#ifdef HAVE_OPENDIR
+    #include <sys/types.h>
 #endif
+
+#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
+    /** Do we have a \c makedir function? */
+    #define HAVE_MKDIR_H
+    #if __WIN32__
+        #define WIN32_LEAN_AND_MEAN
+        #include <windows.h>
+    #endif
+    #include <sys/types.h>
+    #include <sys/stat.h>
+#endif
+
 #include <sstream>
+#include <ctime>
+
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif /* __APPLE__ */
@@ -57,7 +68,7 @@
  * \def SYSTEM_PATH_SEP
  * System-specific path separator used between directory names.
  */
-#if defined (__win32__)
+#if defined (__WIN32__)
 #define SYSTEM_PATH_SEP "\\"
 #else
 #define SYSTEM_PATH_SEP "/"
@@ -132,20 +143,20 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__win32__)
+#elif defined (__WIN32__)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *
      */
     DWORD size = 1024;
     LPTSTR lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-    DWORD status = GetModuleFilename (0, lpFilename, size);
+    DWORD status = GetModuleFileName (0, lpFilename, size);
     while (status == size)
       {
 	size = size * 2;
 	free (lpFilename);
 	lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-	status = GetModuleFilename (0, lpFilename, size);
+	status = GetModuleFileName (0, lpFilename, size);
       }
     NS_ASSERT (status != 0);
     filename = lpFilename;
@@ -256,21 +267,6 @@ std::list<std::string> ReadFiles (std::string path)
       de = readdir (dp);
     }
   closedir (dp);
-#elif defined (HAVE_FIND_FIRST_FILE)
-  /** \todo untested */
-  HANDLE hFind;
-  WIN32_FIND_DATA fileData;
-  
-  hFind = FindFirstFile (path.c_str (), &FindFileData);
-  if (hFind == INVALID_HANDLE_VALUE)
-    {
-      NS_FATAL_ERROR ("Could not open directory=" << path);
-    }
-  do
-    {
-      files.push_back (fileData.cFileName);
-    } while (FindNextFile (hFind, &fileData));
-  FindClose(hFind);
 #else
 #error "No support for reading a directory on this platform"
 #endif
@@ -346,7 +342,12 @@ MakeDirectories (std::string path)
       bool makeDirErr = false;
       
 #if defined(HAVE_MKDIR_H)
-      makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #ifdef __WIN32__
+        //makeDirErr = (CreateDirectory(tmp.c_str(),NULL) == 0);
+        makeDirErr = mkdir (tmp.c_str ());
+    #else
+        makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #endif
 #endif
 
       if (makeDirErr)
