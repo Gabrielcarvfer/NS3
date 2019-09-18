@@ -76,13 +76,13 @@ RequestQueue::DropPacketWithDst (Ipv4Address dst)
   for (std::vector<QueueEntry>::iterator i = m_queue.begin (); i
        != m_queue.end (); ++i)
     {
-      if (IsEqual (*i, dst))
+      if (i->GetIpv4Header ().GetDestination () == dst)
         {
           Drop (*i, "DropPacketWithDst ");
         }
     }
-  m_queue.erase (std::remove_if (m_queue.begin (), m_queue.end (),
-                                 std::bind (std::cref (RequestQueue::IsEqual), std::placeholders::_1, dst)), m_queue.end ());//bind2nd and ptr_fun got deprecated
+    auto new_end = std::remove_if (m_queue.begin (), m_queue.end (),[&](const QueueEntry& en) { return en.GetIpv4Header ().GetDestination () == dst; });
+    m_queue.erase (new_end, m_queue.end ());
 }
 
 bool
