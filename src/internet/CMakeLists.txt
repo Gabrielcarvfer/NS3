@@ -320,6 +320,7 @@ set(test_sources
         test/tcp-classic-recovery-test.cc
         test/tcp-ecn-test.cc
         test/tcp-prr-recovery-test.cc
+        test/icmp-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

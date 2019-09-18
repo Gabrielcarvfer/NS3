@@ -13,7 +13,7 @@ project(NS3 CXX C)
 
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.30)
+set(NS3_VER 3.30.1)
 
 option(NS3_LOG "Enable logging to be built" ON)
 

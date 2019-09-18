@@ -55,6 +55,7 @@ set(source_files
         model/block-ack-agreement.cc
         model/block-ack-manager.cc
         model/block-ack-cache.cc
+        model/block-ack-window.cc
         model/snr-tag.cc
         model/ht-capabilities.cc
         model/wifi-tx-vector.cc
@@ -169,6 +170,7 @@ set(header_files
         model/block-ack-agreement.h
         model/block-ack-manager.h
         model/block-ack-cache.h
+        model/block-ack-window.h
         model/snr-tag.h
         model/ht-capabilities.h
         model/parf-wifi-manager.h
