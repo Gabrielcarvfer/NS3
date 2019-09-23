@@ -164,14 +164,14 @@ def generateScenario(baseFolder):
 
     generateRandomPUs(numPUs=4, central_frequency=869e6, bandwidth=20e6, txPowerRange=(30, 40), txPeriodRange=(1, 5), xRange=xRange, yRange=yRange, zRange=zRange)
 
-    numUEs = 10
+    numUEs = 100
     numENBs = 1
 
     ueTxPower      = 25 #dBm
     ueAntennaGain  = 9  #dBi
     eNBTxPower     = 53 #dBm
     eNBAntennaGain = 9  #dBi
-    propagationModel = "ns3::FriisPropagationLossModel"#"ns3::RANGEPropagationLossModel"
+    propagationModel = "ns3::FriisPropagationLossModel"#"ns3::RANGE5GPropagationLossModel"
 
     for ue in range(numUEs):
         UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
@@ -227,22 +227,22 @@ def runScenario(baseFolder):
         response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
 
         #Generate the results plot figure and save to the simulation output folder
-        response = subprocess.run("python F:\\tools\\source\\NS3\\plot_main.py")
+        response = subprocess.run("python C:\\tools\\source\\NS3\\plot_main.py")
 
 if __name__ == "__main__":
     import multiprocessing
 
     #Select if you want to generate new simulation scenarios or run manually created ones
-    createAndRunScenarios = False
+    createAndRunScenarios = True
 
-    baseDir = "F:\\sims\\"
+    baseDir = "C:\\tools\\source\\sims\\"
     with multiprocessing.Pool(processes=13) as pool:
 
         if createAndRunScenarios:
             #Prepare and run n simulations
             for i in range(6):
                 # Prepare the simulationParameter json files for all simulations
-                #generateScenarios(baseDir+str(i)+"\\")
+                generateScenarios(baseDir+str(i)+"\\")
 
                 #Run simulation if the scenario exists
                 if (os.path.exists(baseDir+str(i))):
@@ -254,7 +254,7 @@ if __name__ == "__main__":
                         argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
 
                     # Run simulations in parallel
-                    pool.starmap(runScenario, argList)
+                    #pool.starmap(runScenario, argList)
         else:
             simulationScenarios = os.listdir(baseDir)
             #print (simulationScenarios)

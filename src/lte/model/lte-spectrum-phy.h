@@ -577,6 +577,7 @@ private:
   static std::ofstream plot_snr_history_file;
   static std::mutex mut;
   bool waitingForSensingReportTransmission;
+  bool spectrumSensing;
 public:
     std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
     std::vector<bool> PU_presence_V;

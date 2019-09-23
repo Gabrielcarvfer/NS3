@@ -690,7 +690,7 @@ NakagamiPropagationLossModel::GetTypeId (void)
                    "Access to the underlying GammaRandomVariable",
                    StringValue ("ns3::GammaRandomVariable"),
                    MakePointerAccessor (&NakagamiPropagationLossModel::m_gammaRandomVariable),
-                   MakePointerChecker<GammaRandomVariable> ());
+                   MakePointerChecker<GammaRandomVariable> ())
   ;
   return tid;
 
@@ -888,80 +888,127 @@ MatrixPropagationLossModel::DoAssignStreams (int64_t stream)
 }
 
 // ------------------------------------------------------------------------- //
-NS_OBJECT_ENSURE_REGISTERED (RANGEPropagationLossModel);
+
+NS_OBJECT_ENSURE_REGISTERED (RangePropagationLossModel);
+
+TypeId
+RangePropagationLossModel::GetTypeId (void)
+{
+    static TypeId tid = TypeId ("ns3::RangePropagationLossModel")
+            .SetParent<PropagationLossModel> ()
+            .SetGroupName ("Propagation")
+            .AddConstructor<RangePropagationLossModel> ()
+            .AddAttribute ("MaxRange",
+                           "Maximum Transmission Range (meters)",
+                           DoubleValue (250),
+                           MakeDoubleAccessor (&RangePropagationLossModel::m_range),
+                           MakeDoubleChecker<double> ())
+    ;
+    return tid;
+}
+
+RangePropagationLossModel::RangePropagationLossModel ()
+{
+}
+
+double
+RangePropagationLossModel::DoCalcRxPower (double txPowerDbm,
+                                          Ptr<MobilityModel> a,
+                                          Ptr<MobilityModel> b) const
+{
+    double distance = a->GetDistanceFrom (b);
+    if (distance <= m_range)
+    {
+        return txPowerDbm;
+    }
+    else
+    {
+        return -1000;
+    }
+}
+
+int64_t
+RangePropagationLossModel::DoAssignStreams (int64_t stream)
+{
+    return 0;
+}
+
+
+// ------------------------------------------------------------------------- //
+NS_OBJECT_ENSURE_REGISTERED (RANGE5GPropagationLossModel);
 //As defined in 5G-RANGE D3.1
 // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
 //
 TypeId
-RANGEPropagationLossModel::GetTypeId (void)
+RANGE5GPropagationLossModel::GetTypeId (void)
 {
-    static TypeId tid = TypeId ("ns3::RANGEPropagationLossModel")
+    static TypeId tid = TypeId ("ns3::RANGE5GPropagationLossModel")
             .SetParent<PropagationLossModel> ()
             .SetGroupName ("Propagation")
-            .AddConstructor<RANGEPropagationLossModel> ()
+            .AddConstructor<RANGE5GPropagationLossModel> ()
             .AddAttribute ("Frequency",
                            "The carrier frequency (in Hz) at which propagation occurs  (default is band 5: 850 MHz). ",
                            DoubleValue (850e6),
-                           MakeDoubleAccessor (&RANGEPropagationLossModel::SetFrequency,
-                                               &RANGEPropagationLossModel::GetFrequency),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::SetFrequency,
+                                               &RANGE5GPropagationLossModel::GetFrequency),
                            MakeDoubleChecker<double> ())
             .AddAttribute ("SystemLoss", "The system loss",
                            DoubleValue (1.0),
-                           MakeDoubleAccessor (&RANGEPropagationLossModel::m_systemLoss),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::m_systemLoss),
                            MakeDoubleChecker<double> ())
             .AddAttribute ("MinLoss",
                            "The minimum value (dB) of the total loss, used at short ranges. Note: ",
                            DoubleValue (0.0),
-                           MakeDoubleAccessor (&RANGEPropagationLossModel::SetMinLoss,
-                                               &RANGEPropagationLossModel::GetMinLoss),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::SetMinLoss,
+                                               &RANGE5GPropagationLossModel::GetMinLoss),
                            MakeDoubleChecker<double> ())
             .AddAttribute("K-value",
                            "K constant added to pathloss in 5G-RANGE networks",
                            DoubleValue(29.38),
-                           MakeDoubleAccessor(&RANGEPropagationLossModel::m_kValue),
+                           MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_kValue),
                            MakeDoubleChecker<double>())
             .AddAttribute("ShadowingMu",
                           "Mu for normal shadowing pathloss in 5G-RANGE networks",
                           DoubleValue(0.0),
-                          MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowMu),
+                          MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_shadowMu),
                           MakeDoubleChecker<double>())
             .AddAttribute("ShadowingSigma",
                           "Sigma for normal shadowing pathloss in 5G-RANGE networks",
                           DoubleValue(4.47),
-                          MakeDoubleAccessor(&RANGEPropagationLossModel::m_shadowSigma),
+                          MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_shadowSigma),
                           MakeDoubleChecker<double>())
     ;
     return tid;
 }
 
-RANGEPropagationLossModel::RANGEPropagationLossModel ()
+RANGE5GPropagationLossModel::RANGE5GPropagationLossModel ()
 {
     m_normalGen = CreateObject<NormalRandomVariable> ();
 }
 
 void
-RANGEPropagationLossModel::SetSystemLoss (double systemLoss)
+RANGE5GPropagationLossModel::SetSystemLoss (double systemLoss)
 {
     m_systemLoss = systemLoss;
 }
 double
-RANGEPropagationLossModel::GetSystemLoss (void) const
+RANGE5GPropagationLossModel::GetSystemLoss (void) const
 {
     return m_systemLoss;
 }
 void
-RANGEPropagationLossModel::SetMinLoss (double minLoss)
+RANGE5GPropagationLossModel::SetMinLoss (double minLoss)
 {
     m_minLoss = minLoss;
 }
 double
-RANGEPropagationLossModel::GetMinLoss (void) const
+RANGE5GPropagationLossModel::GetMinLoss (void) const
 {
     return m_minLoss;
 }
 
 void
-RANGEPropagationLossModel::SetFrequency (double frequency)
+RANGE5GPropagationLossModel::SetFrequency (double frequency)
 {
     m_frequency = frequency;
     static const double C = 299792458.0; // speed of light in vacuum
@@ -969,27 +1016,27 @@ RANGEPropagationLossModel::SetFrequency (double frequency)
 }
 
 double
-RANGEPropagationLossModel::GetFrequency (void) const
+RANGE5GPropagationLossModel::GetFrequency (void) const
 {
     return m_frequency;
 }
 
 double
-RANGEPropagationLossModel::DbmToW (double dbm) const
+RANGE5GPropagationLossModel::DbmToW (double dbm) const
 {
     double mw = std::pow (10.0,dbm/10.0);
     return mw / 1000.0;
 }
 
 double
-RANGEPropagationLossModel::DbmFromW (double w) const
+RANGE5GPropagationLossModel::DbmFromW (double w) const
 {
     double dbm = std::log10 (w * 1000.0) * 10.0;
     return dbm;
 }
 
 double
-RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
+RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
                                           Ptr<MobilityModel> a,
                                           Ptr<MobilityModel> b) const
 {
@@ -1053,7 +1100,7 @@ RANGEPropagationLossModel::DoCalcRxPower (double txPowerDbm,
 }
 
 int64_t
-RANGEPropagationLossModel::DoAssignStreams (int64_t stream)
+RANGE5GPropagationLossModel::DoAssignStreams (int64_t stream)
 {
     return 0;
 }

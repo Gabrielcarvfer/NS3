@@ -26,6 +26,9 @@
 #define LTE_ENB_MAC_H
 
 
+#include <torch/script.h>
+#undef CHECK
+
 #include <map>
 #include <vector>
 #include <ns3/lte-common.h>
@@ -41,7 +44,7 @@
 #include <ns3/lte-ccm-mac-sap.h>
 
 #include <memory>
-#include <torch/script.h>
+
 
 #include <Eigen/Dense>
 #include "kalman.hpp"
@@ -465,27 +468,29 @@ private:
 
 public://todo: implement this properly through the SAP
     //Custom
+    bool spectrumSensing;
     enum mergeAlgorithmEnum{
-        MRG_MULTIFRAME_OR = 1,
-        MRG_MULTIFRAME_2_OF_N,
-        MRG_MULTIFRAME_3_OF_N,
-        MRG_MULTIFRAME_4_OF_N,
-        MRG_MULTIFRAME_K_OF_N,//Don't use this one
-        MRG_OR,
-        MRG_AND,
-        MRG_XOR,
-        MRG_XNOR,
-        MRG_1_OF_N,
-        MRG_2_OF_N,
-        MRG_3_OF_N,
-        MRG_4_OF_N,
-        MRG_K_OF_N, //Don't use this one
-        MRG_NN,
-        MRG_KALMAN,
-        MRG_1_OF_N_RAND,
-        MRG_2_OF_N_RAND,
-        MRG_3_OF_N_RAND,
-        MRG_4_OF_N_RAND,
+        MRG_MULTIFRAME_OR     =  1,
+        MRG_MULTIFRAME_2_OF_N =  2,
+        MRG_MULTIFRAME_3_OF_N =  3,
+        MRG_MULTIFRAME_4_OF_N =  4,
+        MRG_MULTIFRAME_K_OF_N =  5,//Don't use this one
+        MRG_OR                =  6,
+        MRG_AND               =  7,
+        MRG_XOR               =  8,
+        MRG_XNOR              =  9,
+        MRG_1_OF_N            = 10,
+        MRG_2_OF_N            = 11,
+        MRG_3_OF_N            = 12,
+        MRG_4_OF_N            = 13,
+        MRG_K_OF_N            = 14, //Don't use this one
+        MRG_NN                = 15,
+        MRG_KALMAN            = 16,
+        MRG_1_OF_N_RAND       = 17,
+        MRG_2_OF_N_RAND       = 18,
+        MRG_3_OF_N_RAND       = 19,
+        MRG_4_OF_N_RAND       = 20,
+        MRG_MONTECARLOFUSION  = 21,//arxiv.org/pdf/1901.00139.pdf or https://www.groundai.com/project/monte-carlo-fusion/1
     };
 
     typedef struct cognitive_reg
@@ -511,7 +516,16 @@ public://todo: implement this properly through the SAP
 
     static std::vector<int> nonDSAChannels;
 
-    static std::shared_ptr<torch::jit::script::Module> nn_module;
+    //static std::shared_ptr<torch::jit::script::Module> nn_module; //deprecated in LibTorch 1.2 https://github.com/pytorch/pytorch/releases/tag/v1.2.0
+    static torch::jit::script::Module nn_module;
+    static int nn_width;
+    static int nn_num_slices;
+    std::vector<std::vector<float>> nn_encodedDataSlice;
+    std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+    std::map<uint16_t, uint16_t> ue_to_position_map;
+
+
+
     std::vector <CqiListElement_s> tempCqi;
 
     KalmanFilter kf;

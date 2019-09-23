@@ -681,7 +681,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   //Take cognitive info into account before scheduling
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : false;
+      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? false : rbgMap.at(i);
   }
 
   //SchedulerInput
@@ -931,11 +931,12 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
           for (int j = 0; j < 64; j++)
             {
-              if ( ( (dci.m_rbBitmap >> j) & mask ) == 1 )
-                {
-                  dciRbg.push_back (j);
-                  NS_LOG_INFO ("\t" << j);
-                }
+              if (((dci.m_rbBitmap & mask) >> j) == 1)
+              {
+                dciRbg.push_back (j);
+                NS_LOG_INFO ("\t" << j);
+              }
+              mask = (mask << 1);
             }
           bool free = true;
           for (uint8_t j = 0; j < dciRbg.size (); j++)
@@ -982,7 +983,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
                   uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask | ( (uint64_t)0x01 << dciRbg.at (k));
+                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
                       rbgAllocatedNum++;
                     }
                   dci.m_rbBitmap = rbgMask;
@@ -1485,7 +1486,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
             {
               // erase current RBG from the list of available RBG
               availableRBGs.erase (currentRB);
-              rbgMap.at(currentRB) = true;
+              //rbgMap.at(currentRB) = true;
               continue;
             }
 
@@ -1508,7 +1509,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
           // erase current RBG from the list of available RBG
           availableRBGs.erase (currentRB);
-          rbgMap.at(currentRB) = true;
+          //rbgMap.at(currentRB) = true;
 
             if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
           //||(UeHasReachedGBR.find(userWithMaximumMetric)->second == true))
@@ -1578,7 +1579,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
         {
 
           //Leave the cast alone or replace 0x01 with 0x0000000000000001
-          rbgMask |= ((uint64_t)0x01 << itRBGsPerRNTI->second.resource_block_index);
+          rbgMask += ((uint64_t)0x01 << itRBGsPerRNTI->second.resource_block_index);
         }
       newDci.m_rbBitmap = rbgMask;   // (32 bit bitmap see 7.1.6 of 36.213)
       // NOTE: In this first version of CqaFfMacScheduler, it is assumed one flow per user.

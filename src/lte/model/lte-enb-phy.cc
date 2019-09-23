@@ -706,7 +706,7 @@ LteEnbPhy::StartSubFrame (void)
               uint64_t mask = 0x01;
               for (int i = 0; i < 64; i++)
                 {
-                  if (((dci->GetDci ().m_rbBitmap >> i) & mask) == 1)
+                    if (((dci->GetDci ().m_rbBitmap & mask) >> i) == 1)
                     {
                       for (int k = 0; k < GetRbgSize (); k++)
                         {
@@ -717,6 +717,7 @@ LteEnbPhy::StartSubFrame (void)
                           GeneratePowerAllocationMap (dci->GetDci ().m_rnti, (i * GetRbgSize ()) + k );
                         }
                     }
+                    mask = (mask << 1);
                 }
               // fire trace of DL Tx PHY stats
               for (uint8_t i = 0; i < dci->GetDci ().m_mcs.size (); i++)

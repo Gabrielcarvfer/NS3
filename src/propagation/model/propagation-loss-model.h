@@ -933,7 +933,7 @@ private:
  * not affected.
  *
  */
-    class RANGEPropagationLossModel : public PropagationLossModel
+    class RANGE5GPropagationLossModel : public PropagationLossModel
     {
     public:
         /**
@@ -941,7 +941,7 @@ private:
          * \return the object TypeId
          */
         static TypeId GetTypeId (void);
-        RANGEPropagationLossModel ();
+        RANGE5GPropagationLossModel ();
         /**
          * \param frequency (Hz)
          *
@@ -984,14 +984,14 @@ private:
          *
          * Defined and unimplemented to avoid misuse
          */
-        RANGEPropagationLossModel (const RANGEPropagationLossModel &);
+        RANGE5GPropagationLossModel (const RANGE5GPropagationLossModel &);
         /**
          * \brief Copy constructor
          *
          * Defined and unimplemented to avoid misuse
          * \returns
          */
-        RANGEPropagationLossModel & operator = (const RANGEPropagationLossModel &);
+        RANGE5GPropagationLossModel & operator = (const RANGE5GPropagationLossModel &);
 
         virtual double DoCalcRxPower (double txPowerDbm,
                                       Ptr<MobilityModel> a,

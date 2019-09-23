@@ -52,7 +52,13 @@ int main() {
     bool   enableDSA               =  true; //if false, channels with PUs will be automatically flagged not to be used
     bool   SNRSensing              =  true; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
     int    fusionAlgorithm         = LteEnbMac::MRG_1_OF_N;
-    std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGEPropagationLossModel
+    std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
+
+    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
+    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));
+    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));
+
+
 
     picojson::object inputJson = load_json("simulationParameters.json");
 

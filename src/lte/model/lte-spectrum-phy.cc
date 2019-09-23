@@ -328,6 +328,11 @@ LteSpectrumPhy::GetTypeId (void)
                      "DL reception PHY layer statistics.",
                      MakeTraceSourceAccessor (&LteSpectrumPhy::m_ulPhyReception),
                      "ns3::PhyReceptionStatParameters::TracedCallback")
+    .AddAttribute("SpectrumSensing",
+                  "Set if spectrum sensing should be ignored or not",
+                  BooleanValue(false),
+                  MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
+                  MakeBooleanChecker())
   ;
   return tid;
 }
@@ -1421,7 +1426,8 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
 
               // schedule sensing events
               //if (this->m_sensingEvent.IsExpired())
-              this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
+              if (spectrumSensing)
+                this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
 
 
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
