@@ -320,6 +320,11 @@ LteSpectrumPhy::GetTypeId (void)
                     BooleanValue (true),
                     MakeBooleanAccessor (&LteSpectrumPhy::m_ctrlErrorModelEnabled),
                     MakeBooleanChecker ())
+    .AddAttribute("SpectrumSensing",
+                  "Set if spectrum sensing should be used or not",
+                  BooleanValue(false),
+                  MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
+                  MakeBooleanChecker())
     .AddTraceSource ("DlPhyReception",
                      "DL reception PHY layer statistics.",
                      MakeTraceSourceAccessor (&LteSpectrumPhy::m_dlPhyReception),
@@ -328,11 +333,6 @@ LteSpectrumPhy::GetTypeId (void)
                      "DL reception PHY layer statistics.",
                      MakeTraceSourceAccessor (&LteSpectrumPhy::m_ulPhyReception),
                      "ns3::PhyReceptionStatParameters::TracedCallback")
-    .AddAttribute("SpectrumSensing",
-                  "Set if spectrum sensing should be ignored or not",
-                  BooleanValue(false),
-                  MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
-                  MakeBooleanChecker())
   ;
   return tid;
 }

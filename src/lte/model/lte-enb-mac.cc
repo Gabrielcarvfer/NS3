@@ -365,6 +365,21 @@ LteEnbMac::GetTypeId (void)
                    UintegerValue (3),
                    MakeUintegerAccessor (&LteEnbMac::m_raResponseWindowSize),
                    MakeUintegerChecker<uint8_t> (2, 10))
+    .AddAttribute ("ComponentCarrierId",
+                   "ComponentCarrier Id, needed to reply on the appropriate sap.",
+                   UintegerValue (0),
+                   MakeUintegerAccessor (&LteEnbMac::m_componentCarrierId),
+                   MakeUintegerChecker<uint8_t> (0,4))
+    .AddAttribute("FusionAlgorithm",
+                  "Fusion algorithm for the collaborative sensing merge function",
+                  UintegerValue(3),
+                  MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
+                  MakeUintegerChecker<uint8_t> (1,16))//Increment range if you create new fusion algorithms
+    .AddAttribute("SpectrumSensing",
+                  "Set if spectrum sensing should be used or not",
+                  BooleanValue(false),
+                  MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
+                  MakeBooleanChecker())
     .AddTraceSource ("DlScheduling",
                      "Information regarding DL scheduling.",
                      MakeTraceSourceAccessor (&LteEnbMac::m_dlScheduling),
@@ -373,21 +388,7 @@ LteEnbMac::GetTypeId (void)
                      "Information regarding UL scheduling.",
                      MakeTraceSourceAccessor (&LteEnbMac::m_ulScheduling),
                      "ns3::LteEnbMac::UlSchedulingTracedCallback")
-    .AddAttribute ("ComponentCarrierId",
-                   "ComponentCarrier Id, needed to reply on the appropriate sap.",
-                   UintegerValue (0),
-                   MakeUintegerAccessor (&LteEnbMac::m_componentCarrierId),
-                   MakeUintegerChecker<uint8_t> (0,4))
-    .AddAttribute("FusionAlgorithm",
-            "Fusion algorithm for the collaborative sensing merge function",
-            UintegerValue(3),
-            MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
-            MakeUintegerChecker<uint8_t> (1,16))//Increment range if you create new fusion algorithms
-    .AddAttribute("SpectrumSensing",
-                  "Set if spectrum sensing should be used or not",
-                  BooleanValue(false),
-                  MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
-                  MakeBooleanChecker())
+
   ;
 
   return tid;
@@ -405,9 +406,8 @@ m_ccmMacSapUser (0)
   m_enbPhySapUser = new EnbMacMemberLteEnbPhySapUser (this);
   m_ccmMacSapProvider = new MemberLteCcmMacSapProvider<LteEnbMac> (this);
 
-
-  if (spectrumSensing)
-  {
+  //if(spectrumSensing)
+  //{
       unexpectedChannelAccessBitmap.emplace(0, std::map <uint64_t, std::vector<std::vector<bool>>> ());
       unexpectedChannelAccessBitmap.at(0).emplace(0, std::vector<std::vector<bool>>(4));
       for(auto & channelReg : unexpectedChannelAccessBitmap.at(0).at(0))
@@ -464,7 +464,7 @@ m_ccmMacSapUser (0)
       for (int i = 0; i < n; i++)
           x0(i) = 0.0;
       kf.init(0, x0);
-  }
+  //}
 }
 
 

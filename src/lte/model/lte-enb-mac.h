@@ -469,6 +469,7 @@ private:
 public://todo: implement this properly through the SAP
     //Custom
     bool spectrumSensing;
+
     enum mergeAlgorithmEnum{
         MRG_MULTIFRAME_OR     =  1,
         MRG_MULTIFRAME_2_OF_N =  2,
@@ -532,6 +533,7 @@ public://todo: implement this properly through the SAP
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;
+
 };
 
 } // end namespace ns3

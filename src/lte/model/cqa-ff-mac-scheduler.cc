@@ -681,7 +681,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   //Take cognitive info into account before scheduling
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? false : rbgMap.at(i);
+      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : rbgMap.at(i);
   }
 
   //SchedulerInput
@@ -1486,7 +1486,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
             {
               // erase current RBG from the list of available RBG
               availableRBGs.erase (currentRB);
-              //rbgMap.at(currentRB) = true;
+              rbgMap.at(currentRB) = true;
               continue;
             }
 
@@ -1509,7 +1509,8 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
           // erase current RBG from the list of available RBG
           availableRBGs.erase (currentRB);
-          //rbgMap.at(currentRB) = true;
+          rbgMap.at(currentRB) = true;
+
 
             if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
           //||(UeHasReachedGBR.find(userWithMaximumMetric)->second == true))
