@@ -19,14 +19,14 @@
  */
 
 #include "component-carrier-ue.h"
-#include <ns3/uinteger.h>
-#include <ns3/boolean.h>
-#include <ns3/simulator.h>
-#include <ns3/log.h>
-#include <ns3/abort.h>
-#include <ns3/lte-ue-phy.h>
-#include <ns3/lte-ue-mac.h>
-#include <ns3/pointer.h>
+#include "../../core/model/uinteger.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "lte-ue-phy.h"
+#include "lte-ue-mac.h"
+#include "../../core/model/pointer.h"
 
 namespace ns3 {
 

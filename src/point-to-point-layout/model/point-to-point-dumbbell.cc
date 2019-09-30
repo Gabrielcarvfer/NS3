@@ -23,14 +23,14 @@
 #include <sstream>
 
 // ns3 includes
-#include "ns3/log.h"
-#include "ns3/point-to-point-dumbbell.h"
-#include "ns3/constant-position-mobility-model.h"
+#include "../../core/model/log.h"
+#include "point-to-point-dumbbell.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
 
-#include "ns3/node-list.h"
-#include "ns3/point-to-point-net-device.h"
-#include "ns3/vector.h"
-#include "ns3/ipv6-address-generator.h"
+#include "../../network/model/node-list.h"
+#include "../../point-to-point/model/point-to-point-net-device.h"
+#include "../../core/model/vector.h"
+#include "../../internet/model/ipv6-address-generator.h"
 
 namespace ns3 {
 

@@ -19,10 +19,9 @@
  *         Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#ifndef FF_MAC_SCHEDULER_H
-#define FF_MAC_SCHEDULER_H
+#pragma once
 
-#include <ns3/object.h>
+#include "../../core/model/object.h"
 
 
 namespace ns3 {
@@ -135,4 +134,4 @@ protected:
 
 }  // namespace ns3
 
-#endif /* FF_MAC_SCHEDULER_H */
+

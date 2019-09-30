@@ -415,4 +415,5 @@ inline int64x64_t operator ! (const int64x64_t & lhs)
 
 } // namespace ns3
 
-#endif /* INT64X64_CAIRO_H */
+
+#endif

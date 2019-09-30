@@ -17,13 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PACKET_SINK_HELPER_H
-#define PACKET_SINK_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/node-container.h"
-#include "ns3/application-container.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/application-container.h"
 
 namespace ns3 {
 
@@ -97,4 +96,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PACKET_SINK_HELPER_H */
+

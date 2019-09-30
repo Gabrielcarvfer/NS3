@@ -17,11 +17,11 @@
  *
  */
 
-#include "ns3/node.h"
-#include "ns3/log.h"
-#include "ns3/tcp-westwood.h"
-#include "ns3/simple-channel.h"
-#include "ns3/rtt-estimator.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
+#include "../model/tcp-westwood.h"
+#include "../../network/utils/simple-channel.h"
+#include "../model/rtt-estimator.h"
 #include "tcp-general-test.h"
 #include "tcp-error-model.h"
 

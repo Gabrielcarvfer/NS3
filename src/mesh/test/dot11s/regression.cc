@@ -18,7 +18,7 @@
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
 
-#include "ns3/test.h"
+#include "../../../core/model/test.h"
 #include "pmp-regression.h"
 #include "hwmp-reactive-regression.h"
 #include "hwmp-proactive-regression.h"

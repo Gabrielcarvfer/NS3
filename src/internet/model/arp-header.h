@@ -18,12 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef ARP_HEADER_H
-#define ARP_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/address.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/model/header.h"
+#include "../../network/model/address.h"
+#include "../../network/utils/ipv4-address.h"
 #include <string>
 
 namespace ns3 {
@@ -120,4 +119,4 @@ public:
 
 } // namespace ns3
 
-#endif /* ARP_HEADER_H */
+

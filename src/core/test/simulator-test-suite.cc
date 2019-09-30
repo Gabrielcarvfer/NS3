@@ -17,12 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/list-scheduler.h"
-#include "ns3/heap-scheduler.h"
-#include "ns3/map-scheduler.h"
-#include "ns3/calendar-scheduler.h"
+#include "../model/test.h"
+#include "../model/simulator.h"
+#include "../model/list-scheduler.h"
+#include "../model/heap-scheduler.h"
+#include "../model/map-scheduler.h"
+#include "../model/calendar-scheduler.h"
 
 using namespace ns3;
 

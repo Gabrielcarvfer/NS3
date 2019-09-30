@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef COMMAND_LINE_H
-#define COMMAND_LINE_H
+#pragma once
 
 #include <string>
 #include <sstream>
@@ -674,4 +673,4 @@ std::ostream & operator << (std::ostream & os, const CommandLine & cmd);
 
 } // namespace ns3
 
-#endif /* COMMAND_LINE_H */
+

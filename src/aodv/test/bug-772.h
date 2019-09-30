@@ -18,13 +18,12 @@
  * Authors: Pavel Boyko <boyko@iitp.ru>
  */
 
-#ifndef BUG_772_H
-#define BUG_772_H
+#pragma once
 
-#include "ns3/test.h"
-#include "ns3/nstime.h"
-#include "ns3/node-container.h"
-#include "ns3/socket.h"
+#include "../../core/model/test.h"
+#include "../../core/model/nstime.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/model/socket.h"
 
 using namespace ns3;
 
@@ -97,4 +96,4 @@ private:
   void SendData (Ptr<Socket> socket);
 };
 
-#endif /* BUG_772_H */
+

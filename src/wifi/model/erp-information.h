@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef ERP_INFORMATION_H
-#define ERP_INFORMATION_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -146,4 +145,4 @@ std::ostream &operator << (std::ostream &os, const ErpInformation &erpinformatio
 
 } //namespace ns3
 
-#endif /* ERP_INFORMATION_H */
+

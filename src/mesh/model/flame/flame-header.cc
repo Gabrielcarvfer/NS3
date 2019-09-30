@@ -17,9 +17,9 @@
  *
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
-#include "ns3/assert.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
+#include "../../../core/model/assert.h"
+#include "../../../network/utils/address-utils.h"
+#include "../../../network/model/packet.h"
 
 #include "flame-header.h"
 

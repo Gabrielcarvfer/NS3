@@ -19,11 +19,10 @@
  *
  */
 
-#ifndef NS3_MPI_INTERFACE_H
-#define NS3_MPI_INTERFACE_H
+#pragma once
 
-#include <ns3/nstime.h>
-#include <ns3/packet.h>
+#include "../../core/model/nstime.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 /**
@@ -104,4 +103,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_MPI_INTERFACE_H */
+

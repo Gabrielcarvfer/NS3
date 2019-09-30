@@ -30,8 +30,7 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_RCACHE_H
-#define DSR_RCACHE_H
+#pragma once
 
 #include <map>
 #include <stdint.h>
@@ -40,19 +39,19 @@
 #include <iostream>
 #include <vector>
 
-#include "ns3/simulator.h"
-#include "ns3/timer.h"
-#include "ns3/simple-ref-count.h"
-#include "ns3/header.h"
-#include "ns3/enum.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/nstime.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/net-device.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/callback.h"
-#include "ns3/arp-cache.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/timer.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../network/model/header.h"
+#include "../../core/model/enum.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/nstime.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../network/model/net-device.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../core/model/callback.h"
+#include "../../internet/model/arp-cache.h"
 #include "dsr-option-header.h"
 
 namespace ns3 {
@@ -871,4 +870,4 @@ public:
 };
 } // namespace dsr
 } // namespace ns3
-#endif /* DSR_RCACHE_H */
+

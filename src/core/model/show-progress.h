@@ -20,8 +20,7 @@
  */
 
 
-#ifndef SHOW_PROGRESS_H
-#define SHOW_PROGRESS_H
+#pragma once
 
 /**
  * \file
@@ -140,4 +139,4 @@ private:
   
 }  // namespace ns3
 
-#endif  /* SHOW_PROGRESS_H */
+

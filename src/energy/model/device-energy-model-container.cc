@@ -21,8 +21,8 @@
  */
 
 #include "device-energy-model-container.h"
-#include "ns3/names.h"
-#include "ns3/log.h"
+#include "../../core/model/names.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

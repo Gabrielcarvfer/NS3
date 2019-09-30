@@ -24,12 +24,12 @@
 #include "ipv4-queue-disc-item.h"
 #include "arp-l3-protocol.h"
 #include "arp-cache.h"
-#include "ns3/net-device.h"
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/pointer.h"
-#include "ns3/traffic-control-layer.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/pointer.h"
+#include "../../traffic-control/model/traffic-control-layer.h"
 
 
 namespace ns3 {

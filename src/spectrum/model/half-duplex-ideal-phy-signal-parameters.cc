@@ -18,8 +18,8 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/log.h>
-#include <ns3/packet.h>
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
 #include "half-duplex-ideal-phy-signal-parameters.h"
 
 

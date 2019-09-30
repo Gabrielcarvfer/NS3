@@ -18,11 +18,10 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef MSDU_AGGREGATOR_H
-#define MSDU_AGGREGATOR_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
 #include "wifi-mode.h"
 #include "qos-utils.h"
 
@@ -154,4 +153,4 @@ private:
 
 } //namespace ns3
 
-#endif /* MSDU_AGGREGATOR_H */
+

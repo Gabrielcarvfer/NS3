@@ -18,7 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include "ns3/mesh-stack-installer.h"
+#include "mesh-stack-installer.h"
 
 namespace ns3
 {

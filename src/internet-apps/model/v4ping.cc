@@ -15,16 +15,16 @@
  */
 
 #include "v4ping.h"
-#include "ns3/icmpv4.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/socket.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/packet.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../internet/model/icmpv4.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/boolean.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/trace-source-accessor.h"
 
 namespace ns3 {
 

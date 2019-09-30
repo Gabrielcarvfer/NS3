@@ -21,13 +21,12 @@
  *
  */
 
-#ifndef FILE_AGGREGATOR_H
-#define FILE_AGGREGATOR_H
+#pragma once
 
 #include <fstream>
 #include <map>
 #include <string>
-#include "ns3/data-collection-object.h"
+#include "data-collection-object.h"
 
 namespace ns3 {
 
@@ -386,4 +385,4 @@ private:
 
 } // namespace ns3
 
-#endif // FILE_AGGREGATOR_H
+

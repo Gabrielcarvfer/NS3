@@ -25,10 +25,10 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
 #include <fstream>
-#include "ns3/ipv6-static-routing-helper.h"
-#include "ns3/ipv6-routing-table-entry.h"
+#include "../../src/internet/helper/ipv6-static-routing-helper.h"
+#include "../../src/internet/model/ipv6-routing-table-entry.h"
 #include "ns3/internet-module.h"
-#include "ns3/tcp-header.h"
+#include "../../src/internet/model/tcp-header.h"
 #include "ns3/traffic-control-module.h"
 #include  <string>
 

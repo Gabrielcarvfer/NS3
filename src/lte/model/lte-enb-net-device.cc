@@ -21,34 +21,34 @@
  * Author: Danilo Abrignani <danilo.abrignani@unibo.it> : Integrated with new architecture - GSoC 2015 - Carrier Aggregation
  */
 
-#include <ns3/llc-snap-header.h>
-#include <ns3/simulator.h>
-#include <ns3/callback.h>
-#include <ns3/node.h>
-#include <ns3/packet.h>
-#include <ns3/lte-net-device.h>
-#include <ns3/packet-burst.h>
-#include <ns3/uinteger.h>
-#include <ns3/trace-source-accessor.h>
-#include <ns3/pointer.h>
-#include <ns3/enum.h>
-#include <ns3/lte-amc.h>
-#include <ns3/lte-enb-mac.h>
-#include <ns3/lte-enb-net-device.h>
-#include <ns3/lte-enb-rrc.h>
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/lte-enb-phy.h>
-#include <ns3/ff-mac-scheduler.h>
-#include <ns3/lte-handover-algorithm.h>
-#include <ns3/lte-anr.h>
-#include <ns3/lte-ffr-algorithm.h>
-#include <ns3/ipv4-l3-protocol.h>
-#include <ns3/ipv6-l3-protocol.h>
-#include <ns3/abort.h>
-#include <ns3/log.h>
-#include <ns3/lte-enb-component-carrier-manager.h>
-#include <ns3/object-map.h>
-#include <ns3/object-factory.h>
+#include "../../network/utils/llc-snap-header.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "lte-net-device.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
+#include "lte-amc.h"
+#include "lte-enb-mac.h"
+#include "lte-enb-net-device.h"
+#include "lte-enb-rrc.h"
+#include "lte-ue-net-device.h"
+#include "lte-enb-phy.h"
+#include "ff-mac-scheduler.h"
+#include "lte-handover-algorithm.h"
+#include "lte-anr.h"
+#include "lte-ffr-algorithm.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/ipv6-l3-protocol.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
+#include "lte-enb-component-carrier-manager.h"
+#include "../../core/model/object-map.h"
+#include "../../core/model/object-factory.h"
 
 namespace ns3 {
 

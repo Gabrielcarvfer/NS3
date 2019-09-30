@@ -19,10 +19,10 @@
  * <chatzipa@ceid.upatras.gr>
  */
 
-#include "ns3/log.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/node.h"
-#include "ns3/mac48-address.h"
+#include "../../src/core/model/log.h"
+#include "../../src/network/utils/ipv6-address.h"
+#include "../../src/network/model/node.h"
+#include "../../src/network/utils/mac48-address.h"
 
 using namespace ns3;
 

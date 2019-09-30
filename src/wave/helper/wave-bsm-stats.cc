@@ -20,9 +20,9 @@
  */
 
 
-#include "ns3/wave-bsm-stats.h"
-#include "ns3/integer.h"
-#include "ns3/log.h"
+#include "wave-bsm-stats.h"
+#include "../../core/model/integer.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

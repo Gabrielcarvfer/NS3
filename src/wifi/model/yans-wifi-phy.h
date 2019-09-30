@@ -20,8 +20,7 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef YANS_WIFI_PHY_H
-#define YANS_WIFI_PHY_H
+#pragma once
 
 #include "wifi-phy.h"
 
@@ -86,4 +85,4 @@ private:
 
 } //namespace ns3
 
-#endif /* YANS_WIFI_PHY_H */
+

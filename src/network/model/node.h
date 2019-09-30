@@ -18,15 +18,14 @@
  * Authors: George F. Riley<riley@ece.gatech.edu>
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NODE_H
-#define NODE_H
+#pragma once
 
 #include <vector>
 
-#include "ns3/object.h"
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/net-device.h"
+#include "../../core/model/object.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "net-device.h"
 
 namespace ns3 {
 
@@ -292,4 +291,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NODE_H */
+

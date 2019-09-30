@@ -17,13 +17,12 @@
  *
  */
 
-#ifndef NS3_DISTRIBUTED_SIMULATOR_IMPL_H
-#define NS3_DISTRIBUTED_SIMULATOR_IMPL_H
+#pragma once
 
-#include "ns3/simulator-impl.h"
-#include "ns3/scheduler.h"
-#include "ns3/event-impl.h"
-#include "ns3/ptr.h"
+#include "../../core/model/simulator-impl.h"
+#include "../../core/model/scheduler.h"
+#include "../../core/model/event-impl.h"
+#include "../../core/model/ptr.h"
 
 #include <list>
 
@@ -162,4 +161,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_DISTRIBUTED_SIMULATOR_IMPL_H */
+

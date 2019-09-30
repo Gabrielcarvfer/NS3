@@ -18,11 +18,10 @@
  * Authors: Hajime Tazaki <tazaki@sfc.wide.ad.jp>
  */
 
-#ifndef IPV4_PACKET_INFO_TAG_H
-#define IPV4_PACKET_INFO_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/model/tag.h"
+#include "../../network/utils/ipv4-address.h"
 
 namespace ns3 {
 
@@ -132,4 +131,4 @@ private:
 };
 } // namespace ns3
 
-#endif /* IPV4_PACKET_INFO_TAG_H */
+

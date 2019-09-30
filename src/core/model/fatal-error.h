@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Quincy Tse <quincy.tse@nicta.com.au>
  */
-#ifndef NS3_FATAL_ERROR_H
-#define NS3_FATAL_ERROR_H
+#pragma once
 
 #include <iostream>
 #include <exception>
@@ -178,4 +177,4 @@
 #define NS_FATAL_ERROR_CONT(msg)      NS_FATAL_ERROR_IMPL (msg, false)
 
 
-#endif /* FATAL_ERROR_H */
+

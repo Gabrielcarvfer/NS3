@@ -17,8 +17,7 @@
  *
  * Author: Piotr Jurkiewicz <piotr.jerzy.jurkiewicz@gmail.com>
  */
-#ifndef CRC32_H
-#define CRC32_H
+#pragma once
 #include <stdint.h>
 
 namespace ns3 {
@@ -35,4 +34,3 @@ uint32_t CRC32Calculate (const uint8_t *data, int length);
 
 } // namespace ns3
 
-#endif

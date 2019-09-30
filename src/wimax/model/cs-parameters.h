@@ -20,8 +20,7 @@
  *
  */
 
-#ifndef WIMAX_CS_PARAMETERS_H
-#define WIMAX_CS_PARAMETERS_H
+#pragma once
 
 #include "ipcs-classifier-record.h"
 #include "wimax-tlv.h"
@@ -85,4 +84,4 @@ private:
 };
 
 }
-#endif /* WIMAX_CS_PARAMETERS_H */
+

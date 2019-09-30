@@ -23,16 +23,16 @@
  */
 
 #include "dhcp-helper.h"
-#include "ns3/dhcp-server.h"
-#include "ns3/dhcp-client.h"
-#include "ns3/uinteger.h"
-#include "ns3/names.h"
-#include "ns3/ipv4.h"
-#include "ns3/loopback-net-device.h"
-#include "ns3/traffic-control-layer.h"
-#include "ns3/traffic-control-helper.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/log.h"
+#include "../model/dhcp-server.h"
+#include "../model/dhcp-client.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/names.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/loopback-net-device.h"
+#include "../../traffic-control/model/traffic-control-layer.h"
+#include "../../traffic-control/helper/traffic-control-helper.h"
+#include "../../network/utils/net-device-queue-interface.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

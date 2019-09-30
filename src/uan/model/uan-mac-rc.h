@@ -18,17 +18,16 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_MAC_RC_H
-#define UAN_MAC_RC_H
+#pragma once
 
 #include "uan-mac.h"
-#include "ns3/mac8-address.h"
+#include "../../network/utils/mac8-address.h"
 
-#include "ns3/nstime.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/traced-callback.h"
-#include "ns3/event-id.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/random-variable-stream.h"
 
 #include <list>
 #include <utility>
@@ -318,4 +317,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* UAN_MAC_RC_H */
+

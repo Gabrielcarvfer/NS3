@@ -29,8 +29,7 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_ROUTING_H
-#define DSR_ROUTING_H
+#pragma once
 
 #include <map>
 #include <list>
@@ -39,29 +38,29 @@
 #include <cassert>
 #include <sys/types.h>
 
-#include "ns3/callback.h"
-#include "ns3/object.h"
-#include "ns3/node.h"
-#include "ns3/ptr.h"
-#include "ns3/buffer.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4.h"
-#include "ns3/ip-l4-protocol.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/icmpv4-l4-protocol.h"
-#include "ns3/ipv4-interface.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/traced-callback.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/timer.h"
-#include "ns3/net-device.h"
-#include "ns3/output-stream-wrapper.h"
-#include "ns3/wifi-mac.h"
-#include "ns3/socket.h"
-#include "ns3/event-garbage-collector.h"
-#include "ns3/test.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/object.h"
+#include "../../network/model/node.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/buffer.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ip-l4-protocol.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/icmpv4-l4-protocol.h"
+#include "../../internet/model/ipv4-interface.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../core/model/timer.h"
+#include "../../network/model/net-device.h"
+#include "../../network/utils/output-stream-wrapper.h"
+#include "../../wifi/model/wifi-mac.h"
+#include "../../network/model/socket.h"
+#include "../../core/helper/event-garbage-collector.h"
+#include "../../core/model/test.h"
 
 #include "dsr-network-queue.h"
 #include "dsr-rcache.h"
@@ -840,4 +839,4 @@ private:
 }  /* namespace dsr */
 }  /* namespace ns3 */
 
-#endif /* DSR_ROUTING_H */
+

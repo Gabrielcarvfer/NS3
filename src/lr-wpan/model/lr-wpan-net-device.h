@@ -20,12 +20,11 @@
  *  Tommaso Pecorella <tommaso.pecorella@unifi.it>
  *  Margherita Filippetti <morag87@gmail.com>
  */
-#ifndef LR_WPAN_NET_DEVICE_H
-#define LR_WPAN_NET_DEVICE_H
+#pragma once
 
-#include <ns3/net-device.h>
-#include <ns3/traced-callback.h>
-#include <ns3/lr-wpan-mac.h>
+#include "../../network/model/net-device.h"
+#include "../../core/model/traced-callback.h"
+#include "lr-wpan-mac.h"
 
 namespace ns3 {
 
@@ -245,4 +244,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LR_WPAN_NET_DEVICE_H */
+

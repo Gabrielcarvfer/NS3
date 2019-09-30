@@ -14,13 +14,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef NS3_CHANNEL_H
-#define NS3_CHANNEL_H
+#pragma once
 
 #include <string>
 #include <stdint.h>
-#include "ns3/object.h"
-#include "ns3/ptr.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -80,4 +79,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_CHANNEL_H */
+

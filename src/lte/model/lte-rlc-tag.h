@@ -18,11 +18,10 @@
  * Author: Jaume Nin <jaume.nin@cttc.es>
  */
 
-#ifndef RLC_TAG_H
-#define RLC_TAG_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "ns3/nstime.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
 
 
 namespace ns3 {
@@ -83,4 +82,4 @@ private:
 
 } //namespace ns3
 
-#endif /* RLC_TAG_H */
+

@@ -18,12 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/llc-snap-header.h"
-#include "ns3/channel.h"
-#include "ns3/pointer.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/uinteger.h"
+#include "../../network/utils/llc-snap-header.h"
+#include "../../network/model/channel.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../core/model/uinteger.h"
 #include "wifi-net-device.h"
 #include "wifi-phy.h"
 #include "wifi-mac.h"

@@ -18,8 +18,7 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef BLOCK_ACK_CACHE_H
-#define BLOCK_ACK_CACHE_H
+#pragma once
 
 //#include <stdint.h>
 
@@ -85,4 +84,4 @@ private:
 
 } //namespace ns3
 
-#endif /* BLOCK_ACK_CACHE_H */
+

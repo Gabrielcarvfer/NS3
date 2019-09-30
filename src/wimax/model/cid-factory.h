@@ -21,8 +21,7 @@
  */
 
 
-#ifndef CONNECTION_IDENTIFIER_FACTORY_H
-#define CONNECTION_IDENTIFIER_FACTORY_H
+#pragma once
 
 #include <stdint.h>
 #include "cid.h"
@@ -113,4 +112,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CONNECTION_IDENTIFIER_FACTORY_H */
+

@@ -22,12 +22,12 @@
  */
 
 #include "propagation-loss-model.h"
-#include "ns3/log.h"
-#include "ns3/mobility-model.h"
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../../core/model/log.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 #include <cmath>
 
 namespace ns3 {

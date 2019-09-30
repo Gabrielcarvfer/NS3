@@ -18,13 +18,12 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#ifndef ACOUSTIC_MODEM_ENERGY_MODEL_H
-#define ACOUSTIC_MODEM_ENERGY_MODEL_H
+#pragma once
 
-#include "ns3/device-energy-model.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/traced-value.h"
+#include "../../energy/model/device-energy-model.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/traced-value.h"
 
 namespace ns3 {
 
@@ -243,4 +242,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ACOUSTIC_MODEM_ENERGY_MODEL_H */
+

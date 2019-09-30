@@ -20,9 +20,9 @@
  *         Junling Bu <linlinjavaer@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/event-id.h"
-#include "ns3/wifi-phy.h"
+#include "../../core/model/log.h"
+#include "../../core/model/event-id.h"
+#include "../../wifi/model/wifi-phy.h"
 #include "wave-mac-low.h"
 #include "higher-tx-tag.h"
 

@@ -29,25 +29,25 @@
  * to "Outside the Context of a BSS")."
  */
 
-#include "ns3/vector.h"
-#include "ns3/string.h"
-#include "ns3/socket.h"
-#include "ns3/double.h"
-#include "ns3/config.h"
-#include "ns3/log.h"
-#include "ns3/command-line.h"
-#include "ns3/mobility-model.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/position-allocator.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/ipv4-interface-container.h"
+#include "../../core/model/vector.h"
+#include "../../core/model/string.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/double.h"
+#include "../../core/model/config.h"
+#include "../../core/model/log.h"
+#include "../../core/model/command-line.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../mobility/model/position-allocator.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
 #include <iostream>
 
-#include "ns3/ocb-wifi-mac.h"
-#include "ns3/wifi-80211p-helper.h"
-#include "ns3/wave-mac-helper.h"
+#include "../model/ocb-wifi-mac.h"
+#include "../helper/wifi-80211p-helper.h"
+#include "../helper/wave-mac-helper.h"
 
 using namespace ns3;
 

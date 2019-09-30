@@ -17,13 +17,12 @@
  *
  * Author: Phillip Sitbon <phillip@sitbon.net>
  */
-#ifndef WAYPOINT_MOBILITY_MODEL_H
-#define WAYPOINT_MOBILITY_MODEL_H
+#pragma once
 
 #include <stdint.h>
 #include <deque>
 #include "mobility-model.h"
-#include "ns3/vector.h"
+#include "../../core/model/vector.h"
 #include "waypoint.h"
 
 class WaypointMobilityModelNotifyTest;
@@ -191,5 +190,5 @@ protected:
 
 } // namespace ns3
 
-#endif /* WAYPOINT_MOBILITY_MODEL_H */
+
 

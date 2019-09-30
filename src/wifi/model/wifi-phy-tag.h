@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef WIFI_PHY_TAG_H
-#define WIFI_PHY_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 #include "wifi-preamble.h"
 #include "wifi-mode.h"
 
@@ -85,4 +84,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIFI_PHY_TAG_H */
+

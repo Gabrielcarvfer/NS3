@@ -19,12 +19,12 @@
  *          Lluis Parcerisa <lparcerisa@cttc.cat>
  */
 
-#include <ns3/fatal-error.h>
-#include <ns3/log.h>
-#include <ns3/nstime.h>
-#include <ns3/node-list.h>
-#include <ns3/node.h>
-#include <ns3/simulator.h>
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/node-list.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
 
 #include "lte-rrc-protocol-real.h"
 #include "lte-ue-rrc.h"

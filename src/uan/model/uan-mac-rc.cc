@@ -25,12 +25,12 @@
 #include "uan-header-common.h"
 #include "uan-phy-dual.h"
 
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
-#include "ns3/assert.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
 
 #include <list>
 #include <utility>

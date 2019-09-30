@@ -17,12 +17,11 @@
  *
  * Author: Blake Hurd  <naimorai@gmail.com>
  */
-#ifndef OPENFLOW_SWITCH_HELPER_H
-#define OPENFLOW_SWITCH_HELPER_H
+#pragma once
 
-#include "ns3/openflow-interface.h"
-#include "ns3/net-device-container.h"
-#include "ns3/object-factory.h"
+#include "../model/openflow-interface.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../core/model/object-factory.h"
 #include <string>
 
 namespace ns3 {
@@ -99,4 +98,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OPENFLOW_SWITCH_HELPER_H */
+

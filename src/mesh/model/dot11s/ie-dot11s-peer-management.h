@@ -19,10 +19,9 @@
  *          Aleksey Kovalenko <kovalenko@iitp.ru>
  */
 
-#ifndef IE_DOT11S_PEER_MANAGEMENT_H
-#define IE_DOT11S_PEER_MANAGEMENT_H
+#pragma once
 
-#include "ns3/mesh-information-element-vector.h"
+#include "../mesh-information-element-vector.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -146,4 +145,4 @@ std::ostream &operator << (std::ostream &os, const IePeerManagement &peerMan);
 } // namespace dot11s
 } // namespace ns3
 
-#endif /* IE_DOT11S_PEER_MANAGEMENT_H */
+

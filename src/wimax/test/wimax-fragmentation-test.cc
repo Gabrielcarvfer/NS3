@@ -18,15 +18,15 @@
  *         Giuseppe Piro <g.piro@poliba.it>
  *                       <peppe.piro@gmail.com>
  */
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/wimax-mac-header.h"
-#include "ns3/mac-messages.h"
-#include "ns3/cid.h"
-#include "ns3/wimax-connection.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../model/wimax-mac-header.h"
+#include "../model/mac-messages.h"
+#include "../model/cid.h"
+#include "../model/wimax-connection.h"
 
 using namespace ns3;
 

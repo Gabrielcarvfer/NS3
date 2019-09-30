@@ -18,11 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  * Author: Gustavo Carneiro <gjc@inescporto.pt>
  */
-#ifndef BRIDGE_HELPER_H
-#define BRIDGE_HELPER_H
+#pragma once
 
-#include "ns3/net-device-container.h"
-#include "ns3/object-factory.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../core/model/object-factory.h"
 #include <string>
 
 namespace ns3 {
@@ -78,4 +77,4 @@ private:
 } // namespace ns3
 
 
-#endif /* BRIDGE_HELPER_H */
+

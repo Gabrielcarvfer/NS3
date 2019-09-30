@@ -17,17 +17,17 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/pfifo-fast-queue-disc.h"
-#include "ns3/drop-tail-queue.h"
-#include "ns3/ipv4-queue-disc-item.h"
-#include "ns3/ipv6-queue-disc-item.h"
-#include "ns3/enum.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
-#include "ns3/object-factory.h"
-#include "ns3/socket.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../traffic-control/model/pfifo-fast-queue-disc.h"
+#include "../../network/utils/drop-tail-queue.h"
+#include "../../internet/model/ipv4-queue-disc-item.h"
+#include "../../internet/model/ipv6-queue-disc-item.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/socket.h"
 
 using namespace ns3;
 

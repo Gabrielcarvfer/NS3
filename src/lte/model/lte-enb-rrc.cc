@@ -26,24 +26,24 @@
 
 #include "lte-enb-rrc.h"
 
-#include <ns3/fatal-error.h>
-#include <ns3/log.h>
-#include <ns3/abort.h>
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
 
-#include <ns3/pointer.h>
-#include <ns3/object-map.h>
-#include <ns3/object-factory.h>
-#include <ns3/simulator.h>
+#include "../../core/model/pointer.h"
+#include "../../core/model/object-map.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/simulator.h"
 
-#include <ns3/lte-radio-bearer-info.h>
-#include <ns3/eps-bearer-tag.h>
-#include <ns3/packet.h>
+#include "lte-radio-bearer-info.h"
+#include "eps-bearer-tag.h"
+#include "../../network/model/packet.h"
 
-#include <ns3/lte-rlc.h>
-#include <ns3/lte-rlc-tm.h>
-#include <ns3/lte-rlc-um.h>
-#include <ns3/lte-rlc-am.h>
-#include <ns3/lte-pdcp.h>
+#include "lte-rlc.h"
+#include "lte-rlc-tm.h"
+#include "lte-rlc-um.h"
+#include "lte-rlc-am.h"
+#include "lte-pdcp.h"
 
 
 

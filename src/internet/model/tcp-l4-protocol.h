@@ -18,14 +18,13 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#ifndef TCP_L4_PROTOCOL_H
-#define TCP_L4_PROTOCOL_H
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/sequence-number.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../network/utils/sequence-number.h"
 #include "ip-l4-protocol.h"
 
 
@@ -367,4 +366,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TCP_L4_PROTOCOL_H */
+

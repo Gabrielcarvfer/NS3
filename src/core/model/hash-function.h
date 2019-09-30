@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef HASHFUNCTION_H
-#define HASHFUNCTION_H
+#pragma once
 
 #include <cstring>  // memcpy
 #include "simple-ref-count.h"
@@ -181,5 +180,5 @@ private:
 
 }  // namespace ns3
 
-#endif /* HASHFUNCTION_H */
+
 

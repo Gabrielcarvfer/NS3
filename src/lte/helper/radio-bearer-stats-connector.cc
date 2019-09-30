@@ -19,7 +19,7 @@
  *          Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "radio-bearer-stats-calculator.h"
 #include "radio-bearer-stats-connector.h"
 

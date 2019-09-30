@@ -18,17 +18,16 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef GNUPLOT_HELPER_H
-#define GNUPLOT_HELPER_H
+#pragma once
 
 #include <map>
 #include <utility>
 #include <string>
-#include "ns3/object-factory.h"
-#include "ns3/ptr.h"
-#include "ns3/probe.h"
-#include "ns3/gnuplot-aggregator.h"
-#include "ns3/time-series-adaptor.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/ptr.h"
+#include "../model/probe.h"
+#include "../model/gnuplot-aggregator.h"
+#include "../model/time-series-adaptor.h"
 
 namespace ns3 {
 
@@ -217,4 +216,4 @@ private:
 
 } // namespace ns3
 
-#endif // GNUPLOT_HELPER_H
+

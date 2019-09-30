@@ -64,14 +64,14 @@
 
 #include "error-model.h"
 
-#include "ns3/packet.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/enum.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../model/packet.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/double.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 
 namespace ns3 {
 

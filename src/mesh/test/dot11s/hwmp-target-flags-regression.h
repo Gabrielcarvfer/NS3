@@ -18,11 +18,11 @@
  * Authors: Kirill Andreev  <andreev@iitp.ru>
  */
 
-#include "ns3/test.h"
-#include "ns3/node-container.h"
-#include "ns3/nstime.h"
-#include "ns3/ipv4-interface-container.h"
-#include "ns3/pcap-file.h"
+#include "../../../core/model/test.h"
+#include "../../../network/helper/node-container.h"
+#include "../../../core/model/nstime.h"
+#include "../../../internet/helper/ipv4-interface-container.h"
+#include "../../../network/utils/pcap-file.h"
 
 using namespace ns3;
 

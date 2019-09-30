@@ -18,13 +18,12 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SINGLE_MODEL_SPECTRUM_CHANNEL_H
-#define SINGLE_MODEL_SPECTRUM_CHANNEL_H
+#pragma once
 
 
-#include <ns3/spectrum-channel.h>
-#include <ns3/spectrum-model.h>
-#include <ns3/traced-callback.h>
+#include "spectrum-channel.h"
+#include "spectrum-model.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -86,4 +85,4 @@ private:
 
 }
 
-#endif /* SINGLE_MODEL_SPECTRUM_CHANNEL_H */
+

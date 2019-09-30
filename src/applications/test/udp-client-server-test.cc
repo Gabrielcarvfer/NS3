@@ -20,20 +20,20 @@
  */
 
 #include <fstream>
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/uinteger.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/udp-client-server-helper.h"
-#include "ns3/udp-echo-helper.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-channel.h"
-#include "ns3/test.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../helper/udp-client-server-helper.h"
+#include "../helper/udp-echo-helper.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/utils/simple-channel.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
 
 using namespace ns3;
 

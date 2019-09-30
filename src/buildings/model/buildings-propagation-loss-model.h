@@ -20,14 +20,13 @@
  * 
  */
 
-#ifndef BUILDINGS_PROPAGATION_LOSS_MODEL_H_
-#define BUILDINGS_PROPAGATION_LOSS_MODEL_H_
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/propagation-loss-model.h"
-#include "ns3/random-variable-stream.h"
-#include <ns3/building.h>
-#include <ns3/mobility-building-info.h>
+#include "../../core/model/nstime.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../core/model/random-variable-stream.h"
+#include "building.h"
+#include "mobility-building-info.h"
 
 
 
@@ -107,4 +106,4 @@ protected:
 
 }
 
-#endif /* BUILDINGS_PROPAGATION_LOSS_MODEL_H_ */
+

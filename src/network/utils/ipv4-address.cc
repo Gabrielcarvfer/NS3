@@ -19,9 +19,9 @@
  */
 
 #include <cstdlib>
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "ipv4-address.h"
-#include "ns3/assert.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

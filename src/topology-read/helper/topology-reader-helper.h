@@ -19,10 +19,9 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#ifndef TOPOLOGY_READER_HELPER_H
-#define TOPOLOGY_READER_HELPER_H
+#pragma once
 
-#include "ns3/topology-reader.h"
+#include "../model/topology-reader.h"
 #include <string>
 
 namespace ns3 {
@@ -64,4 +63,4 @@ private:
 } // namespace ns3
 
 
-#endif /* TOPOLOGY_READER_HELPER_H */
+

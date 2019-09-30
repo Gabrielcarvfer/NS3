@@ -19,12 +19,11 @@
  * Derived from the p2p net device file
 Transmi */
 
-#ifndef BACKOFF_H
-#define BACKOFF_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/nstime.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -120,4 +119,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BACKOFF_H */
+

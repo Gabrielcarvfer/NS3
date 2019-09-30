@@ -18,13 +18,13 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/enum.h"
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/pointer.h"
-#include "ns3/channel.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/channel.h"
 #include "non-communicating-net-device.h"
 
 

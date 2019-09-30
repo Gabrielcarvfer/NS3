@@ -18,21 +18,21 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/string.h"
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/wifi-mac-queue.h"
-#include "ns3/wifi-psdu.h"
-#include "ns3/sta-wifi-mac.h"
-#include "ns3/yans-wifi-phy.h"
-#include "ns3/mac-tx-middle.h"
-#include "ns3/mac-low.h"
-#include "ns3/msdu-aggregator.h"
-#include "ns3/mpdu-aggregator.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/ht-configuration.h"
-#include "ns3/vht-configuration.h"
-#include "ns3/he-configuration.h"
+#include "../../core/model/string.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../model/wifi-mac-queue.h"
+#include "../model/wifi-psdu.h"
+#include "../model/sta-wifi-mac.h"
+#include "../model/yans-wifi-phy.h"
+#include "../model/mac-tx-middle.h"
+#include "../model/mac-low.h"
+#include "../model/msdu-aggregator.h"
+#include "../model/mpdu-aggregator.h"
+#include "../model/wifi-net-device.h"
+#include "../model/ht-configuration.h"
+#include "../model/vht-configuration.h"
+#include "../model/he-configuration.h"
 
 using namespace ns3;
 

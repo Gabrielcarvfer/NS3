@@ -17,12 +17,11 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NET_DEVICE_CONTAINER_H
-#define NET_DEVICE_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include "ns3/net-device.h"
+#include "../model/net-device.h"
 
 namespace ns3 {
 
@@ -201,4 +200,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NET_DEVICE_CONTAINER_H */
+

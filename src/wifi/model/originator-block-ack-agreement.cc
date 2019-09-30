@@ -19,7 +19,7 @@
  *          Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "originator-block-ack-agreement.h"
 #include "wifi-mac-queue-item.h"
 #include "wifi-utils.h"

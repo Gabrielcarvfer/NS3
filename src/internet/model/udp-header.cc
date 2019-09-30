@@ -19,7 +19,7 @@
  */
 
 #include "udp-header.h"
-#include "ns3/address-utils.h"
+#include "../../network/utils/address-utils.h"
 
 namespace ns3 {
 

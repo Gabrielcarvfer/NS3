@@ -19,10 +19,9 @@
  *
  */
 
-#ifndef WAVE_BSM_STATS_H
-#define WAVE_BSM_STATS_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 #include <vector>
 
 namespace ns3 {
@@ -246,4 +245,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WAVE_BSM_STATS_H*/
+

@@ -15,15 +15,15 @@
  *
  */
 
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/net-device.h"
-#include "ns3/net-device-container.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/data-rate.h"
-#include "ns3/rng-seed-manager.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../network/model/net-device.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/rng-seed-manager.h"
 
 #include "brite-topology-helper.h"
 

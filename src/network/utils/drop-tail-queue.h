@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef DROPTAIL_H
-#define DROPTAIL_H
+#pragma once
 
-#include "ns3/queue.h"
+#include "queue.h"
 
 namespace ns3 {
 
@@ -149,4 +148,4 @@ extern template class DropTailQueue<QueueDiscItem>;
 
 } // namespace ns3
 
-#endif /* DROPTAIL_H */
+

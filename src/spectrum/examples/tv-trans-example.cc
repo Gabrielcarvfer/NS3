@@ -22,9 +22,9 @@
 #include <stdlib.h>
 #include <ns3/core-module.h>
 #include <ns3/mobility-module.h>
-#include <ns3/spectrum-helper.h>
-#include <ns3/spectrum-analyzer-helper.h>
-#include <ns3/tv-spectrum-transmitter-helper.h>
+#include "../helper/spectrum-helper.h"
+#include "../helper/spectrum-analyzer-helper.h"
+#include "../helper/tv-spectrum-transmitter-helper.h"
 
 using namespace ns3;
 

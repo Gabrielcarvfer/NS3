@@ -18,13 +18,12 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef DATA_COLLECTOR_H
-#define DATA_COLLECTOR_H
+#pragma once
 
 #include <list>
 #include <string>
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -161,4 +160,4 @@ private:
 // end namespace ns3
 };
 
-#endif /* DATA_COLLECTOR_H */
+

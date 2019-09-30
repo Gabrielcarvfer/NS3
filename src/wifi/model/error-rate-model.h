@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef ERROR_RATE_MODEL_H
-#define ERROR_RATE_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -78,5 +77,5 @@ public:
 
 } //namespace ns3
 
-#endif /* ERROR_RATE_MODEL_H */
+
 

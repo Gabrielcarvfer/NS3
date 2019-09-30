@@ -19,15 +19,14 @@
  */
 
 
-#ifndef LTE_RRC_PROTOCOL_IDEAL_H
-#define LTE_RRC_PROTOCOL_IDEAL_H
+#pragma once
 
 #include <stdint.h>
 #include <map>
 
-#include <ns3/ptr.h>
-#include <ns3/object.h>
-#include <ns3/lte-rrc-sap.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "lte-rrc-sap.h"
 
 namespace ns3 {
 
@@ -326,4 +325,4 @@ private:
 }
 
 
-#endif // LTE_RRC_PROTOCOL_IDEAL_H
+

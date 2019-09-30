@@ -18,21 +18,21 @@
  * Author: Sebastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/command-line.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/packet-sink.h"
-#include "ns3/ssid.h"
-#include "ns3/wifi-mac-header.h"
+#include "../../src/core/model/log.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/uinteger.h"
+#include "../../src/core/model/boolean.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/packet-sink-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/applications/model/packet-sink.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/wifi/model/wifi-mac-header.h"
 
 /* This is a simple example in order to show the frames exchanged in 802.11 PCF.
  * The output prints the overal throughput as well as the number of different PCF frames that have been transmitted.

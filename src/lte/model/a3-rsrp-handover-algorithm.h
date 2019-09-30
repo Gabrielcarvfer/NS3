@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef A3_RSRP_HANDOVER_ALGORITHM_H
-#define A3_RSRP_HANDOVER_ALGORITHM_H
+#pragma once
 
-#include <ns3/lte-handover-algorithm.h>
-#include <ns3/lte-handover-management-sap.h>
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/nstime.h>
+#include "lte-handover-algorithm.h"
+#include "lte-handover-management-sap.h"
+#include "lte-rrc-sap.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -126,4 +125,4 @@ private:
 } // end of namespace ns3
 
 
-#endif /* A3_RSRP_HANDOVER_ALGORITHM_H */
+

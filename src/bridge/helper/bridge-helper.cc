@@ -17,10 +17,10 @@
  */
 
 #include "bridge-helper.h"
-#include "ns3/log.h"
-#include "ns3/bridge-net-device.h"
-#include "ns3/node.h"
-#include "ns3/names.h"
+#include "../../core/model/log.h"
+#include "../model/bridge-net-device.h"
+#include "../../network/model/node.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

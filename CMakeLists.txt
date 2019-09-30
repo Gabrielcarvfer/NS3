@@ -74,7 +74,7 @@ option(NS3_NSC "Build with NSC" OFF)
 option(NS3_NETANIM "Build netanim support" OFF)
 set(NS3_NETANIM ON)
 
-set(USE_QT 5)# Choose between Qt 4 or 5
+set(USE_QT 4)# Choose between Qt 4 or 5
 
 option(NS3_PTHREAD "Build with pthread support" ON)
 set(NS3_PTHREAD ON)

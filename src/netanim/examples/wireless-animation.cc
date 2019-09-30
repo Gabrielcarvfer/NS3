@@ -24,11 +24,11 @@
 #include "ns3/mobility-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/netanim-module.h"
-#include "ns3/basic-energy-source.h"
-#include "ns3/simple-device-energy-model.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/wifi-radio-energy-model.h"
+#include "../../energy/model/basic-energy-source.h"
+#include "../../energy/model/simple-device-energy-model.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../wifi/model/ssid.h"
+#include "../../wifi/model/wifi-radio-energy-model.h"
 
 using namespace ns3;
 

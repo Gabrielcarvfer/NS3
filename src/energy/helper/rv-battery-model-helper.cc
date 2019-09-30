@@ -19,7 +19,7 @@
  */
 
 #include "rv-battery-model-helper.h"
-#include "ns3/energy-source.h"
+#include "../model/energy-source.h"
 
 namespace ns3 {
 

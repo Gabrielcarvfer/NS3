@@ -19,8 +19,8 @@
  */
 
 #include "ie-dot11s-perr.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
+#include "../../../network/utils/address-utils.h"
+#include "../../../network/model/packet.h"
 namespace ns3 {
 namespace dot11s {
 IePerr::IePerr ()

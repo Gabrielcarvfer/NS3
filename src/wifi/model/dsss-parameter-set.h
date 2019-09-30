@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef DSSS_PARAMETER_SET_H
-#define DSSS_PARAMETER_SET_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -100,4 +99,4 @@ private:
 
 } //namespace ns3
 
-#endif /* DSSS_PARAMETER_SET_H */
+

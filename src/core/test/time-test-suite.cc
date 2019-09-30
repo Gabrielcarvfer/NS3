@@ -25,9 +25,9 @@
 #include <string>
 #include <sstream>
 
-#include "ns3/nstime.h"
-#include "ns3/int64x64.h"
-#include "ns3/test.h"
+#include "../model/nstime.h"
+#include "../model/int64x64.h"
+#include "../model/test.h"
 
 using namespace ns3;
 

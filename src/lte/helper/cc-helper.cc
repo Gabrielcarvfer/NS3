@@ -20,14 +20,14 @@
 
 
 #include "cc-helper.h"
-#include <ns3/component-carrier.h>
-#include <ns3/string.h>
-#include <ns3/log.h>
-#include <ns3/abort.h>
-#include <ns3/pointer.h>
+#include "../model/component-carrier.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/pointer.h"
 #include <iostream>
-#include <ns3/uinteger.h>
-#include <ns3/lte-spectrum-value-helper.h>
+#include "../../core/model/uinteger.h"
+#include "../model/lte-spectrum-value-helper.h"
 
 #define MIN_CC 1
 #define MAX_CC 2

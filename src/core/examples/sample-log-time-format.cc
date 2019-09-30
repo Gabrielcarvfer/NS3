@@ -84,11 +84,11 @@
  * signed 64 bits.
  */
 
-#include "ns3/simulator.h"
-#include "ns3/nstime.h"
-#include "ns3/command-line.h"
-#include "ns3/log.h"
-#include "ns3/random-variable-stream.h"
+#include "../model/simulator.h"
+#include "../model/nstime.h"
+#include "../model/command-line.h"
+#include "../model/log.h"
+#include "../model/random-variable-stream.h"
 
 using namespace ns3;
 

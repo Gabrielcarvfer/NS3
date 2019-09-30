@@ -18,14 +18,13 @@
  * Authors: Lalith Suresh <suresh.lalith@gmail.com>
  */
 
-#ifndef IPV4_CLICK_ROUTING_H
-#define IPV4_CLICK_ROUTING_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/test.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../core/model/test.h"
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -281,4 +280,4 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV4_CLICK_ROUTING_H */
+

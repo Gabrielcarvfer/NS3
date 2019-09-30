@@ -19,15 +19,15 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/prio-queue-disc.h"
-#include "ns3/fifo-queue-disc.h"
-#include "ns3/packet-filter.h"
-#include "ns3/packet.h"
-#include "ns3/socket.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/test.h"
+#include "../model/prio-queue-disc.h"
+#include "../model/fifo-queue-disc.h"
+#include "../model/packet-filter.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 #include <array>
 #include <queue>
 

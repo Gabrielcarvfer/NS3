@@ -20,11 +20,10 @@
  *         Dizhi Zhou <dizhi.zhou@gmail.com>
  */
 
-#ifndef LENA_TEST_PSS_FF_MAC_SCHEDULER_H
-#define LENA_TEST_PSS_FF_MAC_SCHEDULER_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
 
 
 using namespace ns3;
@@ -131,4 +130,4 @@ public:
   LenaTestPssFfMacSchedulerSuite ();
 };
 
-#endif /* LENA_TEST_PSS_FF_MAC_SCHEDULER_H */
+

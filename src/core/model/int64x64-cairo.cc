@@ -27,7 +27,7 @@
 
 // Include directly to allow optimizations within this compilation unit.
 extern "C" {
-#include "cairo-wideint.c"
+#include "ns3/cairo-wideint.c"
 }
 
 /**

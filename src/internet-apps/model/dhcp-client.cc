@@ -23,13 +23,13 @@
  *
  */
 
-#include "ns3/ipv4.h"
-#include "ns3/log.h"
-#include "ns3/ipv4-static-routing-helper.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/ipv4-routing-table-entry.h"
+#include "../../internet/model/ipv4.h"
+#include "../../core/model/log.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
+#include "../../internet/model/ipv4-routing-table-entry.h"
 #include "dhcp-client.h"
 #include "dhcp-header.h"
 

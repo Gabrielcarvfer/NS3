@@ -20,15 +20,15 @@
  *
  */
 
-#include "ns3/data-rate.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-net-device-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/dhcp-client.h"
-#include "ns3/dhcp-server.h"
-#include "ns3/dhcp-helper.h"
-#include "ns3/test.h"
+#include "../../network/utils/data-rate.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/helper/simple-net-device-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../model/dhcp-client.h"
+#include "../model/dhcp-server.h"
+#include "../helper/dhcp-helper.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

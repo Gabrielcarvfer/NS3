@@ -18,12 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef ISOTROPIC_ANTENNA_MODEL_H
-#define ISOTROPIC_ANTENNA_MODEL_H
+#pragma once
 
 
-#include <ns3/object.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/object.h"
+#include "antenna-model.h"
 
 namespace ns3 {
 
@@ -57,4 +56,4 @@ protected:
 } // namespace ns3
 
 
-#endif // ISOTROPIC_ANTENNA_MODEL_H
+

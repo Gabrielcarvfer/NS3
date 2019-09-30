@@ -18,22 +18,22 @@
  * Authors: Shravya Ks <shravya.ks0@gmail.com>
  *
  */
-#include "ns3/ipv4.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv4-interface-address.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/ipv6-routing-protocol.h"
+#include "../model/ipv4.h"
+#include "../model/ipv6.h"
+#include "../model/ipv4-interface-address.h"
+#include "../model/ipv4-route.h"
+#include "../model/ipv6-route.h"
+#include "../model/ipv4-routing-protocol.h"
+#include "../model/ipv6-routing-protocol.h"
 #include "../model/ipv4-end-point.h"
 #include "../model/ipv6-end-point.h"
 #include "tcp-general-test.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
 #include "tcp-error-model.h"
-#include "ns3/tcp-l4-protocol.h"
-#include "ns3/tcp-tx-buffer.h"
-#include "ns3/tcp-rx-buffer.h"
+#include "../model/tcp-l4-protocol.h"
+#include "../model/tcp-tx-buffer.h"
+#include "../model/tcp-rx-buffer.h"
 
 namespace ns3 {
 

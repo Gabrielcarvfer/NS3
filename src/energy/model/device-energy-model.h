@@ -18,13 +18,12 @@
  * Authors: Sidharth Nabar <snabar@uw.edu>, He Wu <mdzz@u.washington.edu>
  */
 
-#ifndef DEVICE_ENERGY_MODEL_H
-#define DEVICE_ENERGY_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/type-id.h"
-#include "ns3/node.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/type-id.h"
+#include "../../network/model/node.h"
 
 namespace ns3 {
 
@@ -121,4 +120,4 @@ private:
 
 }
 
-#endif /* DEVICE_ENERGY_MODEL_H */
+

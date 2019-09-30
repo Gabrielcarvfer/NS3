@@ -18,12 +18,11 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef EPC_MME_APPLICATION_H
-#define EPC_MME_APPLICATION_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/socket.h"
-#include "ns3/epc-s1ap-sap.h"
+#include "../../network/model/application.h"
+#include "../../network/model/socket.h"
+#include "epc-s1ap-sap.h"
 
 namespace ns3 {
 
@@ -237,4 +236,4 @@ private:
 
 } // namespace ns3
 
-#endif // EPC_MME_APPLICATION_H
+

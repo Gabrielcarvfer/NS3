@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef NS3_BUILD_PROFILE_H
-#define NS3_BUILD_PROFILE_H
+#pragma once
 
 /**
  * \file
@@ -90,4 +89,4 @@
 
 
 
-#endif /* NS3_BUILD_PROFILE_H */
+

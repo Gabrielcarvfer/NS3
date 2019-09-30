@@ -18,8 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef FF_MAC_CSCHED_SAP_H
-#define FF_MAC_CSCHED_SAP_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
@@ -512,4 +511,4 @@ MemberCschedSapProvider<C>::CschedUeReleaseReq (const struct CschedUeReleaseReqP
 
 } // end namespace ns3
 
-#endif /* FF_MAC_CSCHED_SAP_H */
+

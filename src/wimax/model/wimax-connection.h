@@ -19,15 +19,14 @@
  *         Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef WIMAX_CONNECTION_H
-#define WIMAX_CONNECTION_H
+#pragma once
 
 #include <stdint.h>
 #include <ostream>
 #include "cid.h"
 #include "wimax-mac-header.h"
 #include "wimax-mac-queue.h"
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 #include "service-flow.h"
 
 namespace ns3 {
@@ -159,4 +158,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_CONNECTION_H */
+

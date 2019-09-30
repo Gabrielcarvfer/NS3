@@ -25,8 +25,7 @@
  */
 
 
-#ifndef NS3_LOG_MACROS_DISABLED_H
-#define NS3_LOG_MACROS_DISABLED_H
+#pragma once
 
 #ifndef NS3_LOG_ENABLE
 /*
@@ -97,4 +96,3 @@
 
 #endif /* !NS3_LOG_ENABLE */
 
-#endif /* NS3_LOG_MACROS_DISABLED_H */

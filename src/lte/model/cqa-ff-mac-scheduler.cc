@@ -23,21 +23,21 @@
  * Proportional Fair and Round Robin schedulers implementations.
  */
 
-#include <ns3/log.h>
-#include <ns3/pointer.h>
-#include <ns3/math.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/math.h"
 
-#include <ns3/simulator.h>
-#include <ns3/lte-amc.h>
-#include <ns3/cqa-ff-mac-scheduler.h>
-#include <ns3/ff-mac-common.h>
-#include <ns3/lte-vendor-specific-parameters.h>
-#include <ns3/boolean.h>
+#include "../../core/model/simulator.h"
+#include "lte-amc.h"
+#include "cqa-ff-mac-scheduler.h"
+#include "ff-mac-common.h"
+#include "lte-vendor-specific-parameters.h"
+#include "../../core/model/boolean.h"
 #include <cfloat>
 #include <set>
 #include <stdexcept>
-#include <ns3/integer.h>
-#include <ns3/string.h>
+#include "../../core/model/integer.h"
+#include "../../core/model/string.h"
 
 namespace ns3 {
 

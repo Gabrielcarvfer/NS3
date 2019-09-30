@@ -21,18 +21,17 @@
  * Modified by: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef IPV4_PACKET_PROBE_H
-#define IPV4_PACKET_PROBE_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/callback.h"
-#include "ns3/boolean.h"
-#include "ns3/nstime.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4.h"
-#include "ns3/traced-value.h"
-#include "ns3/simulator.h"
-#include "ns3/probe.h"
+#include "../../core/model/object.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/packet.h"
+#include "ipv4.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/simulator.h"
+#include "../../stats/model/probe.h"
 
 namespace ns3 {
 
@@ -127,4 +126,4 @@ private:
 
 } // namespace ns3
 
-#endif // IPV4_PACKET_PROBE_H
+

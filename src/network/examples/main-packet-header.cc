@@ -1,7 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
-#include "ns3/header.h"
+#include "../../core/model/ptr.h"
+#include "../model/packet.h"
+#include "../model/header.h"
 #include <iostream>
 
 using namespace ns3;

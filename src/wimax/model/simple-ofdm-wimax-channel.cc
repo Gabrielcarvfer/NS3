@@ -19,18 +19,18 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/callback.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/assert.h"
-#include "ns3/net-device.h"
-#include "ns3/node.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/assert.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/node.h"
 #include "wimax-phy.h"
 #include "simple-ofdm-wimax-phy.h"
 #include "simple-ofdm-wimax-channel.h"
-#include "ns3/mobility-model.h"
-#include "ns3/cost231-propagation-loss-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../propagation/model/cost231-propagation-loss-model.h"
 #include "simple-ofdm-send-param.h"
 
 namespace ns3 {

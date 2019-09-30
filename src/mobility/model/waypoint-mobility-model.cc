@@ -18,14 +18,14 @@
  * Author: Phillip Sitbon <phillip@sitbon.net>
  */
 #include <limits>
-#include "ns3/abort.h"
-#include "ns3/simulator.h"
-#include "ns3/uinteger.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
 #include "waypoint-mobility-model.h"
-#include "ns3/config.h"
-#include "ns3/test.h"
+#include "../../core/model/config.h"
+#include "../../core/model/test.h"
 
 namespace ns3 {
 

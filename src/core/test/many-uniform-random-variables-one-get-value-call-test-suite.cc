@@ -18,10 +18,10 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#include "ns3/test.h"
-#include "ns3/config.h"
-#include "ns3/double.h"
-#include "ns3/random-variable-stream.h"
+#include "../model/test.h"
+#include "../model/config.h"
+#include "../model/double.h"
+#include "../model/random-variable-stream.h"
 #include <vector>
 
 

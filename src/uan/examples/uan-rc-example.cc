@@ -56,9 +56,9 @@
 #include "ns3/network-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/callback.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
+#include "../../core/model/callback.h"
 #include "ns3/stats-module.h"
 
 #include <fstream>

@@ -18,8 +18,7 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#ifndef NS3_SEQ_NUM_H
-#define NS3_SEQ_NUM_H
+#pragma once
 
 #include <limits>
 #include <iostream>
@@ -498,6 +497,6 @@ typedef void (* SequenceNumber32)(SequenceNumber32 oldValue,
 
 } // namespace ns3
 
-#endif /* NS3_SEQ_NUM_H */
+
 
 

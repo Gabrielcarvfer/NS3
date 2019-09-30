@@ -18,10 +18,10 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/fatal-error.h>
-#include <ns3/log.h>
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/log.h"
 
-#include <ns3/epc-helper.h>
+#include "../helper/epc-helper.h"
 
 #include "lte-enb-net-device.h"
 #include "epc-ue-nas.h"

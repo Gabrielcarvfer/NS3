@@ -38,13 +38,13 @@
 #include <vector>
 #include <functional>
 #include <iomanip>
-#include "ns3/simulator.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/socket.h"
-#include "ns3/log.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
-#include "ns3/wifi-mac-header.h"
+#include "../../core/model/simulator.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/address-utils.h"
+#include "../../network/model/packet.h"
+#include "../../wifi/model/wifi-mac-header.h"
 #include "dsr-rcache.h"
 
 namespace ns3 {

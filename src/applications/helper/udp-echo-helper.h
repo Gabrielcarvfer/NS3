@@ -17,15 +17,14 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef UDP_ECHO_HELPER_H
-#define UDP_ECHO_HELPER_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/application-container.h"
-#include "ns3/node-container.h"
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
+#include "../../network/helper/application-container.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3 {
 
@@ -229,4 +228,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_ECHO_HELPER_H */
+

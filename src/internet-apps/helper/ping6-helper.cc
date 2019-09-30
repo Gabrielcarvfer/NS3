@@ -19,8 +19,8 @@
  */
 
 #include "ping6-helper.h"
-#include "ns3/ping6.h"
-#include "ns3/uinteger.h"
+#include "../model/ping6.h"
+#include "../../core/model/uinteger.h"
 
 
 namespace ns3

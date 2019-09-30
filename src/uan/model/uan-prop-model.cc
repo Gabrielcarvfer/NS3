@@ -19,7 +19,7 @@
  */
 
 #include "uan-prop-model.h"
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include <complex>
 #include <vector>
 

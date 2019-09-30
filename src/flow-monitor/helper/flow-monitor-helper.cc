@@ -20,15 +20,15 @@
 
 #include "flow-monitor-helper.h"
 
-#include "ns3/flow-monitor.h"
-#include "ns3/ipv4-flow-classifier.h"
-#include "ns3/ipv4-flow-probe.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/ipv6-flow-classifier.h"
-#include "ns3/ipv6-flow-probe.h"
-#include "ns3/ipv6-l3-protocol.h"
-#include "ns3/node.h"
-#include "ns3/node-list.h"
+#include "../model/flow-monitor.h"
+#include "../model/ipv4-flow-classifier.h"
+#include "../model/ipv4-flow-probe.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../model/ipv6-flow-classifier.h"
+#include "../model/ipv6-flow-probe.h"
+#include "../../internet/model/ipv6-l3-protocol.h"
+#include "../../network/model/node.h"
+#include "../../network/model/node-list.h"
 
 
 namespace ns3 {

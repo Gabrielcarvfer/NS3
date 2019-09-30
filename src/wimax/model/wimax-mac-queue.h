@@ -18,16 +18,15 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef WIMAX_MAC_QUEUE_H
-#define WIMAX_MAC_QUEUE_H
+#pragma once
 
 #include <queue>
 #include <stdint.h>
 #include "wimax-mac-header.h"
-#include "ns3/packet.h"
-#include "ns3/object.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -275,4 +274,4 @@ public:
 
 } // namespace ns3
 
-#endif /* WIMAX_MAC_QUEUE_H */
+

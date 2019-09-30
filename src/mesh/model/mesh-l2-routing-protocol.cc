@@ -19,9 +19,9 @@
  *          Pavel Boyko <boyko@iitp.ru>
  */
 
-#include "ns3/log.h"
-#include "ns3/mesh-l2-routing-protocol.h"
-#include "ns3/mesh-point-device.h"
+#include "../../core/model/log.h"
+#include "mesh-l2-routing-protocol.h"
+#include "mesh-point-device.h"
 
 namespace ns3 {
 

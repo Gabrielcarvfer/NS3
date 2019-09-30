@@ -19,11 +19,11 @@
 #ifndef TCP_STREAM_CLIENT_H
 #define TCP_STREAM_CLIENT_H
 
-#include "ns3/application.h"
-#include "ns3/event-id.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/traced-callback.h"
+#include "../../../../src/network/model/application.h"
+#include "../../../../src/core/model/event-id.h"
+#include "../../../../src/core/model/ptr.h"
+#include "../../../../src/network/utils/ipv4-address.h"
+#include "../../../../src/core/model/traced-callback.h"
 #include <iostream>
 #include <fstream>
 #include "tcp-stream-adaptation-algorithm.h"

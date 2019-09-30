@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef PACKET_FILTER_H
-#define PACKET_FILTER_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -80,4 +79,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PACKET_FILTER */
+

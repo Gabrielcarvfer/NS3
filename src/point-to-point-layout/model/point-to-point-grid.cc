@@ -18,14 +18,14 @@
 
 // Implement an object to create a grid topology.
 
-#include "ns3/point-to-point-grid.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/constant-position-mobility-model.h"
-#include "ns3/string.h"
-#include "ns3/vector.h"
-#include "ns3/log.h"
-#include "ns3/ipv6-address-generator.h"
+#include "point-to-point-grid.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/string.h"
+#include "../../core/model/vector.h"
+#include "../../core/model/log.h"
+#include "../../internet/model/ipv6-address-generator.h"
 
 namespace ns3 {
 

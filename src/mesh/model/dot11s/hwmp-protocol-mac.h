@@ -18,11 +18,10 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef HWMP_STATE_H
-#define HWMP_STATE_H
+#pragma once
 
-#include "ns3/mesh-wifi-interface-mac-plugin.h"
-#include "ns3/hwmp-protocol.h"
+#include "../mesh-wifi-interface-mac-plugin.h"
+#include "hwmp-protocol.h"
 
 namespace ns3 {
 
@@ -197,4 +196,4 @@ private:
 };
 } // namespace dot11s
 } // namespace ns3
-#endif
+

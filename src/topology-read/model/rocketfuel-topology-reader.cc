@@ -23,9 +23,9 @@
 #include <iostream>
 #include <sstream>
 #include <pcre2posix.h>
-#include "ns3/log.h"
-#include "ns3/unused.h"
-#include "ns3/node-container.h"
+#include "../../core/model/log.h"
+#include "../../core/model/unused.h"
+#include "../../network/helper/node-container.h"
 #include "rocketfuel-topology-reader.h"
 
 #include <sys/types.h>

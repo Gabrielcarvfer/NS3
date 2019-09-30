@@ -58,9 +58,9 @@
 #include "ns3/wimax-module.h"
 #include "ns3/csma-module.h"
 #include <iostream>
-#include "ns3/global-route-manager.h"
+#include "../../internet/model/global-route-manager.h"
 #include "ns3/internet-module.h"
-#include "ns3/vector.h"
+#include "../../core/model/vector.h"
 
 using namespace ns3;
 

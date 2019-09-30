@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef BOOLEAN_H
-#define BOOLEAN_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-helper.h"
@@ -85,4 +84,4 @@ ATTRIBUTE_ACCESSOR_DEFINE (Boolean);
 
 } // namespace ns3
 
-#endif /* BOOLEAN_H */
+

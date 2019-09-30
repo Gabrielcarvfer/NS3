@@ -19,10 +19,9 @@
  *          Stefano Avallone <stavallo@unina.it>
  */
 
-#ifndef MQ_QUEUE_DISC_H
-#define MQ_QUEUE_DISC_H
+#pragma once
 
-#include "ns3/queue-disc.h"
+#include "queue-disc.h"
 
 namespace ns3 {
 
@@ -63,4 +62,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MQ_QUEUE_DISC_H */
+

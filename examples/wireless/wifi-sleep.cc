@@ -45,22 +45,22 @@
 // two for the remaining energy on each node and two for the state transitions
 // of each node.
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/mobility-model.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/basic-energy-source-helper.h"
-#include "ns3/wifi-radio-energy-model-helper.h"
-#include "ns3/wifi-utils.h"
-#include "ns3/wifi-net-device.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/string.h"
+#include "../../src/core/model/log.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/mobility/model/mobility-model.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/applications/helper/packet-sink-helper.h"
+#include "../../src/energy/helper/basic-energy-source-helper.h"
+#include "../../src/wifi/helper/wifi-radio-energy-model-helper.h"
+#include "../../src/wifi/model/wifi-utils.h"
+#include "../../src/wifi/model/wifi-net-device.h"
 
 using namespace ns3;
 

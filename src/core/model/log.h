@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef NS3_LOG_H
-#define NS3_LOG_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -552,4 +551,4 @@ ParameterLogger&
 
 /**@}*/  // \ingroup logging
 
-#endif /* NS3_LOG_H */
+

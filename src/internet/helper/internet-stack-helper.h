@@ -18,16 +18,15 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef INTERNET_STACK_HELPER_H
-#define INTERNET_STACK_HELPER_H
+#pragma once
 
-#include "ns3/node-container.h"
-#include "ns3/net-device-container.h"
-#include "ns3/packet.h"
-#include "ns3/ptr.h"
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/ipv6-l3-protocol.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object-factory.h"
+#include "../model/ipv4-l3-protocol.h"
+#include "../model/ipv6-l3-protocol.h"
 #include "internet-trace-helper.h"
 
 namespace ns3 {
@@ -373,4 +372,4 @@ private:
 
 } // namespace ns3
 
-#endif /* INTERNET_STACK_HELPER_H */
+

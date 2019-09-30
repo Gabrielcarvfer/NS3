@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef EVENT_ID_H
-#define EVENT_ID_H
+#pragma once
 
 #include <stdint.h>
 #include "ptr.h"
@@ -157,4 +156,4 @@ operator <  (const EventId &a, const EventId &b)
 
 } // namespace ns3
 
-#endif /* EVENT_ID_H */
+

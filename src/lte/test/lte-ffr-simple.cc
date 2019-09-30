@@ -20,8 +20,8 @@
  */
 
 #include "lte-ffr-simple.h"
-#include <ns3/log.h>
-#include "ns3/lte-rrc-sap.h"
+#include "../../core/model/log.h"
+#include "../model/lte-rrc-sap.h"
 
 namespace ns3 {
 

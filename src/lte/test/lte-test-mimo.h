@@ -18,11 +18,10 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#ifndef LENA_TEST_MIMO_H
-#define LENA_TEST_MIMO_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
 
 
 using namespace ns3;
@@ -93,4 +92,4 @@ public:
   LenaTestMimoSuite ();
 };
 
-#endif /* LENA_TEST_MIMO_H */
+

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef DEFAULT_SIMULATOR_IMPL_H
-#define DEFAULT_SIMULATOR_IMPL_H
+#pragma once
 
 #include "simulator-impl.h"
 #include "scheduler.h"
@@ -139,4 +138,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DEFAULT_SIMULATOR_IMPL_H */
+

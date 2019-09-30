@@ -18,7 +18,7 @@
  * Author:  Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"  // SequenceNumber32
 

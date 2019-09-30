@@ -18,12 +18,11 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#ifndef QUEUE_DISC_CONTAINER_H
-#define QUEUE_DISC_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include "ns3/queue-disc.h"
+#include "../model/queue-disc.h"
 
 namespace ns3 {
 
@@ -168,4 +167,4 @@ private:
 
 } // namespace ns3
 
-#endif /* QUEUE_DISC_CONTAINER_H */
+

@@ -19,15 +19,15 @@
  * Author: Cristiano Tapparello <cristiano.tapparello@rochester.edu>
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/double.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/basic-energy-harvester.h"
-#include "ns3/basic-energy-source.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/double.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../model/basic-energy-harvester.h"
+#include "../model/basic-energy-source.h"
 
 using namespace ns3;
 

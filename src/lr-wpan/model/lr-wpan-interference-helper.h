@@ -18,11 +18,10 @@
  * Author:
  *  Sascha Alexander Jopen <jopen@cs.uni-bonn.de>
  */
-#ifndef LR_WPAN_INTERFERENCE_HELPER_H
-#define LR_WPAN_INTERFERENCE_HELPER_H
+#pragma once
 
-#include <ns3/simple-ref-count.h>
-#include <ns3/ptr.h>
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/ptr.h"
 #include <set>
 
 namespace ns3 {
@@ -120,4 +119,4 @@ private:
 
 }
 
-#endif /* LR_WPAN_INTERFERENCE_HELPER_H */
+

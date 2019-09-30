@@ -19,14 +19,13 @@
  *          Aleksey Kovalenko <kovalenko@iitp.ru>
  */
 
-#ifndef DOT11S_PEER_MAN_H
-#define DOT11S_PEER_MAN_H
+#pragma once
 
-#include "ns3/mac48-address.h"
-#include "ns3/net-device.h"
-#include "ns3/event-id.h"
-#include "ns3/nstime.h"
-#include "ns3/traced-value.h"
+#include "../../../network/utils/mac48-address.h"
+#include "../../../network/model/net-device.h"
+#include "../../../core/model/event-id.h"
+#include "../../../core/model/nstime.h"
+#include "../../../core/model/traced-value.h"
 #include "ie-dot11s-beacon-timing.h"
 #include "ie-dot11s-peer-management.h"
 #include "peer-link.h"
@@ -349,4 +348,3 @@ private:
 
 } // namespace dot11s
 } // namespace ns3
-#endif

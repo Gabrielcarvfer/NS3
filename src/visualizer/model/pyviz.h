@@ -20,17 +20,16 @@
  *
  * Author: Gustavo Carneiro  <gjc@inescporto.pt>
  */
-#ifndef NS3_PYVIZ_H
-#define NS3_PYVIZ_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/node.h"
-#include "ns3/channel.h"
-#include "ns3/packet.h"
-#include "ns3/mac48-address.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv4-l3-protocol.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "../../network/model/node.h"
+#include "../../network/model/channel.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
 
 #include <map>
 #include <set>
@@ -414,4 +413,4 @@ private:
 
 }
 
-#endif /* NS3_PYVIZ_H */
+

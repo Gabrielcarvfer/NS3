@@ -22,17 +22,17 @@
 
 #include <cmath>
 
-#include "ns3/log.h"
-#include "ns3/mobility-model.h"
-#include "ns3/double.h"
-#include "ns3/pointer.h"
-#include "ns3/okumura-hata-propagation-loss-model.h"
-#include "ns3/itu-r-1411-los-propagation-loss-model.h"
-#include "ns3/itu-r-1411-nlos-over-rooftop-propagation-loss-model.h"
-#include "ns3/itu-r-1238-propagation-loss-model.h"
-#include "ns3/kun-2600-mhz-propagation-loss-model.h"
-#include <ns3/mobility-building-info.h>
-#include "ns3/enum.h"
+#include "../../core/model/log.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/double.h"
+#include "../../core/model/pointer.h"
+#include "../../propagation/model/okumura-hata-propagation-loss-model.h"
+#include "../../propagation/model/itu-r-1411-los-propagation-loss-model.h"
+#include "../../propagation/model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.h"
+#include "itu-r-1238-propagation-loss-model.h"
+#include "../../propagation/model/kun-2600-mhz-propagation-loss-model.h"
+#include "mobility-building-info.h"
+#include "../../core/model/enum.h"
 
 #include "hybrid-buildings-propagation-loss-model.h"
 #include <algorithm> //std::max

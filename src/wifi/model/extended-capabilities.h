@@ -18,8 +18,7 @@
  * Authors: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef EXTENDED_CAPABILITIES_H
-#define EXTENDED_CAPABILITIES_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -271,4 +270,4 @@ std::ostream &operator << (std::ostream &os, const ExtendedCapabilities &extende
 
 } //namespace ns3
 
-#endif /* EXTENDED_CAPABILITIES_H */
+

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SPECTRUM_WIFI_HELPER_H
-#define SPECTRUM_WIFI_HELPER_H
+#pragma once
 
 #include "wifi-helper.h"
 
@@ -77,4 +76,4 @@ private:
 
 } //namespace ns3
 
-#endif /* SPECTRUM_WIFI_HELPER_H */
+

@@ -22,10 +22,9 @@
  *          Konstantinos Katsaros <dinos.katsaros@gmail.com>
  */
 
-#ifndef SNR_TAG_H
-#define SNR_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 
 namespace ns3 {
 
@@ -71,4 +70,4 @@ private:
 
 }
 
-#endif /* SNR_TAG_H */
+

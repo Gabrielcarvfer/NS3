@@ -18,11 +18,10 @@
  * Author: Jaume Nin <jnin@cttc.es>
  */
 
-#ifndef LTE_STATS_CALCULATOR_H_
-#define LTE_STATS_CALCULATOR_H_
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/string.h"
+#include "../../core/model/object.h"
+#include "../../core/model/string.h"
 #include <map>
 
 namespace ns3 {
@@ -208,4 +207,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_STATS_CALCULATOR_H_ */
+

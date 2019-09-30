@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef DEFAULT_DELETER_H
-#define DEFAULT_DELETER_H
+#pragma once
 
 /**
  * \file
@@ -57,4 +56,4 @@ struct DefaultDeleter
 
 } // namespace ns3
 
-#endif /* DEFAULT_DELETER_H */
+

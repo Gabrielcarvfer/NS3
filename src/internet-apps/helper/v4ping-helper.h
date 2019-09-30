@@ -18,12 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef V4PING_HELPER_H
-#define V4PING_HELPER_H
+#pragma once
 
-#include "ns3/node-container.h"
-#include "ns3/application-container.h"
-#include "ns3/object-factory.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/application-container.h"
+#include "../../core/model/object-factory.h"
 
 namespace ns3 {
 
@@ -95,4 +94,4 @@ private:
 
 } // namespace ns3
 
-#endif /* V4PING_HELPER_H */
+

@@ -18,11 +18,10 @@
  * Authors: Sidharth Nabar <snabar@uw.edu>, He Wu <mdzz@u.washington.edu>
  */
 
-#ifndef BASIC_ENERGY_SOURCE_HELPER_H
-#define BASIC_ENERGY_SOURCE_HELPER_H
+#pragma once
 
 #include "energy-model-helper.h"
-#include "ns3/node.h"
+#include "../../network/model/node.h"
 
 namespace ns3 {
 
@@ -49,4 +48,4 @@ private:
 
 } // namespace ns3
 
-#endif  /* BASIC_ENERGY_SOURCE_HELPER_H */
+

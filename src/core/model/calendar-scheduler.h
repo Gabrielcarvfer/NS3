@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef CALENDAR_SCHEDULER_H
-#define CALENDAR_SCHEDULER_H
+#pragma once
 
 #include "scheduler.h"
 #include <stdint.h>
@@ -151,4 +150,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CALENDAR_SCHEDULER_H */
+

@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef WALL_CLOCK_CLOCK_SYNCHRONIZER_H
-#define WALL_CLOCK_CLOCK_SYNCHRONIZER_H
+#pragma once
 
 #include "system-condition.h"
 #include "synchronizer.h"
@@ -200,4 +199,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* WALL_CLOCK_SYNCHRONIZER_H */
+

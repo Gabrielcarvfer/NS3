@@ -17,10 +17,10 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/timer.h"
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/nstime.h"
+#include "../model/timer.h"
+#include "../model/test.h"
+#include "../model/simulator.h"
+#include "../model/nstime.h"
 
 namespace {
 void bari (int)

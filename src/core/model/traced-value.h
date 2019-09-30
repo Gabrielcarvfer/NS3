@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TRACED_VALUE_H
-#define TRACED_VALUE_H
+#pragma once
 
 #include "traced-callback.h"
 #include "integer.h"
@@ -770,4 +769,4 @@ TracedValue<T> operator ! (const TracedValue<T> &lhs) {
 
 } // namespace ns3
 
-#endif /* TRACED_VALUE_H */
+

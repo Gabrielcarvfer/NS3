@@ -19,12 +19,12 @@
  *         Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#include <ns3/waveform-generator.h>
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
+#include "../../spectrum/model/waveform-generator.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
 #include <cmath>
-#include <ns3/simulator.h>
-#include "ns3/spectrum-error-model.h"
+#include "../../core/model/simulator.h"
+#include "../../spectrum/model/spectrum-error-model.h"
 #include "lte-phy.h"
 #include "lte-net-device.h"
 

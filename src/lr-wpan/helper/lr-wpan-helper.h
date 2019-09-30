@@ -19,13 +19,12 @@
  *  Gary Pei <guangyu.pei@boeing.com>
  *  Tom Henderson <thomas.r.henderson@boeing.com>
  */
-#ifndef LR_WPAN_HELPER_H
-#define LR_WPAN_HELPER_H
+#pragma once
 
-#include <ns3/node-container.h>
-#include <ns3/lr-wpan-phy.h>
-#include <ns3/lr-wpan-mac.h>
-#include <ns3/trace-helper.h>
+#include "../../network/helper/node-container.h"
+#include "../model/lr-wpan-phy.h"
+#include "../model/lr-wpan-mac.h"
+#include "../../network/helper/trace-helper.h"
 
 namespace ns3 {
 
@@ -191,4 +190,4 @@ private:
 
 }
 
-#endif /* LR_WPAN_HELPER_H */
+

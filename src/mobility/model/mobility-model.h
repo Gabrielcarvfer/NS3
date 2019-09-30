@@ -17,12 +17,11 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef MOBILITY_MODEL_H
-#define MOBILITY_MODEL_H
+#pragma once
 
-#include "ns3/vector.h"
-#include "ns3/object.h"
-#include "ns3/traced-callback.h"
+#include "../../core/model/vector.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -133,4 +132,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MOBILITY_MODEL_H */
+

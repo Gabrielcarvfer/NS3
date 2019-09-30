@@ -20,8 +20,7 @@
 
 
 
-#ifndef SEND_PARAMS_H
-#define SEND_PARAMS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -51,13 +50,10 @@ private:
 
 } // namespace ns3
 
-#endif /* SEND_PARAMS_H */
 
-#ifndef OFDM_SEND_PARAMS_H
-#define OFDM_SEND_PARAMS_H
 
 #include <stdint.h>
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 
 namespace ns3 {
 
@@ -108,4 +104,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_SEND_PARAMS_H */
+

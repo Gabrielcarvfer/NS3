@@ -17,10 +17,9 @@
  *
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
-#ifndef TCP_SOCKET_FACTORY_H
-#define TCP_SOCKET_FACTORY_H
+#pragma once
 
-#include "ns3/socket-factory.h"
+#include "../../network/model/socket-factory.h"
 
 namespace ns3 {
 
@@ -58,4 +57,4 @@ public:
 
 } // namespace ns3
 
-#endif /* TCP_SOCKET_FACTORY_H */
+

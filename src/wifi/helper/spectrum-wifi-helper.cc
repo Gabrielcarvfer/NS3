@@ -19,13 +19,13 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/names.h"
-#include "ns3/spectrum-wifi-phy.h"
-#include "ns3/error-rate-model.h"
-#include "ns3/frame-capture-model.h"
-#include "ns3/preamble-detection-model.h"
-#include "ns3/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
+#include "../model/spectrum-wifi-phy.h"
+#include "../model/error-rate-model.h"
+#include "../model/frame-capture-model.h"
+#include "../model/preamble-detection-model.h"
+#include "../../mobility/model/mobility-model.h"
 #include "spectrum-wifi-helper.h"
 
 namespace ns3 {

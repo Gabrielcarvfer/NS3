@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef TYPE_NAME_H
-#define TYPE_NAME_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
@@ -64,4 +63,4 @@ template <> std::string TypeNameGet< double  > (void);
   
 } // namespace ns3
 
-#endif /* TYPE_NAME_H */
+

@@ -17,13 +17,13 @@
  *
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/packet.h>
-#include <ns3/lr-wpan-phy.h>
-#include <ns3/lr-wpan-mac.h>
-#include <ns3/simulator.h>
-#include <ns3/single-model-spectrum-channel.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../network/model/packet.h"
+#include "../model/lr-wpan-phy.h"
+#include "../model/lr-wpan-mac.h"
+#include "../../core/model/simulator.h"
+#include "../../spectrum/model/single-model-spectrum-channel.h"
 
 using namespace ns3;
 

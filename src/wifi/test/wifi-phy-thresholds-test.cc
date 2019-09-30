@@ -18,18 +18,18 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/spectrum-wifi-helper.h"
-#include "ns3/wifi-spectrum-value-helper.h"
-#include "ns3/spectrum-wifi-phy.h"
-#include "ns3/nist-error-rate-model.h"
-#include "ns3/wifi-mac-header.h"
-#include "ns3/wifi-mac-trailer.h"
-#include "ns3/wifi-phy-tag.h"
-#include "ns3/wifi-spectrum-signal-parameters.h"
-#include "ns3/wifi-utils.h"
-#include "ns3/wifi-phy-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../helper/spectrum-wifi-helper.h"
+#include "../../spectrum/model/wifi-spectrum-value-helper.h"
+#include "../model/spectrum-wifi-phy.h"
+#include "../model/nist-error-rate-model.h"
+#include "../model/wifi-mac-header.h"
+#include "../model/wifi-mac-trailer.h"
+#include "../model/wifi-phy-tag.h"
+#include "../model/wifi-spectrum-signal-parameters.h"
+#include "../model/wifi-utils.h"
+#include "../model/wifi-phy-header.h"
 
 using namespace ns3;
 

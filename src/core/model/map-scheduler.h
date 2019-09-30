@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef MAP_SCHEDULER_H
-#define MAP_SCHEDULER_H
+#pragma once
 
 #include "scheduler.h"
 #include <stdint.h>
@@ -76,4 +75,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MAP_SCHEDULER_H */
+

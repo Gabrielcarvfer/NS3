@@ -18,14 +18,13 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_RAW_SOCKET_IMPL_H
-#define IPV6_RAW_SOCKET_IMPL_H
+#pragma once
 
 #include <list>
 
-#include "ns3/socket.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/ipv6-header.h"
+#include "../../network/model/socket.h"
+#include "../../network/utils/ipv6-address.h"
+#include "ipv6-header.h"
 
 namespace ns3
 {
@@ -238,5 +237,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_RAW_SOCKET_IMPL_H */
+
 

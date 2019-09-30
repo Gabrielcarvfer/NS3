@@ -30,8 +30,7 @@
  *
  */
 
-#ifndef CAIRO_WIDEINT_H
-#define CAIRO_WIDEINT_H
+#pragma once
 
 /**
  * \file
@@ -356,4 +355,4 @@ _cairo_int_96by64_32x64_divrem (cairo_int128_t num,
 #endif
 
 
-#endif /* CAIRO_WIDEINT_H */
+

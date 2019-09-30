@@ -18,7 +18,7 @@
  */
 
 #include "common.h"
-#include "ns3/log.h"
+#include "../../src/core/model/log.h"
 #include "flowmonxmlparser.h"
 #include "animatormode.h"
 #include "flowmonstatsscene.h"

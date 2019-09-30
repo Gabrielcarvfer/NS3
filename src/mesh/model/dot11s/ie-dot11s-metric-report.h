@@ -18,12 +18,11 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef METRIC_REPORT_H
-#define METRIC_REPORT_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/buffer.h"
-#include "ns3/mesh-information-element-vector.h"
+#include "../../../network/model/buffer.h"
+#include "../mesh-information-element-vector.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -93,4 +92,4 @@ bool operator<  (const IeLinkMetricReport & a, const IeLinkMetricReport & b);
 std::ostream &operator << (std::ostream &os, const IeLinkMetricReport &linkMetricReport);
 } // namespace dot11s
 } // namespace ns3
-#endif /* METRIC_REPORT_H */
+

@@ -19,19 +19,19 @@
  */
 
 #include "ping6.h"
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/socket.h"
-#include "ns3/uinteger.h"
-#include "ns3/ipv6.h"
-#include "ns3/inet6-socket-address.h"
-#include "ns3/icmpv6-header.h"
-#include "ns3/ipv6-raw-socket-factory.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv6-extension-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/socket-factory.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/uinteger.h"
+#include "../../internet/model/ipv6.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../internet/model/icmpv6-header.h"
+#include "../../internet/model/ipv6-raw-socket-factory.h"
+#include "../../internet/model/ipv6-header.h"
+#include "../../internet/model/ipv6-extension-header.h"
 
 
 namespace ns3 

@@ -29,27 +29,26 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_OPTION_H
-#define DSR_OPTION_H
+#pragma once
 
 #include <map>
 #include <list>
 
-#include "ns3/buffer.h"
-#include "ns3/packet.h"
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/udp-l4-protocol.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/object.h"
-#include "ns3/node.h"
-#include "ns3/ipv4-interface.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/traced-callback.h"
-#include "ns3/output-stream-wrapper.h"
-#include "ns3/timer.h"
+#include "../../network/model/buffer.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "../../internet/model/udp-l4-protocol.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../core/model/object.h"
+#include "../../network/model/node.h"
+#include "../../internet/model/ipv4-interface.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/utils/output-stream-wrapper.h"
+#include "../../core/model/timer.h"
 
 #include "dsr-rsendbuff.h"
 #include "dsr-maintain-buff.h"
@@ -575,4 +574,3 @@ private:
 } // namespace dsr
 } // Namespace ns3
 
-#endif

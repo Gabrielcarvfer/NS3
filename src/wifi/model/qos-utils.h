@@ -18,10 +18,9 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef QOS_UTILS_H
-#define QOS_UTILS_H
+#pragma once
 
-#include "ns3/ptr.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -182,4 +181,4 @@ uint8_t GetTid (Ptr<const Packet> packet, const WifiMacHeader hdr);
 
 } //namespace ns3
 
-#endif /* QOS_UTILS_H */
+

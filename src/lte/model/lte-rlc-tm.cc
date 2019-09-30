@@ -19,10 +19,10 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
-#include "ns3/lte-rlc-tm.h"
+#include "lte-rlc-tm.h"
 
 namespace ns3 {
 

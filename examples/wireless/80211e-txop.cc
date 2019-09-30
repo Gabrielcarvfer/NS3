@@ -18,21 +18,21 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/command-line.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
-#include "ns3/log.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/udp-client-server-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/qos-txop.h"
-#include "ns3/wifi-mac.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/string.h"
+#include "../../src/core/model/pointer.h"
+#include "../../src/core/model/log.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/udp-client-server-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/wifi/model/wifi-net-device.h"
+#include "../../src/wifi/model/qos-txop.h"
+#include "../../src/wifi/model/wifi-mac.h"
 
 // This is an example that illustrates 802.11 QoS for different Access Categories.
 // It defines 4 independent Wi-Fi networks (working on different logical channels

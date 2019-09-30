@@ -1,10 +1,9 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 
-#ifndef LENA_TEST_DEACTIVATE_BEARER_H
-#define LENA_TEST_DEACTIVATE_BEARER_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
 
 
 namespace ns3 {
@@ -72,4 +71,4 @@ public:
 
 } // namespace ns3
 
-#endif
+

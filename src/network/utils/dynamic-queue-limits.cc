@@ -23,10 +23,10 @@
  * Author: Tom Herbert <therbert@google.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/uinteger.h"
-#include "ns3/simulator.h"
-#include "ns3/string.h"
+#include "../../core/model/log.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/string.h"
 #include "dynamic-queue-limits.h"
 
 // Set some static maximums

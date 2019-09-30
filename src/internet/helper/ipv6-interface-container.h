@@ -20,15 +20,14 @@
  *         Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef IPV6_INTERFACE_CONTAINER_H
-#define IPV6_INTERFACE_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 
 #include <vector>
 
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-address.h"
+#include "../model/ipv6.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -216,5 +215,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_INTERFACE_CONTAINER_H */
+
 

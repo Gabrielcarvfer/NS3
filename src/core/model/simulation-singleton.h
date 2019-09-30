@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SIMULATION_SINGLETON_H
-#define SIMULATION_SINGLETON_H
+#pragma once
 
 /**
  * \file
@@ -135,4 +134,4 @@ SimulationSingleton<T>::DeleteObject (void)
 } // namespace ns3
 
 
-#endif /* SIMULATION_SINGLETON_H */
+

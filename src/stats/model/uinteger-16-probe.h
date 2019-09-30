@@ -21,12 +21,11 @@
  * Modified by: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef UINTEGER_16_PROBE_H
-#define UINTEGER_16_PROBE_H
+#pragma once
 
-#include "ns3/callback.h"
-#include "ns3/probe.h"
-#include "ns3/traced-value.h"
+#include "../../core/model/callback.h"
+#include "probe.h"
+#include "../../core/model/traced-value.h"
 
 namespace ns3 {
 
@@ -102,4 +101,4 @@ private:
 
 } // namespace ns3
 
-#endif // UINTEGER_16_PROBE_H
+

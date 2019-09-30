@@ -18,15 +18,14 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef EPC_X2_H
-#define EPC_X2_H
+#pragma once
 
-#include "ns3/socket.h"
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/object.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
 
-#include "ns3/epc-x2-sap.h"
+#include "epc-x2-sap.h"
 
 #include <map>
 
@@ -234,4 +233,4 @@ private:
 
 } //namespace ns3
 
-#endif // EPC_X2_H
+

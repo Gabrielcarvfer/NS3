@@ -16,13 +16,13 @@
  * Author: Gustavo Carneiro  <gjc@inescporto.pt>
  */
 #include "bridge-net-device.h"
-#include "ns3/node.h"
-#include "ns3/channel.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/simulator.h"
-#include "ns3/uinteger.h"
+#include "../../network/model/node.h"
+#include "../../network/model/channel.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/uinteger.h"
 
 namespace ns3 {
 

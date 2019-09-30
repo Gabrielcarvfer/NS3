@@ -20,17 +20,16 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef BULK_SEND_HELPER_H
-#define BULK_SEND_HELPER_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
-#include "ns3/object-factory.h"
-#include "ns3/address.h"
-#include "ns3/attribute.h"
-#include "ns3/net-device.h"
-#include "ns3/node-container.h"
-#include "ns3/application-container.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/address.h"
+#include "../../core/model/attribute.h"
+#include "../../network/model/net-device.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/application-container.h"
 
 namespace ns3 {
 
@@ -106,5 +105,5 @@ private:
 
 } // namespace ns3
 
-#endif /* ON_OFF_HELPER_H */
+
 

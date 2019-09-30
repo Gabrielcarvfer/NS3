@@ -17,10 +17,9 @@
  *
  * Author: Emmanuelle Laprise <emmanuelle.laprise@bluekazoo.ca>
  */
-#ifndef PACKET_SOCKET_FACTORY_H
-#define PACKET_SOCKET_FACTORY_H
+#pragma once
 
-#include "ns3/socket-factory.h"
+#include "../model/socket-factory.h"
 
 namespace ns3 {
 
@@ -53,4 +52,4 @@ public:
 
 } // namespace ns3
 
-#endif /* PACKET_SOCKET_FACTORY_H */
+

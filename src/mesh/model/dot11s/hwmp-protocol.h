@@ -18,13 +18,12 @@
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef HWMP_PROTOCOL_H
-#define HWMP_PROTOCOL_H
+#pragma once
 
-#include "ns3/mesh-l2-routing-protocol.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/traced-value.h"
+#include "../mesh-l2-routing-protocol.h"
+#include "../../../core/model/nstime.h"
+#include "../../../core/model/event-id.h"
+#include "../../../core/model/traced-value.h"
 #include <vector>
 #include <map>
 
@@ -472,4 +471,4 @@ private:
 };
 } // namespace dot11s
 } // namespace ns3
-#endif
+

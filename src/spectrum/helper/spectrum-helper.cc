@@ -18,14 +18,14 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 #include "spectrum-helper.h"
-#include <ns3/simulator.h>
-#include <ns3/config.h>
-#include <ns3/names.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/spectrum-phy.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include <ns3/multi-model-spectrum-channel.h>
-#include <ns3/half-duplex-ideal-phy.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/config.h"
+#include "../../core/model/names.h"
+#include "../model/spectrum-channel.h"
+#include "../model/spectrum-phy.h"
+#include "../model/single-model-spectrum-channel.h"
+#include "../model/multi-model-spectrum-channel.h"
+#include "../model/half-duplex-ideal-phy.h"
 
 
 namespace ns3 {

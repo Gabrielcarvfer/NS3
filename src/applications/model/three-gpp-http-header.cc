@@ -19,8 +19,8 @@
  *
  */
 
-#include <ns3/log.h>
-#include <ns3/packet.h>
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
 #include <sstream>
 #include "three-gpp-http-header.h"
 

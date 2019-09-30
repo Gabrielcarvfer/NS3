@@ -18,10 +18,9 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef FLAME_PROTOCOL_MAC_H
-#define FLAME_PROTOCOL_MAC_H
+#pragma once
 
-#include "ns3/mesh-wifi-interface-mac.h"
+#include "../mesh-wifi-interface-mac.h"
 
 namespace ns3 {
 namespace flame {
@@ -118,4 +117,4 @@ private:
 };
 } // namespace flame
 } // namespace ns3
-#endif /* FLAME_PROTOCOL_MAC_H */
+

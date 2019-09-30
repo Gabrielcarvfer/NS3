@@ -30,9 +30,9 @@
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/wifi-module.h"
-#include "ns3/click-internet-stack-helper.h"
-#include "ns3/log.h"
-#include "ns3/mobility-helper.h"
+#include "../helper/click-internet-stack-helper.h"
+#include "../../core/model/log.h"
+#include "../../mobility/helper/mobility-helper.h"
 
 using namespace ns3;
 

@@ -19,15 +19,14 @@
  *  Gary Pei <guangyu.pei@boeing.com>
  *  Sascha Alexander Jopen <jopen@cs.uni-bonn.de>
  */
-#ifndef LR_WPAN_PHY_H
-#define LR_WPAN_PHY_H
+#pragma once
 
 #include "lr-wpan-interference-helper.h"
 
-#include <ns3/spectrum-phy.h>
-#include <ns3/traced-callback.h>
-#include <ns3/traced-value.h>
-#include <ns3/event-id.h>
+#include "../../spectrum/model/spectrum-phy.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/event-id.h"
 
 namespace ns3 {
 
@@ -845,4 +844,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LR_WPAN_PHY_H */
+

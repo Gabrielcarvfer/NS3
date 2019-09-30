@@ -17,10 +17,9 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef UDP_SOCKET_FACTORY_H
-#define UDP_SOCKET_FACTORY_H
+#pragma once
 
-#include "ns3/socket-factory.h"
+#include "../../network/model/socket-factory.h"
 
 namespace ns3 {
 
@@ -51,4 +50,4 @@ public:
 
 } // namespace ns3
 
-#endif /* UDP_SOCKET_FACTORY_H */
+

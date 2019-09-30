@@ -18,8 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef FF_MAC_SCHED_SAP_H
-#define FF_MAC_SCHED_SAP_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
@@ -464,4 +463,4 @@ MemberSchedSapProvider<C>::SchedUlCqiInfoReq (const struct SchedUlCqiInfoReqPara
 
 } // namespace ns3
 
-#endif /* FF_MAC_SCHED_SAP_H */
+

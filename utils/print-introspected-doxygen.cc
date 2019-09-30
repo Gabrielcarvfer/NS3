@@ -29,17 +29,17 @@
 #include <map>
 #include <climits>    // CHAR_BIT
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/global-value.h"
-#include "ns3/log.h"
-#include "ns3/object-vector.h"
-#include "ns3/object.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/node-container.h"
-#include "ns3/simple-channel.h"
-#include "ns3/system-path.h"
+#include "../src/core/model/command-line.h"
+#include "../src/core/model/config.h"
+#include "../src/core/model/global-value.h"
+#include "../src/core/model/log.h"
+#include "../src/core/model/object-vector.h"
+#include "../src/core/model/object.h"
+#include "../src/core/model/pointer.h"
+#include "../src/core/model/string.h"
+#include "../src/network/helper/node-container.h"
+#include "../src/network/utils/simple-channel.h"
+#include "../src/core/model/system-path.h"
 
 using namespace ns3;
 
@@ -1447,7 +1447,7 @@ int main (int argc, char *argv[])
       std::cout << "/* -*- Mode:C++; c-file-style:\"gnu\"; "
 	           "indent-tabs-mode:nil; -*- */\n"
 		<< std::endl;
-      std::cout << "#include \"ns3/log.h\""
+      std::cout << "#include \"../src/core/model/log.h\""
                 << std::endl;
     }
 

@@ -17,9 +17,9 @@
  *
  */
 
-#include "ns3/callback.h"
-#include "ns3/assert.h"
-#include "ns3/command-line.h"
+#include "../model/callback.h"
+#include "../model/assert.h"
+#include "../model/command-line.h"
 #include <iostream>
 
 /**

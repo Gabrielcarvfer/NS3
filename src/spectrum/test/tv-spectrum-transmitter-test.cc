@@ -18,12 +18,12 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/test.h>
-#include <ns3/log.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/enum.h>
-#include <ns3/double.h>
-#include <ns3/tv-spectrum-transmitter.h>
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../model/spectrum-value.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/double.h"
+#include "../model/tv-spectrum-transmitter.h"
 
 /**
  * This test verifies the accuracy of the spectrum/PSD model in the 

@@ -17,12 +17,11 @@
  *
  * Author: Dan Broyles <dbroyl01@ku.edu>
  */
-#ifndef BOX_H
-#define BOX_H
+#pragma once
 
-#include "ns3/attribute.h"
-#include "ns3/attribute-helper.h"
-#include "ns3/vector.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/attribute-helper.h"
+#include "../../core/model/vector.h"
 
 namespace ns3 {
 
@@ -110,4 +109,4 @@ ATTRIBUTE_HELPER_HEADER (Box);
 
 } // namespace ns3
 
-#endif /* BOX_H */
+

@@ -17,8 +17,7 @@
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef GTK_CONFIG_STORE_H
-#define GTK_CONFIG_STORE_H
+#pragma once
 
 namespace ns3 {
 
@@ -45,4 +44,4 @@ public:
 
 } // namespace ns3
 
-#endif /* GTK_CONFIG_STORE_H */
+

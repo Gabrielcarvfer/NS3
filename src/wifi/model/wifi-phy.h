@@ -19,12 +19,11 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_PHY_H
-#define WIFI_PHY_H
+#pragma once
 
-#include "ns3/event-id.h"
-#include "ns3/deprecated.h"
-#include "ns3/error-model.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/deprecated.h"
+#include "../../network/utils/error-model.h"
 #include "wifi-mpdu-type.h"
 #include "wifi-phy-standard.h"
 #include "interference-helper.h"
@@ -1935,4 +1934,4 @@ std::ostream& operator<< (std::ostream& os, WifiPhyState state);
 
 } //namespace ns3
 
-#endif /* WIFI_PHY_H */
+

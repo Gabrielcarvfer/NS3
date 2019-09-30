@@ -19,17 +19,16 @@
  *
  */
 
-#ifndef WIMAX_TLV_H
-#define WIMAX_TLV_H
+#pragma once
 
 #define WIMAX_TLV_EXTENDED_LENGTH_MASK 0x80
 
-#include "ns3/ipv4-address.h"
+#include "../../network/utils/ipv4-address.h"
 #include <cstdlib>
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/uinteger.h"
-#include "ns3/header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/model/header.h"
 #include <vector>
 
 namespace ns3 {
@@ -592,4 +591,4 @@ private:
 
 }
 
-#endif /* WIMAX_TLV_H */
+

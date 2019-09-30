@@ -19,12 +19,12 @@
  *         Nicola Baldo <nbaldo@cttc.es> (actual test)
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
 
-#include "ns3/lte-rlc-am-header.h"
+#include "../model/lte-rlc-am-header.h"
 
 #include <list>
 #include <bitset>

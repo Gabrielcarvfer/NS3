@@ -19,14 +19,13 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#ifndef TOPOLOGY_READER_H
-#define TOPOLOGY_READER_H
+#pragma once
 
 #include <string>
 #include <map>
 #include <list>
-#include "ns3/object.h"
-#include "ns3/node.h"
+#include "../../core/model/object.h"
+#include "../../network/model/node.h"
 
 
 namespace ns3 {
@@ -231,4 +230,4 @@ private:
 };
 
 
-#endif /* TOPOLOGY_READER_H */
+

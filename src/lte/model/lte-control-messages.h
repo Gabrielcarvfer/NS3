@@ -19,13 +19,12 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#ifndef LTE_CONTROL_MESSAGES_H
-#define LTE_CONTROL_MESSAGES_H
+#pragma once
 
-#include <ns3/ptr.h>
-#include <ns3/simple-ref-count.h>
-#include <ns3/ff-mac-common.h>
-#include <ns3/lte-rrc-sap.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "ff-mac-common.h"
+#include "lte-rrc-sap.h"
 #include <list>
 
 namespace ns3 {
@@ -405,4 +404,4 @@ private:
 
 } // namespace ns3
 
-#endif  // LTE_CONTROL_MESSAGES_H
+

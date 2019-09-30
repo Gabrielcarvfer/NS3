@@ -19,10 +19,10 @@
  *          Tiago G. Rodrigues (tgr002@bucknell.edu)
  */
 
-#include "ns3/probe.h"
-#include "ns3/object.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "probe.h"
+#include "../../core/model/object.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

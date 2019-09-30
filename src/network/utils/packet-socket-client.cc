@@ -18,17 +18,17 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/packet-socket-address.h"
-#include "ns3/packet-socket.h"
-#include "ns3/packet-socket-factory.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "packet-socket-address.h"
+#include "packet-socket.h"
+#include "packet-socket-factory.h"
+#include "../model/socket.h"
+#include "../../core/model/simulator.h"
+#include "../model/socket-factory.h"
+#include "../model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/abort.h"
 #include "packet-socket-client.h"
 #include <cstdlib>
 #include <cstdio>

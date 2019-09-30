@@ -18,8 +18,7 @@
  * Author: Hajime Tazaki (tazaki@sfc.wide.ad.jp)
  */
 
-#ifndef ROCKETFUEL_TOPOLOGY_READER_H
-#define ROCKETFUEL_TOPOLOGY_READER_H
+#pragma once
 
 #include "topology-reader.h"
 
@@ -133,6 +132,6 @@ private:
 };
 
 
-#endif /* ROCKETFUEL_TOPOLOGY_READER_H */
+
 
 

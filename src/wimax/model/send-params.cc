@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include "ns3/packet.h"
+#include "../../network/model/packet.h"
 #include "send-params.h"
 
 namespace ns3 {

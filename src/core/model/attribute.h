@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ATTRIBUTE_H
-#define ATTRIBUTE_H
+#pragma once
 
 #include <string>
 #include <stdint.h>
@@ -320,4 +319,4 @@ MakeEmptyAttributeChecker ()
 
 } // namespace ns3
 
-#endif /* ATTRIBUTE_H */
+

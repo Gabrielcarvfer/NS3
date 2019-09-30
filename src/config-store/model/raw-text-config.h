@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef RAW_TEXT_CONFIG_H
-#define RAW_TEXT_CONFIG_H
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -73,4 +72,4 @@ private:
 
 } // namespace ns3
 
-#endif /* RAW_TEXT_CONFIG_H */
+

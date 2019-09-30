@@ -19,8 +19,7 @@
  *          Gustavo Carneiro <gjcarneiro@gmail.com>,
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SIMPLE_REF_COUNT_H
-#define SIMPLE_REF_COUNT_H
+#pragma once
 
 #include "empty.h"
 #include "default-deleter.h"
@@ -146,4 +145,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIMPLE_REF_COUNT_H */
+

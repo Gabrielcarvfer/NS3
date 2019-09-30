@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef INET_SOCKET_ADDRESS_H
-#define INET_SOCKET_ADDRESS_H
+#pragma once
 
-#include "ns3/address.h"
+#include "../model/address.h"
 #include "ipv4-address.h"
 #include <stdint.h>
 
@@ -135,4 +134,4 @@ private:
 } // namespace ns3
 
 
-#endif /* INET_SOCKET_ADDRESS_H */
+

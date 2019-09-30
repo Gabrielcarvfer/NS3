@@ -21,8 +21,7 @@
 // It is recommended to include this header instead of <math.h> or 
 // <cmath> whenever the log2(x) function is needed.  See bug 1467.
 
-#ifndef MATH_H
-#define MATH_H
+#pragma once
 
 /**
  * \file
@@ -42,4 +41,3 @@
 
 #endif /* __FreeBSD__ */
 
-#endif /* MATH_H */

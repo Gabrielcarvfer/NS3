@@ -21,11 +21,11 @@
  * Modified by: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#include "ns3/uinteger-8-probe.h"
-#include "ns3/log.h"
-#include "ns3/names.h"
-#include "ns3/config.h"
-#include "ns3/trace-source-accessor.h"
+#include "uinteger-8-probe.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
+#include "../../core/model/config.h"
+#include "../../core/model/trace-source-accessor.h"
 
 namespace ns3 {
 

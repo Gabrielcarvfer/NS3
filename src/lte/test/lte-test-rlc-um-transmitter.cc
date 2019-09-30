@@ -18,11 +18,11 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
-#include "ns3/lte-rlc-header.h"
-#include "ns3/lte-rlc-um.h"
+#include "../model/lte-rlc-header.h"
+#include "../model/lte-rlc-um.h"
 
 #include "lte-test-rlc-um-transmitter.h"
 #include "lte-test-entities.h"

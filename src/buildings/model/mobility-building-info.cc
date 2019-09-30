@@ -19,12 +19,12 @@
  * 
  */
 
-#include <ns3/simulator.h>
-#include <ns3/position-allocator.h>
-#include <ns3/mobility-building-info.h>
-#include <ns3/pointer.h>
-#include <ns3/log.h>
-#include <ns3/assert.h>
+#include "../../core/model/simulator.h"
+#include "../../mobility/model/position-allocator.h"
+#include "mobility-building-info.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

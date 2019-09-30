@@ -19,17 +19,16 @@
  *          Aleksey Kovalenko <kovalenko@iitp.ru>
  */
 
-#ifndef PEER_LINK_H
-#define PEER_LINK_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/object.h"
-#include "ns3/callback.h"
-#include "ns3/mac48-address.h"
-#include "ns3/event-id.h"
-#include "ns3/ie-dot11s-beacon-timing.h"
-#include "ns3/ie-dot11s-peer-management.h"
-#include "ns3/ie-dot11s-configuration.h"
+#include "../../../core/model/nstime.h"
+#include "../../../core/model/object.h"
+#include "../../../core/model/callback.h"
+#include "../../../network/utils/mac48-address.h"
+#include "../../../core/model/event-id.h"
+#include "ie-dot11s-beacon-timing.h"
+#include "ie-dot11s-peer-management.h"
+#include "ie-dot11s-configuration.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -337,4 +336,4 @@ private:
 } // namespace dot11s
 } // namespace ns3
 
-#endif /* PEER_LINK_H */
+

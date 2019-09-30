@@ -18,7 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include "wifi-remote-station-info.h"
 
 namespace ns3 {

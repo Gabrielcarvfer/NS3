@@ -19,14 +19,14 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/names.h"
-#include "ns3/propagation-loss-model.h"
-#include "ns3/propagation-delay-model.h"
-#include "ns3/error-rate-model.h"
-#include "ns3/frame-capture-model.h"
-#include "ns3/preamble-detection-model.h"
-#include "ns3/yans-wifi-phy.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../model/error-rate-model.h"
+#include "../model/frame-capture-model.h"
+#include "../model/preamble-detection-model.h"
+#include "../model/yans-wifi-phy.h"
 #include "yans-wifi-helper.h"
 
 namespace ns3 {

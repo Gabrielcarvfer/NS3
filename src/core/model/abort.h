@@ -18,8 +18,7 @@
  * Author:  Original author unknown
  *          Quincy Tse <quincy.tse@nicta.com.au>
  */
-#ifndef NS3_ABORT_H
-#define NS3_ABORT_H
+#pragma once
 
 #include "fatal-error.h"
 
@@ -144,4 +143,4 @@
 #define NS_ABORT_MSG_UNLESS(cond, msg)                                 \
   NS_ABORT_MSG_IF (!(cond),msg)
 
-#endif /* NS3_ABORT_H */
+

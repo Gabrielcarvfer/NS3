@@ -18,8 +18,7 @@
  * Author: Matias Richart <mrichart@fing.edu.uy>
  */
 
-#ifndef PARF_WIFI_MANAGER_H
-#define PARF_WIFI_MANAGER_H
+#pragma once
 
 #include "wifi-remote-station-manager.h"
 
@@ -106,4 +105,4 @@ private:
 
 } //namespace ns3
 
-#endif /* PARF_WIFI_MANAGER_H */
+

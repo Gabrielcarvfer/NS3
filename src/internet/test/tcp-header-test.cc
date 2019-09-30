@@ -19,11 +19,11 @@
 
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include "ns3/core-module.h"
-#include "ns3/tcp-header.h"
-#include "ns3/buffer.h"
-#include "ns3/tcp-option-rfc793.h"
+#include "../model/tcp-header.h"
+#include "../../network/model/buffer.h"
+#include "../model/tcp-option-rfc793.h"
 
 using namespace ns3;
 

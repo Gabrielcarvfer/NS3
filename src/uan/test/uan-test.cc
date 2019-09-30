@@ -18,19 +18,19 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#include "ns3/uan-net-device.h"
-#include "ns3/uan-channel.h"
-#include "ns3/uan-mac-aloha.h"
-#include "ns3/uan-phy-gen.h"
-#include "ns3/uan-transducer-hd.h"
-#include "ns3/uan-prop-model-ideal.h"
-#include "ns3/constant-position-mobility-model.h"
-#include "ns3/simulator.h"
-#include "ns3/test.h"
-#include "ns3/node.h"
-#include "ns3/object-factory.h"
-#include "ns3/pointer.h"
-#include "ns3/callback.h"
+#include "../model/uan-net-device.h"
+#include "../model/uan-channel.h"
+#include "../model/uan-mac-aloha.h"
+#include "../model/uan-phy-gen.h"
+#include "../model/uan-transducer-hd.h"
+#include "../model/uan-prop-model-ideal.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
+#include "../../network/model/node.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/callback.h"
 
 using namespace ns3;
 

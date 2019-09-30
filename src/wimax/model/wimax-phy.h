@@ -18,19 +18,18 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef WIMAX_PHY_H
-#define WIMAX_PHY_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
-#include "ns3/callback.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
 #include "bvec.h"
 #include "send-params.h"
-#include "ns3/log.h"
-#include "ns3/object.h"
-#include "ns3/traced-callback.h"
+#include "../../core/model/log.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -489,4 +488,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_PHY_H */
+

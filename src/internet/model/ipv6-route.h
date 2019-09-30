@@ -18,16 +18,15 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_ROUTE_H
-#define IPV6_ROUTE_H
+#pragma once
 
 #include <list>
 #include <map>
 #include <ostream>
 
-#include "ns3/simple-ref-count.h"
+#include "../../core/model/simple-ref-count.h"
 
-#include "ns3/ipv6-address.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -240,5 +239,5 @@ std::ostream& operator<< (std::ostream& os, Ipv6MulticastRoute const& route);
 
 } /* namespace ns3 */
 
-#endif /* IPV6_ROUTE_H */
+
 

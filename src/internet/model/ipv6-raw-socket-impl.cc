@@ -18,17 +18,17 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include "../model/inet-headers.h"
+#include "inet-headers.h"
 #include <sys/types.h>
 
-#include "ns3/inet6-socket-address.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/log.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv6-routing-protocol.h"
-#include "ns3/ipv6-packet-info-tag.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/log.h"
+#include "ipv6-route.h"
+#include "ipv6-routing-protocol.h"
+#include "ipv6-packet-info-tag.h"
 
 #include "ipv6-l3-protocol.h"
 #include "ipv6-raw-socket-impl.h"

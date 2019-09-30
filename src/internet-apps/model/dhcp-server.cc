@@ -23,14 +23,14 @@
  */
 
 #include <algorithm>
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/nstime.h"
-#include "ns3/ipv4-packet-info-tag.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/nstime.h"
+#include "../../internet/model/ipv4-packet-info-tag.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4.h"
 #include "dhcp-server.h"
 #include "dhcp-header.h"
 

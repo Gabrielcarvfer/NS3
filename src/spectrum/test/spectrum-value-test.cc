@@ -18,11 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/object.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/spectrum-converter.h>
-#include <ns3/log.h>
-#include <ns3/test.h>
+#include "../../core/model/object.h"
+#include "../model/spectrum-value.h"
+#include "../model/spectrum-converter.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
 #include <iostream>
 #include <cmath>
 

@@ -19,8 +19,7 @@
  *          Ghada Badawy <gbadawy@gmail.com>
  */
 
-#ifndef WIFI_TX_VECTOR_H
-#define WIFI_TX_VECTOR_H
+#pragma once
 
 #include "wifi-mode.h"
 #include "wifi-preamble.h"
@@ -249,4 +248,4 @@ std::ostream & operator << (std::ostream & os,const WifiTxVector &v);
 
 } //namespace ns3
 
-#endif /* WIFI_TX_VECTOR_H */
+

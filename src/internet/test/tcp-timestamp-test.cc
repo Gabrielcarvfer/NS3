@@ -18,10 +18,10 @@
  */
 
 #include "tcp-general-test.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
-#include "ns3/tcp-option-ts.h"
-#include "ns3/tcp-header.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
+#include "../model/tcp-option-ts.h"
+#include "../model/tcp-header.h"
 
 using namespace ns3;
 

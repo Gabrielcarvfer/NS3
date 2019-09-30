@@ -19,26 +19,25 @@
  *          Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef WIMAX_HELPER_H
-#define WIMAX_HELPER_H
+#pragma once
 
 #include <string>
-#include "ns3/object-factory.h"
-#include "ns3/node-container.h"
-#include "ns3/net-device-container.h"
-#include "ns3/bs-net-device.h"
-#include "ns3/ss-net-device.h"
-#include "ns3/service-flow.h"
-#include "ns3/propagation-loss-model.h"
-#include "ns3/simple-ofdm-wimax-channel.h"
-#include "ns3/bs-uplink-scheduler.h"
-#include "ns3/bs-uplink-scheduler-mbqos.h"
-#include "ns3/bs-uplink-scheduler-simple.h"
-#include "ns3/bs-uplink-scheduler-rtps.h"
-#include "ns3/bs-scheduler.h"
-#include "ns3/bs-scheduler-simple.h"
-#include "ns3/bs-scheduler-rtps.h"
-#include "ns3/trace-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../model/bs-net-device.h"
+#include "../model/ss-net-device.h"
+#include "../model/service-flow.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../model/simple-ofdm-wimax-channel.h"
+#include "../model/bs-uplink-scheduler.h"
+#include "../model/bs-uplink-scheduler-mbqos.h"
+#include "../model/bs-uplink-scheduler-simple.h"
+#include "../model/bs-uplink-scheduler-rtps.h"
+#include "../model/bs-scheduler.h"
+#include "../model/bs-scheduler-simple.h"
+#include "../model/bs-scheduler-rtps.h"
+#include "../../network/helper/trace-helper.h"
 
 namespace ns3 {
 
@@ -328,4 +327,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_HELPER_H */
+

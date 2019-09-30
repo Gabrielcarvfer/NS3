@@ -38,11 +38,11 @@
 #include "ns3/csma-module.h"
 #include "ns3/internet-apps-module.h"
 
-#include "ns3/ipv6-routing-table-entry.h"
-#include "ns3/radvd.h"
-#include "ns3/radvd-interface.h"
-#include "ns3/radvd-prefix.h"
-#include "ns3/ipv6-static-routing-helper.h"
+#include "../../src/internet/model/ipv6-routing-table-entry.h"
+#include "../../src/internet-apps/model/radvd.h"
+#include "../../src/internet-apps/model/radvd-interface.h"
+#include "../../src/internet-apps/model/radvd-prefix.h"
+#include "../../src/internet/helper/ipv6-static-routing-helper.h"
 
 using namespace ns3;
 

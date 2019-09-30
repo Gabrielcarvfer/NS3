@@ -20,7 +20,7 @@
  */
 
 #include "basic-energy-harvester-helper.h"
-#include "ns3/energy-harvester.h"
+#include "../model/energy-harvester.h"
 
 namespace ns3 {
   

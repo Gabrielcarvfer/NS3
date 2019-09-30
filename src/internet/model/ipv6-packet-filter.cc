@@ -21,11 +21,11 @@
  *           Pasquale Imputato <p.imputato@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/enum.h"
-#include "ns3/uinteger.h"
-#include "ns3/tcp-header.h"
-#include "ns3/udp-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
+#include "tcp-header.h"
+#include "udp-header.h"
 #include "ipv6-queue-disc-item.h"
 #include "ipv6-packet-filter.h"
 

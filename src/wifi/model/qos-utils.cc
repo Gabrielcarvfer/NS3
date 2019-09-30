@@ -19,8 +19,8 @@
  *          Cecchi Niccolò <insa@igeek.it>
  */
 
-#include "ns3/socket.h"
-#include "ns3/queue-item.h"
+#include "../../network/model/socket.h"
+#include "../../network/utils/queue-item.h"
 #include "qos-utils.h"
 #include "wifi-mac-header.h"
 #include "mgt-headers.h"

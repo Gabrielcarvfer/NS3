@@ -18,8 +18,8 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 #include "block-ack-manager.h"
 #include "wifi-remote-station-manager.h"
 #include "ctrl-headers.h"

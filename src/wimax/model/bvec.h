@@ -19,8 +19,7 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef BVEC_H
-#define BVEC_H
+#pragma once
 
 #include <vector>
 
@@ -29,4 +28,4 @@ namespace ns3 {
 typedef std::vector<bool> bvec;
 }
 
-#endif /* BVEC_H */
+

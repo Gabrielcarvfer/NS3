@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef POINT_TO_POINT_CHANNEL_H
-#define POINT_TO_POINT_CHANNEL_H
+#pragma once
 
 #include <list>
-#include "ns3/channel.h"
-#include "ns3/ptr.h"
-#include "ns3/nstime.h"
-#include "ns3/data-rate.h"
-#include "ns3/traced-callback.h"
+#include "../../network/model/channel.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -206,4 +205,4 @@ public:
 
 } // namespace ns3
 
-#endif /* POINT_TO_POINT_CHANNEL_H */
+

@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef HASH_MURMUR3_H
-#define HASH_MURMUR3_H
+#pragma once
 
 #include "hash-function.h"
 
@@ -126,4 +125,4 @@ private:
 
 }  // namespace ns3
 
-#endif  /* HASH_MURMUR3_H */
+

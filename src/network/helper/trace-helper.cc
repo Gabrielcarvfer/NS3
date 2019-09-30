@@ -20,14 +20,14 @@
 #include <string>
 #include <fstream>
 
-#include "ns3/abort.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/ptr.h"
-#include "ns3/node.h"
-#include "ns3/names.h"
-#include "ns3/net-device.h"
-#include "ns3/pcap-file-wrapper.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/ptr.h"
+#include "../model/node.h"
+#include "../../core/model/names.h"
+#include "../model/net-device.h"
+#include "../utils/pcap-file-wrapper.h"
 
 #include "trace-helper.h"
 

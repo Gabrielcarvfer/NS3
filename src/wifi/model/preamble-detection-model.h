@@ -18,10 +18,9 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef PREAMBLE_DETECTION_MODEL_H
-#define PREAMBLE_DETECTION_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -55,5 +54,5 @@ public:
 
 } //namespace ns3
 
-#endif /* PREAMBLE_DETECTION_MODEL_H */
+
 

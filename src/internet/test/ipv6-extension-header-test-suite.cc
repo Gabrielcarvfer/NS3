@@ -16,9 +16,9 @@
  * Author: Fabian Mauchle <fabian.mauchle@hsr.ch>
  */
 
-#include "ns3/test.h"
-#include "ns3/ipv6-extension-header.h"
-#include "ns3/ipv6-option-header.h"
+#include "../../core/model/test.h"
+#include "../model/ipv6-extension-header.h"
+#include "../model/ipv6-option-header.h"
 
 using namespace ns3;
 

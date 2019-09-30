@@ -21,15 +21,15 @@
 
 #include "ipcs-classifier.h"
 #include <stdint.h>
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "service-flow.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/udp-header.h"
-#include "ns3/tcp-header.h"
-#include "ns3/llc-snap-header.h"
-#include "ns3/udp-l4-protocol.h"
-#include "ns3/tcp-l4-protocol.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../internet/model/udp-header.h"
+#include "../../internet/model/tcp-header.h"
+#include "../../network/utils/llc-snap-header.h"
+#include "../../internet/model/udp-l4-protocol.h"
+#include "../../internet/model/tcp-l4-protocol.h"
 
 namespace ns3 {
 

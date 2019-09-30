@@ -25,9 +25,9 @@
 #include <ns3/lte-module.h>
 #include <ns3/config-store-module.h>
 #include <ns3/buildings-module.h>
-#include <ns3/point-to-point-helper.h>
+#include "../../point-to-point/helper/point-to-point-helper.h"
 #include <ns3/applications-module.h>
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 #include <iomanip>
 #include <ios>
 #include <string>

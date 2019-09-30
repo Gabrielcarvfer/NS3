@@ -21,10 +21,10 @@
 #include "raw-text-config.h"
 #include "attribute-iterator.h"
 #include "attribute-default-iterator.h"
-#include "ns3/global-value.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
+#include "../../core/model/global-value.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
 
 namespace ns3 {
 

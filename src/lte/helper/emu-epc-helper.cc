@@ -22,13 +22,13 @@
 
 #include <iomanip>
 
-#include "ns3/log.h"
-#include "ns3/string.h"
-#include "ns3/lte-enb-net-device.h"
-#include "ns3/lte-enb-rrc.h"
-#include "ns3/epc-x2.h"
-#include "ns3/emu-fd-net-device-helper.h"
-#include "ns3/emu-epc-helper.h"
+#include "../../core/model/log.h"
+#include "../../core/model/string.h"
+#include "../model/lte-enb-net-device.h"
+#include "../model/lte-enb-rrc.h"
+#include "../model/epc-x2.h"
+#include "../../fd-net-device/helper/emu-fd-net-device-helper.h"
+#include "emu-epc-helper.h"
 
 namespace ns3 {
 

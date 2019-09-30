@@ -20,11 +20,10 @@
  * 
  */
 
-#ifndef HYBRID_BUILDINGS_PROPAGATION_LOSS_MODEL_H_
-#define HYBRID_BUILDINGS_PROPAGATION_LOSS_MODEL_H_
+#pragma once
 
-#include <ns3/buildings-propagation-loss-model.h>
-#include <ns3/propagation-environment.h>
+#include "buildings-propagation-loss-model.h"
+#include "../../propagation/model/propagation-environment.h"
 
 namespace ns3 {
 
@@ -118,4 +117,4 @@ private:
 
 }
 
-#endif /* HYBRID_BUILDINGS_PROPAGATION_LOSS_MODEL_H_ */
+

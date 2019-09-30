@@ -18,11 +18,11 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/energy-source.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "energy-source.h"
 #include "simple-device-energy-model.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

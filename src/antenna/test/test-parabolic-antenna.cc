@@ -18,11 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/double.h>
-#include <ns3/parabolic-antenna-model.h>
-#include <ns3/simulator.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/double.h"
+#include "../model/parabolic-antenna-model.h"
+#include "../../core/model/simulator.h"
 #include <cmath>
 #include <string>
 #include <iostream>

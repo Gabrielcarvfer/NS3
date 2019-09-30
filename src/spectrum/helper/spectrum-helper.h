@@ -18,16 +18,15 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SPECTRUM_HELPER_H
-#define SPECTRUM_HELPER_H
+#pragma once
 
 #include <string>
-#include <ns3/attribute.h>
-#include <ns3/object-factory.h>
-#include <ns3/node-container.h>
-#include <ns3/net-device-container.h>
-#include <ns3/propagation-loss-model.h>
-#include <ns3/spectrum-propagation-loss-model.h>
+#include "../../core/model/attribute.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../model/spectrum-propagation-loss-model.h"
 
 namespace ns3 {
 
@@ -284,4 +283,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SPECTRUM_HELPER_H */
+

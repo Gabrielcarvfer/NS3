@@ -18,20 +18,20 @@
  * Author: He Wu <mdzz@u.washington.edu>
  */
 
-#include "ns3/rv-battery-model.h"
-#include "ns3/wifi-radio-energy-model.h"
-#include "ns3/rv-battery-model-helper.h"
-#include "ns3/wifi-radio-energy-model-helper.h"
-#include "ns3/energy-source-container.h"
-#include "ns3/device-energy-model-container.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/double.h"
-#include "ns3/config.h"
-#include "ns3/command-line.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../model/rv-battery-model.h"
+#include "../../wifi/model/wifi-radio-energy-model.h"
+#include "../helper/rv-battery-model-helper.h"
+#include "../../wifi/helper/wifi-radio-energy-model-helper.h"
+#include "../helper/energy-source-container.h"
+#include "../model/device-energy-model-container.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/double.h"
+#include "../../core/model/config.h"
+#include "../../core/model/command-line.h"
+#include "../../core/model/string.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
 #include <cmath>
 
 using namespace ns3;

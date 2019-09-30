@@ -18,10 +18,9 @@
  * Author: Marco Miozzo  <marco.miozzo@cttc.es>
  *         Nicola Baldo <nbaldo@cttc.es>
  */
-#ifndef EPS_BEARER_TAG_H
-#define EPS_BEARER_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 
 namespace ns3 {
 
@@ -96,4 +95,4 @@ private:
 
 } // namespace ns3
 
-#endif /* EPS_BEARER_TAG_H */
+

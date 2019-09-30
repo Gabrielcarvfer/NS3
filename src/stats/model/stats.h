@@ -18,8 +18,7 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef STATS_H
-#define STATS_H
+#pragma once
 
 // Header file used only to define the stats group in Doxygen
 
@@ -75,4 +74,4 @@
  * for subsequent output in a specific format, e.g., Omnet++, SQLite, etc.
  */
 
-#endif /* STATS_H */
+

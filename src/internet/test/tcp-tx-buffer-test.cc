@@ -15,11 +15,11 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/tcp-tx-buffer.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/test.h"
+#include "../model/tcp-tx-buffer.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 using namespace ns3;
 

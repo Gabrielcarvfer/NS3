@@ -18,13 +18,13 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/net-device.h"
-#include "ns3/mac16-address.h"
-#include "ns3/mac64-address.h"
-#include "ns3/traffic-control-layer.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/net-device.h"
+#include "../../network/utils/mac16-address.h"
+#include "../../network/utils/mac64-address.h"
+#include "../../traffic-control/model/traffic-control-layer.h"
 
 #include "ipv6-interface.h"
 #include "ipv6-queue-disc-item.h"

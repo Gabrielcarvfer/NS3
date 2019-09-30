@@ -21,12 +21,12 @@
  *         (most of the code refactored to no-backhaul-epc-helper.cc)
  */
 
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/point-to-point-helper.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
 
-#include "ns3/point-to-point-epc-helper.h"
+#include "point-to-point-epc-helper.h"
 
 namespace ns3 {
 

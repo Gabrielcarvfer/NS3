@@ -21,7 +21,7 @@
  *          Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include "wifi-mac-queue.h"
 #include "qos-blocked-destinations.h"
 

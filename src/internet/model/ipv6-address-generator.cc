@@ -18,10 +18,10 @@
  */
 
 #include <list>
-#include "ns3/abort.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/simulation-singleton.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulation-singleton.h"
 #include "ipv6-address-generator.h"
 
 namespace ns3 {

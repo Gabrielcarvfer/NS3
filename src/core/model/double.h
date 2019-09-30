@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NS_DOUBLE_H
-#define NS_DOUBLE_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-helper.h"
@@ -113,4 +112,4 @@ Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max)
 
 } // namespace ns3
 
-#endif /* NS_DOUBLE_H */
+

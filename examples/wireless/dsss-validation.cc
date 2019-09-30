@@ -23,11 +23,11 @@
 
 #include <fstream>
 #include <cmath>
-#include "ns3/gnuplot.h"
-#include "ns3/command-line.h"
-#include "ns3/yans-error-rate-model.h"
-#include "ns3/nist-error-rate-model.h"
-#include "ns3/wifi-tx-vector.h"
+#include "../../src/stats/model/gnuplot.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/wifi/model/yans-error-rate-model.h"
+#include "../../src/wifi/model/nist-error-rate-model.h"
+#include "../../src/wifi/model/wifi-tx-vector.h"
 
 using namespace ns3;
 

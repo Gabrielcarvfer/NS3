@@ -15,11 +15,10 @@
  *
  * Author: Gustavo Carneiro  <gjc@inescporto.pt>
  */
-#ifndef CONSTANT_ACCELERATION_MOBILITY_MODEL_H
-#define CONSTANT_ACCELERATION_MOBILITY_MODEL_H
+#pragma once
 
 #include "mobility-model.h"
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -62,4 +61,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CONSTANT_ACCELERATION_MOBILITY_MODEL_H */
+

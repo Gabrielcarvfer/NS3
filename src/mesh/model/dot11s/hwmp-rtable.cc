@@ -18,11 +18,11 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#include "ns3/object.h"
-#include "ns3/assert.h"
-#include "ns3/simulator.h"
-#include "ns3/test.h"
-#include "ns3/log.h"
+#include "../../../core/model/object.h"
+#include "../../../core/model/assert.h"
+#include "../../../core/model/simulator.h"
+#include "../../../core/model/test.h"
+#include "../../../core/model/log.h"
 
 #include "hwmp-rtable.h"
 

@@ -22,8 +22,8 @@
 #include "lte-interference.h"
 #include "lte-chunk-processor.h"
 
-#include <ns3/simulator.h>
-#include <ns3/log.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 
 namespace ns3 {

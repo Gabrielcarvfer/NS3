@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ATTRIBUTE_HELPER_H
-#define ATTRIBUTE_HELPER_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-accessor-helper.h"
@@ -408,4 +407,4 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
   ATTRIBUTE_VALUE_IMPLEMENT (type)
 
 
-#endif /* ATTRIBUTE_HELPER_H */
+

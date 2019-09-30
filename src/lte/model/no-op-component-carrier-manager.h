@@ -20,12 +20,11 @@
  *          Biljana Bojovic <biljana.bojovic@cttc.es>
  */
 
-#ifndef NO_OP_COMPONENT_CARRIER_MANAGER_H
-#define NO_OP_COMPONENT_CARRIER_MANAGER_H
+#pragma once
 
-#include <ns3/lte-enb-component-carrier-manager.h>
-#include <ns3/lte-ccm-rrc-sap.h>
-#include <ns3/lte-rrc-sap.h>
+#include "lte-enb-component-carrier-manager.h"
+#include "lte-ccm-rrc-sap.h"
+#include "lte-rrc-sap.h"
 #include <map>
 
 namespace ns3 {
@@ -188,4 +187,4 @@ private:
 } // end of namespace ns3
 
 
-#endif /* NO_OP_COMPONENT_CARRIER_MANAGER_H */
+

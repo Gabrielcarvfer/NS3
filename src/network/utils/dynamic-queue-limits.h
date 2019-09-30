@@ -23,12 +23,11 @@
  * Author: Tom Herbert <therbert@google.com>
  */
 
-#ifndef DYNAMIC_QUEUE_LIMITS_H
-#define DYNAMIC_QUEUE_LIMITS_H
+#pragma once
 
 #include "queue-limits.h"
-#include "ns3/nstime.h"
-#include "ns3/traced-value.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/traced-value.h"
 #include <limits.h>
 
 namespace ns3 {
@@ -110,4 +109,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DYNAMIC_QUEUE_LIMITS_H */
+

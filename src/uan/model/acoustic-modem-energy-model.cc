@@ -18,13 +18,13 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/double.h"
-#include "ns3/simulator.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/energy-source.h"
-#include "ns3/uan-phy.h"
-#include "ns3/uan-net-device.h"
+#include "../../core/model/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../energy/model/energy-source.h"
+#include "uan-phy.h"
+#include "uan-net-device.h"
 #include "acoustic-modem-energy-model.h"
 
 namespace ns3 {

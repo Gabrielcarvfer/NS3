@@ -19,8 +19,7 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#ifndef INET_TOPOLOGY_READER_H
-#define INET_TOPOLOGY_READER_H
+#pragma once
 
 #include "topology-reader.h"
 
@@ -91,4 +90,4 @@ private:
 };
 
 
-#endif /* INET_TOPOLOGY_READER_H */
+

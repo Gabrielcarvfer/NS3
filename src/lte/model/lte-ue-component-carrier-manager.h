@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef LTE_UE_COMPONENT_CARRIER_MANAGER_H
-#define LTE_UE_COMPONENT_CARRIER_MANAGER_H
+#pragma once
 
-#include <ns3/object.h>
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/lte-ue-ccm-rrc-sap.h>
-#include <ns3/lte-mac-sap.h>
+#include "../../core/model/object.h"
+#include "lte-rrc-sap.h"
+#include "lte-ue-ccm-rrc-sap.h"
+#include "lte-mac-sap.h"
 #include <map>
 #include <vector>
 
@@ -115,4 +114,4 @@ protected:
 } // end of namespace ns3
 
 
-#endif /* LTE_UE_COMPONENT_CARRIER_MANAGER_H */
+

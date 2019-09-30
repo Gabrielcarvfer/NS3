@@ -22,9 +22,9 @@
 
 #include <iostream>
 #include <string>
-#include "ns3/assert.h"
-#include "ns3/fatal-error.h"
-#include "ns3/fatal-impl.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/fatal-impl.h"
 #include "ascii-file.h"
 //
 // This file is used as part of the ns-3 test framework, so please refrain from 

@@ -21,15 +21,15 @@
 #include "granted-time-window-mpi-interface.h"
 #include "mpi-interface.h"
 
-#include "ns3/simulator.h"
-#include "ns3/scheduler.h"
-#include "ns3/event-impl.h"
-#include "ns3/channel.h"
-#include "ns3/node-container.h"
-#include "ns3/ptr.h"
-#include "ns3/pointer.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/scheduler.h"
+#include "../../core/model/event-impl.h"
+#include "../../network/model/channel.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 
 #include <cmath>
 

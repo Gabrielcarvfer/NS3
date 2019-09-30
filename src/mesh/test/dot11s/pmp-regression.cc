@@ -17,19 +17,19 @@
  *
  * Authors: Pavel Boyko <boyko@iitp.ru>
  */
-#include "ns3/mesh-helper.h"
-#include "ns3/simulator.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/rng-seed-manager.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/mobility-model.h"
-#include "ns3/pcap-file.h"
-#include "ns3/pcap-test.h"
+#include "../../helper/mesh-helper.h"
+#include "../../../core/model/simulator.h"
+#include "../../../core/model/random-variable-stream.h"
+#include "../../../core/model/rng-seed-manager.h"
+#include "../../../mobility/helper/mobility-helper.h"
+#include "../../../core/model/double.h"
+#include "../../../core/model/uinteger.h"
+#include "../../../core/model/string.h"
+#include "../../../wifi/helper/yans-wifi-helper.h"
+#include "../../../internet/helper/internet-stack-helper.h"
+#include "../../../mobility/model/mobility-model.h"
+#include "../../../network/utils/pcap-file.h"
+#include "../../../network/utils/pcap-test.h"
 #include <sstream>
 
 #include "pmp-regression.h"

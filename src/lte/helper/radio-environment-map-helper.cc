@@ -21,22 +21,22 @@
 
 #include "radio-environment-map-helper.h"
 
-#include <ns3/abort.h>
-#include <ns3/log.h>
-#include <ns3/double.h>
-#include <ns3/integer.h>
-#include <ns3/uinteger.h>
-#include <ns3/string.h>
-#include <ns3/boolean.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/config.h>
-#include <ns3/rem-spectrum-phy.h>
-#include <ns3/mobility-building-info.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/simulator.h>
-#include <ns3/node.h>
-#include <ns3/buildings-helper.h>
-#include <ns3/lte-spectrum-value-helper.h>
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/integer.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../../core/model/boolean.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../core/model/config.h"
+#include "../model/rem-spectrum-phy.h"
+#include "../../buildings/model/mobility-building-info.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/node.h"
+#include "../../buildings/helper/buildings-helper.h"
+#include "../model/lte-spectrum-value-helper.h"
 
 #include <fstream>
 #include <limits>

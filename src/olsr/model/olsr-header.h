@@ -18,14 +18,13 @@
  * Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
  */
 
-#ifndef OLSR_HEADER_H
-#define OLSR_HEADER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include "ns3/header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/nstime.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/nstime.h"
 
 
 namespace ns3 {
@@ -714,5 +713,5 @@ static inline std::ostream& operator<< (std::ostream& os, const MessageList & me
 }
 }  // namespace olsr, ns3
 
-#endif /* OLSR_HEADER_H */
+
 

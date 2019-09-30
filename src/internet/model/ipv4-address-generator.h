@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef IPV4_ADDRESS_GENERATOR_H
-#define IPV4_ADDRESS_GENERATOR_H
+#pragma once
 
-#include "ns3/ipv4-address.h"
+#include "../../network/utils/ipv4-address.h"
 
 namespace ns3 {
 
@@ -148,4 +147,4 @@ public:
 
 } // namespace ns3
 
-#endif /* IPV4_ADDRESS_GENERATOR_H */
+

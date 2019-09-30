@@ -20,20 +20,20 @@
  */
 
 #include "wimax-helper.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 #include <string>
-#include "ns3/config.h"
-#include "ns3/wimax-net-device.h"
-#include "ns3/bs-net-device.h"
-#include "ns3/ss-net-device.h"
-#include "ns3/wimax-channel.h"
-#include "ns3/simple-ofdm-wimax-channel.h"
-#include "ns3/wimax-phy.h"
-#include "ns3/simple-ofdm-wimax-phy.h"
-#include "ns3/pointer.h"
-#include "ns3/wimax-mac-to-mac-header.h"
+#include "../../core/model/config.h"
+#include "../model/wimax-net-device.h"
+#include "../model/bs-net-device.h"
+#include "../model/ss-net-device.h"
+#include "../model/wimax-channel.h"
+#include "../model/simple-ofdm-wimax-channel.h"
+#include "../model/wimax-phy.h"
+#include "../model/simple-ofdm-wimax-phy.h"
+#include "../../core/model/pointer.h"
+#include "../model/wimax-mac-to-mac-header.h"
 
 
 namespace ns3 {

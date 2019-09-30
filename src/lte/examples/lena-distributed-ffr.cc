@@ -24,13 +24,13 @@
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/spectrum-module.h"
-#include "ns3/config-store.h"
-#include <ns3/buildings-helper.h>
-#include "ns3/point-to-point-epc-helper.h"
+#include "../../config-store/model/config-store.h"
+#include "../../buildings/helper/buildings-helper.h"
+#include "../helper/point-to-point-epc-helper.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 using namespace ns3;
 

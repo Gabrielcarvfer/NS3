@@ -14,16 +14,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef NSC_TCP_L4_PROTOCOL_H
-#define NSC_TCP_L4_PROTOCOL_H
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/packet.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ptr.h"
-#include "ns3/object-factory.h"
-#include "ns3/timer.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/timer.h"
 #include "ip-l4-protocol.h"
 
 struct INetStack;
@@ -229,4 +228,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NSC_TCP_L4_PROTOCOL_H */
+

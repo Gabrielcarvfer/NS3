@@ -21,9 +21,9 @@
 
 #include "mpi-interface.h"
 
-#include <ns3/global-value.h>
-#include <ns3/string.h>
-#include <ns3/log.h>
+#include "../../core/model/global-value.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
 
 #include "null-message-mpi-interface.h"
 #include "granted-time-window-mpi-interface.h"

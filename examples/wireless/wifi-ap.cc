@@ -18,19 +18,19 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/mobility-model.h"
-#include "ns3/packet-socket-helper.h"
-#include "ns3/packet-socket-address.h"
-#include "ns3/athstats-helper.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/boolean.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/mobility/model/mobility-model.h"
+#include "../../src/network/helper/packet-socket-helper.h"
+#include "../../src/network/utils/packet-socket-address.h"
+#include "../../src/wifi/helper/athstats-helper.h"
 
 using namespace ns3;
 

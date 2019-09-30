@@ -18,8 +18,8 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 #include "ipv4-interface-address.h"
 
 namespace ns3 {

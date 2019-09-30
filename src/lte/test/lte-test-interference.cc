@@ -19,23 +19,23 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include <ns3/enum.h>
-#include "ns3/boolean.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/lte-helper.h"
-#include "ns3/ff-mac-scheduler.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../helper/lte-helper.h"
+#include "../model/ff-mac-scheduler.h"
 
-#include "ns3/lte-enb-phy.h"
-#include "ns3/lte-enb-net-device.h"
+#include "../model/lte-enb-phy.h"
+#include "../model/lte-enb-net-device.h"
 
-#include "ns3/lte-ue-phy.h"
-#include "ns3/lte-ue-net-device.h"
+#include "../model/lte-ue-phy.h"
+#include "../model/lte-ue-net-device.h"
 
-#include <ns3/lte-chunk-processor.h>
+#include "../model/lte-chunk-processor.h"
 
 #include "lte-test-interference.h"
 

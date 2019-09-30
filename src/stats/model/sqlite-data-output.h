@@ -18,10 +18,9 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef SQLITE_DATA_OUTPUT_H
-#define SQLITE_DATA_OUTPUT_H
+#pragma once
 
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 
 #include "data-output-interface.h"
 
@@ -159,4 +158,4 @@ private:
 };
 
 
-#endif /* SQLITE_DATA_OUTPUT_H */
+

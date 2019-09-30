@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef CONSTANT_OBSS_PD_ALGORITHM_H
-#define CONSTANT_OBSS_PD_ALGORITHM_H
+#pragma once
 
 #include "obss-pd-algorithm.h"
 
@@ -63,4 +62,4 @@ public:
 
 } //namespace ns3
 
-#endif /* CONSTANT_OBSS_PD_ALGORITHM_H */
+

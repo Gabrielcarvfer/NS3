@@ -22,8 +22,7 @@
 // is not local to this simulator object.  It simply over-rides the transmit
 // method and uses an MPI Send operation instead.
 
-#ifndef POINT_TO_POINT_REMOTE_CHANNEL_H
-#define POINT_TO_POINT_REMOTE_CHANNEL_H
+#pragma once
 
 #include "point-to-point-channel.h"
 
@@ -72,6 +71,5 @@ public:
 
 } // namespace ns3
 
-#endif
 
 

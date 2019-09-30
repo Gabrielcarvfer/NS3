@@ -19,13 +19,13 @@
  */
 
 #include <iomanip>
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/net-device.h"
-#include "ns3/names.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "ipv6-route.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/names.h"
 
 #include "ipv6-static-routing.h"
 #include "ipv6-routing-table-entry.h"

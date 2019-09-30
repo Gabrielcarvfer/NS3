@@ -17,14 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef QUEUE_DISC_H
-#define QUEUE_DISC_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/traced-value.h"
-#include "ns3/traced-callback.h"
-#include "ns3/queue-item.h"
-#include "ns3/queue-size.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/utils/queue-item.h"
+#include "../../network/utils/queue-size.h"
 #include <vector>
 #include <map>
 #include <functional>
@@ -743,4 +742,3 @@ std::ostream& operator<< (std::ostream& os, const QueueDisc::Stats &stats);
 
 } // namespace ns3
 
-#endif /* QueueDisc */

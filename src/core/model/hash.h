@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef HASH_H
-#define HASH_H
+#pragma once
 
 #include <string>
 
@@ -302,4 +301,4 @@ Hash64 (const std::string s)
 
 }  // namespace ns3
 
-#endif /* HASH_H */
+

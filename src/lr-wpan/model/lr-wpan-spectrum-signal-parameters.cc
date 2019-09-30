@@ -18,8 +18,8 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 #include "lr-wpan-spectrum-signal-parameters.h"
-#include <ns3/log.h>
-#include <ns3/packet-burst.h>
+#include "../../core/model/log.h"
+#include "../../network/utils/packet-burst.h"
 
 
 namespace ns3 {

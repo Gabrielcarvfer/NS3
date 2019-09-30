@@ -18,12 +18,11 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef BLOCK_ACK_MANAGER_H
-#define BLOCK_ACK_MANAGER_H
+#pragma once
 
 #include <map>
-#include "ns3/nstime.h"
-#include "ns3/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/traced-callback.h"
 #include "wifi-mac-header.h"
 #include "originator-block-ack-agreement.h"
 #include "block-ack-type.h"
@@ -534,4 +533,4 @@ private:
 
 } //namespace ns3
 
-#endif /* BLOCK_ACK_MANAGER_H */
+

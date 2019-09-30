@@ -18,13 +18,12 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef PACKET_DATA_CALCULATORS_H
-#define PACKET_DATA_CALCULATORS_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "ns3/mac48-address.h"
-#include "ns3/data-calculator.h"
-#include "ns3/basic-data-calculators.h"
+#include "../model/packet.h"
+#include "mac48-address.h"
+#include "../../stats/model/data-calculator.h"
+#include "../../stats/model/basic-data-calculators.h"
 
 namespace ns3 {
 
@@ -119,4 +118,4 @@ protected:
 };
 
 
-#endif /* PACKET_DATA_CALCULATORS_H */
+

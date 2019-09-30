@@ -18,36 +18,36 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/object.h>
-#include <ns3/spectrum-interference.h>
-#include <ns3/spectrum-error-model.h>
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/simulator.h>
-#include <ns3/packet.h>
-#include <ns3/ptr.h>
-#include <ns3/string.h>
+#include "../../core/model/object.h"
+#include "../model/spectrum-interference.h"
+#include "../model/spectrum-error-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/string.h"
 #include <iostream>
-#include <ns3/math.h>
-#include <ns3/spectrum-model-ism2400MHz-res1MHz.h>
-#include <ns3/spectrum-model-300kHz-300GHz-log.h>
-#include <ns3/wifi-spectrum-value-helper.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include <ns3/waveform-generator.h>
-#include <ns3/spectrum-analyzer.h>
+#include "../../core/model/math.h"
+#include "../model/spectrum-model-ism2400MHz-res1MHz.h"
+#include "../model/spectrum-model-300kHz-300GHz-log.h"
+#include "../model/wifi-spectrum-value-helper.h"
+#include "../model/single-model-spectrum-channel.h"
+#include "../model/waveform-generator.h"
+#include "../model/spectrum-analyzer.h"
 #include <string>
 #include <iomanip>
-#include <ns3/friis-spectrum-propagation-loss.h>
-#include <ns3/propagation-delay-model.h>
-#include <ns3/spectrum-helper.h>
-#include <ns3/adhoc-aloha-noack-ideal-phy-helper.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/data-rate.h>
-#include <ns3/uinteger.h>
-#include <ns3/packet-socket-helper.h>
-#include <ns3/packet-socket-address.h>
-#include <ns3/packet-socket-client.h>
-#include <ns3/config.h>
+#include "../model/friis-spectrum-propagation-loss.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../helper/spectrum-helper.h"
+#include "../helper/adhoc-aloha-noack-ideal-phy-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/helper/packet-socket-helper.h"
+#include "../../network/utils/packet-socket-address.h"
+#include "../../network/utils/packet-socket-client.h"
+#include "../../core/model/config.h"
 
 
 using namespace ns3;

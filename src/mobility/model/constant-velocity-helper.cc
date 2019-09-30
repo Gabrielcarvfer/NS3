@@ -17,10 +17,10 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/simulator.h"
-#include "ns3/rectangle.h"
-#include "ns3/box.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "rectangle.h"
+#include "box.h"
+#include "../../core/model/log.h"
 #include "constant-velocity-helper.h"
 
 namespace ns3 {

@@ -20,8 +20,8 @@
 
 #include <cmath>
 
-#include "ns3/test.h"
-#include "ns3/average.h"
+#include "../../core/model/test.h"
+#include "../model/average.h"
 
 using namespace ns3;
 

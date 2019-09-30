@@ -18,9 +18,9 @@
  * Author: David Gross <gdavid.devel@gmail.com>
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/header.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../network/model/header.h"
 #include "ipv6-extension-header.h"
 
 namespace ns3

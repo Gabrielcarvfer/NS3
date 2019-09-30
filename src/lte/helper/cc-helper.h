@@ -18,17 +18,16 @@
  * Author: Danilo Abrignani <danilo.abrignani@unibo.it> 
  */
 
-#ifndef CC_HELPER_H
-#define CC_HELPER_H
+#pragma once
 
-#include <ns3/config.h>
-#include <ns3/simulator.h>
-#include <ns3/names.h>
-#include <ns3/net-device.h>
-#include <ns3/net-device-container.h>
-#include <ns3/node.h>
-#include <ns3/node-container.h>
-#include <ns3/component-carrier.h>
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/names.h"
+#include "../../network/model/net-device.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/model/node.h"
+#include "../../network/helper/node-container.h"
+#include "../model/component-carrier.h"
 #include <map>
 
 namespace ns3 {
@@ -198,4 +197,4 @@ private:
 
 
 
-#endif // LTE_HELPER_H
+

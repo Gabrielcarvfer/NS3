@@ -19,8 +19,7 @@
 
 */
 
-#ifndef NSC_SIM_INTERFACE_H
-#define NSC_SIM_INTERFACE_H
+#pragma once
 
 #define NSC_VERSION 0x000500
 
@@ -433,4 +432,4 @@ typedef INetStack *(*FCreateStack)(ISendCallback *, IInterruptCallback *,
 #define CREATE_STACK_FUNC(a,b,c) extern "C" INetStack *nsc_create_stack ( \
     ISendCallback *a, IInterruptCallback *b, FRandom c)
 
-#endif /* NSC_SIM_INTERFACE_H */
+

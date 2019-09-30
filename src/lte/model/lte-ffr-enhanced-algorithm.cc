@@ -20,12 +20,12 @@
  */
 
 #include "lte-ffr-enhanced-algorithm.h"
-#include "ns3/ff-mac-common.h"
-#include "ns3/lte-common.h"
-#include "ns3/lte-vendor-specific-parameters.h"
-#include <ns3/log.h>
-#include "ns3/boolean.h"
-#include <ns3/double.h>
+#include "ff-mac-common.h"
+#include "lte-common.h"
+#include "lte-vendor-specific-parameters.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
 #include <cfloat>
 
 namespace ns3 {

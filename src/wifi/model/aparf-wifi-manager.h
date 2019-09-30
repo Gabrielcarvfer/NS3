@@ -18,8 +18,7 @@
  * Author: Matias Richart <mrichart@fing.edu.uy>
  */
 
-#ifndef APARF_WIFI_MANAGER_H
-#define APARF_WIFI_MANAGER_H
+#pragma once
 
 #include "wifi-remote-station-manager.h"
 
@@ -124,4 +123,4 @@ private:
 
 } //namespace ns3
 
-#endif /* APARF_WIFI_MANAGER_H */
+

@@ -23,14 +23,14 @@
 #include "node-list.h"
 #include "net-device.h"
 #include "application.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/object-vector.h"
-#include "ns3/uinteger.h"
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/global-value.h"
-#include "ns3/boolean.h"
+#include "packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object-vector.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/global-value.h"
+#include "../../core/model/boolean.h"
 
 namespace ns3 {
 

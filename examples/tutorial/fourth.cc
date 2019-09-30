@@ -14,10 +14,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/object.h"
-#include "ns3/uinteger.h"
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../src/core/model/object.h"
+#include "../../src/core/model/uinteger.h"
+#include "../../src/core/model/traced-value.h"
+#include "../../src/core/model/trace-source-accessor.h"
 
 #include <iostream>
 

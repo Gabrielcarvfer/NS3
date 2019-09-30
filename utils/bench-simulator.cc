@@ -22,7 +22,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string.h>
+#include "../src/core/model/string.h"
 
 #include "ns3/core-module.h"
 

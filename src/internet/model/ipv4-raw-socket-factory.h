@@ -17,10 +17,9 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef IPV4_RAW_SOCKET_FACTORY_H
-#define IPV4_RAW_SOCKET_FACTORY_H
+#pragma once
 
-#include "ns3/socket-factory.h"
+#include "../../network/model/socket-factory.h"
 
 namespace ns3 {
 
@@ -48,4 +47,4 @@ public:
 
 } // namespace ns3
 
-#endif /* IPV4_RAW_SOCKET_FACTORY_H */
+

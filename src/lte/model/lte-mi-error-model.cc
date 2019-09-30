@@ -31,12 +31,12 @@
 
 #include <list>
 #include <vector>
-#include <ns3/log.h>
-#include <ns3/pointer.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
 #include <stdint.h>
 #include <cmath>
-#include "stdlib.h"
-#include <ns3/lte-mi-error-model.h>
+#include <cstdlib>
+#include "lte-mi-error-model.h"
 
 namespace ns3 {
 

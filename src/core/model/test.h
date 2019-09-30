@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef NS3_TEST_H
-#define NS3_TEST_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -1489,4 +1488,4 @@ TestVectors<T>::Get (std::size_t i) const
 
 } // namespace ns3 
 
-#endif /* NS3_TEST_H */
+

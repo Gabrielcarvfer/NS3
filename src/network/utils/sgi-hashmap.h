@@ -22,8 +22,7 @@
  * documentation and slightly modified to work
  * with gcc 4.x
  */
-#ifndef SGI_HASHMAP_H
-#define SGI_HASHMAP_H
+#pragma once
 
 /* To use gcc extensions.
  */
@@ -64,4 +63,4 @@ namespace sgi = std;
 #endif
 
 
-#endif /* SGI_HASHMAP_H */
+

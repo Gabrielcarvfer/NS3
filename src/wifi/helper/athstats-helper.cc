@@ -18,14 +18,14 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/config.h"
-#include "ns3/wifi-mode.h"
-#include "ns3/wifi-preamble.h"
-#include "ns3/wifi-phy-state.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/config.h"
+#include "../model/wifi-mode.h"
+#include "../model/wifi-preamble.h"
+#include "../model/wifi-phy-state.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
 #include "athstats-helper.h"
 #include <iomanip>
 #include <fstream>

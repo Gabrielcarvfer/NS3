@@ -16,14 +16,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef TRAFFICCONTROLLAYER_H
-#define TRAFFICCONTROLLAYER_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/address.h"
-#include "ns3/net-device.h"
-#include "ns3/node.h"
-#include "ns3/queue-item.h"
+#include "../../core/model/object.h"
+#include "../../network/model/address.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/queue-item.h"
 #include <map>
 #include <vector>
 
@@ -258,4 +257,4 @@ private:
 
 } // namespace ns3
 
-#endif // TRAFFICCONTROLLAYER_H
+

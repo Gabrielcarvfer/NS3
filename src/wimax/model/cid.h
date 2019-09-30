@@ -21,8 +21,7 @@
  */
 
 
-#ifndef CID_H
-#define CID_H
+#pragma once
 
 #include <stdint.h>
 #include <ostream>
@@ -106,4 +105,4 @@ std::ostream & operator << (std::ostream &os, const Cid &cid);
 
 } // namespace ns3
 
-#endif /* CID_H */
+

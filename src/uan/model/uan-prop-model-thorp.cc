@@ -19,8 +19,8 @@
  */
 #include "uan-prop-model-thorp.h"
 #include "uan-tx-mode.h"
-#include "ns3/double.h"
-#include "ns3/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

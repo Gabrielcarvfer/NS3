@@ -18,10 +18,10 @@
  * Authors: Gustavo Carneiro <gjcarneiro@gmail.com>,
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/test.h"
-#include "ns3/object.h"
-#include "ns3/object-factory.h"
-#include "ns3/assert.h"
+#include "../model/test.h"
+#include "../model/object.h"
+#include "../model/object-factory.h"
+#include "../model/assert.h"
 
 /**
  * \file

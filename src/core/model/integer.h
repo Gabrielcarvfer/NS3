@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef INTEGER_H
-#define INTEGER_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-helper.h"
@@ -117,4 +116,4 @@ MakeIntegerChecker (void)
 
 } // namespace ns3
 
-#endif /* INTEGER_H */
+

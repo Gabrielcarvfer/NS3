@@ -18,15 +18,14 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#ifndef FLOW_PROBE_H
-#define FLOW_PROBE_H
+#pragma once
 
 #include <map>
 #include <vector>
 
-#include "ns3/object.h"
-#include "ns3/flow-classifier.h"
-#include "ns3/nstime.h"
+#include "../../core/model/object.h"
+#include "flow-classifier.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -111,4 +110,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* FLOW_PROBE_H */
+

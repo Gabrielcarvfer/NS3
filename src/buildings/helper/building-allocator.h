@@ -19,14 +19,13 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  * Author: Nicola Baldo <nbaldo@cttc.es> (took position-allocator and turned it into building-allocator)
  */
-#ifndef BUILDING_ALLOCATOR_H
-#define BUILDING_ALLOCATOR_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/object-factory.h"
-#include "ns3/vector.h"
-#include "ns3/building-container.h"
-#include "ns3/position-allocator.h"
+#include "../../core/model/object.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/vector.h"
+#include "building-container.h"
+#include "../../mobility/model/position-allocator.h"
 
 namespace ns3 {
 
@@ -89,4 +88,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BUILDING_ALLOCATOR_H */
+

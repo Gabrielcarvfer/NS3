@@ -20,13 +20,13 @@
  */
  
 #include "mesh-helper.h"
-#include "ns3/simulator.h"
-#include "ns3/pointer.h"
-#include "ns3/mesh-point-device.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/minstrel-wifi-manager.h"
-#include "ns3/mesh-wifi-interface-mac.h"
-#include "ns3/wifi-helper.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/pointer.h"
+#include "../model/mesh-point-device.h"
+#include "../../wifi/model/wifi-net-device.h"
+#include "../../wifi/model/minstrel-wifi-manager.h"
+#include "../model/mesh-wifi-interface-mac.h"
+#include "../../wifi/helper/wifi-helper.h"
 
 namespace ns3
 {

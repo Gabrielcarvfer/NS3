@@ -19,13 +19,13 @@
  *         Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
 #include <cfloat>
 #include <cmath>
-#include <ns3/simulator.h>
-#include <ns3/attribute-accessor-helper.h>
-#include <ns3/double.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/attribute-accessor-helper.h"
+#include "../../core/model/double.h"
 
 
 #include "lte-enb-phy.h"
@@ -36,14 +36,14 @@
 #include "lte-enb-net-device.h"
 #include "lte-ue-rrc.h"
 #include "lte-enb-mac.h"
-#include <ns3/lte-common.h>
-#include <ns3/lte-vendor-specific-parameters.h>
+#include "lte-common.h"
+#include "lte-vendor-specific-parameters.h"
 
 // WILD HACK for the inizialization of direct eNB-UE ctrl messaging
-#include <ns3/node-list.h>
-#include <ns3/node.h>
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/pointer.h>
+#include "../../network/model/node-list.h"
+#include "../../network/model/node.h"
+#include "lte-ue-net-device.h"
+#include "../../core/model/pointer.h"
 
 namespace ns3 {
 

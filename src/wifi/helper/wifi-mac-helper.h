@@ -18,10 +18,9 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_MAC_HELPER_H
-#define WIFI_MAC_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
+#include "../../core/model/object-factory.h"
 
 namespace ns3 {
 
@@ -113,4 +112,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* WIFI_MAC_HELPER_H */
+

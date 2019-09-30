@@ -19,17 +19,16 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef RR_FF_MAC_SCHEDULER_H
-#define RR_FF_MAC_SCHEDULER_H
+#pragma once
 
-#include <ns3/ff-mac-csched-sap.h>
-#include <ns3/ff-mac-sched-sap.h>
-#include <ns3/ff-mac-scheduler.h>
+#include "ff-mac-csched-sap.h"
+#include "ff-mac-sched-sap.h"
+#include "ff-mac-scheduler.h"
 #include <vector>
 #include <map>
-#include <ns3/lte-common.h>
-#include <ns3/lte-amc.h>
-#include <ns3/lte-ffr-sap.h>
+#include "lte-common.h"
+#include "lte-amc.h"
+#include "lte-ffr-sap.h"
 
 #define HARQ_PROC_NUM 8
 #define HARQ_DL_TIMEOUT 11
@@ -355,4 +354,4 @@ private:
 
 } // namespace ns3
 
-#endif /* RR_FF_MAC_SCHEDULER_H */
+

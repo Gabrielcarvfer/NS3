@@ -18,11 +18,11 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/header.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../network/model/header.h"
 
-#include "ns3/address-utils.h"
+#include "../../network/utils/address-utils.h"
 #include "ipv6-header.h"
 
 namespace ns3 {

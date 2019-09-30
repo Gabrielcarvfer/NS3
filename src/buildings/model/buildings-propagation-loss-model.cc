@@ -20,15 +20,15 @@
  * 
  */
 
-#include "ns3/propagation-loss-model.h"
-#include "ns3/log.h"
-#include "ns3/mobility-model.h"
-#include "ns3/double.h"
-#include "ns3/pointer.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../core/model/log.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/double.h"
+#include "../../core/model/pointer.h"
 #include <cmath>
 #include "buildings-propagation-loss-model.h"
-#include <ns3/mobility-building-info.h>
-#include "ns3/enum.h"
+#include "mobility-building-info.h"
+#include "../../core/model/enum.h"
 
 
 namespace ns3 {

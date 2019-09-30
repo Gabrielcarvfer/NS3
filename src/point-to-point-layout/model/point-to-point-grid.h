@@ -18,18 +18,17 @@
 
 // Define an object to create a grid topology.
 
-#ifndef POINT_TO_POINT_GRID_HELPER_H
-#define POINT_TO_POINT_GRID_HELPER_H
+#pragma once
 
 #include <vector>
 
-#include "internet-stack-helper.h"
-#include "point-to-point-helper.h"
-#include "ipv4-address-helper.h"
-#include "ipv6-address-helper.h"
-#include "ipv4-interface-container.h"
-#include "ipv6-interface-container.h"
-#include "net-device-container.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv6-address-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../internet/helper/ipv6-interface-container.h"
+#include "../../network/helper/net-device-container.h"
 
 namespace ns3 {
 
@@ -157,4 +156,4 @@ private:
 
 } // namespace ns3
 
-#endif /* POINT_TO_POINT_GRID_HELPER_H */
+

@@ -17,19 +17,19 @@
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
-#include "ns3/propagation-delay-model.h"
-#include "ns3/spectrum-propagation-loss-model.h"
-#include "ns3/mobility-model.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/names.h"
-#include "ns3/antenna-model.h"
-#include "ns3/spectrum-channel.h"
-#include "ns3/spectrum-analyzer.h"
-#include "ns3/non-communicating-net-device.h"
-#include "ns3/output-stream-wrapper.h"
-#include "ns3/trace-helper.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../model/spectrum-propagation-loss-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/names.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../model/spectrum-channel.h"
+#include "../model/spectrum-analyzer.h"
+#include "../model/non-communicating-net-device.h"
+#include "../../network/utils/output-stream-wrapper.h"
+#include "../../network/helper/trace-helper.h"
 #include "spectrum-analyzer-helper.h"
 
 

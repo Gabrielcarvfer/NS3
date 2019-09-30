@@ -17,16 +17,15 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SIMPLE_NET_DEVICE_H
-#define SIMPLE_NET_DEVICE_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
 
-#include "ns3/traced-callback.h"
-#include "ns3/net-device.h"
-#include "ns3/data-rate.h"
-#include "ns3/event-id.h"
+#include "../../core/model/traced-callback.h"
+#include "../model/net-device.h"
+#include "data-rate.h"
+#include "../../core/model/event-id.h"
 
 #include "mac48-address.h"
 
@@ -184,4 +183,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIMPLE_NET_DEVICE_H */
+

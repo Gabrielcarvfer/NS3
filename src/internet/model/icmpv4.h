@@ -18,12 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef ICMPV4_H
-#define ICMPV4_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-header.h"
+#include "../../network/model/header.h"
+#include "../../core/model/ptr.h"
+#include "ipv4-header.h"
 #include <stdint.h>
 
 namespace ns3 {
@@ -297,4 +296,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ICMPV4_H */
+

@@ -24,19 +24,19 @@
  */
 
 #include "uan-helper.h"
-#include "ns3/uan-net-device.h"
-#include "ns3/uan-mac.h"
-#include "ns3/uan-phy.h"
-#include "ns3/uan-channel.h"
-#include "ns3/uan-prop-model.h"
-#include "ns3/uan-prop-model-ideal.h"
-#include "ns3/uan-transducer.h"
-#include "ns3/mobility-model.h"
-#include "ns3/log.h"
-#include "ns3/uan-tx-mode.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/uan-noise-model-default.h"
+#include "../model/uan-net-device.h"
+#include "../model/uan-mac.h"
+#include "../model/uan-phy.h"
+#include "../model/uan-channel.h"
+#include "../model/uan-prop-model.h"
+#include "../model/uan-prop-model-ideal.h"
+#include "../model/uan-transducer.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../model/uan-tx-mode.h"
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../model/uan-noise-model-default.h"
 
 #include <sstream>
 #include <string>

@@ -19,13 +19,13 @@
 #ifndef TCP_STREAM_SERVER_H
 #define TCP_STREAM_SERVER_H
 
-#include "ns3/application.h"
-#include "ns3/event-id.h"
-#include "ns3/ptr.h"
-#include "ns3/address.h"
-#include "ns3/traced-callback.h"
+#include "../../../../src/network/model/application.h"
+#include "../../../../src/core/model/event-id.h"
+#include "../../../../src/core/model/ptr.h"
+#include "../../../../src/network/model/address.h"
+#include "../../../../src/core/model/traced-callback.h"
 #include <map>
-#include "ns3/random-variable-stream.h"
+#include "../../../../src/core/model/random-variable-stream.h"
 
 namespace ns3 {
 

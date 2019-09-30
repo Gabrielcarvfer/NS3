@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef RNG_SEED_MANAGER_H
-#define RNG_SEED_MANAGER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -113,4 +112,4 @@ typedef RngSeedManager SeedManager;
 } // namespace ns3
 
 
-#endif /* RNG_SEED_MANAGER_H */
+

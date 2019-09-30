@@ -20,9 +20,9 @@
  *          Gustavo J. A. M. Carneiro <gjc@inescporto.pt>
  */
 
-#include "ns3/test.h"
-#include "ns3/olsr-routing-protocol.h"
-#include "ns3/ipv4-header.h"
+#include "../../core/model/test.h"
+#include "../model/olsr-routing-protocol.h"
+#include "../../internet/model/ipv4-header.h"
 
 /**
  * \ingroup olsr

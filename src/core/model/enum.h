@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ENUM_VALUE_H
-#define ENUM_VALUE_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-accessor-helper.h"
@@ -219,4 +218,4 @@ Ptr<const AttributeAccessor> MakeEnumAccessor (T1 a1, T2 a2)
 
 } // namespace ns3
 
-#endif /* ENUM_VALUE_H */
+

@@ -38,8 +38,8 @@
 #include <string>
 
 #include "ns3/core-module.h"
-#include "ns3/time-probe.h"
-#include "ns3/gnuplot-helper.h"
+#include "../model/time-probe.h"
+#include "../helper/gnuplot-helper.h"
 
 using namespace ns3;
 

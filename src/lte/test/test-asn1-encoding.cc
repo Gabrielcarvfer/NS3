@@ -18,17 +18,17 @@
  * Author: Lluis Parcerisa <lparcerisa@cttc.cat>
  */
 
-#include "ns3/log.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include "ns3/enum.h"
-#include "ns3/boolean.h"
-#include "ns3/test.h"
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/test.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
 
-#include "ns3/lte-rrc-header.h"
-#include "ns3/lte-rrc-sap.h"
+#include "../model/lte-rrc-header.h"
+#include "../model/lte-rrc-sap.h"
 
 using namespace ns3;
 

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef NSC_SIM_ERRNO_H
-#define NSC_SIM_ERRNO_H
+#pragma once
 
 /**
  * \ingroup nsctcp
@@ -58,4 +57,4 @@ enum nsc_errno {
   NSC_ETIMEDOUT = -140,
 };
 
-#endif /* NSC_SIM_ERRNO_H */
+

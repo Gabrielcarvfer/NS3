@@ -19,9 +19,9 @@
  */
 
 #include "packet-sink-helper.h"
-#include "ns3/string.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/names.h"
+#include "../../core/model/string.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

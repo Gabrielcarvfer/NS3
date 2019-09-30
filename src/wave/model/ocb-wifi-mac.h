@@ -19,12 +19,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef OCB_WIFI_MAC_H
-#define OCB_WIFI_MAC_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/regular-wifi-mac.h"
-#include "ns3/wifi-mac-queue.h"
+#include "../../core/model/object-factory.h"
+#include "../../wifi/model/regular-wifi-mac.h"
+#include "../../wifi/model/wifi-mac-queue.h"
 #include "vendor-specific-action.h"
 #include "wave-net-device.h"
 
@@ -182,4 +181,4 @@ private:
 };
 
 }
-#endif /* OCB_WIFI_MAC_H */
+

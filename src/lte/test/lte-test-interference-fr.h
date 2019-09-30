@@ -21,10 +21,9 @@
  *
  */
 
-#ifndef LTE_TEST_INTERFERENCE_FR_H
-#define LTE_TEST_INTERFERENCE_FR_H
+#pragma once
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 
@@ -111,4 +110,4 @@ private:
   uint32_t m_rspqThreshold; ///< RSPQ threshold
 };
 
-#endif /* LTE_TEST_INTERFERENCE_FR_H */
+

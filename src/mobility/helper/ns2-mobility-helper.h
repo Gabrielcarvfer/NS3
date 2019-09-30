@@ -20,13 +20,12 @@
  * Contributors: Thomas Waldecker <twaldecker@rocketmail.com>
  *               Martín Giachino <martin.giachino@gmail.com>
  */
-#ifndef NS2_MOBILITY_HELPER_H
-#define NS2_MOBILITY_HELPER_H
+#pragma once
 
 #include <string>
 #include <stdint.h>
-#include "ns3/ptr.h"
-#include "ns3/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -167,4 +166,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS2_MOBILITY_HELPER_H */
+

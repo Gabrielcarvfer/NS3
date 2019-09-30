@@ -29,16 +29,15 @@
  *      Marco Miozzo <marco.miozzo@cttc.es>
  */ 
 
-#ifndef LTE_MI_ERROR_MODEL_H
-#define LTE_MI_ERROR_MODEL_H
+#pragma once
 
 
 #include <list>
 #include <vector>
-#include <ns3/ptr.h>
+#include "../../core/model/ptr.h"
 #include <stdint.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/lte-harq-phy.h>
+#include "../../spectrum/model/spectrum-value.h"
+#include "lte-harq-phy.h"
 
 
 
@@ -128,4 +127,4 @@ public:
 
 } // namespace ns3
 
-#endif /* LTE_MI_ERROR_MODEL_H */
+

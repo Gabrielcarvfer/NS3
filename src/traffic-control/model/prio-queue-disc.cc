@@ -18,10 +18,10 @@
  * Authors:  Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/object-factory.h"
-#include "ns3/socket.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/socket.h"
 #include "prio-queue-disc.h"
 #include <algorithm>
 #include <iterator>

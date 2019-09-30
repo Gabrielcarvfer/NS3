@@ -19,11 +19,10 @@
  * S. da Fonseca - wimaxgroup@lrc.ic.unicamp.br
  */
 
-#ifndef UL_JOB_H
-#define UL_JOB_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include "ss-record.h"
 #include "service-flow.h"
 #include "service-flow-record.h"
@@ -274,4 +273,4 @@ struct SortProcessPtr: public std::binary_function< Ptr<PriorityUlJob>, Ptr<Prio
 
 } // namespace ns3
 
-#endif /* UL_JOB_H */
+

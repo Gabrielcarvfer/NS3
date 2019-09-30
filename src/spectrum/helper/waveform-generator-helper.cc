@@ -17,17 +17,17 @@
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
-#include "ns3/propagation-delay-model.h"
-#include "ns3/spectrum-propagation-loss-model.h"
-#include "ns3/mobility-model.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/names.h"
-#include "ns3/antenna-model.h"
-#include "ns3/spectrum-channel.h"
-#include "ns3/waveform-generator.h"
-#include "ns3/non-communicating-net-device.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../model/spectrum-propagation-loss-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/names.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../model/spectrum-channel.h"
+#include "../model/waveform-generator.h"
+#include "../model/non-communicating-net-device.h"
 #include "waveform-generator-helper.h"
 
 

@@ -19,25 +19,25 @@
  *         (based on the original point-to-point-epc-helper.cc)
  */
 
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/packet-socket-address.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv6-static-routing-helper.h"
-#include "ns3/icmpv6-l4-protocol.h"
-#include "ns3/epc-enb-application.h"
-#include "ns3/epc-pgw-application.h"
-#include "ns3/epc-sgw-application.h"
-#include "ns3/epc-mme-application.h"
-#include "ns3/epc-x2.h"
-#include "ns3/lte-enb-rrc.h"
-#include "ns3/epc-ue-nas.h"
-#include "ns3/lte-enb-net-device.h"
-#include "ns3/lte-ue-net-device.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/packet-socket-address.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv6-static-routing-helper.h"
+#include "../../internet/model/icmpv6-l4-protocol.h"
+#include "../model/epc-enb-application.h"
+#include "../model/epc-pgw-application.h"
+#include "../model/epc-sgw-application.h"
+#include "../model/epc-mme-application.h"
+#include "../model/epc-x2.h"
+#include "../model/lte-enb-rrc.h"
+#include "../model/epc-ue-nas.h"
+#include "../model/lte-enb-net-device.h"
+#include "../model/lte-ue-net-device.h"
 
-#include "ns3/no-backhaul-epc-helper.h"
+#include "no-backhaul-epc-helper.h"
 
 namespace ns3 {
 

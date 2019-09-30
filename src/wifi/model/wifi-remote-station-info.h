@@ -18,11 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_REMOTE_STATION_INFO_H
-#define WIFI_REMOTE_STATION_INFO_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/uinteger.h"
 
 namespace ns3 {
 
@@ -71,4 +70,4 @@ private:
 
 } //namespace ns3
 
-#endif /* WIFI_REMOTE_STATION_INFO_H */
+

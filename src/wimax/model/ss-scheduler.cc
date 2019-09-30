@@ -18,9 +18,9 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
 #include "ss-scheduler.h"
 #include "ss-net-device.h"
 #include "wimax-phy.h"

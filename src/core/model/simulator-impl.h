@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SIMULATOR_IMPL_H
-#define SIMULATOR_IMPL_H
+#pragma once
 
 #include "event-impl.h"
 #include "event-id.h"
@@ -106,4 +105,4 @@ public:
 
 } // namespace ns3
 
-#endif /* SIMULATOR_IMPL_H */
+

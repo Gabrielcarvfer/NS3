@@ -22,10 +22,10 @@
 // operations using Headers and Tags, for various numbers of packets 'n'
 // Sample usage:  ./waf --run 'bench-packets --n=10000'
 
-#include "ns3/command-line.h"
-#include "ns3/system-wall-clock-ms.h"
-#include "ns3/packet.h"
-#include "ns3/packet-metadata.h"
+#include "../src/core/model/command-line.h"
+#include "../src/core/model/system-wall-clock-ms.h"
+#include "../src/network/model/packet.h"
+#include "../src/network/model/packet-metadata.h"
 #include <iostream>
 #include <sstream>
 #include <string>

@@ -18,8 +18,7 @@
  * Author: Andrey Mazo <ahippo@yandex.com>
  */
 
-#ifndef UNUSED_H
-#define UNUSED_H
+#pragma once
 
 /**
  * \file
@@ -51,4 +50,4 @@
 #endif
 #endif
 
-#endif /* UNUSED_H */
+

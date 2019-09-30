@@ -21,11 +21,11 @@
 #include <cmath>
 #include <cfloat>
 
-#include "ns3/time-series-adaptor.h"
-#include "ns3/object.h"
-#include "ns3/traced-value.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "time-series-adaptor.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

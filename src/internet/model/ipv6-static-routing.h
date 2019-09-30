@@ -18,18 +18,17 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_STATIC_ROUTING_H
-#define IPV6_STATIC_ROUTING_H
+#pragma once
 
 #include <stdint.h>
 
 #include <list>
 
-#include "ns3/ptr.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv6-routing-protocol.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv6-address.h"
+#include "ipv6.h"
+#include "ipv6-header.h"
+#include "ipv6-routing-protocol.h"
 
 namespace ns3 {
 
@@ -299,5 +298,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_STATIC_ROUTING_H */
+
 

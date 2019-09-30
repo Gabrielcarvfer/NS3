@@ -24,14 +24,14 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/config-store.h"
-#include "ns3/radio-bearer-stats-calculator.h"
-#include "ns3/lte-global-pathloss-database.h"
+#include "../../config-store/model/config-store.h"
+#include "../helper/radio-bearer-stats-calculator.h"
+#include "../helper/lte-global-pathloss-database.h"
 
 #include <iomanip>
 #include <string>
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 
 using namespace ns3;
 

@@ -17,20 +17,20 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/config.h"
-#include "ns3/test.h"
-#include "ns3/integer.h"
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/callback.h"
+#include "../model/config.h"
+#include "../model/test.h"
+#include "../model/integer.h"
+#include "../model/traced-value.h"
+#include "../model/trace-source-accessor.h"
+#include "../model/callback.h"
 
-#include "ns3/singleton.h"
-#include "ns3/object.h"
-#include "ns3/object-vector.h"
-#include "ns3/names.h"
-#include "ns3/pointer.h"
-#include "ns3/log.h"
-#include "ns3/unused.h"
+#include "../model/singleton.h"
+#include "../model/object.h"
+#include "../model/object-vector.h"
+#include "../model/names.h"
+#include "../model/pointer.h"
+#include "../model/log.h"
+#include "../model/unused.h"
 
 
 #include <sstream>

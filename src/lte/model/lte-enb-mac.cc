@@ -23,23 +23,23 @@
  */
 
 
-#include <ns3/log.h>
-#include <ns3/pointer.h>
-#include <ns3/packet.h>
-#include <ns3/simulator.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
 
 #include "lte-amc.h"
 #include "lte-control-messages.h"
 #include "lte-enb-net-device.h"
 #include "lte-ue-net-device.h"
 
-#include <ns3/lte-enb-mac.h>
-#include <ns3/lte-radio-bearer-tag.h>
-#include <ns3/lte-ue-phy.h>
+#include "lte-enb-mac.h"
+#include "lte-radio-bearer-tag.h"
+#include "lte-ue-phy.h"
 
-#include "ns3/lte-mac-sap.h"
-#include "ns3/lte-enb-cmac-sap.h"
-#include <ns3/lte-common.h>
+#include "lte-mac-sap.h"
+#include "lte-enb-cmac-sap.h"
+#include "lte-common.h"
 
 
 namespace ns3 {

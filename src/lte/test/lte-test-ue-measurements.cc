@@ -21,37 +21,37 @@
  *         Budiarto Herman <budiarto.herman@magister.fi>
  */
 
-#include <ns3/simulator.h>
-#include <ns3/log.h>
-#include <ns3/callback.h>
-#include <ns3/config.h>
-#include <ns3/string.h>
-#include <ns3/double.h>
-#include <ns3/enum.h>
-#include <ns3/boolean.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
 
-#include <ns3/mobility-helper.h>
-#include <ns3/lte-helper.h>
-#include <ns3/point-to-point-epc-helper.h>
-#include <ns3/internet-stack-helper.h>
-#include <ns3/point-to-point-helper.h>
-#include <ns3/ipv4-address-helper.h>
-#include <ns3/ipv4-static-routing-helper.h>
+#include "../../mobility/helper/mobility-helper.h"
+#include "../helper/lte-helper.h"
+#include "../helper/point-to-point-epc-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
 
-#include <ns3/node-container.h>
-#include <ns3/net-device-container.h>
-#include <ns3/ipv4-interface-container.h>
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../internet/helper/ipv4-interface-container.h"
 
-#include <ns3/ff-mac-scheduler.h>
-#include <ns3/lte-enb-net-device.h>
-#include <ns3/lte-enb-phy.h>
-#include <ns3/lte-enb-rrc.h>
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/lte-ue-phy.h>
-#include <ns3/lte-ue-rrc.h>
+#include "../model/ff-mac-scheduler.h"
+#include "../model/lte-enb-net-device.h"
+#include "../model/lte-enb-phy.h"
+#include "../model/lte-enb-rrc.h"
+#include "../model/lte-ue-net-device.h"
+#include "../model/lte-ue-phy.h"
+#include "../model/lte-ue-rrc.h"
 
 #include "lte-test-ue-measurements.h"
-#include <ns3/lte-common.h>
+#include "../model/lte-common.h"
 
 using namespace ns3;
 

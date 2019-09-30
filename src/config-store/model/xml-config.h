@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef XML_CONFIG_STORE_H
-#define XML_CONFIG_STORE_H
+#pragma once
 
 #include <string>
 #include <libxml/xmlwriter.h>
@@ -67,4 +66,4 @@ private:
 
 } // namespace ns3
 
-#endif /* XML_CONFIG_STORE_H */
+

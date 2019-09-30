@@ -19,8 +19,8 @@
  */
 
 #include "lte-rlc-tag.h"
-#include "ns3/tag.h"
-#include "ns3/uinteger.h"
+#include "../../network/model/tag.h"
+#include "../../core/model/uinteger.h"
 
 namespace ns3 {
 

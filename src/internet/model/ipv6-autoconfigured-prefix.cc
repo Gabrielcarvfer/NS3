@@ -18,8 +18,8 @@
  * Author: Mehdi Benamor <benamor.mehdi@ensi.rnu.tn>
  */
 
-#include "ns3/log.h"
-#include "ns3/node.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
 
 #include "ipv6-l3-protocol.h"
 #include "ipv6-autoconfigured-prefix.h"

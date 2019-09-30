@@ -20,12 +20,11 @@
 
 /* SS outbound scheduler as per in Section 6.3.5.1 */
 
-#ifndef SS_SCHEDULER_H
-#define SS_SCHEDULER_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/packet.h"
-#include "ns3/packet-burst.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/packet-burst.h"
 #include "wimax-phy.h"
 #include "wimax-mac-header.h"
 
@@ -100,4 +99,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SS_SCHEDULER_H */
+

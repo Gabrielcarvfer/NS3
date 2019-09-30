@@ -37,8 +37,8 @@
 #include "ns3/mobility-module.h"
 #include "ns3/config-store-module.h"
 #include "ns3/internet-module.h"
-#include "ns3/dsdv-helper.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../helper/dsdv-helper.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
 
 using namespace ns3;
 

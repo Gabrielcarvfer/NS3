@@ -18,10 +18,9 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_TX_MODE_H
-#define UAN_TX_MODE_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 #include <map>
 
 namespace ns3 {
@@ -315,4 +314,4 @@ ATTRIBUTE_HELPER_HEADER (UanModesList);
 
 } // namespace ns3
 
-#endif /* UAN_TX_MODE_H */
+

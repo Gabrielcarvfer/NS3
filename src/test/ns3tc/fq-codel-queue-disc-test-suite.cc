@@ -19,20 +19,20 @@
  *          Stefano Avallone <stefano.avallone@unina.it>
 */
 
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/fq-codel-queue-disc.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv4-packet-filter.h"
-#include "ns3/ipv4-queue-disc-item.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv6-packet-filter.h"
-#include "ns3/ipv6-queue-disc-item.h"
-#include "ns3/tcp-header.h"
-#include "ns3/udp-header.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../traffic-control/model/fq-codel-queue-disc.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../internet/model/ipv4-packet-filter.h"
+#include "../../internet/model/ipv4-queue-disc-item.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../internet/model/ipv6-header.h"
+#include "../../internet/model/ipv6-packet-filter.h"
+#include "../../internet/model/ipv6-queue-disc-item.h"
+#include "../../internet/model/tcp-header.h"
+#include "../../internet/model/udp-header.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 
 using namespace ns3;
 

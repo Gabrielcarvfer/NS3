@@ -17,12 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include <algorithm>
 #include <cmath>
-#include "ns3/log.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 #include "random-direction-2d-mobility-model.h"
 
 namespace ns3 {

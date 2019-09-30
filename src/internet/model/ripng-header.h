@@ -18,14 +18,13 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef RIPNG_HEADER_H
-#define RIPNG_HEADER_H
+#pragma once
 
 #include <list>
-#include "ns3/header.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/packet.h"
-#include "ns3/ipv6-header.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../network/model/packet.h"
+#include "ipv6-header.h"
 
 
 namespace ns3 {
@@ -241,5 +240,5 @@ std::ostream & operator << (std::ostream & os, const RipNgHeader & h);
 
 }
 
-#endif /* RIPNG_HEADER_H */
+
 

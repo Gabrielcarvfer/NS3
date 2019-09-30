@@ -18,8 +18,7 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#ifndef UAN_CW_EXAMPLE_H
-#define UAN_CW_EXAMPLE_H
+#pragma once
 
 #include "ns3/network-module.h"
 #include "ns3/uan-module.h"
@@ -76,4 +75,4 @@ public:
   NetAnimExperiment ();
 };
 
-#endif /* UAN_CW_EXAMPLE_H */
+

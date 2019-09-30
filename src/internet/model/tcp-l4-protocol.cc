@@ -18,17 +18,17 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/boolean.h"
-#include "ns3/object-vector.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/object-vector.h"
 
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv6-route.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
+#include "ipv4-route.h"
+#include "ipv6-route.h"
 
 #include "tcp-l4-protocol.h"
 #include "tcp-header.h"

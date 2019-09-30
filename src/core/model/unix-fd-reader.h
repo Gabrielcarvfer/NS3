@@ -18,8 +18,7 @@
  * Author: Tom Goff <thomas.goff@boeing.com>
  */
 
-#ifndef UNIX_FD_READER_H
-#define UNIX_FD_READER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -137,4 +136,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UNIX_FD_READER_H */
+

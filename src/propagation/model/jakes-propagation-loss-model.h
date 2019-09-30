@@ -17,12 +17,11 @@
  *
  * Author: Kirill Andreev <andreev@telum.ru>
  */
-#ifndef JAKES_STATIONARY_LOSS_MODEL_H
-#define JAKES_STATIONARY_LOSS_MODEL_H
+#pragma once
 
-#include "ns3/propagation-loss-model.h"
-#include "ns3/propagation-cache.h"
-#include "ns3/jakes-process.h"
+#include "propagation-loss-model.h"
+#include "propagation-cache.h"
+#include "jakes-process.h"
 
 namespace ns3
 {
@@ -77,5 +76,5 @@ private:
 
 } // namespace ns3
 
-#endif /* JAKES_STATIONARY_LOSS_MODEL_H */
+
 

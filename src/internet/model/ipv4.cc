@@ -18,11 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/assert.h" 
-#include "ns3/node.h" 
-#include "ns3/boolean.h"
+#include "../../core/model/assert.h" 
+#include "../../network/model/node.h" 
+#include "../../core/model/boolean.h"
 #include "ipv4.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

@@ -56,14 +56,14 @@
  * comments have also been ported from NS-2
  */
 
-#include "ns3/log.h"
-#include "ns3/enum.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/simulator.h"
-#include "ns3/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/abort.h"
 #include "red-queue-disc.h"
-#include "ns3/drop-tail-queue.h"
+#include "../../network/utils/drop-tail-queue.h"
 
 namespace ns3 {
 

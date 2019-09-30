@@ -19,7 +19,7 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "topology-reader.h"
 
 

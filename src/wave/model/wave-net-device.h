@@ -17,15 +17,14 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef WAVE_NET_DEVICE_H
-#define WAVE_NET_DEVICE_H
+#pragma once
 
 #include <map>
 #include <vector>
-#include "ns3/packet.h"
-#include "ns3/traced-callback.h"
-#include "ns3/mac48-address.h"
-#include "ns3/wifi-net-device.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../wifi/model/wifi-net-device.h"
 #include "ocb-wifi-mac.h"
 #include "vendor-specific-action.h"
 #include "channel-coordinator.h"
@@ -410,4 +409,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WAVE_NET_DEVICE_H */
+

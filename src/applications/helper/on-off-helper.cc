@@ -18,14 +18,14 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "on-off-helper.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/packet-socket-address.h"
-#include "ns3/string.h"
-#include "ns3/data-rate.h"
-#include "ns3/uinteger.h"
-#include "ns3/names.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/onoff-application.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/utils/packet-socket-address.h"
+#include "../../core/model/string.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/names.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../model/onoff-application.h"
 
 namespace ns3 {
 

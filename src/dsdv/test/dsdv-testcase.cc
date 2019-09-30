@@ -28,21 +28,21 @@
  * NSF grant CNS-1050226 (Multilayer Network Resilience Analysis and Experimentation on GENI),
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
-#include "ns3/test.h"
-#include "ns3/mesh-helper.h"
-#include "ns3/simulator.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/dsdv-helper.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
-#include "ns3/v4ping-helper.h"
-#include "ns3/string.h"
-#include "ns3/boolean.h"
-#include "ns3/pcap-file.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/dsdv-packet.h"
-#include "ns3/dsdv-rtable.h"
+#include "../../core/model/test.h"
+#include "../../mesh/helper/mesh-helper.h"
+#include "../../core/model/simulator.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../helper/dsdv-helper.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../internet-apps/helper/v4ping-helper.h"
+#include "../../core/model/string.h"
+#include "../../core/model/boolean.h"
+#include "../../network/utils/pcap-file.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../model/dsdv-packet.h"
+#include "../model/dsdv-rtable.h"
 
 using namespace ns3;
 

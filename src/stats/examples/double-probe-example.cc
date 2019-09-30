@@ -25,7 +25,7 @@
 #include <string>
 
 #include "ns3/core-module.h"
-#include "ns3/double-probe.h"
+#include "../model/double-probe.h"
 
 using namespace ns3;
 

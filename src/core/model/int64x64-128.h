@@ -19,8 +19,8 @@
 
 //#include "ns3/core-config.h"
 
-#if !defined(INT64X64_128_H) && defined (INT64X64_USE_128) && !defined(PYTHON_SCAN)
-#define INT64X64_128_H
+#if defined (INT64X64_USE_128) && !defined(PYTHON_SCAN)
+#pragma once 
 
 #include <stdint.h>
 #include <cmath>  // pow
@@ -431,4 +431,5 @@ inline int64x64_t operator ! (const int64x64_t & lhs)
 
 } // namespace ns3
 
-#endif /* INT64X64_128_H */
+
+#endif

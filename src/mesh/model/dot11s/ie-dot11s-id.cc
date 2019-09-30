@@ -19,7 +19,7 @@
  */
 
 #include "ie-dot11s-id.h"
-#include "ns3/assert.h"
+#include "../../../core/model/assert.h"
 
 namespace ns3 {
 namespace dot11s {

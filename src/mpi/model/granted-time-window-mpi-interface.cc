@@ -28,13 +28,13 @@
 #include "mpi-receiver.h"
 #include "mpi-interface.h"
 
-#include "ns3/node.h"
-#include "ns3/node-list.h"
-#include "ns3/net-device.h"
-#include "ns3/simulator.h"
-#include "ns3/simulator-impl.h"
-#include "ns3/nstime.h"
-#include "ns3/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/node-list.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/simulator-impl.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/log.h"
 
 #ifdef NS3_MPI
 #include <mpi.h>

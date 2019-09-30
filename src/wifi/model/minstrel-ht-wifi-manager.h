@@ -23,8 +23,7 @@
  * MinstrelHt is a rate adaptation algorithm for high-throughput (HT) 802.11
  */
 
-#ifndef MINSTREL_HT_WIFI_MANAGER_H
-#define MINSTREL_HT_WIFI_MANAGER_H
+#pragma once
 
 #include "wifi-remote-station-manager.h"
 #include "minstrel-wifi-manager.h"
@@ -586,4 +585,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MINSTREL_HT_WIFI_MANAGER_H */
+

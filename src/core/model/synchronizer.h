@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SYNCHRONIZER_H
-#define SYNCHRONIZER_H
+#pragma once
 
 #include <stdint.h>
 #include "nstime.h"
@@ -337,4 +336,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SYNCHRONIZER_H */
+

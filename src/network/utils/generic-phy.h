@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef GENERIC_PHY_H
-#define GENERIC_PHY_H
+#pragma once
 
-#include <ns3/callback.h>
+#include "../../core/model/callback.h"
 
 namespace ns3 {
 
@@ -70,4 +69,4 @@ typedef Callback< void, Ptr<Packet> > GenericPhyRxEndOkCallback;
 } // namespace ns3
 
 
-#endif /* GENERIC_PHY_H */
+

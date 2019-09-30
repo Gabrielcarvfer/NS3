@@ -18,12 +18,11 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef MESH_ID_H
-#define MESH_ID_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/buffer.h"
-#include "ns3/mesh-information-element-vector.h"
+#include "../../../network/model/buffer.h"
+#include "../mesh-information-element-vector.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -87,4 +86,4 @@ ATTRIBUTE_HELPER_HEADER (IeMeshId);
   
 } // namespace dot11s
 } // namespace ns3
-#endif /* MESH_ID_H */
+

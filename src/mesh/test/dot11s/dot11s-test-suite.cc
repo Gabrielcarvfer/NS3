@@ -17,14 +17,14 @@
  *
  * Author: Pavel Boyko <boyko@iitp.ru>
  */
-#include "ns3/test.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/mgt-headers.h"
-#include "ns3/dot11s-mac-header.h"
-#include "ns3/hwmp-rtable.h"
-#include "ns3/peer-link-frame.h"
-#include "ns3/ie-dot11s-peer-management.h"
+#include "../../../core/model/test.h"
+#include "../../../network/model/packet.h"
+#include "../../../core/model/simulator.h"
+#include "../../../wifi/model/mgt-headers.h"
+#include "../../model/dot11s/dot11s-mac-header.h"
+#include "../../model/dot11s/hwmp-rtable.h"
+#include "../../model/dot11s/peer-link-frame.h"
+#include "../../model/dot11s/ie-dot11s-peer-management.h"
 
 using namespace ns3;
 using namespace dot11s;

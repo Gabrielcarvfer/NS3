@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef LTE_CCM_RRC_SAP_H
-#define LTE_CCM_RRC_SAP_H
+#pragma once
 
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/eps-bearer.h>
-#include <ns3/lte-enb-cmac-sap.h>
-#include <ns3/lte-mac-sap.h>
+#include "lte-rrc-sap.h"
+#include "eps-bearer.h"
+#include "lte-enb-cmac-sap.h"
+#include "lte-mac-sap.h"
 #include <map>
 
 
@@ -371,5 +370,5 @@ MemberLteCcmRrcSapUser<C>::SetNumberOfComponentCarriers (uint16_t noOfComponentC
 } // end of namespace ns3
 
 
-#endif /* LTE_CCM_RRC_SAP_H */
+
 

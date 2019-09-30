@@ -17,21 +17,21 @@
  *
  * Author: Tom Henderson <thomas.r.henderson@boeing.com>
  */
-#include <ns3/test.h>
-#include <ns3/log.h>
-#include <ns3/callback.h>
-#include <ns3/packet.h>
-#include <ns3/simulator.h>
-#include <ns3/lr-wpan-error-model.h>
-#include <ns3/propagation-loss-model.h>
-#include <ns3/lr-wpan-net-device.h>
-#include <ns3/lr-wpan-mac.h>
-#include <ns3/node.h>
-#include <ns3/net-device.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include <ns3/mac16-address.h>
-#include <ns3/constant-position-mobility-model.h>
-#include "ns3/rng-seed-manager.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../model/lr-wpan-error-model.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../model/lr-wpan-net-device.h"
+#include "../model/lr-wpan-mac.h"
+#include "../../network/model/node.h"
+#include "../../network/model/net-device.h"
+#include "../../spectrum/model/single-model-spectrum-channel.h"
+#include "../../network/utils/mac16-address.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/rng-seed-manager.h"
 
 using namespace ns3;
 

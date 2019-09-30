@@ -17,8 +17,7 @@
  *
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
-#ifndef TIME_PRINTER_H
-#define TIME_PRINTER_H
+#pragma once
 
 #include <ostream>
 
@@ -51,4 +50,4 @@ void DefaultTimePrinter (std::ostream &os);
 
 } // namespace ns3
 
-#endif /* TIME_H */
+

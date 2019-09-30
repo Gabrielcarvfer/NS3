@@ -18,9 +18,8 @@
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef AIRTIME_METRIC_H
-#define AIRTIME_METRIC_H
-#include "ns3/mesh-wifi-interface-mac.h"
+#pragma once
+#include "../mesh-wifi-interface-mac.h"
 namespace ns3 {
 namespace dot11s {
 /**
@@ -81,4 +80,3 @@ private:
 };
 } // namespace dot11s
 } // namespace ns3
-#endif

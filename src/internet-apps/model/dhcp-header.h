@@ -22,10 +22,9 @@
  *
  */
 
-#ifndef DHCP_HEADER_H
-#define DHCP_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 namespace ns3 {
 
@@ -319,4 +318,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DHCP_HEADER_H */
+

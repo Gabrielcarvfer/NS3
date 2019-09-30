@@ -16,10 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/assert.h"
+#include "../../core/model/assert.h"
 #include "ipv4-route.h"
 #include "ipv4-routing-protocol.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

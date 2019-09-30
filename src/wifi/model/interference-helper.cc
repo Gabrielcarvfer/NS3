@@ -19,9 +19,9 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 #include "interference-helper.h"
 #include "wifi-phy.h"
 #include "error-rate-model.h"

@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef IPV4_ADDRESS_H
-#define IPV4_ADDRESS_H
+#pragma once
 
 #include <stdint.h>
 #include <ostream>
-#include "ns3/address.h"
-#include "ns3/attribute-helper.h"
+#include "../model/address.h"
+#include "../../core/model/attribute-helper.h"
 
 namespace ns3 {
 
@@ -430,4 +429,4 @@ bool operator != (Ipv4Mask const &a, Ipv4Mask const &b);
 
 } // namespace ns3
 
-#endif /* IPV4_ADDRESS_H */
+

@@ -18,10 +18,9 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_PDCP_HEADER_H
-#define LTE_PDCP_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 #include <list>
 
@@ -98,4 +97,4 @@ private:
 
 } // namespace ns3
 
-#endif // LTE_PDCP_HEADER_H
+

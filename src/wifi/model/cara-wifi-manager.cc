@@ -18,7 +18,7 @@
  * Author: Federico Maguolo <maguolof@dei.unipd.it>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "cara-wifi-manager.h"
 #include "wifi-tx-vector.h"
 

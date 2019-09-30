@@ -49,9 +49,9 @@
 #include "ns3/config-store-module.h"
 #include "ns3/wimax-module.h"
 #include "ns3/internet-module.h"
-#include "ns3/global-route-manager.h"
-#include "ns3/ipcs-classifier-record.h"
-#include "ns3/service-flow.h"
+#include "../../internet/model/global-route-manager.h"
+#include "../model/ipcs-classifier-record.h"
+#include "../model/service-flow.h"
 #include <iostream>
 
 using namespace ns3;

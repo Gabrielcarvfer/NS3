@@ -18,14 +18,13 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef RIP_HEADER_H
-#define RIP_HEADER_H
+#pragma once
 
 #include <list>
-#include "ns3/header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4-header.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/model/packet.h"
+#include "ipv4-header.h"
 
 
 namespace ns3 {
@@ -252,5 +251,5 @@ std::ostream & operator << (std::ostream & os, const RipHeader & h);
 
 }
 
-#endif /* Rip_HEADER_H */
+
 

@@ -20,7 +20,7 @@
 #include "statsmode.h"
 #include "animatormode.h"
 #include "routingstatsscene.h"
-#include "ns3/log.h"
+#include "../../src/core/model/log.h"
 #include <exception>
 
 NS_LOG_COMPONENT_DEFINE("RoutingXmlParser");

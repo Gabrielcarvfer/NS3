@@ -18,11 +18,10 @@
 * Author: Author: Andrea Sacco <andrea.sacco85@gmail.com>
 */
 
-#ifndef ACOUSTIC_MODEM_ENERGY_MODEL_HELPER_H
-#define ACOUSTIC_MODEM_ENERGY_MODEL_HELPER_H
+#pragma once
 
-#include "ns3/energy-model-helper.h"
-#include "ns3/acoustic-modem-energy-model.h"
+#include "../../energy/helper/energy-model-helper.h"
+#include "../model/acoustic-modem-energy-model.h"
 
 namespace ns3 {
 
@@ -86,4 +85,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ACOUSTIC_MODEM_ENERGY_MODEL_HELPER_H */
+

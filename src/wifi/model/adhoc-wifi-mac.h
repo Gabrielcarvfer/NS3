@@ -20,8 +20,7 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef ADHOC_WIFI_MAC_H
-#define ADHOC_WIFI_MAC_H
+#pragma once
 
 #include "regular-wifi-mac.h"
 
@@ -71,4 +70,4 @@ private:
 
 } //namespace ns3
 
-#endif /* ADHOC_WIFI_MAC_H */
+

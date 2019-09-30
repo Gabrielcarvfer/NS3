@@ -17,26 +17,26 @@
  *
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
-#include "ns3/test.h"
-#include "ns3/config.h"
-#include "ns3/uinteger.h"
-#include "ns3/socket-factory.h"
-#include "ns3/ipv6-raw-socket-factory.h"
-#include "ns3/udp-socket-factory.h"
-#include "ns3/simulator.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/socket.h"
-#include "ns3/udp-socket.h"
+#include "../../core/model/test.h"
+#include "../../core/model/config.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/model/socket-factory.h"
+#include "../../internet/model/ipv6-raw-socket-factory.h"
+#include "../../internet/model/udp-socket-factory.h"
+#include "../../core/model/simulator.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/model/socket.h"
+#include "../../internet/model/udp-socket.h"
 
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/boolean.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/boolean.h"
 
-#include "ns3/sixlowpan-net-device.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/icmpv6-l4-protocol.h"
-#include "ns3/error-channel.h"
+#include "../model/sixlowpan-net-device.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/model/icmpv6-l4-protocol.h"
+#include "../../network/utils/error-channel.h"
 
 #include <string>
 #include <limits>

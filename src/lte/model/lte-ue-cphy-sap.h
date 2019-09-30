@@ -19,13 +19,12 @@
  *         Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#ifndef LTE_UE_CPHY_SAP_H
-#define LTE_UE_CPHY_SAP_H
+#pragma once
 
 #include <stdint.h>
-#include <ns3/ptr.h>
+#include "../../core/model/ptr.h"
 
-#include <ns3/lte-rrc-sap.h>
+#include "lte-rrc-sap.h"
 
 namespace ns3 {
 
@@ -546,4 +545,4 @@ MemberLteUeCphySapUser<C>::ResetSyncIndicationCounter ()
 } // namespace ns3
 
 
-#endif // LTE_UE_CPHY_SAP_H
+

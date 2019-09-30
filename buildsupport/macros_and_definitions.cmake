@@ -95,8 +95,8 @@ macro(process_options)
     endif()
 
     #Copy all header files to outputfolder/include/
-    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+    #file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
+    #file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
 
     #Don't build incompatible libraries on Windows
@@ -601,11 +601,19 @@ macro (write_module_header name header_files)
     list(APPEND contents "
     // Module headers: ")
 
+    #Remove absolute path until the root folder
+    string(REPLACE ${PROJECT_SOURCE_DIR} "" module_path ${CMAKE_CURRENT_SOURCE_DIR} )
+
     #Write each header listed to the contents variable
     foreach(header ${header_files})
-        get_filename_component(head ${header} NAME)
+        #get_filename_component(head ${header} NAME)
+        string(REPLACE ${PROJECT_SOURCE_DIR} "" head ${header} )
+        #if coming from contrib modules, we need to remove duplicated module path
+        string(REPLACE "${module_path}/" "" header ${head})
+        #message(WARNING ${header})
         list(APPEND contents
                 "
+    #include \"../..${module_path}/${header}\"")
     #include <ns3/${head}>")
     ##include \"ns3/${head}\"")
     endforeach()

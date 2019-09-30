@@ -15,8 +15,7 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef DEFAULT_CHANNEL_SCHEDULER_H
-#define DEFAULT_CHANNEL_SCHEDULER_H
+#pragma once
 
 #include "wave-net-device.h"
 namespace ns3 {
@@ -136,4 +135,4 @@ private:
 };
 
 }
-#endif /* DEFAULT_CHANNEL_SCHEDULER_H */
+

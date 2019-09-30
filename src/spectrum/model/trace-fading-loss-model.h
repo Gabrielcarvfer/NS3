@@ -20,15 +20,14 @@
  */
 
 
-#ifndef TRACE_FADING_LOSS_MODEL_H
-#define TRACE_FADING_LOSS_MODEL_H
+#pragma once
 
 
-#include <ns3/object.h>
-#include <ns3/spectrum-propagation-loss-model.h>
+#include "../../core/model/object.h"
+#include "spectrum-propagation-loss-model.h"
 #include <map>
-#include "ns3/random-variable-stream.h"
-#include <ns3/nstime.h>
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -145,4 +144,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TRACE_FADING_LOSS_MODEL_H */
+

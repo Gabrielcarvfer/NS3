@@ -21,10 +21,10 @@
 #include <ctime>
 #include <fstream>
 
-#include "ns3/test.h"
-#include "ns3/double.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/rng-seed-manager.h"
+#include "../model/test.h"
+#include "../model/double.h"
+#include "../model/random-variable-stream.h"
+#include "../model/rng-seed-manager.h"
 
 using namespace ns3;
 

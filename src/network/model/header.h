@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef HEADER_H
-#define HEADER_H
+#pragma once
 
 #include "chunk.h"
 #include "buffer.h"
@@ -115,4 +114,4 @@ std::ostream & operator << (std::ostream &os, const Header &header);
 
 } // namespace ns3
 
-#endif /* HEADER_H */
+

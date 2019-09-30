@@ -21,8 +21,7 @@
  */
 
 
-#ifndef OLSR_STATE_H
-#define OLSR_STATE_H
+#pragma once
 
 #include "olsr-repositories.h"
 
@@ -432,4 +431,4 @@ public:
 }
 }  // namespace olsr,ns3
 
-#endif /* OLSR_STATE_H */
+

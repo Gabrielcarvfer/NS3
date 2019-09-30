@@ -21,7 +21,7 @@
 
 #include <iomanip>
 #include <cmath>
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "radiotap-header.h"
 
 namespace ns3 {

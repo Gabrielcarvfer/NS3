@@ -18,15 +18,15 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#include "ns3/ipv4-flow-probe.h"
-#include "ns3/ipv4-flow-classifier.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/flow-monitor.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/config.h"
-#include "ns3/flow-id-tag.h"
+#include "ipv4-flow-probe.h"
+#include "ipv4-flow-classifier.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "flow-monitor.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/config.h"
+#include "../../network/utils/flow-id-tag.h"
 
 namespace ns3 {
 

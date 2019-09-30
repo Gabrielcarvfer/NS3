@@ -18,13 +18,12 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef RADVD_PREFIX_H
-#define RADVD_PREFIX_H 
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/ipv6-address.h"
-#include "ns3/simple-ref-count.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../core/model/simple-ref-count.h"
 
 namespace ns3
 {
@@ -177,5 +176,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* RADVD_PREFIX_H */
+
 

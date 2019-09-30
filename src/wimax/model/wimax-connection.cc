@@ -20,9 +20,9 @@
  */
 
 #include "wimax-connection.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
 #include "service-flow.h"
 
 namespace ns3 {

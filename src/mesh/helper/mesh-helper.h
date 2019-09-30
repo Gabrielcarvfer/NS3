@@ -20,12 +20,11 @@
  */
 
 
-#ifndef MESH_HELPER_H
-#define MESH_HELPER_H
+#pragma once
 
-#include "ns3/mesh-stack-installer.h"
-#include "ns3/wifi-phy-standard.h"
-#include "ns3/object-factory.h"
+#include "mesh-stack-installer.h"
+#include "../../wifi/model/wifi-phy-standard.h"
+#include "../../core/model/object-factory.h"
 
 namespace ns3 {
 
@@ -236,5 +235,5 @@ private:
 };
 } // namespace ns3
 
-#endif /* MESH_HELPER_H */
+
 

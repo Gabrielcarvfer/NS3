@@ -20,12 +20,11 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef MAC_LOW_H
-#define MAC_LOW_H
+#pragma once
 
 #include <map>
-#include "ns3/object.h"
-#include "ns3/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
 #include "channel-access-manager.h"
 #include "block-ack-cache.h"
 #include "mac-low-transmission-parameters.h"
@@ -960,4 +959,4 @@ private:
 
 } //namespace ns3
 
-#endif /* MAC_LOW_H */
+

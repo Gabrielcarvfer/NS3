@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef THRESHOLD_PREAMBLE_DETECTION_MODEL_H
-#define THRESHOLD_PREAMBLE_DETECTION_MODEL_H
+#pragma once
 
 #include "preamble-detection-model.h"
 
@@ -63,4 +62,4 @@ private:
 
 } //namespace ns3
 
-#endif /* THRESHOLD_PREAMBLE_DETECTION_MODEL_H */
+

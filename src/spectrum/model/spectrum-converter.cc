@@ -18,9 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/spectrum-converter.h>
-#include <ns3/assert.h>
-#include <ns3/log.h>
+#include "spectrum-converter.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 #include <algorithm>
 
 

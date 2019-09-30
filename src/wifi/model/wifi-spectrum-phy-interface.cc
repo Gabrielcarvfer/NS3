@@ -18,10 +18,10 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/spectrum-value.h"
-#include "ns3/mobility-model.h"
-#include "ns3/net-device.h"
+#include "../../core/model/log.h"
+#include "../../spectrum/model/spectrum-value.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/net-device.h"
 #include "wifi-spectrum-phy-interface.h"
 #include "spectrum-wifi-phy.h"
 

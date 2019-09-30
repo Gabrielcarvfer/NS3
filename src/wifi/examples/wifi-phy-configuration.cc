@@ -23,17 +23,17 @@
 // WifiHelper.SetStandard () and the physical layer channel number,
 // center frequency, and channel width.
 
-#include "ns3/log.h"
-#include "ns3/command-line.h"
-#include "ns3/config-store.h"
-#include "ns3/config.h"
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/ssid.h"
-#include "ns3/yans-wifi-phy.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/wifi-net-device.h"
+#include "../../core/model/log.h"
+#include "../../core/model/command-line.h"
+#include "../../config-store/model/config-store.h"
+#include "../../core/model/config.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../model/ssid.h"
+#include "../model/yans-wifi-phy.h"
+#include "../helper/yans-wifi-helper.h"
+#include "../model/wifi-net-device.h"
 
 using namespace ns3;
 

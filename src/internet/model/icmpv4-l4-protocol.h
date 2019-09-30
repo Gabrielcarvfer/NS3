@@ -18,12 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef ICMPV4_L4_PROTOCOL_H
-#define ICMPV4_L4_PROTOCOL_H
+#pragma once
 
 #include "ip-l4-protocol.h"
 #include "icmpv4.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/utils/ipv4-address.h"
 
 namespace ns3 {
 
@@ -215,4 +214,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ICMPV4_L4_PROTOCOL_H */
+

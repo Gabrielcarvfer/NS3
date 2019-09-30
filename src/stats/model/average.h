@@ -19,13 +19,12 @@
  * Corrections and extensions: Timo Bingmann <tbns@idlebox.net>
  */
 
-#ifndef AVERAGE_H
-#define AVERAGE_H
+#pragma once
 #include <cmath>
 #include <ostream>
 #include <limits>
 #include <stdint.h>
-#include "ns3/basic-data-calculators.h"
+#include "basic-data-calculators.h"
 
 namespace ns3 {
 
@@ -140,4 +139,4 @@ std::ostream & operator<< (std::ostream & os, Average<T> const & x)
   return os;
 }
 }
-#endif /* AVERAGE_H */
+

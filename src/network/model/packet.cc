@@ -18,9 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "packet.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 #include <string>
 #include <cstdarg>
 

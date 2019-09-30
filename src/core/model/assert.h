@@ -18,8 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Quincy Tse <quincy.tse@nicta.com.au>
  */
-#ifndef NS_ASSERT_H
-#define NS_ASSERT_H
+#pragma once
+
+#include <cassert>
 
 /**
  * \file
@@ -52,7 +53,6 @@
 #ifdef NS3_ASSERT_ENABLE
 
 #include <iostream>
-
 #include "fatal-error.h"
 
 /**
@@ -117,4 +117,3 @@
 
 #endif /* NS3_ASSERT_ENABLE */
 
-#endif /* ASSERT_H */

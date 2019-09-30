@@ -17,10 +17,10 @@
  *
  * Author:  Tom Henderson <thomas.r.henderson@boeing.com>
  */
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/lr-wpan-spectrum-value-helper.h>
-#include <ns3/spectrum-value.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../model/lr-wpan-spectrum-value-helper.h"
+#include "../../spectrum/model/spectrum-value.h"
 
 #include <cmath>
 

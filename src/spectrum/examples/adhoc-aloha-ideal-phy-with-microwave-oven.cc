@@ -24,24 +24,24 @@
 
 #include <ns3/core-module.h>
 #include <ns3/network-module.h>
-#include <ns3/spectrum-model-ism2400MHz-res1MHz.h>
-#include <ns3/spectrum-model-300kHz-300GHz-log.h>
-#include <ns3/wifi-spectrum-value-helper.h>
-#include <ns3/multi-model-spectrum-channel.h>
-#include <ns3/waveform-generator.h>
-#include <ns3/spectrum-analyzer.h>
-#include <ns3/log.h>
+#include "../model/spectrum-model-ism2400MHz-res1MHz.h"
+#include "../model/spectrum-model-300kHz-300GHz-log.h"
+#include "../model/wifi-spectrum-value-helper.h"
+#include "../model/multi-model-spectrum-channel.h"
+#include "../model/waveform-generator.h"
+#include "../model/spectrum-analyzer.h"
+#include "../../core/model/log.h"
 #include <string>
-#include <ns3/friis-spectrum-propagation-loss.h>
-#include <ns3/propagation-delay-model.h>
+#include "../model/friis-spectrum-propagation-loss.h"
+#include "../../propagation/model/propagation-delay-model.h"
 #include <ns3/mobility-module.h>
-#include <ns3/spectrum-helper.h>
+#include "../helper/spectrum-helper.h"
 #include <ns3/applications-module.h>
-#include <ns3/adhoc-aloha-noack-ideal-phy-helper.h>
-#include <ns3/waveform-generator-helper.h>
-#include <ns3/spectrum-analyzer-helper.h>
-#include <ns3/non-communicating-net-device.h>
-#include <ns3/microwave-oven-spectrum-value-helper.h>
+#include "../helper/adhoc-aloha-noack-ideal-phy-helper.h"
+#include "../helper/waveform-generator-helper.h"
+#include "../helper/spectrum-analyzer-helper.h"
+#include "../model/non-communicating-net-device.h"
+#include "../model/microwave-oven-spectrum-value-helper.h"
 
 using namespace ns3;
 

@@ -18,7 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "constant-velocity-mobility-model.h"
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

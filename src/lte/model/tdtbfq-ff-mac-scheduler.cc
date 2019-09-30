@@ -19,16 +19,16 @@
  * Modification: Dizhi Zhou <dizhi.zhou@gmail.com>    // modify codes related to downlink scheduler
  */
 
-#include <ns3/log.h>
-#include <ns3/pointer.h>
-#include <ns3/math.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/math.h"
 
-#include <ns3/simulator.h>
-#include <ns3/lte-amc.h>
-#include <ns3/tdtbfq-ff-mac-scheduler.h>
-#include <ns3/lte-vendor-specific-parameters.h>
-#include <ns3/boolean.h>
-#include <ns3/integer.h>
+#include "../../core/model/simulator.h"
+#include "lte-amc.h"
+#include "tdtbfq-ff-mac-scheduler.h"
+#include "lte-vendor-specific-parameters.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/integer.h"
 #include <set>
 #include <cfloat>
 

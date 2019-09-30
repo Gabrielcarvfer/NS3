@@ -17,23 +17,22 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ARP_CACHE_H
-#define ARP_CACHE_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
-#include "ns3/simulator.h"
-#include "ns3/callback.h"
-#include "ns3/packet.h"
-#include "ns3/nstime.h"
-#include "ns3/net-device.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/address.h"
-#include "ns3/ptr.h"
-#include "ns3/object.h"
-#include "ns3/traced-callback.h"
-#include "ns3/sgi-hashmap.h"
-#include "ns3/output-stream-wrapper.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/net-device.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/model/address.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/utils/sgi-hashmap.h"
+#include "../../network/utils/output-stream-wrapper.h"
 
 namespace ns3 {
 
@@ -344,4 +343,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ARP_CACHE_H */
+

@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef GLOBAL_VALUE_H
-#define GLOBAL_VALUE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -210,4 +209,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GLOBAL_VALUE_H */
+

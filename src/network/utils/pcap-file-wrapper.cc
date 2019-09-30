@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/buffer.h"
-#include "ns3/header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../model/buffer.h"
+#include "../model/header.h"
 #include "pcap-file-wrapper.h"
 
 namespace ns3 {

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef FILE_CONFIG_H
-#define FILE_CONFIG_H
+#pragma once
 
 #include <string>
 
@@ -70,4 +69,4 @@ public:
 
 } // namespace ns3
 
-#endif /* FILE_CONFIG_H */
+

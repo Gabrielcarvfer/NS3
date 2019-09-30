@@ -29,8 +29,8 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 #include "dsdv-packet.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
+#include "../../network/utils/address-utils.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 namespace dsdv {

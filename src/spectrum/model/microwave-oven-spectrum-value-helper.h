@@ -18,11 +18,10 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef MICROWAVE_OVEN_SPECTRUM_VALUE_HELPER_H
-#define MICROWAVE_OVEN_SPECTRUM_VALUE_HELPER_H
+#pragma once
 
 
-#include <ns3/spectrum-value.h>
+#include "spectrum-value.h"
 
 namespace ns3 {
 
@@ -65,4 +64,4 @@ public:
 
 
 
-#endif /*  MICROWAVE_OVEN_SPECTRUM_VALUE_HELPER_H */
+

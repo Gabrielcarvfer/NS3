@@ -19,13 +19,12 @@
  *          He Wu <mdzz@u.washington.edu>
  */
 
-#ifndef WIFI_RADIO_ENERGY_MODEL_H
-#define WIFI_RADIO_ENERGY_MODEL_H
+#pragma once
 
-#include "ns3/device-energy-model.h"
-#include "ns3/traced-value.h"
-#include "ns3/event-id.h"
-#include "ns3/nstime.h"
+#include "../../energy/model/device-energy-model.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/nstime.h"
 #include "wifi-phy-listener.h"
 #include "wifi-phy-state.h"
 
@@ -453,4 +452,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIFI_RADIO_ENERGY_MODEL_H */
+

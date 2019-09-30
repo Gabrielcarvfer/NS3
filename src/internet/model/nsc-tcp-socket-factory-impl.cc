@@ -15,8 +15,8 @@
  */
 #include "nsc-tcp-l4-protocol.h"
 #include "nsc-tcp-socket-factory-impl.h"
-#include "ns3/socket.h"
-#include "ns3/assert.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

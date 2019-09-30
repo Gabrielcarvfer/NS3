@@ -18,11 +18,11 @@
  */
 
 #include "tcp-general-test.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
 #include "tcp-error-model.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/tcp-rx-buffer.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../model/tcp-rx-buffer.h"
 
 using namespace ns3;
 

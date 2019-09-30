@@ -18,17 +18,17 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#include "ns3/trace-source-accessor.h"
-#include "ns3/traced-callback.h"
-#include "ns3/pointer.h"
-#include "ns3/node.h"
-#include "ns3/assert.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/node.h"
+#include "../../core/model/assert.h"
 #include "uan-net-device.h"
 #include "uan-phy.h"
 #include "uan-mac.h"
 #include "uan-channel.h"
 #include "uan-transducer.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

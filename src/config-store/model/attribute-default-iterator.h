@@ -17,10 +17,9 @@
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
  
-#ifndef ATTRIBUTE_DEFAULT_ITERATOR_H
-#define ATTRIBUTE_DEFAULT_ITERATOR_H
+#pragma once
 
-#include "ns3/type-id.h"
+#include "../../core/model/type-id.h"
 #include <string>
 
 namespace ns3 {
@@ -62,4 +61,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ATTRIBUTE_DEFAULT_ITERATOR_H */
+

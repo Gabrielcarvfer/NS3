@@ -18,7 +18,7 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 #include "data-output-interface.h"
 

@@ -18,19 +18,19 @@
  * Author: Dean Armstrong <deanarm@gmail.com>
  */
 
-#include "ns3/string.h"
-#include "ns3/test.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/ssid.h"
-#include "ns3/packet-sink.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/on-off-helper.h"
+#include "../../core/model/string.h"
+#include "../../core/model/test.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../wifi/model/ssid.h"
+#include "../../applications/model/packet-sink.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../applications/helper/packet-sink-helper.h"
+#include "../../applications/helper/on-off-helper.h"
 
 using namespace ns3;
 

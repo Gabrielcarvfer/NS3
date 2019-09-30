@@ -18,10 +18,9 @@
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef PEER_LINK_FRAME_START_H
-#define PEER_LINK_FRAME_START_H
-#include "ns3/header.h"
-#include "ns3/supported-rates.h"
+#pragma once
+#include "../../../network/model/header.h"
+#include "../../../wifi/model/supported-rates.h"
 #include "dot11s-mac-header.h"
 #include "ie-dot11s-configuration.h"
 #include "ie-dot11s-peering-protocol.h"
@@ -251,4 +250,4 @@ private:
 bool operator== (const PeerLinkConfirmStart & a, const PeerLinkConfirmStart & b);
 } // namespace dot11s
 } // namespace ns3
-#endif
+

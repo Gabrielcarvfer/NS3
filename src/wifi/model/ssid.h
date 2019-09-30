@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SSID_H
-#define SSID_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -111,4 +110,4 @@ ATTRIBUTE_HELPER_HEADER (Ssid);
 
 } //namespace ns3
 
-#endif /* SSID_H */
+

@@ -21,10 +21,10 @@
  */
 
 #include "bandwidth-manager.h"
-#include "ns3/node.h"
+#include "../../network/model/node.h"
 #include "bs-net-device.h"
 #include "ss-net-device.h"
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include "burst-profile-manager.h"
 #include "ss-manager.h"
 #include "ss-record.h"

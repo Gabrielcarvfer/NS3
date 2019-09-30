@@ -18,8 +18,8 @@
  * Author: Lluis Parcerisa <lparcerisa@cttc.cat>
  */
 
-#include "ns3/log.h"
-#include "ns3/lte-asn1-header.h"
+#include "../../core/model/log.h"
+#include "lte-asn1-header.h"
 
 #include <stdio.h>
 #include <sstream>

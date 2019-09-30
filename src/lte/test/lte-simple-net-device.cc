@@ -18,10 +18,10 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/pointer.h"
-#include "ns3/log.h"
-#include "ns3/queue.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/queue.h"
 #include "lte-simple-net-device.h"
 
 namespace ns3 {

@@ -18,20 +18,20 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/abort.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/object-factory.h"
-#include "ns3/queue.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-channel.h"
-#include "ns3/config.h"
-#include "ns3/packet.h"
-#include "ns3/names.h"
-#include "ns3/boolean.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object-factory.h"
+#include "../utils/queue.h"
+#include "../utils/net-device-queue-interface.h"
+#include "../utils/simple-net-device.h"
+#include "../utils/simple-channel.h"
+#include "../../core/model/config.h"
+#include "../model/packet.h"
+#include "../../core/model/names.h"
+#include "../../core/model/boolean.h"
 
-#include "ns3/trace-helper.h"
+#include "trace-helper.h"
 #include "simple-net-device-helper.h"
 
 #include <string>

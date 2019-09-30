@@ -21,13 +21,12 @@
  *
  */
 
-#ifndef GNUPLOT_AGGREGATOR_H
-#define GNUPLOT_AGGREGATOR_H
+#pragma once
 
 #include <map>
 #include <string>
-#include "ns3/gnuplot.h"
-#include "ns3/data-collection-object.h"
+#include "gnuplot.h"
+#include "data-collection-object.h"
 
 namespace ns3 {
 
@@ -298,4 +297,4 @@ private:
 
 } // namespace ns3
 
-#endif // GNUPLOT_AGGREGATOR_H
+

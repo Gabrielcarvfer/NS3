@@ -17,10 +17,10 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/packet.h"
-#include "ns3/packet-tag-list.h"
-#include "ns3/test.h"
-#include "ns3/unused.h"
+#include "../model/packet.h"
+#include "../model/packet-tag-list.h"
+#include "../../core/model/test.h"
+#include "../../core/model/unused.h"
 #include <limits>     // std:numeric_limits
 #include <string>
 #include <cstdarg>

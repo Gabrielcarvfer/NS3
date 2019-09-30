@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef TRACED_CALLBACK_H
-#define TRACED_CALLBACK_H
+#pragma once
 
 #include <list>
 #include "callback.h"
@@ -434,4 +433,4 @@ TracedCallback<T1,T2,T3,T4,T5,T6,T7,T8>::operator() (T1 a1, T2 a2, T3 a3, T4 a4,
 
 } // namespace ns3
 
-#endif /* TRACED_CALLBACK_H */
+

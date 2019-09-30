@@ -18,15 +18,14 @@
  * Author: Marco Miozzo  <marco.miozzo@cttc.es>
  * 
  */
-#ifndef BUILDING_H
-#define BUILDING_H
+#pragma once
 
-#include <ns3/attribute.h>
-#include <ns3/attribute-helper.h>
-#include <ns3/vector.h>
-#include <ns3/box.h>
-#include <ns3/simple-ref-count.h>
-#include <ns3/object.h>
+#include "../../core/model/attribute.h"
+#include "../../core/model/attribute-helper.h"
+#include "../../core/model/vector.h"
+#include "../../mobility/model/box.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -224,4 +223,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BUILDING_H */
+

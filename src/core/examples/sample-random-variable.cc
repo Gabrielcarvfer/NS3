@@ -13,10 +13,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "ns3/simulator.h"
-#include "ns3/nstime.h"
-#include "ns3/command-line.h"
-#include "ns3/random-variable-stream.h"
+#include "../model/simulator.h"
+#include "../model/nstime.h"
+#include "../model/command-line.h"
+#include "../model/random-variable-stream.h"
 #include <iostream>
 
 /**

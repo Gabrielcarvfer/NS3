@@ -20,7 +20,7 @@
 
 #include <fstream>
 
-#include "ns3/gnuplot.h"
+#include "../model/gnuplot.h"
 
 using namespace ns3;
 

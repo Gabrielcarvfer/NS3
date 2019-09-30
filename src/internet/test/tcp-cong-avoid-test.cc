@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include "ns3/log.h"
-#include "ns3/simple-channel.h"
-#include "ns3/tcp-westwood.h"
-#include "ns3/config.h"
-#include "ns3/test.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/simple-channel.h"
+#include "../model/tcp-westwood.h"
+#include "../../core/model/config.h"
+#include "../../core/model/test.h"
 #include "tcp-general-test.h"
 
 using namespace ns3;

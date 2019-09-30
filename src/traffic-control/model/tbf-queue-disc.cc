@@ -27,14 +27,14 @@
  *                         Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/enum.h"
-#include "ns3/simulator.h"
-#include "ns3/uinteger.h"
-#include "ns3/attribute.h"
-#include "ns3/object-factory.h"
-#include "ns3/drop-tail-queue.h"
-#include "ns3/net-device-queue-interface.h"
+#include "../../core/model/log.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/drop-tail-queue.h"
+#include "../../network/utils/net-device-queue-interface.h"
 #include "tbf-queue-disc.h"
 
 namespace ns3 {

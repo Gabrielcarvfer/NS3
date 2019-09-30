@@ -19,16 +19,16 @@
  *         Nicola Baldo <nbaldo@cttc.cat>
  */
 
-#include "ns3/lte-helper.h"
-#include "ns3/epc-helper.h"
+#include "../helper/lte-helper.h"
+#include "../helper/epc-helper.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
-#include "ns3/ipv4-global-routing-helper.h"
+#include "../../internet/helper/ipv4-global-routing-helper.h"
 #include "ns3/internet-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/point-to-point-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
 #include <ns3/config-store-module.h>
 
 using namespace ns3;

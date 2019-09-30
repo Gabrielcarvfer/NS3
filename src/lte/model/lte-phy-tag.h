@@ -18,10 +18,9 @@
  * Author: Marco Miozzo  <marco.miozzo@cttc.es>
  *         Nicola Baldo  <nbaldo@cttc.es>
  */
-#ifndef LTE_PHY_TAG_H
-#define LTE_PHY_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 
 namespace ns3 {
 
@@ -73,4 +72,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_PHY_TAG_H */
+

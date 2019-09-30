@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef TRACE_HELPER_H
-#define TRACE_HELPER_H
+#pragma once
 
-#include "ns3/assert.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
-#include "ns3/simulator.h"
-#include "ns3/pcap-file-wrapper.h"
-#include "ns3/output-stream-wrapper.h"
+#include "../../core/model/assert.h"
+#include "net-device-container.h"
+#include "node-container.h"
+#include "../../core/model/simulator.h"
+#include "../utils/pcap-file-wrapper.h"
+#include "../utils/output-stream-wrapper.h"
 
 namespace ns3 {
 
@@ -867,4 +866,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TRACE_HELPER_H */
+

@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@gmail.com>
  */
-#ifndef OBJECT_VECTOR_H
-#define OBJECT_VECTOR_H
+#pragma once
 
 #include "object.h"
 #include "ptr.h"
@@ -141,4 +140,4 @@ MakeObjectVectorAccessor (INDEX (T::*getN)(void) const,
 
 } // namespace ns3
 
-#endif /* OBJECT_VECTOR_H */
+

@@ -20,7 +20,7 @@
  *         Junling Bu <linlinjavaer@gmail.com>
  */
 #include "higher-tx-tag.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

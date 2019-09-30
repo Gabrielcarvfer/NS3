@@ -19,16 +19,16 @@
  *  Sascha Alexander Jopen <jopen@cs.uni-bonn.de>
  */
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 #include <ns3/core-module.h>
 #include <ns3/lr-wpan-module.h>
-#include <ns3/propagation-loss-model.h>
-#include <ns3/propagation-delay-model.h>
-#include <ns3/simulator.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/packet.h>
-#include "ns3/rng-seed-manager.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../../core/model/simulator.h"
+#include "../../spectrum/model/single-model-spectrum-channel.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/rng-seed-manager.h"
 
 #include <iostream>
 #include <iomanip>

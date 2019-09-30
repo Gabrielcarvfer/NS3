@@ -18,7 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/uinteger.h"
+#include "../../core/model/uinteger.h"
 
 #include "ipv6-raw-socket-factory.h"
 

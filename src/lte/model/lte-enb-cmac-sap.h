@@ -19,13 +19,12 @@
  *         Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#ifndef LTE_ENB_CMAC_SAP_H
-#define LTE_ENB_CMAC_SAP_H
+#pragma once
 
-#include <ns3/packet.h>
-#include <ns3/ff-mac-common.h>
-#include <ns3/eps-bearer.h>
-#include <ns3/lte-common.h>
+#include "../../network/model/packet.h"
+#include "ff-mac-common.h"
+#include "eps-bearer.h"
+#include "lte-common.h"
 
 namespace ns3 {
 
@@ -245,4 +244,4 @@ public:
 } // namespace ns3
 
 
-#endif // MAC_SAP_H
+

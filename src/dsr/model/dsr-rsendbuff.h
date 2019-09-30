@@ -29,12 +29,11 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_SENDBUFF_H
-#define DSR_SENDBUFF_H
+#pragma once
 
 #include <vector>
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/simulator.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 namespace dsr {
@@ -264,4 +263,4 @@ private:
 } // namespace dsr
 } // namespace ns3
 
-#endif /* DSR_SENDBUFF_H */
+

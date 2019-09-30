@@ -19,8 +19,8 @@
  */
 
 #include "eps-bearer.h"
-#include <ns3/fatal-error.h>
-#include <ns3/attribute-construction-list.h>
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/attribute-construction-list.h"
 
 namespace ns3 {
 

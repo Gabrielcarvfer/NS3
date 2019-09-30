@@ -19,12 +19,12 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/tcp-congestion-ops.h"
-#include "ns3/tcp-socket-base.h"
-#include "ns3/tcp-ledbat.h"
-#include "ns3/string.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../model/tcp-congestion-ops.h"
+#include "../model/tcp-socket-base.h"
+#include "../model/tcp-ledbat.h"
+#include "../../core/model/string.h"
 
 using namespace ns3;
 

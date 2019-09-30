@@ -27,7 +27,7 @@
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
-#include "ns3/application.h"
+#include "../../src/network/model/application.h"
 
 #include "ns3/stats-module.h"
 

@@ -18,12 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SPECTRUM_VALUE_H
-#define SPECTRUM_VALUE_H
+#pragma once
 
-#include <ns3/ptr.h>
-#include <ns3/simple-ref-count.h>
-#include <ns3/spectrum-model.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "spectrum-model.h"
 #include <ostream>
 #include <vector>
 
@@ -634,4 +633,4 @@ double Integral (const SpectrumValue& arg);
 
 } // namespace ns3
 
-#endif /* SPECTRUM_VALUE_H */
+

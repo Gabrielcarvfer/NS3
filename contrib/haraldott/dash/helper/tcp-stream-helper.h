@@ -21,11 +21,11 @@
 #define TCP_STREAM_HELPER_H
 
 #include <stdint.h>
-#include "ns3/application-container.h"
-#include "ns3/node-container.h"
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
+#include "../../../../src/network/helper/application-container.h"
+#include "../../../../src/network/helper/node-container.h"
+#include "../../../../src/core/model/object-factory.h"
+#include "../../../../src/network/utils/ipv4-address.h"
+#include "../../../../src/network/utils/ipv6-address.h"
 
 namespace ns3 {
 

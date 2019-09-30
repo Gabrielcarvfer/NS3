@@ -23,13 +23,13 @@
  *          Vignesh Babu <ns3-dev@esk.fraunhofer.de> (RLF extensions)
  */
 
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
-#include <ns3/node.h>
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
 #include <cfloat>
 #include <cmath>
-#include <ns3/simulator.h>
-#include <ns3/double.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/double.h"
 #include "lte-ue-phy.h"
 #include "lte-enb-phy.h"
 #include "lte-net-device.h"
@@ -40,10 +40,10 @@
 #include "lte-ue-mac.h"
 #include "ff-mac-common.h"
 #include "lte-chunk-processor.h"
-#include <ns3/lte-common.h>
-#include <ns3/pointer.h>
-#include <ns3/boolean.h>
-#include <ns3/lte-ue-power-control.h>
+#include "lte-common.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/boolean.h"
+#include "lte-ue-power-control.h"
 
 namespace ns3 {
 

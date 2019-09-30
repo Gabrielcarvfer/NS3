@@ -18,12 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef PARABOLIC_ANTENNA_MODEL_H
-#define PARABOLIC_ANTENNA_MODEL_H
+#pragma once
 
 
-#include <ns3/object.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/object.h"
+#include "antenna-model.h"
 
 namespace ns3 {
 
@@ -73,4 +72,4 @@ private:
 } // namespace ns3
 
 
-#endif // PARABOLIC_ANTENNA_MODEL_H
+

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SIMULATOR_H
-#define SIMULATOR_H
+#pragma once
 
 #include "event-id.h"
 #include "event-impl.h"
@@ -1788,4 +1787,4 @@ Simulator::ScheduleDestroy (void (*f)(U1,U2,U3,U4,U5,U6), T1 a1, T2 a2, T3 a3, T
 
 } // namespace ns3
 
-#endif /* SIMULATOR_H */
+

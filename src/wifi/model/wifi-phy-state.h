@@ -19,8 +19,7 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_PHY_STATE_H
-#define WIFI_PHY_STATE_H
+#pragma once
 
 /**
   * The state of the PHY layer.
@@ -58,4 +57,4 @@ enum WifiPhyState
   OFF
 };
 
-#endif /* WIFI_PHY_STATE_H */
+

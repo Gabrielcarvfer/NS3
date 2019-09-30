@@ -18,10 +18,10 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/node.h"
-#include "ns3/node-list.h"
-#include "ns3/ipv6-list-routing.h"
-#include "ns3/ripng.h"
+#include "../../network/model/node.h"
+#include "../../network/model/node-list.h"
+#include "../model/ipv6-list-routing.h"
+#include "../model/ripng.h"
 #include "ripng-helper.h"
 
 namespace ns3 {

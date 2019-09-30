@@ -18,14 +18,13 @@
  * Author: George F. Riley<riley@ece.gatech.edu>
  */
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#pragma once
 
-#include "ns3/event-id.h"
-#include "ns3/nstime.h"
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/node.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "node.h"
 
 namespace ns3 {
 
@@ -154,4 +153,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* APPLICATION_H */
+

@@ -67,3 +67,5 @@ ns3module.h
 3rd-party/libtorch
 
 3rd-party/nsc/
+
+utils/failed_tests.json

@@ -29,9 +29,9 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 #include "dsdv-rtable.h"
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include <iomanip>
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

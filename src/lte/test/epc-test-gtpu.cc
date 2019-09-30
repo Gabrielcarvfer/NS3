@@ -19,10 +19,10 @@
  */
 
 
-#include "ns3/log.h"
-#include "ns3/object.h"
-#include "ns3/packet.h"
-#include "ns3/epc-gtpu-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../model/epc-gtpu-header.h"
 
 #include "epc-test-gtpu.h"
 

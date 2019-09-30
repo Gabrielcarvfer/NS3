@@ -19,11 +19,10 @@
  *
  */
 
-#ifndef LTE_HANDOVER_ALGORITHM_H
-#define LTE_HANDOVER_ALGORITHM_H
+#pragma once
 
-#include <ns3/object.h>
-#include <ns3/lte-rrc-sap.h>
+#include "../../core/model/object.h"
+#include "lte-rrc-sap.h"
 
 namespace ns3 {
 
@@ -111,4 +110,4 @@ protected:
 } // end of namespace ns3
 
 
-#endif /* LTE_HANDOVER_ALGORITHM_H */
+

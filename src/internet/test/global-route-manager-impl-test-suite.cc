@@ -22,10 +22,10 @@
  * of the quagga 0.99.7/src/ospfd/ospf_spf.c code which was ported here
  */
 
-#include "ns3/test.h"
-#include "ns3/global-route-manager-impl.h"
-#include "ns3/candidate-queue.h"
-#include "ns3/simulator.h"
+#include "../../core/model/test.h"
+#include "../model/global-route-manager-impl.h"
+#include "../model/candidate-queue.h"
+#include "../../core/model/simulator.h"
 #include <cstdlib> // for rand()
 
 using namespace ns3;

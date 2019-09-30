@@ -18,17 +18,16 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  * Modified by Emmanuelle Laprise to remove dependence on LLC headers
  */
-#ifndef NET_DEVICE_H
-#define NET_DEVICE_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/callback.h"
-#include "ns3/object.h"
-#include "ns3/ptr.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
 #include "packet.h"
 #include "address.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
+#include "../utils/ipv4-address.h"
+#include "../utils/ipv6-address.h"
 
 namespace ns3 {
 
@@ -363,4 +362,4 @@ public:
 
 } // namespace ns3
 
-#endif /* NET_DEVICE_H */
+

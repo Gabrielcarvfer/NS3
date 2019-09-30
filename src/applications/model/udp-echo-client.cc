@@ -15,18 +15,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "ns3/log.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/nstime.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/inet6-socket-address.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/socket-factory.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
 #include "udp-echo-client.h"
 
 namespace ns3 {

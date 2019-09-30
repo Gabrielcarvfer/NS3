@@ -19,8 +19,8 @@
  *
  */
 
-#include "ns3/wave-bsm-helper.h"
-#include "ns3/log.h"
+#include "wave-bsm-helper.h"
+#include "../../core/model/log.h"
 
 NS_LOG_COMPONENT_DEFINE ("WaveBsmHelper");
 

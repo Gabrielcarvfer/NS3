@@ -18,15 +18,15 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/node.h"
-#include "ns3/node-list.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/ipv4-list-routing.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/ipv4-interface.h"
-#include "ns3/arp-cache.h"
-#include "ns3/names.h"
+#include "../../network/model/node.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/simulator.h"
+#include "../model/ipv4-routing-protocol.h"
+#include "../model/ipv4-list-routing.h"
+#include "../model/ipv4-l3-protocol.h"
+#include "../model/ipv4-interface.h"
+#include "../model/arp-cache.h"
+#include "../../core/model/names.h"
 #include "ipv4-routing-helper.h"
 
 namespace ns3 {

@@ -18,9 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/sequence-number.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/sequence-number.h"
+#include "../../network/model/packet.h"
 #include "mac-rx-middle.h"
 #include "wifi-mac-header.h"
 

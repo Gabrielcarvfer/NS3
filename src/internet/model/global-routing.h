@@ -50,7 +50,7 @@
  * 
  * \section api API and Usage
  * 
- * Users must include ns3/global-route-manager.h header file.  After the
+ * Users must include global-route-manager.h header file.  After the
  * IPv4 topology has been built and addresses assigned, users call
  * ns3::GlobalRouteManager::PopulateRoutingTables (), prior to the 
  * ns3::Simulator::Run() call.

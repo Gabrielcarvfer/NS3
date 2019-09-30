@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage.inria.fr>
  */
 
-#ifndef SYSTEM_MUTEX_H
-#define SYSTEM_MUTEX_H
+#pragma once
 
 #include "ptr.h"
 
@@ -132,4 +131,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SYSTEM_MUTEX_H */
+

@@ -19,12 +19,11 @@
  */
 
 
-#ifndef UAN_HEADER_RC_H
-#define UAN_HEADER_RC_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/nstime.h"
-#include "ns3/mac8-address.h"
+#include "../../network/model/header.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/mac8-address.h"
 
 #include <set>
 
@@ -488,4 +487,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UAN_HEADER_RC_H */
+

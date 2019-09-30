@@ -18,8 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef BURST_PROFILE_MANAGER_H
-#define BURST_PROFILE_MANAGER_H
+#pragma once
 
 #include <stdint.h>
 #include "cid.h"
@@ -109,4 +108,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BURST_PROFILE_MANAGER_H */
+

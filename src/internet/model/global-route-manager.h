@@ -19,8 +19,7 @@
  *           Tom Henderson (tomhend@u.washington.edu)
  */
 
-#ifndef GLOBAL_ROUTE_MANAGER_H
-#define GLOBAL_ROUTE_MANAGER_H
+#pragma once
 
 namespace ns3 {
 
@@ -86,4 +85,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GLOBAL_ROUTE_MANAGER_H */
+

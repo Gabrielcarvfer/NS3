@@ -18,11 +18,10 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef PING6_H
-#define PING6_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/ipv6-address.h"
+#include "../../network/model/application.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -181,5 +180,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* PING6_H */
+
 

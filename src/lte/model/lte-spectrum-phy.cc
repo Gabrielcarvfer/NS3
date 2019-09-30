@@ -21,23 +21,23 @@
  */
 
 
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
 #include <cmath>
-#include <ns3/simulator.h>
-#include <ns3/trace-source-accessor.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../antenna/model/antenna-model.h"
 #include "lte-spectrum-phy.h"
 #include "lte-spectrum-signal-parameters.h"
 #include "lte-net-device.h"
 #include "lte-radio-bearer-tag.h"
 #include "lte-chunk-processor.h"
 #include "lte-phy-tag.h"
-#include <ns3/lte-mi-error-model.h>
-#include <ns3/lte-radio-bearer-tag.h>
-#include <ns3/boolean.h>
-#include <ns3/double.h>
-#include <ns3/config.h>
+#include "lte-mi-error-model.h"
+#include "lte-radio-bearer-tag.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/config.h"
 
 namespace ns3 {
 

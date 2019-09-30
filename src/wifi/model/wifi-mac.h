@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_MAC_H
-#define WIFI_MAC_H
+#pragma once
 
-#include "ns3/net-device.h"
+#include "../../network/model/net-device.h"
 #include "wifi-phy-standard.h"
 #include "wifi-remote-station-manager.h"
 #include "qos-utils.h"
@@ -523,5 +522,5 @@ private:
 
 } //namespace ns3
 
-#endif /* WIFI_MAC_H */
+
 

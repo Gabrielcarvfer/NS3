@@ -15,11 +15,10 @@
  *
  * Author: Gustavo Carneiro  <gjc@inescporto.pt>
  */
-#ifndef BRIDGE_CHANNEL_H
-#define BRIDGE_CHANNEL_H
+#pragma once
 
-#include "ns3/net-device.h"
-#include "ns3/channel.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/channel.h"
 #include <vector>
 
 namespace ns3 {
@@ -77,4 +76,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BRIDGE_CHANNEL_H */
+

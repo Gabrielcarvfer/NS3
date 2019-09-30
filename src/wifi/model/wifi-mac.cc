@@ -18,8 +18,8 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
 #include "wifi-mac.h"
 #include "txop.h"
 #include "ssid.h"

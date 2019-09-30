@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef CHANNEL_ACCESS_MANAGER_H
-#define CHANNEL_ACCESS_MANAGER_H
+#pragma once
 
 #include <vector>
 #include <algorithm>
-#include "ns3/event-id.h"
-#include "ns3/nstime.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -323,4 +322,4 @@ private:
 
 } //namespace ns3
 
-#endif /* CHANNEL_ACCESS_MANAGER_H */
+

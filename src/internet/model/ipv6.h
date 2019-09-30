@@ -20,16 +20,15 @@
 
 /* taken from src/node/ipv4.h and adapted to IPv6 */
 
-#ifndef IPV6_H
-#define IPV6_H
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/object.h"
-#include "ns3/socket.h"
-#include "ns3/callback.h"
+#include "../../core/model/object.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/callback.h"
 
-#include "ns3/ipv6-address.h"
+#include "../../network/utils/ipv6-address.h"
 #include "ipv6-interface-address.h"
 
 #ifdef __WIN32__
@@ -424,5 +423,5 @@ private:
 
 } // namespace ns3 
 
-#endif /* IPV6_H */
+
 

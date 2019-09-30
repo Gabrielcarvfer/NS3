@@ -17,9 +17,9 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/global-value.h"
-#include "ns3/test.h"
-#include "ns3/uinteger.h"
+#include "../model/global-value.h"
+#include "../model/test.h"
+#include "../model/uinteger.h"
 
 /**
  * \file

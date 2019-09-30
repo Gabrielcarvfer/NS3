@@ -20,15 +20,15 @@
  */
 
 
-#include <ns3/trace-fading-loss-model.h>
-#include <ns3/mobility-model.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/log.h>
-#include <ns3/string.h>
-#include <ns3/double.h>
-#include "ns3/uinteger.h"
+#include "trace-fading-loss-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "spectrum-value.h"
+#include "../../core/model/log.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
 #include <fstream>
-#include <ns3/simulator.h>
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

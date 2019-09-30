@@ -19,17 +19,16 @@
  */
 
 
-#ifndef LTE_HARQ_PHY_MODULE_H
-#define LTE_HARQ_PHY_MODULE_H
+#pragma once
 
 
 
-#include <ns3/log.h>
-#include <ns3/assert.h>
-#include <math.h>
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/math.h"
 #include <vector>
 #include <map>
-#include <ns3/simple-ref-count.h>
+#include "../../core/model/simple-ref-count.h"
 
 
 namespace ns3 {
@@ -159,4 +158,4 @@ private:
 
 }
 
-#endif /* LTE_HARQ_PHY_MODULE_H */
+

@@ -18,17 +18,16 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef NON_COMMUNICATING_NET_DEVICE_H
-#define NON_COMMUNICATING_NET_DEVICE_H
+#pragma once
 
 #include <cstring>
-#include <ns3/node.h>
-#include <ns3/address.h>
-#include <ns3/net-device.h>
-#include <ns3/callback.h>
-#include <ns3/packet.h>
-#include <ns3/traced-callback.h>
-#include <ns3/ptr.h>
+#include "../../network/model/node.h"
+#include "../../network/model/address.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -135,4 +134,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NON_COMMUNICATING_NET_DEVICE_H */
+

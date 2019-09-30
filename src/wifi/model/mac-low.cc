@@ -21,8 +21,8 @@
  *          Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 #include "mac-low.h"
 #include "qos-txop.h"
 #include "snr-tag.h"

@@ -15,18 +15,18 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#include "ns3/command-line.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/node-container.h"
-#include "ns3/net-device-container.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/seq-ts-header.h"
-#include "ns3/wave-net-device.h"
-#include "ns3/wave-mac-helper.h"
-#include "ns3/wave-helper.h"
+#include "../../core/model/command-line.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../applications/model/seq-ts-header.h"
+#include "../model/wave-net-device.h"
+#include "../helper/wave-mac-helper.h"
+#include "../helper/wave-helper.h"
 
 using namespace ns3;
 /**

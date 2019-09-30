@@ -103,7 +103,7 @@ macro (build_contrib_lib contrib_name components)
     write_module_header("contrib-${contrib_name}" "${header_files}")
 
     #Copy header files
-    file(COPY ${header_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
+    #file(COPY ${header_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
 endmacro()
 

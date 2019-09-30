@@ -18,12 +18,11 @@
  * Author:  Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#ifndef CANDIDATE_QUEUE_H
-#define CANDIDATE_QUEUE_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
-#include "ns3/ipv4-address.h"
+#include "../../network/utils/ipv4-address.h"
 
 namespace ns3 {
 
@@ -199,4 +198,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CANDIDATE_QUEUE_H */
+

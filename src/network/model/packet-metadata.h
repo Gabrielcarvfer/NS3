@@ -17,15 +17,14 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PACKET_METADATA_H
-#define PACKET_METADATA_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
 #include <limits>
-#include "ns3/callback.h"
-#include "ns3/assert.h"
-#include "ns3/type-id.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/type-id.h"
 #include "buffer.h"
 
 namespace ns3 {
@@ -750,4 +749,4 @@ PacketMetadata::~PacketMetadata ()
 } // namespace ns3
 
 
-#endif /* PACKET_METADATA_H */
+

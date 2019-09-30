@@ -20,11 +20,10 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef MAC_TX_MIDDLE_H
-#define MAC_TX_MIDDLE_H
+#pragma once
 
 #include <map>
-#include "ns3/simple-ref-count.h"
+#include "../../core/model/simple-ref-count.h"
 
 namespace ns3 {
 
@@ -74,4 +73,4 @@ private:
 
 } //namespace ns3
 
-#endif /* MAC_TX_MIDDLE_H */
+

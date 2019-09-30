@@ -42,12 +42,12 @@
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/error-model.h"
-#include "ns3/tcp-header.h"
-#include "ns3/udp-header.h"
-#include "ns3/enum.h"
-#include "ns3/event-id.h"
-#include "ns3/ipv4-global-routing-helper.h"
+#include "../../network/utils/error-model.h"
+#include "../../internet/model/tcp-header.h"
+#include "../../internet/model/udp-header.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/event-id.h"
+#include "../../internet/helper/ipv4-global-routing-helper.h"
 #include "ns3/traffic-control-module.h"
 
 using namespace ns3;

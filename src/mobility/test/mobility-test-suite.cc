@@ -23,14 +23,14 @@
  * involved).
  */
 
-#include "ns3/test.h"
-#include "ns3/boolean.h"
-#include "ns3/simulator.h"
-#include "ns3/scheduler.h"
-#include "ns3/vector.h"
-#include "ns3/mobility-model.h"
-#include "ns3/waypoint-mobility-model.h"
-#include "ns3/mobility-helper.h"
+#include "../../core/model/test.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/scheduler.h"
+#include "../../core/model/vector.h"
+#include "../model/mobility-model.h"
+#include "../model/waypoint-mobility-model.h"
+#include "../helper/mobility-helper.h"
 
 using namespace ns3;
 

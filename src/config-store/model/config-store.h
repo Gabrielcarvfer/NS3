@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef CONFIG_STORE_H
-#define CONFIG_STORE_H
+#pragma once
 
-#include "ns3/object-base.h"
+#include "../../core/model/object-base.h"
 #include "file-config.h"
 
 namespace ns3 {
@@ -130,4 +129,4 @@ std::ostream & operator << (std::ostream & os, ConfigStore::FileFormat & format)
 
 }  // namespace ns3
 
-#endif /* CONFIG_STORE_H */
+

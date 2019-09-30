@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/simulator.h"
-#include "ns3/object-vector.h"
-#include "ns3/config.h"
-#include "ns3/log.h"
-#include "ns3/assert.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object-vector.h"
+#include "../../core/model/config.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 #include "channel-list.h"
 #include "channel.h"
 

@@ -20,18 +20,17 @@
  */
 
 
-#ifndef LTE_RRC_PROTOCOL_REAL_H
-#define LTE_RRC_PROTOCOL_REAL_H
+#pragma once
 
 #include <stdint.h>
 #include <map>
 
-#include <ns3/ptr.h>
-#include <ns3/object.h>
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/lte-pdcp-sap.h>
-#include <ns3/lte-rlc-sap.h>
-#include <ns3/lte-rrc-header.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "lte-rrc-sap.h"
+#include "lte-pdcp-sap.h"
+#include "lte-rlc-sap.h"
+#include "lte-rrc-header.h"
 
 namespace ns3 {
 
@@ -389,4 +388,4 @@ private:
 }
 
 
-#endif // LTE_RRC_PROTOCOL_REAL_H
+

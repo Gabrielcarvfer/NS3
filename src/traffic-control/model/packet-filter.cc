@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/log.h"
-#include "ns3/integer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/integer.h"
 #include "queue-disc.h"
 #include "packet-filter.h"
 

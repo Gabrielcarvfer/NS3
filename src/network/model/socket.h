@@ -20,18 +20,17 @@
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef NS3_SOCKET_H
-#define NS3_SOCKET_H
+#pragma once
 
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/tag.h"
-#include "ns3/object.h"
-#include "ns3/net-device.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "tag.h"
+#include "../../core/model/object.h"
+#include "net-device.h"
 #include "address.h"
 #include <stdint.h>
-#include "ns3/inet-socket-address.h"
-#include "ns3/inet6-socket-address.h"
+#include "../utils/inet-socket-address.h"
+#include "../utils/inet6-socket-address.h"
 
 namespace ns3 {
 
@@ -1396,4 +1395,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_SOCKET_H */
+

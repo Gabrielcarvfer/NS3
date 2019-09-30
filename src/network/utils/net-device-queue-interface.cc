@@ -18,12 +18,12 @@
  * Author: Stefano Avallone <stefano.avallone@.unina.it>
  */
 
-#include "ns3/abort.h"
-#include "ns3/queue-limits.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/simulator.h"
-#include "ns3/uinteger.h"
-#include "ns3/queue-item.h"
+#include "../../core/model/abort.h"
+#include "queue-limits.h"
+#include "net-device-queue-interface.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/uinteger.h"
+#include "queue-item.h"
 
 namespace ns3 {
 

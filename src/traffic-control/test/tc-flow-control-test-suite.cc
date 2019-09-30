@@ -19,21 +19,21 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/uinteger.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/node-container.h"
-#include "ns3/traffic-control-layer.h"
-#include "ns3/traffic-control-helper.h"
-#include "ns3/simple-net-device-helper.h"
-#include "ns3/data-rate.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/queue.h"
-#include "ns3/config.h"
+#include "../../core/model/test.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/helper/node-container.h"
+#include "../model/traffic-control-layer.h"
+#include "../helper/traffic-control-helper.h"
+#include "../../network/helper/simple-net-device-helper.h"
+#include "../../network/utils/data-rate.h"
+#include "../../network/utils/net-device-queue-interface.h"
+#include "../../network/utils/queue.h"
+#include "../../core/model/config.h"
 
 using namespace ns3;
 

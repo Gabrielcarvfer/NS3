@@ -20,10 +20,10 @@
 
 
 #include "ns3/core-module.h"
-#include "ns3/config-store.h"
-#include <ns3/buildings-helper.h>
-#include "ns3/component-carrier.h"
-#include "ns3/cc-helper.h"
+#include "../../config-store/model/config-store.h"
+#include "../../buildings/helper/buildings-helper.h"
+#include "../model/component-carrier.h"
+#include "../helper/cc-helper.h"
 
 using namespace ns3;
 

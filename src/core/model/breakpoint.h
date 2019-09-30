@@ -18,8 +18,7 @@
  * Author: Gustavo Carneiro <gjc@inescporto.pt>
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef BREAKPOINT_H
-#define BREAKPOINT_H
+#pragma once
 
 /**
  * \file
@@ -88,4 +87,4 @@ void BreakpointFallback (void);
 } // namespace ns3
 
 
-#endif /* BREAKPOINT_H */
+

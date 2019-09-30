@@ -19,16 +19,16 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/fifo-queue-disc.h"
-#include "ns3/queue.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/object-factory.h"
+#include "../../core/model/test.h"
+#include "../model/fifo-queue-disc.h"
+#include "../../network/utils/queue.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object-factory.h"
 #include <vector>
 
 using namespace ns3;

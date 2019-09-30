@@ -18,8 +18,8 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 #include "tcp-socket-factory.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
 
 namespace ns3 {
 

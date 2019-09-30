@@ -18,20 +18,19 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef NDISC_CACHE_H
-#define NDISC_CACHE_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
 
-#include "ns3/packet.h"
-#include "ns3/nstime.h"
-#include "ns3/net-device.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/ptr.h"
-#include "ns3/timer.h"
-#include "ns3/sgi-hashmap.h"
-#include "ns3/output-stream-wrapper.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/net-device.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/timer.h"
+#include "../../network/utils/sgi-hashmap.h"
+#include "../../network/utils/output-stream-wrapper.h"
 
 namespace ns3
 {
@@ -460,5 +459,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* NDISC_CACHE_H */
+
 

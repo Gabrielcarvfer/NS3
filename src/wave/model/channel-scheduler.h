@@ -15,8 +15,7 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef CHANNEL_SCHEDULER_H
-#define CHANNEL_SCHEDULER_H
+#pragma once
 
 #include <map>
 #include "wave-net-device.h"
@@ -236,4 +235,4 @@ protected:
 };
 
 }
-#endif /* CHANNEL_SCHEDULER_H */
+

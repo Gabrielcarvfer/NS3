@@ -18,11 +18,10 @@
 
 // Provides an interface to aggregate to MPI-compatible NetDevices
 
-#ifndef NS3_MPI_RECEIVER_H
-#define NS3_MPI_RECEIVER_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/packet.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 
@@ -63,4 +62,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_MPI_RECEIVER_H */
+

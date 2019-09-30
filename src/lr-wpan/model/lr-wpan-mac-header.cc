@@ -18,7 +18,7 @@
  * Author: kwong yin <kwong-sang.yin@boeing.com>
  */
 #include "lr-wpan-mac-header.h"
-#include <ns3/address-utils.h>
+#include "../../network/utils/address-utils.h"
 
 namespace ns3 {
 

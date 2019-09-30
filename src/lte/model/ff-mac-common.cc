@@ -18,7 +18,7 @@
  * Author: Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#include <ns3/ff-mac-common.h>
+#include "ff-mac-common.h"
 
 namespace ns3 {
   

@@ -18,14 +18,13 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_ROUTING_TABLE_ENTRY_H
-#define IPV6_ROUTING_TABLE_ENTRY_H
+#pragma once
 
 #include <list>
 #include <vector>
 #include <ostream>
 
-#include "ns3/ipv6-address.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -384,5 +383,5 @@ std::ostream& operator<< (std::ostream& os, Ipv6MulticastRoutingTableEntry const
 
 } /* namespace ns3 */
 
-#endif /* IPV6_ROUTING_TABLE_ENTRY_H */
+
 

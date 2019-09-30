@@ -18,10 +18,9 @@
  * Author: Federico Maguolo <maguolof@dei.unipd.it>
  */
 
-#ifndef CARA_WIFI_MANAGER_H
-#define CARA_WIFI_MANAGER_H
+#pragma once
 
-#include "ns3/traced-value.h"
+#include "../../core/model/traced-value.h"
 #include "wifi-remote-station-manager.h"
 
 namespace ns3 {
@@ -83,4 +82,4 @@ private:
 
 } //namespace ns3
 
-#endif /* CARA_WIFI_MANAGER_H */
+

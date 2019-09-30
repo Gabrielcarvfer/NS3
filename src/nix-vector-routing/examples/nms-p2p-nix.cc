@@ -41,10 +41,10 @@
 #include "ns3/network-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/onoff-application.h"
-#include "ns3/packet-sink.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv4-nix-vector-helper.h"
+#include "../../applications/model/onoff-application.h"
+#include "../../applications/model/packet-sink.h"
+#include "../../core/model/simulator.h"
+#include "../helper/ipv4-nix-vector-helper.h"
 
 using namespace ns3;
 

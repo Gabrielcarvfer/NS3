@@ -20,8 +20,7 @@
  * 
  */
 
-#ifndef PROPAGATION_ENVIRONMENT_H
-#define PROPAGATION_ENVIRONMENT_H
+#pragma once
 
 
 namespace ns3 {
@@ -54,5 +53,5 @@ enum CitySize
 } // namespace ns3
 
 
-#endif // PROPAGATION_ENVIRONMENT_H
+
 

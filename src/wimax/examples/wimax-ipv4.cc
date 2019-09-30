@@ -57,7 +57,7 @@
 #include "ns3/config-store-module.h"
 #include "ns3/wimax-module.h"
 #include "ns3/internet-module.h"
-#include "ns3/global-route-manager.h"
+#include "../../internet/model/global-route-manager.h"
 #include <iostream>
 
 using namespace ns3;

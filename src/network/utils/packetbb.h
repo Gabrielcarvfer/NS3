@@ -22,16 +22,15 @@
  * (MANET) Packet/PbbMessage Format
  * See: http://tools.ietf.org/html/rfc5444 for details */
 
-#ifndef PACKETBB_H
-#define PACKETBB_H
+#pragma once
 
 #include <list>
 
-#include "ns3/ptr.h"
-#include "ns3/address.h"
-#include "ns3/header.h"
-#include "ns3/buffer.h"
-#include "ns3/simple-ref-count.h"
+#include "../../core/model/ptr.h"
+#include "../model/address.h"
+#include "../model/header.h"
+#include "../model/buffer.h"
+#include "../../core/model/simple-ref-count.h"
 
 namespace ns3 {
 
@@ -1924,4 +1923,4 @@ public:
 
 } /* namespace ns3 */
 
-#endif /* PACKETBB_H */
+

@@ -18,10 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include <cmath>
-#include "ns3/simulator.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
 #include "random-waypoint-mobility-model.h"
 #include "position-allocator.h"
 

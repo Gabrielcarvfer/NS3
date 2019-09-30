@@ -18,8 +18,8 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/mobility-model.h>
-#include <ns3/friis-spectrum-propagation-loss.h>
+#include "../../mobility/model/mobility-model.h"
+#include "friis-spectrum-propagation-loss.h"
 #include <cmath> // for M_PI
 
 

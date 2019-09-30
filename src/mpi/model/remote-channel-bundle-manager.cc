@@ -24,7 +24,7 @@
 #include "remote-channel-bundle.h"
 #include "null-message-simulator-impl.h"
 
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

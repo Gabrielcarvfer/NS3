@@ -19,13 +19,13 @@
  *
  */
 
-#include "ns3/bsm-application.h"
-#include "ns3/log.h"
-#include "ns3/wave-net-device.h"
-#include "ns3/wave-mac-helper.h"
-#include "ns3/wave-helper.h"
-#include "ns3/mobility-model.h"
-#include "ns3/mobility-helper.h"
+#include "bsm-application.h"
+#include "../../core/model/log.h"
+#include "wave-net-device.h"
+#include "../helper/wave-mac-helper.h"
+#include "../helper/wave-helper.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../mobility/helper/mobility-helper.h"
 
 NS_LOG_COMPONENT_DEFINE ("BsmApplication");
 

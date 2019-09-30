@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef CHUNK_H
-#define CHUNK_H
+#pragma once
 
-#include "ns3/object-base.h"
+#include "../../core/model/object-base.h"
 #include "buffer.h"
 
 namespace ns3 {
@@ -76,4 +75,4 @@ public:
 
 } // namespace ns3
 
-#endif /* CHUNK_H */
+

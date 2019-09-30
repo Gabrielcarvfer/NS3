@@ -17,19 +17,19 @@
  *
  * Author:  Tom Henderson (tomhend@u.washington.edu)
  */
-#include "ns3/address.h"
-#include "ns3/address-utils.h"
-#include "ns3/log.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/inet6-socket-address.h"
-#include "ns3/node.h"
-#include "ns3/socket.h"
-#include "ns3/udp-socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/udp-socket-factory.h"
+#include "../../network/model/address.h"
+#include "../../network/utils/address-utils.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../network/model/node.h"
+#include "../../network/model/socket.h"
+#include "../../internet/model/udp-socket.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/socket-factory.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../internet/model/udp-socket-factory.h"
 #include "packet-sink.h"
 
 namespace ns3 {

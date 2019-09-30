@@ -19,8 +19,7 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_PHY_LISTENER_H
-#define WIFI_PHY_LISTENER_H
+#pragma once
 
 namespace ns3 {
 
@@ -120,4 +119,4 @@ public:
 
 } //namespace ns3
 
-#endif /* WIFI_PHY_LISTENER_H */
+

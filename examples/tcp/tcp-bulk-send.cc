@@ -31,7 +31,7 @@
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/network-module.h"
-#include "ns3/packet-sink.h"
+#include "../../src/applications/model/packet-sink.h"
 
 using namespace ns3;
 

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef CONSTANT_RATE_WIFI_MANAGER_H
-#define CONSTANT_RATE_WIFI_MANAGER_H
+#pragma once
 
 #include "wifi-remote-station-manager.h"
 
@@ -67,4 +66,4 @@ private:
 
 } //namespace ns3
 
-#endif /* CONSTANT_RATE_WIFI_MANAGER_H */
+

@@ -25,8 +25,8 @@
  */
 
 #include "tcp-htcp.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

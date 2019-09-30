@@ -50,21 +50,21 @@
  * export NS_LOG=RateAdaptationDistance=level_info
  */
 
-#include "ns3/gnuplot.h"
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
-#include "ns3/log.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/mobility-model.h"
+#include "../../src/stats/model/gnuplot.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/uinteger.h"
+#include "../../src/core/model/boolean.h"
+#include "../../src/core/model/log.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/packet-sink-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/mobility/model/mobility-model.h"
 
 using namespace ns3;
 using namespace std;

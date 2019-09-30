@@ -20,12 +20,12 @@
 
 #include "config-store.h"
 #include "raw-text-config.h"
-#include "ns3/abort.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/attribute-construction-list.h"
-#include "ns3/enum.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/attribute-construction-list.h"
+#include "../../core/model/enum.h"
 //#include "ns3/config-store-config.h"
 #ifdef HAVE_LIBXML2
 #include "xml-config.h"

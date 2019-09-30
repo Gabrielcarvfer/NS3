@@ -18,10 +18,9 @@
  * Author: Ghada Badawy <gbadawy@gmail.com>
  */
 
-#ifndef AMPDU_SUBFRAME_HEADER_H
-#define AMPDU_SUBFRAME_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 namespace ns3 {
 
@@ -87,4 +86,4 @@ private:
 
 } //namespace ns3
 
-#endif /* AMPDU_SUBFRAME_HEADER_H */
+

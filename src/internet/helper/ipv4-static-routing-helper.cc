@@ -17,16 +17,16 @@
  */
 
 #include <vector>
-#include "ns3/log.h"
-#include "ns3/ptr.h"
-#include "ns3/names.h"
-#include "ns3/node.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv4-list-routing.h"
-#include "ns3/assert.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv4-routing-protocol.h"
+#include "../../core/model/log.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/names.h"
+#include "../../network/model/node.h"
+#include "../model/ipv4.h"
+#include "../model/ipv4-route.h"
+#include "../model/ipv4-list-routing.h"
+#include "../../core/model/assert.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../model/ipv4-routing-protocol.h"
 #include "ipv4-static-routing-helper.h"
 
 namespace ns3 {

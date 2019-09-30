@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef UINTEGER_H
-#define UINTEGER_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-helper.h"
@@ -116,4 +115,4 @@ Ptr<const AttributeChecker> MakeUintegerChecker (uint64_t min, uint64_t max)
 
 } // namespace ns3
 
-#endif /* UINTEGER_H */
+

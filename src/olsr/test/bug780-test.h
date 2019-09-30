@@ -16,12 +16,11 @@
  * Authors: Pavel Boyko <boyko@iitp.ru>
  */
 
-#ifndef BUG780_TEST_H
-#define BUG780_TEST_H
+#pragma once
 
-#include "ns3/test.h"
-#include "ns3/nstime.h"
-#include "ns3/node-container.h"
+#include "../../core/model/test.h"
+#include "../../core/model/nstime.h"
+#include "../../network/helper/node-container.h"
 
 namespace ns3 {
 namespace olsr {
@@ -61,4 +60,4 @@ private:
 }
 }
 
-#endif /* BUG780_TEST_H */
+

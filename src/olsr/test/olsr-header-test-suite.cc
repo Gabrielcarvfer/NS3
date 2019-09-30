@@ -18,9 +18,9 @@
  * Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
  */
 
-#include "ns3/test.h"
-#include "ns3/olsr-header.h"
-#include "ns3/packet.h"
+#include "../../core/model/test.h"
+#include "../model/olsr-header.h"
+#include "../../network/model/packet.h"
 
 
 using namespace ns3;

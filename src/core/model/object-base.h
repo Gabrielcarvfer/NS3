@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef OBJECT_BASE_H
-#define OBJECT_BASE_H
+#pragma once
 
 #include "type-id.h"
 #include "callback.h"
@@ -285,4 +284,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OBJECT_BASE_H */
+

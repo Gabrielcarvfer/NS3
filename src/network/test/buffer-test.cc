@@ -18,10 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#include "ns3/buffer.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/double.h"
-#include "ns3/test.h"
+#include "../model/buffer.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/double.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

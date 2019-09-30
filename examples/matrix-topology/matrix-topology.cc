@@ -51,11 +51,11 @@
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/global-route-manager.h"
+#include "../../src/internet/model/global-route-manager.h"
 #include "ns3/mobility-module.h"
 #include "ns3/netanim-module.h"
-#include "ns3/assert.h"
-#include "ns3/ipv4-global-routing-helper.h"
+#include "../../src/core/model/assert.h"
+#include "../../src/internet/helper/ipv4-global-routing-helper.h"
 
 using namespace std;
 using namespace ns3;

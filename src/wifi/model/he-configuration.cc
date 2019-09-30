@@ -17,9 +17,9 @@
  *
  */
 
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/uinteger.h"
 #include "he-configuration.h"
 
 namespace ns3 {

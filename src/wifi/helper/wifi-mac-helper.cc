@@ -18,10 +18,10 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/net-device.h"
+#include "../../network/model/net-device.h"
 #include "wifi-mac-helper.h"
-#include "ns3/wifi-mac.h"
-#include "ns3/boolean.h"
+#include "../model/wifi-mac.h"
+#include "../../core/model/boolean.h"
 
 namespace ns3 {
 

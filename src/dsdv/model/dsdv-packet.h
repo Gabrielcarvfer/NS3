@@ -29,13 +29,12 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSDV_PACKET_H
-#define DSDV_PACKET_H
+#pragma once
 
 #include <iostream>
-#include "ns3/header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/nstime.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 namespace dsdv {
@@ -145,4 +144,4 @@ static inline std::ostream & operator<< (std::ostream& os, const DsdvHeader & pa
 }
 }
 
-#endif /* DSDV_PACKET_H */
+

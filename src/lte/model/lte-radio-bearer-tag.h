@@ -17,10 +17,9 @@
  *
  * Author: Author: Marco Miozzo  <marco.miozzo@cttc.es>
  */
-#ifndef LTE_RADIO_BEARER_TAG_H
-#define LTE_RADIO_BEARER_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 
 namespace ns3 {
 
@@ -118,4 +117,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_RADIO_BEARER_TAG_H */
+

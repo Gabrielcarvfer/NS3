@@ -19,16 +19,15 @@
  *
  */
 
-#ifndef NS3_NULLMESSAGE_MPI_INTERFACE_H
-#define NS3_NULLMESSAGE_MPI_INTERFACE_H
+#pragma once
 
 #include "parallel-communication-interface.h"
 
-#include <ns3/nstime.h>
-#include <ns3/buffer.h>
+#include "../../core/model/nstime.h"
+#include "../../network/model/buffer.h"
 
 #ifdef NS3_MPI
-#include "mpi.h"
+#include "ns3/mpi.h"
 #else
 typedef void* MPI_Request;
 #endif
@@ -223,4 +222,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_NULL_MESSAGE_MPI_INTERFACE_H */
+

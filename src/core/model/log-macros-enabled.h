@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef NS3_LOG_MACROS_ENABLED_H
-#define NS3_LOG_MACROS_ENABLED_H
+#pragma once
 
 /**
  * \file
@@ -246,4 +245,3 @@
 
 #endif /* NS3_LOG_ENABLE */
 
-#endif /* NS3_LOG_MACROS_ENABLED_H */

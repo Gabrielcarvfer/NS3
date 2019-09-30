@@ -18,10 +18,9 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_PHY_HEADER_H
-#define WIFI_PHY_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 namespace ns3 {
 
@@ -445,4 +444,4 @@ private:
 
 } //namespace ns3
 
-#endif /* WIFI_PHY_HEADER_H */
+

@@ -18,12 +18,11 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef DATA_CALCULATOR_H
-#define DATA_CALCULATOR_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 extern const double NaN; //!< Stored representation of NaN
@@ -191,4 +190,4 @@ private:
 };
 
 
-#endif /* DATA_CALCULATOR_H */
+

@@ -17,11 +17,11 @@
  *
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
-#include "ns3/dot11s-installer.h"
-#include "ns3/peer-management-protocol.h"
-#include "ns3/hwmp-protocol.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/mesh-wifi-interface-mac.h"
+#include "dot11s-installer.h"
+#include "../../model/dot11s/peer-management-protocol.h"
+#include "../../model/dot11s/hwmp-protocol.h"
+#include "../../../wifi/model/wifi-net-device.h"
+#include "../../model/mesh-wifi-interface-mac.h"
 
 namespace ns3 {
 using namespace dot11s;

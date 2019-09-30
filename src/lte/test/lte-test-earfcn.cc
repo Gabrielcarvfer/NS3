@@ -20,10 +20,10 @@
 
 
 
-#include "ns3/test.h"
-#include "ns3/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
 
-#include "ns3/lte-spectrum-value-helper.h"
+#include "../model/lte-spectrum-value-helper.h"
 
 using namespace ns3;
 

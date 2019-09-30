@@ -17,17 +17,16 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef CSMA_HELPER_H
-#define CSMA_HELPER_H
+#pragma once
 
 #include <string>
 
-#include "ns3/attribute.h"
-#include "ns3/object-factory.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
-#include "ns3/csma-channel.h"
-#include "ns3/trace-helper.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
+#include "../model/csma-channel.h"
+#include "../../network/helper/trace-helper.h"
 
 namespace ns3 {
 
@@ -254,4 +253,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CSMA_HELPER_H */
+

@@ -16,12 +16,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
  
-#ifndef ATTRIBUTE_ITERATOR_H
-#define ATTRIBUTE_ITERATOR_H
+#pragma once
 
-#include "ns3/ptr.h"
-#include "ns3/object.h"
-#include "ns3/object-ptr-container.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "../../core/model/object-ptr-container.h"
 #include <vector>
 
 namespace ns3 {
@@ -190,4 +189,4 @@ resides
 
 } // namespace ns3
 
-#endif /* ATTRIBUTE_ITERATOR_H */
+

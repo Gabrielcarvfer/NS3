@@ -17,13 +17,13 @@
  *
  */
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include "tcp-general-test.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
-#include "ns3/tcp-header.h"
-#include "ns3/tcp-tx-buffer.h"
-#include "ns3/tcp-rx-buffer.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
+#include "../model/tcp-header.h"
+#include "../model/tcp-tx-buffer.h"
+#include "../model/tcp-rx-buffer.h"
 
 using namespace ns3;
 

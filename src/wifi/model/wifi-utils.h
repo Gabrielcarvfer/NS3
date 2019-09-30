@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_UTILS_H
-#define WIFI_UTILS_H
+#pragma once
 
 #include "block-ack-type.h"
 #include "wifi-preamble.h"
@@ -201,4 +200,4 @@ bool IsAmpdu (Ptr<const Packet> packet);
   const uint16_t SEQNO_SPACE_HALF_SIZE = SEQNO_SPACE_SIZE / 2;
 } // namespace ns3
 
-#endif /* WIFI_UTILS_H */
+

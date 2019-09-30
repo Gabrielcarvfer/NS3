@@ -17,11 +17,11 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/tcp-congestion-ops.h"
-#include "ns3/tcp-socket-base.h"
-#include "ns3/tcp-highspeed.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../model/tcp-congestion-ops.h"
+#include "../model/tcp-socket-base.h"
+#include "../model/tcp-highspeed.h"
 
 using namespace ns3;
 

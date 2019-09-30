@@ -19,7 +19,7 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "yans-error-rate-model.h"
 #include "dsss-error-rate-model.h"
 #include "wifi-utils.h"

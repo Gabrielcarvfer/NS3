@@ -17,13 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PROPAGATION_DELAY_MODEL_H
-#define PROPAGATION_DELAY_MODEL_H
+#pragma once
 
-#include "ns3/ptr.h"
-#include "ns3/object.h"
-#include "ns3/nstime.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -129,4 +128,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PROPAGATION_DELAY_MODEL_H */
+

@@ -19,15 +19,14 @@
  *
  */
 
-#ifndef LTE_TEST_DOWNLINK_FR_H
-#define LTE_TEST_DOWNLINK_FR_H
+#pragma once
 
-#include "ns3/test.h"
-#include "ns3/spectrum-value.h"
-#include <ns3/lte-rrc-sap.h>
+#include "../../core/model/test.h"
+#include "../../spectrum/model/spectrum-value.h"
+#include "../model/lte-rrc-sap.h"
 
-#include "ns3/spectrum-test.h"
-#include "ns3/lte-spectrum-value-helper.h"
+#include "../../spectrum/test/spectrum-test.h"
+#include "../model/lte-spectrum-value-helper.h"
 
 using namespace ns3;
 
@@ -395,4 +394,4 @@ private:
 
 };
 
-#endif /* LTE_TEST_DOWNLINK_FR_H */
+

@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef AARF_WIFI_MANAGER_H
-#define AARF_WIFI_MANAGER_H
+#pragma once
 
-#include "ns3/traced-value.h"
+#include "../../core/model/traced-value.h"
 #include "wifi-remote-station-manager.h"
 
 namespace ns3 {
@@ -80,4 +79,4 @@ private:
 
 } //namespace ns3
 
-#endif /* AARF_WIFI_MANAGER_H */
+

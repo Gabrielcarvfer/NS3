@@ -25,8 +25,8 @@
 #include "tcp-option-sack-permitted.h"
 #include "tcp-option-sack.h"
 
-#include "ns3/type-id.h"
-#include "ns3/log.h"
+#include "../../core/model/type-id.h"
+#include "../../core/model/log.h"
 
 #include <vector>
 

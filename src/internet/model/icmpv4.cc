@@ -19,8 +19,8 @@
  */
 
 #include "icmpv4.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

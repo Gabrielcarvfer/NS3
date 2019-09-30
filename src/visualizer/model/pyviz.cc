@@ -20,15 +20,15 @@
 
 #include <cstdlib>
 #include "pyviz.h"
-#include "ns3/simulator.h"
-#include "ns3/config.h"
-#include "ns3/node-list.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/ppp-header.h"
-#include "ns3/wifi-mac-header.h"
-#include "ns3/ethernet-header.h"
-#include "ns3/log.h"
-#include "ns3/abort.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/config.h"
+#include "../../network/model/node-list.h"
+#include "../../wifi/model/wifi-net-device.h"
+#include "../../point-to-point/model/ppp-header.h"
+#include "../../wifi/model/wifi-mac-header.h"
+#include "../../network/utils/ethernet-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
 
 #include "visual-simulator-impl.h"
 

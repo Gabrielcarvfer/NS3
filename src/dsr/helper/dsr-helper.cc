@@ -30,18 +30,18 @@
  */
 
 #include "dsr-helper.h"
-#include "ns3/node-container.h"
-#include "ns3/node.h"
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/log.h"
-#include "ns3/tcp-l4-protocol.h"
-#include "ns3/udp-l4-protocol.h"
-#include "ns3/dsr-options.h"
-#include "ns3/dsr-routing.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/node-list.h"
-#include "ns3/names.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/model/node.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/log.h"
+#include "../../internet/model/tcp-l4-protocol.h"
+#include "../../internet/model/udp-l4-protocol.h"
+#include "../model/dsr-options.h"
+#include "../model/dsr-routing.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

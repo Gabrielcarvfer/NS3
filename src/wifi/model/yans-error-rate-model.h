@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef YANS_ERROR_RATE_MODEL_H
-#define YANS_ERROR_RATE_MODEL_H
+#pragma once
 
 #include "error-rate-model.h"
 
@@ -159,4 +158,4 @@ private:
 
 } //namespace ns3
 
-#endif /* YANS_ERROR_RATE_MODEL_H */
+

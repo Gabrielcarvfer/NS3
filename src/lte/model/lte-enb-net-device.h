@@ -20,16 +20,15 @@
  * Author: Danilo Abrignani <danilo.abrignani@unibo.it> : Integrated with new architecture - GSoC 2015 - Carrier Aggregation
  */
 
-#ifndef LTE_ENB_NET_DEVICE_H
-#define LTE_ENB_NET_DEVICE_H
+#pragma once
 
-#include "ns3/lte-net-device.h"
-#include "ns3/event-id.h"
-#include "ns3/mac48-address.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/lte-phy.h"
-#include "ns3/component-carrier-enb.h"
+#include "lte-net-device.h"
+#include "../../core/model/event-id.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "lte-phy.h"
+#include "component-carrier-enb.h"
 #include <vector>
 #include <map>
 
@@ -261,4 +260,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_ENB_NET_DEVICE_H */
+

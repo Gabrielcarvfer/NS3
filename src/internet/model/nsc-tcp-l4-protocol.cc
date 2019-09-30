@@ -17,16 +17,16 @@
  * 2008 Florian Westphal <fw@strlen.de>
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/nstime.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
 
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/ipv4-route.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "ipv4-route.h"
 
-#include "ns3/object-vector.h"
-#include "ns3/string.h"
+#include "../../core/model/object-vector.h"
+#include "../../core/model/string.h"
 #include "tcp-header.h"
 #include "ipv4-end-point-demux.h"
 #include "ipv4-end-point.h"
@@ -42,7 +42,7 @@
 #include <dlfcn.h>
 #include <iomanip>
 
-#include "../model/inet-headers.h"
+#include "inet-headers.h"
 #include <arpa/inet.h>
 
 namespace ns3 {

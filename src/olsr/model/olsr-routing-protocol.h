@@ -20,25 +20,24 @@
  *          Gustavo J. A. M. Carneiro <gjc@inescporto.pt>
  */
 
-#ifndef OLSR_AGENT_IMPL_H
-#define OLSR_AGENT_IMPL_H
+#pragma once
 
 #include "olsr-header.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include "olsr-state.h"
 #include "olsr-repositories.h"
 
-#include "ns3/object.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/socket.h"
-#include "ns3/event-garbage-collector.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/timer.h"
-#include "ns3/traced-callback.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/ipv4-static-routing.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../network/model/socket.h"
+#include "../../core/helper/event-garbage-collector.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/timer.h"
+#include "../../core/model/traced-callback.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../internet/model/ipv4-static-routing.h"
 
 #include <vector>
 #include <map>
@@ -785,4 +784,4 @@ private:
 }
 }  // namespace ns3
 
-#endif /* OLSR_AGENT_IMPL_H */
+

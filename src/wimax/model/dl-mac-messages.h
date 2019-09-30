@@ -20,11 +20,10 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef DCD_CHANNEL_ENCODINGS_H
-#define DCD_CHANNEL_ENCODINGS_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 #include <list>
 
 namespace ns3 {
@@ -113,15 +112,12 @@ private:
 
 } // namespace ns3
 
-#endif /* DCD_CHANNEL_ENCODINGS_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef OFDM_DCD_CHANNEL_ENCODINGS_H
-#define OFDM_DCD_CHANNEL_ENCODINGS_H
-
 #include <stdint.h>
-#include "ns3/mac48-address.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -229,15 +225,12 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_DCD_CHANNEL_ENCODINGS_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef OFDM_DL_BURST_PROFILE_H
-#define OFDM_DL_BURST_PROFILE_H
-
 #include <stdint.h>
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 
 namespace ns3 {
 
@@ -334,15 +327,12 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_DL_BURST_PROFILE_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef DCD_H
-#define DCD_H
-
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include <vector>
 
 namespace ns3 {
@@ -426,12 +416,9 @@ private:
 
 } // namespace ns3
 
-#endif /* DCD_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
-
-#ifndef OFDM_DL_MAP_IE_H
-#define OFDM_DL_MAP_IE_H
 
 #include <stdint.h>
 #include "cid.h"
@@ -519,17 +506,14 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_DL_MAP_IE_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef DL_MAP_H
-#define DL_MAP_H
-
 #include <stdint.h>
 #include <vector>
-#include "ns3/header.h"
-#include "ns3/mac48-address.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -600,4 +584,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DL_MAP_H */
+

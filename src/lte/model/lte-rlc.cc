@@ -19,13 +19,13 @@
  */
 
 
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 
-#include "ns3/lte-rlc.h"
-#include "ns3/lte-rlc-tag.h"
+#include "lte-rlc.h"
+#include "lte-rlc-tag.h"
 // #include "lte-mac-sap.h"
-#include "ns3/lte-rlc-sap.h"
+#include "lte-rlc-sap.h"
 // #include "ff-mac-sched-sap.h"
 
 namespace ns3 {

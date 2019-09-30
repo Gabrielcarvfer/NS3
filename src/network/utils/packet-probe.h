@@ -21,17 +21,16 @@
  * Modified by: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef PACKET_PROBE_H
-#define PACKET_PROBE_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/callback.h"
-#include "ns3/boolean.h"
-#include "ns3/nstime.h"
-#include "ns3/packet.h"
-#include "ns3/traced-value.h"
-#include "ns3/simulator.h"
-#include "ns3/probe.h"
+#include "../../core/model/object.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/nstime.h"
+#include "../model/packet.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/simulator.h"
+#include "../../stats/model/probe.h"
 
 namespace ns3 {
 
@@ -113,4 +112,4 @@ private:
 
 } // namespace ns3
 
-#endif // PACKET_PROBE_H
+

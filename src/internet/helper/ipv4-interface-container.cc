@@ -19,8 +19,8 @@
  */
 
 #include "ipv4-interface-container.h"
-#include "ns3/node-list.h"
-#include "ns3/names.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

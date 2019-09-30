@@ -18,10 +18,9 @@
  * Author: Gustavo Carneiro  <gjcarneiro@gmail.com>
  */
 
-#ifndef VISUAL_SIMULATOR_IMPL_H
-#define VISUAL_SIMULATOR_IMPL_H
+#pragma once
 
-#include "ns3/simulator-impl.h"
+#include "../../core/model/simulator-impl.h"
 
 namespace ns3 {
 
@@ -89,4 +88,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DEFAULT_SIMULATOR_IMPL_H */
+

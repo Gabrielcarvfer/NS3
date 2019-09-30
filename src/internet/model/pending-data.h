@@ -21,14 +21,12 @@
 // Georgia Tech Network Simulator - Data Descriptors
 // George F. Riley.  Georgia Tech, Spring 2002
 
-#ifndef PENDING_DATA_H
-#define PENDING_DATA_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "pending-data.h"
-#include "ns3/sequence-number.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/sequence-number.h"
 
-#include "ns3/ptr.h"
+#include "../../core/model/ptr.h"
 namespace ns3
 {
 class Packet;
@@ -181,4 +179,4 @@ public:
 
 } //namespace ns3
 
-#endif /* PENDING_DATA_H */
+

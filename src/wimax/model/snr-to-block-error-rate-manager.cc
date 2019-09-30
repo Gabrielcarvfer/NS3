@@ -20,11 +20,11 @@
  */
 
 #include <cstring>
-#include "ns3/snr-to-block-error-rate-manager.h"
-#include "ns3/snr-to-block-error-rate-record.h"
+#include "snr-to-block-error-rate-manager.h"
+#include "snr-to-block-error-rate-record.h"
 #include "default-traces.h"
-#include "ns3/log.h"
-#include "ns3/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 #include <fstream>
 #include <sstream>
 

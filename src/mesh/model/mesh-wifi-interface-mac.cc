@@ -19,19 +19,19 @@
  *          Pavel Boyko <boyko@iitp.ru>
  */
 
-#include "ns3/mesh-wifi-interface-mac.h"
-#include "ns3/mesh-wifi-beacon.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/mac-low.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/simulator.h"
-#include "ns3/yans-wifi-phy.h"
-#include "ns3/wifi-utils.h"
-#include "ns3/pointer.h"
-#include "ns3/double.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/socket.h"
+#include "mesh-wifi-interface-mac.h"
+#include "mesh-wifi-beacon.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../wifi/model/mac-low.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/simulator.h"
+#include "../../wifi/model/yans-wifi-phy.h"
+#include "../../wifi/model/wifi-utils.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/double.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../network/model/socket.h"
 
 namespace ns3 {
 

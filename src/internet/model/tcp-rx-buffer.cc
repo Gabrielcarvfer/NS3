@@ -18,8 +18,8 @@
  * Author: Adrian Sai-wah Tam <adrian.sw.tam@gmail.com>
  */
 
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 #include "tcp-rx-buffer.h"
 
 namespace ns3 {

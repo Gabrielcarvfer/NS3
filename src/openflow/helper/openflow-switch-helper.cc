@@ -20,11 +20,11 @@
 #ifdef NS3_OPENFLOW
 
 #include "openflow-switch-helper.h"
-#include "ns3/log.h"
-#include "ns3/openflow-switch-net-device.h"
-#include "ns3/openflow-interface.h"
-#include "ns3/node.h"
-#include "ns3/names.h"
+#include "../../core/model/log.h"
+#include "../model/openflow-switch-net-device.h"
+#include "../model/openflow-interface.h"
+#include "../../network/model/node.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

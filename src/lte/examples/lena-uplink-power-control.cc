@@ -23,8 +23,8 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/config-store.h"
-#include <ns3/buildings-helper.h>
+#include "../../config-store/model/config-store.h"
+#include "../../buildings/helper/buildings-helper.h"
 
 using namespace ns3;
 

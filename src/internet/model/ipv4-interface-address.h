@@ -17,12 +17,11 @@
  *
  */
 
-#ifndef IPV4_INTERFACE_ADDRESS_H
-#define IPV4_INTERFACE_ADDRESS_H
+#pragma once
 
 #include <stdint.h>
 #include <ostream>
-#include "ns3/ipv4-address.h"
+#include "../../network/utils/ipv4-address.h"
 
 namespace ns3 {
 
@@ -180,4 +179,4 @@ inline bool operator != (const Ipv4InterfaceAddress &a, const Ipv4InterfaceAddre
 
 } // namespace ns3
 
-#endif /* IPV4_ADDRESS_H */
+

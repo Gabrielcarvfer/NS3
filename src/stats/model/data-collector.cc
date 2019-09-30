@@ -18,8 +18,8 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#include "ns3/object.h"
-#include "ns3/log.h"
+#include "../../core/model/object.h"
+#include "../../core/model/log.h"
 
 #include "data-collector.h"
 #include "data-calculator.h"

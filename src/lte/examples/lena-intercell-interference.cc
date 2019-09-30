@@ -24,8 +24,8 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/config-store.h"
-#include "ns3/radio-bearer-stats-calculator.h"
+#include "../../config-store/model/config-store.h"
+#include "../helper/radio-bearer-stats-calculator.h"
 
 #include <iomanip>
 #include <string>

@@ -1,5 +1,5 @@
-#include "ns3module.h"
-#include "ns3/ref-count-base.h"
+#include "ns3/ns3module.h"
+#include "../model/ref-count-base.h"
 #include <unistd.h>
 
 #if PY_VERSION_HEX >= 0x03000000

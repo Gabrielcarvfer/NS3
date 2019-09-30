@@ -19,14 +19,13 @@
  */
 
 
-#ifndef SPECTRUM_ERROR_MODEL_H
-#define SPECTRUM_ERROR_MODEL_H
+#pragma once
 
-#include <ns3/spectrum-value.h>
-#include <ns3/ptr.h>
-#include <ns3/packet.h>
-#include <ns3/nstime.h>
-#include <ns3/object.h>
+#include "spectrum-value.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -103,4 +102,4 @@ private:
 
 
 
-#endif /* SPECTRUM_ERROR_MODEL_H */
+

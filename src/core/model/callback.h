@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef CALLBACK_H
-#define CALLBACK_H
+#pragma once
 
 #include "ptr.h"
 #include "fatal-error.h"
@@ -1941,4 +1940,4 @@ bool CallbackValue::GetAccessor (T &value) const
 } // namespace ns3
 
 
-#endif /* CALLBACK_H */
+

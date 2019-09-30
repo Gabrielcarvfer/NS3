@@ -18,10 +18,9 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef HT_CONFIGURATION_H
-#define HT_CONFIGURATION_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -93,4 +92,4 @@ private:
 
 } //namespace ns3
 
-#endif /* HT_CONFIGURATION_H */
+

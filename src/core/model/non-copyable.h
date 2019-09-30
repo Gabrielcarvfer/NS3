@@ -18,8 +18,7 @@
  * Author:  Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef NS3_NON_COPYABLE_H
-#define NS3_NON_COPYABLE_H
+#pragma once
 
 /**
  * \file
@@ -72,4 +71,4 @@ private:
 
 } // namespace ns3 
 
-#endif /* NS3_NON_COPYABLE_H */
+

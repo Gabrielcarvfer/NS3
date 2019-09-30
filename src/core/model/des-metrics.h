@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef DESMETRICS_H
-#define DESMETRICS_H
+#pragma once
 
 /**
  * @file
@@ -167,4 +166,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DESMETRICS_H */
+

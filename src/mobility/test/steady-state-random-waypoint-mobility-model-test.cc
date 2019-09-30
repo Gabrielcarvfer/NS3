@@ -18,13 +18,13 @@
  * Author: Denis Fakhriev <fakhriev@iitp.ru>
  */
 #include <cmath>
-#include "ns3/simulator.h"
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/test.h"
-#include "ns3/config.h"
-#include "ns3/steady-state-random-waypoint-mobility-model.h"
-#include "ns3/rng-seed-manager.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/test.h"
+#include "../../core/model/config.h"
+#include "../model/steady-state-random-waypoint-mobility-model.h"
+#include "../../core/model/rng-seed-manager.h"
 
 using namespace ns3;
 

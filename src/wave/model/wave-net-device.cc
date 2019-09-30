@@ -18,14 +18,14 @@
  *         Junling Bu <linlinjavaer@gmail.com>
  */
 #include <algorithm>
-#include "ns3/node.h"
-#include "ns3/wifi-phy.h"
-#include "ns3/llc-snap-header.h"
-#include "ns3/channel.h"
-#include "ns3/log.h"
-#include "ns3/socket.h"
-#include "ns3/object-map.h"
-#include "ns3/object-vector.h"
+#include "../../network/model/node.h"
+#include "../../wifi/model/wifi-phy.h"
+#include "../../network/utils/llc-snap-header.h"
+#include "../../network/model/channel.h"
+#include "../../core/model/log.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/object-map.h"
+#include "../../core/model/object-vector.h"
 #include "wave-net-device.h"
 #include "higher-tx-tag.h"
 

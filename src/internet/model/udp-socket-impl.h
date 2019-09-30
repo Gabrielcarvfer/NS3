@@ -17,18 +17,17 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef UDP_SOCKET_IMPL_H
-#define UDP_SOCKET_IMPL_H
+#pragma once
 
 #include <stdint.h>
 #include <queue>
-#include "ns3/callback.h"
-#include "ns3/traced-callback.h"
-#include "ns3/socket.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/udp-socket.h"
-#include "ns3/ipv4-interface.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv4-address.h"
+#include "udp-socket.h"
+#include "ipv4-interface.h"
 #include "icmpv4.h"
 
 namespace ns3 {
@@ -263,4 +262,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_SOCKET_IMPL_H */
+

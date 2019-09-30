@@ -19,18 +19,17 @@
  * Modification: Dizhi Zhou <dizhi.zhou@gmail.com>    // modify codes related to downlink scheduler
  */
 
-#ifndef TDBET_FF_MAC_SCHEDULER_H
-#define TDBET_FF_MAC_SCHEDULER_H
+#pragma once
 
-#include <ns3/lte-common.h>
-#include <ns3/ff-mac-csched-sap.h>
-#include <ns3/ff-mac-sched-sap.h>
-#include <ns3/ff-mac-scheduler.h>
+#include "lte-common.h"
+#include "ff-mac-csched-sap.h"
+#include "ff-mac-sched-sap.h"
+#include "ff-mac-scheduler.h"
 #include <vector>
 #include <map>
-#include <ns3/nstime.h>
-#include <ns3/lte-amc.h>
-#include <ns3/lte-ffr-sap.h>
+#include "../../core/model/nstime.h"
+#include "lte-amc.h"
+#include "lte-ffr-sap.h"
 
 // value for SINR outside the range defined by FF-API, used to indicate that there
 // is no CQI for this element
@@ -396,4 +395,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TDBET_FF_MAC_SCHEDULER_H */
+

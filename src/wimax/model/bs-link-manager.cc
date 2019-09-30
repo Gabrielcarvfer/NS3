@@ -22,10 +22,10 @@
 
 #include "bs-link-manager.h"
 #include <stdint.h>
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 #include "burst-profile-manager.h"
 #include "ss-record.h"
 #include "ss-manager.h"

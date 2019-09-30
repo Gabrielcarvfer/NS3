@@ -76,7 +76,7 @@
 #include "ns3/dsdv-module.h"
 #include "ns3/dsr-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
 
 using namespace ns3;
 using namespace dsr;

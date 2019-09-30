@@ -19,8 +19,8 @@
  */
 
 #include "inet-socket-address.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

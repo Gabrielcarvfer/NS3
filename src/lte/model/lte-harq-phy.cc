@@ -19,9 +19,9 @@
  */
 
 
-#include <ns3/lte-harq-phy.h>
-#include <ns3/log.h>
-#include <ns3/assert.h>
+#include "lte-harq-phy.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

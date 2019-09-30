@@ -30,14 +30,13 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef TCP_WESTWOOD_H
-#define TCP_WESTWOOD_H
+#pragma once
 
 #include "tcp-congestion-ops.h"
-#include "ns3/tcp-recovery-ops.h"
-#include "ns3/sequence-number.h"
-#include "ns3/traced-value.h"
-#include "ns3/event-id.h"
+#include "tcp-recovery-ops.h"
+#include "../../network/utils/sequence-number.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/event-id.h"
 
 namespace ns3 {
 
@@ -138,4 +137,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* TCP_WESTWOOD_H */
+

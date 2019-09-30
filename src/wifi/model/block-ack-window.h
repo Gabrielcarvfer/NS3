@@ -18,8 +18,7 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#ifndef BLOCK_ACK_WINDOW_H
-#define BLOCK_ACK_WINDOW_H
+#pragma once
 
 #include <vector>
 
@@ -117,4 +116,4 @@ private:
 
 } //namespace ns3
 
-#endif /* BLOCK_ACK_WINDOW_H */
+

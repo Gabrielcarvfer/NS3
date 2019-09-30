@@ -18,14 +18,13 @@
  * Author: Mathieu Lacage <mathieu.lacage@cutebugs.net>
  */
 
-#ifndef PCAP_TEST_H
-#define PCAP_TEST_H
+#pragma once
 
 #include <sstream>
 #include <string>
 #include <stdint.h>
 #include "pcap-file.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 /**
  * \brief Test that a pair of reference/new pcap files are equal
@@ -53,4 +52,4 @@
   } while (false)
 
 
-#endif /* PCAP_TEST_H */
+

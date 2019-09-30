@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef LTE_FR_SOFT_ALGORITHM_H
-#define LTE_FR_SOFT_ALGORITHM_H
+#pragma once
 
-#include <ns3/lte-ffr-algorithm.h>
-#include <ns3/lte-ffr-sap.h>
-#include <ns3/lte-ffr-rrc-sap.h>
-#include <ns3/lte-rrc-sap.h>
+#include "lte-ffr-algorithm.h"
+#include "lte-ffr-sap.h"
+#include "lte-ffr-rrc-sap.h"
+#include "lte-rrc-sap.h"
 #include <map>
 
 namespace ns3 {
@@ -158,4 +157,4 @@ private:
 } // end of namespace ns3
 
 
-#endif /* LTE_FR_SOFT_ALGORITHM_H */
+

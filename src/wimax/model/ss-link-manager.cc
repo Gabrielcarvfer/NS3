@@ -22,12 +22,12 @@
 
 #include "ss-link-manager.h"
 #include <stdint.h>
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
 #include "burst-profile-manager.h"
 #include "service-flow-manager.h"
 

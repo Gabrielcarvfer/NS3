@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage.inria.fr>
  */
 
-#ifndef SYSTEM_THREAD_H
-#define SYSTEM_THREAD_H
+#pragma once
 
 //#include "ns3/core-config.h"
 #include "callback.h"
@@ -173,6 +172,6 @@ private:
 
 } // namespace ns3
 
-#endif /* SYSTEM_THREAD_H */
+
 
 

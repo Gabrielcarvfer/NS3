@@ -20,7 +20,7 @@
  */
 
 #include "ie-dot11s-configuration.h"
-#include "ns3/packet.h"
+#include "../../../network/model/packet.h"
 namespace ns3 {
 namespace dot11s {
 

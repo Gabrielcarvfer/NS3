@@ -18,8 +18,7 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#ifndef HASH_FNV_H
-#define HASH_FNV_H
+#pragma once
 
 #include "hash-function.h"
 
@@ -114,4 +113,4 @@ private:
 
 }  // namespace ns3
 
-#endif  /* HASH_FNV_H */
+

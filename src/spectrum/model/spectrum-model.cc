@@ -21,9 +21,9 @@
 
 #include <cmath>
 #include <cstddef>
-#include <ns3/spectrum-model.h>
-#include <ns3/log.h>
-#include <ns3/assert.h>
+#include "spectrum-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 
 
 

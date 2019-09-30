@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef LTE_FFR_ENHANCED_ALGORITHM_H
-#define LTE_FFR_ENHANCED_ALGORITHM_H
+#pragma once
 
-#include <ns3/lte-ffr-algorithm.h>
-#include <ns3/lte-ffr-sap.h>
-#include <ns3/lte-ffr-rrc-sap.h>
-#include <ns3/lte-rrc-sap.h>
+#include "lte-ffr-algorithm.h"
+#include "lte-ffr-sap.h"
+#include "lte-ffr-rrc-sap.h"
+#include "lte-rrc-sap.h"
 #include <map>
 
 // value for SINR outside the range defined by FF-API, used to indicate that there
@@ -193,4 +192,4 @@ private:
 
 } // end of namespace ns3
 
-#endif /* LTE_FFR_ENHANCED_ALGORITHM_H */
+

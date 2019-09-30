@@ -19,16 +19,15 @@
  *         Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#ifndef UAN_PHY_GEN_H
-#define UAN_PHY_GEN_H
+#pragma once
 
 
 #include "uan-phy.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/device-energy-model.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/event-id.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "../../energy/model/device-energy-model.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/event-id.h"
 #include <list>
 
 namespace ns3 {
@@ -450,4 +449,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* UAN_PHY_GEN_H */
+

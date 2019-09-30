@@ -19,17 +19,17 @@
  */
 #include "simple-net-device.h"
 #include "simple-channel.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/error-model.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/tag.h"
-#include "ns3/simulator.h"
-#include "ns3/queue.h"
+#include "../model/node.h"
+#include "../model/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "error-model.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/string.h"
+#include "../model/tag.h"
+#include "../../core/model/simulator.h"
+#include "queue.h"
 
 namespace ns3 {
 

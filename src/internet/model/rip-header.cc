@@ -19,7 +19,7 @@
  */
 
 #include "rip-header.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

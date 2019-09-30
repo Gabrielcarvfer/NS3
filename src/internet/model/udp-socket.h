@@ -20,14 +20,13 @@
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef UDP_SOCKET_H
-#define UDP_SOCKET_H
+#pragma once
 
-#include "ns3/socket.h"
-#include "ns3/traced-callback.h"
-#include "ns3/callback.h"
-#include "ns3/ptr.h"
-#include "ns3/object.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -171,6 +170,6 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_SOCKET_H */
+
 
 

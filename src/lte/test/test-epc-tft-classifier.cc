@@ -19,19 +19,19 @@
  *          Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/udp-header.h"
-#include "ns3/tcp-header.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/ipv6-l3-protocol.h"
-#include "ns3/udp-l4-protocol.h"
-#include "ns3/tcp-l4-protocol.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../internet/model/ipv6-header.h"
+#include "../../internet/model/udp-header.h"
+#include "../../internet/model/tcp-header.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/ipv6-l3-protocol.h"
+#include "../../internet/model/udp-l4-protocol.h"
+#include "../../internet/model/tcp-l4-protocol.h"
 
-#include "ns3/epc-tft-classifier.h"
+#include "../model/epc-tft-classifier.h"
 
 #include <iomanip>
 

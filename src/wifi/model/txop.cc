@@ -18,11 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/simulator.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/socket.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../network/model/socket.h"
 #include "txop.h"
 #include "channel-access-manager.h"
 #include "wifi-mac-queue.h"

@@ -18,11 +18,10 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef DL_FRAME_PREFIX_IE_H
-#define DL_FRAME_PREFIX_IE_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 namespace ns3 {
 
@@ -120,14 +119,12 @@ private:
 
 } // namespace ns3
 
-#endif /* DL_FRAME_PREFIX_IE_H */
 
-#ifndef OFDM_DOWNLINK_FRAME_PREFIX_H
-#define OFDM_DOWNLINK_FRAME_PREFIX_H
+
 
 #include <stdint.h>
-#include "ns3/header.h"
-#include "ns3/mac48-address.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -217,4 +214,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_DOWNLINK_FRAME_PREFIX_H */
+

@@ -23,35 +23,35 @@
  *          Biljana Bojovic <biljana.bojovic@cttc.es> (Carrier Aggregation)
  */
 
-#include "ns3/llc-snap-header.h"
-#include "ns3/simulator.h"
-#include "ns3/callback.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
+#include "../../network/utils/llc-snap-header.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
 #include "lte-net-device.h"
-#include "ns3/packet-burst.h"
-#include "ns3/uinteger.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
-#include "ns3/lte-enb-net-device.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
+#include "lte-enb-net-device.h"
 #include "lte-ue-net-device.h"
 #include "lte-ue-mac.h"
 #include "lte-ue-rrc.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv6.h"
+#include "../../internet/model/ipv4-header.h"
+#include "../../internet/model/ipv6-header.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv6.h"
 #include "lte-amc.h"
 #include "lte-ue-phy.h"
 #include "epc-ue-nas.h"
-#include <ns3/ipv4-l3-protocol.h>
-#include <ns3/ipv6-l3-protocol.h>
-#include <ns3/log.h>
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/ipv6-l3-protocol.h"
+#include "../../core/model/log.h"
 #include "epc-tft.h"
-#include <ns3/lte-ue-component-carrier-manager.h>
-#include <ns3/object-map.h>
-#include <ns3/object-factory.h>
+#include "lte-ue-component-carrier-manager.h"
+#include "../../core/model/object-map.h"
+#include "../../core/model/object-factory.h"
 
 namespace ns3 {
 

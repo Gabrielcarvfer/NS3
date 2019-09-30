@@ -18,17 +18,16 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_L3_PROTOCOL_H
-#define IPV6_L3_PROTOCOL_H
+#pragma once
 
 #include <list>
 
-#include "ns3/traced-callback.h"
-#include "ns3/net-device.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv6-pmtu-cache.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/model/net-device.h"
+#include "ipv6.h"
+#include "../../network/utils/ipv6-address.h"
+#include "ipv6-header.h"
+#include "ipv6-pmtu-cache.h"
 
 class Ipv6L3ProtocolTestCase;
 
@@ -789,5 +788,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_L3_PROTOCOL_H */
+
 

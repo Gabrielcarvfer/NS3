@@ -20,11 +20,11 @@
 #include <cstdarg>
 #include <iostream>
 #include <sstream>
-#include "ns3/test.h"
-#include "ns3/header.h"
-#include "ns3/trailer.h"
-#include "ns3/packet.h"
-#include "ns3/packet-metadata.h"
+#include "../../core/model/test.h"
+#include "../model/header.h"
+#include "../model/trailer.h"
+#include "../model/packet.h"
+#include "../model/packet-metadata.h"
 
 using namespace ns3;
 

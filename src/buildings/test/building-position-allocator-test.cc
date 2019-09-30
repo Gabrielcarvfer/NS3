@@ -20,16 +20,16 @@
 
 
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include <ns3/building-position-allocator.h>
-#include <ns3/mobility-building-info.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/mobility-model.h>
-#include <ns3/building.h>
-#include <ns3/buildings-helper.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/simulator.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../helper/building-position-allocator.h"
+#include "../model/mobility-building-info.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../model/building.h"
+#include "../helper/buildings-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../core/model/simulator.h"
 #include <map>
 
 using namespace ns3;

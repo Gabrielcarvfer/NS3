@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TAG_BUFFER_H
-#define TAG_BUFFER_H
+#pragma once
 
 #include <stdint.h>
 
@@ -164,7 +163,7 @@ private:
 
 #ifdef TAG_BUFFER_USE_INLINE
 
-#include "ns3/assert.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 
@@ -232,4 +231,3 @@ TagBuffer::ReadU32 (void)
 
 #endif /* TAG_BUFFER_USE_INLINE */
 
-#endif /* TAG_BUFFER_H */

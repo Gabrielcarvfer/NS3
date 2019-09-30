@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TIMER_H
-#define TIMER_H
+#pragma once
 
 #include "fatal-error.h"
 #include "nstime.h"
@@ -392,4 +391,4 @@ Timer::SetArguments (T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6)
 
 } // namespace ns3
 
-#endif /* TIMER_H */
+

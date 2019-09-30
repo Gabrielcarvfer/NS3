@@ -18,11 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_NET_DEVICE_H
-#define WIFI_NET_DEVICE_H
+#pragma once
 
-#include "ns3/net-device.h"
-#include "ns3/traced-callback.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -208,4 +207,4 @@ private:
 
 } //namespace ns3
 
-#endif /* WIFI_NET_DEVICE_H */
+

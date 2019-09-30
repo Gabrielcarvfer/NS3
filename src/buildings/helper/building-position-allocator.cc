@@ -19,22 +19,22 @@
  *         Michele Polese <michele.polese@gmail.com> for the OutdoorPositionAllocator class
  */
 #include "building-position-allocator.h"
-#include <ns3/mobility-building-info.h>
-#include "ns3/mobility-model.h"
-#include "ns3/buildings-helper.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
-#include "ns3/enum.h"
-#include "ns3/boolean.h"
-#include "ns3/log.h"
-#include "ns3/box.h"
-#include "ns3/building.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../model/mobility-building-info.h"
+#include "../../mobility/model/mobility-model.h"
+#include "buildings-helper.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/log.h"
+#include "../../mobility/model/box.h"
+#include "../model/building.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 #include <cmath>
 
-#include "ns3/building-list.h"
+#include "../model/building-list.h"
 
 namespace ns3 {
 

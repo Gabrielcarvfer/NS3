@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@gmail.com>
  */
-#ifndef OBJECT_PTR_CONTAINER_H
-#define OBJECT_PTR_CONTAINER_H
+#pragma once
 
 #include <map>
 #include "object.h"
@@ -286,4 +285,4 @@ Ptr<const AttributeChecker> MakeObjectPtrContainerChecker (void)
 
 } // namespace ns3
 
-#endif /* OBJECT_PTR_CONTAINER_H */
+

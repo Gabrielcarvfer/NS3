@@ -18,8 +18,8 @@
  * Authors: Josh Pelkey <jpelkey@gatech.edu>
  */
 
-#include "ns3/log.h"
-#include "ns3/fatal-error.h"
+#include "../../core/model/log.h"
+#include "../../core/model/fatal-error.h"
 
 #include "nix-vector.h"
 

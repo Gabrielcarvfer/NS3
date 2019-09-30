@@ -18,16 +18,16 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/boolean.h"
-#include "ns3/object-vector.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv6-header.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/object-vector.h"
+#include "ipv6.h"
+#include "ipv4-route.h"
+#include "ipv6-route.h"
+#include "ipv6-header.h"
 
 #include "udp-l4-protocol.h"
 #include "udp-header.h"

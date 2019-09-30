@@ -20,8 +20,8 @@
 */
 
 #include "simple-ue-component-carrier-manager.h"
-#include <ns3/log.h>
-#include <ns3/lte-ue-mac.h>
+#include "../../core/model/log.h"
+#include "lte-ue-mac.h"
 
 namespace ns3 {
 

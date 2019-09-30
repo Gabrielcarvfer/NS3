@@ -19,8 +19,7 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef VHT_CAPABILITIES_H
-#define VHT_CAPABILITIES_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -290,4 +289,4 @@ std::ostream &operator << (std::ostream &os, const VhtCapabilities &vhtcapabilit
 
 } //namespace ns3
 
-#endif /* VHT_CAPABILITY_H */
+

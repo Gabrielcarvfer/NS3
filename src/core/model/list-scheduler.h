@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef LIST_SCHEDULER_H
-#define LIST_SCHEDULER_H
+#pragma once
 
 #include "scheduler.h"
 #include <list>
@@ -76,4 +75,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LIST_SCHEDULER_H */
+

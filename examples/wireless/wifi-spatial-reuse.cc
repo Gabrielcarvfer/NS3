@@ -60,20 +60,20 @@
 // transmission or transmit at the same time.
 //
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/spectrum-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/application-container.h"
-#include "ns3/multi-model-spectrum-channel.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/ap-wifi-mac.h"
-#include "ns3/he-configuration.h"
-#include "ns3/packet-socket-helper.h"
-#include "ns3/packet-socket-client.h"
-#include "ns3/packet-socket-server.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/spectrum-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/network/helper/application-container.h"
+#include "../../src/spectrum/model/multi-model-spectrum-channel.h"
+#include "../../src/wifi/model/wifi-net-device.h"
+#include "../../src/wifi/model/ap-wifi-mac.h"
+#include "../../src/wifi/model/he-configuration.h"
+#include "../../src/network/helper/packet-socket-helper.h"
+#include "../../src/network/utils/packet-socket-client.h"
+#include "../../src/network/utils/packet-socket-server.h"
 
 using namespace ns3;
 

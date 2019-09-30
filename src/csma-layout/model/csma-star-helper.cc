@@ -18,11 +18,11 @@
 #include <sstream>
 
 // ns3 includes
-#include "ns3/csma-star-helper.h"
-#include "ns3/node-list.h"
-#include "ns3/point-to-point-net-device.h"
-#include "ns3/vector.h"
-#include "ns3/log.h"
+#include "csma-star-helper.h"
+#include "../../network/model/node-list.h"
+#include "../../point-to-point/model/point-to-point-net-device.h"
+#include "../../core/model/vector.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

@@ -18,11 +18,10 @@
  * Author: Emmanuelle Laprise <emmanuelle.laprise@bluekazoo.ca>
  */
 
-#ifndef ETHERNET_TRAILER_H
-#define ETHERNET_TRAILER_H
+#pragma once
 
-#include "ns3/trailer.h"
-#include "ns3/packet.h"
+#include "../model/trailer.h"
+#include "../model/packet.h"
 #include <string>
 
 namespace ns3 {
@@ -112,4 +111,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ETHERNET_TRAILER_H */
+

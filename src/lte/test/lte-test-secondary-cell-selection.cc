@@ -21,26 +21,26 @@
 
 #include "lte-test-secondary-cell-selection.h"
 
-#include <ns3/boolean.h>
-#include <ns3/double.h>
-#include <ns3/integer.h>
-#include <ns3/log.h>
-#include <ns3/simulator.h>
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/integer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 
-#include <ns3/internet-stack-helper.h>
-#include <ns3/ipv4-address-helper.h>
-#include <ns3/ipv4-interface-container.h>
-#include <ns3/friis-spectrum-propagation-loss.h>
-#include <ns3/ipv4-static-routing-helper.h>
-#include <ns3/lte-enb-net-device.h>
-#include <ns3/lte-helper.h>
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/lte-ue-rrc.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/net-device-container.h>
-#include <ns3/node-container.h>
-#include <ns3/point-to-point-epc-helper.h>
-#include <ns3/point-to-point-helper.h>
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../spectrum/model/friis-spectrum-propagation-loss.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../model/lte-enb-net-device.h"
+#include "../helper/lte-helper.h"
+#include "../model/lte-ue-net-device.h"
+#include "../model/lte-ue-rrc.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
+#include "../helper/point-to-point-epc-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
 
 using namespace ns3;
 

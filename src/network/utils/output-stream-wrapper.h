@@ -16,13 +16,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef OUTPUT_STREAM_WRAPPER_H
-#define OUTPUT_STREAM_WRAPPER_H
+#pragma once
 
 #include <fstream>
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
 
 namespace ns3 {
 
@@ -99,4 +98,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OUTPUT_STREAM_WRAPPER_H */
+

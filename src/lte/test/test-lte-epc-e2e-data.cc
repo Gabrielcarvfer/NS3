@@ -20,26 +20,26 @@
 
 
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/lte-helper.h"
-#include "ns3/point-to-point-epc-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/udp-client-server-helper.h"
-#include "ns3/udp-echo-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/packet-sink.h"
-#include <ns3/ipv4-static-routing-helper.h>
-#include <ns3/ipv4-static-routing.h>
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/abort.h"
-#include "ns3/mobility-helper.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../helper/lte-helper.h"
+#include "../helper/point-to-point-epc-helper.h"
+#include "../../applications/helper/packet-sink-helper.h"
+#include "../../applications/helper/udp-client-server-helper.h"
+#include "../../applications/helper/udp-echo-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../applications/model/packet-sink.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../../internet/model/ipv4-static-routing.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/abort.h"
+#include "../../mobility/helper/mobility-helper.h"
 
 
 

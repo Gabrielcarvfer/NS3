@@ -18,17 +18,16 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#ifndef TCP_HEADER_H
-#define TCP_HEADER_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/header.h"
-#include "ns3/tcp-option.h"
-#include "ns3/buffer.h"
-#include "ns3/tcp-socket-factory.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/sequence-number.h"
+#include "../../network/model/header.h"
+#include "tcp-option.h"
+#include "../../network/model/buffer.h"
+#include "tcp-socket-factory.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../network/utils/sequence-number.h"
 
 namespace ns3 {
 
@@ -355,4 +354,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TCP_HEADER */
+

@@ -18,9 +18,9 @@
  *         Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  *
  */
-#include "ns3/test.h"
-#include "ns3/service-flow.h"
-#include "ns3/mac-messages.h"
+#include "../../core/model/test.h"
+#include "../model/service-flow.h"
+#include "../model/mac-messages.h"
 
 using namespace ns3;
 

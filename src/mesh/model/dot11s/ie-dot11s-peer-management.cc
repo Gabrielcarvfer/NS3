@@ -20,8 +20,8 @@
  */
 
 #include "ie-dot11s-peer-management.h"
-#include "ns3/assert.h"
-#include "ns3/packet.h"
+#include "../../../core/model/assert.h"
+#include "../../../network/model/packet.h"
 
 namespace ns3 {
 namespace dot11s {

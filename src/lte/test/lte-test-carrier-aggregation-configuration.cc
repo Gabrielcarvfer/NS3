@@ -19,19 +19,19 @@
  *
  */
 
-#include <ns3/object.h>
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/simulator.h>
-#include <ns3/ptr.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/node-container.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/net-device-container.h>
-#include <ns3/lte-ue-rrc.h>
-#include <ns3/lte-helper.h>
-#include <ns3/lte-spectrum-value-helper.h>
-#include <ns3/callback.h>
+#include "../../core/model/object.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/ptr.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../network/helper/node-container.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../network/helper/net-device-container.h"
+#include "../model/lte-ue-rrc.h"
+#include "../helper/lte-helper.h"
+#include "../model/lte-spectrum-value-helper.h"
+#include "../../core/model/callback.h"
 
 using namespace ns3;
 

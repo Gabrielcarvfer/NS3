@@ -23,7 +23,7 @@
 #include <vector>
 
 #include "ns3/core-module.h"
-#include "ns3/hash.h"
+#include "../model/hash.h"
 
 /**
  * \file

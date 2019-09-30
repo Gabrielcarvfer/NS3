@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef TYPE_TRAITS_H
-#define TYPE_TRAITS_H
+#pragma once
 
 #include "ptr.h"
 
@@ -601,4 +600,4 @@ public:
 
 }  // namespace ns3
 
-#endif /* TYPE_TRAITS_H */
+

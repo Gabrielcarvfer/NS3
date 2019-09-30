@@ -18,8 +18,8 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/ipv6-list-routing.h"
-#include "ns3/node.h"
+#include "../model/ipv6-list-routing.h"
+#include "../../network/model/node.h"
 
 #include "ipv6-list-routing-helper.h"
 

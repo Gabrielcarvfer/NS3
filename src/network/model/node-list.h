@@ -18,11 +18,10 @@
  * Authors: 
  *  Mathieu Lacage <mathieu.lacage@sophia.inria.fr>,
  */
-#ifndef NODE_LIST_H
-#define NODE_LIST_H
+#pragma once
 
 #include <vector>
-#include "ns3/ptr.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -75,4 +74,4 @@ public:
 } // namespace ns3
 
 
-#endif /* NODE_LIST_H */
+

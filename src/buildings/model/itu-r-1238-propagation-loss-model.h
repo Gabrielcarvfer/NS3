@@ -20,11 +20,10 @@
  * 
  */
 
-#ifndef ITU_R_1238_PROPAGATION_LOSS_MODEL_H
-#define ITU_R_1238_PROPAGATION_LOSS_MODEL_H
+#pragma once
 
-#include <ns3/propagation-loss-model.h>
-#include <ns3/propagation-environment.h>
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../propagation/model/propagation-environment.h"
 
 namespace ns3 {
 
@@ -66,5 +65,5 @@ private:
 } // namespace ns3
 
 
-#endif // ITU_R_1238_PROPAGATION_LOSS_MODEL_H
+
 

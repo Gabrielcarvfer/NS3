@@ -18,12 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/object.h"
-#include "ns3/log.h"
-#include "ns3/uinteger.h"
-#include "ns3/integer.h"
-#include "ns3/boolean.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../core/model/object.h"
+#include "../../core/model/log.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/integer.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/trace-source-accessor.h"
 #include "udp-socket.h"
 
 namespace ns3 {

@@ -19,17 +19,17 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/simulator.h>
+#include "../../core/model/simulator.h"
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 
-#include <ns3/buildings-helper.h>
-#include <ns3/string.h>
-#include <ns3/double.h>
-#include <ns3/building.h>
-#include <ns3/enum.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/mobility-building-info.h>
+#include "../helper/buildings-helper.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../model/building.h"
+#include "../../core/model/enum.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../model/mobility-building-info.h"
 #include "buildings-pathloss-test.h"
 
 

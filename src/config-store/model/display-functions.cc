@@ -18,9 +18,9 @@
  */
 #include "display-functions.h"
 #include "raw-text-config.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 
 namespace ns3 {
 /**

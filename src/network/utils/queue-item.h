@@ -17,13 +17,12 @@
  *
  * Author: Stefano Avallone <stefano.avallone@unina.it>
  */
-#ifndef QUEUE_ITEM_H
-#define QUEUE_ITEM_H
+#pragma once
 
-#include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
-#include <ns3/address.h>
-#include "ns3/nstime.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../model/address.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -255,4 +254,4 @@ private:
 
 } // namespace ns3
 
-#endif /* QUEUE_ITEM_H */
+

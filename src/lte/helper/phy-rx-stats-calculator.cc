@@ -21,9 +21,9 @@
  */
 
 #include "phy-rx-stats-calculator.h"
-#include "ns3/string.h"
-#include <ns3/simulator.h>
-#include <ns3/log.h>
+#include "../../core/model/string.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

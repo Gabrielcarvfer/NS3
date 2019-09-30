@@ -18,16 +18,16 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/uinteger.h"
-#include "ns3/traced-callback.h"
-#include "ns3/packet.h"
-#include "ns3/packet-socket-helper.h"
-#include "ns3/packet-socket-client.h"
-#include "ns3/packet-socket-server.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-channel.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/traced-callback.h"
+#include "../model/packet.h"
+#include "../helper/packet-socket-helper.h"
+#include "../utils/packet-socket-client.h"
+#include "../utils/packet-socket-server.h"
+#include "../utils/simple-net-device.h"
+#include "../utils/simple-channel.h"
 
 using namespace ns3;
 

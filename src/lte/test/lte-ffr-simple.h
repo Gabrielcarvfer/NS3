@@ -19,15 +19,14 @@
  *
  */
 
-#ifndef LTE_FFR_SIMPLE_H
-#define LTE_FFR_SIMPLE_H
+#pragma once
 
-#include <ns3/lte-ffr-algorithm.h>
-#include <ns3/lte-ffr-sap.h>
-#include <ns3/lte-ffr-rrc-sap.h>
-#include <ns3/lte-rrc-sap.h>
+#include "../model/lte-ffr-algorithm.h"
+#include "../model/lte-ffr-sap.h"
+#include "../model/lte-ffr-rrc-sap.h"
+#include "../model/lte-rrc-sap.h"
 
-#include <ns3/traced-callback.h>
+#include "../../core/model/traced-callback.h"
 #include <map>
 
 namespace ns3 {
@@ -164,4 +163,4 @@ private:
 } // end of namespace ns3
 
 
-#endif /* LTE_FFR_SIMPLE_H */
+

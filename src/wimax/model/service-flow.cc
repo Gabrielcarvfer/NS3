@@ -22,7 +22,7 @@
 
 #include "service-flow.h"
 #include "service-flow-record.h"
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include "wimax-tlv.h"
 
 namespace ns3 {

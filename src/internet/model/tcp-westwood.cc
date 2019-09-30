@@ -32,8 +32,8 @@
  */
 
 #include "tcp-westwood.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 #include "rtt-estimator.h"
 #include "tcp-socket-base.h"
 

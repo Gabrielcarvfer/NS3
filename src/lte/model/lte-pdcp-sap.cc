@@ -18,7 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/lte-pdcp-sap.h"
+#include "lte-pdcp-sap.h"
 
 namespace ns3 {
 

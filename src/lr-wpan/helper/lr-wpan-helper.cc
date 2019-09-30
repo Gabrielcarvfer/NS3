@@ -20,16 +20,16 @@
  *  Tom Henderson <thomas.r.henderson@boeing.com>
  */
 #include "lr-wpan-helper.h"
-#include <ns3/lr-wpan-csmaca.h>
-#include <ns3/lr-wpan-error-model.h>
-#include <ns3/lr-wpan-net-device.h>
-#include <ns3/mobility-model.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include <ns3/multi-model-spectrum-channel.h>
-#include <ns3/propagation-loss-model.h>
-#include <ns3/propagation-delay-model.h>
-#include <ns3/log.h>
-#include "ns3/names.h"
+#include "../model/lr-wpan-csmaca.h"
+#include "../model/lr-wpan-error-model.h"
+#include "../model/lr-wpan-net-device.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../spectrum/model/single-model-spectrum-channel.h"
+#include "../../spectrum/model/multi-model-spectrum-channel.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

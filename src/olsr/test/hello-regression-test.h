@@ -18,14 +18,13 @@
  * Authors: Pavel Boyko <boyko@iitp.ru>
  */
 
-#ifndef HELLO_REGRESSION_TEST_H
-#define HELLO_REGRESSION_TEST_H
+#pragma once
 
-#include "ns3/test.h"
-#include "ns3/nstime.h"
-#include "ns3/socket.h"
-#include "ns3/ipv4-raw-socket-impl.h"
-#include "ns3/node-container.h"
+#include "../../core/model/test.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/socket.h"
+#include "../../internet/model/ipv4-raw-socket-impl.h"
+#include "../../network/helper/node-container.h"
 
 namespace ns3 {
 namespace olsr {
@@ -84,4 +83,4 @@ private:
 }
 }
 
-#endif /* HELLO_REGRESSION_TEST_H */
+

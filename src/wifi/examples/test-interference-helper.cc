@@ -49,19 +49,19 @@
 // logs associated to the chosen scenario.
 //
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/config.h"
-#include "ns3/double.h"
-#include "ns3/simulator.h"
-#include "ns3/command-line.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/yans-wifi-phy.h"
-#include "ns3/propagation-loss-model.h"
-#include "ns3/propagation-delay-model.h"
-#include "ns3/nist-error-rate-model.h"
-#include "ns3/constant-position-mobility-model.h"
-#include "ns3/simple-frame-capture-model.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/config.h"
+#include "../../core/model/double.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/command-line.h"
+#include "../model/yans-wifi-channel.h"
+#include "../model/yans-wifi-phy.h"
+#include "../../propagation/model/propagation-loss-model.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../model/nist-error-rate-model.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../model/simple-frame-capture-model.h"
 
 using namespace ns3;
 

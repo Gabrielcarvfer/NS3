@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SYSTEM_PATH_H
-#define SYSTEM_PATH_H
+#pragma once
 
 #include <string>
 #include <list>
@@ -128,4 +127,4 @@ namespace SystemPath {
 } // namespace ns3
 
 
-#endif /* SYSTEM_PATH_H */
+

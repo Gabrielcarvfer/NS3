@@ -20,13 +20,13 @@
  */
 
 
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/kun-2600-mhz-propagation-loss-model.h>
-#include <ns3/string.h>
-#include <ns3/double.h>
-#include <ns3/constant-position-mobility-model.h>
-#include <ns3/enum.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../model/kun-2600-mhz-propagation-loss-model.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/enum.h"
 
 
 using namespace ns3;

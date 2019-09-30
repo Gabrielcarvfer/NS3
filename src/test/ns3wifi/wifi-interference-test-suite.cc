@@ -16,17 +16,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include "ns3/boolean.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/mobility-helper.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/boolean.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../wifi/model/yans-wifi-channel.h"
+#include "../../mobility/helper/mobility-helper.h"
 
 using namespace ns3;
 

@@ -18,16 +18,15 @@
  * Author: Adrian Sai-wah Tam <adrian.sw.tam@gmail.com>
  */
 
-#ifndef TCP_RX_BUFFER_H
-#define TCP_RX_BUFFER_H
+#pragma once
 
 #include <map>
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/sequence-number.h"
-#include "ns3/ptr.h"
-#include "ns3/tcp-header.h"
-#include "ns3/tcp-option-sack.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../network/utils/sequence-number.h"
+#include "../../core/model/ptr.h"
+#include "tcp-header.h"
+#include "tcp-option-sack.h"
 
 namespace ns3 {
 class Packet;
@@ -230,4 +229,4 @@ private:
 
 } //namespace ns3
 
-#endif /* TCP_RX_BUFFER_H */
+

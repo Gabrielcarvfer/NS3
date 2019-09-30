@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SPECTRUM_MODEL_H
-#define SPECTRUM_MODEL_H
+#pragma once
 
-#include <ns3/simple-ref-count.h>
+#include "../../core/model/simple-ref-count.h"
 #include <vector>
 
 namespace ns3 {
@@ -137,4 +136,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SPECTRUM_MODEL_H */
+

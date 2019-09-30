@@ -20,15 +20,14 @@
  *        Convert MacStatsCalculator in PhyRxStatsCalculator
  */
 
-#ifndef PHY_RX_STATS_CALCULATOR_H_
-#define PHY_RX_STATS_CALCULATOR_H_
+#pragma once
 
-#include "ns3/lte-stats-calculator.h"
-#include "ns3/nstime.h"
-#include "ns3/uinteger.h"
+#include "lte-stats-calculator.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/uinteger.h"
 #include <string>
 #include <fstream>
-#include <ns3/lte-common.h>
+#include "../model/lte-common.h"
 
 namespace ns3 {
 
@@ -146,4 +145,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PHY_RX_STATS_CALCULATOR_H_ */
+

@@ -1,16 +1,16 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 
 // Include a header file from your module to test.
-#include "ns3/double-probe.h"
-#include "ns3/test.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/traced-value.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
-#include "ns3/object.h"
-#include "ns3/type-id.h"
-#include "ns3/names.h"
+#include "../model/double-probe.h"
+#include "../../core/model/test.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object.h"
+#include "../../core/model/type-id.h"
+#include "../../core/model/names.h"
 
 using namespace ns3;
 

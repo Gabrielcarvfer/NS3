@@ -16,9 +16,9 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 #include "default-channel-scheduler.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/wifi-phy.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../wifi/model/wifi-phy.h"
 
 namespace ns3 {
 

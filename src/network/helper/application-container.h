@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef APPLICATION_CONTAINER_H
-#define APPLICATION_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include "ns3/application.h"
-#include "ns3/random-variable-stream.h"
+#include "../model/application.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -229,4 +228,4 @@ private:
 
 } // namespace ns3
 
-#endif /* APPLICATION_CONTAINER_H */
+

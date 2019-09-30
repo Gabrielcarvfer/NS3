@@ -18,14 +18,13 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef UDP_HEADER_H
-#define UDP_HEADER_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
-#include "ns3/header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3 {
 /**
@@ -187,4 +186,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_HEADER */
+

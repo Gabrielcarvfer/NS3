@@ -18,11 +18,10 @@
 * Author: Sidharth Nabar <snabar@uw.edu>, He Wu <mdzz@u.washington.edu>
 */
 
-#ifndef WIFI_RADIO_ENERGY_MODEL_HELPER_H
-#define WIFI_RADIO_ENERGY_MODEL_HELPER_H
+#pragma once
 
-#include "ns3/energy-model-helper.h"
-#include "ns3/wifi-radio-energy-model.h"
+#include "../../energy/helper/energy-model-helper.h"
+#include "../model/wifi-radio-energy-model.h"
 
 namespace ns3 {
 
@@ -122,4 +121,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIFI_RADIO_ENERGY_MODEL_HELPER_H */
+

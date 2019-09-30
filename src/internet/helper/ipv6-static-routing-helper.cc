@@ -18,16 +18,16 @@
 
 #include <vector>
 
-#include "ns3/log.h"
-#include "ns3/ptr.h"
-#include "ns3/names.h"
-#include "ns3/node.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv6-list-routing.h"
-#include "ns3/assert.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/ipv6-routing-protocol.h"
+#include "../../core/model/log.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/names.h"
+#include "../../network/model/node.h"
+#include "../model/ipv6.h"
+#include "../model/ipv6-route.h"
+#include "../model/ipv6-list-routing.h"
+#include "../../core/model/assert.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../model/ipv6-routing-protocol.h"
 
 #include "ipv6-static-routing-helper.h"
 

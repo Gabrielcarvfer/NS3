@@ -18,14 +18,13 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#ifndef IPV4_FLOW_CLASSIFIER_H
-#define IPV4_FLOW_CLASSIFIER_H
+#pragma once
 
 #include <stdint.h>
 #include <map>
 
-#include "ns3/ipv4-header.h"
-#include "ns3/flow-classifier.h"
+#include "../../internet/model/ipv4-header.h"
+#include "flow-classifier.h"
 
 namespace ns3 {
 
@@ -122,4 +121,4 @@ bool operator == (const Ipv4FlowClassifier::FiveTuple &t1, const Ipv4FlowClassif
 
 } // namespace ns3
 
-#endif /* IPV4_FLOW_CLASSIFIER_H */
+

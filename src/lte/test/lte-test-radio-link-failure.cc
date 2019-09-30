@@ -33,7 +33,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/config-store-module.h"
-#include "ns3/config-store.h"
+#include "../../config-store/model/config-store.h"
 #include <iostream>
 #include <vector>
 #include <stdio.h>

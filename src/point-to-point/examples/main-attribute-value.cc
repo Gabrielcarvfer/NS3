@@ -18,19 +18,19 @@
  * Author: Tom Henderson <tomh@tomh.org>
  */
 
-#include "ns3/log.h"
-#include "ns3/command-line.h"
-#include "ns3/ptr.h"
-#include "ns3/config.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/command-line.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/config.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/simulator.h"
 
-#include "ns3/node.h"
-#include "ns3/queue.h"
-#include "ns3/drop-tail-queue.h"
-#include "ns3/point-to-point-net-device.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/queue.h"
+#include "../../network/utils/drop-tail-queue.h"
+#include "../model/point-to-point-net-device.h"
 
 using namespace ns3;
 

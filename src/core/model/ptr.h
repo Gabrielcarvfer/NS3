@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef PTR_H
-#define PTR_H
+#pragma once
 
 #include <iostream>
 #include <stdint.h>
@@ -825,4 +824,4 @@ Ptr<T>::operator Tester * () const
 
 } // namespace ns3
 
-#endif /* PTR_H */
+

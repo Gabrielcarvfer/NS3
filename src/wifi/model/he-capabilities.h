@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef HE_CAPABILITIES_H
-#define HE_CAPABILITIES_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -301,4 +300,4 @@ std::ostream &operator << (std::ostream &os, const HeCapabilities &HeCapabilitie
 
 } //namespace ns3
 
-#endif /* HE_CAPABILITY_H */
+

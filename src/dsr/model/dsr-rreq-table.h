@@ -29,13 +29,12 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_RREQ_TABLE_H
-#define DSR_RREQ_TABLE_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/timer.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/callback.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/timer.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/callback.h"
 #include <list>
 #include <vector>
 #include <map>
@@ -394,4 +393,4 @@ private:
 }  // namespace dsr
 }  // namespace ns3
 
-#endif /* DSR_RREQ_TABLE_H */
+

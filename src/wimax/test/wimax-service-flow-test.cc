@@ -19,16 +19,16 @@
  *                              <amine.ismail@udcast.com>
  *
  */
-#include "ns3/test.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/ipv4-interface-container.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/simulator.h"
-#include "ns3/wimax-helper.h"
-#include "ns3/cs-parameters.h"
-#include "ns3/ipcs-classifier-record.h"
-#include "ns3/service-flow.h"
+#include "../../core/model/test.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/simulator.h"
+#include "../helper/wimax-helper.h"
+#include "../model/cs-parameters.h"
+#include "../model/ipcs-classifier-record.h"
+#include "../model/service-flow.h"
 
 using namespace ns3;
 

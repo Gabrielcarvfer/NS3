@@ -19,11 +19,11 @@
 // Modifications: Tommaso Pecorella <tommaso.pecorella@unifi.it>
 //
 
-#include "ns3/packet.h"
+#include "../../network/model/packet.h"
 
 #include "ipv6-flow-classifier.h"
-#include "ns3/udp-header.h"
-#include "ns3/tcp-header.h"
+#include "../../internet/model/udp-header.h"
+#include "../../internet/model/tcp-header.h"
 #include <algorithm>
 
 namespace ns3 {

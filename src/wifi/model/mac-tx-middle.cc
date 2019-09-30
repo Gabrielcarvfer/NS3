@@ -21,7 +21,7 @@
  *          Ghada Badawy <gbadawy@gmail.com>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "mac-tx-middle.h"
 #include "wifi-mac-header.h"
 

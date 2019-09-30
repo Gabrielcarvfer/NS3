@@ -20,12 +20,12 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
+#include "../../core/model/random-variable-stream.h"
 #include "ap-wifi-mac.h"
 #include "mac-low.h"
 #include "mac-tx-middle.h"

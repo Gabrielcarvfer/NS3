@@ -19,14 +19,13 @@
  *
  */
 
-#ifndef IPCS_CLASSIFIER_H
-#define IPCS_CLASSIFIER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
 #include "ss-service-flow-manager.h"
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 class SsServiceFlowManager;
@@ -55,4 +54,4 @@ public:
 };
 } // namespace ns3
 
-#endif /* IPCS_CLASSIFIER_H */
+

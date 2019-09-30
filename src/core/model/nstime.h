@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TIME_H
-#define TIME_H
+#pragma once
 
 #include "assert.h"
 #include "attribute.h"
@@ -1195,4 +1194,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TIME_H */
+

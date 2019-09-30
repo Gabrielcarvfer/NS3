@@ -18,7 +18,7 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "block-ack-window.h"
 #include "wifi-utils.h"
 

@@ -20,7 +20,7 @@
 #include "gtk-config-store.h"
 #include "raw-text-config.h"
 #include "display-functions.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include <fstream>
 
 

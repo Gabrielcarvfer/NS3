@@ -18,22 +18,21 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#ifndef TV_SPECTRUM_TRANSMITTER_HELPER_H
-#define TV_SPECTRUM_TRANSMITTER_HELPER_H
+#pragma once
 
-#include <ns3/spectrum-value.h>
-#include <ns3/spectrum-phy.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/antenna-model.h>
-#include <ns3/spectrum-signal-parameters.h>
-#include <ns3/mobility-model.h>
-#include <ns3/net-device.h>
-#include <ns3/net-device-container.h>
-#include <ns3/node-container.h>
-#include <ns3/non-communicating-net-device.h>
-#include <ns3/random-variable-stream.h>
-#include <ns3/tv-spectrum-transmitter.h>
-#include "ns3/object-factory.h"
+#include "../model/spectrum-value.h"
+#include "../model/spectrum-phy.h"
+#include "../model/spectrum-channel.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../model/spectrum-signal-parameters.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/net-device.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
+#include "../model/non-communicating-net-device.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../model/tv-spectrum-transmitter.h"
+#include "../../core/model/object-factory.h"
 
 class TvHelperDistributionTestCase;
 
@@ -327,4 +326,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TV_SPECTRUM_TRANSMITTER_HELPER_H */
+

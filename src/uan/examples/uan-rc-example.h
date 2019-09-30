@@ -18,8 +18,7 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_RC_EXAMPLE_H
-#define UAN_RC_EXAMPLE_H
+#pragma once
 
 #include "ns3/network-module.h"
 #include "ns3/stats-module.h"
@@ -114,4 +113,4 @@ public:
 
 };
 
-#endif /* UAN_RC_EXAMPLE_H */
+

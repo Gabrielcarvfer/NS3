@@ -24,19 +24,18 @@
  *          Vignesh Babu <ns3-dev@esk.fraunhofer.de> (RLF extensions)
  */
 
-#ifndef LTE_UE_RRC_H
-#define LTE_UE_RRC_H
+#pragma once
 
-#include <ns3/object.h>
-#include <ns3/packet.h>
-#include <ns3/lte-ue-cmac-sap.h>
-#include <ns3/lte-pdcp-sap.h>
-#include <ns3/lte-as-sap.h>
-#include <ns3/lte-ue-cphy-sap.h>
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/traced-callback.h>
-#include "ns3/component-carrier-ue.h"
-#include <ns3/lte-ue-ccm-rrc-sap.h>
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "lte-ue-cmac-sap.h"
+#include "lte-pdcp-sap.h"
+#include "lte-as-sap.h"
+#include "lte-ue-cphy-sap.h"
+#include "lte-rrc-sap.h"
+#include "../../core/model/traced-callback.h"
+#include "component-carrier-ue.h"
+#include "lte-ue-ccm-rrc-sap.h"
 #include <vector>
 
 #include <map>
@@ -1331,4 +1330,4 @@ public:
 
 } // namespace ns3
 
-#endif // LTE_UE_RRC_H
+

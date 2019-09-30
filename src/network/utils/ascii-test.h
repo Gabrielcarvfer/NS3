@@ -20,12 +20,11 @@
  * This file is based on pcap-test.h by Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#ifndef ASCII_TEST_H
-#define ASCII_TEST_H
+#pragma once
 
 #include <stdint.h>
 #include "ascii-file.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 /**
  * \brief Test that a pair of new/reference ascii files are equal
@@ -46,4 +45,4 @@
   } while (false)
 
 
-#endif /* ASCII_TEST_H */
+

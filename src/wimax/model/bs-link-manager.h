@@ -20,13 +20,12 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef LINK_MANAGER_H
-#define LINK_MANAGER_H
+#pragma once
 
 #include <stdint.h>
 #include "wimax-net-device.h"
 #include "bs-net-device.h"
-#include "ns3/event-id.h"
+#include "../../core/model/event-id.h"
 #include "cid.h"
 #include "mac-messages.h"
 
@@ -170,4 +169,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LINK_MANAGER_H */
+

@@ -18,7 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/lte-rlc-sap.h"
+#include "lte-rlc-sap.h"
 
 namespace ns3 {
 

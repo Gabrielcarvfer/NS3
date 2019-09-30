@@ -18,12 +18,11 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#ifndef SIMPLE_DEVICE_ENERGY_MODEL_H
-#define SIMPLE_DEVICE_ENERGY_MODEL_H
+#pragma once
 
-#include "ns3/device-energy-model.h"
-#include "ns3/nstime.h"
-#include "ns3/traced-value.h"
+#include "device-energy-model.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/traced-value.h"
 
 namespace ns3 {
 
@@ -137,4 +136,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIMPLE_DEVICE_ENERGY_MODEL_H */
+

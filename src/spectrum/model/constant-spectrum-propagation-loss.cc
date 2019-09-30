@@ -20,10 +20,10 @@
 
 #include <cmath>
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
-#include "ns3/constant-spectrum-propagation-loss.h"
-#include "ns3/double.h"
+#include "constant-spectrum-propagation-loss.h"
+#include "../../core/model/double.h"
 
 
 namespace ns3 {

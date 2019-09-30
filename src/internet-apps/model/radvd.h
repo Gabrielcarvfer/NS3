@@ -20,13 +20,12 @@
  *         Mehdi Benamor <benamor.mehdi@ensi.rnu.tn>
  */
 
-#ifndef RADVD_H
-#define RADVD_H
+#pragma once
 
 #include <map>
 
 #include "radvd-interface.h"
-#include "ns3/application.h"
+#include "../../network/model/application.h"
 
 
 namespace ns3
@@ -181,5 +180,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* RADVD_H */
+
 

@@ -18,14 +18,13 @@
  * Author: Nicola Baldo <nbaldo@cttc.cat>
  */
 
-#ifndef EPC_S1AP_SAP_H
-#define EPC_S1AP_SAP_H
+#pragma once
 
-#include <ns3/address.h>
-#include <ns3/ptr.h>
-#include <ns3/object.h>
-#include <ns3/eps-bearer.h>
-#include <ns3/epc-tft.h>
+#include "../../network/model/address.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "eps-bearer.h"
+#include "epc-tft.h"
 #include <list>
 
 
@@ -358,5 +357,5 @@ void MemberEpcS1apSapEnb<C>::PathSwitchRequestAcknowledge (uint64_t enbUeS1Id, u
 
 } //namespace ns3
 
-#endif /* EPC_S1AP_SAP_H */
+
 

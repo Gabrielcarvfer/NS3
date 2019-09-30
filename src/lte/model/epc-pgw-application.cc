@@ -19,17 +19,17 @@
  *         (based on epc-sgw-pgw-application.cc)
  */
 
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/mac48-address.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-header.h"
-#include "ns3/ipv6-l3-protocol.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/epc-gtpu-header.h"
-#include "ns3/epc-pgw-application.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/ipv6.h"
+#include "../../internet/model/ipv6-header.h"
+#include "../../internet/model/ipv6-l3-protocol.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "epc-gtpu-header.h"
+#include "epc-pgw-application.h"
 
 namespace ns3 {
 

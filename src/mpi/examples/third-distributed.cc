@@ -22,8 +22,8 @@
 #include "ns3/csma-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/mpi-module.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../wifi/model/ssid.h"
 
 // Default Network Topology
 //

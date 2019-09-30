@@ -18,8 +18,8 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 #include "wifi-mac-queue-item.h"
 #include "wifi-psdu.h"
 #include "wifi-mac-trailer.h"

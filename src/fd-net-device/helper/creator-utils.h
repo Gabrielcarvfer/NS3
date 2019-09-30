@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef CREATOR_UTILS_H
-#define CREATOR_UTILS_H
+#pragma once
 
 #include <unistd.h>
 #include <string>
@@ -72,5 +71,5 @@ void SendSocket (const char *path, int fd, const int magic_number);
 
 } // namespace ns3
 
-#endif /* CREATOR_UTILS_DEVICE_H */
+
 

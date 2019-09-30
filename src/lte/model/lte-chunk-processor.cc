@@ -21,8 +21,8 @@
  */
 
 
-#include <ns3/log.h>
-#include <ns3/spectrum-value.h>
+#include "../../core/model/log.h"
+#include "../../spectrum/model/spectrum-value.h"
 #include "lte-chunk-processor.h"
 
 namespace ns3 {

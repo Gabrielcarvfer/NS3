@@ -24,12 +24,11 @@
  */
 
 
-#ifndef LTE_CHUNK_PROCESSOR_H
-#define LTE_CHUNK_PROCESSOR_H
+#pragma once
 
-#include <ns3/ptr.h>
-#include <ns3/nstime.h>
-#include <ns3/object.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -126,4 +125,4 @@ private:
 
 
 
-#endif /* LTE_CHUNK_PROCESSOR_H */
+

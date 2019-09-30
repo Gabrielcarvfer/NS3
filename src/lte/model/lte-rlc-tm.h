@@ -19,12 +19,11 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef LTE_RLC_TM_H
-#define LTE_RLC_TM_H
+#pragma once
 
-#include "ns3/lte-rlc.h"
+#include "lte-rlc.h"
 
-#include <ns3/event-id.h>
+#include "../../core/model/event-id.h"
 #include <map>
 
 namespace ns3 {
@@ -106,4 +105,4 @@ private:
 
 } // namespace ns3
 
-#endif // LTE_RLC_TM_H
+

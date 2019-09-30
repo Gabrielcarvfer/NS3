@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#pragma once
 
 #include "non-copyable.h"
 
@@ -95,4 +94,4 @@ Singleton<T>::Get (void)
 
 } // namespace ns3
 
-#endif /* SINGLETON_H */
+

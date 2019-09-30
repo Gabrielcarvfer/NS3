@@ -18,7 +18,7 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 #include <cmath>
 #include "geographic-positions.h"
 

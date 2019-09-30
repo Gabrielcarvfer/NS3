@@ -30,18 +30,17 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSDV_ROUTING_PROTOCOL_H
-#define DSDV_ROUTING_PROTOCOL_H
+#pragma once
 
 #include "dsdv-rtable.h"
 #include "dsdv-packet-queue.h"
 #include "dsdv-packet.h"
-#include "ns3/node.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/ipv4-interface.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/output-stream-wrapper.h"
+#include "../../network/model/node.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../internet/model/ipv4-interface.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../network/utils/output-stream-wrapper.h"
 
 namespace ns3 {
 namespace dsdv {
@@ -260,4 +259,4 @@ private:
 }
 }
 
-#endif /* DSDV_ROUTING_PROTOCOL_H */
+

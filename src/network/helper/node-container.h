@@ -17,12 +17,11 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NODE_CONTAINER_H
-#define NODE_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include "ns3/node.h"
+#include "../model/node.h"
 
 namespace ns3 {
 
@@ -302,4 +301,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NODE_CONTAINER_H */
+

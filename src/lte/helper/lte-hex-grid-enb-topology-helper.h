@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef LTE_HEX_GRID_ENB_TOPOLOGY_HELPER_H
-#define LTE_HEX_GRID_ENB_TOPOLOGY_HELPER_H
+#pragma once
 
-#include <ns3/lte-helper.h>
+#include "lte-helper.h"
 
 namespace ns3 {
 
@@ -116,4 +115,4 @@ private:
 
 
 
-#endif // LTE_HEX_GRID_ENB_TOPOLOGY_HELPER_H
+

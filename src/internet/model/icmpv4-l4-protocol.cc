@@ -22,13 +22,13 @@
 #include "ipv4-raw-socket-factory-impl.h"
 #include "ipv4-interface.h"
 #include "ipv4-l3-protocol.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/packet.h"
-#include "ns3/boolean.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv6-interface.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/boolean.h"
+#include "ipv4-route.h"
+#include "ipv6-interface.h"
 
 namespace ns3 {
 

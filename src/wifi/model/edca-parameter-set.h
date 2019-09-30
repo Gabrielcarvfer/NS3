@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef EDCA_PARAMETER_SET_H
-#define EDCA_PARAMETER_SET_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -332,4 +331,4 @@ private:
 
 } //namespace ns3
 
-#endif /* EDCA_PARAMETER_SET_H */
+

@@ -18,11 +18,11 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#include "ns3/sequence-number.h"
-#include "ns3/test.h"
-#include "ns3/object.h"
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
+#include "../utils/sequence-number.h"
+#include "../../core/model/test.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/trace-source-accessor.h"
 
 using namespace ns3;
 

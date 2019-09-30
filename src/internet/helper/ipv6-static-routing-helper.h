@@ -16,19 +16,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef IPV6_STATIC_ROUTING_HELPER_H
-#define IPV6_STATIC_ROUTING_HELPER_H
+#pragma once
 
-#include "ns3/ipv6.h"
-#include "ns3/ipv6-static-routing.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/node.h"
-#include "ns3/net-device.h"
+#include "../model/ipv6.h"
+#include "../model/ipv6-static-routing.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../network/model/node.h"
+#include "../../network/model/net-device.h"
 
-#include "ns3/node-container.h"
-#include "ns3/net-device-container.h"
-#include "ns3/ipv6-routing-helper.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "ipv6-routing-helper.h"
 
 namespace ns3 {
 
@@ -153,5 +152,5 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV6_STATIC_ROUTING_HELPER_H */
+
 

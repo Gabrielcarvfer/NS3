@@ -18,8 +18,7 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 
-#ifndef NIST_ERROR_RATE_MODEL_H
-#define NIST_ERROR_RATE_MODEL_H
+#pragma once
 
 #include "error-rate-model.h"
 
@@ -171,4 +170,4 @@ private:
 
 } //namespace ns3
 
-#endif /* NIST_ERROR_RATE_MODEL_H */
+

@@ -17,10 +17,10 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/ipv6-list-routing.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/ipv6-routing-protocol.h"
+#include "../../core/model/test.h"
+#include "../model/ipv6-list-routing.h"
+#include "../model/ipv6-route.h"
+#include "../model/ipv6-routing-protocol.h"
 
 using namespace ns3;
 

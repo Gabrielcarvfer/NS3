@@ -18,8 +18,7 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef GET_WILDCARD_MATCHES_H
-#define GET_WILDCARD_MATCHES_H
+#pragma once
 
 #include <string>
 
@@ -42,4 +41,4 @@ std::string GetWildcardMatches (const std::string &configPath,
 
 } // namespace ns3
 
-#endif // GET_WILDCARD_MATCHES_H
+

@@ -17,11 +17,10 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef SIMPLE_CHANNEL_H
-#define SIMPLE_CHANNEL_H
+#pragma once
 
-#include "ns3/channel.h"
-#include "ns3/nstime.h"
+#include "../model/channel.h"
+#include "../../core/model/nstime.h"
 #include "mac48-address.h"
 #include <vector>
 #include <map>
@@ -105,4 +104,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIMPLE_CHANNEL_H */
+

@@ -17,14 +17,14 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/net-device.h"
-#include "ns3/object-vector.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/object-vector.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
 
 #include "ipv4-l3-protocol.h"
 #include "arp-l3-protocol.h"
@@ -32,7 +32,7 @@
 #include "arp-cache.h"
 #include "arp-queue-disc-item.h"
 #include "ipv4-interface.h"
-#include "ns3/traffic-control-layer.h"
+#include "../../traffic-control/model/traffic-control-layer.h"
 
 namespace ns3 {
 

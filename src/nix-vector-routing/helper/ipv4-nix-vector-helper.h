@@ -18,11 +18,10 @@
  * Authors: Josh Pelkey <jpelkey@gatech.edu>
  */
 
-#ifndef IPV4_NIX_VECTOR_HELPER_H
-#define IPV4_NIX_VECTOR_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-routing-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../internet/helper/ipv4-routing-helper.h"
 
 namespace ns3 {
 
@@ -78,4 +77,4 @@ private:
 };
 } // namespace ns3
 
-#endif /* IPV4_NIX_VECTOR_HELPER_H */
+

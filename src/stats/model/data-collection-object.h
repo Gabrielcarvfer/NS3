@@ -18,11 +18,10 @@
  * Authors: Tiago G. Rodrigues (tgr002@bucknell.edu)
  */
 
-#ifndef DATA_COLLECTION_OBJECT_H
-#define DATA_COLLECTION_OBJECT_H
+#pragma once
 
 #include <string>
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -71,4 +70,4 @@ protected:
 
 } // namespace ns3
 
-#endif // DATA_COLLECTION_OBJECT_H
+

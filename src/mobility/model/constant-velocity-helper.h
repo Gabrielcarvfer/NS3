@@ -17,12 +17,11 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef CONSTANT_VELOCITY_HELPER_H
-#define CONSTANT_VELOCITY_HELPER_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/vector.h"
-#include "ns3/box.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/vector.h"
+#include "box.h"
 
 namespace ns3 {
 
@@ -102,4 +101,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CONSTANT_VELOCITY_HELPER_H */
+

@@ -19,18 +19,17 @@
  * Thanks to Kevin Peters, faculty advisor James P.G. Sterbenz, and the ResiliNets 
  * initiative at The University of Kansas, https://wiki.ittc.ku.edu/resilinets
  */
-#ifndef GAUSS_MARKOV_MOBILITY_MODEL_H
-#define GAUSS_MARKOV_MOBILITY_MODEL_H
+#pragma once
 
 #include "constant-velocity-helper.h"
 #include "mobility-model.h"
 #include "position-allocator.h"
-#include "ns3/ptr.h"
-#include "ns3/object.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/box.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "box.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -122,4 +121,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GAUSS_MARKOV_MOBILITY_MODEL_H */
+

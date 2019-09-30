@@ -18,11 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/channel-access-manager.h"
-#include "ns3/txop.h"
-#include "ns3/mac-low.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../model/channel-access-manager.h"
+#include "../model/txop.h"
+#include "../model/mac-low.h"
 
 using namespace ns3;
 

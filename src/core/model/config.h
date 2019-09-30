@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include "ptr.h"
 #include <string>
@@ -291,4 +290,4 @@ Ptr<Object> GetRootNamespaceObject (uint32_t i);
 
 } // namespace ns3
 
-#endif /* CONFIG_H */
+

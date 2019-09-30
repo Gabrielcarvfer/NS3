@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef TX_VECTOR_TAG_H
-#define TX_VECTOR_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
+#include "../../network/model/tag.h"
 #include "wifi-tx-vector.h"
 
 /***************************************************************
@@ -132,4 +131,4 @@ private:
 
 } //namespace ns3
 
-#endif /* TX_VECTOR_TAG_H */
+

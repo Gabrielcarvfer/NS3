@@ -23,7 +23,7 @@
 #include "lte-rlc.h"
 #include "lte-pdcp.h"
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 
 
 

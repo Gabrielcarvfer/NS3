@@ -18,8 +18,7 @@
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef NS3_DEPRECATED_H
-#define NS3_DEPRECATED_H
+#pragma once
 
 /**
  * \file
@@ -60,4 +59,4 @@
 #define NS_DEPRECATED
 #endif
 
-#endif /* NS3_DEPRECATED_H */
+

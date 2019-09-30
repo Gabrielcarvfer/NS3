@@ -20,7 +20,7 @@
  */
 
 #include <cmath>
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "wifi-mode.h"
 #include "wifi-tx-vector.h"
 

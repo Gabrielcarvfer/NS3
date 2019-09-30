@@ -24,7 +24,7 @@
 #include "ss-net-device.h"
 #include "ss-record.h"
 #include "ss-manager.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "mac-messages.h"
 
 namespace ns3 {

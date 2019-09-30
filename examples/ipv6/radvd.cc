@@ -37,9 +37,9 @@
 #include "ns3/csma-module.h"
 #include "ns3/internet-apps-module.h"
 
-#include "ns3/radvd.h"
-#include "ns3/radvd-interface.h"
-#include "ns3/radvd-prefix.h"
+#include "../../src/internet-apps/model/radvd.h"
+#include "../../src/internet-apps/model/radvd-interface.h"
+#include "../../src/internet-apps/model/radvd-prefix.h"
 
 using namespace ns3;
 

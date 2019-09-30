@@ -19,21 +19,20 @@
  *          Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef WIMAX_NET_DEVICE_H
-#define WIMAX_NET_DEVICE_H
+#pragma once
 
-#include "ns3/net-device.h"
-#include "ns3/event-id.h"
-#include "ns3/mac48-address.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/event-id.h"
+#include "../../network/utils/mac48-address.h"
 #include "cid.h"
 #include "wimax-connection.h"
 #include "cid-factory.h"
 #include "mac-messages.h"
 #include "dl-mac-messages.h"
 #include "ul-mac-messages.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/log.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/log.h"
 #include "wimax-phy.h"
 #include "wimax-mac-header.h"
 
@@ -559,4 +558,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_NET_DEVICE_H */
+

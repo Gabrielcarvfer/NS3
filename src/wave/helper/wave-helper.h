@@ -16,16 +16,15 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 
-#ifndef WAVE_HELPER_H
-#define WAVE_HELPER_H
+#pragma once
 
 #include <string>
-#include "ns3/attribute.h"
-#include "ns3/object-factory.h"
-#include "ns3/node-container.h"
-#include "ns3/net-device-container.h"
-#include "ns3/trace-helper.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/trace-helper.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
 
 namespace ns3 {
 
@@ -250,4 +249,4 @@ protected:
   uint32_t m_physNumber; ///< Phy number
 };
 }
-#endif /* WAVE_HELPER_H */
+

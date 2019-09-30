@@ -21,19 +21,19 @@
 
 
 
-#include <ns3/log.h>
-#include <ns3/pointer.h>
-#include <ns3/packet.h>
-#include <ns3/packet-burst.h>
-#include <ns3/random-variable-stream.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/random-variable-stream.h"
 
 #include "lte-ue-mac.h"
 #include "lte-ue-net-device.h"
 #include "lte-radio-bearer-tag.h"
-#include <ns3/ff-mac-common.h>
-#include <ns3/lte-control-messages.h>
-#include <ns3/simulator.h>
-#include <ns3/lte-common.h>
+#include "ff-mac-common.h"
+#include "lte-control-messages.h"
+#include "../../core/model/simulator.h"
+#include "lte-common.h"
 
 
 

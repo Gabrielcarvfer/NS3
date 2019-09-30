@@ -16,15 +16,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INTERNET_TRACE_HELPER_H
-#define INTERNET_TRACE_HELPER_H
+#pragma once
 
-#include "ns3/assert.h"
-#include "ns3/ipv4-interface-container.h"
-#include "ns3/ipv6-interface-container.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv6.h"
-#include "ns3/trace-helper.h"
+#include "../../core/model/assert.h"
+#include "ipv4-interface-container.h"
+#include "ipv6-interface-container.h"
+#include "../model/ipv4.h"
+#include "../model/ipv6.h"
+#include "../../network/helper/trace-helper.h"
 
 namespace ns3 {
 
@@ -748,4 +747,4 @@ private:
 
 } // namespace ns3
 
-#endif /* INTERNET_TRACE_HELPER_H */
+

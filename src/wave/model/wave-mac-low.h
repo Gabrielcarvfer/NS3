@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef WAVE_MAC_LOW_H
-#define WAVE_MAC_LOW_H
+#pragma once
 
-#include "ns3/mac-low.h"
-#include "ns3/msdu-aggregator.h"
-#include "ns3/mpdu-aggregator.h"
-#include "ns3/wifi-psdu.h"
+#include "../../wifi/model/mac-low.h"
+#include "../../wifi/model/msdu-aggregator.h"
+#include "../../wifi/model/mpdu-aggregator.h"
+#include "../../wifi/model/wifi-psdu.h"
 #include "wave-net-device.h"
 
 namespace ns3 {
@@ -90,4 +89,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WAVE_MAC_LOW_H*/
+

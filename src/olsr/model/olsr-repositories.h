@@ -21,14 +21,13 @@
  */
 
 
-#ifndef OLSR_REPOSITORIES_H
-#define OLSR_REPOSITORIES_H
+#pragma once
 
 #include <set>
 #include <vector>
 
-#include "ns3/ipv4-address.h"
-#include "ns3/nstime.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 namespace olsr {
@@ -308,4 +307,4 @@ typedef std::vector<Association>                Associations; //!< Association S
 }
 }  // namespace ns3, olsr
 
-#endif /* OLSR_REPOSITORIES_H */
+

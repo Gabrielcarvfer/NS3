@@ -15,18 +15,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef IPV4_ROUTING_PROTOCOL_H
-#define IPV4_ROUTING_PROTOCOL_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "ns3/callback.h"
-#include "ns3/object.h"
-#include "ns3/socket.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/object.h"
+#include "../../network/model/socket.h"
 #include "ipv4-header.h"
-#include "ns3/ipv4-interface-address.h"
+#include "ipv4-interface-address.h"
 #include "ipv4.h"
-#include "ns3/output-stream-wrapper.h"
-#include "ns3/nstime.h"
+#include "../../network/utils/output-stream-wrapper.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -175,4 +174,4 @@ public:
 
 } // namespace ns3
 
-#endif /* IPV4_ROUTING_PROTOCOL_H */
+

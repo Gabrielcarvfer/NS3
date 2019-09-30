@@ -20,20 +20,19 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef LTE_PHY_H
-#define LTE_PHY_H
+#pragma once
 
 
-#include <ns3/spectrum-value.h>
-#include <ns3/mobility-model.h>
-#include <ns3/packet.h>
-#include <ns3/nstime.h>
-#include <ns3/spectrum-phy.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/spectrum-signal-parameters.h>
-#include <ns3/spectrum-interference.h>
-#include <ns3/generic-phy.h>
-#include <ns3/lte-spectrum-phy.h>
+#include "../../spectrum/model/spectrum-value.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../spectrum/model/spectrum-phy.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../spectrum/model/spectrum-signal-parameters.h"
+#include "../../spectrum/model/spectrum-interference.h"
+#include "../../network/utils/generic-phy.h"
+#include "lte-spectrum-phy.h"
 
 namespace ns3 {
 
@@ -315,4 +314,4 @@ protected:
 
 }
 
-#endif /* LTE_PHY_H */
+

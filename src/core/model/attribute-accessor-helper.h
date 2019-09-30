@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ATTRIBUTE_ACCESSOR_HELPER_H
-#define ATTRIBUTE_ACCESSOR_HELPER_H
+#pragma once
 
 #include "attribute.h"
 #include "unused.h"
@@ -588,4 +587,4 @@ MakeAccessorHelper (T1 a1, T2 a2)
 
 } // namespace ns3
 
-#endif /* ATTRIBUTE_ACCESSOR_HELPER_H */
+

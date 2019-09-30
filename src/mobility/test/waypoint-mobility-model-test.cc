@@ -18,11 +18,11 @@
  * Author: Phillip Sitbon <phillip@sitbon.net>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/boolean.h"
-#include "ns3/config.h"
-#include "ns3/waypoint-mobility-model.h"
-#include "ns3/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/config.h"
+#include "../model/waypoint-mobility-model.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

@@ -18,10 +18,10 @@
  * Authors:  Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "fifo-queue-disc.h"
-#include "ns3/object-factory.h"
-#include "ns3/drop-tail-queue.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/drop-tail-queue.h"
 
 namespace ns3 {
 

@@ -43,14 +43,14 @@
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
-#include "ns3/mpi-interface.h"
-#include "ns3/ipv4-global-routing-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-nix-vector-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/packet-sink-helper.h"
+#include "../model/mpi-interface.h"
+#include "../../internet/helper/ipv4-global-routing-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../nix-vector-routing/helper/ipv4-nix-vector-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../applications/helper/on-off-helper.h"
+#include "../../applications/helper/packet-sink-helper.h"
 
 #ifdef NS3_MPI
 #include <mpi.h>

@@ -18,9 +18,9 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/test.h>
-#include <ns3/log.h>
-#include <ns3/geographic-positions.h>
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../model/geographic-positions.h"
 
 NS_LOG_COMPONENT_DEFINE ("GeoToCartesianTest");
 

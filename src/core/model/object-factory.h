@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef OBJECT_FACTORY_H
-#define OBJECT_FACTORY_H
+#pragma once
 
 #include "attribute-construction-list.h"
 #include "object.h"
@@ -237,4 +236,4 @@ CreateObjectWithAttributes (std::string n1, const AttributeValue & v1,
 
 } // namespace ns3
 
-#endif /* OBJECT_FACTORY_H */
+

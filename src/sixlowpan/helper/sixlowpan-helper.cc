@@ -18,11 +18,11 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/sixlowpan-net-device.h"
-#include "ns3/net-device.h"
-#include "ns3/node.h"
-#include "ns3/names.h"
+#include "../../core/model/log.h"
+#include "../model/sixlowpan-net-device.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/node.h"
+#include "../../core/model/names.h"
 #include "sixlowpan-helper.h"
 
 namespace ns3 {

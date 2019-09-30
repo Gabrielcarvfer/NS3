@@ -17,11 +17,10 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef IPV4_GLOBAL_ROUTING_HELPER_H
-#define IPV4_GLOBAL_ROUTING_HELPER_H
+#pragma once
 
-#include "ns3/node-container.h"
-#include "ns3/ipv4-routing-helper.h"
+#include "../../network/helper/node-container.h"
+#include "ipv4-routing-helper.h"
 
 namespace ns3 {
 
@@ -95,4 +94,4 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV4_GLOBAL_ROUTING_HELPER_H */
+

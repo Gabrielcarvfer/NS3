@@ -20,8 +20,8 @@
  *         Nicola Baldo (wrote building-container.cc based on node-container.cc)
  */
 #include "building-container.h"
-#include "ns3/building-list.h"
-#include "ns3/names.h"
+#include "../model/building-list.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PACKET_TAG_LIST_H
-#define PACKET_TAG_LIST_H
+#pragma once
 
 /**
 \file   packet-tag-list.h
@@ -27,7 +26,7 @@
 
 #include <stdint.h>
 #include <ostream>
-#include "ns3/type-id.h"
+#include "../../core/model/type-id.h"
 
 namespace ns3 {
 
@@ -356,4 +355,4 @@ PacketTagList::RemoveAll (void)
 
 } // namespace ns3
 
-#endif /* PACKET_TAG_LIST_H */
+

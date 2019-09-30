@@ -21,7 +21,7 @@
  *  Erwan Livolant <erwan.livolant@inria.fr>
  */
 #include "lr-wpan-mac-trailer.h"
-#include <ns3/packet.h>
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 

@@ -17,13 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef OLSR_HELPER_H
-#define OLSR_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/node.h"
-#include "ns3/node-container.h"
-#include "ns3/ipv4-routing-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/node.h"
+#include "../../network/helper/node-container.h"
+#include "../../internet/helper/ipv4-routing-helper.h"
 #include <map>
 #include <set>
 
@@ -111,4 +110,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OLSR_HELPER_H */
+

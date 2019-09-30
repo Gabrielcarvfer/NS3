@@ -19,12 +19,11 @@
  */
 
 
-#ifndef EPS_GTPU_V1_H
-#define EPS_GTPU_V1_H
+#pragma once
 
-#include <ns3/ptr.h>
-#include <ns3/header.h>
-#include <ns3/ipv4-header.h>
+#include "../../core/model/ptr.h"
+#include "../../network/model/header.h"
+#include "../../internet/model/ipv4-header.h"
 
 namespace ns3 {
 
@@ -249,4 +248,4 @@ private:
 
 } // namespace ns3
 
-#endif /* EPS_GTPU_V1_H */
+

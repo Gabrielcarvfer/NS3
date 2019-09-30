@@ -18,11 +18,11 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/simple-net-device.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "simple-net-device.h"
+#include "../../core/model/simulator.h"
+#include "../model/packet.h"
+#include "../model/node.h"
+#include "../../core/model/log.h"
 #include "error-channel.h"
 
 namespace ns3 {

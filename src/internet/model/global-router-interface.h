@@ -19,20 +19,19 @@
  *           Tom Henderson (tomhend@u.washington.edu)
  */
 
-#ifndef GLOBAL_ROUTER_INTERFACE_H
-#define GLOBAL_ROUTER_INTERFACE_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/node.h"
-#include "ns3/channel.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/net-device-container.h"
-#include "ns3/bridge-net-device.h"
-#include "ns3/global-route-manager.h"
-#include "ns3/ipv4-routing-table-entry.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/node.h"
+#include "../../network/model/channel.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../bridge/model/bridge-net-device.h"
+#include "global-route-manager.h"
+#include "ipv4-routing-table-entry.h"
 
 namespace ns3 {
 
@@ -911,4 +910,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GLOBAL_ROUTER_INTERFACE_H */
+

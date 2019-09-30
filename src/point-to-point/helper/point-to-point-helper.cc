@@ -18,21 +18,21 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/abort.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/point-to-point-net-device.h"
-#include "ns3/point-to-point-channel.h"
-#include "ns3/point-to-point-remote-channel.h"
-#include "ns3/queue.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/config.h"
-#include "ns3/packet.h"
-#include "ns3/names.h"
-#include "ns3/mpi-interface.h"
-#include "ns3/mpi-receiver.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../model/point-to-point-net-device.h"
+#include "../model/point-to-point-channel.h"
+#include "../model/point-to-point-remote-channel.h"
+#include "../../network/utils/queue.h"
+#include "../../network/utils/net-device-queue-interface.h"
+#include "../../core/model/config.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/names.h"
+#include "../../mpi/model/mpi-interface.h"
+#include "../../mpi/model/mpi-receiver.h"
 
-#include "ns3/trace-helper.h"
+#include "../../network/helper/trace-helper.h"
 #include "point-to-point-helper.h"
 
 namespace ns3 {

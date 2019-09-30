@@ -41,7 +41,7 @@
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/openflow-module.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 using namespace ns3;
 

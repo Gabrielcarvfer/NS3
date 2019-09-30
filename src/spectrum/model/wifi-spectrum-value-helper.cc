@@ -25,9 +25,9 @@
 #include <map>
 #include <cmath>
 #include "wifi-spectrum-value-helper.h"
-#include "ns3/log.h"
-#include "ns3/fatal-error.h"
-#include "ns3/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

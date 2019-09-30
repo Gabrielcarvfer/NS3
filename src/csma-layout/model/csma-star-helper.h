@@ -16,18 +16,17 @@
 
 // Define an object to create a star topology.
 
-#ifndef CSMA_STAR_HELPER_H
-#define CSMA_STAR_HELPER_H
+#pragma once
 
 #include <string>
 
-#include "csma-helper.h"
-#include "ipv4-address-helper.h"
-#include "ipv6-address-helper.h"
-#include "internet-stack-helper.h"
-#include "ipv4-interface-container.h"
-#include "ipv6-interface-container.h"
-#include "ipv6-address-generator.h"
+#include "../../csma/helper/csma-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv6-address-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../internet/helper/ipv6-interface-container.h"
+#include "../../internet/model/ipv6-address-generator.h"
 
 namespace ns3 {
 
@@ -153,4 +152,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CSMA_STAR_HELPER_H */
+

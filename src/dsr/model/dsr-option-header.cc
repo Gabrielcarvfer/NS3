@@ -29,14 +29,14 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/header.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../network/model/header.h"
 #include "dsr-option-header.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
-#include "ns3/enum.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/address-utils.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/enum.h"
 
 namespace ns3 {
 

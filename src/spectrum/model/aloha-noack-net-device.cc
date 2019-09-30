@@ -18,18 +18,18 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/queue.h"
-#include "ns3/simulator.h"
-#include "ns3/enum.h"
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/pointer.h"
-#include "ns3/channel.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/queue.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/channel.h"
+#include "../../core/model/trace-source-accessor.h"
 #include "aloha-noack-mac-header.h"
 #include "aloha-noack-net-device.h"
-#include "ns3/llc-snap-header.h"
+#include "../../network/utils/llc-snap-header.h"
 
 namespace ns3 {
 

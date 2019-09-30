@@ -19,19 +19,19 @@
  *          Aleksey Kovalenko <kovalenko@iitp.ru>
  */
 
-#include "ns3/peer-management-protocol.h"
+#include "peer-management-protocol.h"
 #include "peer-management-protocol-mac.h"
 #include "ie-dot11s-configuration.h"
 #include "ie-dot11s-id.h"
-#include "ns3/mesh-point-device.h"
-#include "ns3/simulator.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/mesh-wifi-interface-mac.h"
-#include "ns3/mesh-wifi-interface-mac-plugin.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/trace-source-accessor.h"
+#include "../mesh-point-device.h"
+#include "../../../core/model/simulator.h"
+#include "../../../core/model/assert.h"
+#include "../../../core/model/log.h"
+#include "../../../core/model/random-variable-stream.h"
+#include "../mesh-wifi-interface-mac.h"
+#include "../mesh-wifi-interface-mac-plugin.h"
+#include "../../../wifi/model/wifi-net-device.h"
+#include "../../../core/model/trace-source-accessor.h"
 
 namespace ns3 {
 

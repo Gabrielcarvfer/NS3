@@ -18,9 +18,9 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
 #include "obss-pd-algorithm.h"
 #include "wifi-net-device.h"
 #include "wifi-phy.h"

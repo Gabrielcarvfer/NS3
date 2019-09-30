@@ -20,11 +20,10 @@
  *          Rediet <getachew.redieteab@orange.com>
  */
 
-#ifndef WIFI_SPECTRUM_VALUE_HELPER_H
-#define WIFI_SPECTRUM_VALUE_HELPER_H
+#pragma once
 
 
-#include <ns3/spectrum-value.h>
+#include "spectrum-value.h"
 
 namespace ns3 {
 
@@ -268,4 +267,4 @@ public:
 
 } // namespace ns3
 
-#endif /*  WIFI_SPECTRUM_VALUE_HELPER_H */
+

@@ -21,26 +21,26 @@
  * This is the test code for ipv4-raw-socket-impl.cc.
  */
 
-#include "ns3/test.h"
-#include "ns3/socket-factory.h"
-#include "ns3/ipv4-raw-socket-factory.h"
-#include "ns3/simulator.h"
-#include "ns3/simple-channel.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-net-device-helper.h"
-#include "ns3/socket.h"
+#include "../../core/model/test.h"
+#include "../../network/model/socket-factory.h"
+#include "../model/ipv4-raw-socket-factory.h"
+#include "../../core/model/simulator.h"
+#include "../../network/utils/simple-channel.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/helper/simple-net-device-helper.h"
+#include "../../network/model/socket.h"
 
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/boolean.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/boolean.h"
 
-#include "ns3/arp-l3-protocol.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/icmpv4-l4-protocol.h"
-#include "ns3/ipv4-list-routing.h"
-#include "ns3/ipv4-static-routing.h"
-#include "ns3/internet-stack-helper.h"
+#include "../model/arp-l3-protocol.h"
+#include "../model/ipv4-l3-protocol.h"
+#include "../model/icmpv4-l4-protocol.h"
+#include "../model/ipv4-list-routing.h"
+#include "../model/ipv4-static-routing.h"
+#include "../helper/internet-stack-helper.h"
 
 #include <string>
 #include <limits>

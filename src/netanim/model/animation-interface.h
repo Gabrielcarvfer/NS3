@@ -20,30 +20,29 @@
 
 // Interface between ns3 and the network animator
 
-#ifndef ANIMATION_INTERFACE__H
-#define ANIMATION_INTERFACE__H
+#pragma once
 
 #include <string>
 #include <cstdio>
 #include <map>
 
-#include "ns3/ptr.h"
-#include "ns3/net-device.h"
-#include "ns3/node-container.h"
-#include "ns3/nstime.h"
-#include "ns3/log.h"
-#include "ns3/node-list.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/simulator.h"
-#include "ns3/config.h"
-#include "ns3/mac48-address.h"
-#include "ns3/lte-ue-net-device.h"
-#include "ns3/lte-enb-net-device.h"
-#include "ns3/uan-phy-gen.h"
-#include "ns3/wifi-phy.h"
-#include "ns3/rectangle.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-l3-protocol.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/net-device.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/config.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../lte/model/lte-ue-net-device.h"
+#include "../../lte/model/lte-enb-net-device.h"
+#include "../../uan/model/uan-phy-gen.h"
+#include "../../wifi/model/wifi-phy.h"
+#include "../../mobility/model/rectangle.h"
+#include "../../internet/model/ipv4.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
 
 namespace ns3 {
 
@@ -1561,5 +1560,4 @@ private:
 
 
 }
-#endif
 

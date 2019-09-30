@@ -17,10 +17,9 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TAG_H
-#define TAG_H
+#pragma once
 
-#include "ns3/object-base.h"
+#include "../../core/model/object-base.h"
 #include "tag-buffer.h"
 #include <stdint.h>
 
@@ -77,4 +76,4 @@ public:
 
 } // namespace ns3
 
-#endif /* TAG_H */
+

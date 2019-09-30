@@ -18,12 +18,12 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/simple-device-energy-model.h"
-#include "ns3/li-ion-energy-source.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../model/simple-device-energy-model.h"
+#include "../model/li-ion-energy-source.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
 
 using namespace ns3;
 

@@ -29,14 +29,14 @@
 #include <fstream>
 #include <cmath>
 
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/integer.h"
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/rng-seed-manager.h"
-#include "ns3/random-variable-stream.h"
+#include "../model/boolean.h"
+#include "../model/double.h"
+#include "../model/string.h"
+#include "../model/integer.h"
+#include "../model/test.h"
+#include "../model/log.h"
+#include "../model/rng-seed-manager.h"
+#include "../model/random-variable-stream.h"
 
 using namespace ns3;
 

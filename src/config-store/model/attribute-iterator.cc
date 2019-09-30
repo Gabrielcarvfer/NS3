@@ -17,11 +17,11 @@
  */
  
 #include "attribute-iterator.h"
-#include "ns3/config.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/object-ptr-container.h"
-#include "ns3/string.h"
+#include "../../core/model/config.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/object-ptr-container.h"
+#include "../../core/model/string.h"
 #include <fstream>
 
 

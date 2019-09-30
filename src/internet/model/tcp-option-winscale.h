@@ -19,10 +19,9 @@
  * Documentation, test cases: Natale Patriciello <natale.patriciello@gmail.com>
  */
 
-#ifndef TCP_OPTION_WINSCALE_H
-#define TCP_OPTION_WINSCALE_H
+#pragma once
 
-#include "ns3/tcp-option.h"
+#include "tcp-option.h"
 
 namespace ns3 {
 
@@ -88,4 +87,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* TCP_OPTION_WINSCALE */
+

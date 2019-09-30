@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef REGULAR_WIFI_MAC_H
-#define REGULAR_WIFI_MAC_H
+#pragma once
 
 #include "wifi-mac.h"
 #include "qos-txop.h"
@@ -633,4 +632,4 @@ private:
 
 } //namespace ns3
 
-#endif /* REGULAR_WIFI_MAC_H */
+

@@ -20,8 +20,8 @@
 
 #include <cmath>
 
-#include "ns3/test.h"
-#include "ns3/basic-data-calculators.h"
+#include "../../core/model/test.h"
+#include "../model/basic-data-calculators.h"
 
 using namespace ns3;
 

@@ -16,16 +16,16 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 #include <cmath>
-#include "ns3/test.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/node-list.h"
-#include "ns3/mobility-model.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/wave-net-device.h"
-#include "ns3/wave-mac-helper.h"
-#include "ns3/wave-helper.h"
+#include "../../core/model/test.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../network/model/node-list.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../model/wave-net-device.h"
+#include "../helper/wave-mac-helper.h"
+#include "../helper/wave-helper.h"
 
 using namespace ns3;
 

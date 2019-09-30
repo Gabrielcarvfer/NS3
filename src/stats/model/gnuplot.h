@@ -18,8 +18,7 @@
  * Original Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  * Enhancements: Timo Bingmann <timo.bingmann@student.kit.edu>
  */
-#ifndef GNUPLOT_H
-#define GNUPLOT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -543,4 +542,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GNUPLOT_H */
+

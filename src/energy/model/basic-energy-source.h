@@ -18,12 +18,11 @@
  * Authors: Sidharth Nabar <snabar@uw.edu>, He Wu <mdzz@u.washington.edu>
  */
 
-#ifndef BASIC_ENERGY_SOURCE_H
-#define BASIC_ENERGY_SOURCE_H
+#pragma once
 
-#include "ns3/traced-value.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
 #include "energy-source.h"
 
 namespace ns3 {
@@ -151,4 +150,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BASIC_ENERGY_SOURCE_H */
+

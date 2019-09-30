@@ -20,12 +20,11 @@
  *  Sascha Alexander Jopen <jopen@cs.uni-bonn.de>
  */
 
-#ifndef LR_WPAN_CSMACA_H
-#define LR_WPAN_CSMACA_H
+#pragma once
 
-#include <ns3/object.h>
-#include <ns3/event-id.h>
-#include <ns3/lr-wpan-mac.h>
+#include "../../core/model/object.h"
+#include "../../core/model/event-id.h"
+#include "lr-wpan-mac.h"
 
 namespace ns3 {
 
@@ -341,4 +340,4 @@ private:
 
 // namespace ns-3
 
-#endif /* LR_WPAN_CSMACA_H */
+

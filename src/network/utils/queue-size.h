@@ -18,14 +18,13 @@
 // Author: Stefano Avallone <stavallo@unina.it>
 //
 
-#ifndef QUEUE_SIZE_H
-#define QUEUE_SIZE_H
+#pragma once
 
 #include <string>
 #include <iostream>
-#include "ns3/attribute.h"
-#include "ns3/attribute-helper.h"
-#include "ns3/abort.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/attribute-helper.h"
+#include "../../core/model/abort.h"
 
 namespace ns3 {
 
@@ -277,4 +276,4 @@ QueueSize operator+ (const Ptr<Item>& lhs, const QueueSize& rhs)
 
 } // namespace ns3
 
-#endif /* QUEUE_SIZE_H */
+

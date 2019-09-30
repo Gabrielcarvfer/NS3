@@ -17,10 +17,9 @@
  *
  * Author: Kirill Andreev <andreev@telum.ru>
  */
-#ifndef PROPAGATION_CACHE_H_
-#define PROPAGATION_CACHE_H_
+#pragma once
 
-#include "ns3/mobility-model.h"
+#include "../../mobility/model/mobility-model.h"
 #include <map>
 
 namespace ns3
@@ -124,4 +123,4 @@ private:
 };
 } // namespace ns3
 
-#endif // PROPAGATION_CACHE_H_
+

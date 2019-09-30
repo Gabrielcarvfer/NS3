@@ -17,15 +17,14 @@
  *
  * Author: Stefano Avallone <stavallo@unina.it>
  */
-#ifndef TRAFFIC_CONTROL_HELPER_H
-#define TRAFFIC_CONTROL_HELPER_H
+#pragma once
 
 #include <string>
 #include <vector>
 #include <map>
-#include "ns3/object-factory.h"
-#include "ns3/net-device-container.h"
-#include "ns3/queue-disc-container.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/net-device-container.h"
+#include "queue-disc-container.h"
 
 namespace ns3 {
 
@@ -502,4 +501,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TRAFFIC_CONTROL_HELPER_H */
+

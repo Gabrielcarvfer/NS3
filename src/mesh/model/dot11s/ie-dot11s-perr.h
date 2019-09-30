@@ -18,12 +18,11 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef PERR_INFORMATION_ELEMENT_H
-#define PERR_INFORMATION_ELEMENT_H
+#pragma once
 
-#include "ns3/mac48-address.h"
-#include "ns3/mesh-information-element-vector.h"
-#include "ns3/hwmp-protocol.h"
+#include "../../../network/utils/mac48-address.h"
+#include "../mesh-information-element-vector.h"
+#include "hwmp-protocol.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -86,4 +85,4 @@ bool operator== (const IePerr & a, const IePerr & b);
 std::ostream &operator << (std::ostream &os, const IePerr &perr);
 } // namespace dot11s
 } // namespace ns3
-#endif
+

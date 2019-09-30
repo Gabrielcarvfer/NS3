@@ -79,17 +79,17 @@
 // that are no longer interfering:
 // ./waf --run "wifi-simple-interference --delta=30000"
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/log.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/mobility-model.h"
-#include "ns3/internet-stack-helper.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/double.h"
+#include "../../src/core/model/string.h"
+#include "../../src/core/model/log.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/mobility/model/mobility-model.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
 
 using namespace ns3;
 

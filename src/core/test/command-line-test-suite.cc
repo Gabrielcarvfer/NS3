@@ -17,14 +17,14 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/command-line.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/global-value.h"
-#include "ns3/system-path.h"
-#include "ns3/type-id.h"
-#include "ns3/test.h"
-#include "ns3/string.h"
+#include "../model/command-line.h"
+#include "../model/log.h"
+#include "../model/config.h"
+#include "../model/global-value.h"
+#include "../model/system-path.h"
+#include "../model/type-id.h"
+#include "../model/test.h"
+#include "../model/string.h"
 #include <cstdlib>
 #include <cstdarg>
 #include <sstream>

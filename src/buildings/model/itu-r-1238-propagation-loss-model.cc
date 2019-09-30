@@ -19,14 +19,14 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  * 
  */
-#include "ns3/log.h"
-#include "ns3/double.h"
-#include "ns3/enum.h"
-#include "ns3/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/enum.h"
+#include "../../mobility/model/mobility-model.h"
 #include <cmath>
 
 #include "itu-r-1238-propagation-loss-model.h"
-#include <ns3/mobility-building-info.h>
+#include "mobility-building-info.h"
 
 namespace ns3 {
 

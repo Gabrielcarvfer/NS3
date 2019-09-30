@@ -19,22 +19,21 @@
  * Author: Marco Miozzo <mmiozzo@cttc.es>
  */
 
-#ifndef LTE_UE_MAC_ENTITY_H
-#define LTE_UE_MAC_ENTITY_H
+#pragma once
 
 
 
 #include <map>
 
-#include <ns3/lte-mac-sap.h>
-#include <ns3/lte-ue-cmac-sap.h>
-#include <ns3/lte-ue-phy-sap.h>
-#include <ns3/nstime.h>
-#include <ns3/event-id.h>
+#include "lte-mac-sap.h"
+#include "lte-ue-cmac-sap.h"
+#include "lte-ue-phy-sap.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
 #include <vector>
-#include <ns3/packet.h>
-#include <ns3/packet-burst.h>
-#include <ns3/traced-callback.h>
+#include "../../network/model/packet.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/traced-callback.h"
 
 
 namespace ns3 {
@@ -298,4 +297,4 @@ private:
 
 } // namespace ns3
 
-#endif // LTE_UE_MAC_ENTITY
+

@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-import subprocess, os, json
+import subprocess, os, json, sys
 
 runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
-dot_path = "."+ os.sep 
+dot_path = "."+ os.sep
 
 cwd_path = os.getcwd()
 cwd_components = cwd_path.split(os.sep)
@@ -11,7 +11,7 @@ cwd_offset_dict = { "NS3"  : len(cwd_components),
 					"utils": -1,
 					"build": -1,
 					"bin"  : -2,
-					"src"  : -1,				
+					"src"  : -1,
 					}
 
 cwd_offset = cwd_offset_dict[cwd_components[-1]]
@@ -20,18 +20,25 @@ bin_path = "/".join([ns3_path,"build","bin",""])
 utils_path = "/".join([ns3_path,"utils",""])
 
 
-#Run a test case and return output + error 
+#Run a test case and return output + error
 def run_test(test_name):
 
 	output = None
 	error = None
 	try:
 		os.chdir(bin_path)
-		output = subprocess.check_output([dot_path+runner_name, "--test-name="+test_name], shell=False, stderr=subprocess.DEVNULL).decode()
-		output = output.split("\n")[-2]
-		output = output.split(" ")[0]
+		output = subprocess.check_output([dot_path+runner_name, "--test-name="+test_name], shell=False, stderr=subprocess.DEVNULL)
 	except Exception:
 		error = True
+
+	try:
+		output = output.decode(sys.stdout.encoding, errors="ignore")
+		output = output.split("\n")[-2]
+		output = output.split(" ")[0]
+
+	except Exception:
+		error = True
+
 
 	return test_name, output, error
 
@@ -42,7 +49,7 @@ def dispatch_tests(tests_to_run):
 	import multiprocessing
 
 	results = []
-	with multiprocessing.Pool(processes=6) as pool: 
+	with multiprocessing.Pool(processes=6) as pool:
 		results = pool.starmap(run_test, [[x] for x in tests_to_run])
 
 	# Compile failed tests in a single dictionary

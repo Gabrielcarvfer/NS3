@@ -19,15 +19,14 @@
  * Original author: Adrian Sai-wah Tam <adrian.sw.tam@gmail.com>
  */
 
-#ifndef TCP_TX_BUFFER_H
-#define TCP_TX_BUFFER_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/traced-value.h"
-#include "ns3/sequence-number.h"
-#include "ns3/nstime.h"
-#include "ns3/tcp-option-sack.h"
-#include "ns3/packet.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-value.h"
+#include "../../network/utils/sequence-number.h"
+#include "../../core/model/nstime.h"
+#include "tcp-option-sack.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 class Packet;
@@ -636,4 +635,4 @@ std::ostream & operator<< (std::ostream & os, TcpTxItem const & item);
 
 } // namespace ns3
 
-#endif /* TCP_TX_BUFFER_H */
+

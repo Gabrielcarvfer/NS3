@@ -18,19 +18,19 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/abort.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/object-factory.h"
-#include "ns3/queue.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/csma-net-device.h"
-#include "ns3/csma-channel.h"
-#include "ns3/config.h"
-#include "ns3/packet.h"
-#include "ns3/names.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/queue.h"
+#include "../../network/utils/net-device-queue-interface.h"
+#include "../model/csma-net-device.h"
+#include "../model/csma-channel.h"
+#include "../../core/model/config.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/names.h"
 
-#include "ns3/trace-helper.h"
+#include "../../network/helper/trace-helper.h"
 #include "csma-helper.h"
 
 #include <string>

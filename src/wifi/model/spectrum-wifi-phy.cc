@@ -23,11 +23,11 @@
  * with Nicola Baldo and Dean Armstrong
  */
 
-#include "ns3/wifi-spectrum-value-helper.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/net-device.h"
-#include "ns3/node.h"
+#include "../../spectrum/model/wifi-spectrum-value-helper.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/node.h"
 #include "spectrum-wifi-phy.h"
 #include "wifi-spectrum-signal-parameters.h"
 #include "wifi-spectrum-phy-interface.h"

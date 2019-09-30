@@ -19,17 +19,16 @@
  *           Tom Henderson (tomhend@u.washington.edu)
  */
 
-#ifndef GLOBAL_ROUTE_MANAGER_IMPL_H
-#define GLOBAL_ROUTE_MANAGER_IMPL_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
 #include <queue>
 #include <map>
 #include <vector>
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv4-address.h"
 #include "global-router-interface.h"
 
 namespace ns3 {
@@ -950,4 +949,4 @@ private:
 
 } // namespace ns3
 
-#endif /* GLOBAL_ROUTE_MANAGER_IMPL_H */
+

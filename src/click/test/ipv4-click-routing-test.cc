@@ -20,13 +20,13 @@
 
 #ifdef NS3_CLICK
 
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/ipv4-click-routing.h"
-#include "ns3/click-internet-stack-helper.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../model/ipv4-click-routing.h"
+#include "../helper/click-internet-stack-helper.h"
 
 #include <click/simclick.h>
 

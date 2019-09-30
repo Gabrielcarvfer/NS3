@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef IPV6_RAW_SOCKET_FACTORY_IMPL_H
-#define IPV6_RAW_SOCKET_FACTORY_IMPL_H
+#pragma once
 
-#include "ns3/ipv6-raw-socket-factory.h"
+#include "ipv6-raw-socket-factory.h"
 
 namespace ns3
 {
@@ -44,5 +43,5 @@ public:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_RAW_SOCKET_FACTORY_IMPL_H */
+
 

@@ -20,22 +20,22 @@
  */
 
 #include <stdint.h>
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
 #include "service-flow.h"
 #include "service-flow-manager.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "bs-net-device.h"
 #include "ss-record.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
 #include "wimax-connection.h"
 #include "ss-manager.h"
 #include "connection-manager.h"
 #include "bs-uplink-scheduler.h"
 #include "ss-scheduler.h"
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 #include "service-flow-record.h"
 
 namespace ns3 {

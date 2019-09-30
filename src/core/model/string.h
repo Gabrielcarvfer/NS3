@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef NS3_STRING_H
-#define NS3_STRING_H
+#pragma once
 
 #include <string>
 #include "attribute-helper.h"
@@ -45,4 +44,4 @@ ATTRIBUTE_CHECKER_DEFINE (String);
 } // namespace ns3
 
 
-#endif /* NS3_STRING_H */
+

@@ -19,12 +19,11 @@
  *  Mathieu Lacage <mathieu.lacage@sophia.inria.fr>,
  *  Tom Henderson <tomh@tomh.org>
  */
-#ifndef IPV4_INTERFACE_H
-#define IPV4_INTERFACE_H
+#pragma once
 
 #include <list>
-#include "ns3/ptr.h"
-#include "ns3/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -243,4 +242,4 @@ private:
 
 } // namespace ns3
 
-#endif
+

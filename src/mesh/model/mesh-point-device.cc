@@ -19,12 +19,12 @@
  *         Pavel Boyko <boyko@iitp.ru>
  */
 
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/mesh-point-device.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/mesh-wifi-interface-mac.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "mesh-point-device.h"
+#include "../../wifi/model/wifi-net-device.h"
+#include "mesh-wifi-interface-mac.h"
 
 namespace ns3 {
 

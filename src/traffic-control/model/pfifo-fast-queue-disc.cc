@@ -20,10 +20,10 @@
  *           Tom Henderson <tomhend@u.washington.edu>
  */
 
-#include "ns3/log.h"
-#include "ns3/object-factory.h"
-#include "ns3/queue.h"
-#include "ns3/socket.h"
+#include "../../core/model/log.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/queue.h"
+#include "../../network/model/socket.h"
 #include "pfifo-fast-queue-disc.h"
 
 namespace ns3 {

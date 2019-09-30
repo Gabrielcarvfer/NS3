@@ -19,8 +19,7 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#ifndef ORBIS_TOPOLOGY_READER_H
-#define ORBIS_TOPOLOGY_READER_H
+#pragma once
 
 #include "topology-reader.h"
 
@@ -87,5 +86,5 @@ private:
 };
 
 
-#endif /* ORBIS_TOPOLOGY_READER_H */
+
 

@@ -22,14 +22,14 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/config-store.h"
-#include <ns3/buildings-propagation-loss-model.h>
-#include <ns3/buildings-helper.h>
-#include <ns3/radio-environment-map-helper.h>
+#include "../../config-store/model/config-store.h"
+#include "../../buildings/model/buildings-propagation-loss-model.h"
+#include "../../buildings/helper/buildings-helper.h"
+#include "../helper/radio-environment-map-helper.h"
 #include <iomanip>
 #include <string>
 #include <vector>
-//#include "ns3/gtk-config-store.h"
+//#include "../../config-store/model/gtk-config-store.h"
 
 using namespace ns3;
 using std::vector;

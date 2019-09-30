@@ -20,7 +20,7 @@
 
 #include <iostream>
 
-#include "ns3/net-device.h"
+#include "../../network/model/net-device.h"
 #include "ipv6-route.h"
 
 namespace ns3

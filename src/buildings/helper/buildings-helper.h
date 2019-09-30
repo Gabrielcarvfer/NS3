@@ -18,14 +18,13 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef BUILDINGS_HELPER_H
-#define BUILDINGS_HELPER_H
+#pragma once
 
 #include <string>
-#include <ns3/attribute.h>
-#include <ns3/object-factory.h>
-#include <ns3/node-container.h>
-#include <ns3/ptr.h>
+#include "../../core/model/attribute.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/ptr.h"
 
 
 namespace ns3 {
@@ -69,4 +68,4 @@ public:
 
 }
 
-#endif /* BUILDINGS_HELPER_H */
+

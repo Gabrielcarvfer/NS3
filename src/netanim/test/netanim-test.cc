@@ -18,7 +18,7 @@
  */
 
 #include <iostream>
-#include "unistd.h"
+#include <unistd.h>
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -27,8 +27,8 @@
 #include "ns3/netanim-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
-#include "ns3/basic-energy-source.h"
-#include "ns3/simple-device-energy-model.h"
+#include "../../energy/model/basic-energy-source.h"
+#include "../../energy/model/simple-device-energy-model.h"
 
 using namespace ns3;
 

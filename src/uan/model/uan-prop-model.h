@@ -18,12 +18,11 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_PROP_MODEL_H
-#define UAN_PROP_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/mobility-model.h"
-#include "ns3/nstime.h"
+#include "../../core/model/object.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/nstime.h"
 
 
 #include <vector>
@@ -330,4 +329,4 @@ public:
 
 } // namespace ns3
 
-#endif /* UAN_PROP_MODEL_H */
+

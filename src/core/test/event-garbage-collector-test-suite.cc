@@ -18,8 +18,8 @@
  * Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
  */
 
-#include "ns3/test.h"
-#include "ns3/event-garbage-collector.h"
+#include "../model/test.h"
+#include "../helper/event-garbage-collector.h"
 
 /**
  * \file

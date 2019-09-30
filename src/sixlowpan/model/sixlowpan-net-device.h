@@ -19,15 +19,14 @@
  *         Michele Muccio <michelemuccio@virgilio.it>
  */
 
-#ifndef SIXLOWPAN_NET_DEVICE_H
-#define SIXLOWPAN_NET_DEVICE_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
 #include <map>
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/net-device.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/net-device.h"
 
 namespace ns3 {
 
@@ -521,4 +520,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIXLOWPAN_NET_DEVICE_H */
+

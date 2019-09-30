@@ -16,18 +16,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/ptr.h"
-#include "ns3/node.h"
-#include "ns3/net-device.h"
-#include "ns3/loopback-net-device.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-address-generator.h"
-#include "ns3/simulator.h"
-#include "ns3/traffic-control-helper.h"
-#include "ns3/traffic-control-layer.h"
-#include "ns3/net-device-queue-interface.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/node.h"
+#include "../../network/model/net-device.h"
+#include "../model/loopback-net-device.h"
+#include "../model/ipv4.h"
+#include "../model/ipv4-address-generator.h"
+#include "../../core/model/simulator.h"
+#include "../../traffic-control/helper/traffic-control-helper.h"
+#include "../../traffic-control/model/traffic-control-layer.h"
+#include "../../network/utils/net-device-queue-interface.h"
 #include "ipv4-address-helper.h"
 
 namespace ns3 {

@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage, <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef YANS_WIFI_CHANNEL_H
-#define YANS_WIFI_CHANNEL_H
+#pragma once
 
-#include "ns3/channel.h"
+#include "../../network/model/channel.h"
 
 namespace ns3 {
 
@@ -123,4 +122,4 @@ private:
 
 } //namespace ns3
 
-#endif /* YANS_WIFI_CHANNEL_H */
+

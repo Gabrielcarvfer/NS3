@@ -18,10 +18,9 @@
  * Authors: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef CF_PARAMETER_SET_H
-#define CF_PARAMETER_SET_H
+#pragma once
 
-#include "ns3/wifi-information-element.h"
+#include "wifi-information-element.h"
 
 namespace ns3 {
 
@@ -147,4 +146,4 @@ std::ostream &operator << (std::ostream &os, const CfParameterSet &cfParameterSe
 
 } //namespace ns3
 
-#endif /* CF_PARAMETER_SET_H */
+

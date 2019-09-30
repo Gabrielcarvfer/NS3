@@ -17,15 +17,15 @@
  *
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
-#include <ns3/packet.h>
-#include <ns3/uinteger.h>
-#include <ns3/simulator.h>
-#include <ns3/nstime.h>
-#include <ns3/log.h>
-#include <ns3/abort.h>
-#include <ns3/command-line.h>
-#include <ns3/gnuplot.h>
-#include <ns3/lr-wpan-error-model.h>
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/command-line.h"
+#include "../../stats/model/gnuplot.h"
+#include "../model/lr-wpan-error-model.h"
 
 #include <fstream>
 #include <iostream>

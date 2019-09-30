@@ -29,15 +29,14 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_FS_HEADER_H
-#define DSR_FS_HEADER_H
+#pragma once
 
 #include <vector>
 #include <list>
 #include <ostream>
 
-#include "ns3/header.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/ipv4-address.h"
 #include "dsr-option-header.h"
 
 namespace ns3 {
@@ -329,5 +328,5 @@ static inline std::ostream & operator<< (std::ostream& os, const DsrRoutingHeade
 }  // namespace dsr
 }  // namespace ns3
 
-#endif /* DSR_FS_HEADER_H */
+
 

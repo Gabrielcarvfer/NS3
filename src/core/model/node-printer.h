@@ -17,8 +17,7 @@
  *
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
-#ifndef NODE_PRINTER_H
-#define NODE_PRINTER_H
+#pragma once
 
 #include <ostream>
 
@@ -48,4 +47,4 @@ void DefaultNodePrinter (std::ostream &os);
 
 } // namespace ns3
 
-#endif /* NODE_H */
+

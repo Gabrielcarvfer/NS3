@@ -18,8 +18,8 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "buffer.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 
 #define LOG_INTERNAL_STATE(y)                                                                    \
   NS_LOG_LOGIC (y << "start="<<m_start<<", end="<<m_end<<", zero start="<<m_zeroAreaStart<<              \

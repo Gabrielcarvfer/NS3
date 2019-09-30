@@ -18,16 +18,15 @@
  * Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
  */
 
-#ifndef VIRTUAL_NET_DEVICE_H
-#define VIRTUAL_NET_DEVICE_H
+#pragma once
 
-#include "ns3/address.h"
-#include "ns3/node.h"
-#include "ns3/net-device.h"
-#include "ns3/callback.h"
-#include "ns3/packet.h"
-#include "ns3/ptr.h"
-#include "ns3/traced-callback.h"
+#include "../../network/model/address.h"
+#include "../../network/model/node.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -172,5 +171,4 @@ private:
 
 } // namespace ns3
 
-#endif
 

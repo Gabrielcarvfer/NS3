@@ -19,11 +19,10 @@
  *          Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef AMPDU_TAG_H
-#define AMPDU_TAG_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/tag.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/tag.h"
 
 namespace ns3 {
 
@@ -86,4 +85,4 @@ private:
 
 } //namespace ns3
 
-#endif /* AMPDU_TAG_H */
+

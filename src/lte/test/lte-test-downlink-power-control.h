@@ -19,16 +19,15 @@
  *
  */
 
-#ifndef LTE_TEST_DOWNLINK_POWER_CONTROL_H
-#define LTE_TEST_DOWNLINK_POWER_CONTROL_H
+#pragma once
 
-#include "ns3/spectrum-value.h"
-#include <ns3/lte-rrc-sap.h>
+#include "../../spectrum/model/spectrum-value.h"
+#include "../model/lte-rrc-sap.h"
 
-#include "ns3/spectrum-test.h"
-#include "ns3/lte-spectrum-value-helper.h"
+#include "../../spectrum/test/spectrum-test.h"
+#include "../model/lte-spectrum-value-helper.h"
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 
@@ -173,4 +172,4 @@ private:
   bool m_connectionReconfigurationEnbCompleted; ///< connection reconfiguration ENB completed?
 };
 
-#endif /* LTE_TEST_DOWNLINK_POWER_CONTROL_H */
+

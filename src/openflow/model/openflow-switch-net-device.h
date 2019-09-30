@@ -21,27 +21,26 @@
  * This section documents the API of the ns-3 OpenFlow module. For a generic functional description, please refer to the ns-3 manual.
  */
 
-#ifndef OPENFLOW_SWITCH_NET_DEVICE_H
-#define OPENFLOW_SWITCH_NET_DEVICE_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/mac48-address.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/mac48-address.h"
 
-#include "ns3/ethernet-header.h"
-#include "ns3/arp-header.h"
-#include "ns3/tcp-header.h"
-#include "ns3/udp-header.h"
+#include "../../network/utils/ethernet-header.h"
+#include "../../internet/model/arp-header.h"
+#include "../../internet/model/tcp-header.h"
+#include "../../internet/model/udp-header.h"
 
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/arp-l3-protocol.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../internet/model/arp-l3-protocol.h"
 
-#include "ns3/bridge-channel.h"
-#include "ns3/node.h"
-#include "ns3/enum.h"
-#include "ns3/string.h"
-#include "ns3/integer.h"
-#include "ns3/uinteger.h"
+#include "../../bridge/model/bridge-channel.h"
+#include "../../network/model/node.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/string.h"
+#include "../../core/model/integer.h"
+#include "../../core/model/uinteger.h"
 
 #include <map>
 #include <set>
@@ -515,4 +514,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OPENFLOW_SWITCH_NET_DEVICE_H */
+

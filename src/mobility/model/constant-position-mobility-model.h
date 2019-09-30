@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef CONSTANT_POSITION_MOBILITY_MODEL_H
-#define CONSTANT_POSITION_MOBILITY_MODEL_H
+#pragma once
 
 #include "mobility-model.h"
 
@@ -53,4 +52,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CONSTANT_POSITION_MOBILITY_MODEL_H */
+

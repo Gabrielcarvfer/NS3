@@ -18,11 +18,10 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef AMSDU_SUBFRAME_HEADER_H
-#define AMSDU_SUBFRAME_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/mac48-address.h"
+#include "../../network/model/header.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -85,4 +84,4 @@ private:
 
 } //namespace ns3
 
-#endif /* AMSDU_SUBFRAME_HEADER_H */
+

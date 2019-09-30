@@ -18,13 +18,12 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#ifndef IPV4_FLOW_PROBE_H
-#define IPV4_FLOW_PROBE_H
+#pragma once
 
-#include "ns3/flow-probe.h"
-#include "ns3/ipv4-flow-classifier.h"
-#include "ns3/ipv4-l3-protocol.h"
-#include "ns3/queue-item.h"
+#include "flow-probe.h"
+#include "ipv4-flow-classifier.h"
+#include "../../internet/model/ipv4-l3-protocol.h"
+#include "../../network/utils/queue-item.h"
 
 namespace ns3 {
 
@@ -123,4 +122,4 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV4_FLOW_PROBE_H */
+

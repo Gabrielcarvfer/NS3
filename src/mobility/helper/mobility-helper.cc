@@ -17,16 +17,16 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/mobility-helper.h"
-#include "ns3/mobility-model.h"
-#include "ns3/position-allocator.h"
-#include "ns3/hierarchical-mobility-model.h"
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/names.h"
-#include "ns3/string.h"
+#include "mobility-helper.h"
+#include "../model/mobility-model.h"
+#include "../model/position-allocator.h"
+#include "../model/hierarchical-mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/names.h"
+#include "../../core/model/string.h"
 #include <iostream>
 
 namespace ns3 {

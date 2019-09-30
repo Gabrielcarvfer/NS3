@@ -18,7 +18,7 @@
  */
 
 // An essential include is test.h
-#include "ns3/test.h"
+#include "../model/test.h"
 
 /**
  * \file
@@ -47,7 +47,7 @@
 /// \defgroup class-tests Class test suite \endverbatim
  *
  * Make sure test.h is included:
- * \verbatim #include "ns3/test.h" \endverbatim
+ * \verbatim #include "../model/test.h" \endverbatim
  *
  * Put the test code in namespace ns3::tests.
  * \verbatim namespace ns3 {

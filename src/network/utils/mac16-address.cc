@@ -19,9 +19,9 @@
  */
 
 #include "mac16-address.h"
-#include "ns3/address.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
+#include "../model/address.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 #include <iomanip>
 #include <iostream>
 #include <cstring>

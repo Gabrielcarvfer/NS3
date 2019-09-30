@@ -21,8 +21,8 @@
 #include <iomanip>
 #include <string>
 
-#include "ns3/test.h"
-#include "ns3/hash.h"
+#include "../model/test.h"
+#include "../model/hash.h"
 
 /**
  * \file

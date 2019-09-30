@@ -25,32 +25,31 @@
  *          Vignesh Babu <ns3-dev@esk.fraunhofer.de> (RLF extensions)
  */
 
-#ifndef LTE_ENB_RRC_H
-#define LTE_ENB_RRC_H
+#pragma once
 
-#include <ns3/nstime.h>
-#include <ns3/object.h>
-#include <ns3/traced-callback.h>
-#include <ns3/event-id.h>
+#include "../../core/model/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/event-id.h"
 
-#include <ns3/lte-enb-cmac-sap.h>
-#include <ns3/lte-mac-sap.h>
-#include <ns3/ff-mac-sched-sap.h>
-#include <ns3/ff-mac-csched-sap.h>
-#include <ns3/lte-pdcp-sap.h>
-#include <ns3/epc-x2-sap.h>
-#include <ns3/epc-enb-s1-sap.h>
-#include <ns3/lte-handover-management-sap.h>
-#include <ns3/lte-ccm-rrc-sap.h>
-#include <ns3/lte-enb-cphy-sap.h>
-#include <ns3/lte-rrc-sap.h>
-#include <ns3/lte-anr-sap.h>
-#include <ns3/lte-ffr-rrc-sap.h>
-#include <ns3/lte-rlc.h>
+#include "lte-enb-cmac-sap.h"
+#include "lte-mac-sap.h"
+#include "ff-mac-sched-sap.h"
+#include "ff-mac-csched-sap.h"
+#include "lte-pdcp-sap.h"
+#include "epc-x2-sap.h"
+#include "epc-enb-s1-sap.h"
+#include "lte-handover-management-sap.h"
+#include "lte-ccm-rrc-sap.h"
+#include "lte-enb-cphy-sap.h"
+#include "lte-rrc-sap.h"
+#include "lte-anr-sap.h"
+#include "lte-ffr-rrc-sap.h"
+#include "lte-rlc.h"
 
 #include <map>
 #include <set>
-#include <ns3/component-carrier-enb.h>
+#include "component-carrier-enb.h"
 #include <vector>
 
 #define MIN_NO_CC 1
@@ -1698,4 +1697,4 @@ private:
 
 } // namespace ns3
 
-#endif // LTE_ENB_RRC_H
+

@@ -19,14 +19,13 @@
 // Modifications: Tommaso Pecorella <tommaso.pecorella@unifi.it>
 //
 
-#ifndef IPV6_FLOW_CLASSIFIER_H
-#define IPV6_FLOW_CLASSIFIER_H
+#pragma once
 
 #include <stdint.h>
 #include <map>
 
-#include "ns3/ipv6-header.h"
-#include "ns3/flow-classifier.h"
+#include "../../internet/model/ipv6-header.h"
+#include "flow-classifier.h"
 
 namespace ns3 {
 
@@ -123,4 +122,4 @@ bool operator == (const Ipv6FlowClassifier::FiveTuple &t1, const Ipv6FlowClassif
 
 } // namespace ns3
 
-#endif /* IPV6_FLOW_CLASSIFIER_H */
+

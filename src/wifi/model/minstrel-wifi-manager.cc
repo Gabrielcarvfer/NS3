@@ -30,10 +30,10 @@
  */
 
 #include <iomanip>
-#include "ns3/packet.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 #include "minstrel-wifi-manager.h"
 #include "wifi-mac.h"
 #include "wifi-phy.h"

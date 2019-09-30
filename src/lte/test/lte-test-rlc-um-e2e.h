@@ -18,10 +18,9 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_TEST_RLC_UM_E2E_H
-#define LTE_TEST_RLC_UM_E2E_H
+#pragma once
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 
 using namespace ns3;
@@ -81,4 +80,4 @@ class LteRlcUmE2eTestCase : public TestCase
     double   m_losses; ///< error rate
 };
 
-#endif // LTE_TEST_RLC_UM_E2E_H
+

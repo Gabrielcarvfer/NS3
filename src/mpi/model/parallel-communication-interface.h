@@ -19,19 +19,18 @@
  *
  */
 
-#ifndef NS3_PARALLEL_COMMUNICATION_INTERFACE_H
-#define NS3_PARALLEL_COMMUNICATION_INTERFACE_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
 
-#include <ns3/object.h>
-#include <ns3/nstime.h>
-#include <ns3/buffer.h>
-#include <ns3/packet.h>
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/buffer.h"
+#include "../../network/model/packet.h"
 
 #if defined(NS3_MPI)
-#include "mpi.h"
+#include "ns3/mpi.h"
 #endif
 
 namespace ns3 {
@@ -96,4 +95,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_PARALLEL_COMMUNICATION_INTERFACE_H */
+

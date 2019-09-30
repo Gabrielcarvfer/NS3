@@ -21,11 +21,11 @@
 
 #include <cstring>
 #include <iostream>
-#include "ns3/test.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/packetbb.h"
+#include "../../core/model/test.h"
+#include "../../core/model/ptr.h"
+#include "../utils/ipv4-address.h"
+#include "../utils/ipv6-address.h"
+#include "../utils/packetbb.h"
 
 using namespace ns3;
 

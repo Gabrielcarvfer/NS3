@@ -18,16 +18,16 @@
  * Author: Amine Ismail <amine.ismail@sophia.inria.fr>
  *                      <amine.ismail@udcast.com>
  */
-#include "ns3/log.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/nstime.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/inet6-socket-address.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/socket-factory.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
 #include "udp-client.h"
 #include "seq-ts-header.h"
 #include <cstdlib>

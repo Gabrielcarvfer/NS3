@@ -18,8 +18,7 @@
  * Author: Mehdi Benamor <benamor.mehdi@ensi.rnu.tn>
  */
 
-#ifndef IPV6_AUTOCONFIGURED_PREFIX_H
-#define IPV6_AUTOCONFIGURED_PREFIX_H
+#pragma once
 
 #include <stdint.h>
 
@@ -27,8 +26,8 @@
 #include <vector>
 #include <ostream>
 
-#include "ns3/timer.h"
-#include "ns3/ipv6-address.h"
+#include "../../core/model/timer.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -277,5 +276,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_AUTOCONFIGURED_PREFIX_H */
+
 

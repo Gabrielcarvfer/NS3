@@ -19,15 +19,15 @@
  *                              <amine.ismail@udcast.com>
  *
  */
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/ipcs-classifier-record.h"
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
-#include "ns3/wimax-helper.h"
-#include "ns3/wimax-tlv.h"
-#include "ns3/service-flow.h"
-#include "ns3/cs-parameters.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../model/ipcs-classifier-record.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/packet.h"
+#include "../helper/wimax-helper.h"
+#include "../model/wimax-tlv.h"
+#include "../model/service-flow.h"
+#include "../model/cs-parameters.h"
 
 using namespace ns3;
 

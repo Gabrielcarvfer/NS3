@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef RANDOM_VARIABLE_STREAM_HELPER_H
-#define RANDOM_VARIABLE_STREAM_HELPER_H
+#pragma once
 
 #include <string>
 
@@ -69,4 +68,4 @@ public:
 
 } // namespace ns3
 
-#endif /* RANDOM_VARIABLE_STREAM_HELPER_H */
+

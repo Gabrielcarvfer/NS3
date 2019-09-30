@@ -18,15 +18,14 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef MOBILITY_HELPER_H
-#define MOBILITY_HELPER_H
+#pragma once
 
 #include <vector>
-#include "ns3/object-factory.h"
-#include "ns3/attribute.h"
-#include "ns3/output-stream-wrapper.h"
-#include "ns3/position-allocator.h"
-#include "node-container.h"
+#include "../../core/model/object-factory.h"
+#include "../../core/model/attribute.h"
+#include "../../network/utils/output-stream-wrapper.h"
+#include "../model/position-allocator.h"
+#include "../../network/helper/node-container.h"
 
 namespace ns3 {
 
@@ -282,4 +281,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MOBILITY_HELPER_H */
+

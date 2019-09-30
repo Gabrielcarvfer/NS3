@@ -24,20 +24,20 @@
 #include <string>
 #include <cassert>
 
-#include "ns3/csma-net-device.h"
+#include "../../src/csma/model/csma-net-device.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/ipv4-static-routing.h"
-#include "ns3/ipv4-global-routing.h"
-#include "ns3/ipv4-list-routing.h"
-#include "ns3/ipv4-routing-table-entry.h"
-#include "ns3/global-router-interface.h"
-#include "ns3/ipv4-static-routing-helper.h"
-#include "ns3/ipv4-list-routing-helper.h"
-#include "ns3/ipv4-global-routing-helper.h"
+#include "../../src/internet/model/ipv4-static-routing.h"
+#include "../../src/internet/model/ipv4-global-routing.h"
+#include "../../src/internet/model/ipv4-list-routing.h"
+#include "../../src/internet/model/ipv4-routing-table-entry.h"
+#include "../../src/internet/model/global-router-interface.h"
+#include "../../src/internet/helper/ipv4-static-routing-helper.h"
+#include "../../src/internet/helper/ipv4-list-routing-helper.h"
+#include "../../src/internet/helper/ipv4-global-routing-helper.h"
 
 using namespace ns3;
 using std::cout;

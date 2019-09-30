@@ -18,11 +18,11 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/node.h"
-#include "ns3/config.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
+#include "../../core/model/config.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
 #include "constant-obss-pd-algorithm.h"
 #include "sta-wifi-mac.h"
 #include "wifi-utils.h"

@@ -43,9 +43,9 @@
 #include "ns3/internet-module.h"
 #include "ns3/csma-module.h"
 #include "ns3/internet-apps-module.h"
-#include "ns3/ipv6-static-routing-helper.h"
+#include "../../internet/helper/ipv6-static-routing-helper.h"
 
-#include "ns3/ipv6-routing-table-entry.h"
+#include "../../internet/model/ipv6-routing-table-entry.h"
 #include "ns3/sixlowpan-module.h"
 
 using namespace ns3;

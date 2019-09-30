@@ -20,19 +20,19 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/node.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/node.h"
 #include "ss-net-device.h"
 #include "wimax-phy.h"
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 #include <algorithm>
 #include "dl-mac-messages.h"
 #include "ul-mac-messages.h"
 #include "ss-scheduler.h"
 #include "wimax-mac-queue.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
 #include "service-flow.h"
 #include "service-flow-record.h"
 #include "service-flow-manager.h"

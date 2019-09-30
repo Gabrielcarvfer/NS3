@@ -21,10 +21,10 @@
 #include <queue>
 #include <iomanip>
 
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/names.h"
-#include "ns3/ipv4-list-routing.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/names.h"
+#include "../../internet/model/ipv4-list-routing.h"
 
 #include "ipv4-nix-vector-routing.h"
 

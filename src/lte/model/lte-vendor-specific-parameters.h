@@ -18,10 +18,9 @@
  * Author: Marco Miozzo  <marco.miozzo@cttc.es>
  */
 
-#ifndef LTE_VENDOR_SPECIFIC_PARAMETERS
-#define LTE_VENDOR_SPECIFIC_PARAMETERS
+#pragma once
 
-#include <ns3/ff-mac-common.h>
+#include "ff-mac-common.h"
 
 
 #define SRS_CQI_RNTI_VSP 1
@@ -58,5 +57,5 @@ class SrsCqiRntiVsp : public VendorSpecificValue
 
 }; // namespace ns3
 
-#endif /* LTE_VENDOR_SPECIFIC_PARAMETERS */
+
 

@@ -28,8 +28,8 @@
 #include "ns3/internet-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/point-to-point-module.h"
-#include "ns3/v4ping-helper.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../../internet-apps/helper/v4ping-helper.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
 
 using namespace ns3;
 

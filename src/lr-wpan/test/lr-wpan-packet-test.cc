@@ -17,13 +17,13 @@
  *
  * Author:  Tom Henderson <thomas.r.henderson@boeing.com>
  */
-#include <ns3/test.h>
-#include <ns3/packet.h>
-#include <ns3/lr-wpan-mac-header.h>
-#include <ns3/lr-wpan-mac-trailer.h>
-#include <ns3/mac16-address.h>
-#include <ns3/mac64-address.h>
-#include <ns3/log.h>
+#include "../../core/model/test.h"
+#include "../../network/model/packet.h"
+#include "../model/lr-wpan-mac-header.h"
+#include "../model/lr-wpan-mac-trailer.h"
+#include "../../network/utils/mac16-address.h"
+#include "../../network/utils/mac64-address.h"
+#include "../../core/model/log.h"
 
 
 using namespace ns3;

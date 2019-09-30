@@ -20,11 +20,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es> (took position-allocator and turned it into building-allocator)
  */
 #include "building-allocator.h"
-#include "ns3/building.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
-#include "ns3/enum.h"
-#include "ns3/log.h"
+#include "../model/building.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/log.h"
 #include <cmath>
 
 namespace ns3 {

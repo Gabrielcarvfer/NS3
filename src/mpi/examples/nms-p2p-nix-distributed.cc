@@ -42,11 +42,11 @@
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/network-module.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/mpi-interface.h"
-#include "ns3/ipv4-nix-vector-helper.h"
+#include "../../applications/helper/on-off-helper.h"
+#include "../../applications/helper/packet-sink-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../model/mpi-interface.h"
+#include "../../nix-vector-routing/helper/ipv4-nix-vector-helper.h"
 
 using namespace ns3;
 

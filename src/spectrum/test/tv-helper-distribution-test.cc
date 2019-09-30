@@ -18,9 +18,9 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/test.h>
-#include <ns3/log.h>
-#include <ns3/tv-spectrum-transmitter-helper.h>
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
+#include "../helper/tv-spectrum-transmitter-helper.h"
 
 /**
  * This test verifies the accuracy of the private GetRandomNumTransmitters()  

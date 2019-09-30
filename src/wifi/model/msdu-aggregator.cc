@@ -19,8 +19,8 @@
  *         Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
 #include "msdu-aggregator.h"
 #include "amsdu-subframe-header.h"
 #include "qos-txop.h"

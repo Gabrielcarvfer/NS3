@@ -18,8 +18,8 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 #include "lr-wpan-spectrum-value-helper.h"
-#include <ns3/log.h>
-#include <ns3/spectrum-value.h>
+#include "../../core/model/log.h"
+#include "../../spectrum/model/spectrum-value.h"
 
 #include <cmath>
 

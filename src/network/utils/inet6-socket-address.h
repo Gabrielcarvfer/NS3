@@ -18,12 +18,11 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef INET6_SOCKET_ADDRESS_H
-#define INET6_SOCKET_ADDRESS_H
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/address.h"
+#include "../model/address.h"
 #include "ipv6-address.h"
 
 namespace ns3 {
@@ -138,4 +137,4 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* INET6_SOCKET_ADDRESS_H */
+

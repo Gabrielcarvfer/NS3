@@ -19,11 +19,10 @@
  * Modified by Marco Miozzo <mmiozzo@cttc.es> (add data and ctrl diversity)
  */
 
-#ifndef LTE_SPECTRUM_SIGNAL_PARAMETERS_H
-#define LTE_SPECTRUM_SIGNAL_PARAMETERS_H
+#pragma once
 
 
-#include <ns3/spectrum-signal-parameters.h>
+#include "../../spectrum/model/spectrum-signal-parameters.h"
 
 namespace ns3 {
 
@@ -155,4 +154,4 @@ struct LteSpectrumSignalParametersUlSrsFrame : public SpectrumSignalParameters
 }  // namespace ns3
 
 
-#endif /* LTE_SPECTRUM_SIGNAL_PARAMETERS_H */
+

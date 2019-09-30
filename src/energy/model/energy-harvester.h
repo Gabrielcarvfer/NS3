@@ -19,17 +19,16 @@
  * Author: Cristiano Tapparello <cristiano.tapparello@rochester.edu>
  */
 
-#ifndef ENERGY_HARVESTER_H
-#define ENERGY_HARVESTER_H
+#pragma once
 
 #include <iostream>
 
 // include from ns-3
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/type-id.h"
-#include "ns3/node.h"
-#include "ns3/energy-source-container.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/type-id.h"
+#include "../../network/model/node.h"
+#include "../helper/energy-source-container.h"
 
 namespace ns3 {
     
@@ -134,4 +133,4 @@ protected:
     
 } // namespace ns3
 
-#endif /* defined(ENERGY_HARVESTER_H) */
+

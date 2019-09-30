@@ -21,8 +21,8 @@
 #include <cmath>
 
 #include "histogram.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 #define DEFAULT_BIN_WIDTH       1
 // #define RESERVED_BINS_INC	10

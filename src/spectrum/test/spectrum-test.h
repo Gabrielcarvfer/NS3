@@ -20,8 +20,8 @@
  * part of the code copied from test.h
  */
 
-#include <ns3/test.h>
-#include <ns3/spectrum-value.h>
+#include "../../core/model/test.h"
+#include "../model/spectrum-value.h"
 
 
 /**

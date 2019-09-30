@@ -18,13 +18,12 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef FLAME_RTABLE_H
-#define FLAME_RTABLE_H
+#pragma once
 
 #include <map>
-#include "ns3/nstime.h"
-#include "ns3/object.h"
-#include "ns3/mac48-address.h"
+#include "../../../core/model/nstime.h"
+#include "../../../core/model/object.h"
+#include "../../../network/utils/mac48-address.h"
 
 namespace ns3 {
 namespace flame {
@@ -138,4 +137,4 @@ private:
 
 } // namespace flame
 } // namespace ns3
-#endif /* FLAME_PROTOCOL_H */
+

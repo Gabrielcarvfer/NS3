@@ -18,12 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/test.h"
-#include "ns3/drop-tail-queue.h"
-#include "ns3/simulator.h"
-#include "ns3/point-to-point-net-device.h"
-#include "ns3/point-to-point-channel.h"
-#include "ns3/net-device-queue-interface.h"
+#include "../../core/model/test.h"
+#include "../../network/utils/drop-tail-queue.h"
+#include "../../core/model/simulator.h"
+#include "../model/point-to-point-net-device.h"
+#include "../model/point-to-point-channel.h"
+#include "../../network/utils/net-device-queue-interface.h"
 
 using namespace ns3;
 

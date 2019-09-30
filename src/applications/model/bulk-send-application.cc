@@ -18,17 +18,17 @@
  * Author: George F. Riley <riley@ece.gatech.edu>
  */
 
-#include "ns3/log.h"
-#include "ns3/address.h"
-#include "ns3/node.h"
-#include "ns3/nstime.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/tcp-socket-factory.h"
+#include "../../core/model/log.h"
+#include "../../network/model/address.h"
+#include "../../network/model/node.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/socket-factory.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../internet/model/tcp-socket-factory.h"
 #include "bulk-send-application.h"
 #include <algorithm> //std::min
 

@@ -19,11 +19,10 @@
  */
 
 
-#ifndef EPS_BEARER
-#define EPS_BEARER
+#pragma once
 
-#include <ns3/uinteger.h>
-#include <ns3/object-base.h>
+#include "../../core/model/uinteger.h"
+#include "../../core/model/object-base.h"
 #include <unordered_map>
 
 namespace ns3 {
@@ -329,4 +328,4 @@ private:
 } // namespace ns3
 
 
-#endif // EPS_BEARER
+

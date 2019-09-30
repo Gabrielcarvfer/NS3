@@ -16,16 +16,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/command-line.h"
-#include "ns3/simulator.h"
-#include "ns3/realtime-simulator-impl.h"
-#include "ns3/nstime.h"
-#include "ns3/log.h"
-#include "ns3/system-thread.h"
-#include "ns3/string.h"
-#include "ns3/config.h"
-#include "ns3/global-value.h"
-#include "ns3/ptr.h"
+#include "../model/command-line.h"
+#include "../model/simulator.h"
+#include "../model/realtime-simulator-impl.h"
+#include "../model/nstime.h"
+#include "../model/log.h"
+#include "../model/system-thread.h"
+#include "../model/string.h"
+#include "../model/config.h"
+#include "../model/global-value.h"
+#include "../model/ptr.h"
 
 #include <chrono>  // seconds, milliseconds
 #include <thread>  // sleep_for

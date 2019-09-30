@@ -18,13 +18,13 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/node.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../network/model/node.h"
 
-#include "ns3/lte-rlc-header.h"
-#include "ns3/lte-rlc-am-header.h"
-#include "ns3/lte-pdcp-header.h"
+#include "../model/lte-rlc-header.h"
+#include "../model/lte-rlc-am-header.h"
+#include "../model/lte-pdcp-header.h"
 
 #include "lte-test-entities.h"
 

@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@gmail.com>
  */
-#ifndef OBJECT_MAP_H
-#define OBJECT_MAP_H
+#pragma once
 
 #include "object.h"
 #include "ptr.h"
@@ -138,4 +137,4 @@ MakeObjectMapAccessor (INDEX (T::*getN)(void) const,
 
 } // namespace ns3
 
-#endif /* OBJECT_MAP_H */
+

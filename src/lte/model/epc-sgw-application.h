@@ -18,13 +18,12 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef EPC_SGW_APPLICATION_H
-#define EPC_SGW_APPLICATION_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/address.h"
-#include "ns3/socket.h"
-#include "ns3/epc-gtpc-header.h"
+#include "../../network/model/application.h"
+#include "../../network/model/address.h"
+#include "../../network/model/socket.h"
+#include "epc-gtpc-header.h"
 
 namespace ns3 {
 
@@ -274,4 +273,4 @@ private:
 
 } // namespace ns3
 
-#endif // EPC_SGW_APPLICATION_H
+

@@ -19,13 +19,12 @@
  */
 
 
-#ifndef EPC_TFT_CLASSIFIER_H
-#define EPC_TFT_CLASSIFIER_H
+#pragma once
 
 
-#include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
-#include "ns3/epc-tft.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "epc-tft.h"
 
 #include <map>
 
@@ -104,4 +103,4 @@ protected:
 
 } // namespace ns3
   
-#endif /* TFT_CLASSIFIER_H */ 
+

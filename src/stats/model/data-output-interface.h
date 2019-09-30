@@ -18,12 +18,11 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef DATA_OUTPUT_INTERFACE_H
-#define DATA_OUTPUT_INTERFACE_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/nstime.h"
-#include "ns3/data-calculator.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "data-calculator.h"
 
 namespace ns3 {
 
@@ -151,4 +150,4 @@ public:
 };
 
 
-#endif /* DATA_OUTPUT_INTERFACE_H */
+

@@ -18,16 +18,15 @@
  * Author: Vignesh Babu <ns3-dev@esk.fraunhofer.de>
  */
 
-#ifndef LTE_TEST_RADIO_LINK_FAILURE_H
-#define LTE_TEST_RADIO_LINK_FAILURE_H
+#pragma once
 
 
-#include <ns3/test.h>
-#include <ns3/nstime.h>
-#include <ns3/node-container.h>
-#include <ns3/net-device-container.h>
-#include <ns3/vector.h>
-#include <ns3/lte-ue-rrc.h>
+#include "../../core/model/test.h"
+#include "../../core/model/nstime.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../core/model/vector.h"
+#include "../model/lte-ue-rrc.h"
 #include <vector>
 
 
@@ -205,4 +204,4 @@ private:
 
 }; // end of class LteRadioLinkFailureTestCase
 
-#endif /* LTE_TEST_RADIO_LINK_FAILURE_H */
+

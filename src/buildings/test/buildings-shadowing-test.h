@@ -18,10 +18,9 @@
 * Author: Marco Miozzo <marco.miozzo@cttc.es>
 */
 
-#ifndef BUILDINGS_SHADOWING_TEST_H
-#define BUILDINGS_SHADOWING_TEST_H
+#pragma once
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 
 
@@ -54,4 +53,4 @@ private:
 
 };
 
-#endif /*BUILDINGS_SHADOWING_TEST_H*/
+

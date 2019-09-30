@@ -21,12 +21,12 @@
  */
 
 #include "connection-manager.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "cid-factory.h"
 #include "ss-record.h"
 #include "mac-messages.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
 #include "service-flow.h"
 #include "ss-net-device.h"
 #include "bs-net-device.h"

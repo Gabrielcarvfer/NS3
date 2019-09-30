@@ -19,8 +19,7 @@
  *         Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef SERVICE_FLOW_H
-#define SERVICE_FLOW_H
+#pragma once
 
 #include <stdint.h>
 #include "wimax-phy.h"
@@ -592,4 +591,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SERVICE_FLOW_H */
+

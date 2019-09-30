@@ -20,12 +20,12 @@
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/packet-sink.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/on-off-helper.h"
+#include "../../applications/helper/packet-sink-helper.h"
+#include "../../applications/model/packet-sink.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../applications/helper/on-off-helper.h"
 #include "ns3/brite-module.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include <iostream>
 #include <fstream>
 

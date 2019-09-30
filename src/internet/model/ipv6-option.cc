@@ -18,9 +18,9 @@
  * Author: David Gross <gdavid.devel@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/uinteger.h"
 #include "ipv6-option.h"
 #include "ipv6-option-header.h"
 

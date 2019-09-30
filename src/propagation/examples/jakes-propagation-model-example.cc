@@ -19,7 +19,7 @@
  */
 #include "ns3/core-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/jakes-propagation-loss-model.h"
+#include "../model/jakes-propagation-loss-model.h"
 #include <vector>
 #include <cmath>
 

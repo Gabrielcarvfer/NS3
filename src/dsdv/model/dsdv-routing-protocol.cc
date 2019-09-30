@@ -31,13 +31,13 @@
  */
 
 #include "dsdv-routing-protocol.h"
-#include "ns3/log.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/udp-socket-factory.h"
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../internet/model/udp-socket-factory.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
 
 namespace ns3 {
 

@@ -25,13 +25,13 @@
  * Ported to ns-3 by: Andrew McGregor <andrewmcgr@gmail.com>
 */
 
-#include "ns3/log.h"
-#include "ns3/enum.h"
-#include "ns3/uinteger.h"
-#include "ns3/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/abort.h"
 #include "codel-queue-disc.h"
-#include "ns3/object-factory.h"
-#include "ns3/drop-tail-queue.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/utils/drop-tail-queue.h"
 
 namespace ns3 {
 

@@ -18,13 +18,12 @@
  * Authors: Pavel Boyko <boyko@iitp.ru>, written after OlsrHelper by Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef AODV_HELPER_H
-#define AODV_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/node.h"
-#include "ns3/node-container.h"
-#include "ns3/ipv4-routing-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/node.h"
+#include "../../network/helper/node-container.h"
+#include "../../internet/helper/ipv4-routing-helper.h"
 
 namespace ns3 {
 /**
@@ -81,4 +80,4 @@ private:
 
 }
 
-#endif /* AODV_HELPER_H */
+

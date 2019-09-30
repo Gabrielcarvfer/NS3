@@ -20,20 +20,20 @@
  *     Extend to Data and SRS frames
  */
 
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
-#include "ns3/spectrum-test.h"
+#include "../../spectrum/test/spectrum-test.h"
 
-#include "ns3/lte-phy-tag.h"
+#include "../model/lte-phy-tag.h"
 #include "lte-test-ue-phy.h"
-#include "ns3/lte-spectrum-signal-parameters.h"
+#include "../model/lte-spectrum-signal-parameters.h"
 
 #include "lte-test-uplink-sinr.h"
 
-#include <ns3/lte-helper.h>
-#include <ns3/lte-chunk-processor.h>
+#include "../helper/lte-helper.h"
+#include "../model/lte-chunk-processor.h"
 
 using namespace ns3;
 

@@ -20,10 +20,9 @@
  */
 
 
-#ifndef MESH_CONFIGURATION_H
-#define MESH_CONFIGURATION_H
+#pragma once
 
-#include "ns3/mesh-information-element-vector.h"
+#include "../mesh-information-element-vector.h"
 
 namespace ns3 {
 namespace dot11s {
@@ -201,4 +200,4 @@ bool operator== (const Dot11sMeshCapability & a, const Dot11sMeshCapability & b)
 std::ostream &operator << (std::ostream &os, const IeConfiguration &config);
 } // namespace dot11s
 } // namespace ns3
-#endif
+

@@ -17,9 +17,9 @@
  *
  */
 #include "tcp-error-model.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../model/ipv4-header.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("TcpGeneralErrorModel");

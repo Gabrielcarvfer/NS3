@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef INT64X64_H
-#define INT64X64_H
+#pragma once
 
 //#include "ns3/core-config.h"
 
@@ -213,4 +212,4 @@ inline int64x64_t Max (const int64x64_t &a, const int64x64_t &b)
 
 } // namespace ns3
 
-#endif /* INT64X64_H */
+

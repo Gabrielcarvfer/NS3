@@ -17,15 +17,14 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef RANDOM_DIRECTION_MOBILITY_MODEL_H
-#define RANDOM_DIRECTION_MOBILITY_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/ptr.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/rectangle.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/object.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "rectangle.h"
+#include "../../core/model/random-variable-stream.h"
 #include "mobility-model.h"
 #include "constant-velocity-helper.h"
 
@@ -86,4 +85,4 @@ private:
 
 } // namespace ns3
 
-#endif /* RANDOM_DIRECTION_MOBILITY_MODEL_H */
+

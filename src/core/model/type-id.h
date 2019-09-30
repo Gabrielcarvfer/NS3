@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TYPE_ID_H
-#define TYPE_ID_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-accessor-helper.h"
@@ -664,4 +663,4 @@ TypeId::AddConstructor (void)
 
 } // namespace ns3
 
-#endif /* TYPE_ID_H */
+

@@ -19,12 +19,11 @@
  *
  */
 
-#ifndef SIMPLE_UE_COMPONENT_CARRIER_MANAGER_H
-#define SIMPLE_UE_COMPONENT_CARRIER_MANAGER_H
+#pragma once
 
-#include <ns3/lte-ue-component-carrier-manager.h>
-#include <ns3/lte-ue-ccm-rrc-sap.h>
-#include <ns3/lte-rrc-sap.h>
+#include "lte-ue-component-carrier-manager.h"
+#include "lte-ue-ccm-rrc-sap.h"
+#include "lte-rrc-sap.h"
 #include <map>
 
 namespace ns3 {
@@ -143,4 +142,4 @@ protected:
 } // end of namespace ns3
 
 
-#endif /* SIMPLE_UE_COMPONENT_CARRIER_MANAGER_H */
+

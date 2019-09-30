@@ -19,22 +19,22 @@
  *          Scott Carpenter <scarpenter44@windstream.net>
  */
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
-#include "ns3/config.h"
-#include "ns3/ssid.h"
-#include "ns3/rng-seed-manager.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/spectrum-wifi-helper.h"
-#include "ns3/multi-model-spectrum-channel.h"
-#include "ns3/constant-obss-pd-algorithm.h"
-#include "ns3/he-configuration.h"
-#include "ns3/wifi-utils.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/config.h"
+#include "../model/ssid.h"
+#include "../../core/model/rng-seed-manager.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../model/wifi-net-device.h"
+#include "../helper/spectrum-wifi-helper.h"
+#include "../../spectrum/model/multi-model-spectrum-channel.h"
+#include "../model/constant-obss-pd-algorithm.h"
+#include "../model/he-configuration.h"
+#include "../model/wifi-utils.h"
 
 using namespace ns3;
 

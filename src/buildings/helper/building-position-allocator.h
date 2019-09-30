@@ -18,13 +18,12 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  *         Michele Polese <michele.polese@gmail.com> for the OutdoorPositionAllocator class
  */
-#ifndef BUILDING_POSITION_ALLOCATOR_H
-#define BUILDING_POSITION_ALLOCATOR_H
+#pragma once
 
-#include <ns3/ptr.h>
-#include <ns3/position-allocator.h>
-#include <ns3/node-container.h>
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/ptr.h"
+#include "../../mobility/model/position-allocator.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -257,4 +256,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BUILDING_POSITION_ALLOCATOR_H */
+

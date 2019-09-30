@@ -18,10 +18,10 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/node.h"
-#include "ns3/node-list.h"
-#include "ns3/ipv4-list-routing.h"
-#include "ns3/rip.h"
+#include "../../network/model/node.h"
+#include "../../network/model/node-list.h"
+#include "../model/ipv4-list-routing.h"
+#include "../model/rip.h"
 #include "rip-helper.h"
 
 namespace ns3 {

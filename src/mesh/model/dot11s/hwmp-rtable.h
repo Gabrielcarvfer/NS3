@@ -18,13 +18,12 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef HWMP_RTABLE_H
-#define HWMP_RTABLE_H
+#pragma once
 
 #include <map>
-#include "ns3/nstime.h"
-#include "ns3/mac48-address.h"
-#include "ns3/hwmp-protocol.h"
+#include "../../../core/model/nstime.h"
+#include "../../../network/utils/mac48-address.h"
+#include "hwmp-protocol.h"
 namespace ns3 {
 namespace dot11s {
 /**
@@ -167,4 +166,4 @@ private:
 };
 } // namespace dot11s
 } // namespace ns3
-#endif
+

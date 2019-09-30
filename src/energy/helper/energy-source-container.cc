@@ -21,7 +21,7 @@
  */
 
 #include "energy-source-container.h"
-#include "ns3/names.h"
+#include "../../core/model/names.h"
 
 namespace ns3 {
 

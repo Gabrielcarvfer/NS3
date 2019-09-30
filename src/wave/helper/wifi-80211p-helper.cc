@@ -21,12 +21,12 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#include "ns3/string.h"
-#include "ns3/log.h"
+#include "../../core/model/string.h"
+#include "../../core/model/log.h"
 #include <typeinfo>
 #include "wave-mac-helper.h"
 #include "wifi-80211p-helper.h"
-#include "ns3/unused.h"
+#include "../../core/model/unused.h"
 
 namespace ns3 {
 

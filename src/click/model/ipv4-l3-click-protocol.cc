@@ -22,20 +22,20 @@
 #ifdef NS3_CLICK
 
 #include "ipv4-l3-click-protocol.h"
-#include "ns3/ipv4-click-routing.h"
-#include "ns3/node.h"
-#include "ns3/socket.h"
-#include "ns3/ethernet-header.h"
-#include "ns3/llc-snap-header.h"
-#include "ns3/net-device.h"
-#include "ns3/uinteger.h"
-#include "ns3/object-vector.h"
+#include "ipv4-click-routing.h"
+#include "../../network/model/node.h"
+#include "../../network/model/socket.h"
+#include "../../network/utils/ethernet-header.h"
+#include "../../network/utils/llc-snap-header.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/object-vector.h"
 
-#include "ns3/ipv4-raw-socket-impl.h"
-#include "ns3/arp-l3-protocol.h"
-#include "ns3/ip-l4-protocol.h"
-#include "ns3/icmpv4-l4-protocol.h"
-#include "ns3/loopback-net-device.h"
+#include "../../internet/model/ipv4-raw-socket-impl.h"
+#include "../../internet/model/arp-l3-protocol.h"
+#include "../../internet/model/ip-l4-protocol.h"
+#include "../../internet/model/icmpv4-l4-protocol.h"
+#include "../../internet/model/loopback-net-device.h"
 
 namespace ns3 {
 

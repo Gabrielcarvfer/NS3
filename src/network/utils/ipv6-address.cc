@@ -44,8 +44,8 @@
 #include <iomanip>
 #include <memory.h>
 
-#include "ns3/log.h"
-#include "ns3/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 
 #include "mac16-address.h"
 #include "mac48-address.h"

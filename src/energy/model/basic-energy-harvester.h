@@ -19,18 +19,17 @@
  * Author: Cristiano Tapparello <cristiano.tapparello@rochester.edu>
  */
 
-#ifndef BASIC_ENERGY_HARVESTER
-#define BASIC_ENERGY_HARVESTER
+#pragma once
 
 #include <iostream>
 
 // include from ns-3
-#include "ns3/traced-value.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
 #include "energy-harvester.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/device-energy-model.h"
+#include "../../core/model/random-variable-stream.h"
+#include "device-energy-model.h"
 
 namespace ns3 {
 
@@ -128,4 +127,4 @@ private:
 
 } // namespace ns3
 
-#endif /* defined(BASIC_ENERGY_HARVESTER) */
+

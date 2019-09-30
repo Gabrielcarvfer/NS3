@@ -24,11 +24,11 @@
 #include <sstream>
 
 #include "gnuplot-helper.h"
-#include "ns3/abort.h"
-#include "ns3/assert.h"
-#include "ns3/config.h"
-#include "ns3/log.h"
-#include "ns3/get-wildcard-matches.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/config.h"
+#include "../../core/model/log.h"
+#include "../model/get-wildcard-matches.h"
 
 namespace ns3 {
 

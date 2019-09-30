@@ -18,20 +18,19 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef LTE_RLC_H
-#define LTE_RLC_H
+#pragma once
 
-#include <ns3/simple-ref-count.h>
-#include <ns3/packet.h>
-#include "ns3/uinteger.h"
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/nstime.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/nstime.h"
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 
-#include "ns3/lte-rlc-sap.h"
-#include "ns3/lte-mac-sap.h"
+#include "lte-rlc-sap.h"
+#include "lte-mac-sap.h"
 
 namespace ns3 {
 
@@ -258,4 +257,4 @@ private:
 
 } // namespace ns3
 
-#endif // LTE_RLC_H
+

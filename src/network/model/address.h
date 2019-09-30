@@ -18,14 +18,13 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef ADDRESS_H
-#define ADDRESS_H
+#pragma once
 
 #include <stdint.h>
 #include <ostream>
-#include "ns3/attribute.h"
-#include "ns3/attribute-helper.h"
-#include "ns3/tag-buffer.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/attribute-helper.h"
+#include "tag-buffer.h"
 
 namespace ns3 {
 
@@ -286,4 +285,4 @@ std::istream& operator>> (std::istream& is, Address & address);
 
 } // namespace ns3
 
-#endif /* ADDRESS_H */
+

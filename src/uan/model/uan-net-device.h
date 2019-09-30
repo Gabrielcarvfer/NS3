@@ -18,13 +18,12 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_NET_DEVICE_H
-#define UAN_NET_DEVICE_H
+#pragma once
 
-#include "ns3/net-device.h"
-#include "ns3/pointer.h"
-#include "ns3/traced-callback.h"
-#include "ns3/mac8-address.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/traced-callback.h"
+#include "../../network/utils/mac8-address.h"
 #include <list>
 
 namespace ns3 {
@@ -199,4 +198,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* UAN_NET_DEVICE_H */
+

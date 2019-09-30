@@ -15,24 +15,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "ns3/log.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/nstime.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/inet6-socket-address.h"
-#include "ns3/socket.h"
-#include "ns3/simulator.h"
-#include "ns3/socket-factory.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../../../src/core/model/log.h"
+#include "../../../../src/network/utils/ipv4-address.h"
+#include "../../../../src/network/utils/ipv6-address.h"
+#include "../../../../src/core/model/nstime.h"
+#include "../../../../src/network/utils/inet-socket-address.h"
+#include "../../../../src/network/utils/inet6-socket-address.h"
+#include "../../../../src/network/model/socket.h"
+#include "../../../../src/core/model/simulator.h"
+#include "../../../../src/network/model/socket-factory.h"
+#include "../../../../src/network/model/packet.h"
+#include "../../../../src/core/model/uinteger.h"
+#include "../../../../src/core/model/trace-source-accessor.h"
 #include "tcp-stream-client.h"
-#include <math.h>
+#include "../../../../src/core/model/math.h"
 #include <sstream>
 #include <stdexcept>
 #include <stdlib.h>
-#include "ns3/global-value.h"
+#include "../../../../src/core/model/global-value.h"
 #include <ns3/core-module.h>
 #include "tcp-stream-server.h"
 #include <iterator>

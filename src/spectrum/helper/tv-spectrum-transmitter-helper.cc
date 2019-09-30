@@ -18,16 +18,16 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/log.h>
+#include "../../core/model/log.h"
 #include <cmath>
 #include <list>
 #include <vector>
-#include <ns3/uinteger.h>
-#include <ns3/double.h>
-#include <ns3/isotropic-antenna-model.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/position-allocator.h>
-#include <ns3/geographic-positions.h>
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../antenna/model/isotropic-antenna-model.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../mobility/model/position-allocator.h"
+#include "../../mobility/model/geographic-positions.h"
 #include "tv-spectrum-transmitter-helper.h"
 
 namespace ns3 {

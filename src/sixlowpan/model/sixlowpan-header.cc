@@ -19,10 +19,10 @@
  *         Michele Muccio <michelemuccio@virgilio.it>
  */
 
-#include "ns3/assert.h"
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/ipv6-header.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../internet/model/ipv6-header.h"
 #include "sixlowpan-header.h"
 
 

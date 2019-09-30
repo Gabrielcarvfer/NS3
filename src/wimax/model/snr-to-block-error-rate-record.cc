@@ -19,9 +19,9 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/snr-to-block-error-rate-record.h"
-#include "ns3/assert.h"
+#include "../../core/model/simulator.h"
+#include "snr-to-block-error-rate-record.h"
+#include "../../core/model/assert.h"
 
 namespace ns3 {
 

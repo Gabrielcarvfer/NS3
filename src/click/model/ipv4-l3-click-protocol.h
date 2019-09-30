@@ -19,16 +19,15 @@
 // Author: Lalith Suresh <suresh.lalith@gmail.com>
 //
 
-#ifndef IPV4_L3_CLICK_PROTOCOL_H
-#define IPV4_L3_CLICK_PROTOCOL_H
+#pragma once
 
-#include "ns3/ipv4.h"
-#include "ns3/net-device.h"
-#include "ns3/packet.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/traced-callback.h"
-#include "ns3/ipv4-interface.h"
-#include "ns3/log.h"
+#include "../../internet/model/ipv4.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/packet.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../core/model/traced-callback.h"
+#include "../../internet/model/ipv4-interface.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 
@@ -281,4 +280,4 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV4_L3_CLICK_ROUTING_H */
+

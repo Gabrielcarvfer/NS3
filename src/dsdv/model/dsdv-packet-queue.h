@@ -29,12 +29,11 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSDV_PACKETQUEUE_H
-#define DSDV_PACKETQUEUE_H
+#pragma once
 
 #include <vector>
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/simulator.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 namespace dsdv {
@@ -294,4 +293,4 @@ private:
 };
 }
 }
-#endif /* DSDV_PACKETQUEUE_H */
+

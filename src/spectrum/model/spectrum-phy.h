@@ -18,12 +18,11 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SPECTRUM_PHY_H
-#define SPECTRUM_PHY_H
+#pragma once
 
 
-#include <ns3/object.h>
-#include <ns3/nstime.h>
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -142,4 +141,4 @@ private:
 
 
 
-#endif /* SPECTRUM_PHY_H */
+

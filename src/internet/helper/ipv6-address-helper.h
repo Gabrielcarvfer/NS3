@@ -19,13 +19,12 @@
  * modified by Tom Henderson for ns-3.14 release
  */
 
-#ifndef IPV6_ADDRESS_HELPER_H
-#define IPV6_ADDRESS_HELPER_H
+#pragma once
 
 #include <vector>
 
-#include "ns3/ipv6-address.h"
-#include "ns3/net-device-container.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../network/helper/net-device-container.h"
 #include "ipv6-interface-container.h"
 
 namespace ns3 {
@@ -176,5 +175,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* IPV6_ADDRESS_STATIC_H */
+
 

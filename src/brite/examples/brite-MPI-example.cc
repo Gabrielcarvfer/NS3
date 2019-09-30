@@ -17,14 +17,14 @@
 
 #include <string>
 #include "ns3/core-module.h"
-#include "ns3/mpi-interface.h"
+#include "../../mpi/model/mpi-interface.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/brite-module.h"
-#include "ns3/ipv4-nix-vector-helper.h"
+#include "../../nix-vector-routing/helper/ipv4-nix-vector-helper.h"
 
 
 

@@ -18,13 +18,12 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef RIP_HELPER_H
-#define RIP_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/ipv4-routing-helper.h"
-#include "ns3/node-container.h"
-#include "ns3/node.h"
+#include "../../core/model/object-factory.h"
+#include "ipv4-routing-helper.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/model/node.h"
 
 namespace ns3 {
 
@@ -150,5 +149,5 @@ private:
 } // namespace ns3
 
 
-#endif /* RIP_HELPER_H */
+
 

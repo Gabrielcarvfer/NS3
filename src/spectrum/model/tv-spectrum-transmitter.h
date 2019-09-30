@@ -18,16 +18,15 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#ifndef TV_SPECTRUM_TRANSMITTER_H
-#define TV_SPECTRUM_TRANSMITTER_H
+#pragma once
 
-#include <ns3/spectrum-value.h>
-#include <ns3/spectrum-phy.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/antenna-model.h>
-#include <ns3/spectrum-signal-parameters.h>
-#include <ns3/mobility-model.h>
-#include <ns3/net-device.h>
+#include "spectrum-value.h"
+#include "spectrum-phy.h"
+#include "spectrum-channel.h"
+#include "../../antenna/model/antenna-model.h"
+#include "spectrum-signal-parameters.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/net-device.h"
 
 namespace ns3
 {
@@ -149,4 +148,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TV_SPECTRUM_TRANSMITTER_H */
+

@@ -24,14 +24,14 @@
 #include "lr-wpan-phy.h"
 #include "lr-wpan-csmaca.h"
 #include "lr-wpan-error-model.h"
-#include <ns3/abort.h>
-#include <ns3/node.h>
-#include <ns3/log.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/pointer.h>
-#include <ns3/boolean.h>
-#include <ns3/mobility-model.h>
-#include <ns3/packet.h>
+#include "../../core/model/abort.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/boolean.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/packet.h"
 
 
 namespace ns3 {

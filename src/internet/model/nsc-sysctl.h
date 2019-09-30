@@ -18,8 +18,8 @@
 
 #include <string>
 
-#include "ns3/attribute.h"
-#include "ns3/object.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/object.h"
 
 struct INetStack;
 

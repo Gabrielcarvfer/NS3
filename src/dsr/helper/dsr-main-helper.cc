@@ -30,15 +30,15 @@
  */
 
 #include "dsr-main-helper.h"
-#include "ns3/dsr-helper.h"
-#include "ns3/dsr-routing.h"
-#include "ns3/dsr-rcache.h"
-#include "ns3/dsr-rreq-table.h"
-#include "ns3/node-list.h"
-#include "ns3/names.h"
-#include "ns3/log.h"
-#include "ns3/ptr.h"
-#include "ns3/node.h"
+#include "dsr-helper.h"
+#include "../model/dsr-routing.h"
+#include "../model/dsr-rcache.h"
+#include "../model/dsr-rreq-table.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/names.h"
+#include "../../core/model/log.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/node.h"
 
 namespace ns3 {
 

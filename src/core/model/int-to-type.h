@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef INT_TO_TYPE_H
-#define INT_TO_TYPE_H
+#pragma once
 
 /**
  * \file
@@ -50,4 +49,4 @@ struct IntToType
 
 } // namespace ns3
 
-#endif /* INT_TO_TYPE_H */
+

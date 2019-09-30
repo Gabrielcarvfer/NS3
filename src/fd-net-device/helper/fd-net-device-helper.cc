@@ -21,15 +21,15 @@
 
 #include "fd-net-device-helper.h"
 
-#include "ns3/abort.h"
-#include "ns3/config.h"
-#include "ns3/fd-net-device.h"
-#include "ns3/log.h"
-#include "ns3/names.h"
-#include "ns3/object-factory.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/trace-helper.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/config.h"
+#include "../model/fd-net-device.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../network/helper/trace-helper.h"
 
 #include <string>
 

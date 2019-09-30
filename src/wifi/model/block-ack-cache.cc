@@ -18,7 +18,7 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "block-ack-cache.h"
 #include "qos-utils.h"
 #include "wifi-utils.h"

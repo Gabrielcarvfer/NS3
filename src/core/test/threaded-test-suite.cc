@@ -17,15 +17,15 @@
  *
  * Author: Claudio Freire <claudio-daniel.freire@inria.fr>
  */
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/list-scheduler.h"
-#include "ns3/heap-scheduler.h"
-#include "ns3/map-scheduler.h"
-#include "ns3/calendar-scheduler.h"
-#include "ns3/config.h"
-#include "ns3/string.h"
-#include "ns3/system-thread.h"
+#include "../model/test.h"
+#include "../model/simulator.h"
+#include "../model/list-scheduler.h"
+#include "../model/heap-scheduler.h"
+#include "../model/map-scheduler.h"
+#include "../model/calendar-scheduler.h"
+#include "../model/config.h"
+#include "../model/string.h"
+#include "../model/system-thread.h"
 
 #include <chrono>  // seconds, milliseconds
 #include <ctime>

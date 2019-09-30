@@ -18,11 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SEQ_TS_HEADER_H
-#define SEQ_TS_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/nstime.h"
+#include "../../network/model/header.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 /**
@@ -70,4 +69,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SEQ_TS_HEADER_H */
+

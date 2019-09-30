@@ -24,13 +24,13 @@
                 << " [node " << m_ipv4->GetObject<Node> ()->GetId () << "] "; }
 
 #include <iomanip>
-#include "ns3/log.h"
-#include "ns3/names.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/output-stream-wrapper.h"
+#include "../../core/model/log.h"
+#include "../../core/model/names.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/simulator.h"
+#include "ipv4-route.h"
+#include "../../network/utils/output-stream-wrapper.h"
 #include "ipv4-static-routing.h"
 #include "ipv4-routing-table-entry.h"
 

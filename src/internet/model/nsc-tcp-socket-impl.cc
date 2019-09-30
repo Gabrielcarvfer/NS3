@@ -20,24 +20,24 @@
 #define NS_LOG_APPEND_CONTEXT                                   \
   if (m_node) { std::clog << Simulator::Now ().GetSeconds () << " [node " << m_node->GetId () << "] "; } 
 
-#include "ns3/node.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/log.h"
-#include "ns3/ipv4.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/log.h"
+#include "ipv4.h"
 #include "ipv4-end-point.h"
 #include "nsc-tcp-l4-protocol.h"
 #include "nsc-tcp-socket-impl.h"
-#include "ns3/simulation-singleton.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../core/model/simulation-singleton.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
 
 #include <algorithm>
 
 // for ntohs().
 #include <arpa/inet.h>
-#include "../model/inet-headers.h"
+#include "inet-headers.h"
 #include "sim_interface.h"
 
 #include "sim_errno.h"

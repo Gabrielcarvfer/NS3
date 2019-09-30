@@ -67,7 +67,7 @@
 #include "ns3/config-store-module.h"
 #include "ns3/wifi-module.h"
 #include "ns3/csma-module.h"
-#include "ns3/olsr-helper.h"
+#include "../../src/olsr/helper/olsr-helper.h"
 #include "ns3/internet-module.h"
 #include "ns3/netanim-module.h"
 

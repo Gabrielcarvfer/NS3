@@ -18,14 +18,14 @@
  * Author: Matías Richart <mrichart@fing.edu.uy>
  */
 
-#include "ns3/node.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/yans-wifi-phy.h"
-#include "ns3/adhoc-wifi-mac.h"
-#include "ns3/constant-position-mobility-model.h"
-#include "ns3/simulator.h"
-#include "ns3/test.h"
+#include "../../network/model/node.h"
+#include "../model/wifi-net-device.h"
+#include "../model/yans-wifi-channel.h"
+#include "../model/yans-wifi-phy.h"
+#include "../model/adhoc-wifi-mac.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

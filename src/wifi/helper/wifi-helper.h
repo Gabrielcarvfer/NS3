@@ -20,11 +20,10 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef WIFI_HELPER_H
-#define WIFI_HELPER_H
+#pragma once
 
-#include "ns3/trace-helper.h"
-#include "ns3/wifi-phy.h"
+#include "../../network/helper/trace-helper.h"
+#include "../model/wifi-phy.h"
 #include "wifi-mac-helper.h"
 #include <functional>
 
@@ -478,4 +477,4 @@ protected:
 
 } //namespace ns3
 
-#endif /* WIFI_HELPER_H */
+

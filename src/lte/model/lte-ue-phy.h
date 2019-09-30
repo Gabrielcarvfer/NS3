@@ -22,21 +22,20 @@
  *          Vignesh Babu <ns3-dev@esk.fraunhofer.de> (RLF extensions)
  */
 
-#ifndef LTE_UE_PHY_H
-#define LTE_UE_PHY_H
+#pragma once
 
 
-#include <ns3/lte-phy.h>
-#include <ns3/ff-mac-common.h>
+#include "lte-phy.h"
+#include "ff-mac-common.h"
 
-#include <ns3/lte-control-messages.h>
-#include <ns3/lte-amc.h>
-#include <ns3/lte-ue-phy-sap.h>
-#include <ns3/lte-ue-cphy-sap.h>
-#include <ns3/ptr.h>
-#include <ns3/lte-amc.h>
+#include "lte-control-messages.h"
+#include "lte-amc.h"
+#include "lte-ue-phy-sap.h"
+#include "lte-ue-cphy-sap.h"
+#include "../../core/model/ptr.h"
+#include "lte-amc.h"
 #include <set>
-#include <ns3/lte-ue-power-control.h>
+#include "lte-ue-power-control.h"
 
 
 namespace ns3 {
@@ -815,4 +814,4 @@ private:
 
 }
 
-#endif /* LTE_UE_PHY_H */
+

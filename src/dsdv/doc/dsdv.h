@@ -30,8 +30,7 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSDV_H
-#define DSDV_H
+#pragma once
 
 /**
  * \defgroup dsdv DSDV Routing
@@ -41,4 +40,4 @@
  * library document.
  */
 
-#endif /* DSDV_H */
+

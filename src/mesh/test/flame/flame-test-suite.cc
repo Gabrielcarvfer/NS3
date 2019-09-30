@@ -18,11 +18,11 @@
  * Author: Pavel Boyko <boyko@iitp.ru>
  */
 
-#include "ns3/test.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/flame-header.h"
-#include "ns3/flame-rtable.h"
+#include "../../../core/model/test.h"
+#include "../../../network/model/packet.h"
+#include "../../../core/model/simulator.h"
+#include "../../model/flame/flame-header.h"
+#include "../../model/flame/flame-rtable.h"
 
 using namespace ns3;
 using namespace flame;

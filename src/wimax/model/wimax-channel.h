@@ -18,13 +18,12 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef WIMAX_CHANNEL_H
-#define WIMAX_CHANNEL_H
+#pragma once
 
 #include <list>
-#include "ns3/channel.h"
+#include "../../network/model/channel.h"
 #include "wimax-connection.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 
@@ -94,4 +93,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_CHANNEL_H */
+

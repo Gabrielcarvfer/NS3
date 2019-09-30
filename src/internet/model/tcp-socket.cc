@@ -20,13 +20,13 @@
 
 #define __STDC_LIMIT_MACROS
 
-#include "ns3/object.h"
-#include "ns3/log.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/boolean.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/log.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/nstime.h"
 #include "tcp-socket.h"
 
 namespace ns3 {

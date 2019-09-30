@@ -18,8 +18,7 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
-#ifndef ORIGINATOR_BLOCK_ACK_AGREEMENT_H
-#define ORIGINATOR_BLOCK_ACK_AGREEMENT_H
+#pragma once
 
 #include "block-ack-agreement.h"
 #include "block-ack-window.h"
@@ -209,4 +208,4 @@ private:
 
 } //namespace ns3
 
-#endif /* ORIGINATOR_BLOCK_ACK_AGREEMENT_H */
+

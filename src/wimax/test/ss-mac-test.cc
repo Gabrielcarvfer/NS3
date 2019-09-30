@@ -18,12 +18,12 @@
  * Author: Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  *                              <amine.ismail@udcast.com>
  */
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/wimax-helper.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../helper/wimax-helper.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
 
 using namespace ns3;
 

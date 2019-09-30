@@ -18,13 +18,12 @@
  * Author: Andrea Sacco <andrea.sacco85@gmail.com>
  */
 
-#ifndef LI_ION_ENERGY_SOURCE_H
-#define LI_ION_ENERGY_SOURCE_H
+#pragma once
 
-#include "ns3/traced-value.h"
-#include "ns3/energy-source.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
+#include "../../core/model/traced-value.h"
+#include "energy-source.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
 
 namespace ns3 {
 
@@ -202,4 +201,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LI_ION_ENERGY_SOURCE_H */
+

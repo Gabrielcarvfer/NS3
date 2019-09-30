@@ -26,11 +26,10 @@
  *          Pavel Boyko <boyko@iitp.ru>
  */
 
-#ifndef AODV_ID_CACHE_H
-#define AODV_ID_CACHE_H
+#pragma once
 
-#include "ns3/ipv4-address.h"
-#include "ns3/simulator.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/simulator.h"
 #include <vector>
 
 namespace ns3 {
@@ -115,4 +114,4 @@ private:
 }  // namespace aodv
 }  // namespace ns3
 
-#endif /* AODV_ID_CACHE_H */
+

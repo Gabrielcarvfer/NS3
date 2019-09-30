@@ -16,10 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/test.h"
-#include "ns3/ipv4-address-generator.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/simulator.h"
+#include "../../core/model/test.h"
+#include "../model/ipv4-address-generator.h"
+#include "../helper/ipv4-address-helper.h"
+#include "../../core/model/simulator.h"
 
 using namespace ns3;
 

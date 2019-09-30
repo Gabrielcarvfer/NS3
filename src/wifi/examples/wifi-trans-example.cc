@@ -18,15 +18,15 @@
  * Author: Rediet <getachew.redieteab@orange.com>
  */
 
-#include "ns3/gnuplot.h"
-#include "ns3/command-line.h"
-#include "ns3/string.h"
-#include "ns3/ssid.h"
-#include "ns3/spectrum-helper.h"
-#include "ns3/spectrum-wifi-helper.h"
-#include "ns3/spectrum-analyzer-helper.h"
-#include "ns3/spectrum-channel.h"
-#include "ns3/mobility-helper.h"
+#include "../../stats/model/gnuplot.h"
+#include "../../core/model/command-line.h"
+#include "../../core/model/string.h"
+#include "../model/ssid.h"
+#include "../../spectrum/helper/spectrum-helper.h"
+#include "../helper/spectrum-wifi-helper.h"
+#include "../../spectrum/helper/spectrum-analyzer-helper.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../mobility/helper/mobility-helper.h"
 
 using namespace ns3;
 

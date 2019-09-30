@@ -19,14 +19,13 @@
  *         (based on epc-sgw-pgw-application.h)
  */
 
-#ifndef EPC_PGW_APPLICATION_H
-#define EPC_PGW_APPLICATION_H
+#pragma once
 
-#include "ns3/virtual-net-device.h"
-#include "ns3/socket.h"
-#include "ns3/application.h"
-#include "ns3/epc-tft-classifier.h"
-#include "ns3/epc-gtpc-header.h"
+#include "../../virtual-net-device/model/virtual-net-device.h"
+#include "../../network/model/socket.h"
+#include "../../network/model/application.h"
+#include "epc-tft-classifier.h"
+#include "epc-gtpc-header.h"
 
 namespace ns3 {
 
@@ -340,4 +339,4 @@ private:
 
 } // namespace ns3
 
-#endif // EPC_PGW_APPLICATION_H
+

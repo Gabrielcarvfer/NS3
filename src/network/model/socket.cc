@@ -20,8 +20,8 @@
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "packet.h"
 #include "node.h"
 #include "socket.h"
 #include "socket-factory.h"

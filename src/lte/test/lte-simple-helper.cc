@@ -19,11 +19,11 @@
  */
 
 
-#include "ns3/log.h"
-#include "ns3/callback.h"
-#include "ns3/config.h"
-#include "ns3/simple-channel.h"
-#include "ns3/error-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/config.h"
+#include "../../network/utils/simple-channel.h"
+#include "../../network/utils/error-model.h"
 
 #include "lte-simple-helper.h"
 #include "lte-simple-net-device.h"

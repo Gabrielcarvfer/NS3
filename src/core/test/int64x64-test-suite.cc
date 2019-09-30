@@ -17,9 +17,9 @@
  *
  */
 
-#include "ns3/int64x64.h"
-#include "ns3/test.h"
-#include "ns3/valgrind.h"  // Bug 1882
+#include "../model/int64x64.h"
+#include "../model/test.h"
+#include "../model/valgrind.h"  // Bug 1882
 
 #include <cmath>    // fabs
 #include <iomanip>

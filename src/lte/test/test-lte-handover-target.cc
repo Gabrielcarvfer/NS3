@@ -19,34 +19,34 @@
  *
  */
 
-#include <ns3/test.h>
+#include "../../core/model/test.h"
 
-#include <ns3/log.h>
-#include <ns3/nstime.h>
-#include <ns3/callback.h>
-#include <ns3/config.h>
-#include <ns3/boolean.h>
-#include <ns3/double.h>
-#include <ns3/uinteger.h>
-#include <ns3/simulator.h>
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/config.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/simulator.h"
 
-#include <ns3/node-container.h>
-#include <ns3/net-device-container.h>
-#include <ns3/ipv4-interface-container.h>
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../internet/helper/ipv4-interface-container.h"
 
-#include <ns3/lte-helper.h>
-#include <ns3/point-to-point-epc-helper.h>
-#include <ns3/internet-stack-helper.h>
-#include <ns3/point-to-point-helper.h>
-#include <ns3/ipv4-address-helper.h>
-#include <ns3/ipv4-static-routing-helper.h>
-#include <ns3/mobility-helper.h>
+#include "../helper/lte-helper.h"
+#include "../helper/point-to-point-epc-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../../mobility/helper/mobility-helper.h"
 
-#include <ns3/data-rate.h>
-#include <ns3/ipv4-static-routing.h>
-#include <ns3/position-allocator.h>
-#include <ns3/lte-enb-net-device.h>
-#include <ns3/lte-enb-phy.h>
+#include "../../network/utils/data-rate.h"
+#include "../../internet/model/ipv4-static-routing.h"
+#include "../../mobility/model/position-allocator.h"
+#include "../model/lte-enb-net-device.h"
+#include "../model/lte-enb-phy.h"
 
 using namespace ns3;
 

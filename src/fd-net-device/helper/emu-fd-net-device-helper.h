@@ -17,17 +17,16 @@
  *
  */
 
-#ifndef EMU_FD_NET_DEVICE_HELPER_H
-#define EMU_FD_NET_DEVICE_HELPER_H
+#pragma once
 
 #include <string>
 
-#include "ns3/attribute.h"
-#include "ns3/fd-net-device.h"
-#include "ns3/fd-net-device-helper.h"
-#include "ns3/object-factory.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
+#include "../../core/model/attribute.h"
+#include "../model/fd-net-device.h"
+#include "fd-net-device-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
 
 namespace ns3 {
 
@@ -93,4 +92,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* EMU_FD_NET_DEVICE_HELPER_H */
+

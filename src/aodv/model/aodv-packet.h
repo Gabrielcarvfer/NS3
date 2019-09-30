@@ -25,15 +25,14 @@
  * Authors: Elena Buchatskaia <borovkovaes@iitp.ru>
  *          Pavel Boyko <boyko@iitp.ru>
  */
-#ifndef AODVPACKET_H
-#define AODVPACKET_H
+#pragma once
 
 #include <iostream>
-#include "ns3/header.h"
-#include "ns3/enum.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/model/header.h"
+#include "../../core/model/enum.h"
+#include "../../network/utils/ipv4-address.h"
 #include <map>
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 namespace aodv {
@@ -630,4 +629,4 @@ std::ostream & operator<< (std::ostream & os, RerrHeader const &);
 }  // namespace aodv
 }  // namespace ns3
 
-#endif /* AODVPACKET_H */
+

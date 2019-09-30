@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SCHEDULER_H
-#define SCHEDULER_H
+#pragma once
 
 #include <stdint.h>
 #include "object.h"
@@ -224,4 +223,4 @@ inline bool operator < (const Scheduler::Event &a,
 } // namespace ns3
 
 
-#endif /* SCHEDULER_H */
+

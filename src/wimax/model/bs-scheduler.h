@@ -20,13 +20,12 @@
 
 /* BS outbound scheduler as per in Section 6.3.5.1 */
 
-#ifndef BS_SCHEDULER_H
-#define BS_SCHEDULER_H
+#pragma once
 
 #include <list>
-#include "ns3/packet.h"
+#include "../../network/model/packet.h"
 #include "wimax-phy.h"
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 #include "dl-mac-messages.h"
 #include "service-flow.h"
 
@@ -128,4 +127,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BS_SCHEDULER_H */
+

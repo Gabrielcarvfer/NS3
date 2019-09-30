@@ -23,7 +23,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/wifi-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/ipv4-global-routing-helper.h"
+#include "../../src/internet/helper/ipv4-global-routing-helper.h"
 #include "ns3/internet-module.h"
 
 // This example shows how the presence of an 802.11b station in an 802.11g network does affect the performance.

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_PREAMBLE_H
-#define WIFI_PREAMBLE_H
+#pragma once
 
 namespace ns3 {
 
@@ -43,4 +42,4 @@ enum WifiPreamble
 
 } //namespace ns3
 
-#endif /* WIFI_PREAMBLE_H */
+

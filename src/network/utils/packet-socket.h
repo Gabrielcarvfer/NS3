@@ -18,16 +18,15 @@
  * Authors: Emmanuelle Laprise <emmanuelle.laprise@bluekazoo.ca>,
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PACKET_SOCKET_H
-#define PACKET_SOCKET_H
+#pragma once
 
 #include <stdint.h>
 #include <queue>
-#include "ns3/callback.h"
-#include "ns3/traced-callback.h"
-#include "ns3/ptr.h"
-#include "ns3/socket.h"
-#include "ns3/net-device.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/ptr.h"
+#include "../model/socket.h"
+#include "../model/net-device.h"
 
 namespace ns3 {
 
@@ -296,6 +295,6 @@ private:
 
 } // namespace ns3
 
-#endif /* PACKET_SOCKET_H */
+
 
 

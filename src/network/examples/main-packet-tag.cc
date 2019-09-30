@@ -17,9 +17,9 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include "ns3/tag.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
+#include "../model/tag.h"
+#include "../model/packet.h"
+#include "../../core/model/uinteger.h"
 #include <iostream>
 
 using namespace ns3;

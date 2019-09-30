@@ -28,8 +28,8 @@
 
 #include <cstring>
 
-#include "ns3/fatal-error.h"
-#include "ns3/log.h"
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/log.h"
 
 #include "pending-data.h"
 

@@ -20,7 +20,7 @@
 
 #include "uan-mac-aloha.h"
 #include "uan-tx-mode.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "uan-phy.h"
 #include "uan-header-common.h"
 

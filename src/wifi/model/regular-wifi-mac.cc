@@ -18,9 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../network/model/packet.h"
 #include "regular-wifi-mac.h"
 #include "wifi-phy.h"
 #include "mac-rx-middle.h"

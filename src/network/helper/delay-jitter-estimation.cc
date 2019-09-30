@@ -19,9 +19,9 @@
  */
 
 #include "delay-jitter-estimation.h"
-#include "ns3/tag.h"
-#include "ns3/simulator.h"
-#include "ns3/string.h"
+#include "../model/tag.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/string.h"
 
 namespace ns3 {
 

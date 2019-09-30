@@ -18,18 +18,17 @@
  * Author: Marco Miozzo  <marco.miozzo@cttc.es>
  * 
  */
-#ifndef MOBILITY_BUILDING_INFO_H
-#define MOBILITY_BUILDING_INFO_H
+#pragma once
 
 
 
-#include <ns3/simple-ref-count.h>
-#include <ns3/ptr.h>
-#include <ns3/object.h>
-#include <ns3/box.h>
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "../../mobility/model/box.h"
 #include <map>
-#include <ns3/building.h>
-#include <ns3/constant-velocity-helper.h>
+#include "building.h"
+#include "../../mobility/model/constant-velocity-helper.h"
 
 
 
@@ -124,4 +123,4 @@ private:
 } // namespace ns3
 
 
-#endif // MOBILITY_BUILDING_INFO_H
+

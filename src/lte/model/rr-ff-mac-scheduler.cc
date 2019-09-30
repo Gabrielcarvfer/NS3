@@ -18,19 +18,19 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#include <ns3/log.h>
-#include <ns3/pointer.h>
-#include <ns3/math.h>
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/math.h"
 #include <cfloat>
 #include <set>
 #include <climits>
 
-#include <ns3/lte-amc.h>
-#include <ns3/rr-ff-mac-scheduler.h>
-#include <ns3/simulator.h>
-#include <ns3/lte-common.h>
-#include <ns3/lte-vendor-specific-parameters.h>
-#include <ns3/boolean.h>
+#include "lte-amc.h"
+#include "rr-ff-mac-scheduler.h"
+#include "../../core/model/simulator.h"
+#include "lte-common.h"
+#include "lte-vendor-specific-parameters.h"
+#include "../../core/model/boolean.h"
 
 namespace ns3 {
 

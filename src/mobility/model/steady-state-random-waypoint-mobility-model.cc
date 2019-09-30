@@ -18,10 +18,10 @@
  * Author: Denis Fakhriev <fakhriev@iitp.ru>
  */
 #include <cmath>
-#include "ns3/simulator.h"
-#include "ns3/double.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/double.h"
 #include "steady-state-random-waypoint-mobility-model.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 namespace ns3 {
 

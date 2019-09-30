@@ -19,8 +19,7 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef SNR_TO_BLOCK_ERROR_RATE_RECORD_H
-#define SNR_TO_BLOCK_ERROR_RATE_RECORD_H
+#pragma once
 
 namespace ns3 {
 
@@ -110,4 +109,4 @@ private:
 
 }
 
-#endif /* SNR_TO_BLOCK_ERROR_RATE_RECORD_H */
+

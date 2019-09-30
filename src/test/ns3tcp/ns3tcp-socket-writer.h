@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/application.h"
-#include "ns3/node.h"
-#include "ns3/ptr.h"
-#include "ns3/socket.h"
-#include "ns3/address.h"
+#include "../../network/model/application.h"
+#include "../../network/model/node.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/socket.h"
+#include "../../network/model/address.h"
 
 namespace ns3
 {

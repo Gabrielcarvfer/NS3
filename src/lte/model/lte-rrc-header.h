@@ -21,16 +21,15 @@
  *          Biljana Bojovic <biljana.bojovic@cttc.es> (Carrier Aggregation)
  */
 
-#ifndef RRC_HEADER_H
-#define RRC_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 #include <bitset>
 #include <string>
 
-#include "ns3/lte-rrc-sap.h"
-#include "ns3/lte-asn1-header.h"
+#include "lte-rrc-sap.h"
+#include "lte-asn1-header.h"
 
 namespace ns3 {
 
@@ -1110,5 +1109,5 @@ private:
 
 } // namespace ns3
 
-#endif // RRC_HEADER_H
+
 

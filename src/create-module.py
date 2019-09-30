@@ -57,8 +57,7 @@ namespace ns3 {
 
 
 MODEL_H_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-#ifndef %(INCLUDE_GUARD)s
-#define %(INCLUDE_GUARD)s
+#pragma once
 
 namespace ns3 {
 
@@ -66,7 +65,6 @@ namespace ns3 {
 
 }
 
-#endif /* %(INCLUDE_GUARD)s */
 
 '''
 
@@ -88,8 +86,7 @@ namespace ns3 {
 
 
 HELPER_H_TEMPLATE = '''/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-#ifndef %(INCLUDE_GUARD)s
-#define %(INCLUDE_GUARD)s
+#pragma once
 
 #include "ns3/%(MODULE)s.h"
 
@@ -99,7 +96,6 @@ namespace ns3 {
 
 }
 
-#endif /* %(INCLUDE_GUARD)s */
 
 '''
 

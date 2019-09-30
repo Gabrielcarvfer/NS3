@@ -18,11 +18,10 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_MAC_ALOHA_H
-#define UAN_MAC_ALOHA_H
+#pragma once
 
 #include "uan-mac.h"
-#include "ns3/mac8-address.h"
+#include "../../network/utils/mac8-address.h"
 
 namespace ns3
 {
@@ -92,4 +91,4 @@ protected:
 
 } // namespace ns3
 
-#endif /* UAN_MAC_ALOHA_H */
+

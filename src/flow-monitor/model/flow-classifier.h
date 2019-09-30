@@ -18,10 +18,9 @@
 // Author: Gustavo J. A. M. Carneiro  <gjc@inescporto.pt> <gjcarneiro@gmail.com>
 //
 
-#ifndef FLOW_CLASSIFIER_H
-#define FLOW_CLASSIFIER_H
+#pragma once
 
-#include "ns3/simple-ref-count.h"
+#include "../../core/model/simple-ref-count.h"
 #include <ostream>
 
 namespace ns3 {
@@ -93,4 +92,4 @@ FlowClassifier::Indent (std::ostream &os, uint16_t level) const
 
 } // namespace ns3
 
-#endif /* FLOW_CLASSIFIER_H */
+

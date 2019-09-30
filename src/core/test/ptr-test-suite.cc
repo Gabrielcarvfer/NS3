@@ -18,8 +18,8 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/test.h"
-#include "ns3/ptr.h"
+#include "../model/test.h"
+#include "../model/ptr.h"
 
 /**
  * \file

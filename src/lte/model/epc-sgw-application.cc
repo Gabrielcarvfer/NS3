@@ -18,9 +18,9 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/epc-gtpu-header.h"
-#include "ns3/epc-sgw-application.h"
+#include "../../core/model/log.h"
+#include "epc-gtpu-header.h"
+#include "epc-sgw-application.h"
 
 namespace ns3 {
 

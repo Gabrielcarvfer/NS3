@@ -29,8 +29,7 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_H
-#define DSR_H
+#pragma once
 
 /**
  * \defgroup dsr DSR Routing
@@ -40,4 +39,4 @@
  * library document.
  */
 
-#endif /* DSR_H */
+

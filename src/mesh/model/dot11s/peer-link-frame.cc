@@ -20,9 +20,9 @@
 
 #include "peer-link-frame.h"
 #include "ie-dot11s-peer-management.h"
-#include "ns3/mesh-wifi-interface-mac.h"
-#include "ns3/test.h"
-#include "ns3/packet.h"
+#include "../mesh-wifi-interface-mac.h"
+#include "../../../core/model/test.h"
+#include "../../../network/model/packet.h"
 
 namespace ns3 {
 namespace dot11s {

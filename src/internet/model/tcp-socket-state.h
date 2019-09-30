@@ -17,10 +17,10 @@
  */
 #pragma once
 
-#include "ns3/object.h"
-#include "ns3/data-rate.h"
-#include "ns3/traced-value.h"
-#include "ns3/sequence-number.h"
+#include "../../core/model/object.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/traced-value.h"
+#include "../../network/utils/sequence-number.h"
 
 namespace ns3 {
 

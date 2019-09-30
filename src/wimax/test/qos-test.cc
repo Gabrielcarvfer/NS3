@@ -18,18 +18,18 @@
  * Author: Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  *                              <amine.ismail@udcast.com>
  */
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/simulator.h"
-#include "ns3/node-container.h"
-#include "ns3/wimax-helper.h"
-#include "ns3/net-device-container.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/ipv4-interface-container.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/service-flow.h"
-#include "ns3/ipcs-classifier-record.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../../core/model/simulator.h"
+#include "../../network/helper/node-container.h"
+#include "../helper/wimax-helper.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../model/service-flow.h"
+#include "../model/ipcs-classifier-record.h"
 
 using namespace ns3;
 

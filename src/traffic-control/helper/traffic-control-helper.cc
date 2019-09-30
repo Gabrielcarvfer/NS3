@@ -18,14 +18,14 @@
  * Author: Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/queue-limits.h"
-#include "ns3/queue.h"
-#include "ns3/net-device-queue-interface.h"
-#include "ns3/uinteger.h"
-#include "ns3/pointer.h"
-#include "ns3/traffic-control-layer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../network/utils/queue-limits.h"
+#include "../../network/utils/queue.h"
+#include "../../network/utils/net-device-queue-interface.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/pointer.h"
+#include "../model/traffic-control-layer.h"
 #include "traffic-control-helper.h"
 
 namespace ns3 {

@@ -18,13 +18,12 @@
  * Author: Ghada Badawy <gbadawy@gmail.com>
  */
 
-#ifndef MPDU_AGGREGATOR_H
-#define MPDU_AGGREGATOR_H
+#pragma once
 
-#include "ns3/object.h"
+#include "../../core/model/object.h"
 #include "wifi-mode.h"
 #include "qos-txop.h"
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include <vector>
 
 namespace ns3 {
@@ -190,4 +189,4 @@ private:
 
 }  //namespace ns3
 
-#endif /* MPDU_AGGREGATOR_H */
+

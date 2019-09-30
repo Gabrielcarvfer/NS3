@@ -16,12 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef TCPERRORCHANNEL_H
-#define TCPERRORCHANNEL_H
+#pragma once
 
-#include "ns3/error-model.h"
-#include "ns3/tcp-header.h"
-#include "ns3/ipv4-header.h"
+#include "../../network/utils/error-model.h"
+#include "../model/tcp-header.h"
+#include "../model/ipv4-header.h"
 
 namespace ns3 {
 
@@ -176,4 +175,4 @@ private:
 
 } // namespace ns3
 
-#endif // TCPERRORCHANNEL_H
+

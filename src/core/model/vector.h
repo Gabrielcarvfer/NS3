@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NS3_VECTOR_H
-#define NS3_VECTOR_H
+#pragma once
 
 #include "attribute.h"
 #include "attribute-helper.h"
@@ -256,4 +255,4 @@ Ptr<const AttributeChecker> MakeVectorChecker (void);
   
 } // namespace ns3
 
-#endif /* NS3_VECTOR_H */
+

@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef SIMPLE_FRAME_CAPTURE_MODEL_H
-#define SIMPLE_FRAME_CAPTURE_MODEL_H
+#pragma once
 
 #include "frame-capture-model.h"
 
@@ -78,5 +77,5 @@ private:
 
 } //namespace ns3
 
-#endif /* SIMPLE_FRAME_CAPTURE_MODEL_H */
+
 

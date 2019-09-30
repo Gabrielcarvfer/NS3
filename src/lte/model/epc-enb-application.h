@@ -19,21 +19,20 @@
  *         Nicola Baldo <nbaldo@cttc.cat>
  */
 
-#ifndef EPC_ENB_APPLICATION_H
-#define EPC_ENB_APPLICATION_H
+#pragma once
 
-#include <ns3/address.h>
-#include <ns3/socket.h>
-#include <ns3/virtual-net-device.h>
-#include <ns3/traced-callback.h>
-#include <ns3/callback.h>
-#include <ns3/ptr.h>
-#include <ns3/object.h>
-#include <ns3/lte-common.h>
-#include <ns3/application.h>
-#include <ns3/eps-bearer.h>
-#include <ns3/epc-enb-s1-sap.h>
-#include <ns3/epc-s1ap-sap.h>
+#include "../../network/model/address.h"
+#include "../../network/model/socket.h"
+#include "../../virtual-net-device/model/virtual-net-device.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
+#include "lte-common.h"
+#include "../../network/model/application.h"
+#include "eps-bearer.h"
+#include "epc-enb-s1-sap.h"
+#include "epc-s1ap-sap.h"
 #include <map>
 
 namespace ns3 {
@@ -340,5 +339,5 @@ private:
 
 } //namespace ns3
 
-#endif /* EPC_ENB_APPLICATION_H */
+
 

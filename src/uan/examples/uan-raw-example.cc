@@ -19,16 +19,16 @@
 
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
-#include "ns3/node-container.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/mobility-model.h"
-#include "ns3/basic-energy-source-helper.h"
-#include "ns3/energy-source-container.h"
-#include "ns3/uan-helper.h"
-#include "ns3/uan-channel.h"
-#include "ns3/acoustic-modem-energy-model-helper.h"
-#include "ns3/packet-socket-helper.h"
-#include "ns3/packet-socket-address.h"
+#include "../../network/helper/node-container.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../energy/helper/basic-energy-source-helper.h"
+#include "../../energy/helper/energy-source-container.h"
+#include "../helper/uan-helper.h"
+#include "../model/uan-channel.h"
+#include "../helper/acoustic-modem-energy-model-helper.h"
+#include "../../network/helper/packet-socket-helper.h"
+#include "../../network/utils/packet-socket-address.h"
 
 using namespace ns3;
 

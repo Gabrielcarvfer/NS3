@@ -22,15 +22,14 @@
  *
  */
 
-#ifndef DHCP_SERVER_H
-#define DHCP_SERVER_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/event-id.h"
-#include "ns3/ptr.h"
-#include "ns3/address.h"
-#include "ns3/traced-value.h"
-#include "ns3/inet-socket-address.h"
+#include "../../network/model/application.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/ptr.h"
+#include "../../network/model/address.h"
+#include "../../core/model/traced-value.h"
+#include "../../network/utils/inet-socket-address.h"
 #include "dhcp-header.h"
 #include <map>
 
@@ -144,4 +143,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DHCP_SERVER_H */
+

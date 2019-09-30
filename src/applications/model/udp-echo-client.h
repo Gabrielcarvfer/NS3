@@ -16,14 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef UDP_ECHO_CLIENT_H
-#define UDP_ECHO_CLIENT_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/event-id.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/traced-callback.h"
+#include "../../network/model/application.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../core/model/traced-callback.h"
 
 namespace ns3 {
 
@@ -186,4 +185,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_ECHO_CLIENT_H */
+

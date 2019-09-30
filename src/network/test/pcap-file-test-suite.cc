@@ -22,9 +22,9 @@
 #include <sstream>
 #include <cstring>
 
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/pcap-file.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../utils/pcap-file.h"
 
 using namespace ns3;
 

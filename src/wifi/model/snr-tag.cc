@@ -22,7 +22,7 @@
  *          Konstantinos Katsaros <dinos.katsaros@gmail.com>
  */
 
-#include "ns3/double.h"
+#include "../../core/model/double.h"
 #include "snr-tag.h"
 
 namespace ns3 {

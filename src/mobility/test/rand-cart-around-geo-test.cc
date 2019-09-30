@@ -18,10 +18,10 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <ns3/test.h>
-#include <ns3/log.h>
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
 #include <cmath>
-#include <ns3/geographic-positions.h>
+#include "../model/geographic-positions.h"
 
 /**
  * This test verifies the accuracy of the RandCartesianPointsAroundGeographicPoint()

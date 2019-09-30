@@ -19,12 +19,12 @@
  */
 
 
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
-#include <ns3/double.h>
-#include <ns3/simulator.h>
-#include <ns3/trace-source-accessor.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
+#include "../../core/model/double.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../antenna/model/antenna-model.h"
 
 #include "spectrum-analyzer.h"
 

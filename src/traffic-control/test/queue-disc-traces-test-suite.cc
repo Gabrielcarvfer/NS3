@@ -19,11 +19,11 @@
  *
  */
 
-#include "ns3/test.h"
-#include "ns3/queue-disc.h"
-#include "ns3/drop-tail-queue.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
+#include "../../core/model/test.h"
+#include "../model/queue-disc.h"
+#include "../../network/utils/drop-tail-queue.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
 #include <map>
 
 using namespace ns3;

@@ -24,28 +24,28 @@
 
 
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/test.h"
-#include "ns3/point-to-point-epc-helper.h"
-#include "ns3/epc-enb-application.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/point-to-point-helper.h"
-#include "ns3/csma-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/packet-sink.h"
-#include <ns3/ipv4-static-routing-helper.h>
-#include <ns3/ipv4-static-routing.h>
-#include <ns3/ipv4-interface.h>
-#include <ns3/mac48-address.h>
-#include "ns3/seq-ts-header.h"
-#include "ns3/eps-bearer-tag.h"
-#include "ns3/arp-cache.h"
-#include "ns3/boolean.h"
-#include "ns3/uinteger.h"
-#include "ns3/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../helper/point-to-point-epc-helper.h"
+#include "../model/epc-enb-application.h"
+#include "../../applications/helper/packet-sink-helper.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../csma/helper/csma-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../applications/model/packet-sink.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../../internet/model/ipv4-static-routing.h"
+#include "../../internet/model/ipv4-interface.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../applications/model/seq-ts-header.h"
+#include "../model/eps-bearer-tag.h"
+#include "../../internet/model/arp-cache.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/config.h"
 #include "lte-test-entities.h"
 
 using namespace ns3;

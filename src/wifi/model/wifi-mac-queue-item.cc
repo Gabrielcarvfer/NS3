@@ -21,9 +21,9 @@
  *          Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
 #include "wifi-mac-queue-item.h"
 #include "wifi-mac-trailer.h"
 

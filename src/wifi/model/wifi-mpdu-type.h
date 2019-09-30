@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef WIFI_MPDU_TYPE_H
-#define WIFI_MPDU_TYPE_H
+#pragma once
 
 namespace ns3 {
 
@@ -43,4 +42,4 @@ enum MpduType
 
 } //namespace ns3
 
-#endif /* WIFI_MPDU_TYPE_H */
+

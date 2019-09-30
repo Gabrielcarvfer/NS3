@@ -18,13 +18,12 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_HEADER_COMMON_H
-#define UAN_HEADER_COMMON_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
-#include "ns3/mac8-address.h"
+#include "../../network/model/header.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
+#include "../../network/utils/mac8-address.h"
 
 namespace ns3 {
 
@@ -147,4 +146,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UAN_HEADER_COMMON_H */
+

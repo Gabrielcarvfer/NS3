@@ -16,11 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef IPV4_QUEUE_DISC_ITEM_H
-#define IPV4_QUEUE_DISC_ITEM_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "ns3/queue-item.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/queue-item.h"
 #include "ipv4-header.h"
 
 namespace ns3 {
@@ -121,4 +120,4 @@ private:
 
 } // namespace ns3
 
-#endif /* IPV4_QUEUE_DISC_ITEM_H */
+

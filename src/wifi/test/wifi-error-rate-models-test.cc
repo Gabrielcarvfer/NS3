@@ -19,10 +19,10 @@
  */
 
 #include <cmath>
-#include "ns3/test.h"
-#include "ns3/nist-error-rate-model.h"
-#include "ns3/dsss-error-rate-model.h"
-#include "ns3/wifi-tx-vector.h"
+#include "../../core/model/test.h"
+#include "../model/nist-error-rate-model.h"
+#include "../model/dsss-error-rate-model.h"
+#include "../model/wifi-tx-vector.h"
 
 using namespace ns3;
 

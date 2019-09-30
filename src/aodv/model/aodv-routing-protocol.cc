@@ -29,18 +29,18 @@
   if (m_ipv4) { std::clog << "[node " << m_ipv4->GetObject<Node> ()->GetId () << "] "; }
 
 #include "aodv-routing-protocol.h"
-#include "ns3/log.h"
-#include "ns3/boolean.h"
-#include "ns3/random-variable-stream.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/udp-socket-factory.h"
-#include "ns3/udp-l4-protocol.h"
-#include "ns3/udp-header.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/adhoc-wifi-mac.h"
-#include "ns3/string.h"
-#include "ns3/pointer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../internet/model/udp-socket-factory.h"
+#include "../../internet/model/udp-l4-protocol.h"
+#include "../../internet/model/udp-header.h"
+#include "../../wifi/model/wifi-net-device.h"
+#include "../../wifi/model/adhoc-wifi-mac.h"
+#include "../../core/model/string.h"
+#include "../../core/model/pointer.h"
 #include <algorithm>
 #include <limits>
 

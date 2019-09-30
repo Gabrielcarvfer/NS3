@@ -18,11 +18,11 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#include "ns3/mesh-wifi-interface-mac.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/nstime.h"
-#include "ns3/log.h"
+#include "../mesh-wifi-interface-mac.h"
+#include "../../../network/model/packet.h"
+#include "../../../core/model/simulator.h"
+#include "../../../core/model/nstime.h"
+#include "../../../core/model/log.h"
 #include "dot11s-mac-header.h"
 #include "hwmp-protocol-mac.h"
 #include "hwmp-tag.h"

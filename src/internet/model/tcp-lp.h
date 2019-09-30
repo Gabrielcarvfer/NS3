@@ -21,12 +21,11 @@
  *
  */
 
-#ifndef TCPLP_H
-#define TCPLP_H
+#pragma once
 
-#include "ns3/tcp-congestion-ops.h"
-#include "ns3/tcp-recovery-ops.h"
-#include "ns3/traced-value.h"
+#include "tcp-congestion-ops.h"
+#include "tcp-recovery-ops.h"
+#include "../../core/model/traced-value.h"
 
 namespace ns3 {
 
@@ -120,4 +119,4 @@ private:
 
 } // namespace ns3
 
-#endif // TCPLP_H
+

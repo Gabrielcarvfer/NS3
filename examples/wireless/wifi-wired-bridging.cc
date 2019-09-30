@@ -41,20 +41,20 @@
 //               | AP Node |              | AP Node |
 //               +---------+              +---------+
 
-#include "ns3/command-line.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/csma-helper.h"
-#include "ns3/animation-interface.h"
-#include "ns3/bridge-helper.h"
-#include "ns3/packet-socket-address.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/double.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/csma/helper/csma-helper.h"
+#include "../../src/netanim/model/animation-interface.h"
+#include "../../src/bridge/helper/bridge-helper.h"
+#include "../../src/network/utils/packet-socket-address.h"
 
 using namespace ns3;
 

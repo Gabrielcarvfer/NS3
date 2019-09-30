@@ -20,9 +20,9 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
+#include "../../core/model/log.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
 #include "sta-wifi-mac.h"
 #include "wifi-phy.h"
 #include "mac-low.h"

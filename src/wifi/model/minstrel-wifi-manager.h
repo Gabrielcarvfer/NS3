@@ -19,10 +19,9 @@
  *          Matías Richart <mrichart@fing.edu.uy>
  */
 
-#ifndef MINSTREL_WIFI_MANAGER_H
-#define MINSTREL_WIFI_MANAGER_H
+#pragma once
 
-#include "ns3/traced-value.h"
+#include "../../core/model/traced-value.h"
 #include "wifi-remote-station-manager.h"
 #include <fstream>
 #include <map>
@@ -367,4 +366,4 @@ private:
 
 } //namespace ns3
 
-#endif /* MINSTREL_WIFI_MANAGER_H */
+

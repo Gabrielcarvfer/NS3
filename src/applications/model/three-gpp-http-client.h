@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef THREE_GPP_HTTP_CLIENT_H
-#define THREE_GPP_HTTP_CLIENT_H
+#pragma once
 
-#include <ns3/application.h>
-#include <ns3/address.h>
-#include <ns3/traced-callback.h>
-#include <ns3/three-gpp-http-header.h>
+#include "../../network/model/application.h"
+#include "../../network/model/address.h"
+#include "../../core/model/traced-callback.h"
+#include "three-gpp-http-header.h"
 
 
 namespace ns3 {
@@ -423,4 +422,4 @@ private:
 }  // end of `namespace ns3`
 
 
-#endif /* THREE_GPP_HTTP_CLIENT_H */
+

@@ -18,11 +18,10 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef OBSS_PD_ALGORITHM_H
-#define OBSS_PD_ALGORITHM_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/traced-callback.h"
+#include "../../core/model/object.h"
+#include "../../core/model/traced-callback.h"
 #include "he-configuration.h"
 
 namespace ns3 {
@@ -96,4 +95,4 @@ private:
 
 } //namespace ns3
 
-#endif /* OBSS_PD_ALGORITHM_H */
+

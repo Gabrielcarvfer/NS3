@@ -18,8 +18,7 @@
  * Authors: Gustavo Carneiro <gjcarneiro@gmail.com>,
  *          Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef OBJECT_H
-#define OBJECT_H
+#pragma once
 
 #include <stdint.h>
 #include <string>
@@ -665,5 +664,5 @@ Ptr<T> CreateObject (T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6, T7 a7)
 
 } // namespace ns3
 
-#endif /* OBJECT_H */
+
 

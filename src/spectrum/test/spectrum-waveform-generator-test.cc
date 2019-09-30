@@ -18,7 +18,7 @@
  * Author: Luis Pacheco <luisbelem@gmail.com>
  */
 #include <ns3/core-module.h>
-#include <ns3/test.h>
+#include "../../core/model/test.h"
 #include <ns3/spectrum-module.h>
 
 

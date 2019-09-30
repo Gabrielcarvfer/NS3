@@ -16,8 +16,7 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef VSA_MANAGER_H
-#define VSA_MANAGER_H
+#pragma once
 #include <vector>
 #include "wave-net-device.h"
 
@@ -200,4 +199,4 @@ private:
 };
 
 }
-#endif /* VSA_MANAGER_H */
+

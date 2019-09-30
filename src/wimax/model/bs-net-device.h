@@ -19,16 +19,15 @@
  *          Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef WIMAX_BS_NET_DEVICE_H
-#define WIMAX_BS_NET_DEVICE_H
+#pragma once
 
 #include "wimax-net-device.h"
-#include "ns3/event-id.h"
+#include "../../core/model/event-id.h"
 #include "wimax-connection.h"
-#include "ns3/nstime.h"
-#include "ns3/mac48-address.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/bs-service-flow-manager.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../network/utils/ipv4-address.h"
+#include "bs-service-flow-manager.h"
 #include "dl-mac-messages.h"
 #include "ipcs-classifier.h"
 
@@ -501,4 +500,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_BS_NET_DEVICE_H */
+

@@ -18,9 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/log.h>
-#include <ns3/test.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/log.h"
+#include "../../core/model/test.h"
+#include "../model/antenna-model.h"
 #include <cmath>
 #include <string>
 #include <iostream>

@@ -19,10 +19,9 @@
  *
  */
 
-#ifndef LTE_ANR_SAP_H
-#define LTE_ANR_SAP_H
+#pragma once
 
-#include <ns3/lte-rrc-sap.h>
+#include "lte-rrc-sap.h"
 
 namespace ns3 {
 
@@ -240,4 +239,4 @@ MemberLteAnrSapUser<C>::AddUeMeasReportConfigForAnr (LteRrcSap::ReportConfigEutr
 } // end of namespace ns3
 
 
-#endif /* LTE_ANR_SAP_H */
+

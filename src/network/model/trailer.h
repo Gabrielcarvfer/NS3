@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef TRAILER_H
-#define TRAILER_H
+#pragma once
 
 #include "chunk.h"
 #include "buffer.h"
@@ -126,4 +125,4 @@ std::ostream & operator << (std::ostream &os, const Trailer &trailer);
 
 } // namespace ns3
 
-#endif /* TRAILER_H */
+

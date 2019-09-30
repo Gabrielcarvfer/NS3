@@ -19,13 +19,12 @@
  *          Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef RADIO_BEARER_STATS_CONNECTOR_H
-#define RADIO_BEARER_STATS_CONNECTOR_H
+#pragma once
 
-#include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
-#include "ns3/config.h"
-#include "ns3/traced-callback.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/config.h"
+#include "../../core/model/traced-callback.h"
 
 #include <map>
 
@@ -233,4 +232,4 @@ private:
 
 } // namespace ns3
 
-#endif // RADIO_BEARER_STATS_CONNECTOR_H
+

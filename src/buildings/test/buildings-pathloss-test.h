@@ -18,11 +18,10 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#ifndef BUILDINGS_PATHLOSS_TEST_H
-#define BUILDINGS_PATHLOSS_TEST_H
+#pragma once
 
-#include <ns3/test.h>
-#include <ns3/hybrid-buildings-propagation-loss-model.h>
+#include "../../core/model/test.h"
+#include "../model/hybrid-buildings-propagation-loss-model.h"
 
 
 using namespace ns3;
@@ -57,4 +56,4 @@ private:
 };
 
 
-#endif /* BUILDING_PATHLOSS_TEST_H */
+

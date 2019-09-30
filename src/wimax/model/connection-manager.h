@@ -20,13 +20,12 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef CONNECTION_MANAGER_H
-#define CONNECTION_MANAGER_H
+#pragma once
 
 #include <stdint.h>
 #include "cid.h"
 #include "wimax-connection.h"
-#include "ns3/mac48-address.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -107,5 +106,5 @@ private:
 
 } // namespace ns3
 
-#endif /* CONNECTION_MANAGER_H */
+
 

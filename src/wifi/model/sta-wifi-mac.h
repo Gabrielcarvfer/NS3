@@ -20,8 +20,7 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef STA_WIFI_MAC_H
-#define STA_WIFI_MAC_H
+#pragma once
 
 #include "infrastructure-wifi-mac.h"
 #include "mgt-headers.h"
@@ -334,4 +333,4 @@ private:
 
 } //namespace ns3
 
-#endif /* STA_WIFI_MAC_H */
+

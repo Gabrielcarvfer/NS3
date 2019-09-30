@@ -18,14 +18,14 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <ns3/object-factory.h>
-#include <ns3/log.h>
+#include "../../core/model/object-factory.h"
+#include "../../core/model/log.h"
 #include <cmath>
-#include <ns3/simulator.h>
-#include <ns3/trace-source-accessor.h>
-#include <ns3/packet-burst.h>
-#include <ns3/callback.h>
-#include <ns3/antenna-model.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/callback.h"
+#include "../../antenna/model/antenna-model.h"
 
 #include "half-duplex-ideal-phy.h"
 #include "half-duplex-ideal-phy-signal-parameters.h"

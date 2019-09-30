@@ -29,13 +29,12 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_MAINTAIN_BUFF_H
-#define DSR_MAINTAIN_BUFF_H
+#pragma once
 
 #include <vector>
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/simulator.h"
-#include "ns3/ipv4-header.h"
+#include "../../internet/model/ipv4-routing-protocol.h"
+#include "../../core/model/simulator.h"
+#include "../../internet/model/ipv4-header.h"
 #include "dsr-option-header.h"
 
 namespace ns3 {
@@ -487,4 +486,4 @@ private:
 /*******************************************************************************************************************************/
 } // namespace dsr
 } // namespace ns3
-#endif /* DSR_MAINTAIN_BUFF_H */
+

@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_REMOTE_STATION_MANAGER_H
-#define WIFI_REMOTE_STATION_MANAGER_H
+#pragma once
 
-#include "ns3/traced-callback.h"
-#include "ns3/object.h"
-#include "ns3/data-rate.h"
-#include "ns3/mac48-address.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/object.h"
+#include "../../network/utils/data-rate.h"
+#include "../../network/utils/mac48-address.h"
 #include "wifi-mode.h"
 #include "wifi-utils.h"
 #include "wifi-remote-station-info.h"
@@ -1359,4 +1358,4 @@ private:
 
 } //namespace ns3
 
-#endif /* WIFI_REMOTE_STATION_MANAGER_H */
+

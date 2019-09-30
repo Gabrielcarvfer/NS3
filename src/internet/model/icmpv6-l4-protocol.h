@@ -20,13 +20,12 @@
  *         Mehdi Benamor <benamor.mehdi@ensi.rnu.tn>
  */
 
-#ifndef ICMPV6_L4_PROTOCOL_H
-#define ICMPV6_L4_PROTOCOL_H
+#pragma once
 
 #include <list>
 
-#include "ns3/ipv6-address.h"
-#include "ns3/random-variable-stream.h"
+#include "../../network/utils/ipv6-address.h"
+#include "../../core/model/random-variable-stream.h"
 
 #include "icmpv6-header.h"
 #include "ip-l4-protocol.h"
@@ -560,5 +559,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* ICMPV6_L4_PROTOCOL_H */
+
 

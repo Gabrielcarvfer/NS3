@@ -23,8 +23,8 @@
  */
 
 #include "tcp-option-sack-permitted.h"
-#include "ns3/log.h"
-#include "ns3/tcp-header.h"
+#include "../../core/model/log.h"
+#include "tcp-header.h"
 
 namespace ns3 {
 

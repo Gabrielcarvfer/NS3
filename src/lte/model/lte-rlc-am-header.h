@@ -18,11 +18,10 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_RLC_AM_HEADER_H
-#define LTE_RLC_AM_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/lte-rlc-sequence-number.h"
+#include "../../network/model/header.h"
+#include "lte-rlc-sequence-number.h"
 
 #include <list>
 
@@ -322,4 +321,4 @@ private:
 
 }; // namespace ns3
 
-#endif // LTE_RLC_AM_HEADER_H
+

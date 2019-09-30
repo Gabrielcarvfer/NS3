@@ -18,17 +18,16 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_MAC_H
-#define UAN_MAC_H
+#pragma once
 
-#include "ns3/address.h"
-#include "ns3/object.h"
-#include "ns3/packet.h"
+#include "../../network/model/address.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
 
-#include "ns3/address.h"
-#include "ns3/nstime.h"
-#include "ns3/ptr.h"
-#include "ns3/mac8-address.h"
+#include "../../network/model/address.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/mac8-address.h"
 
 namespace ns3 {
 
@@ -141,4 +140,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UAN_MAC_H */
+

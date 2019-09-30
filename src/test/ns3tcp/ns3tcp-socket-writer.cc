@@ -17,8 +17,8 @@
  */
 
 #include "ns3tcp-socket-writer.h"
-#include "ns3/tcp-socket-factory.h"
-#include "ns3/packet.h"
+#include "../../internet/model/tcp-socket-factory.h"
+#include "../../network/model/packet.h"
 
 namespace ns3
 {

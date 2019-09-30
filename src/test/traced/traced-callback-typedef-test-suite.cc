@@ -22,12 +22,12 @@
 #include <sstream>
 #include <set>
 #include <string>
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include "ns3/core-module.h"
 #include "ns3/dsr-module.h"       // DsrOPtionSRHeader
 #include "ns3/internet-module.h"  // Ipv4, Ipv4L3Protocol, Ipv4PacketProbe
                                   // Ipv6L3Protocol, Ipv6PacketProbe
-#include "ns3/lr-wpan-mac.h"      // LrWpanMac
+#include "../../lr-wpan/model/lr-wpan-mac.h"      // LrWpanMac
 #include "ns3/lte-module.h"       // PhyReceptionStatParameters,
                                   // PhyTransmissionStatParameters,
                                   // LteUePowerControl
@@ -39,7 +39,7 @@
 #include "ns3/spectrum-module.h"  // SpectrumValue
 #include "ns3/stats-module.h"     // TimeSeriesAdapter
 #include "ns3/uan-module.h"       // UanPhy
-#include "ns3/wifi-phy-state-helper.h"
+#include "../../wifi/model/wifi-phy-state-helper.h"
 
 using namespace ns3;
 

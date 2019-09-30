@@ -20,9 +20,9 @@
 
 #include <stdint.h>
 #include <list>
-#include "ns3/packet.h"
+#include "../model/packet.h"
 #include "packet-burst.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

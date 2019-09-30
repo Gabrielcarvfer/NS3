@@ -18,13 +18,12 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef FLAME_PROTOCOL_H
-#define FLAME_PROTOCOL_H
+#pragma once
 
 
-#include "ns3/mesh-l2-routing-protocol.h"
-#include "ns3/nstime.h"
-#include "ns3/tag.h"
+#include "../mesh-l2-routing-protocol.h"
+#include "../../../core/model/nstime.h"
+#include "../../../network/model/tag.h"
 #include <map>
 
 /**
@@ -210,4 +209,4 @@ private:
 };
 } // namespace flame
 } // namespace ns3
-#endif /* FLAME_PROTOCOL_H */
+

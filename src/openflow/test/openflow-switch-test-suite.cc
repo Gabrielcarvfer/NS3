@@ -20,10 +20,10 @@
  */
 
 // An essential include is test.h
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
-#include "ns3/openflow-switch-net-device.h"
-#include "ns3/openflow-interface.h"
+#include "../model/openflow-switch-net-device.h"
+#include "../model/openflow-interface.h"
 
 // Do not put your test classes in namespace ns3.  You may find it useful
 // to use the using directive to access the ns3 namespace directly

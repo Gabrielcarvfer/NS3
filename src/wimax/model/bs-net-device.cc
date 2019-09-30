@@ -22,28 +22,28 @@
 
 #include <cmath>
 
-#include "ns3/simulator.h"
-#include "ns3/node.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/node.h"
 #include "bs-uplink-scheduler.h"
 #include "bs-net-device.h"
 #include "wimax-phy.h"
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 #include "ss-record.h"
 #include "bs-scheduler.h"
 #include "wimax-mac-queue.h"
 #include "burst-profile-manager.h"
 #include "ss-manager.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/pointer.h"
-#include "ns3/enum.h"
-#include "ns3/uinteger.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
 #include "service-flow.h"
 #include "service-flow-manager.h"
 #include "connection-manager.h"
 #include "bs-link-manager.h"
 #include "bandwidth-manager.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/llc-snap-header.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/llc-snap-header.h"
 
 namespace ns3 {
 

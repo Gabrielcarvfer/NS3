@@ -22,10 +22,10 @@
 #include <algorithm>
 #include <iostream>
 
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/abort.h"
-#include "ns3/tcp-option-ts.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "tcp-option-ts.h"
 
 #include "tcp-tx-buffer.h"
 

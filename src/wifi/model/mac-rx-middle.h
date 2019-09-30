@@ -18,12 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef MAC_RX_MIDDLE_H
-#define MAC_RX_MIDDLE_H
+#pragma once
 
 #include <map>
-#include "ns3/simple-ref-count.h"
-#include "ns3/callback.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/callback.h"
 
 namespace ns3 {
 
@@ -139,4 +138,4 @@ private:
 
 } //namespace ns3
 
-#endif /* MAC_RX_MIDDLE_H */
+

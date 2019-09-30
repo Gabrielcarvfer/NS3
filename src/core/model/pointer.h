@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef NS_POINTER_H
-#define NS_POINTER_H
+#pragma once
 
 #include "attribute.h"
 #include "object.h"
@@ -229,4 +228,4 @@ MakePointerChecker (void)
 
 } // namespace ns3
 
-#endif /* NS_POINTER_H */
+

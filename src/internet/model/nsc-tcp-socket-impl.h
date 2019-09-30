@@ -13,22 +13,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NSC_TCP_SOCKET_IMPL_H
-#define NSC_TCP_SOCKET_IMPL_H
+#pragma once
 
 #include <stdint.h>
 #include <queue>
 #include <vector>
 
-#include "ns3/callback.h"
-#include "ns3/traced-value.h"
-#include "ns3/tcp-socket.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-address.h"
-#include "ns3/inet-socket-address.h"
-#include "ns3/event-id.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/traced-value.h"
+#include "tcp-socket.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/ipv4-address.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../core/model/event-id.h"
 #include "pending-data.h"
-#include "ns3/sequence-number.h"
+#include "../../network/utils/sequence-number.h"
 
 struct INetStreamSocket;
 
@@ -274,4 +273,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NSC_TCP_SOCKET_IMPL_H */
+

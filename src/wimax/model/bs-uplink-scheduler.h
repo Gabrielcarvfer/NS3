@@ -18,12 +18,11 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef UPLINK_SCHEDULER_H
-#define UPLINK_SCHEDULER_H
+#pragma once
 
 #include <stdint.h>
 #include "ul-mac-messages.h"
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include "wimax-phy.h"
 #include "service-flow-record.h"
 #include "service-flow.h"
@@ -243,4 +242,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UPLINK_SCHEDULER_H */
+

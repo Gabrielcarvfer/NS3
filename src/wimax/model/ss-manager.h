@@ -20,8 +20,7 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef SS_MANAGER_H
-#define SS_MANAGER_H
+#pragma once
 
 #include <stdint.h>
 #include "cid.h"
@@ -109,4 +108,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SS_MANAGER_H */
+

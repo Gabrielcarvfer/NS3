@@ -18,18 +18,17 @@
  * Author: Manuel Requena <manuel.requena@cttc.es> (Based on lte-helper.h)
  */
 
-#ifndef LTE_SIMPLE_HELPER_H
-#define LTE_SIMPLE_HELPER_H
+#pragma once
 
-#include "ns3/net-device-container.h"
-#include "ns3/simple-channel.h"
-#include "ns3/node-container.h"
-#include "ns3/radio-bearer-stats-calculator.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/utils/simple-channel.h"
+#include "../../network/helper/node-container.h"
+#include "../helper/radio-bearer-stats-calculator.h"
 
-#include "ns3/lte-pdcp.h"
-#include "ns3/lte-rlc.h"
-#include "ns3/lte-rlc-um.h"
-#include "ns3/lte-rlc-am.h"
+#include "../model/lte-pdcp.h"
+#include "../model/lte-rlc.h"
+#include "../model/lte-rlc-um.h"
+#include "../model/lte-rlc-am.h"
 
 namespace ns3 {
 
@@ -172,4 +171,4 @@ private:
 } // namespace ns3
 
 
-#endif // LTE_SIMPLE_HELPER_H
+

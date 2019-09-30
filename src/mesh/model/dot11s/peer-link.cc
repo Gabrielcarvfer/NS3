@@ -21,10 +21,10 @@
  */
 
 #include "peer-management-protocol-mac.h"
-#include "ns3/peer-link.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/traced-value.h"
+#include "peer-link.h"
+#include "../../../core/model/log.h"
+#include "../../../core/model/simulator.h"
+#include "../../../core/model/traced-value.h"
 
 namespace ns3 {
 

@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef WIFI_PHY_STANDARD_H
-#define WIFI_PHY_STANDARD_H
+#pragma once
 
 namespace ns3 {
 
@@ -61,4 +60,4 @@ enum WifiPhyStandard
 
 } //namespace ns3
 
-#endif /* WIFI_PHY_STANDARD_H */
+

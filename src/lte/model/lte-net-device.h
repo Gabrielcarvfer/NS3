@@ -19,16 +19,15 @@
  *         Nicola Baldo  <nbaldo@cttc.es>
  */
 
-#ifndef LTE_NET_DEVICE_H
-#define LTE_NET_DEVICE_H
+#pragma once
 
-#include <ns3/net-device.h>
-#include <ns3/event-id.h>
-#include <ns3/mac64-address.h>
-#include <ns3/traced-callback.h>
-#include <ns3/nstime.h>
-#include <ns3/lte-phy.h>
-#include <ns3/lte-control-messages.h>
+#include "../../network/model/net-device.h"
+#include "../../core/model/event-id.h"
+#include "../../network/utils/mac64-address.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "lte-phy.h"
+#include "lte-control-messages.h"
 
 namespace ns3 {
 
@@ -118,4 +117,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_NET_DEVICE_H */
+

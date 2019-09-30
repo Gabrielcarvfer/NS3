@@ -18,10 +18,9 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_TEST_LINK_ADAPTATION_H
-#define LTE_TEST_LINK_ADAPTATION_H
+#pragma once
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 
 using namespace ns3;
@@ -75,4 +74,4 @@ private:
   uint16_t m_mcsIndex; ///< the MCS index
 };
 
-#endif /* LTE_TEST_LINK_ADAPTATION_H */
+

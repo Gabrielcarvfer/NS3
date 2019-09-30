@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef SUPPORTED_RATES_H
-#define SUPPORTED_RATES_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -259,4 +258,4 @@ std::ostream &operator << (std::ostream &os, const SupportedRates &rates);
 
 } //namespace ns3
 
-#endif /* SUPPORTED_RATES_H */
+

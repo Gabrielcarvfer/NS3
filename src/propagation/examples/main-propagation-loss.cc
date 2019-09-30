@@ -18,18 +18,18 @@
  * Author: Timo Bingmann <timo.bingmann@student.kit.edu>
  */
 
-#include "ns3/propagation-loss-model.h"
-#include "ns3/jakes-propagation-loss-model.h"
-#include "ns3/constant-position-mobility-model.h"
+#include "../model/propagation-loss-model.h"
+#include "../model/jakes-propagation-loss-model.h"
+#include "../../mobility/model/constant-position-mobility-model.h"
 
-#include "ns3/config.h"
-#include "ns3/command-line.h"
-#include "ns3/string.h"
-#include "ns3/boolean.h"
-#include "ns3/double.h"
-#include "ns3/pointer.h"
-#include "ns3/gnuplot.h"
-#include "ns3/simulator.h"
+#include "../../core/model/config.h"
+#include "../../core/model/command-line.h"
+#include "../../core/model/string.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/double.h"
+#include "../../core/model/pointer.h"
+#include "../../stats/model/gnuplot.h"
+#include "../../core/model/simulator.h"
 
 #include <map>
 

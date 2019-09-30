@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage.inria.fr>
  */
 
-#ifndef SYSTEM_WALL_CLOCK_MS_H
-#define SYSTEM_WALL_CLOCK_MS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -99,4 +98,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SYSTEM_WALL_CLOCK_MS_H */
+

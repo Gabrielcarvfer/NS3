@@ -18,13 +18,12 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef UDP_L4_PROTOCOL_H
-#define UDP_L4_PROTOCOL_H
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/packet.h"
-#include "ns3/ptr.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/ptr.h"
 #include "ip-l4-protocol.h"
 
 namespace ns3 {
@@ -279,4 +278,4 @@ private:
 
 } // namespace ns3
 
-#endif /* UDP_L4_PROTOCOL_H */
+

@@ -19,7 +19,7 @@
  */
 
 #include "airtime-metric.h"
-#include "ns3/wifi-phy.h"
+#include "../../../wifi/model/wifi-phy.h"
 
 namespace ns3 {
 namespace dot11s {

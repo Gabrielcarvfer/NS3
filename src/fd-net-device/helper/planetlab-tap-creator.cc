@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
-#include <string.h> // for strerror
+#include "../../core/model/string.h" // for strerror
 #include <iostream>
 #include <iomanip>
 #include <sstream>

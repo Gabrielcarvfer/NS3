@@ -19,14 +19,13 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef SIMPLE_OFDM_WIMAX_CHANNEL_H
-#define SIMPLE_OFDM_WIMAX_CHANNEL_H
+#pragma once
 
 #include <list>
 #include "wimax-channel.h"
 #include "bvec.h"
 #include "wimax-phy.h"
-#include "ns3/propagation-loss-model.h"
+#include "../../propagation/model/propagation-loss-model.h"
 #include "simple-ofdm-send-param.h"
 
 namespace ns3 {
@@ -129,4 +128,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SIMPLE_OFDM_WIMAX_CHANNEL_H */
+

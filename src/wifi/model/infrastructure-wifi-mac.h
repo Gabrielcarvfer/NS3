@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef INFRASTRUCTURE_WIFI_MAC_H
-#define INFRASTRUCTURE_WIFI_MAC_H
+#pragma once
 
 #include "regular-wifi-mac.h"
 
@@ -81,4 +80,4 @@ private:
 
 } //namespace ns3
 
-#endif /* INFRASTRUCTURE_WIFI_MAC_H */
+

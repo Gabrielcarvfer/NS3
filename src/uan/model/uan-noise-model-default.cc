@@ -19,7 +19,7 @@
  */
 
 #include "uan-noise-model-default.h"
-#include "ns3/double.h"
+#include "../../core/model/double.h"
 
 #include <cmath>
 

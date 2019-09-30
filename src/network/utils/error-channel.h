@@ -17,14 +17,13 @@
  *
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
-#ifndef ERROR_CHANNEL_H
-#define ERROR_CHANNEL_H
+#pragma once
 
-#include "ns3/channel.h"
-#include "ns3/simple-channel.h"
-#include "ns3/error-model.h"
-#include "ns3/mac48-address.h"
-#include "ns3/nstime.h"
+#include "../model/channel.h"
+#include "simple-channel.h"
+#include "error-model.h"
+#include "mac48-address.h"
+#include "../../core/model/nstime.h"
 #include <vector>
 
 namespace ns3 {
@@ -92,4 +91,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ERROR_CHANNEL_H */
+

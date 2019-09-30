@@ -18,10 +18,10 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include "ns3/log.h"
-#include "ns3/uinteger.h"
-#include "ns3/node.h"
-#include "ns3/names.h"
+#include "../../core/model/log.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/model/node.h"
+#include "../../core/model/names.h"
 
 #include "ipv6-l3-protocol.h" 
 #include "icmpv6-l4-protocol.h"

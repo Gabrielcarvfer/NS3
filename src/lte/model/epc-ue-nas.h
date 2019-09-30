@@ -18,13 +18,12 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef EPC_UE_NAS_H
-#define EPC_UE_NAS_H
+#pragma once
 
 
-#include <ns3/object.h>
-#include <ns3/lte-as-sap.h>
-#include <ns3/epc-tft-classifier.h>
+#include "../../core/model/object.h"
+#include "lte-as-sap.h"
+#include "epc-tft-classifier.h"
 
 namespace ns3 {
 
@@ -261,4 +260,4 @@ private:
 
 } // namespace ns3
 
-#endif // EPC_UE_NAS_H
+

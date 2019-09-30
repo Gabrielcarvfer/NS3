@@ -29,14 +29,13 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#ifndef DSR_MAIN_HELPER_H
-#define DSR_MAIN_HELPER_H
+#pragma once
 
-#include "ns3/object-factory.h"
-#include "ns3/node.h"
-#include "ns3/node-container.h"
-#include "ns3/dsr-routing.h"
-#include "ns3/dsr-helper.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/model/node.h"
+#include "../../network/helper/node-container.h"
+#include "../model/dsr-routing.h"
+#include "dsr-helper.h"
 
 namespace ns3 {
 
@@ -89,4 +88,4 @@ private:
 
 } // namespace ns3
 
-#endif /* DSR_MAIN_HELPER_H */
+

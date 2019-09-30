@@ -35,9 +35,9 @@
 #include "ns3/internet-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/csma-module.h"
-#include "ns3/ipv4-click-routing.h"
-#include "ns3/ipv4-l3-click-protocol.h"
-#include "ns3/click-internet-stack-helper.h"
+#include "../model/ipv4-click-routing.h"
+#include "../model/ipv4-l3-click-protocol.h"
+#include "../helper/click-internet-stack-helper.h"
 
 using namespace ns3;
 

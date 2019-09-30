@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef PPP_HEADER_H
-#define PPP_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 
 namespace ns3 {
 
@@ -108,4 +107,4 @@ private:
 } // namespace ns3
 
 
-#endif /* PPP_HEADER_H */
+

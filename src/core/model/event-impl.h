@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef EVENT_IMPL_H
-#define EVENT_IMPL_H
+#pragma once
 
 #include <stdint.h>
 #include "simple-ref-count.h"
@@ -81,4 +80,4 @@ private:
 
 } // namespace ns3
 
-#endif /* EVENT_IMPL_H */
+

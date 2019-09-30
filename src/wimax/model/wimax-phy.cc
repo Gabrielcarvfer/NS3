@@ -18,17 +18,17 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
 #include "wimax-net-device.h"
 #include "wimax-phy.h"
 #include "wimax-channel.h"
-#include "ns3/packet-burst.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/pointer.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
 
 namespace ns3 {
 

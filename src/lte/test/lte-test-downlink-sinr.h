@@ -20,12 +20,11 @@
  *     Extend to Data and Ctrl frames
  */
 
-#ifndef LTE_TEST_DOWNLINK_SINR_H
-#define LTE_TEST_DOWNLINK_SINR_H
+#pragma once
 
-#include "ns3/spectrum-value.h"
+#include "../../spectrum/model/spectrum-value.h"
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 
@@ -108,4 +107,4 @@ private:
   Ptr<SpectrumValue> m_expectedSinr; ///< the expected SINR
 };
 
-#endif /* LTE_TEST_DOWNLINK_SINR_H */
+

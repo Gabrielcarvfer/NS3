@@ -19,9 +19,9 @@
  */
 
 #include <algorithm>
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
 #include "wifi-phy-state-helper.h"
 #include "wifi-tx-vector.h"
 #include "wifi-phy-listener.h"

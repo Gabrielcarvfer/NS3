@@ -18,12 +18,11 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef EPC_GTPC_HEADER_H
-#define EPC_GTPC_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/epc-tft.h"
-#include "ns3/eps-bearer.h"
+#include "../../network/model/header.h"
+#include "epc-tft.h"
+#include "eps-bearer.h"
 
 namespace ns3 {
 
@@ -467,4 +466,4 @@ private:
 
 } // namespace ns3
 
-#endif // EPC_GTPC_HEADER_H
+

@@ -18,8 +18,8 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#include "ns3/log.h"
-#include "ns3/nstime.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
 
 #include "time-data-calculators.h"
 

@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef CAPABILITY_INFORMATION_H
-#define CAPABILITY_INFORMATION_H
+#pragma once
 
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 
 namespace ns3 {
 
@@ -161,4 +160,4 @@ private:
 
 } //namespace ns3
 
-#endif /* CAPABILITY_INFORMATION_H */
+

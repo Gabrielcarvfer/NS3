@@ -18,11 +18,11 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#include "ns3/log.h"
-#include "ns3/packet.h"
-#include "ns3/mac48-address.h"
+#include "../../core/model/log.h"
+#include "../model/packet.h"
+#include "mac48-address.h"
 
-#include "ns3/basic-data-calculators.h"
+#include "../../stats/model/basic-data-calculators.h"
 #include "packet-data-calculators.h"
 
 using namespace ns3;

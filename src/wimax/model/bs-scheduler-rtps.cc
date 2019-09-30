@@ -20,14 +20,14 @@
  */
 
 #include "bs-scheduler-rtps.h"
-#include "ns3/simulator.h"
+#include "../../core/model/simulator.h"
 #include "bs-net-device.h"
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 #include "cid.h"
 #include "wimax-mac-header.h"
 #include "ss-record.h"
 #include "wimax-mac-queue.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "burst-profile-manager.h"
 #include "wimax-connection.h"
 #include "connection-manager.h"

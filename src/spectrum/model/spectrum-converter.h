@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef SPECTRUM_CONVERTER_H
-#define SPECTRUM_CONVERTER_H
+#pragma once
 
-#include <ns3/spectrum-value.h>
+#include "spectrum-value.h"
 
 
 namespace ns3 {
@@ -93,6 +92,6 @@ private:
 
 
 
-#endif /*  SPECTRUM_CONVERTER_H */
+
 
 

@@ -25,20 +25,20 @@
  *         James P.G. Sterbenz <jpgs@ittc.ku.edu>, director 
  */
 
-#include "ns3/test.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-channel.h"
-#include "ns3/address.h"
-#include "ns3/mac48-address.h"
-#include "ns3/packet.h"
-#include "ns3/callback.h"
-#include "ns3/node.h"
-#include "ns3/simulator.h"
-#include "ns3/error-model.h"
-#include "ns3/pointer.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/rng-seed-manager.h"
+#include "../../core/model/test.h"
+#include "../utils/simple-net-device.h"
+#include "../utils/simple-channel.h"
+#include "../model/address.h"
+#include "../utils/mac48-address.h"
+#include "../model/packet.h"
+#include "../../core/model/callback.h"
+#include "../model/node.h"
+#include "../../core/model/simulator.h"
+#include "../utils/error-model.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/double.h"
+#include "../../core/model/string.h"
+#include "../../core/model/rng-seed-manager.h"
 
 using namespace ns3;
 

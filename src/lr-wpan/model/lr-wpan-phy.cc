@@ -25,18 +25,18 @@
 #include "lr-wpan-spectrum-value-helper.h"
 #include "lr-wpan-error-model.h"
 #include "lr-wpan-net-device.h"
-#include <ns3/log.h>
-#include <ns3/abort.h>
-#include <ns3/simulator.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/antenna-model.h>
-#include <ns3/mobility-model.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/packet.h>
-#include <ns3/packet-burst.h>
-#include <ns3/net-device.h>
-#include <ns3/random-variable-stream.h>
-#include <ns3/double.h>
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/simulator.h"
+#include "../../spectrum/model/spectrum-value.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../network/model/packet.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/double.h"
 
 namespace ns3 {
 

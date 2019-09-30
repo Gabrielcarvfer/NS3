@@ -21,11 +21,10 @@
  */
 
 
-#ifndef UCD_CHANNEL_ENCODINGS_H
-#define UCD_CHANNEL_ENCODINGS_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 #include <list>
 
 namespace ns3 {
@@ -114,12 +113,9 @@ private:
 
 } // namespace ns3
 
-#endif /* UCD_CHANNEL_ENCODINGS_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
-
-#ifndef OFDM_UCD_CHANNEL_ENCODINGS_H
-#define OFDM_UCD_CHANNEL_ENCODINGS_H
 
 #include <stdint.h>
 
@@ -183,15 +179,12 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_UCD_CHANNEL_ENCODINGS_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef OFDM_UL_BURST_PROFILE_H
-#define OFDM_UL_BURST_PROFILE_H
-
 #include <stdint.h>
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 
 namespace ns3 {
 
@@ -296,15 +289,12 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_UL_BURST_PROFILE_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef UCD_H
-#define UCD_H
-
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include <vector>
 
 namespace ns3 {
@@ -431,15 +421,12 @@ private:
 
 } // namespace ns3
 
-#endif /* UCD_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef OFDM_UL_MAP_IE_H
-#define OFDM_UL_MAP_IE_H
-
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include "cid.h"
 
 namespace ns3 {
@@ -552,15 +539,12 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_UL_MAP_IE_H */
+
 
 // ----------------------------------------------------------------------------------------------------------
 
-#ifndef UL_MAP_H
-#define UL_MAP_H
-
 #include <stdint.h>
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include <vector>
 
 namespace ns3 {
@@ -633,5 +617,5 @@ private:
 
 } // namespace ns3
 
-#endif /* UL_MAP_H */
+
 

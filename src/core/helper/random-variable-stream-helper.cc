@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include "ns3/random-variable-stream.h"
-#include "ns3/config.h"
-#include "ns3/pointer.h"
-#include "ns3/log.h"
-#include "ns3/assert.h"
+#include "../model/random-variable-stream.h"
+#include "../model/config.h"
+#include "../model/pointer.h"
+#include "../model/log.h"
+#include "../model/assert.h"
 #include "random-variable-stream-helper.h"
 
 /**

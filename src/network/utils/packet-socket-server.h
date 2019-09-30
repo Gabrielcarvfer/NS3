@@ -18,13 +18,12 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef PACKET_SOCKET_SERVER_H
-#define PACKET_SOCKET_SERVER_H
+#pragma once
 
-#include "ns3/application.h"
-#include "ns3/event-id.h"
-#include "ns3/ptr.h"
-#include "ns3/packet-socket-address.h"
+#include "../model/application.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/ptr.h"
+#include "packet-socket-address.h"
 
 namespace ns3 {
 
@@ -89,4 +88,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PACKET_SOCKET_SERVER_H */
+

@@ -20,17 +20,17 @@
 
 #include <string>
 
-#include "ns3/ascii-test.h"
-#include "ns3/trace-helper.h"
-#include "ns3/double.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/simulator.h"
-#include "ns3/rectangle.h"
-#include "ns3/mobility-model.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/node-container.h"
-#include "ns3/test.h"
+#include "../../network/utils/ascii-test.h"
+#include "../../network/helper/trace-helper.h"
+#include "../../core/model/double.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../../core/model/simulator.h"
+#include "../model/rectangle.h"
+#include "../model/mobility-model.h"
+#include "../helper/mobility-helper.h"
+#include "../../network/helper/node-container.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

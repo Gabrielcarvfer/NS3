@@ -18,7 +18,7 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include "ns3/lte-enb-cphy-sap.h"
+#include "lte-enb-cphy-sap.h"
 
 namespace ns3 {
 

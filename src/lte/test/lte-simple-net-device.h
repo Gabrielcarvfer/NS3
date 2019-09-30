@@ -18,15 +18,14 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_SIMPLE_NET_DEVICE_H
-#define LTE_SIMPLE_NET_DEVICE_H
+#pragma once
 
-#include "ns3/event-id.h"
-#include "ns3/node.h"
-#include "ns3/error-model.h"
-#include "ns3/simple-channel.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/lte-rlc.h"
+#include "../../core/model/event-id.h"
+#include "../../network/model/node.h"
+#include "../../network/utils/error-model.h"
+#include "../../network/utils/simple-channel.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../model/lte-rlc.h"
 
 namespace ns3 {
 
@@ -72,4 +71,4 @@ protected:
 } // namespace ns3
 
 
-#endif // LTE_SIMPLE_NET_DEVICE_H
+

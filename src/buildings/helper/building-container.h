@@ -19,12 +19,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr> (original node-container.h)
  *         Nicola Baldo (wrote building-container.h based on node-container.h)
  */
-#ifndef BUILDING_CONTAINER_H
-#define BUILDING_CONTAINER_H
+#pragma once
 
 #include <stdint.h>
 #include <vector>
-#include <ns3/building.h>
+#include "../model/building.h"
 
 namespace ns3 {
 
@@ -205,4 +204,4 @@ private:
 
 } // namespace ns3
 
-#endif /* BUILDING_CONTAINER_H */
+

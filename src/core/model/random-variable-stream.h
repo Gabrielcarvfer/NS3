@@ -23,8 +23,7 @@
  * Modified by Mitch Watrous <watrous@u.washington.edu>
  *
  */
-#ifndef RANDOM_VARIABLE_STREAM_H
-#define RANDOM_VARIABLE_STREAM_H
+#pragma once
 
 #include "type-id.h"
 #include "object.h"
@@ -2548,4 +2547,4 @@ public:
 
 } // namespace ns3
 
-#endif /* RANDOM_VARIABLE_STREAM_H */
+

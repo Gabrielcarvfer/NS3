@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef BLOCK_ACK_TYPE_H
-#define BLOCK_ACK_TYPE_H
+#pragma once
 
 namespace ns3 {
 
@@ -37,4 +36,4 @@ enum BlockAckType
 
 } //namespace ns3
 
-#endif /* BLOCK_ACK_TYPE_H */
+

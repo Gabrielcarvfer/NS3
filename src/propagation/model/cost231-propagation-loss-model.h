@@ -19,11 +19,10 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef COST231_PROPAGATION_LOSS_MODEL_H
-#define COST231_PROPAGATION_LOSS_MODEL_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/propagation-loss-model.h"
+#include "../../core/model/nstime.h"
+#include "propagation-loss-model.h"
 
 namespace ns3 {
 
@@ -151,4 +150,4 @@ private:
 
 }
 
-#endif /* COST231PROPAGATIONMODEL_H */
+

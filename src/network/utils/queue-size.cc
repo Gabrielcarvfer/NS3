@@ -19,8 +19,8 @@
 //
 
 #include "queue-size.h"
-#include "ns3/log.h"
-#include "ns3/unused.h"
+#include "../../core/model/log.h"
+#include "../../core/model/unused.h"
 
 namespace ns3 {
 

@@ -18,12 +18,11 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef BASIC_DATA_CALCULATORS_H
-#define BASIC_DATA_CALCULATORS_H
+#pragma once
 
 #include "data-calculator.h"
 #include "data-output-interface.h"
-#include "ns3/type-name.h"
+#include "../../core/model/type-name.h"
 
 namespace ns3 {
 
@@ -381,4 +380,4 @@ CounterCalculator<T>::Output (DataOutputCallback &callback) const
 };
 
 
-#endif /* BASIC_DATA_CALCULATORS_H */
+

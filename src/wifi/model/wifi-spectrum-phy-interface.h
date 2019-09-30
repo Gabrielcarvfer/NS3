@@ -18,10 +18,9 @@
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
 
-#ifndef WIFI_SPECTRUM_PHY_INTERFACE_H
-#define WIFI_SPECTRUM_PHY_INTERFACE_H
+#pragma once
 
-#include "ns3/spectrum-phy.h"
+#include "../../spectrum/model/spectrum-phy.h"
 
 namespace ns3 {
 
@@ -73,4 +72,4 @@ private:
 
 } // namespace ns3
 
-#endif  /* WIFI_SPECTRUM_PHY_INTERFACE_H */
+

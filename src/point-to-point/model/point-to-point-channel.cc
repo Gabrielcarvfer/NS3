@@ -18,10 +18,10 @@
 
 #include "point-to-point-channel.h"
 #include "point-to-point-net-device.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/packet.h"
-#include "ns3/simulator.h"
-#include "ns3/log.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

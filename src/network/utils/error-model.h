@@ -60,12 +60,11 @@
  *         James P.G. Sterbenz <jpgs@ittc.ku.edu>, director 
  */
 
-#ifndef ERROR_MODEL_H
-#define ERROR_MODEL_H
+#pragma once
 
 #include <list>
-#include "ns3/object.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/object.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -483,4 +482,4 @@ private:
 };
 
 } // namespace ns3
-#endif
+

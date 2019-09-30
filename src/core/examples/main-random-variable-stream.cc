@@ -17,13 +17,13 @@
  *
  * Author: Timo Bingmann <timo.bingmann@student.kit.edu>
  */
-#include "ns3/random-variable-stream.h"
-#include "ns3/ptr.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
-#include "ns3/integer.h"
-#include "ns3/gnuplot.h"
-#include "ns3/command-line.h"
+#include "../model/random-variable-stream.h"
+#include "../model/ptr.h"
+#include "../model/double.h"
+#include "../model/string.h"
+#include "../model/integer.h"
+#include "../../stats/model/gnuplot.h"
+#include "../model/command-line.h"
 #include <map>
 #include <cmath>
 

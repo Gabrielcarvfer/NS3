@@ -19,13 +19,13 @@
  */
 
 #include "uan-mac-cw.h"
-#include "ns3/attribute.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/nstime.h"
-#include "ns3/uan-header-common.h"
-#include "ns3/trace-source-accessor.h"
-#include "ns3/log.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/nstime.h"
+#include "uan-header-common.h"
+#include "../../core/model/trace-source-accessor.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

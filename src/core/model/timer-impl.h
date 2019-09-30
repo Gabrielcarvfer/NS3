@@ -18,8 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef TIMER_IMPL_H
-#define TIMER_IMPL_H
+#pragma once
 
 #include "simulator.h"
 #include "type-traits.h"
@@ -1082,4 +1081,4 @@ TimerImpl::SetArgs (T1 a1, T2 a2, T3 a3, T4 a4, T5 a5, T6 a6)
 
 } // namespace ns3
 
-#endif /* TIMER_IMPL_H */
+

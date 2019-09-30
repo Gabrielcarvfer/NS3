@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef OBJECT_NAMES_H
-#define OBJECT_NAMES_H
+#pragma once
 
 #include "ptr.h"
 #include "object.h"
@@ -500,4 +499,4 @@ Names::Find (Ptr<Object> context, std::string name)
 
 } // namespace ns3
 
-#endif /* OBJECT_NAMES_H */
+

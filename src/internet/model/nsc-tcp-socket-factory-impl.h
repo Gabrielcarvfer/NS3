@@ -13,11 +13,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef NSC_TCP_SOCKET_FACTORY_IMPL_H
-#define NSC_TCP_SOCKET_FACTORY_IMPL_H
+#pragma once
 
-#include "ns3/tcp-socket-factory.h"
-#include "ns3/ptr.h"
+#include "tcp-socket-factory.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -63,4 +62,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NSC_TCP_SOCKET_FACTORY_IMPL_H */
+

@@ -19,18 +19,17 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef SIMPLE_OFDM_WIMAX_PHY_H
-#define SIMPLE_OFDM_WIMAX_PHY_H
+#pragma once
 
 #include <stdint.h>
 #include <list>
-#include "ns3/callback.h"
-#include "ns3/nstime.h"
-#include "ns3/event-id.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/random-variable-stream.h"
 #include "wimax-phy.h"
 #include "bvec.h"
-#include "ns3/snr-to-block-error-rate-manager.h"
+#include "snr-to-block-error-rate-manager.h"
 #include "wimax-connection.h"
 namespace ns3 {
 
@@ -536,4 +535,4 @@ private:
 
 } // namespace ns3
 
-#endif /* OFDM_WIMAX_PHY_H */
+

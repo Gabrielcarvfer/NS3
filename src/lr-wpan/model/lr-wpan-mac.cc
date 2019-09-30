@@ -26,13 +26,13 @@
 #include "lr-wpan-csmaca.h"
 #include "lr-wpan-mac-header.h"
 #include "lr-wpan-mac-trailer.h"
-#include <ns3/simulator.h>
-#include <ns3/log.h>
-#include <ns3/uinteger.h>
-#include <ns3/node.h>
-#include <ns3/packet.h>
-#include <ns3/random-variable-stream.h>
-#include <ns3/double.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/uinteger.h"
+#include "../../network/model/node.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/random-variable-stream.h"
+#include "../../core/model/double.h"
 
 #undef NS_LOG_APPEND_CONTEXT
 #define NS_LOG_APPEND_CONTEXT                                   \

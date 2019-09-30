@@ -19,16 +19,16 @@
  */
 
 #include "component-carrier-enb.h"
-#include <ns3/uinteger.h>
-#include <ns3/boolean.h>
-#include <ns3/simulator.h>
-#include <ns3/log.h>
-#include <ns3/abort.h>
-#include <ns3/lte-enb-phy.h>
-#include <ns3/pointer.h>
-#include <ns3/lte-enb-mac.h>
-#include <ns3/lte-ffr-algorithm.h>
-#include <ns3/ff-mac-scheduler.h>
+#include "../../core/model/uinteger.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/abort.h"
+#include "lte-enb-phy.h"
+#include "../../core/model/pointer.h"
+#include "lte-enb-mac.h"
+#include "lte-ffr-algorithm.h"
+#include "ff-mac-scheduler.h"
 
 namespace ns3 {
 

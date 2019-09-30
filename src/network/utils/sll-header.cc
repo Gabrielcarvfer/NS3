@@ -18,7 +18,7 @@
  * Author: Matthieu Coudron <matthieu.coudron@lip6.fr>
  */
 #include "sll-header.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 
 namespace ns3 {

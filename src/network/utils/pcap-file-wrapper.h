@@ -16,16 +16,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef PCAP_FILE_WRAPPER_H
-#define PCAP_FILE_WRAPPER_H
+#pragma once
 
 #include <cstring>
 #include <limits>
 #include <fstream>
-#include "ns3/ptr.h"
-#include "ns3/packet.h"
-#include "ns3/object.h"
-#include "ns3/nstime.h"
+#include "../../core/model/ptr.h"
+#include "../model/packet.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
 #include "pcap-file.h"
 
 namespace ns3 {
@@ -228,4 +227,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PCAP_FILE_WRAPPER_H */
+

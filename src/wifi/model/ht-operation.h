@@ -18,8 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#ifndef HT_OPERATION_H
-#define HT_OPERATION_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -446,4 +445,4 @@ std::ostream &operator << (std::ostream &os, const HtOperation &htOperation);
 
 } //namespace ns3
 
-#endif /* HT_OPERATION_H */
+

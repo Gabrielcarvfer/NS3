@@ -18,8 +18,7 @@
  * Author: Quincy Tse <quincy.tse@nicta.com.au>
  */
 
-#ifndef FATAL_IMPL_H
-#define FATAL_IMPL_H
+#pragma once
 
 #include <ostream>
 
@@ -96,4 +95,3 @@ void FlushStreams (void);
 } //FatalImpl
 } //ns3
 
-#endif

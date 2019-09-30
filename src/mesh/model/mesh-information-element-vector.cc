@@ -19,20 +19,20 @@
  */
 
 #include "mesh-information-element-vector.h"
-#include "ns3/packet.h"
+#include "../../network/model/packet.h"
 #include <algorithm>
-#include "ns3/hwmp-protocol.h"
+#include "dot11s/hwmp-protocol.h"
 // All information elements:
-#include "ns3/ie-dot11s-beacon-timing.h"
-#include "ns3/ie-dot11s-configuration.h"
-#include "ns3/ie-dot11s-id.h"
-#include "ns3/ie-dot11s-metric-report.h"
-#include "ns3/ie-dot11s-peer-management.h"
-#include "ns3/ie-dot11s-peering-protocol.h"
-#include "ns3/ie-dot11s-perr.h"
-#include "ns3/ie-dot11s-prep.h"
-#include "ns3/ie-dot11s-preq.h"
-#include "ns3/ie-dot11s-rann.h"
+#include "dot11s/ie-dot11s-beacon-timing.h"
+#include "dot11s/ie-dot11s-configuration.h"
+#include "dot11s/ie-dot11s-id.h"
+#include "dot11s/ie-dot11s-metric-report.h"
+#include "dot11s/ie-dot11s-peer-management.h"
+#include "dot11s/ie-dot11s-peering-protocol.h"
+#include "dot11s/ie-dot11s-perr.h"
+#include "dot11s/ie-dot11s-prep.h"
+#include "dot11s/ie-dot11s-preq.h"
+#include "dot11s/ie-dot11s-rann.h"
 
 namespace ns3 {
 

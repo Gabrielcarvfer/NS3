@@ -18,21 +18,20 @@
  * Author: Emmanuelle Laprise <emmanuelle.laprise@bluekazoo.ca
  */
 
-#ifndef CSMA_NET_DEVICE_H
-#define CSMA_NET_DEVICE_H
+#pragma once
 
 #include <cstring>
-#include "ns3/node.h"
-#include "ns3/backoff.h"
-#include "ns3/address.h"
-#include "ns3/net-device.h"
-#include "ns3/callback.h"
-#include "ns3/packet.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/data-rate.h"
-#include "ns3/ptr.h"
-#include "ns3/mac48-address.h"
+#include "../../network/model/node.h"
+#include "backoff.h"
+#include "../../network/model/address.h"
+#include "../../network/model/net-device.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
 
@@ -731,4 +730,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CSMA_NET_DEVICE_H */
+

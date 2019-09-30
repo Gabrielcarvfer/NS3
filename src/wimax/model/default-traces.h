@@ -19,8 +19,7 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#ifndef WIMAX_DEFAULT_TRACES_H
-#define WIMAX_DEFAULT_TRACES_H
+#pragma once
 
 namespace ns3 {
 
@@ -994,4 +993,4 @@ static const double modulation6[6][626] = {
 /** @}*/
 }
 
-#endif /* WIMAX_DEFAULT_TRACES_H */
+

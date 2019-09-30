@@ -19,8 +19,7 @@
  *          Pavel Boyko <boyko.iitp.ru>
  */
 
-#ifndef WIFI_INFORMATION_ELEMENT_VECTOR_H
-#define WIFI_INFORMATION_ELEMENT_VECTOR_H
+#pragma once
 
 #include "wifi-information-element.h"
 
@@ -133,4 +132,4 @@ protected:
 
 } //namespace ns3
 
-#endif /* WIFI_INFORMATION_ELEMENT_VECTOR_H */
+

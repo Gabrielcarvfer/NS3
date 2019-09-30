@@ -17,13 +17,12 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef ADDRESS_UTILS_H
-#define ADDRESS_UTILS_H
+#pragma once
 
-#include "ns3/buffer.h"
+#include "../model/buffer.h"
 #include "ipv4-address.h"
 #include "ipv6-address.h"
-#include "ns3/address.h"
+#include "../model/address.h"
 #include "mac64-address.h"
 #include "mac48-address.h"
 #include "mac16-address.h"
@@ -126,4 +125,4 @@ bool IsMulticast (const Address &ad);
 
 };
 
-#endif /* ADDRESS_UTILS_H */
+

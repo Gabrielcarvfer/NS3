@@ -20,8 +20,7 @@
  * This file is based on pcap-file.h by Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#ifndef ASCII_FILE_H
-#define ASCII_FILE_H
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -91,4 +90,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ASCII_FILE_H */
+

@@ -19,10 +19,9 @@
  * 
  */
 
-#ifndef OH_BUILDINGS_PROPAGATION_LOSS_MODEL_H_
-#define OH_BUILDINGS_PROPAGATION_LOSS_MODEL_H_
+#pragma once
 
-#include <ns3/buildings-propagation-loss-model.h>
+#include "buildings-propagation-loss-model.h"
 
 namespace ns3 {
 
@@ -59,4 +58,4 @@ private:
 
 }
 
-#endif /* OH_BUILDINGS_PROPAGATION_LOSS_MODEL_H_ */
+

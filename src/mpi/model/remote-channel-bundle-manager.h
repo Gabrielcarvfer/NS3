@@ -19,11 +19,10 @@
  *
  */
 
-#ifndef NS3_REMOTE_CHANNEL_BUNDLE_MANAGER
-#define NS3_REMOTE_CHANNEL_BUNDLE_MANAGER
+#pragma once
 
-#include <ns3/nstime.h>
-#include <ns3/ptr.h>
+#include "../../core/model/nstime.h"
+#include "../../core/model/ptr.h"
 #include <map>
 
 namespace ns3 {
@@ -104,4 +103,3 @@ private:
 
 } // namespace ns3
 
-#endif

@@ -30,13 +30,13 @@
  */
 
 #include "dsr-network-queue.h"
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 #include <map>
 #include <algorithm>
 #include <functional>
-#include "ns3/log.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/socket.h"
+#include "../../core/model/log.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../network/model/socket.h"
 
 namespace ns3 {
 

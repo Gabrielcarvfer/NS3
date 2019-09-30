@@ -26,8 +26,8 @@
  *          Pavel Boyko <boyko@iitp.ru>
  */
 #include "aodv-packet.h"
-#include "ns3/address-utils.h"
-#include "ns3/packet.h"
+#include "../../network/utils/address-utils.h"
+#include "../../network/model/packet.h"
 
 namespace ns3 {
 namespace aodv {

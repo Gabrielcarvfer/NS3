@@ -23,11 +23,11 @@
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/config-store.h"
-#include <ns3/string.h>
+#include "../../config-store/model/config-store.h"
+#include "../../core/model/string.h"
 #include <fstream>
-#include <ns3/buildings-helper.h>
-//#include "ns3/gtk-config-store.h"
+#include "../../buildings/helper/buildings-helper.h"
+//#include "../../config-store/model/gtk-config-store.h"
 
 using namespace ns3;
 

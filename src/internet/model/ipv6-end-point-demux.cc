@@ -20,7 +20,7 @@
 
 #include "ipv6-end-point-demux.h"
 #include "ipv6-end-point.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

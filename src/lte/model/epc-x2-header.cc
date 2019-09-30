@@ -18,8 +18,8 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/log.h"
-#include "ns3/epc-x2-header.h"
+#include "../../core/model/log.h"
+#include "epc-x2-header.h"
 
 
 namespace ns3 {

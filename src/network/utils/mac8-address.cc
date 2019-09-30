@@ -19,7 +19,7 @@
  */
 
 #include "mac8-address.h"
-#include "ns3/address.h"
+#include "../model/address.h"
 
 namespace ns3 {
 

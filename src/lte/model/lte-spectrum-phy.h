@@ -20,27 +20,26 @@
  * Modified by: Marco Miozzo <mmiozzo@cttc.es> (introduce physical error model)
  */
 
-#ifndef LTE_SPECTRUM_PHY_H
-#define LTE_SPECTRUM_PHY_H
+#pragma once
 
-#include <ns3/event-id.h>
-#include <ns3/spectrum-value.h>
-#include <ns3/mobility-model.h>
-#include <ns3/packet.h>
-#include <ns3/nstime.h>
-#include <ns3/net-device.h>
-#include <ns3/spectrum-phy.h>
-#include <ns3/spectrum-channel.h>
-#include <ns3/spectrum-interference.h>
-#include <ns3/data-rate.h>
-#include <ns3/generic-phy.h>
-#include <ns3/packet-burst.h>
-#include <ns3/lte-interference.h>
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/event-id.h"
+#include "../../spectrum/model/spectrum-value.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../network/model/net-device.h"
+#include "../../spectrum/model/spectrum-phy.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../spectrum/model/spectrum-interference.h"
+#include "../../network/utils/data-rate.h"
+#include "../../network/utils/generic-phy.h"
+#include "../../network/utils/packet-burst.h"
+#include "lte-interference.h"
+#include "../../core/model/random-variable-stream.h"
 #include <map>
-#include <ns3/ff-mac-common.h>
-#include <ns3/lte-harq-phy.h>
-#include <ns3/lte-common.h>
+#include "ff-mac-common.h"
+#include "lte-harq-phy.h"
+#include "lte-common.h"
 
 namespace ns3 {
 
@@ -559,4 +558,4 @@ private:
 
 }
 
-#endif /* LTE_SPECTRUM_PHY_H */
+

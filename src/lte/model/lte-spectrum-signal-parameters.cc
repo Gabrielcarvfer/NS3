@@ -19,11 +19,11 @@
  * Modified by Marco Miozzo <mmiozzo@cttc.es> (add data and ctrl diversity)
  */
 
-#include <ns3/log.h>
-#include <ns3/packet-burst.h>
-#include <ns3/ptr.h>
-#include <ns3/lte-spectrum-signal-parameters.h>
-#include <ns3/lte-control-messages.h>
+#include "../../core/model/log.h"
+#include "../../network/utils/packet-burst.h"
+#include "../../core/model/ptr.h"
+#include "lte-spectrum-signal-parameters.h"
+#include "lte-control-messages.h"
 
 
 namespace ns3 {

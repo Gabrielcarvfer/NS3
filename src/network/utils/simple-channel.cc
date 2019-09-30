@@ -20,10 +20,10 @@
 #include <algorithm>
 #include "simple-channel.h"
 #include "simple-net-device.h"
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "../../core/model/simulator.h"
+#include "../model/packet.h"
+#include "../model/node.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

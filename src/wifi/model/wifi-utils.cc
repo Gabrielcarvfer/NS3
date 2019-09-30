@@ -18,7 +18,7 @@
  * Author: Sébastien Deronne <sebastien.deronne@gmail.com>
  */
 
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include "wifi-utils.h"
 #include "ctrl-headers.h"
 #include "wifi-mac-header.h"

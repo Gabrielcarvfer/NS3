@@ -18,12 +18,11 @@
  * Authors: Josh Pelkey <jpelkey@gatech.edu>
  */
 
-#ifndef NIX_VECTOR_H
-#define NIX_VECTOR_H
+#pragma once
 
-#include "ns3/ptr.h"
-#include "ns3/simple-ref-count.h"
-#include "ns3/buffer.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/simple-ref-count.h"
+#include "buffer.h"
 
 namespace ns3 {
 
@@ -207,4 +206,4 @@ private:
 };
 } // namespace ns3
 
-#endif /* NIX_VECTOR_H */
+

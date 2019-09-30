@@ -22,14 +22,14 @@
 #include <iomanip>
 #include <ctime>
 
-#include "ns3/integer.h"
-#include "ns3/double.h"
-#include "ns3/object.h"
-#include "ns3/traced-value.h"
-#include "ns3/type-id.h"
-#include "ns3/test.h"
-#include "ns3/log.h"
-#include "ns3/unused.h"
+#include "../model/integer.h"
+#include "../model/double.h"
+#include "../model/object.h"
+#include "../model/traced-value.h"
+#include "../model/type-id.h"
+#include "../model/test.h"
+#include "../model/log.h"
+#include "../model/unused.h"
 
 using namespace std;
 

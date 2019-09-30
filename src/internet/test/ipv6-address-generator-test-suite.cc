@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/test.h"
-#include "ns3/ipv6-address-generator.h"
-#include "ns3/simulation-singleton.h"
+#include "../../core/model/test.h"
+#include "../model/ipv6-address-generator.h"
+#include "../../core/model/simulation-singleton.h"
 
 using namespace ns3;
 

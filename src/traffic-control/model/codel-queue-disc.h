@@ -25,15 +25,14 @@
  * Ported to ns-3 by: Andrew McGregor <andrewmcgr@gmail.com>
  */
 
-#ifndef CODEL_H
-#define CODEL_H
+#pragma once
 
-#include "ns3/queue-disc.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
-#include "ns3/string.h"
-#include "ns3/traced-value.h"
-#include "ns3/trace-source-accessor.h"
+#include "queue-disc.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/string.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/trace-source-accessor.h"
 
 class CoDelQueueDiscNewtonStepTest;  // Forward declaration for unit test
 class CoDelQueueDiscControlLawTest;  // Forward declaration for unit test
@@ -210,4 +209,4 @@ private:
 
 } // namespace ns3
 
-#endif /* CODEL_H */
+

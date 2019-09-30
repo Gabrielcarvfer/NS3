@@ -18,13 +18,12 @@
  *  Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#ifndef SS_SERVICE_FLOW_MANAGER_H
-#define SS_SERVICE_FLOW_MANAGER_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/event-id.h"
+#include "../../core/model/event-id.h"
 #include "mac-messages.h"
-#include "ns3/buffer.h"
+#include "../../network/model/buffer.h"
 #include "service-flow-manager.h"
 #include "ss-net-device.h"
 
@@ -151,4 +150,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SS_SERVICE_FLOW_MANAGER_H */
+

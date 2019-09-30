@@ -18,7 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "lte-test-ue-phy.h"
 
 namespace ns3 {

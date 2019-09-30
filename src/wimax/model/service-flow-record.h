@@ -18,14 +18,13 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#ifndef SERVICE_FLOW_RECORD_H
-#define SERVICE_FLOW_RECORD_H
+#pragma once
 
 #include <stdint.h>
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include "bs-uplink-scheduler.h"
 #include "bs-net-device.h"
-#include "ns3/ptr.h"
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -251,4 +250,4 @@ private:
 
 } // namespace ns3
 
-#endif /* SERVICE_FLOW_RECORD_H */
+

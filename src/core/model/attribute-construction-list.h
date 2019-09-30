@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@gmail.com>
  */
-#ifndef ATTRIBUTE_CONSTRUCTION_LIST_H
-#define ATTRIBUTE_CONSTRUCTION_LIST_H
+#pragma once
 
 #include "attribute.h"
 #include <list>
@@ -87,4 +86,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ATTRIBUTE_CONSTRUCTION_LIST_H */
+

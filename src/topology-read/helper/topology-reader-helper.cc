@@ -19,12 +19,12 @@
  * Author: Valerio Sartini (valesar@gmail.com)
  */
 
-#include "ns3/object.h"
-#include "ns3/topology-reader-helper.h"
-#include "ns3/inet-topology-reader.h"
-#include "ns3/orbis-topology-reader.h"
-#include "ns3/rocketfuel-topology-reader.h"
-#include "ns3/log.h"
+#include "../../core/model/object.h"
+#include "topology-reader-helper.h"
+#include "../model/inet-topology-reader.h"
+#include "../model/orbis-topology-reader.h"
+#include "../model/rocketfuel-topology-reader.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

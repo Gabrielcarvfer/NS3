@@ -15,13 +15,12 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef CHANNEL_MANAGER_H
-#define CHANNEL_MANAGER_H
+#pragma once
 #include <map>
 #include <vector>
-#include "ns3/object.h"
-#include "ns3/wifi-mode.h"
-#include "ns3/wifi-preamble.h"
+#include "../../core/model/object.h"
+#include "../../wifi/model/wifi-mode.h"
+#include "../../wifi/model/wifi-preamble.h"
 
 namespace ns3 {
 
@@ -164,4 +163,4 @@ private:
 };
 
 }
-#endif /* CHANNEL_MANAGER_H */
+

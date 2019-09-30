@@ -22,10 +22,10 @@
  * (MANET) Packet/PbbMessage Format
  * See: http://tools.ietf.org/html/rfc5444 for details */
 
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv6-address.h"
-#include "ns3/assert.h"
-#include "ns3/log.h"
+#include "ipv4-address.h"
+#include "ipv6-address.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/log.h"
 #include "packetbb.h"
 
 static const uint8_t VERSION = 0;

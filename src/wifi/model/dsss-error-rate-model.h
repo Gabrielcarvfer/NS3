@@ -18,8 +18,7 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 
-#ifndef DSS_ERROR_RATE_MODEL_H
-#define DSS_ERROR_RATE_MODEL_H
+#pragma once
 
 #ifdef HAVE_GSL
 #include <gsl/gsl_math.h>
@@ -128,4 +127,4 @@ protected:
 
 } //namespace ns3
 
-#endif /* DSSS_ERROR_RATE_MODEL_H */
+

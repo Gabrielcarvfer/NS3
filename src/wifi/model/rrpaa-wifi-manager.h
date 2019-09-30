@@ -18,11 +18,10 @@
  * Author: Matías Richart <mrichart@fing.edu.uy>
  */
 
-#ifndef RRPAA_WIFI_MANAGER_H
-#define RRPAA_WIFI_MANAGER_H
+#pragma once
 
-#include "ns3/nstime.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/random-variable-stream.h"
 #include "wifi-remote-station-manager.h"
 
 namespace ns3 {
@@ -234,4 +233,4 @@ private:
 
 } //namespace ns3
 
-#endif /* RRPAA__WIFI_MANAGER_H */
+

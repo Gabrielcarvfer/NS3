@@ -18,10 +18,9 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef CTRL_HEADERS_H
-#define CTRL_HEADERS_H
+#pragma once
 
-#include "ns3/header.h"
+#include "../../network/model/header.h"
 #include "block-ack-type.h"
 
 namespace ns3 {
@@ -436,4 +435,4 @@ private:
 
 } //namespace ns3
 
-#endif /* CTRL_HEADERS_H */
+

@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef ENCODE_DECODE_H
-#define ENCODE_DECODE_H
+#pragma once
 
 #include <string>
 
@@ -29,5 +28,5 @@ bool StringToBuffer (std::string s, uint8_t *buffer, uint32_t *len);
 
 } // namespace ns3
 
-#endif /* ENCODE_DECODE_H */
+
 

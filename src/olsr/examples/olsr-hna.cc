@@ -60,9 +60,9 @@
 #include "ns3/config-store-module.h"
 #include "ns3/csma-module.h"
 #include "ns3/internet-module.h"
-#include "ns3/olsr-routing-protocol.h"
-#include "ns3/olsr-helper.h"
-#include "ns3/yans-wifi-helper.h"
+#include "../model/olsr-routing-protocol.h"
+#include "../helper/olsr-helper.h"
+#include "../../wifi/helper/yans-wifi-helper.h"
 
 using namespace ns3;
 

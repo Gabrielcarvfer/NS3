@@ -19,10 +19,9 @@
  *
  */
 
-#ifndef LTE_HANDOVER_MANAGEMENT_SAP_H
-#define LTE_HANDOVER_MANAGEMENT_SAP_H
+#pragma once
 
-#include <ns3/lte-rrc-sap.h>
+#include "lte-rrc-sap.h"
 
 namespace ns3 {
 
@@ -201,4 +200,4 @@ MemberLteHandoverManagementSapUser<C>::TriggerHandover (uint16_t rnti, uint16_t 
 } // end of namespace ns3
 
 
-#endif /* LTE_HANDOVER_MANAGEMENT_SAP_H */
+

@@ -18,10 +18,9 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_TEST_RLC_UM_TRANSMITTER_H
-#define LTE_TEST_RLC_UM_TRANSMITTER_H
+#pragma once
 
-#include "ns3/test.h"
+#include "../../core/model/test.h"
 
 namespace ns3 {
 
@@ -182,4 +181,4 @@ class LteRlcUmTransmitterReportBufferStatusTestCase : public LteRlcUmTransmitter
 
 };
 
-#endif /* LTE_TEST_RLC_UM_TRANSMITTER_H */
+

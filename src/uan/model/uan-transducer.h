@@ -18,13 +18,12 @@
  * Author: Leonard Tracy <lentracy@gmail.com>
  */
 
-#ifndef UAN_TRANSDUCER_H
-#define UAN_TRANSDUCER_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/packet.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
 #include "uan-tx-mode.h"
-#include "ns3/uan-prop-model.h"
+#include "uan-prop-model.h"
 
 #include <list>
 
@@ -254,4 +253,4 @@ public:
 
 } // namespace ns3
 
-#endif /* UAN_TRANSDUCER_H */
+

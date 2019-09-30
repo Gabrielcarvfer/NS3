@@ -19,13 +19,12 @@
  */
 
 
-#ifndef LTE_INTERFERENCE_H
-#define LTE_INTERFERENCE_H
+#pragma once
 
-#include <ns3/object.h>
-#include <ns3/packet.h>
-#include <ns3/nstime.h>
-#include <ns3/spectrum-value.h>
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/nstime.h"
+#include "../../spectrum/model/spectrum-value.h"
 
 #include <list>
 
@@ -181,4 +180,4 @@ private:
 
 
 
-#endif /* LTE_INTERFERENCE_H */
+

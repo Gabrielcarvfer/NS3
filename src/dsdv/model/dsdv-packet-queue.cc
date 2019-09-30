@@ -31,9 +31,9 @@
 #include "dsdv-packet-queue.h"
 #include <algorithm>
 #include <functional>
-#include "ns3/ipv4-route.h"
-#include "ns3/socket.h"
-#include "ns3/log.h"
+#include "../../internet/model/ipv4-route.h"
+#include "../../network/model/socket.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

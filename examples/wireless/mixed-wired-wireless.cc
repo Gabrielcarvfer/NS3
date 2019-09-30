@@ -58,20 +58,20 @@
 // Note that certain mobility patterns may cause packet forwarding
 // to fail (if nodes become disconnected)
 
-#include "ns3/command-line.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/ssid.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/qos-txop.h"
-#include "ns3/packet-sink-helper.h"
-#include "ns3/olsr-helper.h"
-#include "ns3/csma-helper.h"
-#include "ns3/animation-interface.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/wifi/model/ssid.h"
+#include "../../src/mobility/helper/mobility-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/wifi/model/qos-txop.h"
+#include "../../src/applications/helper/packet-sink-helper.h"
+#include "../../src/olsr/helper/olsr-helper.h"
+#include "../../src/csma/helper/csma-helper.h"
+#include "../../src/netanim/model/animation-interface.h"
 
 using namespace ns3;
 

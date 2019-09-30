@@ -23,12 +23,11 @@
  * with Nicola Baldo and Dean Armstrong
  */
 
-#ifndef SPECTRUM_WIFI_PHY_H
-#define SPECTRUM_WIFI_PHY_H
+#pragma once
 
-#include "ns3/antenna-model.h"
-#include "ns3/spectrum-channel.h"
-#include "ns3/spectrum-model.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../../spectrum/model/spectrum-channel.h"
+#include "../../spectrum/model/spectrum-model.h"
 #include "wifi-phy.h"
 
 namespace ns3 {
@@ -202,4 +201,4 @@ private:
 
 } //namespace ns3
 
-#endif /* SPECTRUM_WIFI_PHY_H */
+

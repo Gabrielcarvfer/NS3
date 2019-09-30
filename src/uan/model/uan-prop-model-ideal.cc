@@ -20,7 +20,7 @@
 
 #include "uan-prop-model-ideal.h"
 #include "uan-tx-mode.h"
-#include "ns3/mobility-model.h"
+#include "../../mobility/model/mobility-model.h"
 
 namespace ns3 {
 

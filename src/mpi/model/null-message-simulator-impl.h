@@ -19,13 +19,12 @@
  *
  */
 
-#ifndef NULLMESSAGE_SIMULATOR_IMPL_H
-#define NULLMESSAGE_SIMULATOR_IMPL_H
+#pragma once
 
-#include <ns3/simulator-impl.h>
-#include <ns3/scheduler.h>
-#include <ns3/event-impl.h>
-#include <ns3/ptr.h>
+#include "../../core/model/simulator-impl.h"
+#include "../../core/model/scheduler.h"
+#include "../../core/model/event-impl.h"
+#include "../../core/model/ptr.h"
 
 #include <list>
 #include <iostream>
@@ -212,4 +211,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NULLMESSAGE_SIMULATOR_IMPL_H */
+

@@ -18,8 +18,7 @@
 // Author: Pedro Fortuna  <pedro.fortuna@inescporto.pt> <pedro.fortuna@gmail.com>
 //
 
-#ifndef NS3_HISTOGRAM_H
-#define NS3_HISTOGRAM_H
+#pragma once
 
 #include <vector>
 #include <stdint.h>
@@ -120,4 +119,4 @@ private:
 
 } // namespace ns3
 
-#endif /* NS3_HISTOGRAM_H */
+

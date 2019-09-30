@@ -20,15 +20,14 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef WIMAX_SS_NET_DEVICE_H
-#define WIMAX_SS_NET_DEVICE_H
+#pragma once
 
-#include "ns3/event-id.h"
+#include "../../core/model/event-id.h"
 #include "wimax-net-device.h"
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 #include "wimax-mac-header.h"
-#include "ns3/uinteger.h"
-#include "ns3/ss-service-flow-manager.h"
+#include "../../core/model/uinteger.h"
+#include "ss-service-flow-manager.h"
 #include "ipcs-classifier.h"
 
 namespace ns3 {
@@ -487,4 +486,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WIMAX_SS_NET_DEVICE_H */
+

@@ -21,10 +21,10 @@
  *          Stefano Avallone <stavalli@unina.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/simulator.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/random-variable-stream.h"
 #include "qos-txop.h"
 #include "channel-access-manager.h"
 #include "mac-tx-middle.h"

@@ -17,17 +17,16 @@
 //
 //
 
-#ifndef IPV4_GLOBAL_ROUTING_H
-#define IPV4_GLOBAL_ROUTING_H
+#pragma once
 
 #include <list>
 #include <stdint.h>
-#include "ns3/ipv4-address.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4.h"
-#include "ns3/ipv4-routing-protocol.h"
-#include "ns3/random-variable-stream.h"
+#include "../../network/utils/ipv4-address.h"
+#include "ipv4-header.h"
+#include "../../core/model/ptr.h"
+#include "ipv4.h"
+#include "ipv4-routing-protocol.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 
@@ -277,4 +276,4 @@ private:
 
 } // Namespace ns3
 
-#endif /* IPV4_GLOBAL_ROUTING_H */
+

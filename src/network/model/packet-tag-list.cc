@@ -26,8 +26,8 @@
 #include "packet-tag-list.h"
 #include "tag-buffer.h"
 #include "tag.h"
-#include "ns3/fatal-error.h"
-#include "ns3/log.h"
+#include "../../core/model/fatal-error.h"
+#include "../../core/model/log.h"
 #include <cstring>
 
 namespace ns3 {

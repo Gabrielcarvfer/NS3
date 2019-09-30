@@ -19,17 +19,16 @@
  *
  */
 
-#ifndef FD_NET_DEVICE_HELPER_H
-#define FD_NET_DEVICE_HELPER_H
+#pragma once
 
 #include <string>
 
-#include "ns3/attribute.h"
-#include "ns3/fd-net-device.h"
-#include "ns3/object-factory.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
-#include "ns3/trace-helper.h"
+#include "../../core/model/attribute.h"
+#include "../model/fd-net-device.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/helper/trace-helper.h"
 
 namespace ns3 {
 
@@ -135,4 +134,4 @@ private:
 
 } // namespace ns3
 
-#endif /* FD_NET_DEVICE_HELPER_H */
+

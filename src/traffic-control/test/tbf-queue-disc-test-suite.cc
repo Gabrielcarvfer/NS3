@@ -20,19 +20,19 @@
  *          Stefano Avallone <stavallo@unina.it>
  */
 
-#include "ns3/test.h"
-#include "ns3/tbf-queue-disc.h"
-#include "ns3/packet.h"
-#include "ns3/uinteger.h"
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/node-container.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/simple-channel.h"
-#include "ns3/traffic-control-layer.h"
-#include "ns3/config.h"
+#include "../../core/model/test.h"
+#include "../model/tbf-queue-disc.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../network/helper/node-container.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/utils/simple-channel.h"
+#include "../model/traffic-control-layer.h"
+#include "../../core/model/config.h"
 
 using namespace ns3;
 

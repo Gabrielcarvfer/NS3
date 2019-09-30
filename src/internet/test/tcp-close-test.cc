@@ -19,9 +19,9 @@
 
 #include "tcp-general-test.h"
 #include "tcp-error-model.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
+#include "../../network/model/node.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
 
 namespace ns3 {
 

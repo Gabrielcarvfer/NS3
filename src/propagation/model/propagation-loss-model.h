@@ -22,11 +22,10 @@
  *                Pavel Boyko <boyko@iitp.ru> for matrix
  */
 
-#ifndef PROPAGATION_LOSS_MODEL_H
-#define PROPAGATION_LOSS_MODEL_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/random-variable-stream.h"
+#include "../../core/model/object.h"
+#include "../../core/model/random-variable-stream.h"
 #include <map>
 
 namespace ns3 {
@@ -858,4 +857,4 @@ private:
 
 } // namespace ns3
 
-#endif /* PROPAGATION_LOSS_MODEL_H */
+

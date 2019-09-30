@@ -18,10 +18,9 @@
  * Author: Joe Kopena (tjkopena@cs.drexel.edu)
  */
 
-#ifndef TIME_DATA_CALCULATORS_H
-#define TIME_DATA_CALCULATORS_H
+#pragma once
 
-#include "ns3/nstime.h"
+#include "../../core/model/nstime.h"
 
 #include "data-calculator.h"
 #include "data-output-interface.h"
@@ -77,4 +76,4 @@ protected:
 };
 
 
-#endif /* TIME_DATA_CALCULATORS_H */
+

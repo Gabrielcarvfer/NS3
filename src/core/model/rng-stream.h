@@ -17,8 +17,7 @@
 //
 // Modified for ns-3 by: Rajib Bhattacharjea<raj.b@gatech.edu>
 
-#ifndef RNGSTREAM_H
-#define RNGSTREAM_H
+#pragma once
 #include <string>
 #include <stdint.h>
 
@@ -87,6 +86,4 @@ private:
 
 } // namespace ns3
 
-#endif
- 
 

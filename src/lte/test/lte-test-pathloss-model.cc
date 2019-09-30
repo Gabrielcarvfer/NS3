@@ -18,28 +18,28 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/log.h"
-#include "ns3/spectrum-test.h"
-#include "ns3/lte-phy-tag.h"
-#include "ns3/lte-chunk-processor.h"
-#include <ns3/hybrid-buildings-propagation-loss-model.h>
-#include <ns3/node-container.h>
-#include <ns3/mobility-helper.h>
-#include <ns3/buildings-helper.h>
-#include <ns3/lte-helper.h>
-#include <ns3/single-model-spectrum-channel.h>
-#include "ns3/string.h"
-#include "ns3/double.h"
-#include <ns3/boolean.h>
-#include <ns3/building.h>
-#include <ns3/enum.h>
-#include <ns3/net-device-container.h>
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/lte-enb-net-device.h>
-#include <ns3/lte-ue-rrc.h>
-#include <ns3/lte-enb-phy.h>
-#include <ns3/lte-ue-phy.h>
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../spectrum/test/spectrum-test.h"
+#include "../model/lte-phy-tag.h"
+#include "../model/lte-chunk-processor.h"
+#include "../../buildings/model/hybrid-buildings-propagation-loss-model.h"
+#include "../../network/helper/node-container.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../../buildings/helper/buildings-helper.h"
+#include "../helper/lte-helper.h"
+#include "../../spectrum/model/single-model-spectrum-channel.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/boolean.h"
+#include "../../buildings/model/building.h"
+#include "../../core/model/enum.h"
+#include "../../network/helper/net-device-container.h"
+#include "../model/lte-ue-net-device.h"
+#include "../model/lte-enb-net-device.h"
+#include "../model/lte-ue-rrc.h"
+#include "../model/lte-enb-phy.h"
+#include "../model/lte-ue-phy.h"
 #include "lte-test-ue-phy.h"
 #include "lte-test-pathloss-model.h"
 

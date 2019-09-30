@@ -17,7 +17,7 @@
  */
 
 #include "attribute-default-iterator.h"
-#include "ns3/type-id.h"
+#include "../../core/model/type-id.h"
 #include <gtk/gtk.h>
 #include <vector>
 

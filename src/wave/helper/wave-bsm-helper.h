@@ -19,17 +19,16 @@
  *
  */
 
-#ifndef WAVE_BSM_HELPER_H
-#define WAVE_BSM_HELPER_H
+#pragma once
 
 #include <vector>
-#include "ns3/wave-bsm-stats.h"
-#include "ns3/bsm-application.h"
-#include "ns3/object-factory.h"
-#include "ns3/application-container.h"
-#include "ns3/nstime.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/mobility-model.h"
+#include "wave-bsm-stats.h"
+#include "../model/bsm-application.h"
+#include "../../core/model/object-factory.h"
+#include "../../network/helper/application-container.h"
+#include "../../core/model/nstime.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../mobility/model/mobility-model.h"
 
 namespace ns3 {
 /**
@@ -146,4 +145,4 @@ private:
 
 } // namespace ns3
 
-#endif /* WAVE_BSM_HELPER_H*/
+

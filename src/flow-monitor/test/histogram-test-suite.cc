@@ -18,8 +18,8 @@
 // Author: Pedro Fortuna  <pedro.fortuna@inescporto.pt> <pedro.fortuna@gmail.com>
 //
 
-#include "ns3/histogram.h"
-#include "ns3/test.h"
+#include "../model/histogram.h"
+#include "../../core/model/test.h"
 
 using namespace ns3;
 

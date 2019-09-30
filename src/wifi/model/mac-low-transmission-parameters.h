@@ -20,10 +20,9 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef MAC_LOW_TRANSMISSION_PARAMETERS_H
-#define MAC_LOW_TRANSMISSION_PARAMETERS_H
+#pragma once
 
-#include "ns3/uinteger.h"
+#include "../../core/model/uinteger.h"
 #include "block-ack-type.h"
 
 namespace ns3 {
@@ -153,4 +152,4 @@ std::ostream &operator << (std::ostream &os, const MacLowTransmissionParameters 
 
 } //namespace ns3
 
-#endif /* MAC_LOW_TRANSMISSION_PARAMETERS_H */
+

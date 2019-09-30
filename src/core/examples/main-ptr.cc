@@ -17,9 +17,9 @@
  *
  */
 
-#include "ns3/ptr.h"
-#include "ns3/object.h"
-#include "ns3/command-line.h"
+#include "../model/ptr.h"
+#include "../model/object.h"
+#include "../model/command-line.h"
 #include <iostream>
 
 /**

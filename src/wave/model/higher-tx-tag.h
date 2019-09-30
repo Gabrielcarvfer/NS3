@@ -19,11 +19,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  *         Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef HIGHER_LAYER_TX_VECTOR_TAG_H
-#define HIGHER_LAYER_TX_VECTOR_TAG_H
+#pragma once
 
-#include "ns3/tag.h"
-#include "ns3/wifi-tx-vector.h"
+#include "../../network/model/tag.h"
+#include "../../wifi/model/wifi-tx-vector.h"
 
 namespace ns3 {
 
@@ -83,4 +82,4 @@ private:
 
 } // namespace ns3
 
-#endif /* HIGHER_LAYER_TX_VECTOR_TAG_H*/
+

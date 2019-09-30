@@ -18,18 +18,17 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef LTE_TEST_ENTITIES_H
-#define LTE_TEST_ENTITIES_H
+#pragma once
 
-#include "ns3/simulator.h"
-#include "ns3/test.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/test.h"
 
-#include "ns3/lte-mac-sap.h"
-#include "ns3/lte-rlc-sap.h"
-#include "ns3/lte-pdcp-sap.h"
+#include "../model/lte-mac-sap.h"
+#include "../model/lte-rlc-sap.h"
+#include "../model/lte-pdcp-sap.h"
 
-#include "ns3/net-device.h"
-#include <ns3/epc-enb-s1-sap.h>
+#include "../../network/model/net-device.h"
+#include "../model/epc-enb-s1-sap.h"
 
 namespace ns3 {
 
@@ -471,4 +470,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LTE_TEST_MAC_H */
+

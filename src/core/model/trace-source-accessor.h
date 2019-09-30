@@ -17,8 +17,7 @@
  *
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef TRACE_SOURCE_ACCESSOR_H
-#define TRACE_SOURCE_ACCESSOR_H
+#pragma once
 
 #include <stdint.h>
 #include "callback.h"
@@ -203,4 +202,4 @@ Ptr<const TraceSourceAccessor> MakeTraceSourceAccessor (T a)
 } // namespace ns3
 
 
-#endif /* TRACE_SOURCE_ACCESSOR_H */
+

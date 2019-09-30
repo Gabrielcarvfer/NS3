@@ -20,12 +20,11 @@
  * Modified by:     Marco Miozzo   <mmiozzo@cttc.es>
  */
 
-#ifndef AMCMODULE_H
-#define AMCMODULE_H
+#pragma once
 
 #include <vector>
-#include <ns3/ptr.h>
-#include <ns3/object.h>
+#include "../../core/model/ptr.h"
+#include "../../core/model/object.h"
 
 namespace ns3 {
 
@@ -138,4 +137,4 @@ private:
 
 }
 
-#endif /* AMCMODULE_H */
+

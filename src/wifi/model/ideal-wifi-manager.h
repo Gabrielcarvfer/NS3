@@ -18,10 +18,9 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#ifndef IDEAL_WIFI_MANAGER_H
-#define IDEAL_WIFI_MANAGER_H
+#pragma once
 
-#include "ns3/traced-value.h"
+#include "../../core/model/traced-value.h"
 #include "wifi-remote-station-manager.h"
 
 namespace ns3 {
@@ -115,4 +114,4 @@ private:
 
 } //namespace ns3
 
-#endif /* IDEAL_WIFI_MANAGER_H */
+

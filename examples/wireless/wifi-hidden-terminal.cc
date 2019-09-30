@@ -28,22 +28,22 @@
  *  - IP flow monitor
  */
 
-#include "ns3/command-line.h"
-#include "ns3/config.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
-#include "ns3/string.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/udp-echo-helper.h"
-#include "ns3/yans-wifi-channel.h"
-#include "ns3/constant-position-mobility-model.h"
-#include "ns3/propagation-loss-model.h"
-#include "ns3/propagation-delay-model.h"
-#include "ns3/on-off-helper.h"
-#include "ns3/flow-monitor-helper.h"
-#include "ns3/ipv4-flow-classifier.h"
+#include "../../src/core/model/command-line.h"
+#include "../../src/core/model/config.h"
+#include "../../src/core/model/uinteger.h"
+#include "../../src/core/model/boolean.h"
+#include "../../src/core/model/string.h"
+#include "../../src/wifi/helper/yans-wifi-helper.h"
+#include "../../src/internet/helper/internet-stack-helper.h"
+#include "../../src/internet/helper/ipv4-address-helper.h"
+#include "../../src/applications/helper/udp-echo-helper.h"
+#include "../../src/wifi/model/yans-wifi-channel.h"
+#include "../../src/mobility/model/constant-position-mobility-model.h"
+#include "../../src/propagation/model/propagation-loss-model.h"
+#include "../../src/propagation/model/propagation-delay-model.h"
+#include "../../src/applications/helper/on-off-helper.h"
+#include "../../src/flow-monitor/helper/flow-monitor-helper.h"
+#include "../../src/flow-monitor/model/ipv4-flow-classifier.h"
 
 using namespace ns3;
 

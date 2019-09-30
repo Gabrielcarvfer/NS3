@@ -28,7 +28,7 @@
 #include "ns3/wifi-module.h"
 #include "ns3/mobility-module.h"
 #include <ns3/buildings-module.h>
-#include "ns3/building-position-allocator.h"
+#include "../../../../src/buildings/helper/building-position-allocator.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>

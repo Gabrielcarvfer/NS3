@@ -18,8 +18,8 @@
  * Author: Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include "ns3/build-profile.h"
-#include "ns3/test.h"
+#include "../model/build-profile.h"
+#include "../model/test.h"
 
 /**
  * \file

@@ -18,17 +18,17 @@
 #ifndef ADAPTATION_ALGORITHM_H
 #define ADAPTATION_ALGORITHM_H
 
-#include "ns3/application.h"
+#include "../../../../src/network/model/application.h"
 #include <iostream>
 #include <fstream>
-#include "ns3/log.h"
-#include "ns3/nstime.h"
-#include "ns3/simulator.h"
+#include "../../../../src/core/model/log.h"
+#include "../../../../src/core/model/nstime.h"
+#include "../../../../src/core/model/simulator.h"
 #include <stdint.h>
 #include "tcp-stream-interface.h"
 #include <stdexcept>
-#include <assert.h>
-#include <math.h>
+#include "../../../../src/core/model/assert.h"
+#include "../../../../src/core/model/math.h"
 #include <numeric>
 #include <algorithm>
 

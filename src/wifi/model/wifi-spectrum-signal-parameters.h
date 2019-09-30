@@ -19,10 +19,9 @@
  * Modified by Marco Miozzo <mmiozzo@cttc.es> (add data and ctrl diversity)
  */
 
-#ifndef WIFI_SPECTRUM_SIGNAL_PARAMETERS_H
-#define WIFI_SPECTRUM_SIGNAL_PARAMETERS_H
+#pragma once
 
-#include "ns3/spectrum-signal-parameters.h"
+#include "../../spectrum/model/spectrum-signal-parameters.h"
 
 namespace ns3 {
 
@@ -59,4 +58,4 @@ struct WifiSpectrumSignalParameters : public SpectrumSignalParameters
 
 }  // namespace ns3
 
-#endif /* WIFI_SPECTRUM_SIGNAL_PARAMETERS_H */
+

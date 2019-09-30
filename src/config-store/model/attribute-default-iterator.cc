@@ -18,12 +18,12 @@
  */
  
 #include "attribute-default-iterator.h"
-#include "ns3/attribute.h"
-#include "ns3/pointer.h"
-#include "ns3/callback.h"
-#include "ns3/global-value.h"
-#include "ns3/string.h"
-#include "ns3/object-ptr-container.h"
+#include "../../core/model/attribute.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/global-value.h"
+#include "../../core/model/string.h"
+#include "../../core/model/object-ptr-container.h"
 
 namespace ns3
 {

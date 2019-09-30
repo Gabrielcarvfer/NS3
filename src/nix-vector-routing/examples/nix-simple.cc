@@ -19,9 +19,9 @@
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
-#include "ns3/ipv4-static-routing-helper.h"
-#include "ns3/ipv4-list-routing-helper.h"
-#include "ns3/ipv4-nix-vector-helper.h"
+#include "../../internet/helper/ipv4-static-routing-helper.h"
+#include "../../internet/helper/ipv4-list-routing-helper.h"
+#include "../helper/ipv4-nix-vector-helper.h"
 
 /*
  *  Simple point to point links:

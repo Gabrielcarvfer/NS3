@@ -16,8 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef REALTIME_SIMULATOR_IMPL_H
-#define REALTIME_SIMULATOR_IMPL_H
+#pragma once
 
 #include "simulator-impl.h"
 #include "system-thread.h"
@@ -225,4 +224,4 @@ private:
 
 } // namespace ns3
 
-#endif /* REALTIME_SIMULATOR_IMPL_H */
+

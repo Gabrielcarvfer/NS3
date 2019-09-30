@@ -18,12 +18,11 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef IPV6_INTERFACE_ADDRESS_H
-#define IPV6_INTERFACE_ADDRESS_H 
+#pragma once
 
 #include <stdint.h>
 
-#include "ns3/ipv6-address.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3
 {
@@ -235,5 +234,5 @@ inline bool operator != (const Ipv6InterfaceAddress& a, const Ipv6InterfaceAddre
 
 } /* namespace ns3 */
 
-#endif /* IPV6_INTERFACE_ADDRESS_H */
+
 

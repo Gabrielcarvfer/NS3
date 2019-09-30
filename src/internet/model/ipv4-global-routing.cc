@@ -18,16 +18,16 @@
 
 #include <vector>
 #include <iomanip>
-#include "ns3/names.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
-#include "ns3/object.h"
-#include "ns3/packet.h"
-#include "ns3/net-device.h"
-#include "ns3/ipv4-route.h"
-#include "ns3/ipv4-routing-table-entry.h"
-#include "ns3/boolean.h"
-#include "ns3/node.h"
+#include "../../core/model/names.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/net-device.h"
+#include "ipv4-route.h"
+#include "ipv4-routing-table-entry.h"
+#include "../../core/model/boolean.h"
+#include "../../network/model/node.h"
 #include "ipv4-global-routing.h"
 #include "global-route-manager.h"
 

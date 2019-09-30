@@ -23,10 +23,10 @@
 #include "building.h"
 #include "building-list.h"
 
-#include <ns3/enum.h>
-#include <ns3/uinteger.h>
-#include <ns3/log.h>
-#include <ns3/assert.h>
+#include "../../core/model/enum.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
 #include <cmath>
 
 namespace ns3 {

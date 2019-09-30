@@ -18,10 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "tcp-stream-helper.h"
-#include "ns3/tcp-stream-server.h"
-#include "ns3/tcp-stream-client.h"
-#include "ns3/uinteger.h"
-#include "ns3/names.h"
+#include "../model/tcp-stream-server.h"
+#include "../model/tcp-stream-client.h"
+#include "../../../../src/core/model/uinteger.h"
+#include "../../../../src/core/model/names.h"
 
 namespace ns3 {
 

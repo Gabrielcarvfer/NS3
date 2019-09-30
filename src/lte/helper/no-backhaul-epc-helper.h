@@ -19,10 +19,9 @@
  *         (based on the original point-to-point-epc-helper.h)
  */
 
-#ifndef NO_BACKHAUL_EPC_HELPER_H
-#define NO_BACKHAUL_EPC_HELPER_H
+#pragma once
 
-#include "ns3/epc-helper.h"
+#include "epc-helper.h"
 
 namespace ns3 {
 
@@ -244,4 +243,4 @@ private:
 
 } // namespace ns3
 
-#endif // NO_BACKHAUL_EPC_HELPER_H
+

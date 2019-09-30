@@ -16,19 +16,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/spectrum-phy.h"
-#include "ns3/test.h"
-#include "ns3/spectrum-wifi-helper.h"
-#include "ns3/wifi-spectrum-value-helper.h"
-#include "ns3/spectrum-wifi-phy.h"
-#include "ns3/nist-error-rate-model.h"
-#include "ns3/wifi-mac-header.h"
-#include "ns3/wifi-mac-trailer.h"
-#include "ns3/wifi-phy-tag.h"
-#include "ns3/wifi-spectrum-signal-parameters.h"
-#include "ns3/wifi-phy-listener.h"
-#include "ns3/log.h"
-#include "ns3/wifi-phy-header.h"
+#include "../../spectrum/model/spectrum-phy.h"
+#include "../../core/model/test.h"
+#include "../helper/spectrum-wifi-helper.h"
+#include "../../spectrum/model/wifi-spectrum-value-helper.h"
+#include "../model/spectrum-wifi-phy.h"
+#include "../model/nist-error-rate-model.h"
+#include "../model/wifi-mac-header.h"
+#include "../model/wifi-mac-trailer.h"
+#include "../model/wifi-phy-tag.h"
+#include "../model/wifi-spectrum-signal-parameters.h"
+#include "../model/wifi-phy-listener.h"
+#include "../../core/model/log.h"
+#include "../model/wifi-phy-header.h"
 
 using namespace ns3;
 

@@ -18,11 +18,11 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include "olsr-helper.h"
-#include "ns3/olsr-routing-protocol.h"
-#include "ns3/node-list.h"
-#include "ns3/names.h"
-#include "ns3/ptr.h"
-#include "ns3/ipv4-list-routing.h"
+#include "../model/olsr-routing-protocol.h"
+#include "../../network/model/node-list.h"
+#include "../../core/model/names.h"
+#include "../../core/model/ptr.h"
+#include "../../internet/model/ipv4-list-routing.h"
 
 namespace ns3 {
 

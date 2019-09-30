@@ -18,13 +18,12 @@
  * Author: Pavel Boyko <boyko@iitp.ru>
  */
 
-#ifndef MESH_WIFI_BEACON_H
-#define MESH_WIFI_BEACON_H
+#pragma once
 
-#include "ns3/object.h"
-#include "ns3/packet.h"
-#include "ns3/mgt-headers.h"
-#include "ns3/mesh-information-element-vector.h"
+#include "../../core/model/object.h"
+#include "../../network/model/packet.h"
+#include "../../wifi/model/mgt-headers.h"
+#include "mesh-information-element-vector.h"
 
 namespace ns3 {
 
@@ -91,4 +90,4 @@ private:
 
 }
 
-#endif /* MESH_WIFI_BEACON_H */
+

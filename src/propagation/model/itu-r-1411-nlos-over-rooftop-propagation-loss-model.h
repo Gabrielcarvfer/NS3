@@ -20,11 +20,10 @@
  * 
  */
 
-#ifndef ITU_R_1411_NLOS_OVER_ROOFTOP_PROPAGATION_LOSS_MODEL_H
-#define ITU_R_1411_NLOS_OVER_ROOFTOP_PROPAGATION_LOSS_MODEL_H
+#pragma once
 
-#include <ns3/propagation-loss-model.h>
-#include <ns3/propagation-environment.h>
+#include "propagation-loss-model.h"
+#include "propagation-environment.h"
 
 namespace ns3 {
 
@@ -106,5 +105,5 @@ private:
 } // namespace ns3
 
 
-#endif // ITU_R_1411_NLOS_OVER_ROOFTOP_PROPAGATION_LOSS_MODEL_H
+
 

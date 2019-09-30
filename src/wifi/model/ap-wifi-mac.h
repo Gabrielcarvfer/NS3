@@ -20,8 +20,7 @@
  *          Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#ifndef AP_WIFI_MAC_H
-#define AP_WIFI_MAC_H
+#pragma once
 
 #include "infrastructure-wifi-mac.h"
 
@@ -343,4 +342,4 @@ private:
 
 } //namespace ns3
 
-#endif /* AP_WIFI_MAC_H */
+

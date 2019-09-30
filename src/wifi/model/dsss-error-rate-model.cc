@@ -18,7 +18,7 @@
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
 
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 #include "dsss-error-rate-model.h"
 #include <cmath>
 

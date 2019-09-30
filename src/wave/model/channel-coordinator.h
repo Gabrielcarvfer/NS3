@@ -15,11 +15,10 @@
  *
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
-#ifndef CHANNEL_COORDINATOR_H
-#define CHANNEL_COORDINATOR_H
-#include "ns3/nstime.h"
-#include "ns3/object.h"
-#include "ns3/event-id.h"
+#pragma once
+#include "../../core/model/nstime.h"
+#include "../../core/model/object.h"
+#include "../../core/model/event-id.h"
 
 namespace ns3 {
 
@@ -251,4 +250,4 @@ private:
 };
 
 }
-#endif /* CHANNEL_COORDINATOR_H */
+

@@ -17,9 +17,9 @@
  */
 
 #include "output-stream-wrapper.h"
-#include "ns3/log.h"
-#include "ns3/fatal-impl.h"
-#include "ns3/abort.h"
+#include "../../core/model/log.h"
+#include "../../core/model/fatal-impl.h"
+#include "../../core/model/abort.h"
 #include <fstream>
 
 namespace ns3 {

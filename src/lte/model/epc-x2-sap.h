@@ -18,12 +18,11 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
-#ifndef EPC_X2_SAP_H
-#define EPC_X2_SAP_H
+#pragma once
 
-#include "ns3/packet.h"
-#include "ns3/eps-bearer.h"
-#include "ns3/ipv4-address.h"
+#include "../../network/model/packet.h"
+#include "eps-bearer.h"
+#include "../../network/utils/ipv4-address.h"
 
 #include <bitset>
 
@@ -741,4 +740,4 @@ EpcX2SpecificEpcX2SapUser<C>::RecvUeData (UeDataParams params)
 
 } // namespace ns3
 
-#endif // EPC_X2_SAP_H
+

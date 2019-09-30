@@ -18,11 +18,10 @@
  * Author: Kirill Andreev <andreev@iitp.ru>
  */
 
-#ifndef FLAME_HEADER_H
-#define FLAME_HEADER_H
+#pragma once
 
-#include "ns3/header.h"
-#include "ns3/mac48-address.h"
+#include "../../../network/model/header.h"
+#include "../../../network/utils/mac48-address.h"
 
 namespace ns3 {
 namespace flame {
@@ -123,4 +122,4 @@ private:
 bool operator== (const FlameHeader & a, const FlameHeader & b);
 } // namespace flame
 } // namespace ns3
-#endif /* FLAME_HEADER_H */
+

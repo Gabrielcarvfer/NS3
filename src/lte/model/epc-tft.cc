@@ -22,8 +22,8 @@
 
 
 #include "epc-tft.h"
-#include "ns3/abort.h"
-#include "ns3/log.h"
+#include "../../core/model/abort.h"
+#include "../../core/model/log.h"
 
 
 namespace ns3 {

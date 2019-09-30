@@ -18,21 +18,21 @@
  * Author: Mirko Banchi <mk.banchi@gmail.com>
  */
 
-#include "ns3/test.h"
-#include "ns3/string.h"
-#include "ns3/qos-utils.h"
-#include "ns3/ctrl-headers.h"
-#include "ns3/packet.h"
-#include "ns3/wifi-net-device.h"
-#include "ns3/ap-wifi-mac.h"
-#include "ns3/wifi-mac-header.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/yans-wifi-helper.h"
-#include "ns3/packet-socket-server.h"
-#include "ns3/packet-socket-client.h"
-#include "ns3/packet-socket-helper.h"
-#include "ns3/config.h"
-#include "ns3/pointer.h"
+#include "../../core/model/test.h"
+#include "../../core/model/string.h"
+#include "../model/qos-utils.h"
+#include "../model/ctrl-headers.h"
+#include "../../network/model/packet.h"
+#include "../model/wifi-net-device.h"
+#include "../model/ap-wifi-mac.h"
+#include "../model/wifi-mac-header.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../helper/yans-wifi-helper.h"
+#include "../../network/utils/packet-socket-server.h"
+#include "../../network/utils/packet-socket-client.h"
+#include "../../network/helper/packet-socket-helper.h"
+#include "../../core/model/config.h"
+#include "../../core/model/pointer.h"
 
 using namespace ns3;
 

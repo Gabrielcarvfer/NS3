@@ -16,15 +16,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "ns3/ipv6-address-helper.h"
-#include "ns3/ipv6-address-generator.h"
-#include "ns3/ipv4-address-helper.h"
-#include "ns3/simple-net-device.h"
-#include "ns3/net-device-container.h"
-#include "ns3/node-container.h"
-#include "ns3/internet-stack-helper.h"
-#include "ns3/test.h"
-#include "ns3/log.h"
+#include "../helper/ipv6-address-helper.h"
+#include "../model/ipv6-address-generator.h"
+#include "../helper/ipv4-address-helper.h"
+#include "../../network/utils/simple-net-device.h"
+#include "../../network/helper/net-device-container.h"
+#include "../../network/helper/node-container.h"
+#include "../helper/internet-stack-helper.h"
+#include "../../core/model/test.h"
+#include "../../core/model/log.h"
 
 using namespace ns3;
 

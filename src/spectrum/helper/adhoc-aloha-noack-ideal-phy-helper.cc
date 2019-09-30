@@ -17,18 +17,18 @@
  *
  * Author: Nicola Baldo <nbaldo@cttc.es>
  */
-#include "ns3/propagation-delay-model.h"
-#include "ns3/spectrum-propagation-loss-model.h"
-#include "ns3/mobility-model.h"
-#include "ns3/log.h"
-#include "ns3/config.h"
-#include "ns3/simulator.h"
-#include "ns3/names.h"
-#include "ns3/antenna-model.h"
-#include "ns3/spectrum-channel.h"
-#include "ns3/half-duplex-ideal-phy.h"
-#include "ns3/mac48-address.h"
-#include "ns3/aloha-noack-net-device.h"
+#include "../../propagation/model/propagation-delay-model.h"
+#include "../model/spectrum-propagation-loss-model.h"
+#include "../../mobility/model/mobility-model.h"
+#include "../../core/model/log.h"
+#include "../../core/model/config.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/names.h"
+#include "../../antenna/model/antenna-model.h"
+#include "../model/spectrum-channel.h"
+#include "../model/half-duplex-ideal-phy.h"
+#include "../../network/utils/mac48-address.h"
+#include "../model/aloha-noack-net-device.h"
 #include "adhoc-aloha-noack-ideal-phy-helper.h"
 
 

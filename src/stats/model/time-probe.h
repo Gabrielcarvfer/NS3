@@ -21,16 +21,15 @@
  * Modified by: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#ifndef TIME_PROBE_H
-#define TIME_PROBE_H
+#pragma once
 
-#include "ns3/probe.h"
-#include "ns3/object.h"
-#include "ns3/callback.h"
-#include "ns3/boolean.h"
-#include "ns3/traced-value.h"
-#include "ns3/simulator.h"
-#include "ns3/nstime.h"
+#include "probe.h"
+#include "../../core/model/object.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/traced-value.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3 {
 
@@ -107,4 +106,4 @@ private:
 
 } // namespace ns3
 
-#endif // TIME_PROBE_H
+

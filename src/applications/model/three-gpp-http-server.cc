@@ -21,20 +21,20 @@
 
 #include "three-gpp-http-server.h"
 
-#include <ns3/log.h>
-#include <ns3/simulator.h>
-#include <ns3/callback.h>
-#include <ns3/config.h>
-#include <ns3/pointer.h>
-#include <ns3/uinteger.h>
-#include <ns3/three-gpp-http-variables.h>
-#include <ns3/packet.h>
-#include <ns3/socket.h>
-#include <ns3/tcp-socket.h>
-#include <ns3/tcp-socket-factory.h>
-#include <ns3/inet-socket-address.h>
-#include <ns3/inet6-socket-address.h>
-#include <ns3/unused.h>
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/config.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/uinteger.h"
+#include "three-gpp-http-variables.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/socket.h"
+#include "../../internet/model/tcp-socket.h"
+#include "../../internet/model/tcp-socket-factory.h"
+#include "../../network/utils/inet-socket-address.h"
+#include "../../network/utils/inet6-socket-address.h"
+#include "../../core/model/unused.h"
 #include <algorithm>
 
 

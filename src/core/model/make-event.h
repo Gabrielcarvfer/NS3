@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef MAKE_EVENT_H
-#define MAKE_EVENT_H
+#pragma once
 
 /**
  * \file
@@ -804,4 +803,4 @@ private:
 
 } // namespace ns3
 
-#endif /* MAKE_EVENT_H */
+

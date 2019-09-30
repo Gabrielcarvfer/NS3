@@ -18,10 +18,10 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/assert.h"
-#include "ns3/address-utils.h"
+#include "../../core/model/assert.h"
+#include "../../network/utils/address-utils.h"
 #include "arp-header.h"
-#include "ns3/log.h"
+#include "../../core/model/log.h"
 
 namespace ns3 {
 

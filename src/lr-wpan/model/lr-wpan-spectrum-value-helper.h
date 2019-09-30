@@ -17,10 +17,9 @@
  *
  * Author: Gary Pei <guangyu.pei@boeing.com>
  */
-#ifndef LR_WPAN_SPECTRUM_VALUE_HELPER_H
-#define LR_WPAN_SPECTRUM_VALUE_HELPER_H
+#pragma once
 
-#include <ns3/ptr.h>
+#include "../../core/model/ptr.h"
 
 namespace ns3 {
 
@@ -71,4 +70,4 @@ private:
 
 } //namespace ns3
 
-#endif /*  LR_WPAN_SPECTRUM_VALUE_HELPER_H */
+

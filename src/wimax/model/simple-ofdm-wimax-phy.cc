@@ -19,19 +19,19 @@
  *                              <amine.ismail@udcast.com>
  */
 
-#include "ns3/simulator.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/uinteger.h"
-#include "ns3/double.h"
-#include "ns3/string.h"
+#include "../../core/model/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/uinteger.h"
+#include "../../core/model/double.h"
+#include "../../core/model/string.h"
 #include "wimax-net-device.h"
 #include "simple-ofdm-wimax-phy.h"
 #include "wimax-channel.h"
-#include "ns3/packet-burst.h"
+#include "../../network/utils/packet-burst.h"
 #include "wimax-mac-header.h"
 #include "simple-ofdm-wimax-channel.h"
-#include "ns3/trace-source-accessor.h"
+#include "../../core/model/trace-source-accessor.h"
 #include <string>
 #include <cmath>
 

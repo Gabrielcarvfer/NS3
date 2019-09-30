@@ -22,8 +22,8 @@
  */
 
 #include "no-op-component-carrier-manager.h"
-#include <ns3/log.h>
-#include <ns3/random-variable-stream.h>
+#include "../../core/model/log.h"
+#include "../../core/model/random-variable-stream.h"
 
 namespace ns3 {
 

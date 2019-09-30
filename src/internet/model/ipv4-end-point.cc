@@ -19,9 +19,9 @@
  */
 
 #include "ipv4-end-point.h"
-#include "ns3/packet.h"
-#include "ns3/log.h"
-#include "ns3/simulator.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/log.h"
+#include "../../core/model/simulator.h"
 
 namespace ns3 {
 

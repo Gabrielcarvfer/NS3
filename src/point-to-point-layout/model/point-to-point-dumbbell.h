@@ -18,17 +18,16 @@
 
 // Define an object to create a dumbbell topology.
 
-#ifndef POINT_TO_POINT_DUMBBELL_HELPER_H
-#define POINT_TO_POINT_DUMBBELL_HELPER_H
+#pragma once
 
 #include <string>
 
-#include "point-to-point-helper.h"
-#include "ipv4-address-helper.h"
-#include "ipv6-address-helper.h"
-#include "internet-stack-helper.h"
-#include "ipv4-interface-container.h"
-#include "ipv6-interface-container.h"
+#include "../../point-to-point/helper/point-to-point-helper.h"
+#include "../../internet/helper/ipv4-address-helper.h"
+#include "../../internet/helper/ipv6-address-helper.h"
+#include "../../internet/helper/internet-stack-helper.h"
+#include "../../internet/helper/ipv4-interface-container.h"
+#include "../../internet/helper/ipv6-interface-container.h"
 
 namespace ns3 {
 
@@ -189,4 +188,4 @@ private:
 
 } // namespace ns3
 
-#endif /* POINT_TO_POINT_DUMBBELL_HELPER_H */
+

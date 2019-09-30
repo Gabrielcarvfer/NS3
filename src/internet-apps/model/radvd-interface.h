@@ -18,13 +18,12 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#ifndef RADVD_INTERFACE_H
-#define RADVD_INTERFACE_H
+#pragma once
 
 #include "radvd-prefix.h"
 #include <list>
-#include "ns3/simple-ref-count.h"
-#include "ns3/nstime.h"
+#include "../../core/model/simple-ref-count.h"
+#include "../../core/model/nstime.h"
 
 namespace ns3
 {
@@ -451,5 +450,5 @@ private:
 
 } /* namespace ns3 */
 
-#endif /* RADVD_INTERFACE_H */
+
 

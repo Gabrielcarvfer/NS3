@@ -16,16 +16,16 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 
-#include "ns3/log.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/config.h"
-#include "ns3/names.h"
-#include "ns3/abort.h"
-#include "ns3/wave-net-device.h"
-#include "ns3/minstrel-wifi-manager.h"
-#include "ns3/radiotap-header.h"
-#include "ns3/unused.h"
+#include "../../core/model/log.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
+#include "../../core/model/config.h"
+#include "../../core/model/names.h"
+#include "../../core/model/abort.h"
+#include "../model/wave-net-device.h"
+#include "../../wifi/model/minstrel-wifi-manager.h"
+#include "../../network/utils/radiotap-header.h"
+#include "../../core/model/unused.h"
 #include "wave-mac-helper.h"
 #include "wave-helper.h"
 

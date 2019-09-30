@@ -18,16 +18,15 @@
  * Author: Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#ifndef IPV6_PMTU_CACHE_H
-#define IPV6_PMTU_CACHE_H
+#pragma once
 
 #include <map>
 
-#include "ns3/object.h"
-#include "ns3/nstime.h"
-#include "ns3/type-id.h"
-#include "ns3/event-id.h"
-#include "ns3/ipv6-address.h"
+#include "../../core/model/object.h"
+#include "../../core/model/nstime.h"
+#include "../../core/model/type-id.h"
+#include "../../core/model/event-id.h"
+#include "../../network/utils/ipv6-address.h"
 
 namespace ns3 {
 
@@ -127,4 +126,4 @@ private:
 
 }
 
-#endif /* IPV6_PMTU_CACHE_H */
+

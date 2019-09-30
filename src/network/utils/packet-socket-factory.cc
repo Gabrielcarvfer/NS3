@@ -18,8 +18,8 @@
  * Author: Emmanuelle Laprise <emmanuelle.laprise@bluekazoo.ca>
  */
 #include "packet-socket-factory.h"
-#include "ns3/node.h"
-#include "ns3/log.h"
+#include "../model/node.h"
+#include "../../core/model/log.h"
 #include "packet-socket.h"
 
 namespace ns3 {

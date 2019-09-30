@@ -19,23 +19,23 @@
  *
  */
 
-#include <ns3/simulator.h>
-#include <ns3/log.h>
-#include <ns3/callback.h>
-#include <ns3/config.h>
-#include <ns3/string.h>
-#include <ns3/double.h>
-#include <ns3/enum.h>
-#include <ns3/boolean.h>
-#include <ns3/pointer.h>
-#include "ns3/ff-mac-scheduler.h"
-#include "ns3/mobility-helper.h"
-#include "ns3/lte-helper.h"
+#include "../../core/model/simulator.h"
+#include "../../core/model/log.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/config.h"
+#include "../../core/model/string.h"
+#include "../../core/model/double.h"
+#include "../../core/model/enum.h"
+#include "../../core/model/boolean.h"
+#include "../../core/model/pointer.h"
+#include "../model/ff-mac-scheduler.h"
+#include "../../mobility/helper/mobility-helper.h"
+#include "../helper/lte-helper.h"
 
 #include "lte-ffr-simple.h"
-#include "ns3/lte-rrc-sap.h"
-#include <ns3/lte-ue-net-device.h>
-#include <ns3/lte-ue-mac.h>
+#include "../model/lte-rrc-sap.h"
+#include "../model/lte-ue-net-device.h"
+#include "../model/lte-ue-mac.h"
 
 #include "lte-test-cqi-generation.h"
 

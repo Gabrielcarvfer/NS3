@@ -16,22 +16,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef TAP_BRIDGE_H
-#define TAP_BRIDGE_H
+#pragma once
 
 #include <cstring>
-#include "ns3/address.h"
-#include "ns3/net-device.h"
-#include "ns3/node.h"
-#include "ns3/callback.h"
-#include "ns3/packet.h"
-#include "ns3/traced-callback.h"
-#include "ns3/event-id.h"
-#include "ns3/nstime.h"
-#include "ns3/data-rate.h"
-#include "ns3/ptr.h"
-#include "ns3/mac48-address.h"
-#include "ns3/unix-fd-reader.h"
+#include "../../network/model/address.h"
+#include "../../network/model/net-device.h"
+#include "../../network/model/node.h"
+#include "../../core/model/callback.h"
+#include "../../network/model/packet.h"
+#include "../../core/model/traced-callback.h"
+#include "../../core/model/event-id.h"
+#include "../../core/model/nstime.h"
+#include "../../network/utils/data-rate.h"
+#include "../../core/model/ptr.h"
+#include "../../network/utils/mac48-address.h"
+#include "../../core/model/unix-fd-reader.h"
 
 namespace ns3 {
 
@@ -458,4 +457,4 @@ private:
 
 } // namespace ns3
 
-#endif /* TAP_BRIDGE_H */
+

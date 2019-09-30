@@ -21,16 +21,16 @@
  *         Tommaso Pecorella <tommaso.pecorella@unifi.it>
  */
 
-#include "ns3/log.h"
-#include "ns3/assert.h"
-#include "ns3/packet.h"
-#include "ns3/node.h"
-#include "ns3/boolean.h"
-#include "ns3/ipv6-routing-protocol.h"
-#include "ns3/ipv6-route.h"
-#include "ns3/pointer.h"
-#include "ns3/string.h"
-#include "ns3/integer.h"
+#include "../../core/model/log.h"
+#include "../../core/model/assert.h"
+#include "../../network/model/packet.h"
+#include "../../network/model/node.h"
+#include "../../core/model/boolean.h"
+#include "ipv6-routing-protocol.h"
+#include "ipv6-route.h"
+#include "../../core/model/pointer.h"
+#include "../../core/model/string.h"
+#include "../../core/model/integer.h"
 
 #include "ipv6-raw-socket-factory-impl.h"
 #include "ipv6-l3-protocol.h"

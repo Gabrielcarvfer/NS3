@@ -17,8 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#ifndef PACKET_H
-#define PACKET_H
+#pragma once
 
 #include <stdint.h>
 #include "buffer.h"
@@ -29,11 +28,11 @@
 #include "byte-tag-list.h"
 #include "packet-tag-list.h"
 #include "nix-vector.h"
-#include "ns3/mac48-address.h"
-#include "ns3/callback.h"
-#include "ns3/assert.h"
-#include "ns3/ptr.h"
-#include "ns3/deprecated.h"
+#include "../utils/mac48-address.h"
+#include "../../core/model/callback.h"
+#include "../../core/model/assert.h"
+#include "../../core/model/ptr.h"
+#include "../../core/model/deprecated.h"
 
 namespace ns3 {
 
@@ -856,4 +855,4 @@ Packet::GetSize (void) const
 
 } // namespace ns3
 
-#endif /* PACKET_H */
+

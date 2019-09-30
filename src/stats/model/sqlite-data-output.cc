@@ -22,8 +22,8 @@
 
 #include <sqlite3.h>
 
-#include "ns3/log.h"
-#include "ns3/nstime.h"
+#include "../../core/model/log.h"
+#include "../../core/model/nstime.h"
 
 #include "data-collector.h"
 #include "data-calculator.h"
