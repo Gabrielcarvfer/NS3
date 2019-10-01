@@ -12,3 +12,4 @@ add_subdirectory(netanim)    # http://code.nsnam.org/netanim/rev/2ce82d2b8afd 3.
 add_subdirectory(pybindgen)  # pybindgen-0.17.0.post58+ngcf00cc0
 add_subdirectory(csv-parser) # https://github.com/AriaFallah/csv-parser/commit/41e9cd9b3d50929152c7390de5deb614b885f752
 add_subdirectory(picojson)   # https://github.com/kazuho/picojson/commit/8ba7113451b745b6e4bd83db12f73eefbb315d2e
+add_subdirectory(json-loader)
