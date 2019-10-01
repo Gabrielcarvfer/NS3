@@ -288,6 +288,7 @@ LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, ui
       NS_ASSERT_MSG (sinrIndex < MI_map_64qam.size(), "MI map out of data");
       MI = MI_map_64qam[sinrIndex];
     }
+
     NS_LOG_LOGIC (" RB " << map.at (i) << "Minimum SNR = " << 10 * std::log10 (sinrLin) << " dB, " << sinrLin << " V, MCS = " << (uint16_t)mcs << ", MI = " << MI);
     MIsum += MI;
   }

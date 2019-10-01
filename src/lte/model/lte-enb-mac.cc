@@ -1843,37 +1843,37 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     for (int i = 0; i < padding_length; i++)
                         encodedData.push_back(0.0);
 
-                    std::stringstream ss;
-                    for (auto num : encodedData)
-                        ss << num << " ";
-                    ss << pu_pres << "\n";
+                    //std::stringstream ss;
+                    //for (auto num : encodedData)
+                    //    ss << num << " ";
+                    //ss << pu_pres << "\n";
                     //std::cout << ss.str();
 
                     //Remove older entry and insert the newer one
-                    nn_encodedDataSlice.erase(nn_encodedDataSlice.begin());
-                    nn_encodedDataSlice.push_back(encodedData);
+                    //nn_encodedDataSlice.clear();
+                    //nn_encodedDataSlice.erase(nn_encodedDataSlice.begin());
+                    //nn_encodedDataSlice.push_back(encodedData);
                     //std::stringstream ss;
-                    std::vector<float> encodedTensor;
-                    for (auto slice: nn_encodedDataSlice)
-                    {
-                        encodedTensor.insert(std::end(encodedTensor), std::begin(slice), std::end(slice));
-
-                        //for (auto num : slice)
-                        //    ss << num << " ";
-                        //ss << "\n";
-                    }
+                    //std::vector<float> encodedTensor;
+                    //for (auto slice: nn_encodedDataSlice)
+                    //{
+                    //    encodedTensor.insert(std::end(encodedTensor), std::begin(slice), std::end(slice));
+                    //
+                    //    //for (auto num : slice)
+                    //    //    ss << num << " ";
+                    //    //ss << "\n";
+                    //}
                     //std::cout << ss.str() << std::endl;
 
                     //Rebuild entry tensor
                     torch::Tensor k;
-                    k = torch::from_blob(encodedTensor.data(),{nn_num_slices, 1, nn_width});
+                    k = torch::from_blob(encodedData.data(),{1, 1, nn_width});
                     k = k.toType(torch::kFloat);
                     //std::cout << "sizes " << k.sizes() << std::endl;
 
                     //Assemble nn input in an IValue
                     std::vector<torch::jit::IValue> inputs;
                     inputs.push_back(k);
-                    inputs.push_back((int)1);
 
                     //Feed the nn
                     torch::Tensor output = nn_module.forward(inputs).toTensor();
@@ -1881,19 +1881,27 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Decode the nn output
                     //std::cout << "sizes " << output.sizes() << std::endl;
                     //std::cout << "values " << output[9].sizes() << std::endl;
-                    //std::cout << "argmax " << output[9].argmax().item<int>() << "val " << output[9].max().item<float>() << std::endl;
-                    std::cout << output[9] << std::endl;
+                    //std::cout << "argmax " << output[0][9].argmax().item<int>() << std::endl;// << "val " << output[9].max().item<float>() << std::endl;
+                    //std::cout << output.sizes() << std::endl;
                     std::vector<bool> vec;
+                    float notdetected, detected;
                     for (int i = 0; i<8-1; i+=2)
-                        vec.push_back( output[9][i].item<float>() < output[9][i+1].item<float>() );
+                    {
+                        notdetected = output[0][0][i].item<float>();
+                        detected = output[0][0][i + 1].item<float>();
+                        if (isnan(notdetected) || isnan(detected))
+                            vec.push_back(false);
+                        else
+                            vec.push_back( notdetected < detected );
+                    }
 
                     //uint16_t nn_output = output[9].argmax().item<int>() % 16;
                     int i = 0;
                     for(auto & channelReg : fusedResults)
                     {
                         fusedResults[i][0] = vec[i];//nn_output % 2;
-                        if (fusedResults[i][0])
-                            std::cout << "bing bing bing" << std::endl;
+                        //if (fusedResults[i][0])
+                        //    std::cout << "bing bing bing" << std::endl;
                         //nn_output /= 2;
                         i++;
                     }
@@ -1904,7 +1912,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             case MRG_KALMAN:
                 {
                     //Prepare A30 cqi list
-                    std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
                     for (auto & cqiEntry : tempCqi)
                     {
                         if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
@@ -1922,7 +1929,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     }
 
                     //Prepare P10 cqi list
-                    //std::map<uint16_t, unsigned char> ue_to_cqi_map;
                     //for (auto & cqiEntry : tempCqi)
                     //{
                     //    if(cqiEntry.m_cqiType == ns3::CqiListElement_s::A30)

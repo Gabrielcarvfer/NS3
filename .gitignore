@@ -62,3 +62,5 @@ cmake-build-release/
 3rd-party/libtorch/
 
 3rd-party/libtorch\.zip
+
+utils/failed_tests.json

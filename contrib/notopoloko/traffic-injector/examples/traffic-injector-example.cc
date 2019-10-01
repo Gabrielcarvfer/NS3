@@ -7,7 +7,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/config-store.h"
-
+#include "ns3/contrib-notopoloko-module.h"
 #include <fstream>
 
 //NS_LOG_COMPONENT_DEFINE ("POC_LOADER");
@@ -155,8 +155,7 @@ main (int argc, char *argv[])
   // clientApps.Add (ulClient.Install (ueNodes.Get(0)));
 
   LoaderTrafficHelper loader = LoaderTrafficHelper();
-  clientIOTApps = loader.LoadJsonTraffic(ueNodes, remoteHostAddr, ulPort, "../../scratch/voip_charge.json" );//sinkAddress
-
+  clientIOTApps = loader.LoadJsonTraffic(ueNodes, remoteHostAddr, ulPort, "voip_charge.json" );
   serverApps.Start (ns3::Seconds (0));
   clientIOTApps.Start (ns3::Seconds (1));
   // lteHelper->EnableTraces ();
