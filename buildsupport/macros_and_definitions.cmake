@@ -63,14 +63,6 @@ endif()
 
 
 
-#3rd party libraries with sources shipped in 3rd-party folder
-set(3rdPartyLibraries
-        netanim
-        brite
-        openflow
-        )
-
-
 #process all options passed in main cmakeLists
 macro(process_options)
     #process debug switch
@@ -104,6 +96,7 @@ macro(process_options)
     set(3rdPartyLibraries
             netanim
             kalman
+            json-loader
             ${build_lib_brite}
             ${build_lib_openflow}
             )
@@ -139,7 +132,7 @@ macro(process_options)
     if(${NS3_PYTORCH})
         set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
         set(CMAKE_CXX_STANDARD_REQUIRED OFF) #ABI requirements for PyTorch affect this
-        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS)
+        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS -DNS3_PYTORCH)
     else()
         set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
         set(CMAKE_CXX_STANDARD_REQUIRED ON)

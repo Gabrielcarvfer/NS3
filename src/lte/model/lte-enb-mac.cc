@@ -55,9 +55,12 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbMac);
 
 
 std::vector<int> LteEnbMac::nonDSAChannels;
-torch::jit::script::Module LteEnbMac::nn_module;
-int LteEnbMac::nn_width = 800;
-int LteEnbMac::nn_num_slices = 10;
+#ifdef NS3_PYTORCH
+    torch::jit::script::Module LteEnbMac::nn_module;
+    int LteEnbMac::nn_width = 800;
+    int LteEnbMac::nn_num_slices = 10;
+#endif
+
 
 
 // //////////////////////////////////////
@@ -413,7 +416,9 @@ m_ccmMacSapUser (0)
       for(auto & channelReg : unexpectedChannelAccessBitmap.at(0).at(0))
           channelReg = std::vector<bool>(3);
 
-      //Prepare neural network for fusion
+#ifdef NS3_PYTORCH
+
+    //Prepare neural network for fusion
       std::string fusion_model = PROJECT_SOURCE_PATH"/scratch/fusion_model.pt";
 
       LteEnbMac::nn_module = torch::jit::load(fusion_model);
@@ -421,7 +426,7 @@ m_ccmMacSapUser (0)
       //Initialize slice
       for (int i = 0; i < nn_num_slices; i++)
           nn_encodedDataSlice.push_back(std::vector<float>(nn_width));
-
+#endif
       //Prepare kalman filter for fusion
       int n = 4; // Number of states
       int m = 80; // Number of measurements
@@ -1745,6 +1750,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Checking for false positives and negatives is made in the end
                 }
                 break;
+#ifdef NS3_PYTORCH
             case MRG_NN:
                 {
 
@@ -1894,6 +1900,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Checking for false positives and negatives is made in the end
                 }
                 break;
+#endif
             case MRG_KALMAN:
                 {
                     //Prepare A30 cqi list

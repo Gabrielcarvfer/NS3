@@ -25,9 +25,10 @@
 #ifndef LTE_ENB_MAC_H
 #define LTE_ENB_MAC_H
 
-
+#if NS3_PYTORCH
 #include <torch/script.h>
 #undef CHECK
+#endif
 
 #include <map>
 #include <vector>
@@ -518,10 +519,12 @@ public://todo: implement this properly through the SAP
     static std::vector<int> nonDSAChannels;
 
     //static std::shared_ptr<torch::jit::script::Module> nn_module; //deprecated in LibTorch 1.2 https://github.com/pytorch/pytorch/releases/tag/v1.2.0
+#ifdef NS3_PYTORCH
     static torch::jit::script::Module nn_module;
     static int nn_width;
     static int nn_num_slices;
     std::vector<std::vector<float>> nn_encodedDataSlice;
+#endif
     std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
     std::map<uint16_t, uint16_t> ue_to_position_map;
 

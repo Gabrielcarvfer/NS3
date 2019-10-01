@@ -18,12 +18,14 @@ set(source_files
         model/three-gpp-http-header.cc
         model/three-gpp-http-server.cc
         model/three-gpp-http-variables.cc
+        model/json-traffic-injector-application.cc
         helper/bulk-send-helper.cc
         helper/on-off-helper.cc
         helper/packet-sink-helper.cc
         helper/udp-client-server-helper.cc
         helper/udp-echo-helper.cc
         helper/three-gpp-http-helper.cc
+        helper/loader-traffic-helper.cc
         )
 
 set(header_files
@@ -42,12 +44,14 @@ set(header_files
         model/three-gpp-http-header.h
         model/three-gpp-http-server.h
         model/three-gpp-http-variables.h
+        model/json-traffic-injector-application.h
         helper/bulk-send-helper.h
         helper/on-off-helper.h
         helper/packet-sink-helper.h
         helper/udp-client-server-helper.h
         helper/udp-echo-helper.h
         helper/three-gpp-http-helper.h
+        helper/loader-traffic-helper.h
         )
 
 #link to dependencies
@@ -55,6 +59,7 @@ set(libraries_to_link
         ${libinternet}
         ${libconfig-store}
         ${libstats}
+        json-loader
         )
 
 set(test_sources

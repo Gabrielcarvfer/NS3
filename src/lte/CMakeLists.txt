@@ -140,8 +140,6 @@ set(source_files
         model/no-op-component-carrier-manager.cc
         model/simple-ue-component-carrier-manager.cc
         helper/cc-helper.cc
-
-        model/BLER/json_loader.cc
         )
 
 set(header_files
@@ -274,9 +272,6 @@ set(header_files
         model/simple-ue-component-carrier-manager.h
         helper/cc-helper.h
         #helper/wireshark_epan_dissectors_packet-mac-lte.h
-
-        model/BLER/json_loader.h
-
         )
 
 set(libraries_to_link
@@ -292,6 +287,7 @@ set(libraries_to_link
         ${libcsma}
         "${nn_libraries}"
         kalman
+        json-loader
         )
 
 set(test_sources

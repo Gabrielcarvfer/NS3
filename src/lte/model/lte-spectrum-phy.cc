@@ -38,7 +38,7 @@
 #include <ns3/config.h>
 #include "lte-ue-net-device.h"
 #include "lte-ue-mac.h"
-#include "./BLER/json_loader.h"
+#include "../../../3rd-party/json-loader/json_loader.h"
 #include <mutex>
 #include <fstream>
 #include <bitset>
