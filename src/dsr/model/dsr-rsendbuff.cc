@@ -176,7 +176,7 @@ DsrSendBuffer::Purge ()
 }
 
 void
-DsrSendBuffer::Drop (DsrSendBuffEntry en, std::string reason)
+DsrSendBuffer::Drop (DsrSendBuffEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetDestination ());
 //  en.GetErrorCallback () (en.GetPacket (), en.GetDestination (),

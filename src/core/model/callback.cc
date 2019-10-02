@@ -57,7 +57,7 @@ CallbackValue::Copy (void) const
   NS_LOG_FUNCTION (this);
   return Create<CallbackValue> (m_value);
 }
-std::string
+stdfwd::string
 CallbackValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 {
   NS_LOG_FUNCTION (this << checker);
@@ -66,7 +66,7 @@ CallbackValue::SerializeToString (Ptr<const AttributeChecker> checker) const
   return oss.str ();
 }
 bool
-CallbackValue::DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker)
+CallbackValue::DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker)
 {
   NS_LOG_FUNCTION (this << value << checker);
   return false;
@@ -84,8 +84,8 @@ ATTRIBUTE_CHECKER_IMPLEMENT (Callback);
 
 namespace ns3 {
 
-std::string
-CallbackImplBase::Demangle (const std::string& mangled)
+stdfwd::string
+CallbackImplBase::Demangle (const stdfwd::string& mangled)
 {
   NS_LOG_FUNCTION (mangled);
 
@@ -93,7 +93,7 @@ CallbackImplBase::Demangle (const std::string& mangled)
   char* demangled = abi::__cxa_demangle (mangled.c_str (),
                                          NULL, NULL, &status);
 
-  std::string ret;
+  stdfwd::string ret;
   if (status == 0) {
       NS_ASSERT (demangled);
       ret = demangled;
@@ -125,8 +125,8 @@ CallbackImplBase::Demangle (const std::string& mangled)
 
 #else
 
-std::string
-ns3::CallbackImplBase::Demangle (const std::string& mangled)
+stdfwd::string
+ns3::CallbackImplBase::Demangle (const stdfwd::string& mangled)
 {
   NS_LOG_FUNCTION (this << mangled);
   return mangled;

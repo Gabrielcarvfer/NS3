@@ -34,7 +34,7 @@ NS_LOG_COMPONENT_DEFINE ("EpcUeNas");
 
 
 /// Map each of UE NAS states to its string representation.
-static const std::string g_ueNasStateName[EpcUeNas::NUM_STATES] =
+static const stdfwd::string g_ueNasStateName[EpcUeNas::NUM_STATES] =
 {
   "OFF",
   "ATTACHING",
@@ -47,7 +47,7 @@ static const std::string g_ueNasStateName[EpcUeNas::NUM_STATES] =
  * \param s The UE NAS state.
  * \return The string representation of the given state.
  */
-static inline const std::string & ToString (EpcUeNas::State s)
+static inline const stdfwd::string & ToString (EpcUeNas::State s)
 {
   return g_ueNasStateName[s];
 }

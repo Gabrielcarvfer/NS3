@@ -168,7 +168,7 @@ TcpHybla::Fork (void)
   return CopyObject<TcpHybla> (this);
 }
 
-std::string
+stdfwd::string
 TcpHybla::GetName () const
 {
   return "TcpHybla";

@@ -89,7 +89,7 @@ DsrHelper::Create (Ptr<Node> node) const
 }
 
 void
-DsrHelper::Set (std::string name, const AttributeValue &value)
+DsrHelper::Set (stdfwd::string name, const AttributeValue &value)
 {
   m_agentFactory.Set (name, value);
 }

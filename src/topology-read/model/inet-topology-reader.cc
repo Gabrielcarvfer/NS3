@@ -59,7 +59,7 @@ InetTopologyReader::Read (void)
 {
   std::ifstream topgen;
   topgen.open (GetFileName ().c_str ());
-  std::map<std::string, Ptr<Node> > nodeMap;
+  std::map<stdfwd::string, Ptr<Node> > nodeMap;
   NodeContainer nodes;
 
   if ( !topgen.is_open () )
@@ -68,9 +68,9 @@ InetTopologyReader::Read (void)
       return nodes;
     }
 
-  std::string from;
-  std::string to;
-  std::string linkAttr;
+  stdfwd::string from;
+  stdfwd::string to;
+  stdfwd::string linkAttr;
 
   int linksNumber = 0;
   int nodesNumber = 0;
@@ -79,7 +79,7 @@ InetTopologyReader::Read (void)
   int totlink = 0;
 
   std::istringstream lineBuffer;
-  std::string line;
+  stdfwd::string line;
 
   getline (topgen,line);
   lineBuffer.str (line);

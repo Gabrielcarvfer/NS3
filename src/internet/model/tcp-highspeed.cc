@@ -121,7 +121,7 @@ TcpHighSpeed::CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAck
     }
 }
 
-std::string
+stdfwd::string
 TcpHighSpeed::GetName () const
 {
   return "TcpHighSpeed";

@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #define TAG_BUFFER_USE_INLINE 1
 

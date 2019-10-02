@@ -22,7 +22,7 @@
 
 #include "../../network/helper/net-device-container.h"
 #include "../../core/model/object-factory.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -48,7 +48,7 @@ public:
    * \param n1 [in] The name of the attribute to set.
    * \param v1 [in] The value of the attribute to set.
    */
-  void SetDeviceAttribute (std::string n1,
+  void SetDeviceAttribute (stdfwd::string n1,
                            const AttributeValue &v1);
 
   /**

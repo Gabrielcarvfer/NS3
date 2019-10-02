@@ -35,7 +35,7 @@
 #include <list>
 #include <vector>
 #include "../../core/model/ptr.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../spectrum/model/spectrum-value.h"
 #include "lte-harq-phy.h"
 

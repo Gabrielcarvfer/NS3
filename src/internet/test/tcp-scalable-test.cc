@@ -53,7 +53,7 @@ public:
    */
   TcpScalableIncrementTest (uint32_t cWnd, uint32_t segmentSize,
                             uint32_t segmentsAcked,
-                            const std::string &name);
+                            const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -67,7 +67,7 @@ private:
 TcpScalableIncrementTest::TcpScalableIncrementTest (uint32_t cWnd,
                                                     uint32_t segmentSize,
                                                     uint32_t segmentsAcked,
-                                                    const std::string &name)
+                                                    const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -119,7 +119,7 @@ public:
    * \param name Test description.
    */
   TcpScalableDecrementTest (uint32_t cWnd, uint32_t segmentSize,
-                            const std::string &name);
+                            const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -131,7 +131,7 @@ private:
 
 TcpScalableDecrementTest::TcpScalableDecrementTest (uint32_t cWnd,
                                                     uint32_t segmentSize,
-                                                    const std::string &name)
+                                                    const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize)

@@ -21,7 +21,7 @@
 #include "calendar-scheduler.h"
 #include "event-impl.h"
 #include <utility>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 #include "assert.h"
 #include "log.h"

@@ -62,7 +62,7 @@ public:
    * \param sinr the SINR
    * \param name the reference name
    */
-  LteUplinkDataSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, std::string name);
+  LteUplinkDataSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, stdfwd::string name);
   virtual ~LteUplinkDataSinrTestCase ();
 
 private:
@@ -97,7 +97,7 @@ class LteUplinkSrsSinrTestCase : public TestCase
    * \param sinr the SINR
    * \param name the reference name
    */
-    LteUplinkSrsSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, std::string name);
+    LteUplinkSrsSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, stdfwd::string name);
     virtual ~LteUplinkSrsSinrTestCase ();
     
   /** 

@@ -529,7 +529,7 @@ PeerManagementProtocol::GetMeshId () const
   return m_meshId;
 }
 void
-PeerManagementProtocol::SetMeshId (std::string s)
+PeerManagementProtocol::SetMeshId (stdfwd::string s)
 {
   m_meshId = Create<IeMeshId> (s);
 }

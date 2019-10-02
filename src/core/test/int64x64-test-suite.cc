@@ -193,7 +193,7 @@ class Int64x64InputTestCase : public TestCase
 public:
   Int64x64InputTestCase ();
   virtual void DoRun (void);
-  void Check (const std::string & str,
+  void Check (const stdfwd::string & str,
 	      const int64_t hi, const uint64_t lo,
 	      const int64_t tolerance = 0);
 };
@@ -202,7 +202,7 @@ Int64x64InputTestCase::Int64x64InputTestCase ()
 {
 }
 void 
-Int64x64InputTestCase::Check (const std::string & str,
+Int64x64InputTestCase::Check (const stdfwd::string & str,
 			      const int64_t hi, const uint64_t lo,
 			      const int64_t tolerance /* = 0 */)
 			      
@@ -212,7 +212,7 @@ Int64x64InputTestCase::Check (const std::string & str,
   int64x64_t value;
   iss >> value;
 
-  std::string input = "\"" + str + "\"";
+  stdfwd::string input = "\"" + str + "\"";
   uint64_t vLow = value.GetLow ();
   bool pass = ( (value.GetHigh () == hi) &&
 		( Max (vLow, lo) - Min (vLow, lo) <= tolerance)
@@ -268,7 +268,7 @@ class Int64x64InputOutputTestCase : public TestCase
 public:
   Int64x64InputOutputTestCase ();
   virtual void DoRun (void);
-  void Check (const std::string & str,
+  void Check (const stdfwd::string & str,
 	      const int64_t tolerance = 0);
 };
 Int64x64InputOutputTestCase::Int64x64InputOutputTestCase ()
@@ -276,22 +276,22 @@ Int64x64InputOutputTestCase::Int64x64InputOutputTestCase ()
 {
 }
 void 
-Int64x64InputOutputTestCase::Check (const std::string & str,
+Int64x64InputOutputTestCase::Check (const stdfwd::string & str,
 				    const int64_t tolerance /* = 0 */)
 {
-  std::stringstream iss (str);
+  stdfwd::stringstream iss (str);
   int64x64_t expect;
   iss >> expect;
 
-  std::stringstream oss;
+  stdfwd::stringstream oss;
   oss << std::scientific << std::setprecision (21) << expect;
   int64x64_t value;
   oss >> value;
 
   bool pass = Abs (value - expect) <= int64x64_t (0, tolerance + 1);
 
-  std::string input  = "\"" + str + "\"";
-  std::string output = "\"" + oss.str () + "\"";
+  stdfwd::string input  = "\"" + str + "\"";
+  stdfwd::string output = "\"" + oss.str () + "\"";
 
   if (pass)
     {
@@ -497,7 +497,7 @@ public:
   Int64x64Bug455TestCase ();
   virtual void DoRun (void);
   void Check (const double result, const double expect,
-	      const std::string & msg);
+	      const stdfwd::string & msg);
 };
 
 Int64x64Bug455TestCase::Int64x64Bug455TestCase ()
@@ -506,7 +506,7 @@ Int64x64Bug455TestCase::Int64x64Bug455TestCase ()
 }
 void
 Int64x64Bug455TestCase::Check (const double result, const double expect,
-			       const std::string & msg)
+			       const stdfwd::string & msg)
 {
   bool pass = result == expect;
   
@@ -559,7 +559,7 @@ public:
   Int64x64Bug863TestCase ();
   virtual void DoRun (void);
   void Check (const double result, const double expect,
-	      const std::string & msg);
+	      const stdfwd::string & msg);
 };
 
 Int64x64Bug863TestCase::Int64x64Bug863TestCase ()
@@ -568,7 +568,7 @@ Int64x64Bug863TestCase::Int64x64Bug863TestCase ()
 }
 void
 Int64x64Bug863TestCase::Check (const double result, const double expect,
-			       const std::string & msg)
+			       const stdfwd::string & msg)
 {
   bool pass = result == expect;
   
@@ -621,7 +621,7 @@ class Int64x64Bug1786TestCase : public TestCase
 public:
   Int64x64Bug1786TestCase ();
   virtual void DoRun (void);
-  void Check (const uint64_t low, const std::string & value,
+  void Check (const uint64_t low, const stdfwd::string & value,
 	      const int64_t tolerance = 0);
 };
 
@@ -631,7 +631,7 @@ Int64x64Bug1786TestCase::Int64x64Bug1786TestCase ()
 }
 void
 Int64x64Bug1786TestCase::Check (const uint64_t low,
-				const std::string & str,
+				const stdfwd::string & str,
 				const int64_t tolerance /* = 0 */)
 {
   int64x64_t value (0, low);
@@ -756,7 +756,7 @@ public:
   virtual void DoRun (void);
 
   void Check (const bool result, const bool expect,
-	      const std::string & msg);
+	      const stdfwd::string & msg);
 };
 Int64x64CompareTestCase::Int64x64CompareTestCase ()
   : TestCase ("Basic compare operations")
@@ -764,7 +764,7 @@ Int64x64CompareTestCase::Int64x64CompareTestCase ()
 }
 void
 Int64x64CompareTestCase::Check (const bool result, const bool expect,
-				const std::string & msg)
+				const stdfwd::string & msg)
 {
   bool pass = result == expect;
   
@@ -863,7 +863,7 @@ public:
   void Check (const int64_t factor);
   void CheckCase (const uint64_t factor,
 		  const int64x64_t result, const int64x64_t expect,
-		  const std::string & msg,
+		  const stdfwd::string & msg,
 		  const double tolerance = 0);
 };
 
@@ -875,7 +875,7 @@ void
 Int64x64InvertTestCase::CheckCase (const uint64_t factor,
 				   const int64x64_t result,
 				   const int64x64_t expect,
-				   const std::string & msg,
+				   const stdfwd::string & msg,
 				   const double tolerance /* = 0 */)
 {
   bool pass = Abs (result - expect) <= tolerance;

@@ -36,13 +36,13 @@ TopologyReaderHelper::TopologyReaderHelper ()
 }
 
 void
-TopologyReaderHelper::SetFileName (const std::string fileName)
+TopologyReaderHelper::SetFileName (const stdfwd::string fileName)
 {
   m_fileName = fileName;
 }
 
 void
-TopologyReaderHelper::SetFileType (const std::string fileType)
+TopologyReaderHelper::SetFileType (const stdfwd::string fileType)
 {
   m_fileType = fileType;
 }

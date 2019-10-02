@@ -101,7 +101,7 @@ public:
    * Set the filename
    * \param filename the file name
    */
-  void SetFilename (std::string filename);
+  void SetFilename (stdfwd::string filename);
 
   /**
    * Configure the default values
@@ -115,7 +115,7 @@ public:
 private:
   enum Mode m_mode; ///< store mode
   enum FileFormat m_fileFormat; ///< store format
-  std::string m_filename; ///< store file name
+  stdfwd::string m_filename; ///< store file name
   FileConfig *m_file; ///< configuration file
 };
 

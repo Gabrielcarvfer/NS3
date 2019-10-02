@@ -21,7 +21,7 @@
 
 #include "attribute.h"
 #include "attribute-helper.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 /**
@@ -82,7 +82,7 @@ namespace ns3 {
 
 namespace internal {
 
-Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, std::string name);
+Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, stdfwd::string name);
 
 } // namespace internal
 

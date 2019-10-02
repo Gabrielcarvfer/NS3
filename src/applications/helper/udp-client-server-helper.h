@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/helper/application-container.h"
 #include "../../network/helper/node-container.h"
 #include "../../core/model/object-factory.h"
@@ -57,7 +57,7 @@ public:
    * \param name the name of the attribute to set
    * \param value the value of the attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Create one UDP server application on each of the Nodes in the
@@ -128,7 +128,7 @@ public:
    * \param name the name of the attribute to set
    * \param value the value of the attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
      * \param c the nodes
@@ -174,7 +174,7 @@ public:
    * \param port The port number of the remote UDP server
    * \param filename the file from which packet traces will be loaded
    */
-  UdpTraceClientHelper (Address ip, uint16_t port, std::string filename);
+  UdpTraceClientHelper (Address ip, uint16_t port, stdfwd::string filename);
   /**
    * Create UdpTraceClientHelper which will make life easier for people trying
    * to set up simulations with udp-client-server. Use this variant with
@@ -184,7 +184,7 @@ public:
    * \param addr The address of the remote UDP server
    * \param filename the file from which packet traces will be loaded
    */
-  UdpTraceClientHelper (Address addr, std::string filename);
+  UdpTraceClientHelper (Address addr, stdfwd::string filename);
 
   /**
     * Record an attribute to be set in each Application after it is is created.
@@ -192,7 +192,7 @@ public:
     * \param name the name of the attribute to set
     * \param value the value of the attribute to set
     */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
     * \param c the nodes

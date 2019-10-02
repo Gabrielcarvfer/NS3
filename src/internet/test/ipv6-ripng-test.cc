@@ -41,7 +41,7 @@
 #include "../helper/ripng-helper.h"
 #include "../../network/helper/node-container.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 using namespace ns3;
@@ -61,13 +61,13 @@ class Ipv6RipngTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -97,7 +97,7 @@ void Ipv6RipngTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv6RipngTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv6RipngTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -105,7 +105,7 @@ Ipv6RipngTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv6RipngTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv6RipngTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (60),
@@ -284,13 +284,13 @@ class Ipv6RipngCountToInfinityTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -320,7 +320,7 @@ void Ipv6RipngCountToInfinityTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv6RipngCountToInfinityTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv6RipngCountToInfinityTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -328,7 +328,7 @@ Ipv6RipngCountToInfinityTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv6RipngCountToInfinityTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv6RipngCountToInfinityTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (60),

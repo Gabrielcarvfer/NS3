@@ -59,7 +59,7 @@ TypeId TcpHtcp::GetTypeId (void)
   return tid;
 }
 
-std::string TcpHtcp::GetName () const
+stdfwd::string TcpHtcp::GetName () const
 {
   return "TcpHtcp";
 }

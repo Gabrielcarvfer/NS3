@@ -29,7 +29,7 @@
 #include "../helper/lte-global-pathloss-database.h"
 
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/log.h"
 
@@ -143,9 +143,9 @@ int main (int argc, char *argv[])
   Simulator::Stop (Seconds (0.5));
 
   // Insert RLC Performance Calculator
-  std::string dlOutFname = "DlRlcStats";
+  stdfwd::string dlOutFname = "DlRlcStats";
   dlOutFname.append (tag.str ());
-  std::string ulOutFname = "UlRlcStats";
+  stdfwd::string ulOutFname = "UlRlcStats";
   ulOutFname.append (tag.str ());
 
   lteHelper->EnableMacTraces ();

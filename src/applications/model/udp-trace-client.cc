@@ -145,7 +145,7 @@ UdpTraceClient::SetRemote (Address addr)
 }
 
 void
-UdpTraceClient::SetTraceFile (std::string traceFile)
+UdpTraceClient::SetTraceFile (stdfwd::string traceFile)
 {
   NS_LOG_FUNCTION (this << traceFile);
   if (traceFile == "")
@@ -181,7 +181,7 @@ UdpTraceClient::DoDispose (void)
 }
 
 void
-UdpTraceClient::LoadTrace (std::string filename)
+UdpTraceClient::LoadTrace (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   uint32_t time = 0;
@@ -324,7 +324,7 @@ UdpTraceClient::SendPacket (uint32_t size)
   seqTs.SetSeq (m_sent);
   p->AddHeader (seqTs);
 
-  std::stringstream addressString;
+  stdfwd::stringstream addressString;
   if (Ipv4Address::IsMatchingType(m_peerAddress) == true)
     {
       addressString << Ipv4Address::ConvertFrom (m_peerAddress);

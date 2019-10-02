@@ -136,7 +136,7 @@ TcpLedbat::Fork (void)
   return CopyObject<TcpLedbat> (this);
 }
 
-std::string
+stdfwd::string
 TcpLedbat::GetName () const
 {
   return "TcpLedbat";

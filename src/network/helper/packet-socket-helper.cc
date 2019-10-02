@@ -41,7 +41,7 @@ PacketSocketHelper::Install (Ptr<Node> node) const
 }
 
 void
-PacketSocketHelper::Install (std::string nodeName) const
+PacketSocketHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Install (node);

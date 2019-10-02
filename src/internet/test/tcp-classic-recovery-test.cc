@@ -50,7 +50,7 @@ public:
                        uint32_t segmentSize,
                        uint32_t ssThresh,
                        uint32_t dupAckCount,
-                       const std::string &name);
+                       const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -67,7 +67,7 @@ ClassicRecoveryTest::ClassicRecoveryTest (uint32_t cWnd,
                                           uint32_t segmentSize,
                                           uint32_t ssThresh,
                                           uint32_t dupAckCount,
-                                          const std::string &name)
+                                          const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

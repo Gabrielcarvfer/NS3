@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include <map>
 #include "../../core/model/object-factory.h"
@@ -171,22 +171,22 @@ public:
    * \param v15 the value of the attribute to set on the queue disc
    * \return the handle of the root queue disc (zero)
    */
-  uint16_t SetRootQueueDisc (std::string type,
-                             std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                             std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                             std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                             std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                             std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                             std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                             std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                             std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
-                             std::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
-                             std::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
-                             std::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
-                             std::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
-                             std::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
-                             std::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
-                             std::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
+  uint16_t SetRootQueueDisc (stdfwd::string type,
+                             stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                             stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                             stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                             stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                             stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                             stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                             stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                             stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
+                             stdfwd::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
+                             stdfwd::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
+                             stdfwd::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
+                             stdfwd::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
+                             stdfwd::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
+                             stdfwd::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
+                             stdfwd::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
 
   /**
    * Helper function used to add the given number of internal queues (of the given
@@ -212,15 +212,15 @@ public:
    * \param n08 the name of the attribute to set on the queue
    * \param v08 the value of the attribute to set on the queue
    */
-  void AddInternalQueues (uint16_t handle, uint16_t count, std::string type,
-                          std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                          std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                          std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                          std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                          std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                          std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                          std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                          std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
+  void AddInternalQueues (uint16_t handle, uint16_t count, stdfwd::string type,
+                          stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                          stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                          stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                          stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                          stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                          stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                          stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                          stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
 
   /**
    * Helper function used to add a packet filter (of the given type and with
@@ -245,15 +245,15 @@ public:
    * \param n08 the name of the attribute to set on the packet filter
    * \param v08 the value of the attribute to set on the packet filter
    */
-  void AddPacketFilter (uint16_t handle, std::string type,
-                        std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                        std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                        std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                        std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                        std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                        std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                        std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                        std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
+  void AddPacketFilter (uint16_t handle, stdfwd::string type,
+                        stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                        stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                        stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                        stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                        stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                        stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                        stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                        stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
 
   /**
    * Container type for Class IDs
@@ -285,15 +285,15 @@ public:
    * \param v08 the value of the attribute to set on the queue disc class
    * \return the list of class IDs
    */
-  ClassIdList AddQueueDiscClasses (uint16_t handle, uint16_t count, std::string type,
-                                   std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                                   std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                                   std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                                   std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                                   std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                                   std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                                   std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                                   std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
+  ClassIdList AddQueueDiscClasses (uint16_t handle, uint16_t count, stdfwd::string type,
+                                   stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                                   stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                                   stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                                   stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                                   stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                                   stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                                   stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                                   stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
 
   /**
    * Helper function used to attach a child queue disc (of the given type and with
@@ -335,22 +335,22 @@ public:
    * \param v15 the value of the attribute to set on the queue disc
    * \return the handle of the created child queue disc
    */
-  uint16_t AddChildQueueDisc (uint16_t handle, uint16_t classId, std::string type,
-                              std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                              std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                              std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                              std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                              std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                              std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                              std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                              std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
-                              std::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
-                              std::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
-                              std::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
-                              std::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
-                              std::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
-                              std::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
-                              std::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
+  uint16_t AddChildQueueDisc (uint16_t handle, uint16_t classId, stdfwd::string type,
+                              stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                              stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                              stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                              stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                              stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                              stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                              stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                              stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
+                              stdfwd::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
+                              stdfwd::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
+                              stdfwd::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
+                              stdfwd::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
+                              stdfwd::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
+                              stdfwd::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
+                              stdfwd::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
 
   /**
    * Container type for Handlers
@@ -397,22 +397,22 @@ public:
    * \param v15 the value of the attribute to set on the queue disc
    * \return the list of handles of the created child queue discs
    */
-  HandleList AddChildQueueDiscs (uint16_t handle, const ClassIdList &classes, std::string type,
-                                 std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                                 std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                                 std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                                 std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                                 std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                                 std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                                 std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                                 std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
-                                 std::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
-                                 std::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
-                                 std::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
-                                 std::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
-                                 std::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
-                                 std::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
-                                 std::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
+  HandleList AddChildQueueDiscs (uint16_t handle, const ClassIdList &classes, stdfwd::string type,
+                                 stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                                 stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                                 stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                                 stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                                 stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                                 stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                                 stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                                 stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue (),
+                                 stdfwd::string n09 = "", const AttributeValue &v09 = EmptyAttributeValue (),
+                                 stdfwd::string n10 = "", const AttributeValue &v10 = EmptyAttributeValue (),
+                                 stdfwd::string n11 = "", const AttributeValue &v11 = EmptyAttributeValue (),
+                                 stdfwd::string n12 = "", const AttributeValue &v12 = EmptyAttributeValue (),
+                                 stdfwd::string n13 = "", const AttributeValue &v13 = EmptyAttributeValue (),
+                                 stdfwd::string n14 = "", const AttributeValue &v14 = EmptyAttributeValue (),
+                                 stdfwd::string n15 = "", const AttributeValue &v15 = EmptyAttributeValue ());
 
   /**
    * Helper function used to add a queue limits object to the transmission
@@ -436,15 +436,15 @@ public:
    * \param n08 the name of the attribute to set on the queue limits object
    * \param v08 the value of the attribute to set on the queue limits object
    */
-  void SetQueueLimits (std::string type,
-                       std::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
-                       std::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
-                       std::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
-                       std::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
-                       std::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
-                       std::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
-                       std::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
-                       std::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
+  void SetQueueLimits (stdfwd::string type,
+                       stdfwd::string n01 = "", const AttributeValue &v01 = EmptyAttributeValue (),
+                       stdfwd::string n02 = "", const AttributeValue &v02 = EmptyAttributeValue (),
+                       stdfwd::string n03 = "", const AttributeValue &v03 = EmptyAttributeValue (),
+                       stdfwd::string n04 = "", const AttributeValue &v04 = EmptyAttributeValue (),
+                       stdfwd::string n05 = "", const AttributeValue &v05 = EmptyAttributeValue (),
+                       stdfwd::string n06 = "", const AttributeValue &v06 = EmptyAttributeValue (),
+                       stdfwd::string n07 = "", const AttributeValue &v07 = EmptyAttributeValue (),
+                       stdfwd::string n08 = "", const AttributeValue &v08 = EmptyAttributeValue ());
 
   /**
    * \param c set of devices

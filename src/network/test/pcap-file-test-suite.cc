@@ -47,7 +47,7 @@ Swap (uint32_t val)
 }
 
 static bool
-CheckFileExists (std::string filename)
+CheckFileExists (stdfwd::string filename)
 {
   FILE * p = std::fopen (filename.c_str (), "rb");
   if (p == 0)
@@ -61,7 +61,7 @@ CheckFileExists (std::string filename)
 
 
 static bool
-CheckFileLength (std::string filename, uint64_t sizeExpected)
+CheckFileLength (stdfwd::string filename, uint64_t sizeExpected)
 {
   FILE * p = std::fopen (filename.c_str (), "rb");
   if (p == 0)
@@ -95,7 +95,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename; //!< File name
+  stdfwd::string m_testFilename; //!< File name
 };
 
 WriteModeCreateTestCase::WriteModeCreateTestCase ()
@@ -110,7 +110,7 @@ WriteModeCreateTestCase::~WriteModeCreateTestCase ()
 void
 WriteModeCreateTestCase::DoSetup (void)
 {
-  std::stringstream filename;
+  stdfwd::stringstream filename;
   uint32_t n = rand ();
   filename << n;
   m_testFilename = CreateTempDirFilename (filename.str () + ".pcap");
@@ -213,7 +213,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename; //!< File name
+  stdfwd::string m_testFilename; //!< File name
 };
 
 ReadModeCreateTestCase::ReadModeCreateTestCase ()
@@ -228,7 +228,7 @@ ReadModeCreateTestCase::~ReadModeCreateTestCase ()
 void
 ReadModeCreateTestCase::DoSetup (void)
 {
-  std::stringstream filename;
+  stdfwd::stringstream filename;
   uint32_t n = rand ();
   filename << n;
   m_testFilename = CreateTempDirFilename (filename.str () + ".pcap");
@@ -322,7 +322,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename;
+  stdfwd::string m_testFilename;
 };
 
 AppendModeCreateTestCase::AppendModeCreateTestCase ()
@@ -337,7 +337,7 @@ AppendModeCreateTestCase::~AppendModeCreateTestCase ()
 void
 AppendModeCreateTestCase::DoSetup (void)
 {
-  std::stringstream filename;
+  stdfwd::stringstream filename;
   uint32_t n = rand ();
   filename << n;
   m_testFilename = CreateTempDirFilename (filename.str () + ".pcap");
@@ -435,7 +435,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename; //!< File name
+  stdfwd::string m_testFilename; //!< File name
 };
 
 FileHeaderTestCase::FileHeaderTestCase ()
@@ -450,7 +450,7 @@ FileHeaderTestCase::~FileHeaderTestCase ()
 void
 FileHeaderTestCase::DoSetup (void)
 {
-  std::stringstream filename;
+  stdfwd::stringstream filename;
   uint32_t n = rand ();
   filename << n;
   m_testFilename = CreateTempDirFilename (filename.str () + ".pcap");
@@ -679,7 +679,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename; //!< File name
+  stdfwd::string m_testFilename; //!< File name
 };
 
 RecordHeaderTestCase::RecordHeaderTestCase ()
@@ -694,7 +694,7 @@ RecordHeaderTestCase::~RecordHeaderTestCase ()
 void
 RecordHeaderTestCase::DoSetup (void)
 {
-  std::stringstream filename;
+  stdfwd::stringstream filename;
   uint32_t n = rand ();
   filename << n;
   m_testFilename = CreateTempDirFilename (filename.str () + ".pcap");
@@ -988,7 +988,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_testFilename; //!< File name
+  stdfwd::string m_testFilename; //!< File name
 };
 
 ReadFileTestCase::ReadFileTestCase ()
@@ -1047,7 +1047,7 @@ ReadFileTestCase::DoRun (void)
 
   //
   //
-  std::string filename = CreateDataDirFilename ("known.pcap");
+  stdfwd::string filename = CreateDataDirFilename ("known.pcap");
   f.Open (filename, std::ios::in);
   NS_TEST_ASSERT_MSG_EQ (f.Fail (), false, "Open (" << filename << 
                          ", \"std::ios::in\") returns error");
@@ -1112,7 +1112,7 @@ DiffTestCase::DoRun (void)
   //
   // Check that PcapDiff(file, file) is false
   //
-  std::string filename = CreateDataDirFilename ("known.pcap");
+  stdfwd::string filename = CreateDataDirFilename ("known.pcap");
   uint32_t sec (0), usec (0), packets (0);
   bool diff = PcapFile::Diff (filename, filename, sec, usec, packets);
   NS_TEST_EXPECT_MSG_EQ (diff, false, "PcapDiff(file, file) must always be false");
@@ -1120,7 +1120,7 @@ DiffTestCase::DoRun (void)
   //
   // Create different PCAP file (with the same timestamps, but different packets) and check that it is indeed different 
   //
-  std::string filename2 = "different.pcap";
+  stdfwd::string filename2 = "different.pcap";
   PcapFile f;
 
   f.Open (filename2, std::ios::out);

@@ -52,21 +52,21 @@ bool use_drop = false;
 ns3::Time timeout = ns3::Seconds (0);
 
 bool
-SetVerbose (std::string value)
+SetVerbose (stdfwd::string value)
 {
   verbose = true;
   return true;
 }
 
 bool
-SetDrop (std::string value)
+SetDrop (stdfwd::string value)
 {
   use_drop = true;
   return true;
 }
 
 bool
-SetTimeout (std::string value)
+SetTimeout (stdfwd::string value)
 {
   try {
       timeout = ns3::Seconds (atof (value.c_str ()));

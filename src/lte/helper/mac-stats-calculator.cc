@@ -66,24 +66,24 @@ MacStatsCalculator::GetTypeId (void)
 }
 
 void
-MacStatsCalculator::SetUlOutputFilename (std::string outputFilename)
+MacStatsCalculator::SetUlOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetUlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 MacStatsCalculator::GetUlOutputFilename (void)
 {
   return LteStatsCalculator::GetUlOutputFilename ();
 }
 
 void
-MacStatsCalculator::SetDlOutputFilename (std::string outputFilename)
+MacStatsCalculator::SetDlOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetDlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 MacStatsCalculator::GetDlOutputFilename (void)
 {
   return LteStatsCalculator::GetDlOutputFilename ();
@@ -176,12 +176,12 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
 }
 
 void
-MacStatsCalculator::DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path, DlSchedulingCallbackInfo dlSchedulingCallbackInfo)
+MacStatsCalculator::DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, stdfwd::string path, DlSchedulingCallbackInfo dlSchedulingCallbackInfo)
 {
   NS_LOG_FUNCTION (macStats << path);
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
-  std::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
+  stdfwd::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
   pathAndRnti << pathEnb << "/LteEnbRrc/UeMap/" << dlSchedulingCallbackInfo.rnti;
   if (macStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {
@@ -207,7 +207,7 @@ MacStatsCalculator::DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std:
 }
 
 void
-MacStatsCalculator::UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path,
+MacStatsCalculator::UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, stdfwd::string path,
                       uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                       uint8_t mcs, uint16_t size, uint8_t componentCarrierId)
 {
@@ -215,7 +215,7 @@ MacStatsCalculator::UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std:
 
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
-  std::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
+  stdfwd::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
   pathAndRnti << pathEnb << "/LteEnbRrc/UeMap/" << rnti;
   if (macStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {

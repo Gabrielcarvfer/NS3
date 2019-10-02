@@ -36,7 +36,7 @@ AttributeConstructionList::AttributeConstructionList ()
 }
 
 void 
-AttributeConstructionList::Add (std::string name, Ptr<const AttributeChecker> checker, Ptr<AttributeValue> value)
+AttributeConstructionList::Add (stdfwd::string name, Ptr<const AttributeChecker> checker, Ptr<AttributeValue> value)
 {
   // get rid of any previous value stored in this
   // vector of values.

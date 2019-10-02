@@ -70,7 +70,7 @@ cell_data_function_col_0 (GtkTreeViewColumn *col, GtkCellRenderer *renderer, Gtk
       break;
     case ModelNode::NODE_VECTOR_ITEM:
       {
-        std::stringstream oss;
+        stdfwd::stringstream oss;
         oss << node->index;
         g_object_set (renderer, "text", oss.str ().c_str (), (char*) 0);
       }
@@ -144,7 +144,7 @@ cell_tooltip_callback (GtkWidget *widget, gint x, gint y, gboolean keyboard_tip,
     case ModelNode::NODE_OBJECT:
       if (col == 0)
         {
-          std::string tip = "This object is of type "
+          stdfwd::string tip = "This object is of type "
             + node->object->GetInstanceTypeId ().GetName ();
           gtk_tooltip_set_text (tooltip, tip.c_str ());
           return TRUE;
@@ -155,7 +155,7 @@ cell_tooltip_callback (GtkWidget *widget, gint x, gint y, gboolean keyboard_tip,
         {
           PointerValue ptr;
           node->object->GetAttribute (node->name, ptr);
-          std::string tip = "This object is of type "
+          stdfwd::string tip = "This object is of type "
             + ptr.GetObject ()->GetInstanceTypeId ().GetName ();
           gtk_tooltip_set_text (tooltip, tip.c_str ());
           return TRUE;
@@ -166,7 +166,7 @@ cell_tooltip_callback (GtkWidget *widget, gint x, gint y, gboolean keyboard_tip,
     case ModelNode::NODE_VECTOR_ITEM:
       if (col == 0)
         {
-          std::string tip = "This object is of type "
+          stdfwd::string tip = "This object is of type "
             + node->object->GetInstanceTypeId ().GetName ();
           gtk_tooltip_set_text (tooltip, tip.c_str ());
           return TRUE;
@@ -190,14 +190,14 @@ cell_tooltip_callback (GtkWidget *widget, gint x, gint y, gboolean keyboard_tip,
           }
 out: if (col == 0)
           {
-            std::string tip = tid.GetAttribute (attrIndex).help;
+            stdfwd::string tip = tid.GetAttribute (attrIndex).help;
             gtk_tooltip_set_text (tooltip, tip.c_str ());
           }
         else
           {
             struct TypeId::AttributeInformation info = tid.GetAttribute (attrIndex);
             Ptr<const AttributeChecker> checker = info.checker;
-            std::string tip;
+            stdfwd::string tip;
             tip = "This attribute is of type " + checker->GetValueTypeName ();
             if (checker->HasUnderlyingTypeInformation ())
               {
@@ -456,7 +456,7 @@ cell_tooltip_callback_config_default (GtkWidget *widget, gint x, gint y,
     case ModelTypeid::NODE_TYPEID:
       if (col == 0)
         {
-          std::string tip = "This object is of type " + node->tid.GetName ();
+          stdfwd::string tip = "This object is of type " + node->tid.GetName ();
           gtk_tooltip_set_text (tooltip, tip.c_str ());
           return TRUE;
         }
@@ -466,13 +466,13 @@ cell_tooltip_callback_config_default (GtkWidget *widget, gint x, gint y,
         uint32_t attrIndex = node->index;
         if (col == 0)
           {
-            std::string tip = node->tid.GetAttribute (attrIndex).help;
+            stdfwd::string tip = node->tid.GetAttribute (attrIndex).help;
             gtk_tooltip_set_text (tooltip, tip.c_str ());
           }
         else
           {
             Ptr<const AttributeChecker> checker = node->tid.GetAttribute (attrIndex).checker;
-            std::string tip;
+            stdfwd::string tip;
             tip = "This attribute is of type " + checker->GetValueTypeName ();
             if (checker->HasUnderlyingTypeInformation ())
               {

@@ -73,8 +73,8 @@ Ipv4InterfaceContainer i2i3;
 Ipv4InterfaceContainer i3i4;
 Ipv4InterfaceContainer i3i5;
 
-std::stringstream filePlotQueue;
-std::stringstream filePlotQueueAvg;
+stdfwd::stringstream filePlotQueue;
+stdfwd::stringstream filePlotQueueAvg;
 
 void
 CheckQueueSize (Ptr<QueueDisc> queue)
@@ -258,10 +258,10 @@ main (int argc, char *argv[])
   LogComponentEnable ("RedQueueDisc", LOG_LEVEL_INFO);
 
   uint32_t redTest;
-  std::string redLinkDataRate = "1.5Mbps";
-  std::string redLinkDelay = "20ms";
+  stdfwd::string redLinkDataRate = "1.5Mbps";
+  stdfwd::string redLinkDelay = "20ms";
 
-  std::string pathOut;
+  stdfwd::string pathOut;
   bool writeForPlot = false;
   bool writePcap = false;
   bool flowMonitor = false;
@@ -420,7 +420,7 @@ main (int argc, char *argv[])
   if (writePcap)
     {
       PointToPointHelper ptp;
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/red";
       ptp.EnablePcapAll (stmp.str ().c_str ());
     }
@@ -448,7 +448,7 @@ main (int argc, char *argv[])
 
   if (flowMonitor)
     {
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/red.flowmon";
 
       flowmon->SerializeToXmlFile (stmp.str ().c_str (), false, false);

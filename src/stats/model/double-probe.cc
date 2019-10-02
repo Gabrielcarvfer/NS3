@@ -74,7 +74,7 @@ DoubleProbe::SetValue (double newVal)
 }
 
 void
-DoubleProbe::SetValueByPath (std::string path, double newVal)
+DoubleProbe::SetValueByPath (stdfwd::string path, double newVal)
 {
   NS_LOG_FUNCTION (path << newVal);
   Ptr<DoubleProbe> probe = Names::Find<DoubleProbe> (path);
@@ -83,7 +83,7 @@ DoubleProbe::SetValueByPath (std::string path, double newVal)
 }
 
 bool
-DoubleProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+DoubleProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of trace source (if any) in names database: " << Names::FindPath (obj));
@@ -92,7 +92,7 @@ DoubleProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-DoubleProbe::ConnectByPath (std::string path)
+DoubleProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of trace source to search for in config database: " << path);

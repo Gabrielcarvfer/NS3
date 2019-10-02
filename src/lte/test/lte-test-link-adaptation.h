@@ -56,7 +56,7 @@ public:
    * \param loss the loss
    * \param mcsIndex the DL se
    */
-  LteLinkAdaptationTestCase (std::string name, double snrDb, double loss, uint16_t mcsIndex);
+  LteLinkAdaptationTestCase (stdfwd::string name, double snrDb, double loss, uint16_t mcsIndex);
   LteLinkAdaptationTestCase ();
   virtual ~LteLinkAdaptationTestCase ();
 

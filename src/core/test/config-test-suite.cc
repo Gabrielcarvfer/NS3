@@ -633,7 +633,7 @@ public:
    * \param old The old value.
    * \param newValue The new value.
    */
-  void TraceWithPath (std::string path, int16_t old, int16_t newValue)
+  void TraceWithPath (stdfwd::string path, int16_t old, int16_t newValue)
   { 
     NS_UNUSED (old); 
     m_newValue = newValue; 
@@ -644,7 +644,7 @@ private:
   virtual void DoRun (void);
 
   int16_t m_newValue; //!< Flag to detect tracing result.
-  std::string m_path; //!< The context path.
+  stdfwd::string m_path; //!< The context path.
 };
 
 ObjectVectorTraceConfigTestCase::ObjectVectorTraceConfigTestCase ()

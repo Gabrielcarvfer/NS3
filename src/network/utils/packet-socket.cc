@@ -608,7 +608,7 @@ DeviceNameTag::DeviceNameTag ()
 }
 
 void
-DeviceNameTag::SetDeviceName (std::string n)
+DeviceNameTag::SetDeviceName (stdfwd::string n)
 {
   if ( n.substr(0,5) == "ns3::" )
     {
@@ -617,7 +617,7 @@ DeviceNameTag::SetDeviceName (std::string n)
   m_deviceName = n;
 }
 
-std::string
+stdfwd::string
 DeviceNameTag::GetDeviceName (void) const
 {
   return m_deviceName;
@@ -661,7 +661,7 @@ DeviceNameTag::Deserialize (TagBuffer i)
   char buf[256];
 
   i.Read ( (uint8_t* ) buf, (uint32_t) l);
-  m_deviceName = std::string (buf, l);
+  m_deviceName = stdfwd::string (buf, l);
 }
 void
 DeviceNameTag::Print (std::ostream &os) const

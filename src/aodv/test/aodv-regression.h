@@ -168,7 +168,7 @@ private:
   NodeContainer * m_nodes;
 
   /// PCAP file names prefix
-  const std::string m_prefix;
+  const stdfwd::string m_prefix;
   /// Total simulation time
   const Time m_time;
   /// Chain size

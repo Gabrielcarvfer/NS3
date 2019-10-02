@@ -58,14 +58,14 @@ DataOutputInterface::DoDispose ()
 }
 
 void
-DataOutputInterface::SetFilePrefix (const std::string prefix)
+DataOutputInterface::SetFilePrefix (const stdfwd::string prefix)
 {
   NS_LOG_FUNCTION (this << prefix);
 
   m_filePrefix = prefix;
 }
 
-std::string
+stdfwd::string
 DataOutputInterface::GetFilePrefix () const
 {
   NS_LOG_FUNCTION (this);

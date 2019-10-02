@@ -73,7 +73,7 @@ public:
  * \param activeRbs
  * \param expected the expected Tx Power Spectral Density
  */
-  LteDownlinkPowerControlSpectrumValueTestCase (std::string name,
+  LteDownlinkPowerControlSpectrumValueTestCase (stdfwd::string name,
                                                 uint16_t earfcn, uint8_t bw, double powerTx,
                                                 std::map<int, double> powerTxMap, std::vector <int> activeRbs,
                                                 SpectrumValue& expected);
@@ -104,7 +104,7 @@ public:
  * \param pa
  * \param name the reference name
  */
-  LteDownlinkPowerControlTestCase (bool changePower, uint8_t pa, std::string name);
+  LteDownlinkPowerControlTestCase (bool changePower, uint8_t pa, stdfwd::string name);
   virtual ~LteDownlinkPowerControlTestCase ();
 
 private:
@@ -133,7 +133,7 @@ public:
    * \param useIdealRrc if true use ideal RRC
    * \param name the reference name
    */
-  LteDownlinkPowerControlRrcConnectionReconfigurationTestCase (bool useIdealRrc, std::string name);
+  LteDownlinkPowerControlRrcConnectionReconfigurationTestCase (bool useIdealRrc, stdfwd::string name);
   virtual ~LteDownlinkPowerControlRrcConnectionReconfigurationTestCase ();
 
   /**
@@ -144,7 +144,7 @@ public:
    * \param cellid the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionReconfigurationEnb (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
+  void ConnectionReconfigurationEnb (stdfwd::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
 
   /**
    * \brief Connection Reconfiguration UE
@@ -154,7 +154,7 @@ public:
    * \param cellid the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionReconfigurationUe (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
+  void ConnectionReconfigurationUe (stdfwd::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
 
   /**
    * \brief Change PDSCH config dedicated

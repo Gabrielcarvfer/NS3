@@ -109,7 +109,7 @@ public:
    * \param size Packet size.
    * \param packets Number of packets.
    */
-  TcpDataSentCbTestCase (const std::string &desc, uint32_t size, uint32_t packets) :
+  TcpDataSentCbTestCase (const stdfwd::string &desc, uint32_t size, uint32_t packets) :
     TcpGeneralTest (desc),
     m_pktSize (size),
     m_pktCount (packets),

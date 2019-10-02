@@ -97,20 +97,20 @@ ClickInternetStackHelper::Reset (void)
 }
 
 void
-ClickInternetStackHelper::SetTcp (const std::string tid)
+ClickInternetStackHelper::SetTcp (const stdfwd::string tid)
 {
   m_tcpFactory.SetTypeId (tid);
 }
 
 void
-ClickInternetStackHelper::SetTcp (std::string tid, std::string n0, const AttributeValue &v0)
+ClickInternetStackHelper::SetTcp (stdfwd::string tid, stdfwd::string n0, const AttributeValue &v0)
 {
   m_tcpFactory.SetTypeId (tid);
   m_tcpFactory.Set (n0,v0);
 }
 
 void
-ClickInternetStackHelper::SetClickFile (NodeContainer c, std::string clickfile)
+ClickInternetStackHelper::SetClickFile (NodeContainer c, stdfwd::string clickfile)
 {
   for (NodeContainer::Iterator i = c.Begin (); i != c.End (); ++i)
     {
@@ -119,13 +119,13 @@ ClickInternetStackHelper::SetClickFile (NodeContainer c, std::string clickfile)
 }
 
 void
-ClickInternetStackHelper::SetClickFile (Ptr<Node> node, std::string clickfile)
+ClickInternetStackHelper::SetClickFile (Ptr<Node> node, stdfwd::string clickfile)
 {
   m_nodeToClickFileMap.insert (std::make_pair (node, clickfile));
 }
 
 void
-ClickInternetStackHelper::SetDefines (NodeContainer c, std::map<std::string, std::string> defines)
+ClickInternetStackHelper::SetDefines (NodeContainer c, std::map<stdfwd::string, stdfwd::string> defines)
 {
   for (NodeContainer::Iterator i = c.Begin (); i != c.End (); ++i)
     {
@@ -134,13 +134,13 @@ ClickInternetStackHelper::SetDefines (NodeContainer c, std::map<std::string, std
 }
 
 void
-ClickInternetStackHelper::SetDefines (Ptr<Node> node, std::map<std::string, std::string> defines)
+ClickInternetStackHelper::SetDefines (Ptr<Node> node, std::map<stdfwd::string, stdfwd::string> defines)
 {
   m_nodeToDefinesMap.insert (std::make_pair (node, defines));
 }
 
 void
-ClickInternetStackHelper::SetRoutingTableElement (NodeContainer c, std::string rt)
+ClickInternetStackHelper::SetRoutingTableElement (NodeContainer c, stdfwd::string rt)
 {
   for (NodeContainer::Iterator i = c.Begin (); i != c.End (); ++i)
     {
@@ -149,7 +149,7 @@ ClickInternetStackHelper::SetRoutingTableElement (NodeContainer c, std::string r
 }
 
 void
-ClickInternetStackHelper::SetRoutingTableElement (Ptr<Node> node, std::string rt)
+ClickInternetStackHelper::SetRoutingTableElement (Ptr<Node> node, stdfwd::string rt)
 {
   m_nodeToRoutingTableElementMap.insert (std::make_pair (node, rt));
 }
@@ -170,7 +170,7 @@ ClickInternetStackHelper::InstallAll (void) const
 }
 
 void
-ClickInternetStackHelper::CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const std::string typeId)
+ClickInternetStackHelper::CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const stdfwd::string typeId)
 {
   ObjectFactory factory;
   factory.SetTypeId (typeId);
@@ -200,7 +200,7 @@ ClickInternetStackHelper::Install (Ptr<Node> node) const
       // Set routing
       Ptr<Ipv4> ipv4 = node->GetObject<Ipv4> ();
       Ptr<Ipv4ClickRouting> ipv4Routing = CreateObject<Ipv4ClickRouting> ();
-      std::map< Ptr<Node>, std::string >::const_iterator it;
+      std::map< Ptr<Node>, stdfwd::string >::const_iterator it;
       it = m_nodeToClickFileMap.find (node);
 
       if (it != m_nodeToClickFileMap.end ())
@@ -208,7 +208,7 @@ ClickInternetStackHelper::Install (Ptr<Node> node) const
           ipv4Routing->SetClickFile (it->second);
         }
 
-      std::map<Ptr<Node>, std::map<std::string, std::string> >::const_iterator definesIt;
+      std::map<Ptr<Node>, std::map<stdfwd::string, stdfwd::string> >::const_iterator definesIt;
       definesIt = m_nodeToDefinesMap.find (node);
       if (definesIt != m_nodeToDefinesMap.end ())
         {
@@ -226,7 +226,7 @@ ClickInternetStackHelper::Install (Ptr<Node> node) const
 }
 
 void
-ClickInternetStackHelper::Install (std::string nodeName) const
+ClickInternetStackHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Install (node);
@@ -270,7 +270,7 @@ ClickInternetStackHelper::PcapHooked (Ptr<Ipv4> ipv4)
 }
 
 void
-ClickInternetStackHelper::EnablePcapIpv4Internal (std::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename)
+ClickInternetStackHelper::EnablePcapIpv4Internal (stdfwd::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename)
 {
   NS_LOG_FUNCTION (prefix << ipv4 << interface);
 
@@ -286,7 +286,7 @@ ClickInternetStackHelper::EnablePcapIpv4Internal (std::string prefix, Ptr<Ipv4> 
   //
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -354,7 +354,7 @@ Ipv4L3ProtocolDropSinkWithoutContext (
 static void
 Ipv4L3ProtocolDropSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ipv4Header const &header,
   Ptr<const Packet> packet,
   Ipv4L3Protocol::DropReason reason,
@@ -402,7 +402,7 @@ ClickInternetStackHelper::AsciiHooked (Ptr<Ipv4> ipv4)
 void
 ClickInternetStackHelper::EnableAsciiIpv4Internal (
   Ptr<OutputStreamWrapper> stream,
-  std::string prefix,
+  stdfwd::string prefix,
   Ptr<Ipv4> ipv4,
   uint32_t interface,
   bool explicitFilename)
@@ -438,7 +438,7 @@ ClickInternetStackHelper::EnableAsciiIpv4Internal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;

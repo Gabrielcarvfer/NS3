@@ -61,7 +61,7 @@ public:
    * \param rngRun the number of run to be used by the random number generator
    * \param numberOfComponentCarriers number of component carriers
    */
-  LteSecondaryCellSelectionTestCase (std::string name, bool isIdealRrc, uint64_t rngRun, uint8_t numberOfComponentCarriers);
+  LteSecondaryCellSelectionTestCase (stdfwd::string name, bool isIdealRrc, uint64_t rngRun, uint8_t numberOfComponentCarriers);
 
   virtual ~LteSecondaryCellSelectionTestCase ();
 
@@ -81,7 +81,7 @@ private:
    * \param oldState the old state
    * \param newState the new state
    */
-  void StateTransitionCallback (std::string context, uint64_t imsi,
+  void StateTransitionCallback (stdfwd::string context, uint64_t imsi,
                                 uint16_t cellId, uint16_t rnti,
                                 LteUeRrc::State oldState, LteUeRrc::State newState);
   /**
@@ -90,7 +90,7 @@ private:
    * \param imsi the IMSI
    * \param cellId the cell ID
    */
-  void InitialSecondaryCellSelectionEndOkCallback (std::string context, uint64_t imsi,
+  void InitialSecondaryCellSelectionEndOkCallback (stdfwd::string context, uint64_t imsi,
                                           uint16_t cellId);
   /**
    * \brief Connection established callback function
@@ -99,7 +99,7 @@ private:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionEstablishedCallback (std::string context, uint64_t imsi,
+  void ConnectionEstablishedCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti);
 
   bool m_isIdealRrc; ///< whether the LTE is configured to use ideal RRC

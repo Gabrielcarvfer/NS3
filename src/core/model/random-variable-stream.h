@@ -28,7 +28,7 @@
 #include "type-id.h"
 #include "object.h"
 #include "attribute-helper.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file

@@ -50,7 +50,7 @@ public:
    * \brief Creates an instance of the carrier aggregation throughput scaling test case.
    * \param name name of this test
    */
-  LteAggregationThroughputScaleTestCase (std::string name);
+  LteAggregationThroughputScaleTestCase (stdfwd::string name);
 
   virtual ~LteAggregationThroughputScaleTestCase ();
 

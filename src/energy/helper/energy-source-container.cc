@@ -52,7 +52,7 @@ EnergySourceContainer::EnergySourceContainer (Ptr<EnergySource> source)
   m_sources.push_back (source);
 }
 
-EnergySourceContainer::EnergySourceContainer (std::string sourceName)
+EnergySourceContainer::EnergySourceContainer (stdfwd::string sourceName)
 {
   Ptr<EnergySource> source = Names::Find<EnergySource> (sourceName);
   NS_ASSERT (source != NULL);
@@ -107,7 +107,7 @@ EnergySourceContainer::Add (Ptr<EnergySource> source)
 }
 
 void
-EnergySourceContainer::Add (std::string sourceName)
+EnergySourceContainer::Add (stdfwd::string sourceName)
 {
   Ptr<EnergySource> source = Names::Find<EnergySource> (sourceName);
   NS_ASSERT (source != NULL);

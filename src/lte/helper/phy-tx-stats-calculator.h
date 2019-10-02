@@ -25,7 +25,7 @@
 #include "lte-stats-calculator.h"
 #include "../../core/model/nstime.h"
 #include "../../core/model/uinteger.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 #include "../model/lte-common.h"
 
@@ -71,26 +71,26 @@ public:
    *
    * @param outputFilename string with the name of the file
    */
-  void SetUlTxOutputFilename (std::string outputFilename);
+  void SetUlTxOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the UL RX PHY statistics will be stored.
    * @return the name of the file where the UL RX PHY statistics will be stored
    */
-  std::string GetUlTxOutputFilename (void);
+  stdfwd::string GetUlTxOutputFilename (void);
 
   /**
    * Set the name of the file where the DL TX PHY statistics will be stored.
    *
    * @param outputFilename string with the name of the file
    */
-  void SetDlTxOutputFilename (std::string outputFilename);
+  void SetDlTxOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the DL TX PHY statistics will be stored.
    * @return the name of the file where the DL TX PHY statistics will be stored
    */
-  std::string GetDlTxOutputFilename (void);
+  stdfwd::string GetDlTxOutputFilename (void);
 
   /**
    * Notifies the stats calculator that an downlink transmission has occurred.
@@ -113,7 +113,7 @@ public:
    * \param params 
    */
   static void DlPhyTransmissionCallback (Ptr<PhyTxStatsCalculator> phyTxStats,
-                                  std::string path, PhyTransmissionStatParameters params);
+                                  stdfwd::string path, PhyTransmissionStatParameters params);
 
   /** 
    * trace sink
@@ -123,7 +123,7 @@ public:
    * \param params 
    */
   static void UlPhyTransmissionCallback (Ptr<PhyTxStatsCalculator> phyTxStats,
-                                  std::string path, PhyTransmissionStatParameters params);
+                                  stdfwd::string path, PhyTransmissionStatParameters params);
 
 private:
   /**

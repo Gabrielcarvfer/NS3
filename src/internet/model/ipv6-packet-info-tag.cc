@@ -19,7 +19,7 @@
  */
 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/utils/ipv6-address.h"
 #include "ipv6-packet-info-tag.h"
 

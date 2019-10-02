@@ -105,7 +105,7 @@ AttributeDefaultIterator::Iterate (void)
 }
 
 void 
-AttributeDefaultIterator::StartVisitTypeId (std::string name)
+AttributeDefaultIterator::StartVisitTypeId (stdfwd::string name)
 {
 }
 void 
@@ -114,12 +114,12 @@ AttributeDefaultIterator::EndVisitTypeId (void)
 }
 
 void 
-AttributeDefaultIterator::DoVisitAttribute (std::string name, std::string defaultValue)
+AttributeDefaultIterator::DoVisitAttribute (stdfwd::string name, stdfwd::string defaultValue)
 {
 }
 
 void 
-AttributeDefaultIterator::VisitAttribute (TypeId tid, std::string name, std::string defaultValue, uint32_t index)
+AttributeDefaultIterator::VisitAttribute (TypeId tid, stdfwd::string name, stdfwd::string defaultValue, uint32_t index)
 {
   DoVisitAttribute (name, defaultValue);
 }

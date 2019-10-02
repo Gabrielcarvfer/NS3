@@ -177,7 +177,7 @@ public:
    * \param [in] cb The Callback to connect to the target trace source.
    * \param [in] path The context to bind to the user callback.
    */
-  void Connect (const CallbackBase &cb, std::string path) {
+  void Connect (const CallbackBase &cb, stdfwd::string path) {
     m_cb.Connect (cb, path);
   }
   /**
@@ -194,7 +194,7 @@ public:
    * \param [in] cb The Callback to disconnect.
    * \param [in] path The context to bind to the user callback.
    */
-  void Disconnect (const CallbackBase &cb, std::string path) {
+  void Disconnect (const CallbackBase &cb, stdfwd::string path) {
     m_cb.Disconnect (cb, path);
   }
   /**

@@ -175,18 +175,18 @@ public:
   DscpType GetDscp (void) const;
   /**
    * \param dscp the dscp
-   * \returns std::string of DSCPType
+   * \returns stdfwd::string of DSCPType
    */
-  std::string DscpTypeToString (DscpType dscp) const;
+  stdfwd::string DscpTypeToString (DscpType dscp) const;
   /**
    * \returns the ECN field of this packet.
    */
   EcnType GetEcn (void) const;
   /**
    * \param ecn the ECNType
-   * \returns std::string of ECNType
+   * \returns stdfwd::string of ECNType
    */
-  std::string EcnTypeToString (EcnType ecn) const;
+  stdfwd::string EcnTypeToString (EcnType ecn) const;
   /**
    * \returns true if this is the last fragment of a packet, false otherwise.
    */

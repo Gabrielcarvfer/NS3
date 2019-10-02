@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 #include <map>
 
@@ -85,7 +85,7 @@ public:
    * \param name attribute name
    * \param value attribute value
    */
-  void SetAttribute (std::string name, const AttributeValue& value);
+  void SetAttribute (stdfwd::string name, const AttributeValue& value);
 
   /**
    * \brief Install the application in a Node.

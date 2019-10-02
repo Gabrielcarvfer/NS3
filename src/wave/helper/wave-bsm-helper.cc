@@ -47,7 +47,7 @@ WaveBsmHelper::WaveBsmHelper ()
 }
 
 void
-WaveBsmHelper::SetAttribute (std::string name, const AttributeValue &value)
+WaveBsmHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }

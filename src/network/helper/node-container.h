@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../model/node.h"
 
@@ -60,7 +60,7 @@ public:
    *
    * \param nodeName The name of the Node Object to add to the container.
    */
-  NodeContainer (std::string nodeName);
+  NodeContainer (stdfwd::string nodeName);
 
   /**
    * Create a node container which is a concatenation of two input
@@ -271,7 +271,7 @@ public:
    *
    * \param nodeName The name of the Node Object to add to the container.
    */
-  void Add (std::string nodeName);
+  void Add (stdfwd::string nodeName);
 
   /**
    * \brief Create a NodeContainer that contains a list of _all_ nodes

@@ -100,7 +100,7 @@ public:
    * \param input Input NetDevice.
    * \param output Output NetDevices.
    */
-  void AddMulticastRoute (std::string n, Ipv6Address source, Ipv6Address group,
+  void AddMulticastRoute (stdfwd::string n, Ipv6Address source, Ipv6Address group,
                           Ptr<NetDevice> input, NetDeviceContainer output);
 
   /**
@@ -114,7 +114,7 @@ public:
    * \param output Output NetDevices.
    */
   void AddMulticastRoute (Ptr<Node> n, Ipv6Address source, Ipv6Address group,
-                          std::string inputName, NetDeviceContainer output);
+                          stdfwd::string inputName, NetDeviceContainer output);
 
   /**
    * \brief Add a multicast route to a node and device using name strings
@@ -127,8 +127,8 @@ public:
    * \param inputName Input NetDevice.
    * \param output Output NetDevices.
    */
-  void AddMulticastRoute (std::string nName, Ipv6Address source, Ipv6Address group,
-                          std::string inputName, NetDeviceContainer output);
+  void AddMulticastRoute (stdfwd::string nName, Ipv6Address source, Ipv6Address group,
+                          stdfwd::string inputName, NetDeviceContainer output);
 
 #if 0
   /**
@@ -136,9 +136,9 @@ public:
    *        packets out a particular interface
    */
   void SetDefaultMulticastRoute (Ptr<Node> n, Ptr<NetDevice> nd);
-  void SetDefaultMulticastRoute (Ptr<Node> n, std::string ndName);
-  void SetDefaultMulticastRoute (std::string nName, Ptr<NetDevice> nd);
-  void SetDefaultMulticastRoute (std::string nName, std::string ndName);
+  void SetDefaultMulticastRoute (Ptr<Node> n, stdfwd::string ndName);
+  void SetDefaultMulticastRoute (stdfwd::string nName, Ptr<NetDevice> nd);
+  void SetDefaultMulticastRoute (stdfwd::string nName, stdfwd::string ndName);
 #endif
 private:
   /**

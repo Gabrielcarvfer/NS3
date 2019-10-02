@@ -66,7 +66,7 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("PlanetLabTAPPingExample");
 
 static void
-PingRtt (std::string context, Time rtt)
+PingRtt (stdfwd::string context, Time rtt)
 {
   NS_LOG_UNCOND ("Received Response with RTT = " << rtt);
 }
@@ -76,15 +76,15 @@ main (int argc, char *argv[])
 {
   NS_LOG_INFO ("Ping Emulation Example with TAP on PlanetLab host");
 
-  std::string remote ("173.194.34.51"); // example.com
+  stdfwd::string remote ("173.194.34.51"); // example.com
   //
   //  Make sure network and mask correspond to those assigned to your PlanetLab
   //  slice, through the tag vsys_vnet x.x.x.x/yy .
   //  In this case The network should be x.x.x.x and the mask should correspond to
   //  the prefix yy.
   //
-  std::string network ("1.2.3.4");
-  std::string mask ("255.255.255.0");
+  stdfwd::string network ("1.2.3.4");
+  stdfwd::string mask ("255.255.255.0");
 
   //
   // Allow the user to override any of the defaults at run-time, via

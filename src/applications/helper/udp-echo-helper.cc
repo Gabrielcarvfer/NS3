@@ -33,7 +33,7 @@ UdpEchoServerHelper::UdpEchoServerHelper (uint16_t port)
 
 void 
 UdpEchoServerHelper::SetAttribute (
-  std::string name, 
+  stdfwd::string name,
   const AttributeValue &value)
 {
   m_factory.Set (name, value);
@@ -46,7 +46,7 @@ UdpEchoServerHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-UdpEchoServerHelper::Install (std::string nodeName) const
+UdpEchoServerHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));
@@ -88,14 +88,14 @@ UdpEchoClientHelper::UdpEchoClientHelper (Address address)
 
 void 
 UdpEchoClientHelper::SetAttribute (
-  std::string name, 
+  stdfwd::string name,
   const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
 
 void
-UdpEchoClientHelper::SetFill (Ptr<Application> app, std::string fill)
+UdpEchoClientHelper::SetFill (Ptr<Application> app, stdfwd::string fill)
 {
   app->GetObject<UdpEchoClient>()->SetFill (fill);
 }
@@ -119,7 +119,7 @@ UdpEchoClientHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-UdpEchoClientHelper::Install (std::string nodeName) const
+UdpEchoClientHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

@@ -22,7 +22,7 @@
 
 #include <map>
 #include <utility>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object-factory.h"
 #include "../../core/model/ptr.h"
 #include "../model/probe.h"
@@ -62,11 +62,11 @@ public:
    * ".plt", and a shell script to generate the gnuplot named
    * outputFileNameWithoutExtension + ".sh".
    */
-  GnuplotHelper (const std::string &outputFileNameWithoutExtension,
-                 const std::string &title,
-                 const std::string &xLegend,
-                 const std::string &yLegend,
-                 const std::string &terminalType = "png");
+  GnuplotHelper (const stdfwd::string &outputFileNameWithoutExtension,
+                 const stdfwd::string &title,
+                 const stdfwd::string &xLegend,
+                 const stdfwd::string &yLegend,
+                 const stdfwd::string &terminalType = "png");
 
   virtual ~GnuplotHelper ();
 
@@ -86,11 +86,11 @@ public:
    * to generate the gnuplot named outputFileNameWithoutExtension +
    * ".sh".
    */
-  void ConfigurePlot (const std::string &outputFileNameWithoutExtension,
-                      const std::string &title,
-                      const std::string &xLegend,
-                      const std::string &yLegend,
-                      const std::string &terminalType = "png");
+  void ConfigurePlot (const stdfwd::string &outputFileNameWithoutExtension,
+                      const stdfwd::string &title,
+                      const stdfwd::string &xLegend,
+                      const stdfwd::string &yLegend,
+                      const stdfwd::string &terminalType = "png");
 
   /**
    * \param typeId the type ID for the probe used when it is created.
@@ -118,10 +118,10 @@ public:
    * then dataset titles like "bytes-0 0" or "bytes-12 9" will be
    * possible as labels for the datasets that are plotted.
    */
-  void PlotProbe (const std::string &typeId,
-                  const std::string &path,
-                  const std::string &probeTraceSource,
-                  const std::string &title,
+  void PlotProbe (const stdfwd::string &typeId,
+                  const stdfwd::string &path,
+                  const stdfwd::string &probeTraceSource,
+                  const stdfwd::string &title,
                   enum GnuplotAggregator::KeyLocation keyLocation = GnuplotAggregator::KEY_INSIDE);
 
   /**
@@ -129,14 +129,14 @@ public:
    *
    * \brief Adds a time series adaptor to be used to make the plot.
    */
-  void AddTimeSeriesAdaptor (const std::string &adaptorName);
+  void AddTimeSeriesAdaptor (const stdfwd::string &adaptorName);
 
   /**
    * \param probeName the probe's name.
    * \return Ptr to probe
    * \brief Gets the specified probe.
    */
-  Ptr<Probe> GetProbe (std::string probeName) const;
+  Ptr<Probe> GetProbe (stdfwd::string probeName) const;
 
   /**
    * \return Ptr to GnuplotAggregator object
@@ -156,9 +156,9 @@ private:
    *
    * \brief Adds a probe to be used to make the plot.
    */
-  void AddProbe (const std::string &typeId,
-                 const std::string &probeName,
-                 const std::string &path);
+  void AddProbe (const stdfwd::string &typeId,
+                 const stdfwd::string &probeName,
+                 const stdfwd::string &path);
 
   /**
    * \brief Constructs the aggregator.
@@ -175,11 +175,11 @@ private:
    *
    * \brief Connects the probe to the aggregator.
    */
-  void ConnectProbeToAggregator (const std::string &typeId,
-                                 const std::string &matchIdentifier,
-                                 const std::string &path,
-                                 const std::string &probeTraceSource,
-                                 const std::string &title);
+  void ConnectProbeToAggregator (const stdfwd::string &typeId,
+                                 const stdfwd::string &matchIdentifier,
+                                 const stdfwd::string &path,
+                                 const stdfwd::string &probeTraceSource,
+                                 const stdfwd::string &title);
 
   /// Used to create the probes and collectors as they are added.
   ObjectFactory m_factory;
@@ -188,28 +188,28 @@ private:
   Ptr<GnuplotAggregator> m_aggregator;
 
   /// Maps probe names to probes.
-  std::map<std::string, std::pair <Ptr<Probe>, std::string> > m_probeMap;
+  std::map<stdfwd::string, std::pair <Ptr<Probe>, stdfwd::string> > m_probeMap;
 
   /// Maps time series adaptor names to time series adaptors.
-  std::map<std::string, Ptr<TimeSeriesAdaptor> > m_timeSeriesAdaptorMap;
+  std::map<stdfwd::string, Ptr<TimeSeriesAdaptor> > m_timeSeriesAdaptorMap;
 
   /// Number of plot probes that have been created.
   uint32_t m_plotProbeCount;
 
   /// The name of the output file to created without its extension.
-  std::string m_outputFileNameWithoutExtension;
+  stdfwd::string m_outputFileNameWithoutExtension;
 
   /// Title string to use for this plot.
-  std::string m_title;
+  stdfwd::string m_title;
 
   /// Legend for the x axis.
-  std::string m_xLegend;
+  stdfwd::string m_xLegend;
 
   /// Legend for the y axis.
-  std::string m_yLegend;
+  stdfwd::string m_yLegend;
 
   /// Terminal type for the plot.
-  std::string m_terminalType;
+  stdfwd::string m_terminalType;
 
 }; // class GnuplotHelper
 

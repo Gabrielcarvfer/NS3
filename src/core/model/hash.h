@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "assert.h"
 #include "ptr.h"
@@ -140,7 +140,7 @@ public:
    * \param [in] s String to hash.
    * \return 32-bit hash of the string.
    */
-  uint32_t  GetHash32  (const std::string s);
+  uint32_t  GetHash32  (const stdfwd::string s);
   /**
    * Compute 64-bit hash of a string.
    *
@@ -154,7 +154,7 @@ public:
    * \param [in] s String to hash.
    * \return 64-bit hash of the string.
    */
-  uint64_t  GetHash64  (const std::string s);
+  uint64_t  GetHash64  (const stdfwd::string s);
   /**
    * Restore initial state.
    *
@@ -209,7 +209,7 @@ uint64_t Hash64 (const char * buffer, const std::size_t size);
  * \param [in] s String to hash.
  * \return 32-bit hash of the string.
  */
-uint32_t Hash32 (const std::string s);
+uint32_t Hash32 (const stdfwd::string s);
 /**
  * \ingroup hash
  *
@@ -218,7 +218,7 @@ uint32_t Hash32 (const std::string s);
  * \param [in] s String to hash.
  * \return 64-bit hash of the string.
  */
-uint64_t Hash64 (const std::string s);
+uint64_t Hash64 (const stdfwd::string s);
 
 }  // namespace ns3
 
@@ -251,7 +251,7 @@ Hasher::GetHash64  (const char * buffer, const std::size_t size)
 
 inline
 uint32_t
-Hasher::GetHash32  (const std::string s)
+Hasher::GetHash32  (const stdfwd::string s)
 {
   NS_ASSERT (m_impl != 0);
   return m_impl->GetHash32  (s.c_str (), s.size ());
@@ -259,7 +259,7 @@ Hasher::GetHash32  (const std::string s)
 
 inline
 uint64_t
-Hasher::GetHash64  (const std::string s)
+Hasher::GetHash64  (const stdfwd::string s)
 {
   NS_ASSERT (m_impl != 0);
   return m_impl->GetHash64  (s.c_str (), s.size ());
@@ -286,14 +286,14 @@ Hash64 (const char * buffer, const std::size_t size)
 
 inline
 uint32_t
-Hash32 (const std::string s)
+Hash32 (const stdfwd::string s)
 {
   return Hasher ().GetHash32 (s);
 }
 
 inline
 uint64_t
-Hash64 (const std::string s)
+Hash64 (const stdfwd::string s)
 {
   return Hasher ().GetHash64 (s);
 }

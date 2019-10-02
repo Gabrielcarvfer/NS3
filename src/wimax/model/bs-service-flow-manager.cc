@@ -19,7 +19,7 @@
  *          Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/node.h"
 #include "../../core/model/simulator.h"
 #include "../../network/model/packet.h"

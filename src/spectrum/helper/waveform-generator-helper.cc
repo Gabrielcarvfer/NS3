@@ -55,7 +55,7 @@ WaveformGeneratorHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-WaveformGeneratorHelper::SetChannel (std::string channelName)
+WaveformGeneratorHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
   m_channel = channel;
@@ -70,28 +70,28 @@ WaveformGeneratorHelper::SetTxPowerSpectralDensity (Ptr<SpectrumValue> txPsd)
 
 
 void
-WaveformGeneratorHelper::SetPhyAttribute (std::string name, const AttributeValue &v)
+WaveformGeneratorHelper::SetPhyAttribute (stdfwd::string name, const AttributeValue &v)
 {
   m_phy.Set (name, v);
 }
 
 
 void
-WaveformGeneratorHelper::SetDeviceAttribute (std::string name, const AttributeValue &v)
+WaveformGeneratorHelper::SetDeviceAttribute (stdfwd::string name, const AttributeValue &v)
 {
   m_device.Set (name, v);
 }
 
 void
-WaveformGeneratorHelper::SetAntenna (std::string type,
-                                           std::string n0, const AttributeValue &v0,
-                                           std::string n1, const AttributeValue &v1,
-                                           std::string n2, const AttributeValue &v2,
-                                           std::string n3, const AttributeValue &v3,
-                                           std::string n4, const AttributeValue &v4,
-                                           std::string n5, const AttributeValue &v5,
-                                           std::string n6, const AttributeValue &v6,
-                                           std::string n7, const AttributeValue &v7)
+WaveformGeneratorHelper::SetAntenna (stdfwd::string type,
+                                           stdfwd::string n0, const AttributeValue &v0,
+                                           stdfwd::string n1, const AttributeValue &v1,
+                                           stdfwd::string n2, const AttributeValue &v2,
+                                           stdfwd::string n3, const AttributeValue &v3,
+                                           stdfwd::string n4, const AttributeValue &v4,
+                                           stdfwd::string n5, const AttributeValue &v5,
+                                           stdfwd::string n6, const AttributeValue &v6,
+                                           stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -151,7 +151,7 @@ WaveformGeneratorHelper::Install (Ptr<Node> node) const
 }
 
 NetDeviceContainer
-WaveformGeneratorHelper::Install (std::string nodeName) const
+WaveformGeneratorHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (node);

@@ -127,7 +127,7 @@ Ipv4StaticRoutingHelper::AddMulticastRoute (
   Ptr<Node> n,
   Ipv4Address source, 
   Ipv4Address group,
-  std::string inputName, 
+  stdfwd::string inputName,
   NetDeviceContainer output)
 {
   Ptr<NetDevice> input = Names::Find<NetDevice> (inputName);
@@ -136,7 +136,7 @@ Ipv4StaticRoutingHelper::AddMulticastRoute (
 
 void
 Ipv4StaticRoutingHelper::AddMulticastRoute (
-  std::string nName,
+  stdfwd::string nName,
   Ipv4Address source, 
   Ipv4Address group,
   Ptr<NetDevice> input, 
@@ -148,10 +148,10 @@ Ipv4StaticRoutingHelper::AddMulticastRoute (
 
 void
 Ipv4StaticRoutingHelper::AddMulticastRoute (
-  std::string nName,
+  stdfwd::string nName,
   Ipv4Address source, 
   Ipv4Address group,
-  std::string inputName, 
+  stdfwd::string inputName,
   NetDeviceContainer output)
 {
   Ptr<NetDevice> input = Names::Find<NetDevice> (inputName);
@@ -183,7 +183,7 @@ Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
 void
 Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
   Ptr<Node> n, 
-  std::string ndName)
+  stdfwd::string ndName)
 {
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);
   SetDefaultMulticastRoute (n, nd);
@@ -191,7 +191,7 @@ Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
 
 void
 Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
-  std::string nName, 
+  stdfwd::string nName,
   Ptr<NetDevice> nd)
 {
   Ptr<Node> n = Names::Find<Node> (nName);
@@ -200,8 +200,8 @@ Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
 
 void
 Ipv4StaticRoutingHelper::SetDefaultMulticastRoute (
-  std::string nName, 
-  std::string ndName)
+  stdfwd::string nName,
+  stdfwd::string ndName)
 {
   Ptr<Node> n = Names::Find<Node> (nName);
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);

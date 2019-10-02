@@ -55,7 +55,7 @@ class LteRlcUmE2eTestCase : public TestCase
    * \param seed the random variable seed
    * \param losses the error rate
    */
-    LteRlcUmE2eTestCase (std::string name, uint32_t seed, double losses);
+    LteRlcUmE2eTestCase (stdfwd::string name, uint32_t seed, double losses);
     LteRlcUmE2eTestCase ();
     virtual ~LteRlcUmE2eTestCase ();
 

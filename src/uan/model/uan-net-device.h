@@ -176,7 +176,7 @@ private:
   Ptr<UanMac> m_mac;               //!< The MAC layer attached to this device.
   Ptr<UanPhy> m_phy;               //!< The PHY layer attached to this device.
 
-  //unused: std::string m_name;
+  //unused: stdfwd::string m_name;
   uint32_t m_ifIndex;              //!< The interface index of this device.
   uint16_t m_mtu;                  //!< The device MTU value, in bytes.
   bool m_linkup;                   //!< The link state, true if up.

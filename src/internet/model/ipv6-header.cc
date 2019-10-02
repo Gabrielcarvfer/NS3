@@ -206,7 +206,7 @@ Ipv6Header::DscpType Ipv6Header::GetDscp (void) const
   return DscpType ((m_trafficClass & 0xFC) >> 2);
 }
 
-std::string Ipv6Header::DscpTypeToString (DscpType dscp) const
+stdfwd::string Ipv6Header::DscpTypeToString (DscpType dscp) const
 {
   NS_LOG_FUNCTION (this << dscp);
   switch (dscp)
@@ -266,7 +266,7 @@ Ipv6Header::GetEcn (void) const
   return EcnType (m_trafficClass & 0x3);
 }
 
-std::string Ipv6Header::EcnTypeToString (EcnType ecn) const
+stdfwd::string Ipv6Header::EcnTypeToString (EcnType ecn) const
 {
   NS_LOG_FUNCTION (this << ecn);
   switch (ecn)

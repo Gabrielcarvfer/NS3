@@ -85,7 +85,7 @@ private:
    * \param isIdealRrc True if the Ideal RRC protocol is used
    * \returns the name string
    */
-  std::string BuildNameString (uint32_t numEnbs, uint32_t numUes, bool isIdealRrc);
+  stdfwd::string BuildNameString (uint32_t numEnbs, uint32_t numUes, bool isIdealRrc);
   /**
    * \brief Setup the simulation according to the configuration set by the
    *        class constructor, run it, and verify the result.
@@ -123,7 +123,7 @@ private:
    * \param oldState the old state
    * \param newState the new state
    */
-  void UeStateTransitionCallback (std::string context, uint64_t imsi,
+  void UeStateTransitionCallback (stdfwd::string context, uint64_t imsi,
                                   uint16_t cellId, uint16_t rnti,
                                   LteUeRrc::State oldState, LteUeRrc::State newState);
 
@@ -134,7 +134,7 @@ private:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionEstablishedUeCallback (std::string context, uint64_t imsi,
+  void ConnectionEstablishedUeCallback (stdfwd::string context, uint64_t imsi,
                                         uint16_t cellId, uint16_t rnti);
 
   /**
@@ -144,7 +144,7 @@ private:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionEstablishedEnbCallback (std::string context, uint64_t imsi,
+  void ConnectionEstablishedEnbCallback (stdfwd::string context, uint64_t imsi,
                                          uint16_t cellId, uint16_t rnti);
 
   /**
@@ -154,7 +154,7 @@ private:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionReleaseAtEnbCallback (std::string context, uint64_t imsi,
+  void ConnectionReleaseAtEnbCallback (stdfwd::string context, uint64_t imsi,
                                        uint16_t cellId, uint16_t rnti);
 
   /**
@@ -166,8 +166,8 @@ private:
    * \param type in-sync or out-of-sync indication
    * \param count the number of in-sync or out-of-sync indications
    */
-  void PhySyncDetectionCallback (std::string context, uint64_t imsi, uint16_t rnti,
-                                 uint16_t cellId, std::string type, uint8_t count);
+  void PhySyncDetectionCallback (stdfwd::string context, uint64_t imsi, uint16_t rnti,
+                                 uint16_t cellId, stdfwd::string type, uint8_t count);
 
   /**
    * \brief This callback function is executed when radio link failure is detected
@@ -176,7 +176,7 @@ private:
    * \param rnti the RNTI
    * \param cellId the cell ID
    */
-  void RadioLinkFailureCallback (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+  void RadioLinkFailureCallback (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
 
   /**
    * \brief Jump away function

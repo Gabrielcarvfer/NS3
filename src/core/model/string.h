@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "attribute-helper.h"
 
 /**
@@ -35,9 +35,9 @@ namespace ns3 {
  * Hold variables of type string
  *
  * This class can be used to hold variables of type string,
- * that is, either char * or std::string.
+ * that is, either char * or stdfwd::string.
  */
-ATTRIBUTE_VALUE_DEFINE_WITH_NAME (std::string, String);
+ATTRIBUTE_VALUE_DEFINE_WITH_NAME (stdfwd::string, String);
 ATTRIBUTE_ACCESSOR_DEFINE (String);
 ATTRIBUTE_CHECKER_DEFINE (String);
 

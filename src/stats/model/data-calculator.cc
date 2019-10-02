@@ -69,7 +69,7 @@ DataCalculator::DoDispose (void)
 
 //----------------------------------------------
 void
-DataCalculator::SetKey (const std::string key)
+DataCalculator::SetKey (const stdfwd::string key)
 {
   NS_LOG_FUNCTION (this << key);
 
@@ -77,7 +77,7 @@ DataCalculator::SetKey (const std::string key)
   // end DataCalculator::SetKey
 }
 
-std::string
+stdfwd::string
 DataCalculator::GetKey () const
 {
   NS_LOG_FUNCTION (this);
@@ -88,7 +88,7 @@ DataCalculator::GetKey () const
 
 //----------------------------------------------
 void
-DataCalculator::SetContext (const std::string context)
+DataCalculator::SetContext (const stdfwd::string context)
 {
   NS_LOG_FUNCTION (this << context);
 
@@ -96,7 +96,7 @@ DataCalculator::SetContext (const std::string context)
   // end DataCalculator::SetContext
 }
 
-std::string
+stdfwd::string
 DataCalculator::GetContext () const
 {
   NS_LOG_FUNCTION (this);

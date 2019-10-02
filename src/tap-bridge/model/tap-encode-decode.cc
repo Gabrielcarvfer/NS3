@@ -16,11 +16,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <iomanip>
 #include <sstream>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -33,7 +33,7 @@ namespace ns3 {
  * \param len The length of the input buffer.
  * \returns A string containing a hex representation of the data in buffer.
  */
-std::string
+stdfwd::string
 TapBufferToString (uint8_t *buffer, uint32_t len)
 {
   std::ostringstream oss;
@@ -64,7 +64,7 @@ TapBufferToString (uint8_t *buffer, uint32_t len)
  * \returns True indicates a successful conversion.
  */
 bool
-TapStringToBuffer (std::string s, uint8_t *buffer, uint32_t *len)
+TapStringToBuffer (stdfwd::string s, uint8_t *buffer, uint32_t *len)
 {
   //
   // If the string was made by our inverse function, the string length must

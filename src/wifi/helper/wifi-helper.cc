@@ -56,7 +56,7 @@ NS_LOG_COMPONENT_DEFINE ("WifiHelper");
 static void
 AsciiPhyTransmitSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> p,
   WifiMode mode,
   WifiPreamble preamble,
@@ -98,7 +98,7 @@ AsciiPhyTransmitSinkWithoutContext (
 static void
 AsciiPhyReceiveSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> p,
   double snr,
   WifiMode mode,
@@ -139,21 +139,21 @@ WifiPhyHelper::~WifiPhyHelper ()
 }
 
 void
-WifiPhyHelper::Set (std::string name, const AttributeValue &v)
+WifiPhyHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_phy.Set (name, v);
 }
 
 void
-WifiPhyHelper::SetErrorRateModel (std::string name,
-                                  std::string n0, const AttributeValue &v0,
-                                  std::string n1, const AttributeValue &v1,
-                                  std::string n2, const AttributeValue &v2,
-                                  std::string n3, const AttributeValue &v3,
-                                  std::string n4, const AttributeValue &v4,
-                                  std::string n5, const AttributeValue &v5,
-                                  std::string n6, const AttributeValue &v6,
-                                  std::string n7, const AttributeValue &v7)
+WifiPhyHelper::SetErrorRateModel (stdfwd::string name,
+                                  stdfwd::string n0, const AttributeValue &v0,
+                                  stdfwd::string n1, const AttributeValue &v1,
+                                  stdfwd::string n2, const AttributeValue &v2,
+                                  stdfwd::string n3, const AttributeValue &v3,
+                                  stdfwd::string n4, const AttributeValue &v4,
+                                  stdfwd::string n5, const AttributeValue &v5,
+                                  stdfwd::string n6, const AttributeValue &v6,
+                                  stdfwd::string n7, const AttributeValue &v7)
 {
   m_errorRateModel = ObjectFactory ();
   m_errorRateModel.SetTypeId (name);
@@ -168,15 +168,15 @@ WifiPhyHelper::SetErrorRateModel (std::string name,
 }
 
 void
-WifiPhyHelper::SetFrameCaptureModel (std::string name,
-                                     std::string n0, const AttributeValue &v0,
-                                     std::string n1, const AttributeValue &v1,
-                                     std::string n2, const AttributeValue &v2,
-                                     std::string n3, const AttributeValue &v3,
-                                     std::string n4, const AttributeValue &v4,
-                                     std::string n5, const AttributeValue &v5,
-                                     std::string n6, const AttributeValue &v6,
-                                     std::string n7, const AttributeValue &v7)
+WifiPhyHelper::SetFrameCaptureModel (stdfwd::string name,
+                                     stdfwd::string n0, const AttributeValue &v0,
+                                     stdfwd::string n1, const AttributeValue &v1,
+                                     stdfwd::string n2, const AttributeValue &v2,
+                                     stdfwd::string n3, const AttributeValue &v3,
+                                     stdfwd::string n4, const AttributeValue &v4,
+                                     stdfwd::string n5, const AttributeValue &v5,
+                                     stdfwd::string n6, const AttributeValue &v6,
+                                     stdfwd::string n7, const AttributeValue &v7)
 {
   m_frameCaptureModel = ObjectFactory ();
   m_frameCaptureModel.SetTypeId (name);
@@ -191,15 +191,15 @@ WifiPhyHelper::SetFrameCaptureModel (std::string name,
 }
 
 void
-WifiPhyHelper::SetPreambleDetectionModel (std::string name,
-                                          std::string n0, const AttributeValue &v0,
-                                          std::string n1, const AttributeValue &v1,
-                                          std::string n2, const AttributeValue &v2,
-                                          std::string n3, const AttributeValue &v3,
-                                          std::string n4, const AttributeValue &v4,
-                                          std::string n5, const AttributeValue &v5,
-                                          std::string n6, const AttributeValue &v6,
-                                          std::string n7, const AttributeValue &v7)
+WifiPhyHelper::SetPreambleDetectionModel (stdfwd::string name,
+                                          stdfwd::string n0, const AttributeValue &v0,
+                                          stdfwd::string n1, const AttributeValue &v1,
+                                          stdfwd::string n2, const AttributeValue &v2,
+                                          stdfwd::string n3, const AttributeValue &v3,
+                                          stdfwd::string n4, const AttributeValue &v4,
+                                          stdfwd::string n5, const AttributeValue &v5,
+                                          stdfwd::string n6, const AttributeValue &v6,
+                                          stdfwd::string n7, const AttributeValue &v7)
 {
   m_preambleDetectionModel = ObjectFactory ();
   m_preambleDetectionModel.SetTypeId (name);
@@ -535,7 +535,7 @@ WifiPhyHelper::GetPcapDataLinkType (void) const
 }
 
 void
-WifiPhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+WifiPhyHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   NS_LOG_FUNCTION (this << prefix << nd << promiscuous << explicitFilename);
 
@@ -554,7 +554,7 @@ WifiPhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool p
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -573,7 +573,7 @@ WifiPhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool p
 void
 WifiPhyHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream,
-  std::string prefix,
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -606,7 +606,7 @@ WifiPhyHelper::EnableAsciiInternal (
       //name of the file given the prefix.
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -658,15 +658,15 @@ WifiHelper::WifiHelper ()
 }
 
 void
-WifiHelper::SetRemoteStationManager (std::string type,
-                                     std::string n0, const AttributeValue &v0,
-                                     std::string n1, const AttributeValue &v1,
-                                     std::string n2, const AttributeValue &v2,
-                                     std::string n3, const AttributeValue &v3,
-                                     std::string n4, const AttributeValue &v4,
-                                     std::string n5, const AttributeValue &v5,
-                                     std::string n6, const AttributeValue &v6,
-                                     std::string n7, const AttributeValue &v7)
+WifiHelper::SetRemoteStationManager (stdfwd::string type,
+                                     stdfwd::string n0, const AttributeValue &v0,
+                                     stdfwd::string n1, const AttributeValue &v1,
+                                     stdfwd::string n2, const AttributeValue &v2,
+                                     stdfwd::string n3, const AttributeValue &v3,
+                                     stdfwd::string n4, const AttributeValue &v4,
+                                     stdfwd::string n5, const AttributeValue &v5,
+                                     stdfwd::string n6, const AttributeValue &v6,
+                                     stdfwd::string n7, const AttributeValue &v7)
 {
   m_stationManager = ObjectFactory ();
   m_stationManager.SetTypeId (type);
@@ -681,15 +681,15 @@ WifiHelper::SetRemoteStationManager (std::string type,
 }
 
 void
-WifiHelper::SetObssPdAlgorithm (std::string type,
-                                std::string n0, const AttributeValue &v0,
-                                std::string n1, const AttributeValue &v1,
-                                std::string n2, const AttributeValue &v2,
-                                std::string n3, const AttributeValue &v3,
-                                std::string n4, const AttributeValue &v4,
-                                std::string n5, const AttributeValue &v5,
-                                std::string n6, const AttributeValue &v6,
-                                std::string n7, const AttributeValue &v7)
+WifiHelper::SetObssPdAlgorithm (stdfwd::string type,
+                                stdfwd::string n0, const AttributeValue &v0,
+                                stdfwd::string n1, const AttributeValue &v1,
+                                stdfwd::string n2, const AttributeValue &v2,
+                                stdfwd::string n3, const AttributeValue &v3,
+                                stdfwd::string n4, const AttributeValue &v4,
+                                stdfwd::string n5, const AttributeValue &v5,
+                                stdfwd::string n6, const AttributeValue &v6,
+                                stdfwd::string n7, const AttributeValue &v7)
 {
   m_obssPdAlgorithm = ObjectFactory ();
   m_obssPdAlgorithm.SetTypeId (type);
@@ -821,7 +821,7 @@ WifiHelper::Install (const WifiPhyHelper &phy,
 
 NetDeviceContainer
 WifiHelper::Install (const WifiPhyHelper &phy,
-                     const WifiMacHelper &mac, std::string nodeName) const
+                     const WifiMacHelper &mac, stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (phy, mac, NodeContainer (node));

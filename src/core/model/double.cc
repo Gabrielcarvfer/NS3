@@ -46,13 +46,13 @@ namespace internal {
  * \param [in] name The original type name ("float", "double").
  * \returns The AttributeChecker.
  */
-Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, std::string name)
+Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, stdfwd::string name)
 {
   NS_LOG_FUNCTION (min << max << name);
 
   struct Checker : public AttributeChecker
   {
-    Checker (double minValue, double maxValue, std::string name)
+    Checker (double minValue, double maxValue, stdfwd::string name)
       : m_minValue (minValue),
         m_maxValue (maxValue),
         m_name (name) {}
@@ -65,7 +65,7 @@ Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, std::stri
         }
       return v->Get () >= m_minValue && v->Get () <= m_maxValue;
     }
-    virtual std::string GetValueTypeName (void) const {
+    virtual stdfwd::string GetValueTypeName (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       return "ns3::DoubleValue";
     }
@@ -73,7 +73,7 @@ Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, std::stri
       NS_LOG_FUNCTION_NOARGS ();
       return true;
     }
-    virtual std::string GetUnderlyingTypeInformation (void) const {
+    virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       std::ostringstream oss;
       oss << m_name << " " << m_minValue << ":" << m_maxValue;
@@ -96,7 +96,7 @@ Ptr<const AttributeChecker> MakeDoubleChecker (double min, double max, std::stri
     }
     double m_minValue;
     double m_maxValue;
-    std::string m_name;
+    stdfwd::string m_name;
   } *checker = new Checker (min, max, name);
   return Ptr<const AttributeChecker> (checker, false);
 }

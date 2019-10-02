@@ -47,7 +47,7 @@ public:
    * \param schedulerType the scheduler type
    * \param useIdealRrc true if use ideal RRC
    */
-  LenaMimoTestCase (uint16_t dist, std::vector<uint32_t> estThrDl, std::string schedulerType, bool useIdealRrc);
+  LenaMimoTestCase (uint16_t dist, std::vector<uint32_t> estThrDl, stdfwd::string schedulerType, bool useIdealRrc);
   virtual ~LenaMimoTestCase ();
 
 private:
@@ -68,10 +68,10 @@ private:
    * \param useIdealRrc if true use the ideal RRC
    * \returns the name string
    */
-  static std::string BuildNameString (uint16_t dist, std::string schedulerType, bool useIdealRrc);
+  static stdfwd::string BuildNameString (uint16_t dist, stdfwd::string schedulerType, bool useIdealRrc);
   uint16_t m_dist; ///< the distance
   std::vector<uint32_t> m_estThrDl; ///< estimated throughput DL
-  std::string m_schedulerType; ///< the scheduler type
+  stdfwd::string m_schedulerType; ///< the scheduler type
   bool m_useIdealRrc; ///< whether to use the ideal RRC
   
   std::vector <uint64_t> m_dlDataRxed; ///< DL data received

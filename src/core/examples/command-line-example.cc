@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 
@@ -39,7 +39,7 @@ namespace {
  * Global variable to illustrate command line arguments handled by a
  * Callback function.
  */
-std::string g_cbArg = "cbArg default";
+stdfwd::string g_cbArg = "cbArg default";
 
 /**
  * Function to illustrate command line arguments handled by a
@@ -48,7 +48,7 @@ std::string g_cbArg = "cbArg default";
  * \param [in] val New value for \p g_cbArg.
  * \returns \c true.
  */
-bool SetCbArg (std::string val)
+bool SetCbArg (stdfwd::string val)
 {
   g_cbArg = val;
   return true;
@@ -62,11 +62,11 @@ int main (int argc, char *argv[])
 
   int         intArg  = 1;
   bool        boolArg = false;
-  std::string strArg  = "strArg default";
+  stdfwd::string strArg  = "strArg default";
   // Attribute path
-  const std::string attrClass = "ns3::RandomVariableStream";
-  const std::string attrName  = "Antithetic";
-  const std::string attrPath  = attrClass + "::" + attrName;
+  const stdfwd::string attrClass = "ns3::RandomVariableStream";
+  const stdfwd::string attrName  = "Antithetic";
+  const stdfwd::string attrPath  = attrClass + "::" + attrName;
   // Non-option arguments
   int         nonOpt1 = 1;
   int         nonOpt2 = 1;
@@ -75,11 +75,11 @@ int main (int argc, char *argv[])
   // but we want to demonstrate that CommandLine has changed them.
   const int intDef = intArg;
   const bool boolDef = boolArg;
-  const std::string strDef = strArg;
-  const std::string cbDef  = g_cbArg;
+  const stdfwd::string strDef = strArg;
+  const stdfwd::string cbDef  = g_cbArg;
   // Look up default value for attribute
   const TypeId tid = TypeId::LookupByName (attrClass);
-  std::string attrDef;
+  stdfwd::string attrDef;
   {
     struct TypeId::AttributeInformation info;
     tid.LookupAttributeByName (attrName, &info);

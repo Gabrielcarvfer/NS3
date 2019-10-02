@@ -83,7 +83,7 @@ public:
    * \param [in] name The name of this type id.
    * \returns The id.
    */
-  uint16_t AllocateUid (std::string name);
+  uint16_t AllocateUid (stdfwd::string name);
   /**
    * Set the parent of a type id.
    * \param [in] uid The id.
@@ -95,7 +95,7 @@ public:
    * \param [in] uid The id.
    * \param [in] groupName The group name.
    */
-  void SetGroupName (uint16_t uid, std::string groupName);
+  void SetGroupName (uint16_t uid, stdfwd::string groupName);
   /**
    * Set the size of the object class referred to by this id.
    * \param [in] uid The id.
@@ -118,7 +118,7 @@ public:
    * \param [in] name The type id to find.
    * \returns The type id.  A type id of 0 means \p name wasn't found.
    */
-  uint16_t GetUid (std::string name) const;
+  uint16_t GetUid (stdfwd::string name) const;
   /**
    * Get a type id by hash value.
    * \param [in] hash The type id to find.
@@ -130,7 +130,7 @@ public:
    * \param [in] uid The id.
    * \returns The name of the type id.
    */
-  std::string GetName (uint16_t uid) const;
+  stdfwd::string GetName (uint16_t uid) const;
   /**
    * Get the hash of a type id.
    * \param [in] uid The id.
@@ -148,7 +148,7 @@ public:
    * \param [in] uid The id.
    * \returns The group name of the type id.
    */
-  std::string GetGroupName (uint16_t uid) const;
+  stdfwd::string GetGroupName (uint16_t uid) const;
   /**
    * Get the size of a type id.
    * \param [in] uid The id.
@@ -199,14 +199,14 @@ public:
    * \param [in] supportMsg Upgrade hint if this attribute is no longer supported.
    */
   void AddAttribute (uint16_t uid,
-                     std::string name,
-                     std::string help, 
+                     stdfwd::string name,
+                     stdfwd::string help,
                      uint32_t flags,
                      Ptr<const AttributeValue> initialValue,
                      Ptr<const AttributeAccessor> accessor,
                      Ptr<const AttributeChecker> checker,
                      TypeId::SupportLevel supportLevel = TypeId::SUPPORTED,
-                     const std::string &supportMsg = "");
+                     const stdfwd::string &supportMsg = "");
   /**
    * Set the initial value of an Attribute.
    * \param [in] uid The id.
@@ -245,12 +245,12 @@ public:
    * \returns This TypeId instance.
    */
   void AddTraceSource (uint16_t uid,
-                       std::string name, 
-                       std::string help,
+                       stdfwd::string name,
+                       stdfwd::string help,
                        Ptr<const TraceSourceAccessor> accessor,
-                       std::string callback,
+                       stdfwd::string callback,
                        TypeId::SupportLevel supportLevel = TypeId::SUPPORTED,
-                       const std::string &supportMsg = "");
+                       const stdfwd::string &supportMsg = "");
   /**
    * Get the number of Trace sources.
    * \param [in] uid The id.
@@ -278,31 +278,31 @@ private:
    * \param [in] name The TraceSource name.
    * \returns \c true if \p uid has the TraceSource \p name.
    */
-  bool HasTraceSource (uint16_t uid, std::string name);
+  bool HasTraceSource (uint16_t uid, stdfwd::string name);
   /**
    * Check if a type id has a given Attribute.
    * \param [in] uid The id.
    * \param [in] name The Attribute name.
    * \returns \c true if \p uid has the Attribute \p name.
    */
-  bool HasAttribute (uint16_t uid, std::string name);
+  bool HasAttribute (uint16_t uid, stdfwd::string name);
   /**
    * Hashing function.
    * \param [in] name The type id name.
    * \returns The hashed value of \p name.
    */
-  static TypeId::hash_t Hasher (const std::string name);
+  static TypeId::hash_t Hasher (const stdfwd::string name);
 
   /** The information record about a single type id. */
   struct IidInformation {
     /** The type id name. */
-    std::string name;
+    stdfwd::string name;
     /** The type id hash value. */
     TypeId::hash_t hash;
     /** The parent type id. */
     uint16_t parent;
     /** The group name. */
-    std::string groupName;
+    stdfwd::string groupName;
     /** The size of the object represented by this type id. */
     std::size_t size;
     /** \c true if a constructor Callback has been registered. */
@@ -318,7 +318,7 @@ private:
     /** Support level/deprecation. */
     TypeId::SupportLevel supportLevel;
     /** Support message. */
-    std::string supportMsg;
+    stdfwd::string supportMsg;
   };
   /** Iterator type. */
   typedef std::vector<struct IidInformation>::const_iterator Iterator;
@@ -334,7 +334,7 @@ private:
   std::vector<struct IidInformation> m_information;
 
   /** Type of the by-name index. */
-  typedef std::map<std::string, uint16_t> namemap_t;
+  typedef std::map<stdfwd::string, uint16_t> namemap_t;
   /** The by-name index. */
   namemap_t m_namemap;
 
@@ -359,7 +359,7 @@ private:
 
 //static
 TypeId::hash_t
-IidManager::Hasher (const std::string name)
+IidManager::Hasher (const stdfwd::string name)
 {
   static ns3::Hasher hasher ( Create<Hash::Function::Murmur3> () );
   return hasher.clear ().GetHash32 (name);
@@ -379,7 +379,7 @@ IidManager::Hasher (const std::string name)
 #define IIDL IID << ": "
 
 uint16_t
-IidManager::AllocateUid (std::string name)
+IidManager::AllocateUid (stdfwd::string name)
 {
   NS_LOG_FUNCTION (IID << name);
   // Type names are definitive: equal names are equal types
@@ -469,7 +469,7 @@ IidManager::SetParent (uint16_t uid, uint16_t parent)
   information->parent = parent;
 }
 void 
-IidManager::SetGroupName (uint16_t uid, std::string groupName)
+IidManager::SetGroupName (uint16_t uid, stdfwd::string groupName)
 {
   NS_LOG_FUNCTION (IID << uid << groupName);
   struct IidInformation *information = LookupInformation (uid);
@@ -504,7 +504,7 @@ IidManager::AddConstructor (uint16_t uid, Callback<ObjectBase *> callback)
 }
 
 uint16_t 
-IidManager::GetUid (std::string name) const
+IidManager::GetUid (stdfwd::string name) const
 {
   NS_LOG_FUNCTION (IID << name);
   uint16_t uid = 0;
@@ -529,7 +529,7 @@ IidManager::GetUid (TypeId::hash_t hash) const
   NS_LOG_LOGIC (IIDL << uid);
   return uid;
 }
-std::string 
+stdfwd::string
 IidManager::GetName (uint16_t uid) const
 {
   NS_LOG_FUNCTION (IID << uid);
@@ -555,7 +555,7 @@ IidManager::GetParent (uint16_t uid) const
   NS_LOG_LOGIC (IIDL << pid);
   return pid;
 }
-std::string 
+stdfwd::string
 IidManager::GetGroupName (uint16_t uid) const
 {
   NS_LOG_FUNCTION (IID << uid);
@@ -610,7 +610,7 @@ IidManager::GetRegistered (uint16_t i) const
 
 bool
 IidManager::HasAttribute (uint16_t uid,
-                          std::string name)
+                          stdfwd::string name)
 {
   NS_LOG_FUNCTION (IID << uid << name);
   struct IidInformation *information  = LookupInformation (uid);
@@ -641,20 +641,20 @@ IidManager::HasAttribute (uint16_t uid,
 
 void 
 IidManager::AddAttribute (uint16_t uid,
-                          std::string name,
-                          std::string help,
+                          stdfwd::string name,
+                          stdfwd::string help,
                           uint32_t flags,
                           Ptr<const AttributeValue> initialValue,
                           Ptr<const AttributeAccessor> accessor,
                           Ptr<const AttributeChecker> checker,
                           TypeId::SupportLevel supportLevel,
-                          const std::string &supportMsg)
+                          const stdfwd::string &supportMsg)
 {
   NS_LOG_FUNCTION (IID << uid << name << help << flags
                    << initialValue << accessor << checker
                    << supportLevel << supportMsg);
   struct IidInformation *information = LookupInformation (uid);
-  if (name.find (' ') != std::string::npos)
+  if (name.find (' ') != stdfwd::string::npos)
     {
       NS_FATAL_ERROR ("Attribute name \"" << name << "\" may not contain spaces ' ', "
                       << "encountered when registering TypeId \""
@@ -712,7 +712,7 @@ IidManager::GetAttribute (uint16_t uid, std::size_t i) const
 
 bool
 IidManager::HasTraceSource (uint16_t uid,
-                            std::string name)
+                            stdfwd::string name)
 {
   NS_LOG_FUNCTION (IID << uid << name);
   struct IidInformation *information  = LookupInformation (uid);
@@ -743,12 +743,12 @@ IidManager::HasTraceSource (uint16_t uid,
 
 void 
 IidManager::AddTraceSource (uint16_t uid,
-                            std::string name, 
-                            std::string help,
+                            stdfwd::string name,
+                            stdfwd::string help,
                             Ptr<const TraceSourceAccessor> accessor,
-                            std::string callback,
+                            stdfwd::string callback,
                             TypeId::SupportLevel supportLevel,
-                            const std::string &supportMsg)
+                            const stdfwd::string &supportMsg)
 {
   NS_LOG_FUNCTION (IID << uid << name << help
                    << accessor << callback
@@ -821,7 +821,7 @@ TypeId::TypeId (uint16_t tid)
   NS_LOG_FUNCTION (this << tid);
 }
 TypeId
-TypeId::LookupByName (std::string name)
+TypeId::LookupByName (stdfwd::string name)
 {
   NS_LOG_FUNCTION (name);
   uint16_t uid = IidManager::Get ()->GetUid (name);
@@ -829,7 +829,7 @@ TypeId::LookupByName (std::string name)
   return TypeId (uid);
 }
 bool
-TypeId::LookupByNameFailSafe (std::string name, TypeId *tid)
+TypeId::LookupByNameFailSafe (stdfwd::string name, TypeId *tid)
 {
   NS_LOG_FUNCTION (name << tid->GetUid ());
   uint16_t uid = IidManager::Get ()->GetUid (name);
@@ -874,7 +874,7 @@ TypeId::GetRegistered (uint16_t i)
 }
 
 bool
-TypeId::LookupAttributeByName (std::string name, struct TypeId::AttributeInformation *info) const
+TypeId::LookupAttributeByName (stdfwd::string name, struct TypeId::AttributeInformation *info) const
 {
   NS_LOG_FUNCTION (this << name << info);
   TypeId tid;
@@ -919,7 +919,7 @@ TypeId::SetParent (TypeId tid)
   return *this;
 }
 TypeId 
-TypeId::SetGroupName (std::string groupName)
+TypeId::SetGroupName (stdfwd::string groupName)
 {
   NS_LOG_FUNCTION (this << groupName);
   IidManager::Get ()->SetGroupName (m_tid, groupName);
@@ -957,19 +957,19 @@ TypeId::IsChildOf (TypeId other) const
     }
   return tmp == other && *this != other;
 }
-std::string 
+stdfwd::string
 TypeId::GetGroupName (void) const
 {
   NS_LOG_FUNCTION (this);
-  std::string groupName = IidManager::Get ()->GetGroupName (m_tid);
+  stdfwd::string groupName = IidManager::Get ()->GetGroupName (m_tid);
   return groupName;
 }
 
-std::string 
+stdfwd::string
 TypeId::GetName (void) const
 {
   NS_LOG_FUNCTION (this);
-  std::string name = IidManager::Get ()->GetName (m_tid);
+  stdfwd::string name = IidManager::Get ()->GetName (m_tid);
   return name;
 }
 
@@ -1003,13 +1003,13 @@ TypeId::DoAddConstructor (Callback<ObjectBase *> cb)
 }
 
 TypeId 
-TypeId::AddAttribute (std::string name,
-                      std::string help, 
+TypeId::AddAttribute (stdfwd::string name,
+                      stdfwd::string help,
                       const AttributeValue &initialValue,
                       Ptr<const AttributeAccessor> accessor,
                       Ptr<const AttributeChecker> checker,
                       SupportLevel supportLevel,
-                      const std::string &supportMsg)
+                      const stdfwd::string &supportMsg)
 {
   NS_LOG_FUNCTION (this << name << help
                    << &initialValue << accessor << checker
@@ -1021,14 +1021,14 @@ TypeId::AddAttribute (std::string name,
 }
 
 TypeId 
-TypeId::AddAttribute (std::string name,
-                      std::string help, 
+TypeId::AddAttribute (stdfwd::string name,
+                      stdfwd::string help,
                       uint32_t flags,
                       const AttributeValue &initialValue,
                       Ptr<const AttributeAccessor> accessor,
                       Ptr<const AttributeChecker> checker,
                       SupportLevel supportLevel,
-                      const std::string &supportMsg)
+                      const stdfwd::string &supportMsg)
 {
   NS_LOG_FUNCTION (this << name << help << flags
                    << &initialValue << accessor << checker
@@ -1078,7 +1078,7 @@ TypeId::GetAttribute (std::size_t i) const
   NS_LOG_FUNCTION (this << i);
   return IidManager::Get ()->GetAttribute (m_tid, i);
 }
-std::string 
+stdfwd::string
 TypeId::GetAttributeFullName (std::size_t i) const
 {
   NS_LOG_FUNCTION (this << i);
@@ -1100,20 +1100,20 @@ TypeId::GetTraceSource (std::size_t i) const
 }
 
 TypeId 
-TypeId::AddTraceSource (std::string name,
-                        std::string help,
+TypeId::AddTraceSource (stdfwd::string name,
+                        stdfwd::string help,
                         Ptr<const TraceSourceAccessor> accessor)
 {
   return AddTraceSource (name, help, accessor, "(not yet documented)");
 }
 
 TypeId 
-TypeId::AddTraceSource (std::string name,
-                        std::string help,
+TypeId::AddTraceSource (stdfwd::string name,
+                        stdfwd::string help,
                         Ptr<const TraceSourceAccessor> accessor,
-                        std::string callback,
+                        stdfwd::string callback,
                         SupportLevel supportLevel,
-                        const std::string &supportMsg)
+                        const stdfwd::string &supportMsg)
 {
   NS_LOG_FUNCTION (this << name << help
                    << accessor << callback
@@ -1133,7 +1133,7 @@ TypeId::HideFromDocumentation (void)
 }
 
 Ptr<const TraceSourceAccessor>
-TypeId::LookupTraceSourceByName (std::string name,
+TypeId::LookupTraceSourceByName (stdfwd::string name,
                                  struct TraceSourceInformation *info) const
 {
   NS_LOG_FUNCTION (this << name);
@@ -1173,7 +1173,7 @@ TypeId::LookupTraceSourceByName (std::string name,
 }
 
 Ptr<const TraceSourceAccessor> 
-TypeId::LookupTraceSourceByName (std::string name) const
+TypeId::LookupTraceSourceByName (stdfwd::string name) const
 {
   struct TraceSourceInformation info;
   return LookupTraceSourceByName (name, &info);
@@ -1211,7 +1211,7 @@ std::ostream & operator << (std::ostream &os, TypeId tid)
  */
 std::istream & operator >> (std::istream &is, TypeId &tid)
 {
-  std::string tidString;
+  stdfwd::string tidString;
   is >> tidString;
   bool ok = TypeId::LookupByNameFailSafe (tidString, &tid);
   if (!ok)

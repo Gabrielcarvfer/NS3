@@ -86,8 +86,8 @@ NS_LOG_COMPONENT_DEFINE ("EmulatedUdpEchoExample");
 int
 main (int argc, char *argv[])
 {
-  std::string deviceName ("eth1");
-  std::string encapMode ("Dix");
+  stdfwd::string deviceName ("eth1");
+  stdfwd::string encapMode ("Dix");
   bool clientMode = false;
   bool serverMode = false;
   double stopTime = 10;

@@ -72,7 +72,7 @@ static BuildingsShadowingTestSuite buildingsShadowingTestSuite;
 * TestCase
 */
 
-BuildingsShadowingTestCase::BuildingsShadowingTestCase ( uint16_t m1, uint16_t m2, double refValue, double sigmaRef, std::string name)
+BuildingsShadowingTestCase::BuildingsShadowingTestCase ( uint16_t m1, uint16_t m2, double refValue, double sigmaRef, stdfwd::string name)
   : TestCase ("SHADOWING calculation: " + name),
     m_mobilityModelIndex1 (m1),
     m_mobilityModelIndex2 (m2),

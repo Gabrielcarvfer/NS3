@@ -15,7 +15,7 @@
  *
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -54,7 +54,7 @@ BriteTopologyStructureTestCase::~BriteTopologyStructureTestCase ()
 void BriteTopologyStructureTestCase::DoRun (void)
 {
 
-  std::string confFile = "src/brite/test/test.conf";
+  stdfwd::string confFile = "src/brite/test/test.conf";
 
   SeedManager::SetRun (1);
   SeedManager::SetSeed (1);
@@ -109,7 +109,7 @@ BriteTopologyFunctionTestCase::~BriteTopologyFunctionTestCase ()
 void BriteTopologyFunctionTestCase::DoRun (void)
 {
 
-  std::string confFile = "src/brite/test/test.conf";
+  stdfwd::string confFile = "src/brite/test/test.conf";
   BriteTopologyHelper bth (confFile);
 
   PointToPointHelper p2p;

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "ss-record.h"
 #include "service-flow.h"

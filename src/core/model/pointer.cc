@@ -64,7 +64,7 @@ PointerValue::Copy (void) const
   NS_LOG_FUNCTION (this);
   return Create<PointerValue> (*this);
 }
-std::string
+stdfwd::string
 PointerValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 {
   NS_LOG_FUNCTION (this << checker);
@@ -74,7 +74,7 @@ PointerValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 }
 
 bool 
-PointerValue::DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker)
+PointerValue::DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker)
 {
   // We assume that the string you want to deserialize contains
   // a description for an ObjectFactory to create an object and then assign it to the

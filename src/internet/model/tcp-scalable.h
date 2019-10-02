@@ -80,7 +80,7 @@ public:
   TcpScalable (const TcpScalable& sock);
   virtual ~TcpScalable (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Get slow start threshold following Scalable principle (Equation 2)

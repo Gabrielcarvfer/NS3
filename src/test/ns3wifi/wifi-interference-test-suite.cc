@@ -42,8 +42,8 @@ private:
   virtual void DoRun (void);
   void ReceivePacket (Ptr<Socket> socket);
   static void GenerateTraffic (Ptr<Socket> socket, uint32_t pktSize, uint32_t pktCount, Time pktInterval);
-  void PrintEndSync (std::string context, uint32_t dataRate, double snr, double per);
-  double WifiSimpleInterference (std::string phyMode, double Prss, double Irss, double delta, uint32_t PpacketSize, 
+  void PrintEndSync (stdfwd::string context, uint32_t dataRate, double snr, double per);
+  double WifiSimpleInterference (stdfwd::string phyMode, double Prss, double Irss, double delta, uint32_t PpacketSize,
                                  uint32_t IpacketSize, bool verbose, InternetStackHelper internet, WifiPhyStandard wifiStandard);
   double m_PER;
   double m_SNR;
@@ -60,7 +60,7 @@ WifiInterferenceTestCase::~WifiInterferenceTestCase ()
 {
 }
 
-static inline std::string
+static inline stdfwd::string
 PrintReceivedPacket (Ptr<Socket> socket)
 {
   Address addr;
@@ -94,7 +94,7 @@ WifiInterferenceTestCase::GenerateTraffic (Ptr<Socket> socket, uint32_t pktSize,
 }
 
 void 
-WifiInterferenceTestCase::PrintEndSync (std::string context, uint32_t dataRate, double snr, double per)
+WifiInterferenceTestCase::PrintEndSync (stdfwd::string context, uint32_t dataRate, double snr, double per)
 {
   NS_LOG_UNCOND ("EndSync:  Received frame with dataRate=" << dataRate << ", SNR=" << snr << ", PER =" << per);
   m_PER = per;
@@ -103,7 +103,7 @@ WifiInterferenceTestCase::PrintEndSync (std::string context, uint32_t dataRate, 
 }
 
 double 
-WifiInterferenceTestCase::WifiSimpleInterference (std::string phyMode,double Prss, double Irss, double delta, uint32_t PpacketSize, uint32_t IpacketSize, bool verbose, InternetStackHelper internet, WifiPhyStandard wifiStandard)
+WifiInterferenceTestCase::WifiSimpleInterference (stdfwd::string phyMode,double Prss, double Irss, double delta, uint32_t PpacketSize, uint32_t IpacketSize, bool verbose, InternetStackHelper internet, WifiPhyStandard wifiStandard)
 {
 
   uint32_t numPackets = 1;
@@ -230,7 +230,7 @@ void
 WifiInterferenceTestCase::DoRun (void)
 {
 
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
   WifiPhyStandard wifiStandard=WIFI_PHY_STANDARD_80211b;
   double Prss = -90;  // -dBm
   double Irss = -90;  // -dBm

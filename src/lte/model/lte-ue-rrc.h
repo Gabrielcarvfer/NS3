@@ -387,7 +387,7 @@ public:
    * \param [in] count
    */
   typedef void (*PhySyncDetectionTracedCallback)
-      (uint64_t imsi, uint16_t rnti, uint16_t cellId, std::string type, uint16_t count);
+      (uint64_t imsi, uint16_t rnti, uint16_t cellId, stdfwd::string type, uint16_t count);
 
   /**
    * TracedCallback signature for imsi, cellId, rnti and counter for
@@ -924,7 +924,7 @@ private:
    * receives in-sync or out-of-sync indications from UE PHY
    *
    */
-  TracedCallback<uint64_t, uint16_t, uint16_t, std::string, uint8_t> m_phySyncDetectionTrace;
+  TracedCallback<uint64_t, uint16_t, uint16_t, stdfwd::string, uint8_t> m_phySyncDetectionTrace;
   /**
    * The 'RadioLinkFailure' trace source. Fired when T310 timer expires.
    *

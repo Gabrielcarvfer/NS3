@@ -78,7 +78,7 @@
 #include <iosfwd>
 #include <fstream>
 #include <vector>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -96,15 +96,15 @@ main (int argc, char *argv[])
 {
   uint16_t sinkPort = 8000;
   uint32_t packetSize = 10000; // bytes
-  std::string dataRate("1000Mb/s");
+  stdfwd::string dataRate("1000Mb/s");
   bool serverMode = false;
 
-  std::string deviceName ("eth0");
-  std::string client ("10.1.1.1");
-  std::string server ("10.1.1.2");
-  std::string netmask ("255.255.255.0");
-  std::string macClient ("00:00:00:00:00:01");
-  std::string macServer ("00:00:00:00:00:02");
+  stdfwd::string deviceName ("eth0");
+  stdfwd::string client ("10.1.1.1");
+  stdfwd::string server ("10.1.1.2");
+  stdfwd::string netmask ("255.255.255.0");
+  stdfwd::string macClient ("00:00:00:00:00:01");
+  stdfwd::string macServer ("00:00:00:00:00:02");
 
   CommandLine cmd;
   cmd.AddValue ("deviceName", "Device name", deviceName);

@@ -32,7 +32,7 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("LenaX2HandoverMeasures");
 
 void
-NotifyConnectionEstablishedUe (std::string context,
+NotifyConnectionEstablishedUe (stdfwd::string context,
                                uint64_t imsi,
                                uint16_t cellid,
                                uint16_t rnti)
@@ -45,7 +45,7 @@ NotifyConnectionEstablishedUe (std::string context,
 }
 
 void
-NotifyHandoverStartUe (std::string context,
+NotifyHandoverStartUe (stdfwd::string context,
                        uint64_t imsi,
                        uint16_t cellid,
                        uint16_t rnti,
@@ -60,7 +60,7 @@ NotifyHandoverStartUe (std::string context,
 }
 
 void
-NotifyHandoverEndOkUe (std::string context,
+NotifyHandoverEndOkUe (stdfwd::string context,
                        uint64_t imsi,
                        uint16_t cellid,
                        uint16_t rnti)
@@ -73,7 +73,7 @@ NotifyHandoverEndOkUe (std::string context,
 }
 
 void
-NotifyConnectionEstablishedEnb (std::string context,
+NotifyConnectionEstablishedEnb (stdfwd::string context,
                                 uint64_t imsi,
                                 uint16_t cellid,
                                 uint16_t rnti)
@@ -86,7 +86,7 @@ NotifyConnectionEstablishedEnb (std::string context,
 }
 
 void
-NotifyHandoverStartEnb (std::string context,
+NotifyHandoverStartEnb (stdfwd::string context,
                         uint64_t imsi,
                         uint16_t cellid,
                         uint16_t rnti,
@@ -101,7 +101,7 @@ NotifyHandoverStartEnb (std::string context,
 }
 
 void
-NotifyHandoverEndOkEnb (std::string context,
+NotifyHandoverEndOkEnb (stdfwd::string context,
                         uint64_t imsi,
                         uint16_t cellid,
                         uint16_t rnti)

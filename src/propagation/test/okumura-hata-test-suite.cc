@@ -36,7 +36,7 @@ NS_LOG_COMPONENT_DEFINE ("OkumuraHataPropagationLossModelTest");
 class OkumuraHataPropagationLossModelTestCase : public TestCase
 {
 public:
-  OkumuraHataPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, std::string name);
+  OkumuraHataPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, stdfwd::string name);
   virtual ~OkumuraHataPropagationLossModelTestCase ();
 
 private:
@@ -53,7 +53,7 @@ private:
 
 };
 
-OkumuraHataPropagationLossModelTestCase::OkumuraHataPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, std::string name)
+OkumuraHataPropagationLossModelTestCase::OkumuraHataPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, stdfwd::string name)
   : TestCase (name),
     m_freq (freq),
     m_dist (dist),

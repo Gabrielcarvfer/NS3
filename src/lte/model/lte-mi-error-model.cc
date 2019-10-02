@@ -33,7 +33,7 @@
 #include <vector>
 #include "../../core/model/log.h"
 #include "../../core/model/pointer.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cmath>
 #include <cstdlib>
 #include "lte-mi-error-model.h"

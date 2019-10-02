@@ -37,7 +37,7 @@ SixLowPanHelper::SixLowPanHelper ()
   m_deviceFactory.SetTypeId ("ns3::SixLowPanNetDevice");
 }
 
-void SixLowPanHelper::SetDeviceAttribute (std::string n1,
+void SixLowPanHelper::SetDeviceAttribute (stdfwd::string n1,
                                           const AttributeValue &v1)
 {
   NS_LOG_FUNCTION (this);

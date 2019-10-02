@@ -52,7 +52,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  static std::string Name (TvSpectrumTransmitter::TvType tvType, 
+  static stdfwd::string Name (TvSpectrumTransmitter::TvType tvType,
                            double startFrequency, 
                            double channelBandwidth, 
                            double basePsd);
@@ -64,7 +64,7 @@ private:
 };
 
 
-std::string 
+stdfwd::string
 TvSpectrumTransmitterTestCase::Name (TvSpectrumTransmitter::TvType tvType, 
                                      double startFrequency, 
                                      double channelBandwidth, 

@@ -20,9 +20,9 @@
  */
 #pragma once
 
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <string>
 #include <vector>
-#include <utility>
 
 namespace ns3 {
 
@@ -64,19 +64,19 @@ public:
    *       escape it like this:  "First line\\nSecond line" so that
    *       it is converted to "First line\nSecond line" in the plot file.
    */
-  void SetTitle (const std::string& title);
+  void SetTitle (const stdfwd::string& title);
 
   /**
    * \brief Change extra formatting style parameters for newly created objects.
    * \param extra       extra formatting
    */
-  static void SetDefaultExtra (const std::string& extra);
+  static void SetDefaultExtra (const stdfwd::string& extra);
 
   /**
    * \brief Add extra formatting parameters to this dataset.
    * \param extra       extra formatting
    */
-  void SetExtra (const std::string& extra);
+  void SetExtra (const stdfwd::string& extra);
 
 protected:
 
@@ -87,7 +87,7 @@ protected:
   /**
    * \brief Extra gnuplot parameters set on every newly created dataset.
    */
-  static std::string m_defaultExtra;
+  static stdfwd::string m_defaultExtra;
 
   /**
    * \brief Derived classes subclass this struct and add their own data fields.
@@ -146,7 +146,7 @@ public:
    * Create an empty dataset. Usually, the dataset's title is 
    * displayed in the legend box.
    */
-  Gnuplot2dDataset (const std::string& title = "Untitled");
+  Gnuplot2dDataset (const stdfwd::string& title = "Untitled");
 
   /**
    * Change default style for all newly created objects.
@@ -249,12 +249,12 @@ public:
    * Create an function dataset. Usually, the dataset's title is displayed in
    * the legend box.
    */
-  Gnuplot2dFunction (const std::string& title = "Untitled", const std::string& function = "");
+  Gnuplot2dFunction (const stdfwd::string& title = "Untitled", const stdfwd::string& function = "");
 
   /**
    * \param function new function string to set
    */
-  void SetFunction (const std::string& function);
+  void SetFunction (const stdfwd::string& function);
 
 private:
 
@@ -277,18 +277,18 @@ public:
    * Create an empty dataset. Usually, the dataset's title is 
    * displayed in the legend box.
    */
-  Gnuplot3dDataset (const std::string& title = "Untitled");
+  Gnuplot3dDataset (const stdfwd::string& title = "Untitled");
 
   /**
    * Change default style for all newly created objects.
    * \param style the style of plotting to use for newly created datasets.
    */
-  static void SetDefaultStyle (const std::string& style);
+  static void SetDefaultStyle (const stdfwd::string& style);
 
   /**
    * \param style the style of plotting to use for this dataset.
    */
-  void SetStyle (const std::string& style);
+  void SetStyle (const stdfwd::string& style);
 
   /**
    * \param x x coord to new data point
@@ -320,7 +320,7 @@ private:
   /// The set of points in the dataset
   typedef std::vector<struct Point> PointSet;
 
-  static std::string m_defaultStyle; //!< default plot style
+  static stdfwd::string m_defaultStyle; //!< default plot style
 
   /// Forward declaration of the internal data class.
   struct Data3d;
@@ -345,12 +345,12 @@ public:
    * Create an function dataset. Usually, the dataset's title is displayed in
    * the legend box.
    */
-  Gnuplot3dFunction (const std::string& title = "Untitled", const std::string& function = "");
+  Gnuplot3dFunction (const stdfwd::string& title = "Untitled", const stdfwd::string& function = "");
 
   /**
    * \param function new function string to set
    */
-  void SetFunction (const std::string& function);
+  void SetFunction (const stdfwd::string& function);
 
 private:
 
@@ -376,14 +376,14 @@ public:
    *        Gnuplot::GenerateOutput to the gnuplot program.
    * \param title title line of the plot page 
    */
-  Gnuplot (const std::string& outputFilename="", const std::string& title = "");
+  Gnuplot (const stdfwd::string& outputFilename="", const stdfwd::string& title = "");
 
   /**
    * \param outputFilename the name of the file where the rendering of the
    *        graph will be generated if you feed the command stream output by
    *        Gnuplot::GenerateOutput to the gnuplot program.
    */
-  void SetOutputFilename (const std::string& outputFilename);
+  void SetOutputFilename (const stdfwd::string& outputFilename);
 
   /**
    * Crude attempt to auto-detect the correct terminal setting by inspecting
@@ -391,34 +391,34 @@ public:
    * \param filename output filename
    * \return File extension of the provided filename
    */
-  static std::string DetectTerminal (const std::string& filename);
+  static stdfwd::string DetectTerminal (const stdfwd::string& filename);
 
   /**
    * \param terminal terminal setting string for output. The default terminal
    * string is "png"
    */
-  void SetTerminal (const std::string& terminal);
+  void SetTerminal (const stdfwd::string& terminal);
 
   /**
    * \param title set new plot title string to use for this plot.
    */
-  void SetTitle (const std::string& title);
+  void SetTitle (const stdfwd::string& title);
 
   /**
    * \param xLegend the legend for the x horizontal axis
    * \param yLegend the legend for the y vertical axis
    */
-  void SetLegend (const std::string& xLegend, const std::string& yLegend);
+  void SetLegend (const stdfwd::string& xLegend, const stdfwd::string& yLegend);
 
   /**
    * \param extra set extra gnuplot directive for output.
    */
-  void SetExtra (const std::string& extra);
+  void SetExtra (const stdfwd::string& extra);
 
   /**
    * \param extra append extra gnuplot directive for output.
    */
-  void AppendExtra (const std::string& extra);
+  void AppendExtra (const stdfwd::string& extra);
 
   /**
    * \param dataset add a dataset to the graph to be plotted.
@@ -449,7 +449,7 @@ public:
    */
   void GenerateOutput (std::ostream &osControl,
                        std::ostream &osData,
-                       std::string dataFileName);
+                       stdfwd::string dataFileName);
 
   /**
    * \param index the index for the data stream in the data file.
@@ -462,15 +462,15 @@ private:
   /// Type for Datasets to be used in plots
   typedef std::vector<GnuplotDataset> Datasets;
 
-  std::string m_outputFilename; //!< Output file name
-  std::string m_terminal; //!< Gnuplot "terminal" to use
+  stdfwd::string m_outputFilename; //!< Output file name
+  stdfwd::string m_terminal; //!< Gnuplot "terminal" to use
 
   Datasets m_datasets; //!< Data sets
 
-  std::string m_title; //!< Plot title
-  std::string m_xLegend; //!< X axis legend
-  std::string m_yLegend; //!< Y axis legend
-  std::string m_extra; //!< extra parameters for the plot
+  stdfwd::string m_title; //!< Plot title
+  stdfwd::string m_xLegend; //!< X axis legend
+  stdfwd::string m_yLegend; //!< Y axis legend
+  stdfwd::string m_extra; //!< extra parameters for the plot
 
   bool m_generateOneOutputFile; //!< true if only one plot will be generated
 
@@ -491,13 +491,13 @@ public:
    *        graph will be generated if you feed the command stream output by
    *        GnuplotCollection::GenerateOutput to the gnuplot program.
    */
-  GnuplotCollection (const std::string& outputFilename);
+  GnuplotCollection (const stdfwd::string& outputFilename);
 
   /**
    * \param terminal terminal setting string for output. The default terminal
    * string is guessed from the output filename's extension.
    */
-  void SetTerminal (const std::string& terminal);
+  void SetTerminal (const stdfwd::string& terminal);
 
   /**
    * \param plot add a plot to the collection to be plotted.
@@ -528,14 +528,14 @@ public:
    */
   void GenerateOutput (std::ostream &osControl,
                        std::ostream &osData,
-                       std::string dataFileName);
+                       stdfwd::string dataFileName);
 
 private:
   /// Type of the Gnuplot collection
   typedef std::vector<Gnuplot> Plots;
 
-  std::string m_outputFilename; //!< Output file name
-  std::string m_terminal; //!< Gnuplot "terminal" to use
+  stdfwd::string m_outputFilename; //!< Output file name
+  stdfwd::string m_terminal; //!< Gnuplot "terminal" to use
 
   Plots       m_plots; //!< Plots in the collection
 };

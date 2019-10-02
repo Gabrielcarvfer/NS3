@@ -36,14 +36,14 @@ public:
    * \brief Constructor
    * \param name name of the attribute
    */
-  NscStackStringAccessor (std::string name) : m_name (name) {}
+  NscStackStringAccessor (stdfwd::string name) : m_name (name) {}
 
   virtual bool Set (ObjectBase * object, const AttributeValue &val) const;
   virtual bool Get (const ObjectBase * object, AttributeValue &val) const;
   virtual bool HasGetter (void) const;
   virtual bool HasSetter (void) const;
 private:
-  std::string m_name; //!< name of the attribute
+  stdfwd::string m_name; //!< name of the attribute
 };
 
 bool NscStackStringAccessor::HasGetter (void) const
@@ -98,7 +98,7 @@ Ns3NscStack::GetInstanceTypeId (void) const
       // if we have no stack, we are a normal NscStack without any attributes.
       return GetTypeId ();
     }
-  std::string name = "ns3::Ns3NscStack<";
+  stdfwd::string name = "ns3::Ns3NscStack<";
   name += m_stack->get_name ();
   name += ">";
   TypeId tid;
@@ -131,19 +131,19 @@ Ns3NscStack::GetInstanceTypeId (void) const
     }
 }
 
-std::string
-Ns3NscStack::Get (std::string name) const
+stdfwd::string
+Ns3NscStack::Get (stdfwd::string name) const
 {
   char buf[512];
   if (m_stack->sysctl_get (name.c_str (), buf, sizeof(buf)) <= 0)
     { // name.c_str () is not a valid sysctl name, or internal NSC error (eg. error converting value)
       return NULL;
     }
-  return std::string (buf);
+  return stdfwd::string (buf);
 }
 
 void
-Ns3NscStack::Set (std::string name, std::string value)
+Ns3NscStack::Set (stdfwd::string name, stdfwd::string value)
 {
   int ret = m_stack->sysctl_set (name.c_str (), value.c_str ());
   if (ret < 0)

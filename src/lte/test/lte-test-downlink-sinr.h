@@ -62,7 +62,7 @@ public:
    * \param sinr the SINR
    * \param name the name of the test
    */
-  LteDownlinkDataSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, std::string name);
+  LteDownlinkDataSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, stdfwd::string name);
   virtual ~LteDownlinkDataSinrTestCase ();
 
 private:
@@ -96,7 +96,7 @@ class LteDownlinkCtrlSinrTestCase : public TestCase
    * \param sinr the SINR
    * \param name the name of the test
    */
-    LteDownlinkCtrlSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, std::string name);
+    LteDownlinkCtrlSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, stdfwd::string name);
     virtual ~LteDownlinkCtrlSinrTestCase ();
   
 private:

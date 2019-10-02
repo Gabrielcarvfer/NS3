@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object-factory.h"
 #include "../../network/model/address.h"
 #include "../../core/model/attribute.h"
@@ -51,7 +51,7 @@ public:
    * \param address the address of the remote node to send traffic
    *        to.
    */
-  BulkSendHelper (std::string protocol, Address address);
+  BulkSendHelper (stdfwd::string protocol, Address address);
 
   /**
    * Helper function used to set the underlying application attributes, 
@@ -60,7 +60,7 @@ public:
    * \param name the name of the application attribute to set
    * \param value the value of the application attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Install an ns3::BulkSendApplication on each node of the input container
@@ -88,7 +88,7 @@ public:
    * \param nodeName The node on which an BulkSendApplication will be installed.
    * \returns Container of Ptr to the applications installed.
    */
-  ApplicationContainer Install (std::string nodeName) const;
+  ApplicationContainer Install (stdfwd::string nodeName) const;
 
 private:
   /**

@@ -30,7 +30,7 @@
 #include "xml-config.h"
 #endif
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 
 
@@ -150,7 +150,7 @@ ConfigStore::SetFileFormat (enum FileFormat format)
   m_fileFormat = format;
 }
 void 
-ConfigStore::SetFilename (std::string filename)
+ConfigStore::SetFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   m_filename = filename;

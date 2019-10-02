@@ -73,14 +73,14 @@ public:
    *
    * \returns An ApplicationContainer holding the Ping application created.
    */
-  ApplicationContainer Install (std::string nodeName) const;
+  ApplicationContainer Install (stdfwd::string nodeName) const;
 
   /**
    * \brief Configure ping applications attribute 
    * \param name   attribute's name
    * \param value  attribute's value
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 private:
   /**
    * \brief Do the actual application installation in the node

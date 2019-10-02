@@ -92,7 +92,7 @@ private:
    * \param rnti the RNTI
    * \param targetCellId the target cell ID
    */
-  void UeHandoverStartCallback (std::string context, uint64_t imsi,
+  void UeHandoverStartCallback (stdfwd::string context, uint64_t imsi,
       uint16_t cellid, uint16_t rnti, uint16_t targetCellId);
   /**
    * UE handover end OK callback function
@@ -101,7 +101,7 @@ private:
    * \param cellid the cell ID
    * \param rnti the RNTI
    */
-  void UeHandoverEndOkCallback (std::string context, uint64_t imsi,
+  void UeHandoverEndOkCallback (stdfwd::string context, uint64_t imsi,
       uint16_t cellid, uint16_t rnti);
   /**
    * ENB handover start callback function
@@ -111,7 +111,7 @@ private:
    * \param rnti the RNTI
    * \param targetCellId the target cell ID
    */
-  void EnbHandoverStartCallback (std::string context, uint64_t imsi,
+  void EnbHandoverStartCallback (stdfwd::string context, uint64_t imsi,
       uint16_t cellid, uint16_t rnti, uint16_t targetCellId);
   /**
    * ENB handover end OK callback function
@@ -120,7 +120,7 @@ private:
    * \param cellid the cell ID
    * \param rnti the RNTI
    */
-  void EnbHandoverEndOkCallback (std::string context, uint64_t imsi,
+  void EnbHandoverEndOkCallback (stdfwd::string context, uint64_t imsi,
       uint16_t cellid, uint16_t rnti);
 
   uint8_t m_numberOfComponentCarriers; ///< Number of component carriers
@@ -221,7 +221,7 @@ LteHandoverDelayTestCase::DoRun ()
 
 
 void
-LteHandoverDelayTestCase::UeHandoverStartCallback (std::string context,
+LteHandoverDelayTestCase::UeHandoverStartCallback (stdfwd::string context,
     uint64_t imsi, uint16_t cellid, uint16_t rnti, uint16_t targetCellId)
 {
   NS_LOG_FUNCTION (this << context);
@@ -229,7 +229,7 @@ LteHandoverDelayTestCase::UeHandoverStartCallback (std::string context,
 }
 
 void
-LteHandoverDelayTestCase::UeHandoverEndOkCallback (std::string context,
+LteHandoverDelayTestCase::UeHandoverEndOkCallback (stdfwd::string context,
     uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << context);
@@ -244,7 +244,7 @@ LteHandoverDelayTestCase::UeHandoverEndOkCallback (std::string context,
 
 
 void
-LteHandoverDelayTestCase::EnbHandoverStartCallback (std::string context,
+LteHandoverDelayTestCase::EnbHandoverStartCallback (stdfwd::string context,
     uint64_t imsi, uint16_t cellid, uint16_t rnti, uint16_t targetCellId)
 {
   NS_LOG_FUNCTION (this << context);
@@ -252,7 +252,7 @@ LteHandoverDelayTestCase::EnbHandoverStartCallback (std::string context,
 }
 
 void
-LteHandoverDelayTestCase::EnbHandoverEndOkCallback (std::string context,
+LteHandoverDelayTestCase::EnbHandoverEndOkCallback (stdfwd::string context,
     uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << context);

@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include <ostream>
 #include "../../core/model/assert.h"
@@ -441,7 +441,7 @@ private:
      * \brief Returns an appropriate message indicating a read error
      * \returns the error message
      */
-    std::string GetReadErrorMessage (void) const;
+    stdfwd::string GetReadErrorMessage (void) const;
     /**
      * \brief Returns an appropriate message indicating a write error
      *
@@ -449,7 +449,7 @@ private:
      *
      * \returns the error message
      */
-    std::string GetWriteErrorMessage (void) const;
+    stdfwd::string GetWriteErrorMessage (void) const;
 
     /**
      * offset in virtual bytes from the start of the data buffer to the

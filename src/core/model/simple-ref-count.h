@@ -25,7 +25,7 @@
 #include "default-deleter.h"
 #include "assert.h"
 #include "unused.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 /**

@@ -66,8 +66,8 @@ public:
   bool GetAccessor (T & value) const;
 
   virtual Ptr<AttributeValue> Copy (void) const;
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const;
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker);
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const;
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker);
 
 private:
   int m_value;  //!< The stored integer value.
@@ -91,25 +91,25 @@ public:
    * \param [in] value The value.
    * \param [in] name Then enum symbol name.
    */
-  void AddDefault (int value, std::string name);
+  void AddDefault (int value, stdfwd::string name);
   /**
    * Add a new value.
    * \param [in] value The value.
    * \param [in] name Then enum symbol name.
    */
-  void Add (int value, std::string name);
+  void Add (int value, stdfwd::string name);
 
   virtual bool Check (const AttributeValue &value) const;
-  virtual std::string GetValueTypeName (void) const;
+  virtual stdfwd::string GetValueTypeName (void) const;
   virtual bool HasUnderlyingTypeInformation (void) const;
-  virtual std::string GetUnderlyingTypeInformation (void) const;
+  virtual stdfwd::string GetUnderlyingTypeInformation (void) const;
   virtual Ptr<AttributeValue> Create (void) const;
   virtual bool Copy (const AttributeValue &src, AttributeValue &dst) const;
 
 private:
   friend class EnumValue;
   /** Type of container for storing Enum values and symbol names. */
-  typedef std::list<std::pair<int,std::string> > ValueSet;
+  typedef std::list<std::pair<int,stdfwd::string> > ValueSet;
   /** The stored Enum values and symbol names. */
   ValueSet m_valueSet;
 };
@@ -176,28 +176,28 @@ Ptr<const AttributeAccessor> MakeEnumAccessor (T1 a1, T2 a2);
  * \param [in] v22 A enum value
  * \param [in] n22 The corresponding name.
  */ 
-Ptr<const AttributeChecker> MakeEnumChecker (int v1, std::string n1,
-                                             int v2 = 0, std::string n2 = "",
-                                             int v3 = 0, std::string n3 = "",
-                                             int v4 = 0, std::string n4 = "",
-                                             int v5 = 0, std::string n5 = "",
-                                             int v6 = 0, std::string n6 = "",
-                                             int v7 = 0, std::string n7 = "",
-                                             int v8 = 0, std::string n8 = "",
-                                             int v9 = 0, std::string n9 = "",
-                                             int v10 = 0, std::string n10 = "",
-                                             int v11 = 0, std::string n11 = "",
-                                             int v12 = 0, std::string n12 = "",
-                                             int v13 = 0, std::string n13 = "",
-                                             int v14 = 0, std::string n14 = "",
-                                             int v15 = 0, std::string n15 = "",
-                                             int v16 = 0, std::string n16 = "",
-                                             int v17 = 0, std::string n17 = "",
-                                             int v18 = 0, std::string n18 = "",
-                                             int v19 = 0, std::string n19 = "",
-                                             int v20 = 0, std::string n20 = "",
-                                             int v21 = 0, std::string n21 = "",
-                                             int v22 = 0, std::string n22 = "");
+Ptr<const AttributeChecker> MakeEnumChecker (int v1, stdfwd::string n1,
+                                             int v2 = 0, stdfwd::string n2 = "",
+                                             int v3 = 0, stdfwd::string n3 = "",
+                                             int v4 = 0, stdfwd::string n4 = "",
+                                             int v5 = 0, stdfwd::string n5 = "",
+                                             int v6 = 0, stdfwd::string n6 = "",
+                                             int v7 = 0, stdfwd::string n7 = "",
+                                             int v8 = 0, stdfwd::string n8 = "",
+                                             int v9 = 0, stdfwd::string n9 = "",
+                                             int v10 = 0, stdfwd::string n10 = "",
+                                             int v11 = 0, stdfwd::string n11 = "",
+                                             int v12 = 0, stdfwd::string n12 = "",
+                                             int v13 = 0, stdfwd::string n13 = "",
+                                             int v14 = 0, stdfwd::string n14 = "",
+                                             int v15 = 0, stdfwd::string n15 = "",
+                                             int v16 = 0, stdfwd::string n16 = "",
+                                             int v17 = 0, stdfwd::string n17 = "",
+                                             int v18 = 0, stdfwd::string n18 = "",
+                                             int v19 = 0, stdfwd::string n19 = "",
+                                             int v20 = 0, stdfwd::string n20 = "",
+                                             int v21 = 0, stdfwd::string n21 = "",
+                                             int v22 = 0, stdfwd::string n22 = "");
 
 
 } // namespace ns3

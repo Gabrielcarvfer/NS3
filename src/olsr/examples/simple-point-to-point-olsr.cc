@@ -37,7 +37,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cassert>
 
 #include "ns3/core-module.h"

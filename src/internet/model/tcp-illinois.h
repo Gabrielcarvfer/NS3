@@ -124,7 +124,7 @@ public:
   TcpIllinois (const TcpIllinois& sock);
   virtual ~TcpIllinois (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Get slow start threshold after congestion event

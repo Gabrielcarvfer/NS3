@@ -25,7 +25,7 @@
 
 #include <fstream>
 #include <map>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "data-collection-object.h"
 
 namespace ns3 {
@@ -61,7 +61,7 @@ public:
    * outputFileName with values printed as specified by fileType.  The
    * default file type is space-separated.
    */
-  FileAggregator (const std::string &outputFileName,
+  FileAggregator (const stdfwd::string &outputFileName,
                   enum FileType fileType = SPACE_SEPARATED);
 
   virtual ~FileAggregator ();
@@ -84,7 +84,7 @@ public:
    * Note that the heading string will only be printed if it has been
    * set by calling this function.
    */
-  void SetHeading (const std::string &heading);
+  void SetHeading (const stdfwd::string &heading);
 
   /**
    * \param format the 1D format string.
@@ -92,7 +92,7 @@ public:
    * \brief Sets the 1D format string for the C-style sprintf()
    * function.
    */
-  void Set1dFormat (const std::string &format);
+  void Set1dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 2D format string.
@@ -100,7 +100,7 @@ public:
    * \brief Sets the 2D format string for the C-style sprintf()
    * function.
    */
-  void Set2dFormat (const std::string &format);
+  void Set2dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 3D format string.
@@ -108,7 +108,7 @@ public:
    * \brief Sets the 3D format string for the C-style sprintf()
    * function.
    */
-  void Set3dFormat (const std::string &format);
+  void Set3dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 4D format string.
@@ -116,7 +116,7 @@ public:
    * \brief Sets the 4D format string for the C-style sprintf()
    * function.
    */
-  void Set4dFormat (const std::string &format);
+  void Set4dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 5D format string.
@@ -124,7 +124,7 @@ public:
    * \brief Sets the 5D format string for the C-style sprintf()
    * function.
    */
-  void Set5dFormat (const std::string &format);
+  void Set5dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 6D format string.
@@ -132,7 +132,7 @@ public:
    * \brief Sets the 6D format string for the C-style sprintf()
    * function.
    */
-  void Set6dFormat (const std::string &format);
+  void Set6dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 7D format string.
@@ -140,7 +140,7 @@ public:
    * \brief Sets the 7D format string for the C-style sprintf()
    * function.
    */
-  void Set7dFormat (const std::string &format);
+  void Set7dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 8D format string.
@@ -148,7 +148,7 @@ public:
    * \brief Sets the 8D format string for the C-style sprintf()
    * function.
    */
-  void Set8dFormat (const std::string &format);
+  void Set8dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 9D format string.
@@ -156,7 +156,7 @@ public:
    * \brief Sets the 9D format string for the C-style sprintf()
    * function.
    */
-  void Set9dFormat (const std::string &format);
+  void Set9dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 10D format string.
@@ -164,7 +164,7 @@ public:
    * \brief Sets the 10D format string for the C-style sprintf()
    * function.
    */
-  void Set10dFormat (const std::string &format);
+  void Set10dFormat (const stdfwd::string &format);
 
   // Below are hooked to connectors exporting data
   // They are not overloaded since it confuses the compiler when made
@@ -176,7 +176,7 @@ public:
    *
    * \brief Writes 1 value to the file.
    */
-  void Write1d (std::string context,
+  void Write1d (stdfwd::string context,
                 double v1);
 
   /**
@@ -186,7 +186,7 @@ public:
    *
    * \brief Writes 2 values to the file.
    */
-  void Write2d (std::string context,
+  void Write2d (stdfwd::string context,
                 double v1,
                 double v2);
 
@@ -198,7 +198,7 @@ public:
    *
    * \brief Writes 3 values to the file.
    */
-  void Write3d (std::string context,
+  void Write3d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3);
@@ -212,7 +212,7 @@ public:
    *
    * \brief Writes 4 values to the file.
    */
-  void Write4d (std::string context,
+  void Write4d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -228,7 +228,7 @@ public:
    *
    * \brief Writes 5 values to the file.
    */
-  void Write5d (std::string context,
+  void Write5d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -246,7 +246,7 @@ public:
    *
    * \brief Writes 6 values to the file.
    */
-  void Write6d (std::string context,
+  void Write6d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -266,7 +266,7 @@ public:
    *
    * \brief Writes 7 values to the file.
    */
-  void Write7d (std::string context,
+  void Write7d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -288,7 +288,7 @@ public:
    *
    * \brief Writes 8 values to the file.
    */
-  void Write8d (std::string context,
+  void Write8d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -312,7 +312,7 @@ public:
    *
    * \brief Writes 9 values to the file.
    */
-  void Write9d (std::string context,
+  void Write9d (stdfwd::string context,
                 double v1,
                 double v2,
                 double v3,
@@ -338,7 +338,7 @@ public:
    *
    * \brief Writes 10 values to the file.
    */
-  void Write10d (std::string context,
+  void Write10d (stdfwd::string context,
                  double v1,
                  double v2,
                  double v3,
@@ -352,7 +352,7 @@ public:
 
 private:
   /// The file name.
-  std::string m_outputFileName;
+  stdfwd::string m_outputFileName;
 
   /// Used to write values to the file.
   std::ofstream m_file;
@@ -361,24 +361,24 @@ private:
   enum FileType m_fileType;
 
   /// Printed between values in the file.
-  std::string m_separator;
+  stdfwd::string m_separator;
 
   /// Indicates if the heading line for the file has been set.
   bool m_hasHeadingBeenSet;
 
   /// Heading line for the outputfile.
-  std::string m_heading;
+  stdfwd::string m_heading;
 
-  std::string m_1dFormat;  //!< Format string for 1D C-style sprintf() function.
-  std::string m_2dFormat;  //!< Format string for 2D C-style sprintf() function.
-  std::string m_3dFormat;  //!< Format string for 3D C-style sprintf() function.
-  std::string m_4dFormat;  //!< Format string for 4D C-style sprintf() function.
-  std::string m_5dFormat;  //!< Format string for 5D C-style sprintf() function.
-  std::string m_6dFormat;  //!< Format string for 6D C-style sprintf() function.
-  std::string m_7dFormat;  //!< Format string for 7D C-style sprintf() function.
-  std::string m_8dFormat;  //!< Format string for 8D C-style sprintf() function.
-  std::string m_9dFormat;  //!< Format string for 9D C-style sprintf() function.
-  std::string m_10dFormat; //!< Format string for 10D C-style sprintf() function.
+  stdfwd::string m_1dFormat;  //!< Format string for 1D C-style sprintf() function.
+  stdfwd::string m_2dFormat;  //!< Format string for 2D C-style sprintf() function.
+  stdfwd::string m_3dFormat;  //!< Format string for 3D C-style sprintf() function.
+  stdfwd::string m_4dFormat;  //!< Format string for 4D C-style sprintf() function.
+  stdfwd::string m_5dFormat;  //!< Format string for 5D C-style sprintf() function.
+  stdfwd::string m_6dFormat;  //!< Format string for 6D C-style sprintf() function.
+  stdfwd::string m_7dFormat;  //!< Format string for 7D C-style sprintf() function.
+  stdfwd::string m_8dFormat;  //!< Format string for 8D C-style sprintf() function.
+  stdfwd::string m_9dFormat;  //!< Format string for 9D C-style sprintf() function.
+  stdfwd::string m_10dFormat; //!< Format string for 10D C-style sprintf() function.
 
 }; // class FileAggregator
 

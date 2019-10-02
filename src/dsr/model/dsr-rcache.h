@@ -33,7 +33,7 @@
 #pragma once
 
 #include <map>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cassert>
 #include <sys/types.h>
 #include <iosfwd>
@@ -807,7 +807,7 @@ public:
    * when current graph information has changed
    * \param type The type of the cache
    */
-  void SetCacheType (std::string type);
+  void SetCacheType (stdfwd::string type);
   /**
    * \brief is link cached
    * \return true if the link is cached

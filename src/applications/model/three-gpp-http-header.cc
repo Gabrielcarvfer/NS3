@@ -115,7 +115,7 @@ ThreeGppHttpHeader::Print (std::ostream &os) const
 }
 
 
-std::string
+stdfwd::string
 ThreeGppHttpHeader::ToString () const
 {
   NS_LOG_FUNCTION (this);

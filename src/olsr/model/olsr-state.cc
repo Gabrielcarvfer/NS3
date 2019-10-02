@@ -85,7 +85,7 @@ OlsrState::InsertMprSelectorTuple (MprSelectorTuple const &tuple)
   m_mprSelectorSet.push_back (tuple);
 }
 
-std::string
+stdfwd::string
 OlsrState::PrintMprSelectorSet () const
 {
   std::ostringstream os;

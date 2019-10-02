@@ -114,7 +114,7 @@ int main (int argc, char *argv[])
   uint32_t    nLeftLeaf = 5;
   uint32_t    nRightLeaf = 5;
   uint32_t    nLeaf = 0; // If non-zero, number of both left and right
-  std::string animFile = "resources_demo.xml" ;  // Name of file for animation output
+  stdfwd::string animFile = "resources_demo.xml" ;  // Name of file for animation output
 
   CommandLine cmd;
   cmd.AddValue ("nLeftLeaf", "Number of left side leaf nodes", nLeftLeaf);

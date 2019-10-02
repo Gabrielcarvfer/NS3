@@ -120,7 +120,7 @@ TcpClassicRecovery::ExitRecovery (Ptr<TcpSocketState> tcb)
   tcb->m_cWndInfl = tcb->m_ssThresh.Get ();
 }
 
-std::string
+stdfwd::string
 TcpClassicRecovery::GetName () const
 {
   return "TcpClassicRecovery";

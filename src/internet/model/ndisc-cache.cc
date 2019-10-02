@@ -181,7 +181,7 @@ void NdiscCache::PrintNdiscCache (Ptr<OutputStreamWrapper> stream)
   for (CacheI i = m_ndCache.begin (); i != m_ndCache.end (); i++)
     {
       *os << i->first << " dev ";
-      std::string found = Names::FindName (m_device);
+      stdfwd::string found = Names::FindName (m_device);
       if (Names::FindName (m_device) != "")
         {
           *os << found;

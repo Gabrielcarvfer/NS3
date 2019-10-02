@@ -21,8 +21,8 @@
 #include "../../network/utils/mac48-address.h"
 #include "../../core/model/nstime.h"
 #include "bridge-channel.h"
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <map>
 
 namespace ns3 {

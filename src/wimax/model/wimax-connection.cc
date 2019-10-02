@@ -150,7 +150,7 @@ WimaxConnection::HasPackets (MacHeaderType::HeaderType packetType) const
   return !m_queue->IsEmpty (packetType);
 }
 
-std::string
+stdfwd::string
 WimaxConnection::GetTypeStr (void) const
 {
   switch (m_cidType)

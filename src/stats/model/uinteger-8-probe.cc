@@ -73,7 +73,7 @@ Uinteger8Probe::SetValue (uint8_t newVal)
 }
 
 void
-Uinteger8Probe::SetValueByPath (std::string path, uint8_t newVal)
+Uinteger8Probe::SetValueByPath (stdfwd::string path, uint8_t newVal)
 {
   NS_LOG_FUNCTION (path << newVal);
   Ptr<Uinteger8Probe> probe = Names::Find<Uinteger8Probe> (path);
@@ -82,7 +82,7 @@ Uinteger8Probe::SetValueByPath (std::string path, uint8_t newVal)
 }
 
 bool
-Uinteger8Probe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+Uinteger8Probe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -91,7 +91,7 @@ Uinteger8Probe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-Uinteger8Probe::ConnectByPath (std::string path)
+Uinteger8Probe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

@@ -25,7 +25,7 @@
 #include "../../config-store/model/config-store.h"
 #include <ns3/buildings-module.h>
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 //#include "../../config-store/model/gtk-config-store.h"
 

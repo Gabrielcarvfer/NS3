@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../../core/model/object-factory.h"
@@ -59,11 +59,11 @@ public:
    * Set the type of queue to create and associated to each
    * SimpleNetDevice created through SimpleNetDeviceHelper::Install.
    */
-  void SetQueue (std::string type,
-                 std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                 std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                 std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                 std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
+  void SetQueue (stdfwd::string type,
+                 stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                 stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                 stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                 stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
 
   /**
    * Each net device must have a channel to pass packets through.
@@ -83,11 +83,11 @@ public:
    * Set the type of channel to create and associated to each
    * SimpleNetDevice created through SimpleNetDeviceHelper::Install.
    */
-  void SetChannel (std::string type,
-                   std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                   std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                   std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                   std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
+  void SetChannel (stdfwd::string type,
+                   stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                   stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                   stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                   stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
 
 
   /**
@@ -97,7 +97,7 @@ public:
    * Set these attributes on each ns3::SimpleNetDevice created
    * by SimpleNetDeviceHelper::Install
    */
-  void SetDeviceAttribute (std::string n1, const AttributeValue &v1);
+  void SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * \param n1 the name of the attribute to set
@@ -106,7 +106,7 @@ public:
    * Set these attributes on each ns3::CsmaChannel created
    * by SimpleNetDeviceHelper::Install
    */
-  void SetChannelAttribute (std::string n1, const AttributeValue &v1);
+  void SetChannelAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * SimpleNetDevice is Broadcast capable and ARP needing. This function

@@ -66,7 +66,7 @@ public:
    * \param path Config path to access the probe
    * \param value set the traced uint32_t to a new value
    */
-  static void SetValueByPath (std::string path, uint32_t value);
+  static void SetValueByPath (stdfwd::string path, uint32_t value);
 
   /**
    * \brief connect to a trace source attribute provided by a given object
@@ -75,7 +75,7 @@ public:
    * \param obj ns3::Object to connect to
    * \return true if the trace source was successfully connected
    */
-  virtual bool ConnectByObject (std::string traceSource, Ptr<Object> obj);
+  virtual bool ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj);
 
   /**
    * \brief connect to a trace source provided by a config path
@@ -85,7 +85,7 @@ public:
    * Note, if an invalid path is provided, the probe will not be connected
    * to anything.
    */
-  virtual void ConnectByPath (std::string path);
+  virtual void ConnectByPath (stdfwd::string path);
 
 private:
   /**

@@ -19,7 +19,7 @@
  */
 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/utils/ipv4-address.h"
 #include "ipv4-packet-info-tag.h"
 #include "../../core/model/log.h"

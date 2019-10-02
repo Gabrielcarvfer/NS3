@@ -111,7 +111,7 @@ private:
    * \param simulationDuration Duration of the simulation
    * \returns the name string
    */
-  std::string BuildNameString (uint32_t numberOfNodes, uint16_t numberOfComponentCarriers, std::vector<ConfigToCheck> configToCheck, Time simulationDuration);
+  stdfwd::string BuildNameString (uint32_t numberOfNodes, uint16_t numberOfComponentCarriers, std::vector<ConfigToCheck> configToCheck, Time simulationDuration);
   /**
    * Evaluate function
    *
@@ -119,7 +119,7 @@ private:
    * \param ueRrc Pointer to the UE RRC
    * \param sCellToAddModList List of the configuration parameters for secondary cell
    */
-  void Evaluate (std::string context, Ptr<LteUeRrc> ueRrc, std::list<LteRrcSap::SCellToAddMod> sCellToAddModList);
+  void Evaluate (stdfwd::string context, Ptr<LteUeRrc> ueRrc, std::list<LteRrcSap::SCellToAddMod> sCellToAddModList);
   /**
    * Equally spaced component carriers function
    *
@@ -135,7 +135,7 @@ private:
   std::vector<std::map<uint16_t, ConfigToCheck> > m_configToCheckContainer; ///< Vector of maps containing the per component carrier configuration
 };
 
-std::string
+stdfwd::string
 CarrierAggregationConfigTestCase::BuildNameString (uint32_t numberOfNodes, uint16_t numberOfComponentCarriers, std::vector<ConfigToCheck> configToCheck, Time simulationDuration)
 {
   std::ostringstream oss;
@@ -201,7 +201,7 @@ CarrierAggregationConfigTestCase::EquallySpacedCcs ()
 }
 
 void
-CarrierAggregationConfigTestCase::Evaluate (std::string context, Ptr<LteUeRrc> ueRrc, std::list<LteRrcSap::SCellToAddMod> sCellToAddModList)
+CarrierAggregationConfigTestCase::Evaluate (stdfwd::string context, Ptr<LteUeRrc> ueRrc, std::list<LteRrcSap::SCellToAddMod> sCellToAddModList)
 {
   NS_LOG_INFO ("Secondary carriers configured");
 

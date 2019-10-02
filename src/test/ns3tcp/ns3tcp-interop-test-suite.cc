@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/log.h"
 #include "../../core/model/abort.h"
@@ -99,9 +99,9 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  void Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
+  void Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
 
-  std::string m_pcapFilename;
+  stdfwd::string m_pcapFilename;
   PcapFile m_pcapFile;
   bool m_writeVectors;
   bool m_writeResults;
@@ -144,7 +144,7 @@ Ns3TcpInteroperabilityTestCase::DoTeardown (void)
 }
 
 void
-Ns3TcpInteroperabilityTestCase::Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
+Ns3TcpInteroperabilityTestCase::Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
 {
   //
   // We're not testing IP so remove and toss the header.  In order to do this,
@@ -237,7 +237,7 @@ Ns3TcpInteroperabilityTestCase::DoRun (void)
   // The other node, node one, is going to be set up to use a Linux TCP
   // implementation that we consider a known good TCP.
   //
-  std::string nscStack = "liblinux2.6.26.so";
+  stdfwd::string nscStack = "liblinux2.6.26.so";
   stack.SetTcp ("ns3::NscTcpL4Protocol", "Library", StringValue ("liblinux2.6.26.so"));
   stack.Install (nodes.Get (1));
 

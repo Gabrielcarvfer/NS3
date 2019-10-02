@@ -42,15 +42,15 @@ SpectrumChannelHelper::Default (void)
 }
 
 void
-SpectrumChannelHelper::SetChannel (std::string type,
-                                   std::string n0, const AttributeValue &v0,
-                                   std::string n1, const AttributeValue &v1,
-                                   std::string n2, const AttributeValue &v2,
-                                   std::string n3, const AttributeValue &v3,
-                                   std::string n4, const AttributeValue &v4,
-                                   std::string n5, const AttributeValue &v5,
-                                   std::string n6, const AttributeValue &v6,
-                                   std::string n7, const AttributeValue &v7)
+SpectrumChannelHelper::SetChannel (stdfwd::string type,
+                                   stdfwd::string n0, const AttributeValue &v0,
+                                   stdfwd::string n1, const AttributeValue &v1,
+                                   stdfwd::string n2, const AttributeValue &v2,
+                                   stdfwd::string n3, const AttributeValue &v3,
+                                   stdfwd::string n4, const AttributeValue &v4,
+                                   stdfwd::string n5, const AttributeValue &v5,
+                                   stdfwd::string n6, const AttributeValue &v6,
+                                   stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   m_channel.SetTypeId (type);
@@ -65,15 +65,15 @@ SpectrumChannelHelper::SetChannel (std::string type,
 }
 
 void
-SpectrumChannelHelper::AddPropagationLoss (std::string type,
-                                           std::string n0, const AttributeValue &v0,
-                                           std::string n1, const AttributeValue &v1,
-                                           std::string n2, const AttributeValue &v2,
-                                           std::string n3, const AttributeValue &v3,
-                                           std::string n4, const AttributeValue &v4,
-                                           std::string n5, const AttributeValue &v5,
-                                           std::string n6, const AttributeValue &v6,
-                                           std::string n7, const AttributeValue &v7)
+SpectrumChannelHelper::AddPropagationLoss (stdfwd::string type,
+                                           stdfwd::string n0, const AttributeValue &v0,
+                                           stdfwd::string n1, const AttributeValue &v1,
+                                           stdfwd::string n2, const AttributeValue &v2,
+                                           stdfwd::string n3, const AttributeValue &v3,
+                                           stdfwd::string n4, const AttributeValue &v4,
+                                           stdfwd::string n5, const AttributeValue &v5,
+                                           stdfwd::string n6, const AttributeValue &v6,
+                                           stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -98,15 +98,15 @@ SpectrumChannelHelper::AddPropagationLoss (Ptr<PropagationLossModel> m)
 }
 
 void
-SpectrumChannelHelper::AddSpectrumPropagationLoss (std::string type,
-                                                   std::string n0, const AttributeValue &v0,
-                                                   std::string n1, const AttributeValue &v1,
-                                                   std::string n2, const AttributeValue &v2,
-                                                   std::string n3, const AttributeValue &v3,
-                                                   std::string n4, const AttributeValue &v4,
-                                                   std::string n5, const AttributeValue &v5,
-                                                   std::string n6, const AttributeValue &v6,
-                                                   std::string n7, const AttributeValue &v7)
+SpectrumChannelHelper::AddSpectrumPropagationLoss (stdfwd::string type,
+                                                   stdfwd::string n0, const AttributeValue &v0,
+                                                   stdfwd::string n1, const AttributeValue &v1,
+                                                   stdfwd::string n2, const AttributeValue &v2,
+                                                   stdfwd::string n3, const AttributeValue &v3,
+                                                   stdfwd::string n4, const AttributeValue &v4,
+                                                   stdfwd::string n5, const AttributeValue &v5,
+                                                   stdfwd::string n6, const AttributeValue &v6,
+                                                   stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -130,15 +130,15 @@ SpectrumChannelHelper::AddSpectrumPropagationLoss (Ptr<SpectrumPropagationLossMo
 }
 
 void
-SpectrumChannelHelper::SetPropagationDelay (std::string type,
-                                            std::string n0, const AttributeValue &v0,
-                                            std::string n1, const AttributeValue &v1,
-                                            std::string n2, const AttributeValue &v2,
-                                            std::string n3, const AttributeValue &v3,
-                                            std::string n4, const AttributeValue &v4,
-                                            std::string n5, const AttributeValue &v5,
-                                            std::string n6, const AttributeValue &v6,
-                                            std::string n7, const AttributeValue &v7)
+SpectrumChannelHelper::SetPropagationDelay (stdfwd::string type,
+                                            stdfwd::string n0, const AttributeValue &v0,
+                                            stdfwd::string n1, const AttributeValue &v1,
+                                            stdfwd::string n2, const AttributeValue &v2,
+                                            stdfwd::string n3, const AttributeValue &v3,
+                                            stdfwd::string n4, const AttributeValue &v4,
+                                            stdfwd::string n5, const AttributeValue &v5,
+                                            stdfwd::string n6, const AttributeValue &v6,
+                                            stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -166,15 +166,15 @@ SpectrumChannelHelper::Create (void) const
 
 
 void
-SpectrumPhyHelper::SetPhy (std::string type,
-                           std::string n0, const AttributeValue &v0,
-                           std::string n1, const AttributeValue &v1,
-                           std::string n2, const AttributeValue &v2,
-                           std::string n3, const AttributeValue &v3,
-                           std::string n4, const AttributeValue &v4,
-                           std::string n5, const AttributeValue &v5,
-                           std::string n6, const AttributeValue &v6,
-                           std::string n7, const AttributeValue &v7)
+SpectrumPhyHelper::SetPhy (stdfwd::string type,
+                           stdfwd::string n0, const AttributeValue &v0,
+                           stdfwd::string n1, const AttributeValue &v1,
+                           stdfwd::string n2, const AttributeValue &v2,
+                           stdfwd::string n3, const AttributeValue &v3,
+                           stdfwd::string n4, const AttributeValue &v4,
+                           stdfwd::string n5, const AttributeValue &v5,
+                           stdfwd::string n6, const AttributeValue &v6,
+                           stdfwd::string n7, const AttributeValue &v7)
 {
   m_phy.SetTypeId (type);
   m_phy.Set (n0, v0);
@@ -196,14 +196,14 @@ SpectrumPhyHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-SpectrumPhyHelper::SetChannel (std::string channelName)
+SpectrumPhyHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
   m_channel = channel;
 }
 
 void
-SpectrumPhyHelper::SetPhyAttribute (std::string name, const AttributeValue &v)
+SpectrumPhyHelper::SetPhyAttribute (stdfwd::string name, const AttributeValue &v)
 {
   m_phy.Set (name, v);
 }

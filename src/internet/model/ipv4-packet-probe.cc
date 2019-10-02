@@ -83,7 +83,7 @@ Ipv4PacketProbe::SetValue (Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t in
 }
 
 void
-Ipv4PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
+Ipv4PacketProbe::SetValueByPath (stdfwd::string path, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
 {
   NS_LOG_FUNCTION (path << packet << ipv4 << interface);
   Ptr<Ipv4PacketProbe> probe = Names::Find<Ipv4PacketProbe> (path);
@@ -92,7 +92,7 @@ Ipv4PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet, Ptr
 }
 
 bool
-Ipv4PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+Ipv4PacketProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -101,7 +101,7 @@ Ipv4PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-Ipv4PacketProbe::ConnectByPath (std::string path)
+Ipv4PacketProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

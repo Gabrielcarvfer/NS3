@@ -86,7 +86,7 @@ public:
    *
    * \return A string identifying the name
    */
-  virtual std::string GetName () const = 0;
+  virtual stdfwd::string GetName () const = 0;
 
   /**
    * \brief Performs variable initialization at the start of recovery
@@ -188,7 +188,7 @@ public:
    */
   virtual ~TcpClassicRecovery () override;
 
-  virtual std::string GetName () const override;
+  virtual stdfwd::string GetName () const override;
 
   virtual void EnterRecovery (Ptr<TcpSocketState> tcb, uint32_t dupAckCount,
                               uint32_t unAckDataCount, uint32_t lastSackedBytes) override;

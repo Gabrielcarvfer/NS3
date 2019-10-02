@@ -174,7 +174,7 @@ UlDataRxStartNofitication (LteFrTestCase *testcase,
   testcase->UlDataRxStart (spectrumValue);
 }
 
-LteFrTestCase::LteFrTestCase (std::string name,
+LteFrTestCase::LteFrTestCase (stdfwd::string name,
                               uint32_t userNum,uint8_t dlBandwidth,uint8_t ulBandwidth,
                               std::vector<bool> availableDlRb, std::vector<bool> availableUlRb)
   : TestCase ("Test: " + name),
@@ -240,8 +240,8 @@ LteFrTestCase::DoRun (void)
 }
 
 
-LteHardFrTestCase::LteHardFrTestCase (std::string name, uint32_t userNum,
-                                      std::string schedulerType,
+LteHardFrTestCase::LteHardFrTestCase (stdfwd::string name, uint32_t userNum,
+                                      stdfwd::string schedulerType,
                                       uint8_t dlBandwidth, uint8_t ulBandwidth,
                                       uint8_t dlSubBandOffset, uint8_t dlSubBandwidth,
                                       uint8_t ulSubBandOffset, uint8_t ulSubBandwidth,
@@ -355,8 +355,8 @@ LteHardFrTestCase::DoRun (void)
 
 
 
-LteStrictFrTestCase::LteStrictFrTestCase (std::string name, uint32_t userNum,
-                                          std::string schedulerType,
+LteStrictFrTestCase::LteStrictFrTestCase (stdfwd::string name, uint32_t userNum,
+                                          stdfwd::string schedulerType,
                                           uint8_t dlBandwidth, uint8_t ulBandwidth,
                                           uint8_t dlCommonSubBandwidth, uint8_t dlEdgeSubBandOffset, uint8_t dlEdgeSubBandwidth,
                                           uint8_t ulCommonSubBandwidth, uint8_t ulEdgeSubBandOffset, uint8_t ulEdgeSubBandwidth,
@@ -486,7 +486,7 @@ UlDataRxStartNofiticationArea (LteFrAreaTestCase *testcase,
   testcase->UlDataRxStart (spectrumValue);
 }
 
-LteFrAreaTestCase::LteFrAreaTestCase (std::string name, std::string schedulerType)
+LteFrAreaTestCase::LteFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : TestCase ("Test: " + name),
     m_schedulerType (schedulerType)
 {
@@ -635,7 +635,7 @@ LteFrAreaTestCase::DoRun (void)
 {
 }
 
-LteStrictFrAreaTestCase::LteStrictFrAreaTestCase (std::string name, std::string schedulerType)
+LteStrictFrAreaTestCase::LteStrictFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : LteFrAreaTestCase (name, schedulerType)
 {
   NS_LOG_INFO ("Creating LteFrTestCase");
@@ -822,7 +822,7 @@ LteStrictFrAreaTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteSoftFrAreaTestCase::LteSoftFrAreaTestCase (std::string name, std::string schedulerType)
+LteSoftFrAreaTestCase::LteSoftFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : LteFrAreaTestCase (name, schedulerType)
 {
   NS_LOG_INFO ("Creating LteSoftFrAreaTestCase");
@@ -1014,7 +1014,7 @@ LteSoftFrAreaTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteSoftFfrAreaTestCase::LteSoftFfrAreaTestCase (std::string name, std::string schedulerType)
+LteSoftFfrAreaTestCase::LteSoftFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : LteFrAreaTestCase (name, schedulerType)
 {
   NS_LOG_INFO ("Creating LteSoftFfrAreaTestCase");
@@ -1238,7 +1238,7 @@ LteSoftFfrAreaTestCase::DoRun (void)
 }
 
 
-LteEnhancedFfrAreaTestCase::LteEnhancedFfrAreaTestCase (std::string name, std::string schedulerType)
+LteEnhancedFfrAreaTestCase::LteEnhancedFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : LteFrAreaTestCase (name, schedulerType)
 {
   NS_LOG_INFO ("Creating LteEnhancedFfrAreaTestCase");
@@ -1473,7 +1473,7 @@ LteEnhancedFfrAreaTestCase::DoRun (void)
 }
 
 
-LteDistributedFfrAreaTestCase::LteDistributedFfrAreaTestCase (std::string name, std::string schedulerType)
+LteDistributedFfrAreaTestCase::LteDistributedFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType)
   : LteFrAreaTestCase (name, schedulerType)
 {
   NS_LOG_INFO ("Creating LteDistributedFfrAreaTestCase");

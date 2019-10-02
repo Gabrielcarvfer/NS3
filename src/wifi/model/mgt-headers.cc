@@ -1348,7 +1348,7 @@ WifiActionHeader::GetInstanceTypeId () const
   return GetTypeId ();
 }
 
-std::string
+stdfwd::string
 WifiActionHeader::CategoryValueToString (CategoryValue value) const
 {
   if (value == BLOCK_ACK)
@@ -1374,7 +1374,7 @@ WifiActionHeader::CategoryValueToString (CategoryValue value) const
       return convert.str ();
     }
 }
-std::string
+stdfwd::string
 WifiActionHeader::SelfProtectedActionValueToString (SelfProtectedActionValue value) const
 {
   if (value == PEER_LINK_OPEN)

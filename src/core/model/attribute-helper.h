@@ -94,7 +94,7 @@ namespace ns3 {
  */
 template <typename T, typename BASE>
 Ptr<AttributeChecker>
-MakeSimpleAttributeChecker (std::string name, std::string underlying)
+MakeSimpleAttributeChecker (stdfwd::string name, stdfwd::string underlying)
 {
   /**
    * String-based AttributeChecker implementation.
@@ -105,13 +105,13 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
     virtual bool Check (const AttributeValue &value) const {
       return dynamic_cast<const T *> (&value) != 0;
     }
-    virtual std::string GetValueTypeName (void) const {
+    virtual stdfwd::string GetValueTypeName (void) const {
       return m_type;
     }
     virtual bool HasUnderlyingTypeInformation (void) const {
       return true;
     }
-    virtual std::string GetUnderlyingTypeInformation (void) const {
+    virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
       return m_underlying;
     }
     virtual Ptr<AttributeValue> Create (void) const {
@@ -127,8 +127,8 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
       *dst = *src;
       return true;
     }
-    std::string m_type;        // The name of the AttributeValue type.
-    std::string m_underlying;  // The underlying attribute type name.
+    stdfwd::string m_type;        // The name of the AttributeValue type.
+    stdfwd::string m_underlying;  // The underlying attribute type name.
   } *checker = new SimpleAttributeChecker ();
   checker->m_type = name;
   checker->m_underlying = underlying;
@@ -176,9 +176,9 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
  * This macro is typically invoked in the class header file.
  *
  * This can be used directly for things like plain old data,
- * such as \c std::string, to create the attribute value class
+ * such as \c stdfwd::string, to create the attribute value class
  * StringValue, as in
- *   `ATTRIBUTE_VALUE_DEFINE_WITH_NAME(std::string, String);`
+ *   `ATTRIBUTE_VALUE_DEFINE_WITH_NAME(stdfwd::string, String);`
  */
 #define ATTRIBUTE_VALUE_DEFINE_WITH_NAME(type,name)                     \
   class name ## Value : public AttributeValue                           \
@@ -194,10 +194,10 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
       return true;                                                      \
     }                                                                   \
     virtual Ptr<AttributeValue> Copy (void) const;                      \
-    virtual std::string                                                 \
+    virtual stdfwd::string                                                 \
       SerializeToString (Ptr<const AttributeChecker> checker) const;    \
     virtual bool                                                        \
-      DeserializeFromString (std::string value,                         \
+      DeserializeFromString (stdfwd::string value,                         \
                              Ptr<const AttributeChecker> checker);      \
   private:                                                              \
     type m_value;                                                       \
@@ -288,14 +288,14 @@ MakeSimpleAttributeChecker (std::string name, std::string underlying)
   name ## Value::Copy (void) const {                                    \
     return ns3::Create<name ## Value> (*this);                          \
   }                                                                     \
-  std::string name ## Value::SerializeToString                          \
+  stdfwd::string name ## Value::SerializeToString                          \
     (Ptr<const AttributeChecker> checker) const {                       \
       std::ostringstream oss;                                           \
       oss << m_value;                                                   \
       return oss.str ();                                                \
   }                                                                     \
   bool name ## Value::DeserializeFromString                             \
-    (std::string value, Ptr<const AttributeChecker> checker) {          \
+    (stdfwd::string value, Ptr<const AttributeChecker> checker) {          \
       std::istringstream iss;                                           \
       iss.str (value);                                                  \
       iss >> m_value;                                                   \

@@ -45,7 +45,7 @@ namespace ns3 {
 static void
 AsciiPhyTransmitSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> p,
   WifiMode mode,
   WifiPreamble preamble,
@@ -87,7 +87,7 @@ AsciiPhyTransmitSinkWithoutContext (
 static void
 AsciiPhyReceiveSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> p,
   double snr,
   WifiMode mode,
@@ -128,7 +128,7 @@ YansWavePhyHelper::Default (void)
 }
 
 void
-YansWavePhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+YansWavePhyHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   //
   // All of the Pcap enable functions vector through here including the ones
@@ -147,7 +147,7 @@ YansWavePhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bo
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -171,7 +171,7 @@ YansWavePhyHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bo
 void
 YansWavePhyHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream,
-  std::string prefix,
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -212,7 +212,7 @@ YansWavePhyHelper::EnableAsciiInternal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -312,15 +312,15 @@ WaveHelper::CreatePhys (uint32_t phys)
 }
 
 void
-WaveHelper::SetRemoteStationManager (std::string type,
-                                     std::string n0, const AttributeValue &v0,
-                                     std::string n1, const AttributeValue &v1,
-                                     std::string n2, const AttributeValue &v2,
-                                     std::string n3, const AttributeValue &v3,
-                                     std::string n4, const AttributeValue &v4,
-                                     std::string n5, const AttributeValue &v5,
-                                     std::string n6, const AttributeValue &v6,
-                                     std::string n7, const AttributeValue &v7)
+WaveHelper::SetRemoteStationManager (stdfwd::string type,
+                                     stdfwd::string n0, const AttributeValue &v0,
+                                     stdfwd::string n1, const AttributeValue &v1,
+                                     stdfwd::string n2, const AttributeValue &v2,
+                                     stdfwd::string n3, const AttributeValue &v3,
+                                     stdfwd::string n4, const AttributeValue &v4,
+                                     stdfwd::string n5, const AttributeValue &v5,
+                                     stdfwd::string n6, const AttributeValue &v6,
+                                     stdfwd::string n7, const AttributeValue &v7)
 {
   m_stationManager = ObjectFactory ();
   m_stationManager.SetTypeId (type);
@@ -335,15 +335,15 @@ WaveHelper::SetRemoteStationManager (std::string type,
 }
 
 void
-WaveHelper::SetChannelScheduler (std::string type,
-                                 std::string n0, const AttributeValue &v0,
-                                 std::string n1, const AttributeValue &v1,
-                                 std::string n2, const AttributeValue &v2,
-                                 std::string n3, const AttributeValue &v3,
-                                 std::string n4, const AttributeValue &v4,
-                                 std::string n5, const AttributeValue &v5,
-                                 std::string n6, const AttributeValue &v6,
-                                 std::string n7, const AttributeValue &v7)
+WaveHelper::SetChannelScheduler (stdfwd::string type,
+                                 stdfwd::string n0, const AttributeValue &v0,
+                                 stdfwd::string n1, const AttributeValue &v1,
+                                 stdfwd::string n2, const AttributeValue &v2,
+                                 stdfwd::string n3, const AttributeValue &v3,
+                                 stdfwd::string n4, const AttributeValue &v4,
+                                 stdfwd::string n5, const AttributeValue &v5,
+                                 stdfwd::string n6, const AttributeValue &v6,
+                                 stdfwd::string n7, const AttributeValue &v7)
 {
   m_channelScheduler = ObjectFactory ();
   m_channelScheduler.SetTypeId (type);
@@ -416,7 +416,7 @@ WaveHelper::Install (const WifiPhyHelper &phy, const WifiMacHelper &mac, Ptr<Nod
 }
 
 NetDeviceContainer
-WaveHelper::Install (const WifiPhyHelper &phy, const WifiMacHelper &mac, std::string nodeName) const
+WaveHelper::Install (const WifiPhyHelper &phy, const WifiMacHelper &mac, stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (phy, mac, NodeContainer (node));

@@ -80,9 +80,9 @@ public:
   Time m_slotTime;                    //!< Slot time duration.
   Time m_simTime;                     //!< Simulation run time, default 1000 s.
 
-  std::string m_gnudatfile;           //!< Name for GNU Plot output, default uan-cw-example.gpl.
-  std::string m_asciitracefile;       //!< Name for ascii trace file, default uan-cw-example.asc.
-  std::string m_bhCfgFile;            //!< (Unused)
+  stdfwd::string m_gnudatfile;           //!< Name for GNU Plot output, default uan-cw-example.gpl.
+  stdfwd::string m_asciitracefile;       //!< Name for ascii trace file, default uan-cw-example.asc.
+  stdfwd::string m_bhCfgFile;            //!< (Unused)
 
   Gnuplot2dDataset m_data;            //!< Container for the simulation data.
   std::vector<double> m_throughputs;  //!< Throughput for each run.

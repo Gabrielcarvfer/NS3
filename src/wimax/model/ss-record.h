@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 #include "../../network/utils/mac48-address.h"
 #include "wimax-connection.h"
 #include "wimax-phy.h"
 #include "wimax-net-device.h"
 #include "../../network/utils/ipv4-address.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "service-flow.h"
 
 namespace ns3 {

@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "gnuplot-aggregator.h"
 #include "../../core/model/abort.h"
@@ -43,7 +43,7 @@ GnuplotAggregator::GetTypeId ()
   return tid;
 }
 
-GnuplotAggregator::GnuplotAggregator (const std::string &outputFileNameWithoutExtension)
+GnuplotAggregator::GnuplotAggregator (const stdfwd::string &outputFileNameWithoutExtension)
   : m_outputFileNameWithoutExtension (outputFileNameWithoutExtension),
     m_graphicsFileName               (m_outputFileNameWithoutExtension + ".png"),
     m_title                          ("Data Values"),
@@ -68,9 +68,9 @@ GnuplotAggregator::~GnuplotAggregator ()
       NS_LOG_WARN ("Warning: The axis legends were not set for the gnuplot aggregator");
     }
 
-  std::string dataFileName     = m_outputFileNameWithoutExtension + ".dat";
-  std::string plotFileName     = m_outputFileNameWithoutExtension + ".plt";
-  std::string scriptFileName   = m_outputFileNameWithoutExtension + ".sh";
+  stdfwd::string dataFileName     = m_outputFileNameWithoutExtension + ".dat";
+  stdfwd::string plotFileName     = m_outputFileNameWithoutExtension + ".plt";
+  stdfwd::string scriptFileName   = m_outputFileNameWithoutExtension + ".sh";
 
   // Open the gnuplot plot and data files.
   std::ofstream plotFile;
@@ -102,7 +102,7 @@ GnuplotAggregator::~GnuplotAggregator ()
 }
 
 void
-GnuplotAggregator::Write2d (std::string context, double x, double y)
+GnuplotAggregator::Write2d (stdfwd::string context, double x, double y)
 {
   NS_LOG_FUNCTION (this << context << x << y);
 
@@ -119,7 +119,7 @@ GnuplotAggregator::Write2d (std::string context, double x, double y)
 }
 
 void
-GnuplotAggregator::Write2dWithXErrorDelta (std::string context,
+GnuplotAggregator::Write2dWithXErrorDelta (stdfwd::string context,
                                            double x,
                                            double y,
                                            double errorDelta)
@@ -139,7 +139,7 @@ GnuplotAggregator::Write2dWithXErrorDelta (std::string context,
 }
 
 void
-GnuplotAggregator::Write2dWithYErrorDelta (std::string context,
+GnuplotAggregator::Write2dWithYErrorDelta (stdfwd::string context,
                                            double x,
                                            double y,
                                            double errorDelta)
@@ -159,7 +159,7 @@ GnuplotAggregator::Write2dWithYErrorDelta (std::string context,
 }
 
 void
-GnuplotAggregator::Write2dWithXYErrorDelta (std::string context,
+GnuplotAggregator::Write2dWithXYErrorDelta (stdfwd::string context,
                                             double x,
                                             double y,
                                             double xErrorDelta,
@@ -180,7 +180,7 @@ GnuplotAggregator::Write2dWithXYErrorDelta (std::string context,
 }
 
 void
-GnuplotAggregator::SetTerminal (const std::string &terminal)
+GnuplotAggregator::SetTerminal (const stdfwd::string &terminal)
 {
   // Change the extension for the graphics file.
   m_graphicsFileName = m_outputFileNameWithoutExtension + "." + terminal;
@@ -191,7 +191,7 @@ GnuplotAggregator::SetTerminal (const std::string &terminal)
 }
 
 void
-GnuplotAggregator::SetTitle (const std::string &title)
+GnuplotAggregator::SetTitle (const stdfwd::string &title)
 {
   NS_LOG_FUNCTION (this << title);
   m_gnuplot.SetTitle (title);
@@ -199,7 +199,7 @@ GnuplotAggregator::SetTitle (const std::string &title)
 }
 
 void
-GnuplotAggregator::SetLegend (const std::string &xLegend, const std::string &yLegend)
+GnuplotAggregator::SetLegend (const stdfwd::string &xLegend, const stdfwd::string &yLegend)
 {
   NS_LOG_FUNCTION (this << xLegend << yLegend);
   m_gnuplot.SetLegend (xLegend, yLegend);
@@ -207,21 +207,21 @@ GnuplotAggregator::SetLegend (const std::string &xLegend, const std::string &yLe
 }
 
 void
-GnuplotAggregator::SetExtra (const std::string &extra)
+GnuplotAggregator::SetExtra (const stdfwd::string &extra)
 {
   NS_LOG_FUNCTION (this << extra);
   m_gnuplot.SetExtra (extra);
 }
 
 void
-GnuplotAggregator::AppendExtra (const std::string &extra)
+GnuplotAggregator::AppendExtra (const stdfwd::string &extra)
 {
   NS_LOG_FUNCTION (this << extra);
   m_gnuplot.AppendExtra (extra);
 }
 
 void
-GnuplotAggregator::Add2dDataset (const std::string &dataset, const std::string &title)
+GnuplotAggregator::Add2dDataset (const stdfwd::string &dataset, const stdfwd::string &title)
 {
   NS_LOG_FUNCTION (this << dataset << title);
 
@@ -239,14 +239,14 @@ GnuplotAggregator::Add2dDataset (const std::string &dataset, const std::string &
 }
 
 void
-GnuplotAggregator::Set2dDatasetDefaultExtra (const std::string &extra)
+GnuplotAggregator::Set2dDatasetDefaultExtra (const stdfwd::string &extra)
 {
   NS_LOG_FUNCTION (extra);
   Gnuplot2dDataset::SetDefaultExtra (extra);
 }
 
 void
-GnuplotAggregator::Set2dDatasetExtra (const std::string &dataset, const std::string &extra)
+GnuplotAggregator::Set2dDatasetExtra (const stdfwd::string &dataset, const stdfwd::string &extra)
 {
   NS_LOG_FUNCTION (this << dataset << extra);
   if (m_2dDatasetMap.count (dataset) == 0)
@@ -259,7 +259,7 @@ GnuplotAggregator::Set2dDatasetExtra (const std::string &dataset, const std::str
 }
 
 void
-GnuplotAggregator::Write2dDatasetEmptyLine (const std::string &dataset)
+GnuplotAggregator::Write2dDatasetEmptyLine (const stdfwd::string &dataset)
 {
   NS_LOG_FUNCTION (this << dataset);
   if (m_2dDatasetMap.count (dataset) == 0)
@@ -282,7 +282,7 @@ GnuplotAggregator::Set2dDatasetDefaultStyle (enum Gnuplot2dDataset::Style style)
 }
 
 void
-GnuplotAggregator::Set2dDatasetStyle (const std::string &dataset, enum Gnuplot2dDataset::Style style)
+GnuplotAggregator::Set2dDatasetStyle (const stdfwd::string &dataset, enum Gnuplot2dDataset::Style style)
 {
   NS_LOG_FUNCTION (this << dataset << style);
   if (m_2dDatasetMap.count (dataset) == 0)
@@ -302,7 +302,7 @@ GnuplotAggregator::Set2dDatasetDefaultErrorBars (enum Gnuplot2dDataset::ErrorBar
 }
 
 void
-GnuplotAggregator::Set2dDatasetErrorBars (const std::string &dataset, enum Gnuplot2dDataset::ErrorBars errorBars)
+GnuplotAggregator::Set2dDatasetErrorBars (const stdfwd::string &dataset, enum Gnuplot2dDataset::ErrorBars errorBars)
 {
   NS_LOG_FUNCTION (this << dataset << errorBars);
   if (m_2dDatasetMap.count (dataset) == 0)

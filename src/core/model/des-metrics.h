@@ -30,9 +30,9 @@
 #include "singleton.h"
 #include "system-mutex.h"
 
-#include <stdint.h>    // uint32_t
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"    // uint32_t
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 
 namespace ns3 {
@@ -117,7 +117,7 @@ public:
    * \param args [in] Command line arguments.
    * \param outDir [in] Directory where the trace file should be written.
    */
-      void Initialize (std::vector<std::string> args, std::string outDir = "");
+      void Initialize (std::vector<stdfwd::string> args, stdfwd::string outDir = "");
 
   /**
    * Trace an event to self at the time it is scheduled.
@@ -152,7 +152,7 @@ private:
    * This is enables repeated/re-entrant use of CommandLine, for example
    * in \c command-line-test-suite.cc
    */
-  static std::string m_outputDir;
+  static stdfwd::string m_outputDir;
   
   bool m_initialized;    //!< Have we been initialized.
   std::ofstream m_os;    //!< The output JSON trace file stream.

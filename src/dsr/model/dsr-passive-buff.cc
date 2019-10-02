@@ -201,7 +201,7 @@ DsrPassiveBuffer::Purge ()
 }
 
 void
-DsrPassiveBuffer::Drop (DsrPassiveBuffEntry en, std::string reason)
+DsrPassiveBuffer::Drop (DsrPassiveBuffEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetDestination ());
 //  en.GetErrorCallback () (en.GetPacket (), en.GetDestination (),
@@ -210,7 +210,7 @@ DsrPassiveBuffer::Drop (DsrPassiveBuffEntry en, std::string reason)
 }
 
 void
-DsrPassiveBuffer::DropLink (DsrPassiveBuffEntry en, std::string reason)
+DsrPassiveBuffer::DropLink (DsrPassiveBuffEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetSource () << " " << en.GetNextHop ());
 //  en.GetErrorCallback () (en.GetPacket (), en.GetDestination (),

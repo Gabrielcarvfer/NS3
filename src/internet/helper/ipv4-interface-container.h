@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../model/ipv4.h"
 #include "../../network/utils/ipv4-address.h"
@@ -180,7 +180,7 @@ public:
    *        has been previously named using the Object Name Service.
    * \param interface interface index of the Ipv4Interface to add to the container
    */
-  void Add (std::string ipv4Name, uint32_t interface);
+  void Add (stdfwd::string ipv4Name, uint32_t interface);
 
   /**
    * Get the std::pair of an Ptr<Ipv4> and interface stored at the location 

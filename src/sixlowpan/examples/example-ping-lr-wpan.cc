@@ -105,7 +105,7 @@ int main (int argc, char** argv)
 
   AsciiTraceHelper ascii;
   lrWpanHelper.EnableAsciiAll (ascii.CreateFileStream ("Ping-6LoW-lr-wpan.tr"));
-  lrWpanHelper.EnablePcapAll (std::string ("Ping-6LoW-lr-wpan"), true);
+  lrWpanHelper.EnablePcapAll (stdfwd::string ("Ping-6LoW-lr-wpan"), true);
   
   Simulator::Stop (Seconds (10));
   

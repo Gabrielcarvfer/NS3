@@ -330,7 +330,7 @@ ServiceFlow::GetCid (void) const
     }
   return m_connection->GetCid ().GetIdentifier ();
 }
-std::string
+stdfwd::string
 ServiceFlow::GetServiceClassName () const
 {
   return m_serviceClassName;
@@ -487,7 +487,7 @@ ServiceFlow::SetSfid (uint32_t sfid)
   m_sfid = sfid;
 }
 void
-ServiceFlow::SetServiceClassName (std::string name)
+ServiceFlow::SetServiceClassName (stdfwd::string name)
 {
   m_serviceClassName = name;
 }

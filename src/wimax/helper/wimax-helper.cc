@@ -23,7 +23,7 @@
 #include "../../core/model/simulator.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/log.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/config.h"
 #include "../model/wimax-net-device.h"
 #include "../model/bs-net-device.h"
@@ -405,7 +405,7 @@ WimaxHelper::EnableLogComponents (void)
 
 
 void WimaxHelper::AsciiRxEvent (Ptr<OutputStreamWrapper> stream,
-                                std::string path,
+                                stdfwd::string path,
                                 Ptr<const Packet> packet,
                                 const Mac48Address &source)
 {
@@ -413,7 +413,7 @@ void WimaxHelper::AsciiRxEvent (Ptr<OutputStreamWrapper> stream,
   *stream->GetStream () << path << std::endl;
 }
 
-void WimaxHelper::AsciiTxEvent (Ptr<OutputStreamWrapper> stream, std::string path, Ptr<const Packet> packet, const Mac48Address &dest)
+void WimaxHelper::AsciiTxEvent (Ptr<OutputStreamWrapper> stream, stdfwd::string path, Ptr<const Packet> packet, const Mac48Address &dest)
 {
   *stream->GetStream () << "t " << Simulator::Now ().GetSeconds () << " to: " << dest << " ";
   *stream->GetStream () << path << std::endl;
@@ -444,7 +444,7 @@ ServiceFlow WimaxHelper::CreateServiceFlow (ServiceFlow::Direction direction,
 
 void
 WimaxHelper::EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                  std::string prefix,
+                                  stdfwd::string prefix,
                                   Ptr<NetDevice> nd,
                                   bool explicitFilename)
 {
@@ -480,7 +480,7 @@ WimaxHelper::EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
       // name of the file given the prefix.
       //
       AsciiTraceHelper asciiTraceHelper;
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -564,7 +564,7 @@ static void PcapSniffTxRxEvent (Ptr<PcapFileWrapper> file,
 }
 
 void
-WimaxHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool explicitFilename, bool promiscuous)
+WimaxHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool explicitFilename, bool promiscuous)
 {
   //
   // All of the Pcap enable functions vector through here including the ones
@@ -580,7 +580,7 @@ WimaxHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool exp
 
   Ptr<WimaxPhy> phy = device->GetPhy ();
   PcapHelper pcapHelper;
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;

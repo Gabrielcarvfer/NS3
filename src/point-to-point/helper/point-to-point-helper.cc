@@ -48,11 +48,11 @@ PointToPointHelper::PointToPointHelper ()
 }
 
 void 
-PointToPointHelper::SetQueue (std::string type,
-                              std::string n1, const AttributeValue &v1,
-                              std::string n2, const AttributeValue &v2,
-                              std::string n3, const AttributeValue &v3,
-                              std::string n4, const AttributeValue &v4)
+PointToPointHelper::SetQueue (stdfwd::string type,
+                              stdfwd::string n1, const AttributeValue &v1,
+                              stdfwd::string n2, const AttributeValue &v2,
+                              stdfwd::string n3, const AttributeValue &v3,
+                              stdfwd::string n4, const AttributeValue &v4)
 {
   QueueBase::AppendItemTypeIfNotPresent (type, "Packet");
 
@@ -64,20 +64,20 @@ PointToPointHelper::SetQueue (std::string type,
 }
 
 void 
-PointToPointHelper::SetDeviceAttribute (std::string n1, const AttributeValue &v1)
+PointToPointHelper::SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_deviceFactory.Set (n1, v1);
 }
 
 void 
-PointToPointHelper::SetChannelAttribute (std::string n1, const AttributeValue &v1)
+PointToPointHelper::SetChannelAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_channelFactory.Set (n1, v1);
   m_remoteChannelFactory.Set (n1, v1);
 }
 
 void 
-PointToPointHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+PointToPointHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   //
   // All of the Pcap enable functions vector through here including the ones
@@ -93,7 +93,7 @@ PointToPointHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, b
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -111,7 +111,7 @@ PointToPointHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, b
 void 
 PointToPointHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -149,7 +149,7 @@ PointToPointHelper::EnableAsciiInternal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -287,21 +287,21 @@ PointToPointHelper::Install (Ptr<Node> a, Ptr<Node> b)
 }
 
 NetDeviceContainer 
-PointToPointHelper::Install (Ptr<Node> a, std::string bName)
+PointToPointHelper::Install (Ptr<Node> a, stdfwd::string bName)
 {
   Ptr<Node> b = Names::Find<Node> (bName);
   return Install (a, b);
 }
 
 NetDeviceContainer 
-PointToPointHelper::Install (std::string aName, Ptr<Node> b)
+PointToPointHelper::Install (stdfwd::string aName, Ptr<Node> b)
 {
   Ptr<Node> a = Names::Find<Node> (aName);
   return Install (a, b);
 }
 
 NetDeviceContainer 
-PointToPointHelper::Install (std::string aName, std::string bName)
+PointToPointHelper::Install (stdfwd::string aName, stdfwd::string bName)
 {
   Ptr<Node> a = Names::Find<Node> (aName);
   Ptr<Node> b = Names::Find<Node> (bName);

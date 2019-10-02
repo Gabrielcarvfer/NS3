@@ -331,11 +331,11 @@ private:
   /// Notify that packet is dropped from queue by timeout
   /// \param en BuffEntry Buffer entry
   /// \param reason Drop reason
-  void Drop (DsrPassiveBuffEntry en, std::string reason);
+  void Drop (DsrPassiveBuffEntry en, stdfwd::string reason);
   /// Notify that packet is dropped from queue by timeout
   /// \param en BuffEntry Buffer entry
   /// \param reason Drop reason
-  void DropLink (DsrPassiveBuffEntry en, std::string reason);
+  void DropLink (DsrPassiveBuffEntry en, stdfwd::string reason);
   /// The maximum number of packets that we allow a routing protocol to buffer.
   uint32_t m_maxLen;
   /// The maximum period of time that a routing protocol is allowed to buffer a packet for, seconds.

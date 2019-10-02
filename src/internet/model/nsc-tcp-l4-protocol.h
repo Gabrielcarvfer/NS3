@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../network/model/packet.h"
 #include "../../network/utils/ipv4-address.h"
@@ -65,13 +65,13 @@ public:
    * Set the NSC library to be used
    * \param lib the library path
    */
-  void SetNscLibrary (const std::string &lib);
+  void SetNscLibrary (const stdfwd::string &lib);
 
   /**
    * Get the NSC library being used
    * \returns the library path
    */
-  std::string GetNscLibrary (void) const;
+  stdfwd::string GetNscLibrary (void) const;
   virtual int GetProtocolNumber (void) const;
 
   /**
@@ -220,7 +220,7 @@ private:
   INetStack* m_nscStack; //!< the NSC stack.
   NscInterfaceImpl *m_nscInterface; //!< the NSC Interface.
   void *m_dlopenHandle; //!< dynamic library handle.
-  std::string m_nscLibrary; //!< path to the NSC library.
+  stdfwd::string m_nscLibrary; //!< path to the NSC library.
   Timer m_softTimer; //!< Soft interrupt timer
   std::vector<Ptr<NscTcpSocketImpl> > m_sockets; //!< list of sockets
   IpL4Protocol::DownTargetCallback m_downTarget; //!< Callback to send packets over IPv4

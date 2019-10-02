@@ -38,7 +38,7 @@ public:
   LiIonEnergySourceHelper ();
   ~LiIonEnergySourceHelper ();
 
-  void Set (std::string name, const AttributeValue &v);
+  void Set (stdfwd::string name, const AttributeValue &v);
 
 private:
   virtual Ptr<EnergySource> DoInstall (Ptr<Node> node) const;

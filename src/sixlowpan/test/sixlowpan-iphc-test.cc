@@ -34,7 +34,7 @@
 
 #include "../model/sixlowpan-net-device.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 using namespace ns3;
@@ -61,7 +61,7 @@ class SixlowpanIphcImplTest : public TestCase
    * \param socket The sending socket.
    * \param to The destination.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
 
   /**
    * Send data function.
@@ -69,7 +69,7 @@ class SixlowpanIphcImplTest : public TestCase
    * \param socket The sending socket.
    * \param to The destination.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -113,7 +113,7 @@ void SixlowpanIphcImplTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-SixlowpanIphcImplTest::DoSendData (Ptr<Socket> socket, std::string to)
+SixlowpanIphcImplTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 1234);
   uint8_t buffer [] = "\"Can you tell me where my country lies?\" \\ said the unifaun to his true love's eyes. \\ \"It lies with me!\" cried the Queen of Maybe \\ - for her merchandise, he traded in his prize.";
@@ -124,7 +124,7 @@ SixlowpanIphcImplTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-SixlowpanIphcImplTest::SendData (Ptr<Socket> socket, std::string to)
+SixlowpanIphcImplTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (0),

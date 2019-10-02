@@ -30,7 +30,7 @@ int
 main (int argc, char *argv[])
 {
 #ifdef NS3_CLICK
-  std::string clickConfigFolder = "src/click/examples";
+  stdfwd::string clickConfigFolder = "src/click/examples";
 
   CommandLine cmd;
   cmd.AddValue ("clickConfigFolder", "Base folder for click configuration files", clickConfigFolder);
@@ -46,7 +46,7 @@ main (int argc, char *argv[])
 //
 // Install Click on the nodes
 //
-  std::map<std::string, std::string> defines;
+  std::map<stdfwd::string, stdfwd::string> defines;
 // Strings, especially with blanks in it, have to be enclosed in quotation
 // marks, like in click configuration files.
   defines["OUTPUT"] = "\"Hello World!\"";

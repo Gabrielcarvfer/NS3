@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include <string>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object.h"
 #include "../../core/model/ptr.h"
 

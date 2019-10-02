@@ -74,7 +74,7 @@ BooleanProbe::SetValue (bool newVal)
 }
 
 void
-BooleanProbe::SetValueByPath (std::string path, bool newVal)
+BooleanProbe::SetValueByPath (stdfwd::string path, bool newVal)
 {
   NS_LOG_FUNCTION (path << newVal);
   Ptr<BooleanProbe> probe = Names::Find<BooleanProbe> (path);
@@ -83,7 +83,7 @@ BooleanProbe::SetValueByPath (std::string path, bool newVal)
 }
 
 bool
-BooleanProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+BooleanProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -92,7 +92,7 @@ BooleanProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-BooleanProbe::ConnectByPath (std::string path)
+BooleanProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

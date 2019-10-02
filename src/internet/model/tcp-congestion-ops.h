@@ -70,7 +70,7 @@ public:
    *
    * \return A string identifying the name
    */
-  virtual std::string GetName () const = 0;
+  virtual stdfwd::string GetName () const = 0;
 
   /**
    * \brief Get the slow start threshold after a loss event
@@ -195,7 +195,7 @@ public:
 
   ~TcpNewReno ();
 
-  std::string GetName () const;
+  stdfwd::string GetName () const;
 
   virtual void IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked);
   virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb,

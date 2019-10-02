@@ -133,7 +133,7 @@ Ipv4RoutingHelper::PrintArpCache (Ptr<Node> node, Ptr<OutputStreamWrapper> strea
       std::ostream* os = stream->GetStream ();
 
       *os << "ARP Cache of node ";
-      std::string found = Names::FindName (node);
+      stdfwd::string found = Names::FindName (node);
       if (Names::FindName (node) != "")
         {
           *os << found;
@@ -164,7 +164,7 @@ Ipv4RoutingHelper::PrintArpCacheEvery (Time printInterval, Ptr<Node> node, Ptr<O
       std::ostream* os = stream->GetStream ();
 
       *os << "ARP Cache of node ";
-      std::string found = Names::FindName (node);
+      stdfwd::string found = Names::FindName (node);
       if (Names::FindName (node) != "")
         {
           *os << found;

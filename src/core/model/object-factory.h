@@ -58,7 +58,7 @@ public:
    *
    * \param [in] typeId The name of the TypeId this factory should create.
    */
-  ObjectFactory (std::string typeId);
+  ObjectFactory (stdfwd::string typeId);
 
   /**@{*/
   /**
@@ -68,7 +68,7 @@ public:
    */
   void SetTypeId (TypeId tid);
   void SetTypeId (const char *tid);
-  void SetTypeId (std::string tid);
+  void SetTypeId (stdfwd::string tid);
   /**@}*/
   
   /**
@@ -84,7 +84,7 @@ public:
    * \param [in] name The name of the attribute to set.
    * \param [in] value The value of the attribute to set.
    */
-  void Set (std::string name, const AttributeValue &value);
+  void Set (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Get the TypeId which will be created by this ObjectFactory.
@@ -176,15 +176,15 @@ std::istream & operator >> (std::istream &is, ObjectFactory &factory);
 template <typename T>
 Ptr<T> 
 CreateObjectWithAttributes
-  (std::string n1 = "", const AttributeValue & v1 = EmptyAttributeValue (),
-   std::string n2 = "", const AttributeValue & v2 = EmptyAttributeValue (),
-   std::string n3 = "", const AttributeValue & v3 = EmptyAttributeValue (),
-   std::string n4 = "", const AttributeValue & v4 = EmptyAttributeValue (),
-   std::string n5 = "", const AttributeValue & v5 = EmptyAttributeValue (),
-   std::string n6 = "", const AttributeValue & v6 = EmptyAttributeValue (),
-   std::string n7 = "", const AttributeValue & v7 = EmptyAttributeValue (),
-   std::string n8 = "", const AttributeValue & v8 = EmptyAttributeValue (),
-   std::string n9 = "", const AttributeValue & v9 = EmptyAttributeValue ()
+  (stdfwd::string n1 = "", const AttributeValue & v1 = EmptyAttributeValue (),
+   stdfwd::string n2 = "", const AttributeValue & v2 = EmptyAttributeValue (),
+   stdfwd::string n3 = "", const AttributeValue & v3 = EmptyAttributeValue (),
+   stdfwd::string n4 = "", const AttributeValue & v4 = EmptyAttributeValue (),
+   stdfwd::string n5 = "", const AttributeValue & v5 = EmptyAttributeValue (),
+   stdfwd::string n6 = "", const AttributeValue & v6 = EmptyAttributeValue (),
+   stdfwd::string n7 = "", const AttributeValue & v7 = EmptyAttributeValue (),
+   stdfwd::string n8 = "", const AttributeValue & v8 = EmptyAttributeValue (),
+   stdfwd::string n9 = "", const AttributeValue & v9 = EmptyAttributeValue ()
    );
 
 
@@ -209,15 +209,15 @@ ObjectFactory::Create (void) const
 
 template <typename T>
 Ptr<T> 
-CreateObjectWithAttributes (std::string n1, const AttributeValue & v1,
-                            std::string n2, const AttributeValue & v2,
-                            std::string n3, const AttributeValue & v3,
-                            std::string n4, const AttributeValue & v4,
-                            std::string n5, const AttributeValue & v5,
-                            std::string n6, const AttributeValue & v6,
-                            std::string n7, const AttributeValue & v7,
-                            std::string n8, const AttributeValue & v8,
-                            std::string n9, const AttributeValue & v9)
+CreateObjectWithAttributes (stdfwd::string n1, const AttributeValue & v1,
+                            stdfwd::string n2, const AttributeValue & v2,
+                            stdfwd::string n3, const AttributeValue & v3,
+                            stdfwd::string n4, const AttributeValue & v4,
+                            stdfwd::string n5, const AttributeValue & v5,
+                            stdfwd::string n6, const AttributeValue & v6,
+                            stdfwd::string n7, const AttributeValue & v7,
+                            stdfwd::string n8, const AttributeValue & v8,
+                            stdfwd::string n9, const AttributeValue & v9)
 {
   ObjectFactory factory;
   factory.SetTypeId (T::GetTypeId ());

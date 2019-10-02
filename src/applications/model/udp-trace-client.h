@@ -100,7 +100,7 @@ public:
    *  Frame No Frametype   Time[ms]    Length [byte]
    *  ...
    */
-  void SetTraceFile (std::string filename);
+  void SetTraceFile (stdfwd::string filename);
 
   /**
    * \brief Return the maximum packet size
@@ -128,7 +128,7 @@ private:
    * \brief Load a trace file
    * \param filename the trace file path
    */
-  void LoadTrace (std::string filename);
+  void LoadTrace (stdfwd::string filename);
   /**
    * \brief Load the default trace
    */

@@ -39,7 +39,7 @@ public:
 class BuildingsPathlossTestCase : public TestCase
 {
 public:
-  BuildingsPathlossTestCase (double freq, uint16_t m1, uint16_t m2, EnvironmentType env, CitySize city, double refValue, std::string name);
+  BuildingsPathlossTestCase (double freq, uint16_t m1, uint16_t m2, EnvironmentType env, CitySize city, double refValue, stdfwd::string name);
   virtual ~BuildingsPathlossTestCase ();
 
 private:

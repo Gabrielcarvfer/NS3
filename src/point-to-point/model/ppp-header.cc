@@ -57,7 +57,7 @@ PppHeader::GetInstanceTypeId (void) const
 void 
 PppHeader::Print (std::ostream &os) const
 {
-  std::string proto;
+  stdfwd::string proto;
 
   switch(m_protocol)
     {

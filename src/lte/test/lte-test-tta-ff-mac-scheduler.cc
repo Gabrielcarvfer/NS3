@@ -21,7 +21,7 @@
  */
 
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object.h"
 #include "../../spectrum/model/spectrum-error-model.h"
 #include "../../core/model/log.h"
@@ -151,7 +151,7 @@ static LenaTestTtaFfMacSchedulerSuite lenaTestTtaFfMacSchedulerSuite;
 
 // --------------- T E S T - C A S E ------------------------------
 
-std::string 
+stdfwd::string
 LenaTtaFfMacSchedulerTestCase::BuildNameString (uint16_t nUser, double dist)
 {
   std::ostringstream oss;

@@ -57,7 +57,7 @@ private:
   virtual void DoRun (void);
   bool m_writeResults;
 
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
 
   TestVectors<uint32_t> m_inputs;
   TestVectors<uint32_t> m_responses;
@@ -70,7 +70,7 @@ NscTcpLossTestCase1::NscTcpLossTestCase1 ()
 }
 
 void 
-NscTcpLossTestCase1::SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+NscTcpLossTestCase1::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   m_responses.Add (p->GetSize ());
 }
@@ -165,7 +165,7 @@ private:
   virtual void DoRun (void);
   bool m_writeResults;
 
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
 
   TestVectors<uint32_t> m_inputs;
   TestVectors<uint32_t> m_responses;
@@ -178,7 +178,7 @@ NscTcpLossTestCase2::NscTcpLossTestCase2 ()
 }
 
 void 
-NscTcpLossTestCase2::SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+NscTcpLossTestCase2::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   m_responses.Add (p->GetSize ());
 }

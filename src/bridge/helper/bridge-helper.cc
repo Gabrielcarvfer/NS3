@@ -33,7 +33,7 @@ BridgeHelper::BridgeHelper ()
 }
 
 void 
-BridgeHelper::SetDeviceAttribute (std::string n1, const AttributeValue &v1)
+BridgeHelper::SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   NS_LOG_FUNCTION_NOARGS ();
   m_deviceFactory.Set (n1, v1);
@@ -59,7 +59,7 @@ BridgeHelper::Install (Ptr<Node> node, NetDeviceContainer c)
 }
 
 NetDeviceContainer
-BridgeHelper::Install (std::string nodeName, NetDeviceContainer c)
+BridgeHelper::Install (stdfwd::string nodeName, NetDeviceContainer c)
 {
   NS_LOG_FUNCTION_NOARGS ();
   Ptr<Node> node = Names::Find<Node> (nodeName);

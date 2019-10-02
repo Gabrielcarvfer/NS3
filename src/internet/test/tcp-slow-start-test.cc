@@ -59,7 +59,7 @@ public:
    */
   TcpSlowStartNormalTest (uint32_t segmentSize, uint32_t packetSize,
                           uint32_t initSsTh, uint32_t packets, TypeId& congControl,
-                          const std::string &desc);
+                          const stdfwd::string &desc);
 
 protected:
   virtual void CWndTrace (uint32_t oldValue, uint32_t newValue);
@@ -89,7 +89,7 @@ TcpSlowStartNormalTest::TcpSlowStartNormalTest (uint32_t segmentSize,
                                                 uint32_t initSsTh,
                                                 uint32_t packets,
                                                 TypeId &typeId,
-                                                const std::string &desc)
+                                                const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_ackedBytes (0),
     m_sentBytes (0),
@@ -232,7 +232,7 @@ public:
    */
   TcpSlowStartAttackerTest (uint32_t segmentSize, uint32_t packetSize,
                             uint32_t initSsTh, uint32_t packets, TypeId& congControl,
-                            const std::string &desc);
+                            const stdfwd::string &desc);
 
 protected:
   virtual Ptr<TcpSocketMsgBase> CreateReceiverSocket (Ptr<Node> node);
@@ -242,7 +242,7 @@ TcpSlowStartAttackerTest::TcpSlowStartAttackerTest (uint32_t segmentSize,
                                                     uint32_t packetSize,
                                                     uint32_t initSsTh,
                                                     uint32_t packets,
-                                                    TypeId &typeId, const std::string &msg)
+                                                    TypeId &typeId, const stdfwd::string &msg)
   : TcpSlowStartNormalTest (segmentSize, packetSize, initSsTh, packets, typeId, msg)
 {
 

@@ -98,7 +98,7 @@ UeMemberLteUeCmacSapUser::NotifyRandomAccessFailed ()
 
 
 /// Map each of UE RRC states to its string representation.
-static const std::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
+static const stdfwd::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
 {
   "IDLE_START",
   "IDLE_CELL_SEARCH",
@@ -119,7 +119,7 @@ static const std::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
  * \param s The UE RRC state.
  * \return The string representation of the given state.
  */
-static const std::string & ToString (LteUeRrc::State s)
+static const stdfwd::string & ToString (LteUeRrc::State s)
 {
   return g_ueRrcStateName[s];
 }

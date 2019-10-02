@@ -91,7 +91,7 @@ BuildingData::BuildingData ()
 class BuildingsHelperOneTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (PositionInBuilding pib, BuildingData bd);
+  static stdfwd::string BuildNameString (PositionInBuilding pib, BuildingData bd);
   BuildingsHelperOneTestCase (PositionInBuilding pib, BuildingData bd);
 
 private:
@@ -102,7 +102,7 @@ private:
   
 };
 
-std::string BuildingsHelperOneTestCase::BuildNameString (PositionInBuilding pib, BuildingData bd)
+stdfwd::string BuildingsHelperOneTestCase::BuildNameString (PositionInBuilding pib, BuildingData bd)
 {
   std::ostringstream oss;
   oss <<  "pos=" << pib.pos;

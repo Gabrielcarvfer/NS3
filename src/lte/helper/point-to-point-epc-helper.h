@@ -102,7 +102,7 @@ private:
   /**
    * Prefix for the PCAP file for the S1 link
    */
-  std::string m_s1uLinkPcapPrefix;
+  stdfwd::string m_s1uLinkPcapPrefix;
 };
 
 } // namespace ns3

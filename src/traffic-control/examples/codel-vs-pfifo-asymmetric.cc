@@ -49,7 +49,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -76,7 +76,7 @@ CwndTracer (Ptr<OutputStreamWrapper>stream, uint32_t oldval, uint32_t newval)
 }
 
 static void
-TraceCwnd (std::string cwndTrFileName)
+TraceCwnd (stdfwd::string cwndTrFileName)
 {
   AsciiTraceHelper ascii;
   if (cwndTrFileName.compare ("") == 0)
@@ -98,7 +98,7 @@ SojournTracer (Ptr<OutputStreamWrapper>stream, Time oldval, Time newval)
 }
 
 static void
-TraceSojourn (std::string sojournTrFileName)
+TraceSojourn (stdfwd::string sojournTrFileName)
 {
   AsciiTraceHelper ascii;
   if (sojournTrFileName.compare ("") == 0)
@@ -120,7 +120,7 @@ QueueLengthTracer (Ptr<OutputStreamWrapper>stream, uint32_t oldval, uint32_t new
 }
 
 static void
-TraceQueueLength (std::string queueLengthTrFileName)
+TraceQueueLength (stdfwd::string queueLengthTrFileName)
 {
   AsciiTraceHelper ascii;
   if (queueLengthTrFileName.compare ("") == 0)
@@ -142,7 +142,7 @@ EveryDropTracer (Ptr<OutputStreamWrapper>stream, Ptr<const QueueDiscItem> item)
 }
 
 static void
-TraceEveryDrop (std::string everyDropTrFileName)
+TraceEveryDrop (stdfwd::string everyDropTrFileName)
 {
   AsciiTraceHelper ascii;
   if (everyDropTrFileName.compare ("") == 0)
@@ -173,7 +173,7 @@ DroppingStateTracer (Ptr<OutputStreamWrapper>stream, bool oldVal, bool newVal)
 }
 
 static void
-TraceDroppingState (std::string dropStateTrFileName)
+TraceDroppingState (stdfwd::string dropStateTrFileName)
 {
   AsciiTraceHelper ascii;
   if (dropStateTrFileName.compare ("") == 0)
@@ -213,17 +213,17 @@ CreateOnOffFlow (AddressValue remoteAddress, Ptr<Node> sender, float stopTime)
 
 int main (int argc, char *argv[])
 {
-  std::string serverCmtsDelay = "15ms";
-  std::string cmtsRouterDelay = "6ms";
-  std::string routerHostDelay = "0.1ms";
-  std::string serverLanDataRate = "10Gbps";
-  std::string cmtsLanDataRate = "10Gbps";
-  std::string cmtsWanDataRate = "22Mbps";
-  std::string routerWanDataRate = "5Mbps";
-  std::string routerLanDataRate = "10Gbps";
-  std::string hostLanDataRate = "10Gbps";
+  stdfwd::string serverCmtsDelay = "15ms";
+  stdfwd::string cmtsRouterDelay = "6ms";
+  stdfwd::string routerHostDelay = "0.1ms";
+  stdfwd::string serverLanDataRate = "10Gbps";
+  stdfwd::string cmtsLanDataRate = "10Gbps";
+  stdfwd::string cmtsWanDataRate = "22Mbps";
+  stdfwd::string routerWanDataRate = "5Mbps";
+  stdfwd::string routerLanDataRate = "10Gbps";
+  stdfwd::string hostLanDataRate = "10Gbps";
 
-  std::string routerWanQueueDiscType = "CoDel";           // outbound cable router queue
+  stdfwd::string routerWanQueueDiscType = "CoDel";           // outbound cable router queue
   uint32_t pktSize = 1458;                // in bytes. 1458 to prevent fragments
   uint32_t queueSize = 1000;              // in packets
   uint32_t numOfUpLoadBulkFlows = 1;      // # of upload bulk transfer flows
@@ -235,7 +235,7 @@ int main (int argc, char *argv[])
   float startTime = 0.1f;
   float simDuration = 60;        //in seconds
 
-  std::string fileNamePrefix = "codel-vs-pfifo-fast-asymmetric";
+  stdfwd::string fileNamePrefix = "codel-vs-pfifo-fast-asymmetric";
   bool logging = true;
 
   CommandLine cmd;
@@ -264,13 +264,13 @@ int main (int argc, char *argv[])
 
   float stopTime = startTime + simDuration;
 
-  std::string pcapFileName = fileNamePrefix + "-" + routerWanQueueDiscType;
-  std::string cwndTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-cwnd" + ".tr";
-  std::string attributeFileName = fileNamePrefix + "-" + routerWanQueueDiscType + ".attr";
-  std::string sojournTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-sojourn" + ".tr";
-  std::string queueLengthTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-length" + ".tr";
-  std::string everyDropTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-drop" + ".tr";
-  std::string dropStateTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-drop-state" + ".tr";
+  stdfwd::string pcapFileName = fileNamePrefix + "-" + routerWanQueueDiscType;
+  stdfwd::string cwndTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-cwnd" + ".tr";
+  stdfwd::string attributeFileName = fileNamePrefix + "-" + routerWanQueueDiscType + ".attr";
+  stdfwd::string sojournTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-sojourn" + ".tr";
+  stdfwd::string queueLengthTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-length" + ".tr";
+  stdfwd::string everyDropTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-drop" + ".tr";
+  stdfwd::string dropStateTrFileName = fileNamePrefix + "-" + routerWanQueueDiscType + "-drop-state" + ".tr";
   if (logging)
     {
       //LogComponentEnable ("CoDelPfifoFastAsymmetricTest", LOG_LEVEL_ALL);

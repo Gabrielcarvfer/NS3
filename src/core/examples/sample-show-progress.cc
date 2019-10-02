@@ -35,7 +35,7 @@
 
 #include <ctime>
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 
 using namespace ns3;
@@ -60,8 +60,8 @@ class Timestamp
     last  = seconds;
   }
 
-  std::string string () {
-    std::string now = ctime ( &last );
+  stdfwd::string string () {
+    stdfwd::string now = ctime ( &last );
     now.resize(now.length () - 1);  // trim trailing newline
     return now;
   }

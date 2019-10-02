@@ -21,7 +21,7 @@
 #pragma once
 
 #include <list>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/object.h"
 
@@ -38,7 +38,7 @@ typedef std::list<Ptr<DataCalculator> > DataCalculatorList;
 /**
  * List of pairs of strings representing metadata
  */
-typedef std::list<std::pair<std::string, std::string> > MetadataList;
+typedef std::list<std::pair<stdfwd::string, stdfwd::string> > MetadataList;
 
 /**
  * \ingroup dataoutput
@@ -64,56 +64,56 @@ public:
    * \param runID Label for the runID
    * \param description Description
    */
-  void DescribeRun (std::string experiment,
-                    std::string strategy,
-                    std::string input,
-                    std::string runID,
-                    std::string description = "");
+  void DescribeRun (stdfwd::string experiment,
+                    stdfwd::string strategy,
+                    stdfwd::string input,
+                    stdfwd::string runID,
+                    stdfwd::string description = "");
 
   /**
    * Return the experiment label
    * \return Experiment label
    */
-  std::string GetExperimentLabel () const { return m_experimentLabel; }
+  stdfwd::string GetExperimentLabel () const { return m_experimentLabel; }
   /**
    * Return the strategy label
    * \return Strategy label
    */
-  std::string GetStrategyLabel () const { return m_strategyLabel; }
+  stdfwd::string GetStrategyLabel () const { return m_strategyLabel; }
   /**
    * Return the input label
    * \return Input label
    */
-  std::string GetInputLabel () const { return m_inputLabel; }
+  stdfwd::string GetInputLabel () const { return m_inputLabel; }
   /**
    * Return the runID label
    * \return Run label
    */
-  std::string GetRunLabel () const { return m_runLabel; }
+  stdfwd::string GetRunLabel () const { return m_runLabel; }
   /**
    * Return the description label
    * \return Description label
    */
-  std::string GetDescription () const { return m_description; }
+  stdfwd::string GetDescription () const { return m_description; }
 
   /**
    * Add the key and the value as a pair of strings to the metadata list
    * \param key Key value to include
    * \param value Value to include of type string
    */
-  void AddMetadata (std::string key, std::string value);
+  void AddMetadata (stdfwd::string key, stdfwd::string value);
   /**
    * Add the key and the value as a pair of strings to the metadata list
    * \param key Key value to include
    * \param value Value to include of type double
    */
-  void AddMetadata (std::string key, double value);
+  void AddMetadata (stdfwd::string key, double value);
   /**
    * Add the key and the value as a pair of strings to the metadata list
    * \param key Key value to include
    * \param value Value to include of type uint32_t
    */
-  void AddMetadata (std::string key, uint32_t value);
+  void AddMetadata (stdfwd::string key, uint32_t value);
   /**
    * Returns an iterator to the beginning of the metadata list
    * \return Iterator pointing to the first value of the metadata list
@@ -145,11 +145,11 @@ protected:
   virtual void DoDispose ();
 
 private:
-  std::string m_experimentLabel; //!< Experiment label
-  std::string m_strategyLabel;   //!< Strategy label
-  std::string m_inputLabel;      //!< Input label
-  std::string m_runLabel;        //!< Run label
-  std::string m_description;     //!< Description label
+  stdfwd::string m_experimentLabel; //!< Experiment label
+  stdfwd::string m_strategyLabel;   //!< Strategy label
+  stdfwd::string m_inputLabel;      //!< Input label
+  stdfwd::string m_runLabel;        //!< Run label
+  stdfwd::string m_description;     //!< Description label
 
   MetadataList m_metadata;       //!< List of experiment metadata
   DataCalculatorList m_calcList; //!< List of data calculators

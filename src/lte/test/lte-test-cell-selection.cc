@@ -128,7 +128,7 @@ LteCellSelectionTestCase::UeSetup_t::UeSetup_t (
 
 
 LteCellSelectionTestCase::LteCellSelectionTestCase (
-  std::string name, bool isEpcMode, bool isIdealRrc,
+  stdfwd::string name, bool isEpcMode, bool isIdealRrc,
   double interSiteDistance,
   std::vector<UeSetup_t> ueSetupList, uint64_t rngRun)
   : TestCase (name),
@@ -394,7 +394,7 @@ LteCellSelectionTestCase::CheckPoint (Ptr<LteUeNetDevice> ueDev,
 
 void
 LteCellSelectionTestCase::StateTransitionCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
   LteUeRrc::State oldState, LteUeRrc::State newState)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti << oldState << newState);
@@ -404,7 +404,7 @@ LteCellSelectionTestCase::StateTransitionCallback (
 
 void
 LteCellSelectionTestCase::InitialCellSelectionEndOkCallback (
-  std::string context, uint64_t imsi, uint16_t cellId)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId)
 {
   NS_LOG_FUNCTION (this << imsi << cellId);
 }
@@ -412,7 +412,7 @@ LteCellSelectionTestCase::InitialCellSelectionEndOkCallback (
 
 void
 LteCellSelectionTestCase::InitialCellSelectionEndErrorCallback (
-  std::string context, uint64_t imsi, uint16_t cellId)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId)
 {
   NS_LOG_FUNCTION (this << imsi << cellId);
 }
@@ -420,7 +420,7 @@ LteCellSelectionTestCase::InitialCellSelectionEndErrorCallback (
 
 void
 LteCellSelectionTestCase::ConnectionEstablishedCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
 }

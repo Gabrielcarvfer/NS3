@@ -35,7 +35,7 @@
 #include "../model/single-model-spectrum-channel.h"
 #include "../model/waveform-generator.h"
 #include "../model/spectrum-analyzer.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iomanip>
 #include "../model/friis-spectrum-propagation-loss.h"
 #include "../../propagation/model/propagation-delay-model.h"
@@ -58,7 +58,7 @@ static uint64_t g_rxBytes;
 static double g_bandwidth = 20e6; // Hz
 
 void
-PhyRxEndOkTrace (std::string context, Ptr<const Packet> p)
+PhyRxEndOkTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   g_rxBytes += p->GetSize ();
 }
@@ -70,21 +70,21 @@ public:
   SpectrumIdealPhyTestCase (double snrLinear,
 			    uint64_t phyRate,
 			    bool rateIsAchievable,
-			    std::string channelType);
+			    stdfwd::string channelType);
   virtual ~SpectrumIdealPhyTestCase ();
 
 private:
   virtual void DoRun (void);
-  static std::string Name (std::string channelType, double snrLinear, uint64_t phyRate);
+  static stdfwd::string Name (stdfwd::string channelType, double snrLinear, uint64_t phyRate);
   
   double      m_snrLinear;
   uint64_t    m_phyRate;
   bool        m_rateIsAchievable;
-  std::string m_channelType;
+  stdfwd::string m_channelType;
 };
 
-std::string 
-SpectrumIdealPhyTestCase::Name (std::string channelType, double snrLinear, uint64_t phyRate)
+stdfwd::string
+SpectrumIdealPhyTestCase::Name (stdfwd::string channelType, double snrLinear, uint64_t phyRate)
 {
   std::ostringstream oss;
   oss << channelType
@@ -97,7 +97,7 @@ SpectrumIdealPhyTestCase::Name (std::string channelType, double snrLinear, uint6
 SpectrumIdealPhyTestCase::SpectrumIdealPhyTestCase (double snrLinear,
 						    uint64_t phyRate,
 						    bool rateIsAchievable,
-						    std::string channelType)
+						    stdfwd::string channelType)
   : TestCase (Name (channelType, snrLinear, phyRate)),
     m_snrLinear (snrLinear),
     m_phyRate (phyRate),

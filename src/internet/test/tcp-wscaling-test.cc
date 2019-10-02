@@ -60,7 +60,7 @@ public:
    */
   WScalingTestCase (WScalingTestCase::Configuration conf,
                     uint32_t maxRcvBufferSize,
-                    uint32_t maxSndBufferSize, std::string name);
+                    uint32_t maxSndBufferSize, stdfwd::string name);
 
 protected:
   virtual Ptr<TcpSocketMsgBase> CreateReceiverSocket (Ptr<Node> node);
@@ -75,7 +75,7 @@ protected:
 
 WScalingTestCase::WScalingTestCase (WScalingTestCase::Configuration conf,
                                     uint32_t maxRcvBufferSize,
-                                    uint32_t maxSndBufferSize, std::string name)
+                                    uint32_t maxSndBufferSize, stdfwd::string name)
   : TcpGeneralTest (name)
 {
   m_configuration = conf;

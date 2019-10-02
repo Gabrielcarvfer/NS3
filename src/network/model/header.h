@@ -22,7 +22,7 @@
 
 #include "chunk.h"
 #include "buffer.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

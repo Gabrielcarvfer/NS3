@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "cid.h"
 #include "wimax-phy.h"
 #include "wimax-net-device.h"

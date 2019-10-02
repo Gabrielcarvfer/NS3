@@ -37,7 +37,7 @@ OpenFlowSwitchHelper::OpenFlowSwitchHelper ()
 }
 
 void
-OpenFlowSwitchHelper::SetDeviceAttribute (std::string n1, const AttributeValue &v1)
+OpenFlowSwitchHelper::SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   NS_LOG_FUNCTION_NOARGS ();
   m_deviceFactory.Set (n1, v1);
@@ -85,7 +85,7 @@ OpenFlowSwitchHelper::Install (Ptr<Node> node, NetDeviceContainer c)
 }
 
 NetDeviceContainer
-OpenFlowSwitchHelper::Install (std::string nodeName, NetDeviceContainer c)
+OpenFlowSwitchHelper::Install (stdfwd::string nodeName, NetDeviceContainer c)
 {
   NS_LOG_FUNCTION_NOARGS ();
   Ptr<Node> node = Names::Find<Node> (nodeName);

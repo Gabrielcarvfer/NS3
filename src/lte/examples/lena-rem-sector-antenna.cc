@@ -27,7 +27,7 @@
 #include "../../buildings/helper/buildings-helper.h"
 #include "../helper/radio-environment-map-helper.h"
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 //#include "../../config-store/model/gtk-config-store.h"
 

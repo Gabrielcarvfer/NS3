@@ -55,7 +55,7 @@ public:
    * \param n attribute name
    * \param v attribute value
    */
-  void SetBuildingAttribute (std::string n, const AttributeValue &v);
+  void SetBuildingAttribute (stdfwd::string n, const AttributeValue &v);
 
   /** 
    * Create a set of buildings allocated on a grid

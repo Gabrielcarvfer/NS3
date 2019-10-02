@@ -26,8 +26,8 @@
 #include "callback.h"
 #include "deprecated.h"
 #include "hash.h"
-#include <string>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file
@@ -74,9 +74,9 @@ public:
   /** Attribute implementation. */
   struct AttributeInformation {
     /** Attribute name. */
-    std::string name;
+    stdfwd::string name;
     /** Attribute help string. */
-    std::string help;
+    stdfwd::string help;
     /** AttributeFlags value. */
     uint32_t flags;
     /** Default initial value. */
@@ -90,22 +90,22 @@ public:
     /** Support level/deprecation. */
     TypeId::SupportLevel supportLevel;
     /** Support message. */
-    std::string supportMsg;
+    stdfwd::string supportMsg;
   };
   /** TraceSource implementation. */
   struct TraceSourceInformation {
     /** Trace name. */
-    std::string name;
+    stdfwd::string name;
     /** Trace help string. */
-    std::string help;
+    stdfwd::string help;
     /** Callback function signature type. */
-    std::string callback;
+    stdfwd::string callback;
     /** Trace accessor. */
     Ptr<const TraceSourceAccessor> accessor;
     /** Support level/deprecation. */
     TypeId::SupportLevel supportLevel;
     /** Support message. */
-    std::string supportMsg;
+    stdfwd::string supportMsg;
   };
 
   /** Type of hash values. */
@@ -120,7 +120,7 @@ public:
    * This method cannot fail: it will crash if the input 
    * name is not a valid TypeId name.
    */
-  static TypeId LookupByName (std::string name);
+  static TypeId LookupByName (stdfwd::string name);
   /**
    * Get a TypeId by name.
    * 
@@ -129,7 +129,7 @@ public:
    *              result of this function should be stored.
    * \returns \c true if the requested name was found.
    */
-  static bool LookupByNameFailSafe (std::string name, TypeId *tid);
+  static bool LookupByNameFailSafe (stdfwd::string name, TypeId *tid);
   /**
    * Get a TypeId by hash.
    *
@@ -211,14 +211,14 @@ public:
    *
    * \returns The name of the group associated to this TypeId.
    */
-  std::string GetGroupName (void) const;
+  stdfwd::string GetGroupName (void) const;
 
   /**
    * Get the name.
    *
    * \returns The name of this interface.
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
 
   /**
    * Get the hash.
@@ -260,7 +260,7 @@ public:
    * \param [in] i Index into attribute array
    * \returns The full name associated to the attribute whose index is \p i.
    */
-  std::string GetAttributeFullName (std::size_t i) const;
+  stdfwd::string GetAttributeFullName (std::size_t i) const;
 
   /**
    * Get the constructor callback.
@@ -324,7 +324,7 @@ public:
    * group together types according to a user-specific grouping
    * scheme.
    */
-  TypeId SetGroupName (std::string groupName);
+  TypeId SetGroupName (stdfwd::string groupName);
 
   /**
    * Set the size of this type.
@@ -374,13 +374,13 @@ public:
    *             See test file type-id-test-suite.cc for examples.
    * \returns This TypeId instance
    */
-  TypeId AddAttribute (std::string name,
-                       std::string help, 
+  TypeId AddAttribute (stdfwd::string name,
+                       stdfwd::string help,
                        const AttributeValue &initialValue,
                        Ptr<const AttributeAccessor> accessor,
                        Ptr<const AttributeChecker> checker,
                        SupportLevel supportLevel = SUPPORTED,
-                       const std::string &supportMsg = "");
+                       const stdfwd::string &supportMsg = "");
 
   /**
    * Set the initial value of an Attribute.
@@ -414,14 +414,14 @@ public:
    *             or that the functionality is no longer supported.
    * \returns This TypeId instance
    */
-  TypeId AddAttribute (std::string name,
-                       std::string help, 
+  TypeId AddAttribute (stdfwd::string name,
+                       stdfwd::string help,
                        uint32_t flags,
                        const AttributeValue &initialValue,
                        Ptr<const AttributeAccessor> accessor,
                        Ptr<const AttributeChecker> checker,
                        SupportLevel supportLevel = SUPPORTED,
-                       const std::string &supportMsg = "");
+                       const stdfwd::string &supportMsg = "");
 
   /**
    * Record a new TraceSource.
@@ -435,8 +435,8 @@ public:
    * \deprecated
    */
   NS_DEPRECATED
-  TypeId AddTraceSource (std::string name,
-                         std::string help,
+  TypeId AddTraceSource (stdfwd::string name,
+                         stdfwd::string help,
                          Ptr<const TraceSourceAccessor> accessor);
   
   /**
@@ -461,12 +461,12 @@ public:
    *             See test file type-id-test-suite.cc for examples.
    * \returns This TypeId instance.
    */
-  TypeId AddTraceSource (std::string name,
-                         std::string help,
+  TypeId AddTraceSource (stdfwd::string name,
+                         stdfwd::string help,
                          Ptr<const TraceSourceAccessor> accessor,
-                         std::string callback,
+                         stdfwd::string callback,
                          SupportLevel supportLevel = SUPPORTED,
-                         const std::string &supportMsg = "");
+                         const stdfwd::string &supportMsg = "");
 
   /**
    * Hide this TypeId from documentation.
@@ -483,7 +483,7 @@ public:
    *              will be stored.
    * \returns \c true if the requested attribute could be found.
    */
-  bool LookupAttributeByName (std::string name, struct AttributeInformation *info) const;
+  bool LookupAttributeByName (stdfwd::string name, struct AttributeInformation *info) const;
   /**
    * Find a TraceSource by name.
    *
@@ -494,7 +494,7 @@ public:
    *  and disconnect trace sinks with the requested trace source on
    *  an object instance.
    */
-  Ptr<const TraceSourceAccessor> LookupTraceSourceByName (std::string name) const;
+  Ptr<const TraceSourceAccessor> LookupTraceSourceByName (stdfwd::string name) const;
   /**
    * Find a TraceSource by name, retrieving the associated TraceSourceInformation.
    *
@@ -506,7 +506,7 @@ public:
    *  and disconnect trace sinks with the requested trace source on
    *  an object instance.
    */
-  Ptr<const TraceSourceAccessor> LookupTraceSourceByName (std::string name, struct TraceSourceInformation *info) const;
+  Ptr<const TraceSourceAccessor> LookupTraceSourceByName (stdfwd::string name, struct TraceSourceInformation *info) const;
 
   /**
    * Get the internal id of this TypeId.

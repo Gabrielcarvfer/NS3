@@ -47,7 +47,7 @@ public:
    * \param seqToKill Sequence number of the packet to drop.
    * \param msg Test message.
    */
-  TcpFastRetrTest (TypeId congControl, uint32_t seqToKill, const std::string &msg);
+  TcpFastRetrTest (TypeId congControl, uint32_t seqToKill, const stdfwd::string &msg);
 
   virtual Ptr<ErrorModel> CreateSenderErrorModel ();
   virtual Ptr<ErrorModel> CreateReceiverErrorModel ();
@@ -97,7 +97,7 @@ protected:
 };
 
 TcpFastRetrTest::TcpFastRetrTest (TypeId typeId, uint32_t seqToKill,
-                                  const std::string &msg)
+                                  const stdfwd::string &msg)
   : TcpGeneralTest (msg),
     m_pktDropped (false),
     m_pktWasDropped (false),

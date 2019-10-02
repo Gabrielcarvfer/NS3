@@ -23,7 +23,7 @@
 #include "../../network/model/header.h"
 #include "../../network/model/address.h"
 #include "../../network/utils/ipv4-address.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 /**

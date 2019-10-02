@@ -42,7 +42,7 @@ TapBridgeHelper::TapBridgeHelper (Ipv4Address gateway)
 }
 
 void 
-TapBridgeHelper::SetAttribute (std::string n1, const AttributeValue &v1)
+TapBridgeHelper::SetAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   NS_LOG_FUNCTION (n1 << &v1);
   m_deviceFactory.Set (n1, v1);
@@ -71,21 +71,21 @@ TapBridgeHelper::Install (Ptr<Node> node, Ptr<NetDevice> nd)
 }
 
 Ptr<NetDevice>
-TapBridgeHelper::Install (std::string nodeName, Ptr<NetDevice> nd)
+TapBridgeHelper::Install (stdfwd::string nodeName, Ptr<NetDevice> nd)
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (node, nd);
 }
 
 Ptr<NetDevice>
-TapBridgeHelper::Install (Ptr<Node> node, std::string ndName)
+TapBridgeHelper::Install (Ptr<Node> node, stdfwd::string ndName)
 {
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);
   return Install (node, nd);
 }
 
 Ptr<NetDevice>
-TapBridgeHelper::Install (std::string nodeName, std::string ndName)
+TapBridgeHelper::Install (stdfwd::string nodeName, stdfwd::string ndName)
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);

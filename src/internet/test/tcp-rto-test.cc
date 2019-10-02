@@ -50,7 +50,7 @@ public:
    * \param congControl Congestion control type.
    * \param msg Test description.
    */
-  TcpRtoTest (TypeId &congControl, const std::string &msg);
+  TcpRtoTest (TypeId &congControl, const stdfwd::string &msg);
 
 protected:
 
@@ -69,7 +69,7 @@ private:
   bool m_segmentReceived; //!< True if segments have been received.
 };
 
-TcpRtoTest::TcpRtoTest (TypeId &congControl, const std::string &desc)
+TcpRtoTest::TcpRtoTest (TypeId &congControl, const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_afterRTOExpired (false),
     m_segmentReceived (false)
@@ -188,7 +188,7 @@ public:
    * \param minRto minimum RTO
    * \param msg Test description.
    */
-  TcpSsThreshRtoTest (TypeId &congControl, uint32_t seqToDrop, Time minRto, const std::string &msg);
+  TcpSsThreshRtoTest (TypeId &congControl, uint32_t seqToDrop, Time minRto, const stdfwd::string &msg);
 
 protected:
 
@@ -217,7 +217,7 @@ private:
   Time m_minRtoTime; //!< the minimum RTO time
 };
 
-TcpSsThreshRtoTest::TcpSsThreshRtoTest (TypeId &congControl, uint32_t seqToDrop, Time minRto, const std::string &desc)
+TcpSsThreshRtoTest::TcpSsThreshRtoTest (TypeId &congControl, uint32_t seqToDrop, Time minRto, const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_seqToDrop (seqToDrop),
     m_minRtoTime (minRto)
@@ -328,7 +328,7 @@ public:
    * \param congControl Congestion control type.
    * \param msg Test description.
    */
-  TcpTimeRtoTest (TypeId &congControl, const std::string &msg);
+  TcpTimeRtoTest (TypeId &congControl, const stdfwd::string &msg);
 
 protected:
   virtual Ptr<TcpSocketMsgBase> CreateSenderSocket (Ptr<Node> node);
@@ -355,7 +355,7 @@ private:
 };
 
 
-TcpTimeRtoTest::TcpTimeRtoTest (TypeId &congControl, const std::string &desc)
+TcpTimeRtoTest::TcpTimeRtoTest (TypeId &congControl, const stdfwd::string &desc)
   :   TcpGeneralTest (desc),
     m_senderSentSegments (0),
     m_closed (false)

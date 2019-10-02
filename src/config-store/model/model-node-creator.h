@@ -52,7 +52,7 @@ struct ModelNode
     // store object
     NODE_OBJECT
   } type; ///< node type
-  std::string name; ///< node name
+  stdfwd::string name; ///< node name
   Ptr<Object> object; ///< the object
   uint32_t index; ///< index
 };
@@ -72,12 +72,12 @@ public:
    */
   void Build (GtkTreeStore *treestore);
 private:
-  virtual void DoVisitAttribute (Ptr<Object> object, std::string name);
+  virtual void DoVisitAttribute (Ptr<Object> object, stdfwd::string name);
   virtual void DoStartVisitObject (Ptr<Object> object);
   virtual void DoEndVisitObject (void);
-  virtual void DoStartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> value);
+  virtual void DoStartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> value);
   virtual void DoEndVisitPointerAttribute (void);
-  virtual void DoStartVisitArrayAttribute (Ptr<Object> object, std::string name,
+  virtual void DoStartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name,
                                            const ObjectPtrContainerValue &vector);
   virtual void DoEndVisitArrayAttribute (void);
   virtual void DoStartVisitArrayItem (const ObjectPtrContainerValue &vector,

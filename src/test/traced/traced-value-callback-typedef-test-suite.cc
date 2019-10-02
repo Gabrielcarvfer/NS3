@@ -33,18 +33,18 @@ namespace {
  * @{
  */
 template <typename T> inline
-std::string TypeName (void) { return "unknown"; }
+stdfwd::string TypeName (void) { return "unknown"; }
 
-template <> inline std::string TypeName <bool>     (void) { return "Bool"    ; }
-template <> inline std::string TypeName <int8_t>   (void) { return "Int8_t"  ; }
-template <> inline std::string TypeName <int16_t>  (void) { return "Int16_t" ; }
-template <> inline std::string TypeName <int32_t>  (void) { return "Int32_t" ; }
-template <> inline std::string TypeName <uint8_t>  (void) { return "Uint8_t" ; }
-template <> inline std::string TypeName <uint16_t> (void) { return "Uint16_t"; }
-template <> inline std::string TypeName <uint32_t> (void) { return "Uint32_t"; }
-template <> inline std::string TypeName <double>   (void) { return "Double"  ; }
-template <> inline std::string TypeName <Time>     (void) { return "Time"    ; }
-template <> inline std::string TypeName <SequenceNumber32> (void) { return "SequenceNumber32" ; }
+template <> inline stdfwd::string TypeName <bool>     (void) { return "Bool"    ; }
+template <> inline stdfwd::string TypeName <int8_t>   (void) { return "Int8_t"  ; }
+template <> inline stdfwd::string TypeName <int16_t>  (void) { return "Int16_t" ; }
+template <> inline stdfwd::string TypeName <int32_t>  (void) { return "Int32_t" ; }
+template <> inline stdfwd::string TypeName <uint8_t>  (void) { return "Uint8_t" ; }
+template <> inline stdfwd::string TypeName <uint16_t> (void) { return "Uint16_t"; }
+template <> inline stdfwd::string TypeName <uint32_t> (void) { return "Uint32_t"; }
+template <> inline stdfwd::string TypeName <double>   (void) { return "Double"  ; }
+template <> inline stdfwd::string TypeName <Time>     (void) { return "Time"    ; }
+template <> inline stdfwd::string TypeName <SequenceNumber32> (void) { return "SequenceNumber32" ; }
 /** @} */
 
 
@@ -57,7 +57,7 @@ template <> inline std::string TypeName <SequenceNumber32> (void) { return "Sequ
  * in the \c g_Result global value, then inspect it
  * in the TracedValueCallbackTestCase::CheckType method.
  */
-std::string g_Result = "";
+stdfwd::string g_Result = "";
   
 
 /**

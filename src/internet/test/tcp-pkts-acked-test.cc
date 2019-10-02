@@ -51,7 +51,7 @@ public:
    * \brief Constructor.
    * \param desc Test description.
    */
-  TcpPktsAckedOpenTest (const std::string &desc);
+  TcpPktsAckedOpenTest (const stdfwd::string &desc);
 
   /**
    * \brief Called when an ACK is received.
@@ -124,7 +124,7 @@ DummyCongControl::GetTypeId (void)
   return tid;
 }
 
-TcpPktsAckedOpenTest::TcpPktsAckedOpenTest (const std::string &desc)
+TcpPktsAckedOpenTest::TcpPktsAckedOpenTest (const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_segmentsAcked (0),
     m_segmentsReceived (0)

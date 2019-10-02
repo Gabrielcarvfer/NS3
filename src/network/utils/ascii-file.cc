@@ -21,7 +21,7 @@
  */
 
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/assert.h"
 #include "../../core/model/fatal-error.h"
 #include "../../core/model/fatal-impl.h"
@@ -62,7 +62,7 @@ AsciiFile::Close (void)
 }
 
 void
-AsciiFile::Open (std::string const &filename, std::ios::openmode mode)
+AsciiFile::Open (stdfwd::string const &filename, std::ios::openmode mode)
 {
   NS_ASSERT ((mode & std::ios::app) == 0);
   NS_ASSERT (!m_file.fail ());
@@ -71,7 +71,7 @@ AsciiFile::Open (std::string const &filename, std::ios::openmode mode)
 }
 
 void
-AsciiFile::Read (std::string& line)
+AsciiFile::Read (stdfwd::string& line)
 {
   NS_ASSERT (m_file.good ());
 
@@ -80,8 +80,8 @@ AsciiFile::Read (std::string& line)
 }
 
 bool
-AsciiFile::Diff (std::string const & f1,
-                 std::string const & f2, 
+AsciiFile::Diff (stdfwd::string const & f1,
+                 stdfwd::string const & f2,
                  uint64_t & lineNumber)
 {
   AsciiFile ascii1, ascii2;
@@ -93,8 +93,8 @@ AsciiFile::Diff (std::string const & f1,
       return true;
     }
 
-  std::string line1;
-  std::string line2;
+  stdfwd::string line1;
+  stdfwd::string line2;
   lineNumber = 0;
   bool diff = false;
 

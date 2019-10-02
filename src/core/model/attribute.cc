@@ -95,14 +95,14 @@ EmptyAttributeValue::Copy (void) const
   NS_LOG_FUNCTION (this);
   return Create<EmptyAttributeValue> ();
 }
-std::string
+stdfwd::string
 EmptyAttributeValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 {
   NS_LOG_FUNCTION (this << checker);
   return "";
 }
 bool
-EmptyAttributeValue::DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker)
+EmptyAttributeValue::DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker)
 {
   NS_LOG_FUNCTION (this << value << checker);
   return true;
@@ -159,7 +159,7 @@ EmptyAttributeChecker::Check (const AttributeValue &value) const
   return true;
 }
 
-std::string
+stdfwd::string
 EmptyAttributeChecker::GetValueTypeName (void) const
 {
   return "EmptyAttribute";
@@ -171,7 +171,7 @@ EmptyAttributeChecker::HasUnderlyingTypeInformation (void) const
   return false;
 }
 
-std::string
+stdfwd::string
 EmptyAttributeChecker::GetUnderlyingTypeInformation (void) const
 {
   return "";

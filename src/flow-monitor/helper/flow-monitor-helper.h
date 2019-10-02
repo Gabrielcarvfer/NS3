@@ -23,7 +23,7 @@
 #include "../../core/model/object-factory.h"
 #include "../model/flow-monitor.h"
 #include "../model/flow-classifier.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -47,7 +47,7 @@ public:
    * \param n1 attribute name
    * \param v1 attribute value
    */
-  void SetMonitorAttribute (std::string n1, const AttributeValue &v1);
+  void SetMonitorAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * \brief Enable flow monitoring on a set of nodes
@@ -95,13 +95,13 @@ public:
   void SerializeToXmlStream (std::ostream &os, uint16_t indent, bool enableHistograms, bool enableProbes);
 
   /**
-   * Same as SerializeToXmlStream, but returns the output as a std::string
+   * Same as SerializeToXmlStream, but returns the output as a stdfwd::string
    * \param indent number of spaces to use as base indentation level
    * \param enableHistograms if true, include also the histograms in the output
    * \param enableProbes if true, include also the per-probe/flow pair statistics in the output
    * \return the XML output as string
    */
-  std::string SerializeToXmlString (uint16_t indent, bool enableHistograms, bool enableProbes);
+  stdfwd::string SerializeToXmlString (uint16_t indent, bool enableHistograms, bool enableProbes);
 
   /**
    * Same as SerializeToXmlStream, but writes to a file instead
@@ -109,7 +109,7 @@ public:
    * \param enableHistograms if true, include also the histograms in the output
    * \param enableProbes if true, include also the per-probe/flow pair statistics in the output
    */
-  void SerializeToXmlFile (std::string fileName, bool enableHistograms, bool enableProbes);
+  void SerializeToXmlFile (stdfwd::string fileName, bool enableHistograms, bool enableProbes);
 
 private:
   /**

@@ -252,13 +252,13 @@ InternetStackHelper::AssignStreams (NodeContainer c, int64_t stream)
 }
 
 void
-InternetStackHelper::SetTcp (const std::string tid)
+InternetStackHelper::SetTcp (const stdfwd::string tid)
 {
   m_tcpFactory.SetTypeId (tid);
 }
 
 void 
-InternetStackHelper::SetTcp (std::string tid, std::string n0, const AttributeValue &v0)
+InternetStackHelper::SetTcp (stdfwd::string tid, stdfwd::string n0, const AttributeValue &v0)
 {
   m_tcpFactory.SetTypeId (tid);
   m_tcpFactory.Set (n0,v0);
@@ -280,7 +280,7 @@ InternetStackHelper::InstallAll (void) const
 }
 
 void
-InternetStackHelper::CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const std::string typeId)
+InternetStackHelper::CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const stdfwd::string typeId)
 {
   ObjectFactory factory;
   factory.SetTypeId (typeId);
@@ -363,7 +363,7 @@ InternetStackHelper::Install (Ptr<Node> node) const
 }
 
 void
-InternetStackHelper::Install (std::string nodeName) const
+InternetStackHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Install (node);
@@ -413,7 +413,7 @@ InternetStackHelper::PcapHooked (Ptr<Ipv4> ipv4)
 }
 
 void 
-InternetStackHelper::EnablePcapIpv4Internal (std::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename)
+InternetStackHelper::EnablePcapIpv4Internal (stdfwd::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename)
 {
   NS_LOG_FUNCTION (prefix << ipv4 << interface);
 
@@ -429,7 +429,7 @@ InternetStackHelper::EnablePcapIpv4Internal (std::string prefix, Ptr<Ipv4> ipv4,
   //
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -511,7 +511,7 @@ InternetStackHelper::PcapHooked (Ptr<Ipv6> ipv6)
 }
 
 void 
-InternetStackHelper::EnablePcapIpv6Internal (std::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename)
+InternetStackHelper::EnablePcapIpv6Internal (stdfwd::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename)
 {
   NS_LOG_FUNCTION (prefix << ipv6 << interface);
 
@@ -527,7 +527,7 @@ InternetStackHelper::EnablePcapIpv6Internal (std::string prefix, Ptr<Ipv6> ipv6,
   //
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -662,7 +662,7 @@ Ipv4L3ProtocolRxSinkWithoutContext (
 static void
 Ipv4L3ProtocolDropSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ipv4Header const &header, 
   Ptr<const Packet> packet,
   Ipv4L3Protocol::DropReason reason, 
@@ -703,7 +703,7 @@ Ipv4L3ProtocolDropSinkWithContext (
 static void
 Ipv4L3ProtocolTxSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> packet,
   Ptr<Ipv4> ipv4, 
   uint32_t interface)
@@ -734,7 +734,7 @@ Ipv4L3ProtocolTxSinkWithContext (
 static void
 Ipv4L3ProtocolRxSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> packet,
   Ptr<Ipv4> ipv4, 
   uint32_t interface)
@@ -772,7 +772,7 @@ InternetStackHelper::AsciiHooked (Ptr<Ipv4> ipv4)
 void 
 InternetStackHelper::EnableAsciiIpv4Internal (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
+  stdfwd::string prefix,
   Ptr<Ipv4> ipv4, 
   uint32_t interface,
   bool explicitFilename)
@@ -808,7 +808,7 @@ InternetStackHelper::EnableAsciiIpv4Internal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -1000,7 +1000,7 @@ Ipv6L3ProtocolRxSinkWithoutContext (
 static void
 Ipv6L3ProtocolDropSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ipv6Header const &header, 
   Ptr<const Packet> packet,
   Ipv6L3Protocol::DropReason reason, 
@@ -1041,7 +1041,7 @@ Ipv6L3ProtocolDropSinkWithContext (
 static void
 Ipv6L3ProtocolTxSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> packet,
   Ptr<Ipv6> ipv6, 
   uint32_t interface)
@@ -1072,7 +1072,7 @@ Ipv6L3ProtocolTxSinkWithContext (
 static void
 Ipv6L3ProtocolRxSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> packet,
   Ptr<Ipv6> ipv6, 
   uint32_t interface)
@@ -1110,7 +1110,7 @@ InternetStackHelper::AsciiHooked (Ptr<Ipv6> ipv6)
 void 
 InternetStackHelper::EnableAsciiIpv6Internal (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
+  stdfwd::string prefix,
   Ptr<Ipv6> ipv6, 
   uint32_t interface,
   bool explicitFilename)
@@ -1146,7 +1146,7 @@ InternetStackHelper::EnableAsciiIpv6Internal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;

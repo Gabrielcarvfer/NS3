@@ -62,7 +62,7 @@ public:
    * \param dlSinr the DL SINR
    * \param ulSinr the UL SINR
    */
-  LteInterferenceHardFrTestCase (std::string name, double d1, double d2, double dlSinr, double ulSinr);
+  LteInterferenceHardFrTestCase (stdfwd::string name, double d1, double d2, double dlSinr, double ulSinr);
   virtual ~LteInterferenceHardFrTestCase ();
 
 private:
@@ -94,7 +94,7 @@ public:
    * \param edgeUlSinr the UL SINR
    * \param rspqThreshold RSPQ threshold
    */
-  LteInterferenceStrictFrTestCase (std::string name, double d1, double d2,
+  LteInterferenceStrictFrTestCase (stdfwd::string name, double d1, double d2,
                                    double commonDlSinr, double commonUlSinr, double edgeDlSinr, double edgeUlSinr,
                                    uint32_t rspqThreshold);
   virtual ~LteInterferenceStrictFrTestCase ();

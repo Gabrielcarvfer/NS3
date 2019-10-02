@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/packet.h"
 #include "../../network/utils/packet-burst.h"
 #include "wimax-phy.h"

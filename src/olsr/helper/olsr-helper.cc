@@ -78,7 +78,7 @@ OlsrHelper::Create (Ptr<Node> node) const
 }
 
 void
-OlsrHelper::Set (std::string name, const AttributeValue &value)
+OlsrHelper::Set (stdfwd::string name, const AttributeValue &value)
 {
   m_agentFactory.Set (name, value);
 }

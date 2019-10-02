@@ -19,8 +19,7 @@
  */
 #pragma once
 
-#include <string>
-#include <stdint.h>
+#include <iostream>
 #include "ptr.h"
 #include "simple-ref-count.h"
 
@@ -83,7 +82,7 @@ public:
    * perform proper serialization. A nice example of code which needs it is
    * the EnumValue::SerializeToString code.
    */
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const = 0;
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const = 0;
   /**
    * \param [in] value A string representation of the value
    * \param [in] checker A pointer to the checker associated to the attribute.
@@ -97,7 +96,7 @@ public:
    * perform proper serialization. A nice example of code which needs it is
    * the EnumValue::SerializeToString code.
    */
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker) = 0;
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker) = 0;
 };
 
 /**
@@ -191,7 +190,7 @@ public:
    * A typical return value here is FooValue where Foo is the name of the
    * type being wrapped.
    */
-  virtual std::string GetValueTypeName (void) const = 0;
+  virtual stdfwd::string GetValueTypeName (void) const = 0;
   /**
    * \returns true if this checker has information about the underlying
    *          C++ type, false otherwise.
@@ -204,7 +203,7 @@ public:
    * \returns a human-readable representation of information about
    *          the underlying C++ type.
    */
-  virtual std::string GetUnderlyingTypeInformation (void) const = 0;
+  virtual stdfwd::string GetUnderlyingTypeInformation (void) const = 0;
   /**
    * \returns a new instance of an AttributeValue (wrapper in an Attribute 
    *          instance) which matches the type of the underlying attribute.
@@ -244,7 +243,7 @@ private:
    *
    * In the EmptyAttributeValue case, the string returned will be simply ""
    */
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const;
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const;
   /**
    * \param [in] value A string representation of the value
    * \param [in] checker A pointer to the checker associated to the attribute.
@@ -253,7 +252,7 @@ private:
    *
    * In the trivial case of EmptyAttributeValue, this should always return true
    */
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker);
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker);
 };
 
 /**
@@ -297,9 +296,9 @@ public:
   EmptyAttributeChecker ();
   ~EmptyAttributeChecker ();
   virtual bool Check (const AttributeValue &value) const;
-  virtual std::string GetValueTypeName (void) const;
+  virtual stdfwd::string GetValueTypeName (void) const;
   virtual bool HasUnderlyingTypeInformation (void) const;
-  virtual std::string GetUnderlyingTypeInformation (void) const;
+  virtual stdfwd::string GetUnderlyingTypeInformation (void) const;
   virtual Ptr<AttributeValue> Create (void) const;
   virtual bool Copy (const AttributeValue &source, AttributeValue &destination) const;
 };

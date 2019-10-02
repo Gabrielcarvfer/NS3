@@ -277,7 +277,7 @@ TcpVegas::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
     }
 }
 
-std::string
+stdfwd::string
 TcpVegas::GetName () const
 {
   return "TcpVegas";

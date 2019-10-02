@@ -55,7 +55,7 @@ ModelCreator::Remove (void)
 }
 
 void 
-ModelCreator::DoVisitAttribute (Ptr<Object> object, std::string name)
+ModelCreator::DoVisitAttribute (Ptr<Object> object, stdfwd::string name)
 {
   ModelNode *node = new ModelNode ();
   node->type = ModelNode::NODE_ATTRIBUTE;
@@ -78,7 +78,7 @@ ModelCreator::DoEndVisitObject (void)
   Remove ();
 }
 void 
-ModelCreator::DoStartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> value)
+ModelCreator::DoStartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> value)
 {
   ModelNode *node = new ModelNode ();
   node->type = ModelNode::NODE_POINTER;
@@ -92,7 +92,7 @@ ModelCreator::DoEndVisitPointerAttribute (void)
   Remove ();
 }
 void 
-ModelCreator::DoStartVisitArrayAttribute (Ptr<Object> object, std::string name, const ObjectPtrContainerValue &vector)
+ModelCreator::DoStartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name, const ObjectPtrContainerValue &vector)
 {
   ModelNode *node = new ModelNode ();
   node->type = ModelNode::NODE_VECTOR;

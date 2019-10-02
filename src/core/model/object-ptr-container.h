@@ -90,7 +90,7 @@ public:
    * \param [in] checker The checker to use (currently not used.)
    * \returns The string form of the Objects.
    */
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const;
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const;
   /**
    * Deserialize from a string. (Not implemented; raises a fatal error.)
    *
@@ -98,7 +98,7 @@ public:
    * \param [in] checker The checker to use.
    * \returns \c true.
    */
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker);
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker);
 
 private:
   friend class ObjectPtrContainerAccessor;
@@ -181,13 +181,13 @@ public:
   virtual bool Check (const AttributeValue &value) const {
     return dynamic_cast<const ObjectPtrContainerValue *> (&value) != 0;
   }
-  virtual std::string GetValueTypeName (void) const {
+  virtual stdfwd::string GetValueTypeName (void) const {
     return "ns3::ObjectPtrContainerValue";
   }
   virtual bool HasUnderlyingTypeInformation (void) const {
     return true;
   }
-  virtual std::string GetUnderlyingTypeInformation (void) const {
+  virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
     return "ns3::Ptr< " + T::GetTypeId ().GetName () + " >";
   }
   virtual Ptr<AttributeValue> Create (void) const {

@@ -131,7 +131,7 @@ LenaTestPhyErrorModelSuite::LenaTestPhyErrorModelSuite ()
 
 static LenaTestPhyErrorModelSuite lenaTestPhyErrorModelSuite;
 
-std::string 
+stdfwd::string
 LenaDataPhyErrorModelTestCase::BuildNameString (uint16_t nUser, uint16_t dist, uint32_t rngRun)
 {
   std::ostringstream oss;
@@ -286,7 +286,7 @@ LenaDataPhyErrorModelTestCase::DoRun (void)
 
 
 
-std::string 
+stdfwd::string
 LenaDlCtrlPhyErrorModelTestCase::BuildNameString (uint16_t nEnb, uint16_t dist, uint32_t rngRun)
 {
   std::ostringstream oss;

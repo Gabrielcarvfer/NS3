@@ -66,7 +66,7 @@ void Ipv6InterfaceContainer::Add (Ptr<Ipv6> ipv6, uint32_t interface)
   m_interfaces.push_back (std::make_pair (ipv6, interface));
 }
 
-void Ipv6InterfaceContainer::Add (std::string ipv6Name, uint32_t interface)
+void Ipv6InterfaceContainer::Add (stdfwd::string ipv6Name, uint32_t interface)
 {
   Ptr<Ipv6> ipv6 = Names::Find<Ipv6> (ipv6Name);
   m_interfaces.push_back (std::make_pair (ipv6, interface));

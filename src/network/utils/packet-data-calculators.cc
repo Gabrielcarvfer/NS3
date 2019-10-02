@@ -61,7 +61,7 @@ PacketCounterCalculator::DoDispose (void)
 }
 
 void
-PacketCounterCalculator::PacketUpdate (std::string path,
+PacketCounterCalculator::PacketUpdate (stdfwd::string path,
                                        Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -71,7 +71,7 @@ PacketCounterCalculator::PacketUpdate (std::string path,
   // PacketCounterCalculator::Update
 }
 void
-PacketCounterCalculator::FrameUpdate (std::string path,
+PacketCounterCalculator::FrameUpdate (stdfwd::string path,
                                       Ptr<const Packet> packet,
                                       Mac48Address realto)
 {
@@ -117,7 +117,7 @@ PacketSizeMinMaxAvgTotalCalculator::DoDispose (void)
 }
 
 void
-PacketSizeMinMaxAvgTotalCalculator::PacketUpdate (std::string path,
+PacketSizeMinMaxAvgTotalCalculator::PacketUpdate (stdfwd::string path,
                                                   Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -127,7 +127,7 @@ PacketSizeMinMaxAvgTotalCalculator::PacketUpdate (std::string path,
   // end PacketSizeMinMaxAvgTotalCalculator::Update
 }
 void
-PacketSizeMinMaxAvgTotalCalculator::FrameUpdate (std::string path,
+PacketSizeMinMaxAvgTotalCalculator::FrameUpdate (stdfwd::string path,
                                                  Ptr<const Packet> packet,
                                                  Mac48Address realto)
 {

@@ -63,7 +63,7 @@ public:
                    uint32_t segmentsAcked,
                    SequenceNumber32 nextTxSeq,
                    SequenceNumber32 lastAckedSeq,
-                   const std::string &name);
+                   const stdfwd::string &name);
 
 private:
   virtual void DoRun ();
@@ -131,7 +131,7 @@ TcpIllinoisTest::TcpIllinoisTest (uint32_t cWnd,
                                   uint32_t segmentsAcked,
                                   SequenceNumber32 nextTxSeq,
                                   SequenceNumber32 lastAckedSeq,
-                                  const std::string & name)
+                                  const stdfwd::string & name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_ssThresh (ssThresh),

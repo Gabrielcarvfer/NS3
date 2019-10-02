@@ -57,23 +57,23 @@ public:
    * Register drop trace path function
    * \param tracePath the path to trace
    */
-  void RegisterDropTracePath (std::string const &tracePath);
+  void RegisterDropTracePath (stdfwd::string const &tracePath);
 
   /**
    * Register CSMA like device function
    * \param deviceTypeName the device type name
    */
-  void RegisterCsmaLikeDevice (std::string const &deviceTypeName);
+  void RegisterCsmaLikeDevice (stdfwd::string const &deviceTypeName);
   /**
    * Register WIFI like device function
    * \param deviceTypeName the device type name
    */
-  void RegisterWifiLikeDevice (std::string const &deviceTypeName);
+  void RegisterWifiLikeDevice (stdfwd::string const &deviceTypeName);
   /**
    * Register point to point like device function
    * \param deviceTypeName the device type name
    */
-  void RegisterPointToPointLikeDevice (std::string const &deviceTypeName);
+  void RegisterPointToPointLikeDevice (stdfwd::string const &deviceTypeName);
 
   /**
    * Run simulation until a given (simulated, absolute) time is reached
@@ -85,12 +85,12 @@ public:
    * Pause function
    * \param message the pause message
    */
-  static void Pause (std::string const &message);
+  static void Pause (stdfwd::string const &message);
   /**
    * Get pause message function
    * \returns the pause message
    */
-  std::vector<std::string> GetPauseMessages () const;
+  std::vector<stdfwd::string> GetPauseMessages () const;
 
   /// TransmissionSample structure
   struct TransmissionSample
@@ -272,7 +272,7 @@ private:
 
   // data
   std::map<uint32_t, PacketCaptureOptions> m_packetCaptureOptions; ///< packet capture options
-  std::vector<std::string> m_pauseMessages; ///< pause message
+  std::vector<stdfwd::string> m_pauseMessages; ///< pause message
   std::map<TxRecordKey, TxRecordValue> m_txRecords; ///< transmit records
   std::map<TransmissionSampleKey, TransmissionSampleValue> m_transmissionSamples; ///< transmission samples
   std::map<Ptr<Node>, uint32_t> m_packetDrops; ///< packt drops
@@ -288,34 +288,34 @@ private:
    * \param packet the packet
    * \param destination the destination MAC address
    */
-  void TraceNetDevTxCommon (std::string const &context, Ptr<const Packet> packet, Mac48Address const &destination);
+  void TraceNetDevTxCommon (stdfwd::string const &context, Ptr<const Packet> packet, Mac48Address const &destination);
   /**
    * network receive common trace callback function
    * \param context the context
    * \param packet the packet
    * \param source the source MAC address
    */
-  void TraceNetDevRxCommon (std::string const &context, Ptr<const Packet> packet, Mac48Address const &source);
+  void TraceNetDevRxCommon (stdfwd::string const &context, Ptr<const Packet> packet, Mac48Address const &source);
 
   /**
    * WIFI transmit trace callback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevTxWifi (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevTxWifi (stdfwd::string context, Ptr<const Packet> packet);
   /**
    * WIFI receive trace callback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevRxWifi (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevRxWifi (stdfwd::string context, Ptr<const Packet> packet);
 
   /**
    * queue drop trace callback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceDevQueueDrop (std::string context, Ptr<const Packet> packet);
+  void TraceDevQueueDrop (stdfwd::string context, Ptr<const Packet> packet);
   /**
    * ipv4 drop trace callback function
    * \param context the context
@@ -325,7 +325,7 @@ private:
    * \param dummy_ipv4
    * \param interface the interface
    */
-  void TraceIpv4Drop (std::string context, ns3::Ipv4Header const &hdr, Ptr<const Packet> packet, 
+  void TraceIpv4Drop (stdfwd::string context, ns3::Ipv4Header const &hdr, Ptr<const Packet> packet,
                       ns3::Ipv4L3Protocol::DropReason reason, Ptr<Ipv4> dummy_ipv4, uint32_t interface);
 
   /**
@@ -333,32 +333,32 @@ private:
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevTxCsma (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevTxCsma (stdfwd::string context, Ptr<const Packet> packet);
   /**
    * CSMA receive trace callback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevRxCsma (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevRxCsma (stdfwd::string context, Ptr<const Packet> packet);
   /**
    * CSMA promiscious receive function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevPromiscRxCsma (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevPromiscRxCsma (stdfwd::string context, Ptr<const Packet> packet);
 
   /**
    * Point to point transmit trace calllback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevTxPointToPoint (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevTxPointToPoint (stdfwd::string context, Ptr<const Packet> packet);
   /**
    * Point to point receive trace callback function
    * \param context the context
    * \param packet the packet
    */
-  void TraceNetDevRxPointToPoint (std::string context, Ptr<const Packet> packet);
+  void TraceNetDevRxPointToPoint (stdfwd::string context, Ptr<const Packet> packet);
 
   /**
    * WIMax transmit trace callback function
@@ -366,14 +366,14 @@ private:
    * \param packet the packet
    * \param destination the destination MAC address
    */
-  void TraceNetDevTxWimax (std::string context, Ptr<const Packet> packet, Mac48Address const &destination);
+  void TraceNetDevTxWimax (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &destination);
   /**
    * WIMax transmit trace callback function
    * \param context the context
    * \param packet the packet
    * \param source the source MAC address
    */
-  void TraceNetDevRxWimax (std::string context, Ptr<const Packet> packet, Mac48Address const &source);
+  void TraceNetDevRxWimax (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &source);
 
   /**
    * LTE transmit trace callback function
@@ -381,14 +381,14 @@ private:
    * \param packet the packet
    * \param destination the destination MAC address
    */
-  void TraceNetDevTxLte (std::string context, Ptr<const Packet> packet, Mac48Address const &destination);
+  void TraceNetDevTxLte (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &destination);
   /**
    * LTE receive trace callback function
    * \param context the context
    * \param packet the packet
    * \param source the MAC address of the source
    */
-  void TraceNetDevRxLte (std::string context, Ptr<const Packet> packet, Mac48Address const &source);
+  void TraceNetDevRxLte (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &source);
 
   /**
    * Findnet device statistics function
@@ -402,7 +402,7 @@ private:
    * Do pause function
    * \param message the pause message
    */
-  void DoPause (std::string const &message);
+  void DoPause (stdfwd::string const &message);
 
   bool m_stop; ///< stop?
   Time m_runUntil; ///< run until time

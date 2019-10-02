@@ -21,7 +21,7 @@
 #include <iosfwd>
 #include <sstream>
 #include <set>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/test.h"
 #include "ns3/core-module.h"
 #include "ns3/dsr-module.h"       // DsrOPtionSRHeader
@@ -96,10 +96,10 @@ private:
 namespace {
 
 /** Record typedefs which are identical to previously declared. */
-std::set<std::string>
+std::set<stdfwd::string>
 Duplicates (void)
 {
-  std::set<std::string> dupes;
+  std::set<stdfwd::string> dupes;
 
   dupes.insert ("LteRlc::NotifyTxTracedCallback");
   dupes.insert ("LteRlc::ReceiveTracedCallback");
@@ -113,7 +113,7 @@ Duplicates (void)
 /**
  * Container for duplicate types.
  */
-std::set<std::string> g_dupes = Duplicates ();
+std::set<stdfwd::string> g_dupes = Duplicates ();
 
 
 /**
@@ -125,17 +125,17 @@ std::set<std::string> g_dupes = Duplicates ();
  */
 template <typename T>
 inline
-std::string TypeName (int N)
+stdfwd::string TypeName (int N)
 {
   return "unknown";
 }
 
 #define TYPENAME(T)               \
   template <> \
-  inline std::string  \
+  inline stdfwd::string  \
   TypeName < T >     (int N)      \
   {                               \
-    std::stringstream ss;         \
+    stdfwd::stringstream ss;         \
     ss << # T << "(" << N << ")"; \
     return ss.str ();             \
   }

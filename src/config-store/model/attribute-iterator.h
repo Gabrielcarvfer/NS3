@@ -46,7 +46,7 @@ protected:
    * Get the current attribute path
    * \returns the current path string
    */
-  std::string GetCurrentPath (void) const;
+  stdfwd::string GetCurrentPath (void) const;
 private:
   /**
    * This method visits and performs a config-store action (such as saving
@@ -56,7 +56,7 @@ private:
    * \param object the object visited
    * \param name the attribute name
    */
-  virtual void DoVisitAttribute (Ptr<Object> object, std::string name) = 0;
+  virtual void DoVisitAttribute (Ptr<Object> object, stdfwd::string name) = 0;
   /**
    * This method is called to start the process of visiting the input object
    * \param object the object visited
@@ -75,7 +75,7 @@ private:
    * \param name the attribute name provided
    * \param [in] value Ptr to the ns3::Object pointed to by the attribute
    */
-  virtual void DoStartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> value);
+  virtual void DoStartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> value);
   /**
    * End the visit to the attribute of type ns3::PointerValue.
    */
@@ -91,7 +91,7 @@ resides
    * \param name the attribute name provided
    * \param [in] vector the ObjectPtrContainerValue corresponding to the named attribute 
    */
-  virtual void DoStartVisitArrayAttribute (Ptr<Object> object, std::string name, const ObjectPtrContainerValue &vector);
+  virtual void DoStartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name, const ObjectPtrContainerValue &vector);
   /**
    * End the visit to the attribute of type ns3::ObjectVectorValue.
    */
@@ -124,14 +124,14 @@ resides
    * \param attr the current attribute string
    * \returns the current path string
    */
-  std::string GetCurrentPath (std::string attr) const;
+  stdfwd::string GetCurrentPath (stdfwd::string attr) const;
 
   /**
    * Visit attribute to perform a config store operation on it
    * \param object the current object
    * \param name the attribute name
    */
-  void VisitAttribute (Ptr<Object> object, std::string name);
+  void VisitAttribute (Ptr<Object> object, stdfwd::string name);
   /**
    * Start to visit an object to visit its attributes
    * \param object the current object
@@ -149,7 +149,7 @@ resides
    * \param name the attribute name provided
    * \param [in] value Ptr to the ns3::Object pointed to by the attribute
    */
-  void StartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> value);
+  void StartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> value);
   /**
    * End the visit to the attribute of type ns3::PointerValue.
    */
@@ -165,7 +165,7 @@ resides
    * \param name the attribute name provided
    * \param [in] vector the ObjectPtrContainerValue corresponding to the named attribute 
    */
-  void StartVisitArrayAttribute (Ptr<Object> object, std::string name, const ObjectPtrContainerValue &vector);
+  void StartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name, const ObjectPtrContainerValue &vector);
   /**
    * End the visit to the attribute of type ns3::ObjectVectorValue.
    */
@@ -184,7 +184,7 @@ resides
 
 
   std::vector<Ptr<Object> > m_examined; ///< list of attributes examined
-  std::vector<std::string> m_currentPath; ///< current attribute path
+  std::vector<stdfwd::string> m_currentPath; ///< current attribute path
 };
 
 } // namespace ns3

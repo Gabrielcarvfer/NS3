@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/attribute.h"
 #include "../../core/model/object-factory.h"
 #include "../../network/helper/node-container.h"
@@ -56,7 +56,7 @@ private:
    * @param promiscuous If true capture all possible packets available at the device.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix,
+  virtual void EnablePcapInternal (stdfwd::string prefix,
                                    Ptr<NetDevice> nd,
                                    bool promiscuous,
                                    bool explicitFilename);
@@ -74,7 +74,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                    std::string prefix,
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 };
@@ -155,15 +155,15 @@ public:
    * All the attributes specified in this method should exist
    * in the requested station manager.
    */
-  void SetRemoteStationManager (std::string type,
-                                std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                                std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                                std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                                std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                                std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                                std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                                std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                                std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetRemoteStationManager (stdfwd::string type,
+                                stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                                stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                                stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                                stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                                stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                                stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                                stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                                stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * \param type the type of ns3::ChannelScheduler to create.
    * \param n0 the name of the attribute to set
@@ -186,15 +186,15 @@ public:
    * All the attributes specified in this method should exist
    * in the requested channel scheduler.
    */
-  void SetChannelScheduler (std::string type,
-                            std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                            std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                            std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                            std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                            std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                            std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                            std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                            std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetChannelScheduler (stdfwd::string type,
+                            stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                            stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                            stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                            stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                            stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                            stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                            stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                            stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * \param phy the PHY helper to create PHY objects
@@ -219,7 +219,7 @@ public:
    * \returns a device container which contains all the devices created by this method.
    */
   virtual NetDeviceContainer Install (const WifiPhyHelper &phy,
-                                      const WifiMacHelper &mac, std::string nodeName) const;
+                                      const WifiMacHelper &mac, stdfwd::string nodeName) const;
 
   /**
    * Helper to enable all WaveNetDevice log components with one statement

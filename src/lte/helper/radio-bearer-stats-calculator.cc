@@ -40,7 +40,7 @@ RadioBearerStatsCalculator::RadioBearerStatsCalculator ()
   NS_LOG_FUNCTION (this);
 }
 
-RadioBearerStatsCalculator::RadioBearerStatsCalculator (std::string protocolType)
+RadioBearerStatsCalculator::RadioBearerStatsCalculator (stdfwd::string protocolType)
   : m_firstWrite (true),
     m_pendingOutput (false)
 {
@@ -625,7 +625,7 @@ RadioBearerStatsCalculator::GetDlPduSizeStats (uint64_t imsi, uint8_t lcid)
   return stats;
 }
 
-std::string
+stdfwd::string
 RadioBearerStatsCalculator::GetUlOutputFilename (void)
 {
   if (m_protocolType == "RLC")
@@ -638,7 +638,7 @@ RadioBearerStatsCalculator::GetUlOutputFilename (void)
     }
 }
 
-std::string
+stdfwd::string
 RadioBearerStatsCalculator::GetDlOutputFilename (void)
 {
   if (m_protocolType == "RLC")
@@ -652,23 +652,23 @@ RadioBearerStatsCalculator::GetDlOutputFilename (void)
 }
 
 void
-RadioBearerStatsCalculator::SetUlPdcpOutputFilename (std::string outputFilename)
+RadioBearerStatsCalculator::SetUlPdcpOutputFilename (stdfwd::string outputFilename)
 {
   m_ulPdcpOutputFilename = outputFilename;
 }
 
-std::string
+stdfwd::string
 RadioBearerStatsCalculator::GetUlPdcpOutputFilename (void)
 {
   return m_ulPdcpOutputFilename;
 }
 void
-RadioBearerStatsCalculator::SetDlPdcpOutputFilename (std::string outputFilename)
+RadioBearerStatsCalculator::SetDlPdcpOutputFilename (stdfwd::string outputFilename)
 {
   m_dlPdcpOutputFilename = outputFilename;
 }
 
-std::string
+stdfwd::string
 RadioBearerStatsCalculator::GetDlPdcpOutputFilename (void)
 {
   return m_dlPdcpOutputFilename;

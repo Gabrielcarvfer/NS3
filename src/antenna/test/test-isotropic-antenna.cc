@@ -22,7 +22,7 @@
 #include "../../core/model/test.h"
 #include "../model/isotropic-antenna-model.h"
 #include <cmath>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <sstream>
 
@@ -31,7 +31,7 @@ using namespace ns3;
 class IsotropicAntennaModelTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (Angles a);
+  static stdfwd::string BuildNameString (Angles a);
   IsotropicAntennaModelTestCase (Angles a, double expectedGainDb);
 
 
@@ -42,7 +42,7 @@ private:
   double m_expectedGain;
 };
 
-std::string IsotropicAntennaModelTestCase::BuildNameString (Angles a)
+stdfwd::string IsotropicAntennaModelTestCase::BuildNameString (Angles a)
 {
   std::ostringstream oss;
   oss <<  "theta=" << a.theta << " , phi=" << a.phi;

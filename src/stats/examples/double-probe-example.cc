@@ -22,7 +22,7 @@
  * ns3::DoubleProbe.
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "../model/double-probe.h"
@@ -106,14 +106,14 @@ Emitter::Count (void)
 
 // This is a function to test hooking a raw function to the trace source
 void
-NotifyViaTraceSource (std::string context, double oldVal, double newVal)
+NotifyViaTraceSource (stdfwd::string context, double oldVal, double newVal)
 {
   NS_LOG_DEBUG ("context: " << context << " old " << oldVal << " new " << newVal);
 }
 
 // This is a function to test hooking it to the probe output
 void
-NotifyViaProbe (std::string context, double oldVal, double newVal)
+NotifyViaProbe (stdfwd::string context, double oldVal, double newVal)
 {
   NS_LOG_DEBUG ("context: " << context << " old " << oldVal << " new " << newVal);
 }

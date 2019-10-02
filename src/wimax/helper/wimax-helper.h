@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object-factory.h"
 #include "../../network/helper/node-container.h"
 #include "../../network/helper/net-device-container.h"
@@ -284,7 +284,7 @@ private:
    * \param packet the packet
    * \param source the source MAC address
    */
-  static void AsciiRxEvent (Ptr<OutputStreamWrapper> stream, std::string path, Ptr<const Packet> packet, const Mac48Address &source);
+  static void AsciiRxEvent (Ptr<OutputStreamWrapper> stream, stdfwd::string path, Ptr<const Packet> packet, const Mac48Address &source);
   /**
    * ASCII trace transmit event
    * \param stream the output stream
@@ -292,7 +292,7 @@ private:
    * \param packet the packet
    * \param dest the destination MAC address
    */
-  static void AsciiTxEvent (Ptr<OutputStreamWrapper> stream, std::string path, Ptr<const Packet> packet, const Mac48Address &dest);
+  static void AsciiTxEvent (Ptr<OutputStreamWrapper> stream, stdfwd::string path, Ptr<const Packet> packet, const Mac48Address &dest);
   /**
    * \brief Enable pcap output on the indicated net device.
    *
@@ -304,7 +304,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    * \param promiscuous If true capture all possible packets available at the device.
    */
-  virtual void EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool explicitFilename, bool promiscuous);
+  virtual void EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool explicitFilename, bool promiscuous);
 
   /**
    * \brief Enable ascii trace output on the indicated net device.
@@ -318,7 +318,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                    std::string prefix,
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 

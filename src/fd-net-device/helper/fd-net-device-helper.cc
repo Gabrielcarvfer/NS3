@@ -31,7 +31,7 @@
 #include "../../core/model/simulator.h"
 #include "../../network/helper/trace-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -43,14 +43,14 @@ FdNetDeviceHelper::FdNetDeviceHelper ()
 }
 
 void
-FdNetDeviceHelper::SetAttribute (std::string n1, const AttributeValue &v1)
+FdNetDeviceHelper::SetAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   NS_LOG_FUNCTION (this);
   m_deviceFactory.Set (n1, v1);
 }
 
 void
-FdNetDeviceHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+FdNetDeviceHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   //
   // All of the Pcap enable functions vector through here including the ones
@@ -66,7 +66,7 @@ FdNetDeviceHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bo
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -90,7 +90,7 @@ FdNetDeviceHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bo
 void
 FdNetDeviceHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream,
-  std::string prefix,
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -127,7 +127,7 @@ FdNetDeviceHelper::EnableAsciiInternal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -173,7 +173,7 @@ FdNetDeviceHelper::Install (Ptr<Node> node) const
 }
 
 NetDeviceContainer
-FdNetDeviceHelper::Install (std::string nodeName) const
+FdNetDeviceHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return NetDeviceContainer (InstallPriv (node));

@@ -90,7 +90,7 @@ PcapFileWrapper::Close (void)
 }
 
 void
-PcapFileWrapper::Open (std::string const &filename, std::ios::openmode mode)
+PcapFileWrapper::Open (stdfwd::string const &filename, std::ios::openmode mode)
 {
   NS_LOG_FUNCTION (this << filename << mode);
   m_file.Open (filename, mode);

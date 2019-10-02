@@ -40,7 +40,7 @@ public:
   {
     // We do not use NS_TEST_SOURCEDIR variable here since mesh/test has 
     // subdirectories
-    SetDataDir (std::string ("src/mesh/test/dot11s"));
+    SetDataDir (stdfwd::string ("src/mesh/test/dot11s"));
     AddTestCase (new PeerManagementProtocolRegressionTest, TestCase::QUICK);
     AddTestCase (new HwmpSimplestRegressionTest, TestCase::QUICK);
     AddTestCase (new HwmpReactiveRegressionTest, TestCase::QUICK);

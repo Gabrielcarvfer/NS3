@@ -89,9 +89,9 @@ main (int argc, char *argv[])
   double nodeSpeed = 20.0;
   double txpDistance = 250.0;
 
-  std::string rate = "0.512kbps";
-  std::string dataMode ("DsssRate11Mbps");
-  std::string phyMode ("DsssRate11Mbps");
+  stdfwd::string rate = "0.512kbps";
+  stdfwd::string dataMode ("DsssRate11Mbps");
+  stdfwd::string phyMode ("DsssRate11Mbps");
 
   //Allow users to override the default parameters and set it to new ones from CommandLine.
   CommandLine cmd;

@@ -320,7 +320,7 @@ public:
    * \param name the reference name
    * \param v the list of UE lists
    */
-  EpcS1uUlTestCase (std::string name, std::vector<EnbUlTestData> v);
+  EpcS1uUlTestCase (stdfwd::string name, std::vector<EnbUlTestData> v);
   virtual ~EpcS1uUlTestCase ();
 
 private:
@@ -329,7 +329,7 @@ private:
 };
 
 
-EpcS1uUlTestCase::EpcS1uUlTestCase (std::string name, std::vector<EnbUlTestData> v)
+EpcS1uUlTestCase::EpcS1uUlTestCase (stdfwd::string name, std::vector<EnbUlTestData> v)
   : TestCase (name),
     m_enbUlTestData (v)
 {

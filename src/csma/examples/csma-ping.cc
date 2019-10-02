@@ -25,7 +25,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cassert>
 
 #include "ns3/core-module.h"
@@ -44,7 +44,7 @@ static void SinkRx (Ptr<const Packet> p, const Address &ad)
   //std::cout << *p << std::endl;
 }
 
-static void PingRtt (std::string context, Time rtt)
+static void PingRtt (stdfwd::string context, Time rtt)
 {
   //std::cout << context << " " << rtt << std::endl;
 }

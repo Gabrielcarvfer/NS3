@@ -38,7 +38,7 @@ class TcpLpToNewReno : public TestCase
 {
 public:
   TcpLpToNewReno (uint32_t cWnd, uint32_t segmentSize,
-                  uint32_t segmentsAcked,uint32_t ssThresh, Time rtt, const std::string &name);
+                  uint32_t segmentsAcked,uint32_t ssThresh, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -52,7 +52,7 @@ private:
 };
 
 TcpLpToNewReno::TcpLpToNewReno (uint32_t cWnd, uint32_t segmentSize,
-                                uint32_t segmentsAcked, uint32_t ssThresh, Time rtt, const std::string &name)
+                                uint32_t segmentsAcked, uint32_t ssThresh, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -105,7 +105,7 @@ class TcpLpInferenceTest1 : public TestCase
 {
 public:
   TcpLpInferenceTest1 (uint32_t cWnd, uint32_t segmentSize,
-                       uint32_t segmentsAcked, Time rtt, const std::string &name);
+                       uint32_t segmentsAcked, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -119,7 +119,7 @@ private:
 };
 
 TcpLpInferenceTest1::TcpLpInferenceTest1 (uint32_t cWnd, uint32_t segmentSize,
-                                          uint32_t segmentsAcked, Time rtt, const std::string &name)
+                                          uint32_t segmentsAcked, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -166,7 +166,7 @@ class TcpLpInferenceTest2 : public TestCase
 {
 public:
   TcpLpInferenceTest2 (uint32_t cWnd, uint32_t segmentSize,
-                       uint32_t segmentsAcked, Time rtt, const std::string &name);
+                       uint32_t segmentsAcked, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -179,7 +179,7 @@ private:
   Ptr<TcpSocketState> m_state;
 };
 
-TcpLpInferenceTest2::TcpLpInferenceTest2 (uint32_t cWnd, uint32_t segmentSize,uint32_t segmentsAcked, Time rtt, const std::string &name)
+TcpLpInferenceTest2::TcpLpInferenceTest2 (uint32_t cWnd, uint32_t segmentSize,uint32_t segmentsAcked, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

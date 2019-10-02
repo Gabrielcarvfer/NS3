@@ -21,7 +21,7 @@
 #if !defined(INT64X64_DOUBLE_H) && (defined (INT64X64_USE_DOUBLE) || defined(PYTHON_SCAN))
 #define INT64X64_DOUBLE_H
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cmath>  // pow
 #include <utility>  // pair
 

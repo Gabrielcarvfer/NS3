@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <sstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object.h"
 #include "../../spectrum/model/spectrum-interference.h"
 #include "../../spectrum/model/spectrum-error-model.h"
@@ -80,8 +80,8 @@ LenaTestMimoSuite::LenaTestMimoSuite ()
 
 static LenaTestMimoSuite lenaTestMimoSuite;
 
-std::string 
-LenaMimoTestCase::BuildNameString (uint16_t dist, std::string schedulerType, bool useIdealRrc)
+stdfwd::string
+LenaMimoTestCase::BuildNameString (uint16_t dist, stdfwd::string schedulerType, bool useIdealRrc)
 {
   std::ostringstream oss;
   oss << " UE distance " << dist << " m" << " Scheduler " << schedulerType;
@@ -96,7 +96,7 @@ LenaMimoTestCase::BuildNameString (uint16_t dist, std::string schedulerType, boo
   return oss.str ();
 }
 
-LenaMimoTestCase::LenaMimoTestCase (uint16_t dist, std::vector<uint32_t> estThrDl, std::string schedulerType, bool useIdealRrc)
+LenaMimoTestCase::LenaMimoTestCase (uint16_t dist, std::vector<uint32_t> estThrDl, stdfwd::string schedulerType, bool useIdealRrc)
   : TestCase (BuildNameString (dist, schedulerType, useIdealRrc)),              
     m_dist (dist),
     m_estThrDl (estThrDl),

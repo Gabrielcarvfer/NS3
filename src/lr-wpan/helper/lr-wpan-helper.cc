@@ -44,7 +44,7 @@ NS_LOG_COMPONENT_DEFINE ("LrWpanHelper");
 static void
 AsciiLrWpanMacTransmitSinkWithContext (
   Ptr<OutputStreamWrapper> stream,
-  std::string context,
+  stdfwd::string context,
   Ptr<const Packet> p)
 {
   *stream->GetStream () << "t " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
@@ -112,57 +112,57 @@ LrWpanHelper::EnableLogComponents (void)
   LogComponentEnable ("LrWpanSpectrumValueHelper", LOG_LEVEL_ALL);
 }
 
-std::string
+stdfwd::string
 LrWpanHelper::LrWpanPhyEnumerationPrinter (LrWpanPhyEnumeration e)
 {
   switch (e)
     {
     case IEEE_802_15_4_PHY_BUSY:
-      return std::string ("BUSY");
+      return stdfwd::string ("BUSY");
     case IEEE_802_15_4_PHY_BUSY_RX:
-      return std::string ("BUSY_RX");
+      return stdfwd::string ("BUSY_RX");
     case IEEE_802_15_4_PHY_BUSY_TX:
-      return std::string ("BUSY_TX");
+      return stdfwd::string ("BUSY_TX");
     case IEEE_802_15_4_PHY_FORCE_TRX_OFF:
-      return std::string ("FORCE_TRX_OFF");
+      return stdfwd::string ("FORCE_TRX_OFF");
     case IEEE_802_15_4_PHY_IDLE:
-      return std::string ("IDLE");
+      return stdfwd::string ("IDLE");
     case IEEE_802_15_4_PHY_INVALID_PARAMETER:
-      return std::string ("INVALID_PARAMETER");
+      return stdfwd::string ("INVALID_PARAMETER");
     case IEEE_802_15_4_PHY_RX_ON:
-      return std::string ("RX_ON");
+      return stdfwd::string ("RX_ON");
     case IEEE_802_15_4_PHY_SUCCESS:
-      return std::string ("SUCCESS");
+      return stdfwd::string ("SUCCESS");
     case IEEE_802_15_4_PHY_TRX_OFF:
-      return std::string ("TRX_OFF");
+      return stdfwd::string ("TRX_OFF");
     case IEEE_802_15_4_PHY_TX_ON:
-      return std::string ("TX_ON");
+      return stdfwd::string ("TX_ON");
     case IEEE_802_15_4_PHY_UNSUPPORTED_ATTRIBUTE:
-      return std::string ("UNSUPPORTED_ATTRIBUTE");
+      return stdfwd::string ("UNSUPPORTED_ATTRIBUTE");
     case IEEE_802_15_4_PHY_READ_ONLY:
-      return std::string ("READ_ONLY");
+      return stdfwd::string ("READ_ONLY");
     case IEEE_802_15_4_PHY_UNSPECIFIED:
-      return std::string ("UNSPECIFIED");
+      return stdfwd::string ("UNSPECIFIED");
     default:
-      return std::string ("INVALID");
+      return stdfwd::string ("INVALID");
     }
 }
 
-std::string
+stdfwd::string
 LrWpanHelper::LrWpanMacStatePrinter (LrWpanMacState e)
 {
   switch (e)
     {
     case MAC_IDLE:
-      return std::string ("MAC_IDLE");
+      return stdfwd::string ("MAC_IDLE");
     case CHANNEL_ACCESS_FAILURE:
-      return std::string ("CHANNEL_ACCESS_FAILURE");
+      return stdfwd::string ("CHANNEL_ACCESS_FAILURE");
     case CHANNEL_IDLE:
-      return std::string ("CHANNEL_IDLE");
+      return stdfwd::string ("CHANNEL_IDLE");
     case SET_PHY_TX_ON:
-      return std::string ("SET_PHY_TX_ON");
+      return stdfwd::string ("SET_PHY_TX_ON");
     default:
-      return std::string ("INVALID");
+      return stdfwd::string ("INVALID");
     }
 }
 
@@ -205,7 +205,7 @@ LrWpanHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-LrWpanHelper::SetChannel (std::string channelName)
+LrWpanHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
   m_channel = channel;
@@ -266,7 +266,7 @@ PcapSniffLrWpan (Ptr<PcapFileWrapper> file, Ptr<const Packet> packet)
 }
 
 void
-LrWpanHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+LrWpanHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   NS_LOG_FUNCTION (this << prefix << nd << promiscuous << explicitFilename);
   //
@@ -288,7 +288,7 @@ LrWpanHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool pr
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -315,7 +315,7 @@ LrWpanHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool pr
 void
 LrWpanHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream,
-  std::string prefix,
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -351,7 +351,7 @@ LrWpanHelper::EnableAsciiInternal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;

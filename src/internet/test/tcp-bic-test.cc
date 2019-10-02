@@ -50,7 +50,7 @@ public:
                        uint32_t ssThresh,
                        uint32_t segmentsAcked,
                        uint32_t lastMaxCwnd,
-                       const std::string &name);
+                       const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -80,7 +80,7 @@ TcpBicIncrementTest::TcpBicIncrementTest (uint32_t cWnd,
                                           uint32_t ssThresh,
                                           uint32_t segmentsAcked,
                                           uint32_t lastMaxCwnd,
-                                          const std::string &name)
+                                          const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -209,7 +209,7 @@ public:
                        uint32_t segmentSize,
                        BooleanValue fastConvergence,
                        uint32_t lastMaxCwnd,
-                       const std::string &name);
+                       const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -230,7 +230,7 @@ TcpBicDecrementTest::TcpBicDecrementTest (uint32_t cWnd,
                                           uint32_t segmentSize,
                                           BooleanValue fastConvergence,
                                           uint32_t lastMaxCwnd,
-                                          const std::string &name)
+                                          const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

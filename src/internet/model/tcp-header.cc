@@ -18,7 +18,7 @@
  * Author: Raj Bhattacharjea <raj.b@gatech.edu>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include "tcp-header.h"
 #include "tcp-option.h"
@@ -51,8 +51,8 @@ TcpHeader::~TcpHeader ()
 {
 }
 
-std::string
-TcpHeader::FlagsToString (uint8_t flags, const std::string& delimiter)
+stdfwd::string
+TcpHeader::FlagsToString (uint8_t flags, const stdfwd::string& delimiter)
 {
   static const char* flagNames[8] = {
     "FIN",
@@ -64,7 +64,7 @@ TcpHeader::FlagsToString (uint8_t flags, const std::string& delimiter)
     "ECE",
     "CWR"
   };
-  std::string flagsDescription = "";
+  stdfwd::string flagsDescription = "";
   for (uint8_t i = 0; i < 8; ++i)
     {
       if (flags & (1 << i))

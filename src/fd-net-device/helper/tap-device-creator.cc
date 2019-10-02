@@ -18,7 +18,7 @@
 
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <iomanip>
 #include <sstream>

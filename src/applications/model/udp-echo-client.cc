@@ -216,7 +216,7 @@ UdpEchoClient::GetDataSize (void) const
 }
 
 void 
-UdpEchoClient::SetFill (std::string fill)
+UdpEchoClient::SetFill (stdfwd::string fill)
 {
   NS_LOG_FUNCTION (this << fill);
 

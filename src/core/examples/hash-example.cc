@@ -123,7 +123,7 @@ namespace Example
 class Collider {
 
 public:
-  std::string m_name;                   /**< Name of this hash. */
+  stdfwd::string m_name;                   /**< Name of this hash. */
   Hasher      m_hash;                   /**< The hash. */
 
   /** The size of hash function being tested. */
@@ -139,7 +139,7 @@ public:
    * \param [in] hash Hash function.
    * \param [in] bits Which hash length to use.
    */
-  Collider (const std::string name, Hasher hash, const enum Bits bits)
+  Collider (const stdfwd::string name, Hasher hash, const enum Bits bits)
     : m_name (name),
       m_hash (hash),
       m_bits (bits)
@@ -151,7 +151,7 @@ public:
    * \param [in] phrase The string to add.
    * \return true If this was a new string.
    */
-  bool Add (const std::string phrase)
+  bool Add (const stdfwd::string phrase)
   {
     uint64_t h = GetHash (phrase);
     
@@ -188,9 +188,9 @@ public:
   /**
    * \return The hash name, including the length.
    */
-  std::string GetName () const
+  stdfwd::string GetName () const
   {
-    std::string name = m_name;
+    stdfwd::string name = m_name;
 
     switch (m_bits)
       {
@@ -233,7 +233,7 @@ private:
    * \param [in] phrase The string to hash.
    * \return The hash value, using the number of bits set in the constructor.
    */
-  uint64_t GetHash (const std::string phrase)
+  uint64_t GetHash (const stdfwd::string phrase)
     {
       m_hash.clear ();
       uint64_t h = 0;
@@ -253,13 +253,13 @@ private:
   enum Bits m_bits;
   
   /** Hashed dictionary of first instance of each hash. */
-  typedef std::map <uint64_t, std::string> hashdict_t;
+  typedef std::map <uint64_t, stdfwd::string> hashdict_t;
 
   /** The dictionary map, indexed by hash. */
   hashdict_t  m_dict;
 
   /** Collision map of subsequent instances. */
-  typedef std::vector < std::pair<uint64_t, std::string> > collision_t;
+  typedef std::vector < std::pair<uint64_t, stdfwd::string> > collision_t;
 
   /** The list of collisions. */
   collision_t m_coll;            
@@ -294,7 +294,7 @@ public:
    *
    * \param [in] phrase The string to add.
    */
-  void Add (const std::string phrase)
+  void Add (const stdfwd::string phrase)
   {
     if (phrase.size () == 0)
       {
@@ -399,7 +399,7 @@ public:
     uint32_t reps = 100;
     Hasher h = m_hashes[hindex].m_hash;
     int start = clock ();
-    for (std::vector<std::string>::const_iterator w = m_words.begin ();
+    for (std::vector<stdfwd::string>::const_iterator w = m_words.begin ();
          w != m_words.end();
          ++w)
       {
@@ -445,7 +445,7 @@ public:
 private:
   unsigned long m_nphrases;             /**< Number of strings hashed. */
   std::vector <Collider> m_hashes;      /**< List of hash Colliders. */
-  std::vector <std::string> m_words;    /**< List of unique words. */
+  std::vector <stdfwd::string> m_words;    /**< List of unique words. */
 
 };  // class Dictionary
 
@@ -464,7 +464,7 @@ public:
    * \param [in] file The word file to add.
    * \return true Tf the file is new to the list.
    */
-  bool Add (const std::string file)
+  bool Add (const stdfwd::string file)
   {
     if (std::find (m_files.begin (), m_files.end (), file) == m_files.end ())
       {
@@ -490,11 +490,11 @@ public:
               << (m_files.size () == 1 ? "y" : "ies")
               << std::endl;
 
-    for (std::vector <std::string>::const_iterator it = m_files.begin ();
+    for (std::vector <stdfwd::string>::const_iterator it = m_files.begin ();
          it != m_files.end ();
          ++it)
       {
-        std::string dictFile = *it;
+        stdfwd::string dictFile = *it;
         std::cout << "Dictionary file: " << dictFile << std::endl;
   
         // Find collisions
@@ -512,7 +512,7 @@ public:
     
         while (dictStream.good () )
           {
-            std::string phrase;
+            stdfwd::string phrase;
             getline (dictStream, phrase);
             dict.Add (phrase);
           }  // while
@@ -524,7 +524,7 @@ public:
   }  // ReadInto
 
 private:
-  std::vector <std::string> m_files;    /**< List of word files to use. */
+  std::vector <stdfwd::string> m_files;    /**< List of word files to use. */
 
 };  // class DictFiles
 

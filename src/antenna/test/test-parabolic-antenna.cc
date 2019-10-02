@@ -24,7 +24,7 @@
 #include "../model/parabolic-antenna-model.h"
 #include "../../core/model/simulator.h"
 #include <cmath>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <sstream>
 
@@ -41,7 +41,7 @@ enum ParabolicAntennaModelGainTestCondition  {
 class ParabolicAntennaModelTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (Angles a, double b, double o, double g);
+  static stdfwd::string BuildNameString (Angles a, double b, double o, double g);
   ParabolicAntennaModelTestCase (Angles a, double b, double o, double g, double expectedGainDb, ParabolicAntennaModelGainTestCondition cond);
 
 
@@ -56,7 +56,7 @@ private:
   ParabolicAntennaModelGainTestCondition m_cond;
 };
 
-std::string ParabolicAntennaModelTestCase::BuildNameString (Angles a, double b, double o, double g)
+stdfwd::string ParabolicAntennaModelTestCase::BuildNameString (Angles a, double b, double o, double g)
 {
   std::ostringstream oss;
   oss <<  "theta=" << a.theta << " , phi=" << a.phi 

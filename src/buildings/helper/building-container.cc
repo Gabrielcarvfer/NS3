@@ -33,7 +33,7 @@ BuildingContainer::BuildingContainer (Ptr<Building> building)
 {
   m_buildings.push_back (building);
 }
-BuildingContainer::BuildingContainer (std::string buildingName)
+BuildingContainer::BuildingContainer (stdfwd::string buildingName)
 {
   Ptr<Building> building = Names::Find<Building> (buildingName);
   m_buildings.push_back (building);
@@ -82,7 +82,7 @@ BuildingContainer::Add (Ptr<Building> building)
   m_buildings.push_back (building);
 }
 void 
-BuildingContainer::Add (std::string buildingName)
+BuildingContainer::Add (stdfwd::string buildingName)
 {
   Ptr<Building> building = Names::Find<Building> (buildingName);
   m_buildings.push_back (building);

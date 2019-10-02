@@ -152,7 +152,7 @@ public:
    * \param name name of the DeviceEnergyModel we are searching for.
    * \returns List of pointers to DeviceEnergyModel objects installed on node.
    */
-  DeviceEnergyModelContainer FindDeviceEnergyModels (std::string name);
+  DeviceEnergyModelContainer FindDeviceEnergyModels (stdfwd::string name);
 
   /**
    * Calls Start () method of the device energy models. Device energy models are

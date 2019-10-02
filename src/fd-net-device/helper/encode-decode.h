@@ -18,12 +18,12 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
-std::string BufferToString (uint8_t *buffer, uint32_t len);
-bool StringToBuffer (std::string s, uint8_t *buffer, uint32_t *len);
+stdfwd::string BufferToString (uint8_t *buffer, uint32_t len);
+bool StringToBuffer (stdfwd::string s, uint8_t *buffer, uint32_t *len);
 
 
 } // namespace ns3

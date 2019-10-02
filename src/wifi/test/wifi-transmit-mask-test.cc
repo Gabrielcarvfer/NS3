@@ -90,7 +90,7 @@ private:
 WifiOfdmMaskSlopesTestCase::WifiOfdmMaskSlopesTestCase (const char* str, WifiPhyStandard standard, uint8_t bw,
                                                         IndexPowerVect maskRefsLeft, IndexPowerVect maskRefsRight,
                                                         double tol)
-  :   TestCase (std::string ("SpectrumValue ") + str)
+  :   TestCase (stdfwd::string ("SpectrumValue ") + str)
 {
   NS_LOG_FUNCTION (this << str << standard << +bw << tol);
   NS_ASSERT (maskRefsLeft.size () % 2 == 0 && maskRefsRight.size () % 2 == 0); //start/stop pairs expected

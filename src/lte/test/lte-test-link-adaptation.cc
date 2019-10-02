@@ -45,7 +45,7 @@ NS_LOG_COMPONENT_DEFINE ("LteLinkAdaptationTest");
  */
 
 void
-LteTestDlSchedulingCallback (LteLinkAdaptationTestCase *testcase, std::string path,
+LteTestDlSchedulingCallback (LteLinkAdaptationTestCase *testcase, stdfwd::string path,
                              DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
@@ -135,7 +135,7 @@ static LteLinkAdaptationTestSuite lteLinkAdaptationTestSuite;
  * TestCase
  */
 
-LteLinkAdaptationTestCase::LteLinkAdaptationTestCase (std::string name, double snrDb, double loss, uint16_t mcsIndex)
+LteLinkAdaptationTestCase::LteLinkAdaptationTestCase (stdfwd::string name, double snrDb, double loss, uint16_t mcsIndex)
   : TestCase (name),
     m_snrDb (snrDb),
     m_loss (loss),

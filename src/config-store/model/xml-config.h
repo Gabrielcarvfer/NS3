@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <libxml/xmlwriter.h>
 #include <libxml/xmlreader.h>
 #include "file-config.h"
@@ -38,7 +38,7 @@ public:
   XmlConfigSave ();
   virtual ~XmlConfigSave ();
 
-  virtual void SetFilename (std::string filename);
+  virtual void SetFilename (stdfwd::string filename);
   virtual void Default (void);
   virtual void Global (void);
   virtual void Attributes (void);
@@ -56,12 +56,12 @@ public:
   XmlConfigLoad ();
   virtual ~XmlConfigLoad ();
 
-  virtual void SetFilename (std::string filename);
+  virtual void SetFilename (stdfwd::string filename);
   virtual void Default (void);
   virtual void Global (void);
   virtual void Attributes (void);
 private:
-  std::string m_filename; ///< the file name
+  stdfwd::string m_filename; ///< the file name
 };
 
 } // namespace ns3

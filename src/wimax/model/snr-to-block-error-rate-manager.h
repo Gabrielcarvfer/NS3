@@ -65,7 +65,7 @@ public:
   /**
    * \return the path to the repository containing the traces.
    */
-  std::string GetTraceFilePath (void);
+  stdfwd::string GetTraceFilePath (void);
   /**
    * \brief returns the Block Error Rate for a given modulation and SNR value
    * \param SNR the SNR value
@@ -104,7 +104,7 @@ private:
   /// Clear records function
   void ClearRecords (void);
   uint8_t m_activateLoss; ///< activate loss
-  std::string m_traceFilePath; ///< trace file path
+  stdfwd::string m_traceFilePath; ///< trace file path
 
   std::vector<SNRToBlockErrorRateRecord *> * m_recordModulation[7]; ///< record modulation
 

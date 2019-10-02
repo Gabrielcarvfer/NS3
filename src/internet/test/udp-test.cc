@@ -53,7 +53,7 @@
 #include "../model/ipv6-static-routing.h"
 #include "../helper/ipv6-address-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 using namespace ns3;
@@ -195,13 +195,13 @@ class UdpSocketImplTest : public TestCase
    * \param socket The sending socket.
    * \param to The destination address.
    */
-  void DoSendDataTo (Ptr<Socket> socket, std::string to);
+  void DoSendDataTo (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to The destination address.
    */
-  void SendDataTo (Ptr<Socket> socket, std::string to);
+  void SendDataTo (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
@@ -278,7 +278,7 @@ uint32_t UdpSocketImplTest::GetPriority (void)
 }
 
 void
-UdpSocketImplTest::DoSendDataTo (Ptr<Socket> socket, std::string to)
+UdpSocketImplTest::DoSendDataTo (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -286,7 +286,7 @@ UdpSocketImplTest::DoSendDataTo (Ptr<Socket> socket, std::string to)
 }
 
 void
-UdpSocketImplTest::SendDataTo (Ptr<Socket> socket, std::string to)
+UdpSocketImplTest::SendDataTo (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   m_receivedPacket2 = Create<Packet> ();
@@ -494,13 +494,13 @@ class Udp6SocketImplTest : public TestCase
    * \param socket The sending socket.
    * \param to The destination address.
    */
-  void DoSendDataTo (Ptr<Socket> socket, std::string to);
+  void DoSendDataTo (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to The destination address.
    */
-  void SendDataTo (Ptr<Socket> socket, std::string to);
+  void SendDataTo (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -570,7 +570,7 @@ void Udp6SocketImplTest::ReceivePkt2 (Ptr<Socket> socket)
 }
 
 void
-Udp6SocketImplTest::DoSendDataTo (Ptr<Socket> socket, std::string to)
+Udp6SocketImplTest::DoSendDataTo (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -578,7 +578,7 @@ Udp6SocketImplTest::DoSendDataTo (Ptr<Socket> socket, std::string to)
 }
 
 void
-Udp6SocketImplTest::SendDataTo (Ptr<Socket> socket, std::string to)
+Udp6SocketImplTest::SendDataTo (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   m_receivedPacket2 = Create<Packet> ();

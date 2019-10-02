@@ -40,7 +40,7 @@ public:
    * \brief Constructor.
    * \param desc Test description.
    */
-  TcpZeroWindowTest (const std::string &desc);
+  TcpZeroWindowTest (const stdfwd::string &desc);
 
 protected:
   //virtual void ReceivePacket (Ptr<Socket> socket);
@@ -69,7 +69,7 @@ protected:
   bool m_receiverFinished;    //!< Receiver finished.
 };
 
-TcpZeroWindowTest::TcpZeroWindowTest (const std::string &desc)
+TcpZeroWindowTest::TcpZeroWindowTest (const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_zeroWindowProbe (false),
     m_windowUpdated (false),

@@ -250,25 +250,25 @@ std::ostream& operator<< (std::ostream& os, const Address & address)
 
 std::istream& operator>> (std::istream& is, Address & address)
 {
-  std::string v;
+  stdfwd::string v;
   is >> v;
-  std::string::size_type firstDash, secondDash;
+  stdfwd::string::size_type firstDash, secondDash;
   firstDash = v.find ("-");
   secondDash = v.find ("-", firstDash+1);
-  std::string type = v.substr (0, firstDash-0);
-  std::string len = v.substr (firstDash+1, secondDash-(firstDash+1));
+  stdfwd::string type = v.substr (0, firstDash-0);
+  stdfwd::string len = v.substr (firstDash+1, secondDash-(firstDash+1));
 
   address.m_type = strtoul (type.c_str(), 0, 16);
   address.m_len = strtoul (len.c_str(), 0, 16);
   NS_ASSERT (address.m_len <= Address::MAX_SIZE);
 
-  std::string::size_type col = secondDash + 1;
+  stdfwd::string::size_type col = secondDash + 1;
   for (uint8_t i = 0; i < address.m_len; ++i)
     {
-      std::string tmp;
-      std::string::size_type next;
+      stdfwd::string tmp;
+      stdfwd::string::size_type next;
       next = v.find (":", col);
-      if (next == std::string::npos)
+      if (next == stdfwd::string::npos)
         {
           tmp = v.substr (col, v.size ()-col);
           address.m_data[i] = strtoul (tmp.c_str(), 0, 16);

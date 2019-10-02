@@ -122,14 +122,14 @@ public:
    * Returns the current state of the application in string format.
    * \return The current state of the application in string format.
    */
-  std::string GetStateString () const;
+  stdfwd::string GetStateString () const;
 
   /**
    * Returns the given state in string format.
    * \param state An arbitrary state of an application.
    * \return The given state equivalently expressed in string format.
    */
-  static std::string GetStateString (State_t state);
+  static stdfwd::string GetStateString (State_t state);
 
   /**
    * Common callback signature for `MainObject` and `EmbeddedObject` trace
@@ -292,7 +292,7 @@ private:
   /// The `RxDelay` trace source.
   TracedCallback<const Time &, const Address &> m_rxDelayTrace;
   /// The `StateTransition` trace source.
-  TracedCallback<const std::string &, const std::string &> m_stateTransitionTrace;
+  TracedCallback<const stdfwd::string &, const stdfwd::string &> m_stateTransitionTrace;
 
 }; // end of `class ThreeGppHttpServer`
 

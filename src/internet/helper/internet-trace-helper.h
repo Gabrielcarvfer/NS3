@@ -54,7 +54,7 @@ public:
    * @param interface Interface on ipv4 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapIpv4Internal (std::string prefix, 
+  virtual void EnablePcapIpv4Internal (stdfwd::string prefix,
                                        Ptr<Ipv4> ipv4, 
                                        uint32_t interface,
                                        bool explicitFilename) = 0;
@@ -67,7 +67,7 @@ public:
    * @param interface Interface on ipv4 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnablePcapIpv4 (std::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename = false);
+  void EnablePcapIpv4 (stdfwd::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable pcap output the indicated Ipv4 and interface pair using a
@@ -78,7 +78,7 @@ public:
    * @param interface Interface on ipv4 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnablePcapIpv4 (std::string prefix, std::string ipv4Name, uint32_t interface, bool explicitFilename = false);
+  void EnablePcapIpv4 (stdfwd::string prefix, stdfwd::string ipv4Name, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable pcap output on each Ipv4 and interface pair in the container.
@@ -86,7 +86,7 @@ public:
    * @param prefix Filename prefix to use for pcap files.
    * @param c Ipv4InterfaceContainer of Ipv4 and interface pairs
    */
-  void EnablePcapIpv4 (std::string prefix, Ipv4InterfaceContainer c);
+  void EnablePcapIpv4 (stdfwd::string prefix, Ipv4InterfaceContainer c);
 
   /**
    * @brief Enable pcap output on all Ipv4 and interface pairs existing in the
@@ -95,7 +95,7 @@ public:
    * \param prefix Filename prefix to use for pcap files.
    * \param n container of nodes.
    */
-  void EnablePcapIpv4 (std::string prefix, NodeContainer n);
+  void EnablePcapIpv4 (stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable pcap output on the Ipv4 and interface pair specified by a 
@@ -108,7 +108,7 @@ public:
    * @param interface Interface on ipv4 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  void EnablePcapIpv4 (std::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
+  void EnablePcapIpv4 (stdfwd::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
 
   /**
    * @brief Enable pcap output on all Ipv4 and interface pairs existing in the 
@@ -116,7 +116,7 @@ public:
    *
    * @param prefix Filename prefix to use for pcap files.
    */
-  void EnablePcapIpv4All (std::string prefix);
+  void EnablePcapIpv4All (stdfwd::string prefix);
 
 };
 
@@ -164,7 +164,7 @@ public:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   virtual void EnableAsciiIpv4Internal (Ptr<OutputStreamWrapper> stream, 
-                                        std::string prefix, 
+                                        stdfwd::string prefix,
                                         Ptr<Ipv4> ipv4, 
                                         uint32_t interface,
                                         bool explicitFilename) = 0;
@@ -177,7 +177,7 @@ public:
    * @param interface The interface on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnableAsciiIpv4 (std::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename = false);
+  void EnableAsciiIpv4 (stdfwd::string prefix, Ptr<Ipv4> ipv4, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable ascii trace output on the indicated Ipv4 and interface pair.
@@ -198,7 +198,7 @@ public:
    * @param interface The interface on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnableAsciiIpv4 (std::string prefix, std::string ipv4Name, uint32_t interface, bool explicitFilename = false);
+  void EnableAsciiIpv4 (stdfwd::string prefix, stdfwd::string ipv4Name, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable ascii trace output the indicated net device using a device 
@@ -209,7 +209,7 @@ public:
    * @param ipv4Name The name of the Ipv4 on which you want to enable tracing.
    * @param interface The interface on which you want to enable tracing.
    */
-  void EnableAsciiIpv4 (Ptr<OutputStreamWrapper> stream, std::string ipv4Name, uint32_t interface);
+  void EnableAsciiIpv4 (Ptr<OutputStreamWrapper> stream, stdfwd::string ipv4Name, uint32_t interface);
 
   /**
    * @brief Enable ascii trace output on each Ipv4 and interface pair in the 
@@ -219,7 +219,7 @@ public:
    * @param c Ipv4InterfaceContainer of Ipv4 and interface pairs on which to 
    *          enable tracing.
    */
-  void EnableAsciiIpv4 (std::string prefix, Ipv4InterfaceContainer c);
+  void EnableAsciiIpv4 (stdfwd::string prefix, Ipv4InterfaceContainer c);
 
   /**
    * @brief Enable ascii trace output on each device in the container which is
@@ -239,7 +239,7 @@ public:
    * \param prefix Filename prefix to use for ascii files.
    * \param n container of nodes.
    */
-  void EnableAsciiIpv4 (std::string prefix, NodeContainer n);
+  void EnableAsciiIpv4 (stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable ascii trace output on all Ipv4 and interface pairs existing
@@ -257,7 +257,7 @@ public:
    *
    * @param prefix Filename prefix to use for ascii files.
    */
-  void EnableAsciiIpv4All (std::string prefix);
+  void EnableAsciiIpv4All (stdfwd::string prefix);
 
   /**
    * @brief Enable ascii trace output on each device (which is of the
@@ -281,7 +281,7 @@ public:
    *                 ascii tracing
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  void EnableAsciiIpv4 (std::string prefix, uint32_t nodeid, uint32_t deviceid, bool explicitFilename);
+  void EnableAsciiIpv4 (stdfwd::string prefix, uint32_t nodeid, uint32_t deviceid, bool explicitFilename);
 
   /**
    * @brief Enable ascii trace output on the Ipv4 and interface pair specified by a
@@ -315,7 +315,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
+                            stdfwd::string prefix,
                             uint32_t nodeid, 
                             uint32_t interface,
                             bool explicitFilename);
@@ -331,7 +331,7 @@ private:
    * @param prefix Filename prefix to use when creating ascii trace files
    * @param n container of nodes.
    */
-  void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, std::string prefix, NodeContainer n);
+  void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable ascii trace output on the Ipv4 and interface pair specified by a
@@ -344,7 +344,7 @@ private:
    * @param prefix Filename prefix to use when creating ascii trace files
    * @param c Ipv4InterfaceContainer of Ipv4 and interface pairs
    */
-  void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, std::string prefix, Ipv4InterfaceContainer c);
+  void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, Ipv4InterfaceContainer c);
 
   /**
    * @brief Enable ascii trace output on the Ipv4 and interface pair specified by a
@@ -361,8 +361,8 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
-                            std::string ipv4Name, 
+                            stdfwd::string prefix,
+                            stdfwd::string ipv4Name,
                             uint32_t interface,
                             bool explicitFilename);
 
@@ -381,7 +381,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv4Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
+                            stdfwd::string prefix,
                             Ptr<Ipv4> ipv4, 
                             uint32_t interface,
                             bool explicitFilename);
@@ -414,7 +414,7 @@ public:
    * @param interface Interface on ipv6 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  virtual void EnablePcapIpv6Internal (std::string prefix, 
+  virtual void EnablePcapIpv6Internal (stdfwd::string prefix,
                                        Ptr<Ipv6> ipv6, 
                                        uint32_t interface,
                                        bool explicitFilename) = 0;
@@ -427,7 +427,7 @@ public:
    * @param interface Interface on ipv6 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnablePcapIpv6 (std::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename = false);
+  void EnablePcapIpv6 (stdfwd::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable pcap output the indicated Ipv6 and interface pair using a
@@ -438,7 +438,7 @@ public:
    * @param interface Interface on ipv6 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnablePcapIpv6 (std::string prefix, std::string ipv6Name, uint32_t interface, bool explicitFilename = false);
+  void EnablePcapIpv6 (stdfwd::string prefix, stdfwd::string ipv6Name, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable pcap output on each Ipv6 and interface pair in the container.
@@ -446,7 +446,7 @@ public:
    * @param prefix Filename prefix to use for pcap files.
    * @param c Ipv6InterfaceContainer of Ipv6 and interface pairs
    */
-  void EnablePcapIpv6 (std::string prefix, Ipv6InterfaceContainer c);
+  void EnablePcapIpv6 (stdfwd::string prefix, Ipv6InterfaceContainer c);
 
   /**
    * @brief Enable pcap output on all Ipv6 and interface pairs existing in the
@@ -455,7 +455,7 @@ public:
    * \param prefix Filename prefix to use for pcap files.
    * \param n container of nodes.
    */
-  void EnablePcapIpv6 (std::string prefix, NodeContainer n);
+  void EnablePcapIpv6 (stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable pcap output on the Ipv6 and interface pair specified by a 
@@ -468,7 +468,7 @@ public:
    * @param interface Interface on ipv6 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  void EnablePcapIpv6 (std::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
+  void EnablePcapIpv6 (stdfwd::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
 
   /**
    * @brief Enable pcap output on all Ipv6 and interface pairs existing in the 
@@ -476,7 +476,7 @@ public:
    *
    * @param prefix Filename prefix to use for pcap files.
    */
-  void EnablePcapIpv6All (std::string prefix);
+  void EnablePcapIpv6All (stdfwd::string prefix);
 };
 
 /**
@@ -523,7 +523,7 @@ public:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   virtual void EnableAsciiIpv6Internal (Ptr<OutputStreamWrapper> stream, 
-                                        std::string prefix, 
+                                        stdfwd::string prefix,
                                         Ptr<Ipv6> ipv6, 
                                         uint32_t interface,
                                         bool explicitFilename) = 0;
@@ -536,7 +536,7 @@ public:
    * @param interface The interface on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnableAsciiIpv6 (std::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename = false);
+  void EnableAsciiIpv6 (stdfwd::string prefix, Ptr<Ipv6> ipv6, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable ascii trace output on the indicated Ipv6 and interface pair.
@@ -557,7 +557,7 @@ public:
    * @param interface The interface on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnableAsciiIpv6 (std::string prefix, std::string ipv6Name, uint32_t interface, bool explicitFilename = false);
+  void EnableAsciiIpv6 (stdfwd::string prefix, stdfwd::string ipv6Name, uint32_t interface, bool explicitFilename = false);
 
   /**
    * @brief Enable ascii trace output the indicated net device using a device 
@@ -568,7 +568,7 @@ public:
    * @param ipv6Name The name of the Ipv6 on which you want to enable tracing.
    * @param interface The interface on which you want to enable tracing.
    */
-  void EnableAsciiIpv6 (Ptr<OutputStreamWrapper> stream, std::string ipv6Name, uint32_t interface); 
+  void EnableAsciiIpv6 (Ptr<OutputStreamWrapper> stream, stdfwd::string ipv6Name, uint32_t interface);
 
   /**
    * @brief Enable ascii trace output on each Ipv6 and interface pair in the 
@@ -578,7 +578,7 @@ public:
    * @param c Ipv6InterfaceContainer of Ipv6 and interface pairs on which to 
    *          enable tracing.
    */
-  void EnableAsciiIpv6 (std::string prefix, Ipv6InterfaceContainer c);
+  void EnableAsciiIpv6 (stdfwd::string prefix, Ipv6InterfaceContainer c);
 
   /**
    * @brief Enable ascii trace output on each device in the container which is
@@ -598,7 +598,7 @@ public:
    * \param prefix Filename prefix to use for ascii files.
    * \param n container of nodes.
    */
-  void EnableAsciiIpv6 (std::string prefix, NodeContainer n);
+  void EnableAsciiIpv6 (stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable ascii trace output on all Ipv6 and interface pairs existing
@@ -623,7 +623,7 @@ public:
    *               ascii tracing
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
-  void EnableAsciiIpv6 (std::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
+  void EnableAsciiIpv6 (stdfwd::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename);
 
   /**
    * @brief Enable ascii trace output on the Ipv6 and interface pair specified by a
@@ -645,7 +645,7 @@ public:
    *
    * @param prefix Filename prefix to use for ascii files.
    */
-  void EnableAsciiIpv6All (std::string prefix);
+  void EnableAsciiIpv6All (stdfwd::string prefix);
 
   /**
    * @brief Enable ascii trace output on each device (which is of the
@@ -673,7 +673,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
+                            stdfwd::string prefix,
                             uint32_t nodeid, 
                             uint32_t interface,
                             bool explicitFilename);
@@ -689,7 +689,7 @@ private:
    * @param prefix Filename prefix to use when creating ascii trace files
    * @param n container of nodes.
    */
-  void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, std::string prefix, NodeContainer n);
+  void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, NodeContainer n);
 
   /**
    * @brief Enable ascii trace output on the Ipv6 and interface pair specified by a
@@ -702,7 +702,7 @@ private:
    * @param prefix Filename prefix to use when creating ascii trace files
    * @param c Ipv6InterfaceContainer of Ipv6 and interface pairs
    */
-  void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, std::string prefix, Ipv6InterfaceContainer c);
+  void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, Ipv6InterfaceContainer c);
 
   /**
    * @brief Enable ascii trace output on the Ipv6 and interface pair specified by a
@@ -719,8 +719,8 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
-                            std::string ipv6Name, 
+                            stdfwd::string prefix,
+                            stdfwd::string ipv6Name,
                             uint32_t interface,
                             bool explicitFilename);
 
@@ -739,7 +739,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true.
    */
   void EnableAsciiIpv6Impl (Ptr<OutputStreamWrapper> stream, 
-                            std::string prefix, 
+                            stdfwd::string prefix,
                             Ptr<Ipv6> ipv6, 
                             uint32_t interface,
                             bool explicitFilename);

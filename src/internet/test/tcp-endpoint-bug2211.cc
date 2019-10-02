@@ -57,7 +57,7 @@ public:
    * \param desc Test description.
    * \param ipVersion True to use IPv6.
    */
-  TcpEndPointBug2211Test (std::string desc, bool ipVersion);
+  TcpEndPointBug2211Test (stdfwd::string desc, bool ipVersion);
 
   /**
    * \brief Receive a packet.
@@ -104,7 +104,7 @@ TcpEndPointBug2211Test::HandleConnect (Ptr<Socket> socket)
   socket->Close ();
 }
 
-TcpEndPointBug2211Test::TcpEndPointBug2211Test (std::string desc, bool ipVersion) : TestCase (desc)
+TcpEndPointBug2211Test::TcpEndPointBug2211Test (stdfwd::string desc, bool ipVersion) : TestCase (desc)
 {
   m_v6 = ipVersion;
 }

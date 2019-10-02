@@ -17,8 +17,8 @@
  */
 
 #include <unistd.h>
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cstring> // for strerror
 #include <iosfwd>
 #include <iomanip>
@@ -294,7 +294,7 @@ CreateTap (const char *dev, const char *gw, const char *ip, const char *mac, con
   int status = ioctl (tap, TUNSETIFF, (void *) &ifr);
   ABORT_IF (status == -1, "Could not allocate tap device", true);
 
-  std::string tapDeviceName = (char *)ifr.ifr_name;
+  stdfwd::string tapDeviceName = (char *)ifr.ifr_name;
   LOG ("Allocated TAP device " << tapDeviceName);
 
   //

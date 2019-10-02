@@ -90,7 +90,7 @@ private:
    * \param context the context
    * \param bssid the BSSID
    */
-  void MacAssoc (std::string context, Mac48Address bssid);
+  void MacAssoc (stdfwd::string context, Mac48Address bssid);
   /**
    * Phy receive ok trace function
    * \param context the context
@@ -99,7 +99,7 @@ private:
    * \param mode the mode
    * \param preamble the preamble
    */
-  void PhyRxOkTrace (std::string context, Ptr<const Packet> packet, double snr, WifiMode mode, enum WifiPreamble preamble);
+  void PhyRxOkTrace (stdfwd::string context, Ptr<const Packet> packet, double snr, WifiMode mode, enum WifiPreamble preamble);
   /**
    * Phy transmit trace function
    * \param context the context
@@ -108,7 +108,7 @@ private:
    * \param preamble the preamble
    * \param txPower the transmit power
    */
-  void PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
+  void PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
   /**
    * Get current position function
    * \param i the current position index
@@ -202,7 +202,7 @@ OcbWifiMacTestCase::GetCurrentPosition (uint32_t i)
 }
 
 void
-OcbWifiMacTestCase::MacAssoc (std::string context,Mac48Address bssid)
+OcbWifiMacTestCase::MacAssoc (stdfwd::string context,Mac48Address bssid)
 {
   if (macassoc_time == Time (0))
     {
@@ -217,7 +217,7 @@ OcbWifiMacTestCase::MacAssoc (std::string context,Mac48Address bssid)
 // We want to get the time that sta receives the first beacon frame from AP
 // it means that in this time this sta has ability to receive frame
 void
-OcbWifiMacTestCase::PhyRxOkTrace (std::string context, Ptr<const Packet> packet, double snr, WifiMode mode, enum WifiPreamble preamble)
+OcbWifiMacTestCase::PhyRxOkTrace (stdfwd::string context, Ptr<const Packet> packet, double snr, WifiMode mode, enum WifiPreamble preamble)
 {
   if (phyrx_time == Time (0))
     {
@@ -231,7 +231,7 @@ OcbWifiMacTestCase::PhyRxOkTrace (std::string context, Ptr<const Packet> packet,
 
 // We want to get the time that STA sends the first data packet successfully
 void
-OcbWifiMacTestCase::PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
+OcbWifiMacTestCase::PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
 {
   WifiMacHeader h;
   packet->PeekHeader (h);

@@ -80,7 +80,7 @@ MpiInterface::Enable (int* pargc, char*** pargv)
 
   if (GlobalValue::GetValueByNameFailSafe ("SimulatorImplementationType", simulationTypeValue))
     {
-      std::string simulationType = simulationTypeValue.Get ();
+      stdfwd::string simulationType = simulationTypeValue.Get ();
 
       // Set communication interface based on the simulation type being used.
       // Defaults to synchronous.

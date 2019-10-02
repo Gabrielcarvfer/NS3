@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 #include "../../network/utils/ipv4-address.h"
 

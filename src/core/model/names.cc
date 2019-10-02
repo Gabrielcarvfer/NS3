@@ -56,7 +56,7 @@ public:
    * \param [in] name The name of this NameNode
    * \param [in] object The object corresponding to this NameNode.
    */
-  NameNode (NameNode *parent, std::string name, Ptr<Object> object);
+  NameNode (NameNode *parent, stdfwd::string name, Ptr<Object> object);
   /**
    * Assignment operator.
    *
@@ -71,12 +71,12 @@ public:
   /** The parent NameNode. */
   NameNode *m_parent;
   /** The name of this NameNode. */
-  std::string m_name;
+  stdfwd::string m_name;
   /** The object corresponding to this NameNode. */
   Ptr<Object> m_object;
 
   /** Children of this NameNode. */
-  std::map<std::string, NameNode *> m_nameMap;
+  std::map<stdfwd::string, NameNode *> m_nameMap;
 };
 
 NameNode::NameNode ()
@@ -102,7 +102,7 @@ NameNode::operator = (const NameNode &rhs)
   return *this;
 }
 
-NameNode::NameNode (NameNode *parent, std::string name, Ptr<Object> object)
+NameNode::NameNode (NameNode *parent, stdfwd::string name, Ptr<Object> object)
   : m_parent (parent), m_name (name), m_object (object)
 {
   NS_LOG_FUNCTION (this << parent << name << object);
@@ -128,16 +128,16 @@ public:
   // Doxygen \copydoc bug: won't copy these docs, so we repeat them.
   
   /**
-   * Internal implementation for Names::Add(std::string,Ptr<Object>)
+   * Internal implementation for Names::Add(stdfwd::string,Ptr<Object>)
    *
    * \param [in] name The name of the object you want to associate;
    *             which may be prepended with a path to that object.
    * \param [in] object A smart pointer to the object itself.
    * \return \c true if the object was named successfully.
    */
-  bool Add (std::string name, Ptr<Object> object);
+  bool Add (stdfwd::string name, Ptr<Object> object);
   /**
-   * Internal implementation for Names::Add(std::string,std::string,Ptr<Object>)
+   * Internal implementation for Names::Add(stdfwd::string,stdfwd::string,Ptr<Object>)
    *
    * \param [in] path A path name describing a previously named object
    *             under which you want this new name to be defined.
@@ -145,9 +145,9 @@ public:
    * \param [in] object A smart pointer to the object itself.
    * \return \c true if the object was named successfully.
    */
-  bool Add (std::string path, std::string name, Ptr<Object> object);
+  bool Add (stdfwd::string path, stdfwd::string name, Ptr<Object> object);
   /**
-   * Internal implementation for Names::Add(Ptr<Object>,std::string,Ptr<Object>)
+   * Internal implementation for Names::Add(Ptr<Object>,stdfwd::string,Ptr<Object>)
    *
    * \param [in] context A smart pointer to an object that is used
    *             in place of the path under which you want this new
@@ -156,20 +156,20 @@ public:
    * \param [in] object A smart pointer to the object itself.
    * \return \c true if the object was named successfully.
    */
-  bool Add (Ptr<Object> context, std::string name, Ptr<Object> object);
+  bool Add (Ptr<Object> context, stdfwd::string name, Ptr<Object> object);
 
   /**
-   * Internal implementation for Names::Rename(std::string,std::string)
+   * Internal implementation for Names::Rename(stdfwd::string,stdfwd::string)
    *
    * \param [in] oldpath The current path name to the object you want
    *             to change.
    * \param [in] newname The new name of the object you want to change.
    * \return \c true if the object was renamed successfully.
    */
-  bool Rename (std::string oldpath, std::string newname);
+  bool Rename (stdfwd::string oldpath, stdfwd::string newname);
   /**
    * Internal implementation for
-   * Names::Rename(std::string,std::string,std::string)
+   * Names::Rename(stdfwd::string,stdfwd::string,stdfwd::string)
    *
    * \param [in] path A path name describing a previously named object
    *             under which you want this name change to occur
@@ -178,10 +178,10 @@ public:
    * \param [in] newname The new name you want the object to have.
    * \return \c true if the object was renamed successfully.
    */
-  bool Rename (std::string path, std::string oldname, std::string newname);
+  bool Rename (stdfwd::string path, stdfwd::string oldname, stdfwd::string newname);
   /**
    * Internal implementation for
-   * Names::Rename(Ptr<Object>,std::string,std::string)
+   * Names::Rename(Ptr<Object>,stdfwd::string,stdfwd::string)
    *
    * \param [in] context A smart pointer to an object that is used
    *             in place of the path under which you want this
@@ -192,7 +192,7 @@ public:
    *             to change.
    * \return \c true if the object was renamed successfully.
    */
-  bool Rename (Ptr<Object> context, std::string oldname, std::string newname);
+  bool Rename (Ptr<Object> context, stdfwd::string oldname, stdfwd::string newname);
 
   /**
    * Internal implementation for Names::FindName()
@@ -202,7 +202,7 @@ public:
    * \returns A string containing the name of the object if found,
    *          otherwise the empty string.
    */
-  std::string FindName (Ptr<Object> object);
+  stdfwd::string FindName (Ptr<Object> object);
   /**
    * Internal implementation of Names::FindPath()
    *
@@ -211,7 +211,7 @@ public:
    * \returns A string containing the name path of the object,
    *          otherwise the empty string.
    */
-  std::string FindPath (Ptr<Object> object);
+  stdfwd::string FindPath (Ptr<Object> object);
 
   /**
    * Internal implementation for Names::Clear()
@@ -219,16 +219,16 @@ public:
   void Clear (void);
 
   /**
-   * Internal implementation for ns3::Names::Find(std::string)
+   * Internal implementation for ns3::Names::Find(stdfwd::string)
    *
    * \param [in] path A string containing a name space path used
    *             to locate the object.
    * \returns A smart pointer to the named object converted to
    *          the requested type.
    */
-  Ptr<Object> Find (std::string path);
+  Ptr<Object> Find (stdfwd::string path);
   /**
-   * Internal implementation for ns3::Names::Find(std::string,std::string)
+   * Internal implementation for ns3::Names::Find(stdfwd::string,stdfwd::string)
    *
    * \param [in] path A path name describing a previously named object
    *             under which you want to look for the specified name.
@@ -236,9 +236,9 @@ public:
    * \returns A smart pointer to the named object converted to
    *          the requested type.
    */
-  Ptr<Object> Find (std::string path, std::string name);
+  Ptr<Object> Find (stdfwd::string path, stdfwd::string name);
   /**
-   * Internal implementation for ns3::Names::Find(Ptr<Object>,std::string)
+   * Internal implementation for ns3::Names::Find(Ptr<Object>,stdfwd::string)
    *
    * \param [in] context A smart pointer to an object that is used
    *             in place of the path under which you want this
@@ -247,7 +247,7 @@ public:
    * \returns A smart pointer to the named object converted to
    *          the requested type.
    */
-  Ptr<Object> Find (Ptr<Object> context, std::string name);
+  Ptr<Object> Find (Ptr<Object> context, stdfwd::string name);
 
 private:
   friend class Names;
@@ -266,7 +266,7 @@ private:
    * \param [in] name The name to search for.
    * \returns \c true if \c name already exists as a child of \c node.
    */
-  bool IsDuplicateName (NameNode *node, std::string name);
+  bool IsDuplicateName (NameNode *node, stdfwd::string name);
 
   /** The root NameNode. */
   NameNode m_root;
@@ -314,7 +314,7 @@ NamesPriv::Clear (void)
 }
 
 bool
-NamesPriv::Add (std::string name, Ptr<Object> object)
+NamesPriv::Add (stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (this << name << object);
   //
@@ -332,8 +332,8 @@ NamesPriv::Add (std::string name, Ptr<Object> object)
   // fully qualified path name to the object we want to create.  We split the name
   // into a path string and a final segment (name) and then call the "Real" Add.
   //
-  std::string namespaceName = "/Names";
-  std::string::size_type offset = name.find (namespaceName);
+  stdfwd::string namespaceName = "/Names";
+  stdfwd::string::size_type offset = name.find (namespaceName);
   if (offset != 0)
     {
       //
@@ -357,8 +357,8 @@ NamesPriv::Add (std::string name, Ptr<Object> object)
   // separates the path from the final segment had better be there since
   // we just made sure that at least the namespace name was there.
   //
-  std::string::size_type i = name.rfind ("/");
-  NS_ASSERT_MSG (i != std::string::npos, "NamesPriv::Add(): Internal error.  Can't find '/' in name");
+  stdfwd::string::size_type i = name.rfind ("/");
+  NS_ASSERT_MSG (i != stdfwd::string::npos, "NamesPriv::Add(): Internal error.  Can't find '/' in name");
 
   //
   // The slash we found cannot be the slash at the start of the namespaceName.
@@ -376,7 +376,7 @@ NamesPriv::Add (std::string name, Ptr<Object> object)
 }
 
 bool
-NamesPriv::Add (std::string path, std::string name, Ptr<Object> object)
+NamesPriv::Add (stdfwd::string path, stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (this << path << name << object);
   if (path == "/Names")
@@ -387,7 +387,7 @@ NamesPriv::Add (std::string path, std::string name, Ptr<Object> object)
 }
 
 bool
-NamesPriv::Add (Ptr<Object> context, std::string name, Ptr<Object> object)
+NamesPriv::Add (Ptr<Object> context, stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (this << context << name << object);
 
@@ -422,7 +422,7 @@ NamesPriv::Add (Ptr<Object> context, std::string name, Ptr<Object> object)
 }
 
 bool
-NamesPriv::Rename (std::string oldpath, std::string newname)
+NamesPriv::Rename (stdfwd::string oldpath, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (this << oldpath << newname);
   //
@@ -442,8 +442,8 @@ NamesPriv::Rename (std::string oldpath, std::string newname)
   // path string (cf directory) and a final segment (cf filename) and then call
   // the "Real" Rename.
   //
-  std::string namespaceName = "/Names";
-  std::string::size_type offset = oldpath.find (namespaceName);
+  stdfwd::string namespaceName = "/Names";
+  stdfwd::string::size_type offset = oldpath.find (namespaceName);
   if (offset != 0)
     {
       //
@@ -467,8 +467,8 @@ NamesPriv::Rename (std::string oldpath, std::string newname)
   // separates the path from the final segment (name) had better be there since
   // we just made sure that at least the namespace name was there.
   //
-  std::string::size_type i = oldpath.rfind ("/");
-  NS_ASSERT_MSG (i != std::string::npos, "NamesPriv::Add(): Internal error.  Can't find '/' in name");
+  stdfwd::string::size_type i = oldpath.rfind ("/");
+  NS_ASSERT_MSG (i != stdfwd::string::npos, "NamesPriv::Add(): Internal error.  Can't find '/' in name");
 
   //
   // The slash we found cannot be the slash at the start of the namespaceName.
@@ -486,7 +486,7 @@ NamesPriv::Rename (std::string oldpath, std::string newname)
 }
 
 bool
-NamesPriv::Rename (std::string path, std::string oldname, std::string newname)
+NamesPriv::Rename (stdfwd::string path, stdfwd::string oldname, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (this << path << oldname << newname);
   if (path == "/Names")
@@ -497,7 +497,7 @@ NamesPriv::Rename (std::string path, std::string oldname, std::string newname)
 }
 
 bool
-NamesPriv::Rename (Ptr<Object> context, std::string oldname, std::string newname)
+NamesPriv::Rename (Ptr<Object> context, stdfwd::string oldname, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (this << context << oldname << newname);
 
@@ -518,7 +518,7 @@ NamesPriv::Rename (Ptr<Object> context, std::string oldname, std::string newname
       return false;
     }
 
-  std::map<std::string, NameNode *>::iterator i = node->m_nameMap.find (oldname);
+  std::map<stdfwd::string, NameNode *>::iterator i = node->m_nameMap.find (oldname);
   if (i == node->m_nameMap.end ())
     {
       NS_LOG_LOGIC ("Old name does not exist in name map");
@@ -543,7 +543,7 @@ NamesPriv::Rename (Ptr<Object> context, std::string oldname, std::string newname
     }
 }
 
-std::string
+stdfwd::string
 NamesPriv::FindName (Ptr<Object> object)
 {
   NS_LOG_FUNCTION (this << object);
@@ -561,7 +561,7 @@ NamesPriv::FindName (Ptr<Object> object)
     }
 }
 
-std::string
+stdfwd::string
 NamesPriv::FindPath (Ptr<Object> object)
 {
   NS_LOG_FUNCTION (this << object);
@@ -576,7 +576,7 @@ NamesPriv::FindPath (Ptr<Object> object)
   NameNode *p = i->second;
   NS_ASSERT_MSG (p, "NamesPriv::FindFullName(): Internal error: Invalid NameNode pointer from map");
 
-  std::string path;
+  stdfwd::string path;
 
   do
     {
@@ -590,7 +590,7 @@ NamesPriv::FindPath (Ptr<Object> object)
 
 
 Ptr<Object>
-NamesPriv::Find (std::string path)
+NamesPriv::Find (stdfwd::string path)
 {
   //
   // This is hooked in from simple, easy to use version of Find, so we want it
@@ -608,10 +608,10 @@ NamesPriv::Find (std::string path)
   //
 
   NS_LOG_FUNCTION (this << path);
-  std::string namespaceName = "/Names/";
-  std::string remaining;
+  stdfwd::string namespaceName = "/Names/";
+  stdfwd::string remaining;
 
-  std::string::size_type offset = path.find (namespaceName);
+  stdfwd::string::size_type offset = path.find (namespaceName);
   if (offset == 0)
     {
       NS_LOG_LOGIC (path << " is a fully qualified name");
@@ -636,13 +636,13 @@ NamesPriv::Find (std::string path)
     {
       NS_LOG_LOGIC ("Looking for the object of name " << remaining);
       offset = remaining.find ("/");
-      if (offset == std::string::npos)
+      if (offset == stdfwd::string::npos)
         {
           //
           // There are no remaining slashes so this is the last segment of the 
           // specified name.  We're done when we find it
           //
-          std::map<std::string, NameNode *>::iterator i = node->m_nameMap.find (remaining);
+          std::map<stdfwd::string, NameNode *>::iterator i = node->m_nameMap.find (remaining);
           if (i == node->m_nameMap.end ())
             {
               NS_LOG_LOGIC ("Name does not exist in name map");
@@ -661,9 +661,9 @@ NamesPriv::Find (std::string path)
           // specified name.  We need to "recurse" when we find this segment.
           //
           offset = remaining.find ("/");
-          std::string segment = remaining.substr (0, offset);
+          stdfwd::string segment = remaining.substr (0, offset);
 
-          std::map<std::string, NameNode *>::iterator i = node->m_nameMap.find (segment);
+          std::map<stdfwd::string, NameNode *>::iterator i = node->m_nameMap.find (segment);
           if (i == node->m_nameMap.end ())
             {
               NS_LOG_LOGIC ("Name does not exist in name map");
@@ -684,7 +684,7 @@ NamesPriv::Find (std::string path)
 }
 
 Ptr<Object>
-NamesPriv::Find (std::string path, std::string name)
+NamesPriv::Find (stdfwd::string path, stdfwd::string name)
 {
   NS_LOG_FUNCTION (this << path << name);
 
@@ -696,7 +696,7 @@ NamesPriv::Find (std::string path, std::string name)
 }
 
 Ptr<Object>
-NamesPriv::Find (Ptr<Object> context, std::string name)
+NamesPriv::Find (Ptr<Object> context, stdfwd::string name)
 {
   NS_LOG_FUNCTION (this << context << name);
 
@@ -717,7 +717,7 @@ NamesPriv::Find (Ptr<Object> context, std::string name)
         }
     }
 
-  std::map<std::string, NameNode *>::iterator i = node->m_nameMap.find (name);
+  std::map<stdfwd::string, NameNode *>::iterator i = node->m_nameMap.find (name);
   if (i == node->m_nameMap.end ())
     {
       NS_LOG_LOGIC ("Name does not exist in name map");
@@ -749,11 +749,11 @@ NamesPriv::IsNamed (Ptr<Object> object)
 }
 
 bool
-NamesPriv::IsDuplicateName (NameNode *node, std::string name)
+NamesPriv::IsDuplicateName (NameNode *node, stdfwd::string name)
 {
   NS_LOG_FUNCTION (this << node << name);
 
-  std::map<std::string, NameNode *>::iterator i = node->m_nameMap.find (name);
+  std::map<stdfwd::string, NameNode *>::iterator i = node->m_nameMap.find (name);
   if (i == node->m_nameMap.end ())
     {
       NS_LOG_LOGIC ("Name does not exist in name map");
@@ -767,7 +767,7 @@ NamesPriv::IsDuplicateName (NameNode *node, std::string name)
 }
 
 void
-Names::Add (std::string name, Ptr<Object> object)
+Names::Add (stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (name << object);
   bool result = NamesPriv::Get ()->Add (name, object);
@@ -775,7 +775,7 @@ Names::Add (std::string name, Ptr<Object> object)
 }
 
 void
-Names::Rename (std::string oldpath, std::string newname)
+Names::Rename (stdfwd::string oldpath, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (oldpath << newname);
   bool result = NamesPriv::Get ()->Rename (oldpath, newname);
@@ -783,7 +783,7 @@ Names::Rename (std::string oldpath, std::string newname)
 }
 
 void
-Names::Add (std::string path, std::string name, Ptr<Object> object)
+Names::Add (stdfwd::string path, stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (path << name << object);
   bool result = NamesPriv::Get ()->Add (path, name, object);
@@ -791,7 +791,7 @@ Names::Add (std::string path, std::string name, Ptr<Object> object)
 }
 
 void
-Names::Rename (std::string path, std::string oldname, std::string newname)
+Names::Rename (stdfwd::string path, stdfwd::string oldname, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (path << oldname << newname);
   bool result = NamesPriv::Get ()->Rename (path, oldname, newname);
@@ -799,7 +799,7 @@ Names::Rename (std::string path, std::string oldname, std::string newname)
 }
 
 void
-Names::Add (Ptr<Object> context, std::string name, Ptr<Object> object)
+Names::Add (Ptr<Object> context, stdfwd::string name, Ptr<Object> object)
 {
   NS_LOG_FUNCTION (context << name << object);
   bool result = NamesPriv::Get ()->Add (context, name, object);
@@ -807,7 +807,7 @@ Names::Add (Ptr<Object> context, std::string name, Ptr<Object> object)
 }
 
 void
-Names::Rename (Ptr<Object> context, std::string oldname, std::string newname)
+Names::Rename (Ptr<Object> context, stdfwd::string oldname, stdfwd::string newname)
 {
   NS_LOG_FUNCTION (context << oldname << newname);
   bool result = NamesPriv::Get ()->Rename (context, oldname, newname);
@@ -815,14 +815,14 @@ Names::Rename (Ptr<Object> context, std::string oldname, std::string newname)
                        &context);
 }
 
-std::string
+stdfwd::string
 Names::FindName (Ptr<Object> object)
 {
   NS_LOG_FUNCTION (object);
   return NamesPriv::Get ()->FindName (object);
 }
 
-std::string
+stdfwd::string
 Names::FindPath (Ptr<Object> object)
 {
   NS_LOG_FUNCTION (object);
@@ -837,21 +837,21 @@ Names::Clear (void)
 }
 
 Ptr<Object>
-Names::FindInternal (std::string name)
+Names::FindInternal (stdfwd::string name)
 {
   NS_LOG_FUNCTION (name);
   return NamesPriv::Get ()->Find (name);
 }
 
 Ptr<Object>
-Names::FindInternal (std::string path, std::string name)
+Names::FindInternal (stdfwd::string path, stdfwd::string name)
 {
   NS_LOG_FUNCTION (path << name);
   return NamesPriv::Get ()->Find (path, name);
 }
 
 Ptr<Object>
-Names::FindInternal (Ptr<Object> context, std::string name)
+Names::FindInternal (Ptr<Object> context, stdfwd::string name)
 {
   NS_LOG_FUNCTION (context << name);
   return NamesPriv::Get ()->Find (context, name);

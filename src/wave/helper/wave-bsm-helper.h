@@ -55,7 +55,7 @@ public:
    * \param name the name of the application attribute to set
    * \param value the value of the application attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Install an ns3::BsmApplication on each node of the input container

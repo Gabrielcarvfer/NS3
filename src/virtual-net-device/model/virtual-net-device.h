@@ -161,7 +161,7 @@ private:
   Ptr<Node> m_node;
   ReceiveCallback m_rxCallback;
   PromiscReceiveCallback m_promiscRxCallback;
-  std::string m_name;
+  stdfwd::string m_name;
   uint32_t m_index;
   uint16_t m_mtu;
   bool m_needsArp;

@@ -52,7 +52,7 @@ public:
    *
    * Sets one of the attributes of underlying EnergySource.
    */
-  virtual void Set (std::string name, const AttributeValue &v) = 0;
+  virtual void Set (stdfwd::string name, const AttributeValue &v) = 0;
 
   /**
    * \param node Pointer to the node where EnergySource will be installed.
@@ -76,7 +76,7 @@ public:
    *
    * This function installs an EnergySource onto a node.
    */
-  EnergySourceContainer Install (std::string nodeName) const;
+  EnergySourceContainer Install (stdfwd::string nodeName) const;
 
   /**
    * \brief This function installs an EnergySource on all nodes in simulation.
@@ -123,7 +123,7 @@ public:
    *
    * Sets one of the attributes of underlying DeviceEnergyModel.
    */
-  virtual void Set (std::string name, const AttributeValue &v) = 0;
+  virtual void Set (stdfwd::string name, const AttributeValue &v) = 0;
 
   /**
    * \param device Pointer to the NetDevice to install DeviceEnergyModel.

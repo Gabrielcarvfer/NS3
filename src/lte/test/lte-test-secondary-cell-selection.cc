@@ -72,7 +72,7 @@ static LteSecondaryCellSelectionTestSuite g_lteSecondaryCellSelectionTestSuite;
  */
 
 LteSecondaryCellSelectionTestCase::LteSecondaryCellSelectionTestCase (
-  std::string name, bool isIdealRrc, uint64_t rngRun, uint8_t numberOfComponentCarriers)
+  stdfwd::string name, bool isIdealRrc, uint64_t rngRun, uint8_t numberOfComponentCarriers)
   : TestCase (name),
     m_isIdealRrc (isIdealRrc),
     m_rngRun (rngRun),
@@ -168,7 +168,7 @@ LteSecondaryCellSelectionTestCase::DoRun ()
 
 void
 LteSecondaryCellSelectionTestCase::StateTransitionCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
   LteUeRrc::State oldState, LteUeRrc::State newState)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti << oldState << newState);
@@ -178,14 +178,14 @@ LteSecondaryCellSelectionTestCase::StateTransitionCallback (
 
 void
 LteSecondaryCellSelectionTestCase::InitialSecondaryCellSelectionEndOkCallback (
-  std::string context, uint64_t imsi, uint16_t cellId)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId)
 {
   NS_LOG_FUNCTION (this << imsi << cellId);
 }
 
 void
 LteSecondaryCellSelectionTestCase::ConnectionEstablishedCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
 }

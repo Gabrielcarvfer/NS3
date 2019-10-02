@@ -22,8 +22,8 @@
  */
 #pragma once
 
-#include <string>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/ptr.h"
 #include "../../core/model/object.h"
 
@@ -79,7 +79,7 @@ public:
    * \param filename filename of file which contains the
    *        ns2 movement trace.
    */
-  Ns2MobilityHelper (std::string filename);
+  Ns2MobilityHelper (stdfwd::string filename);
 
   /**
    * Read the ns2 trace file and configure the movement
@@ -128,8 +128,8 @@ public:
    * \param store Object store containing ns-3 mobility models
    * \return pointer to a ConstantVelocityMobilityModel
    */
-  Ptr<ConstantVelocityMobilityModel> GetMobilityModel (std::string idString, const ObjectStore &store) const;
-  std::string m_filename; //!< filename of file containing ns-2 mobility trace 
+  Ptr<ConstantVelocityMobilityModel> GetMobilityModel (stdfwd::string idString, const ObjectStore &store) const;
+  stdfwd::string m_filename; //!< filename of file containing ns-2 mobility trace
 };
 
 } // namespace ns3

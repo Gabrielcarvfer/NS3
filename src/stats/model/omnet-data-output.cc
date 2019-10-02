@@ -67,12 +67,12 @@ OmnetDataOutput::DoDispose ()
 
 //----------------------------------------------
 
-inline bool isNumeric (const std::string& s) {
+inline bool isNumeric (const stdfwd::string& s) {
   bool decimalPtSeen = false;
   bool exponentSeen = false;
   char last = '\0';
 
-  for (std::string::const_iterator it = s.begin (); it != s.end (); it++)
+  for (stdfwd::string::const_iterator it = s.begin (); it != s.end (); it++)
     {
       if ((*it == '.') && (decimalPtSeen))
         return false;
@@ -99,7 +99,7 @@ OmnetDataOutput::Output (DataCollector &dc)
   NS_LOG_FUNCTION (this << &dc);
 
   std::ofstream scalarFile;
-  std::string fn = m_filePrefix +"-"+dc.GetRunLabel ()+ ".sca";
+  stdfwd::string fn = m_filePrefix +"-"+dc.GetRunLabel ()+ ".sca";
   scalarFile.open (fn.c_str (), std::ios_base::out);
 
   /// \todo add timestamp to the runlevel
@@ -115,7 +115,7 @@ OmnetDataOutput::Output (DataCollector &dc)
 
   for (MetadataList::iterator i = dc.MetadataBegin ();
        i != dc.MetadataEnd (); i++) {
-      std::pair<std::string, std::string> blob = (*i);
+      std::pair<stdfwd::string, stdfwd::string> blob = (*i);
       scalarFile << "attr \"" << blob.first << "\" \"" << blob.second << "\""
                  << std::endl;
     }
@@ -127,7 +127,7 @@ OmnetDataOutput::Output (DataCollector &dc)
     }
   for (MetadataList::iterator i = dc.MetadataBegin ();
        i != dc.MetadataEnd (); i++) {
-      std::pair<std::string, std::string> blob = (*i);
+      std::pair<stdfwd::string, stdfwd::string> blob = (*i);
       if (isNumeric (blob.second)) {
           scalarFile << "scalar . \"" << blob.first << "\" \"" << blob.second << "\""
                      << std::endl;
@@ -155,8 +155,8 @@ OmnetDataOutput::OmnetOutputCallback::OmnetOutputCallback
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputStatistic (std::string context,
-                                                       std::string name,
+OmnetDataOutput::OmnetOutputCallback::OutputStatistic (stdfwd::string context,
+                                                       stdfwd::string name,
                                                        const StatisticalSummary *statSum)
 {
   NS_LOG_FUNCTION (this << context << name << statSum);
@@ -183,8 +183,8 @@ OmnetDataOutput::OmnetOutputCallback::OutputStatistic (std::string context,
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
-                                                       std::string name,
+OmnetDataOutput::OmnetOutputCallback::OutputSingleton (stdfwd::string context,
+                                                       stdfwd::string name,
                                                        int val)
 {
   NS_LOG_FUNCTION (this << context << name << val);
@@ -198,8 +198,8 @@ OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
-                                                       std::string name,
+OmnetDataOutput::OmnetOutputCallback::OutputSingleton (stdfwd::string context,
+                                                       stdfwd::string name,
                                                        uint32_t val)
 {
   NS_LOG_FUNCTION (this << context << name << val);
@@ -213,8 +213,8 @@ OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
-                                                       std::string name,
+OmnetDataOutput::OmnetOutputCallback::OutputSingleton (stdfwd::string context,
+                                                       stdfwd::string name,
                                                        double val)
 {
   NS_LOG_FUNCTION (this << context << name << val);
@@ -228,9 +228,9 @@ OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
-                                                       std::string name,
-                                                       std::string val)
+OmnetDataOutput::OmnetOutputCallback::OutputSingleton (stdfwd::string context,
+                                                       stdfwd::string name,
+                                                       stdfwd::string val)
 {
   NS_LOG_FUNCTION (this << context << name << val);
 
@@ -243,8 +243,8 @@ OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
 }
 
 void
-OmnetDataOutput::OmnetOutputCallback::OutputSingleton (std::string context,
-                                                       std::string name,
+OmnetDataOutput::OmnetOutputCallback::OutputSingleton (stdfwd::string context,
+                                                       stdfwd::string name,
                                                        Time val)
 {
   NS_LOG_FUNCTION (this << context << name << val);

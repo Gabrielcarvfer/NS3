@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/object-factory.h"
 #include "../../network/helper/net-device-container.h"
@@ -68,11 +68,11 @@ public:
    * Set the type of queue to create and associated to each
    * PointToPointNetDevice created through PointToPointHelper::Install.
    */
-  void SetQueue (std::string type,
-                 std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                 std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                 std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                 std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
+  void SetQueue (stdfwd::string type,
+                 stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                 stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                 stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                 stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
 
   /**
    * Set an attribute value to be propagated to each NetDevice created by the
@@ -84,7 +84,7 @@ public:
    * Set these attributes on each ns3::PointToPointNetDevice created
    * by PointToPointHelper::Install
    */
-  void SetDeviceAttribute (std::string name, const AttributeValue &value);
+  void SetDeviceAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Set an attribute value to be propagated to each Channel created by the
@@ -96,7 +96,7 @@ public:
    * Set these attribute on each ns3::PointToPointChannel created
    * by PointToPointHelper::Install
    */
-  void SetChannelAttribute (std::string name, const AttributeValue &value);
+  void SetChannelAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * \param c a set of nodes
@@ -129,7 +129,7 @@ public:
    *
    * Saves you from having to construct a temporary NodeContainer.
    */
-  NetDeviceContainer Install (Ptr<Node> a, std::string bName);
+  NetDeviceContainer Install (Ptr<Node> a, stdfwd::string bName);
 
   /**
    * \param aName Name of first node
@@ -138,7 +138,7 @@ public:
    *
    * Saves you from having to construct a temporary NodeContainer.
    */
-  NetDeviceContainer Install (std::string aName, Ptr<Node> b);
+  NetDeviceContainer Install (stdfwd::string aName, Ptr<Node> b);
 
   /**
    * \param aNode Name of first node
@@ -147,7 +147,7 @@ public:
    *
    * Saves you from having to construct a temporary NodeContainer.
    */
-  NetDeviceContainer Install (std::string aNode, std::string bNode);
+  NetDeviceContainer Install (stdfwd::string aNode, stdfwd::string bNode);
 
 private:
   /**
@@ -161,7 +161,7 @@ private:
    * \param promiscuous If true capture all possible packets available at the device.
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
+  virtual void EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
 
   /**
    * \brief Enable ascii trace output on the indicated net device.
@@ -176,7 +176,7 @@ private:
    */
   virtual void EnableAsciiInternal (
     Ptr<OutputStreamWrapper> stream,
-    std::string prefix,
+    stdfwd::string prefix,
     Ptr<NetDevice> nd,
     bool explicitFilename);
 

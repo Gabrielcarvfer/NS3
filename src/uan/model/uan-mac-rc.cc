@@ -523,7 +523,7 @@ UanMacRc::SendPacket (Ptr<Packet> pkt, uint32_t rate)
 {
   UanHeaderCommon ch;
   pkt->PeekHeader (ch);
-  std::string type;
+  stdfwd::string type;
   switch (ch.GetType ())
     {
     case TYPE_DATA:

@@ -51,7 +51,7 @@ LteRlcAmTransmitterTestSuite::LteRlcAmTransmitterTestSuite ()
 static LteRlcAmTransmitterTestSuite lteRlcAmTransmitterTestSuite;
 
 
-LteRlcAmTransmitterTestCase::LteRlcAmTransmitterTestCase (std::string name)
+LteRlcAmTransmitterTestCase::LteRlcAmTransmitterTestCase (stdfwd::string name)
   : TestCase (name)
 {
 }
@@ -99,13 +99,13 @@ LteRlcAmTransmitterTestCase::DoRun (void)
 }
 
 void
-LteRlcAmTransmitterTestCase::CheckDataReceived (Time time, std::string shouldReceived, std::string assertMsg)
+LteRlcAmTransmitterTestCase::CheckDataReceived (Time time, stdfwd::string shouldReceived, stdfwd::string assertMsg)
 {
   Simulator::Schedule (time, &LteRlcAmTransmitterTestCase::DoCheckDataReceived, this, shouldReceived, assertMsg);
 }
 
 void
-LteRlcAmTransmitterTestCase::DoCheckDataReceived (std::string shouldReceived, std::string assertMsg)
+LteRlcAmTransmitterTestCase::DoCheckDataReceived (stdfwd::string shouldReceived, stdfwd::string assertMsg)
 {
   NS_TEST_ASSERT_MSG_EQ (shouldReceived, txMac->GetDataReceived (), assertMsg);
 }
@@ -114,7 +114,7 @@ LteRlcAmTransmitterTestCase::DoCheckDataReceived (std::string shouldReceived, st
 /**
  * Test 4.1.1.1 One SDU, One PDU
  */
-LteRlcAmTransmitterOneSduTestCase::LteRlcAmTransmitterOneSduTestCase (std::string name)
+LteRlcAmTransmitterOneSduTestCase::LteRlcAmTransmitterOneSduTestCase (stdfwd::string name)
   : LteRlcAmTransmitterTestCase (name)
 {
 }
@@ -147,7 +147,7 @@ LteRlcAmTransmitterOneSduTestCase::DoRun (void)
 /**
  * Test 4.1.1.2 Segmentation (One SDU => n PDUs)
  */
-LteRlcAmTransmitterSegmentationTestCase::LteRlcAmTransmitterSegmentationTestCase (std::string name)
+LteRlcAmTransmitterSegmentationTestCase::LteRlcAmTransmitterSegmentationTestCase (stdfwd::string name)
   : LteRlcAmTransmitterTestCase (name)
 {
 }
@@ -190,7 +190,7 @@ LteRlcAmTransmitterSegmentationTestCase::DoRun (void)
 /**
  * Test 4.1.1.3 Concatenation (n SDUs => One PDU)
  */
-LteRlcAmTransmitterConcatenationTestCase::LteRlcAmTransmitterConcatenationTestCase (std::string name)
+LteRlcAmTransmitterConcatenationTestCase::LteRlcAmTransmitterConcatenationTestCase (stdfwd::string name)
   : LteRlcAmTransmitterTestCase (name)
 {
 }
@@ -227,7 +227,7 @@ LteRlcAmTransmitterConcatenationTestCase::DoRun (void)
 /**
  * Test 4.1.1.4 Report Buffer Status (test primitive parameters)
  */
-LteRlcAmTransmitterReportBufferStatusTestCase::LteRlcAmTransmitterReportBufferStatusTestCase (std::string name)
+LteRlcAmTransmitterReportBufferStatusTestCase::LteRlcAmTransmitterReportBufferStatusTestCase (stdfwd::string name)
   : LteRlcAmTransmitterTestCase (name)
 {
 }

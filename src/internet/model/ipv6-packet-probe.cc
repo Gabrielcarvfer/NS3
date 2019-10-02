@@ -84,7 +84,7 @@ Ipv6PacketProbe::SetValue (Ptr<const Packet> packet, Ptr<Ipv6> ipv6, uint32_t in
 }
 
 void
-Ipv6PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet, Ptr<Ipv6> ipv6, uint32_t interface)
+Ipv6PacketProbe::SetValueByPath (stdfwd::string path, Ptr<const Packet> packet, Ptr<Ipv6> ipv6, uint32_t interface)
 {
   NS_LOG_FUNCTION (path << packet << ipv6 << interface);
   Ptr<Ipv6PacketProbe> probe = Names::Find<Ipv6PacketProbe> (path);
@@ -93,7 +93,7 @@ Ipv6PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet, Ptr
 }
 
 bool
-Ipv6PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+Ipv6PacketProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -102,7 +102,7 @@ Ipv6PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-Ipv6PacketProbe::ConnectByPath (std::string path)
+Ipv6PacketProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

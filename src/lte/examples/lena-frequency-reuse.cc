@@ -33,7 +33,7 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("LenaFrequencyReuse");
 
 void
-PrintGnuplottableUeListToFile (std::string filename)
+PrintGnuplottableUeListToFile (stdfwd::string filename)
 {
   std::ofstream outFile;
   outFile.open (filename.c_str (), std::ios_base::out | std::ios_base::trunc);
@@ -61,7 +61,7 @@ PrintGnuplottableUeListToFile (std::string filename)
 }
 
 void
-PrintGnuplottableEnbListToFile (std::string filename)
+PrintGnuplottableEnbListToFile (stdfwd::string filename)
 {
   std::ofstream outFile;
   outFile.open (filename.c_str (), std::ios_base::out | std::ios_base::trunc);
@@ -207,7 +207,7 @@ int main (int argc, char *argv[])
   lteHelper->SetEnbDeviceAttribute ("DlBandwidth", UintegerValue (bandwidth));
   lteHelper->SetEnbDeviceAttribute ("UlBandwidth", UintegerValue (bandwidth));
 
-  std::string frAlgorithmType = lteHelper->GetFfrAlgorithmType ();
+  stdfwd::string frAlgorithmType = lteHelper->GetFfrAlgorithmType ();
   NS_LOG_DEBUG ("FrAlgorithmType: " << frAlgorithmType);
 
   if (frAlgorithmType == "ns3::LteFrHardAlgorithm")

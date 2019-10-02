@@ -198,12 +198,12 @@ WimaxNetDevice::GetRtg (void) const
 }
 
 void
-WimaxNetDevice::SetName (const std::string name)
+WimaxNetDevice::SetName (const stdfwd::string name)
 {
   m_name = name;
 }
 
-std::string
+stdfwd::string
 WimaxNetDevice::GetName (void) const
 {
   return m_name;

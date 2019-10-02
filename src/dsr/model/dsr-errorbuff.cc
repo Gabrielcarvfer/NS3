@@ -183,7 +183,7 @@ DsrErrorBuffer::Purge ()
 }
 
 void
-DsrErrorBuffer::Drop (DsrErrorBuffEntry en, std::string reason)
+DsrErrorBuffer::Drop (DsrErrorBuffEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetDestination ());
 //  en.GetErrorCallback () (en.GetPacket (), en.GetDestination (),
@@ -192,7 +192,7 @@ DsrErrorBuffer::Drop (DsrErrorBuffEntry en, std::string reason)
 }
 
 void
-DsrErrorBuffer::DropLink (DsrErrorBuffEntry en, std::string reason)
+DsrErrorBuffer::DropLink (DsrErrorBuffEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetSource () << " " << en.GetNextHop ());
 //  en.GetErrorCallback () (en.GetPacket (), en.GetDestination (),

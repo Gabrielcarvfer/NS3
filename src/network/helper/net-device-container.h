@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../model/net-device.h"
 
@@ -65,7 +65,7 @@ public:
    *
    * Create a NetDeviceContainer with exactly one device
    */
-  NetDeviceContainer (std::string devName);
+  NetDeviceContainer (stdfwd::string devName);
 
   /**
    * \param a a device container
@@ -192,7 +192,7 @@ public:
    *
    * \param deviceName The name of the NetDevice Object to add to the container.
    */
-  void Add (std::string deviceName);
+  void Add (stdfwd::string deviceName);
 
 private:
   std::vector<Ptr<NetDevice> > m_devices; //!< NetDevices smart pointers

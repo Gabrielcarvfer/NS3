@@ -34,7 +34,7 @@
 #include <map>
 #include <list>
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cassert>
 #include <sys/types.h>
 
@@ -169,13 +169,13 @@ public:
     * \param context context
     * \return the netdevice we are looking for
     */
-  Ptr<NetDevice> GetNetDeviceFromContext (std::string context);
+  Ptr<NetDevice> GetNetDeviceFromContext (stdfwd::string context);
   /**
     * \brief Get the elements from the tracing context.
     * \param context context
     * \return the elements we are looking for
     */
-  std::vector<std::string> GetElementsFromContext (std::string context);
+  std::vector<stdfwd::string> GetElementsFromContext (stdfwd::string context);
   /**
     * \brief Get the node id from ip address.
     * \param address IPv4 address
@@ -776,9 +776,9 @@ private:
 
   uint32_t m_graReplyTableSize;                         ///< Set the gratuitous reply table size
 
-  std::string m_cacheType;                              ///< The type of route cache
+  stdfwd::string m_cacheType;                              ///< The type of route cache
 
-  std::string m_routeSortType;                          ///< The type of route sort methods
+  stdfwd::string m_routeSortType;                          ///< The type of route sort methods
 
   uint32_t m_stabilityDecrFactor;                       ///< The initial decrease factor for link cache
 
@@ -832,7 +832,7 @@ private:
 
   std::vector<Ipv4Address> m_addresses;                 ///< The bind ipv4 addresses with next hop, src, destination address in sequence
 
-  std::map <std::string, uint32_t> m_macToNodeIdMap;    ///< The map of mac address to node id
+  std::map <stdfwd::string, uint32_t> m_macToNodeIdMap;    ///< The map of mac address to node id
 
   Ptr<UniformRandomVariable> m_uniformRandomVariable;    ///< Provides uniform random variables.
 };

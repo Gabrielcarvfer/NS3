@@ -19,7 +19,7 @@
 #include "../model/test.h"
 #include "../model/callback.h"
 #include "../model/unused.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 using namespace ns3;
 

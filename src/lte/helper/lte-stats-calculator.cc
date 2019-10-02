@@ -60,24 +60,24 @@ LteStatsCalculator::GetTypeId (void)
 
 
 void
-LteStatsCalculator::SetUlOutputFilename (std::string outputFilename)
+LteStatsCalculator::SetUlOutputFilename (stdfwd::string outputFilename)
 {
   m_ulOutputFilename = outputFilename;
 }
 
-std::string
+stdfwd::string
 LteStatsCalculator::GetUlOutputFilename (void)
 {
   return m_ulOutputFilename;
 }
 
 void
-LteStatsCalculator::SetDlOutputFilename (std::string outputFilename)
+LteStatsCalculator::SetDlOutputFilename (stdfwd::string outputFilename)
 {
   m_dlOutputFilename = outputFilename;
 }
 
-std::string
+stdfwd::string
 LteStatsCalculator::GetDlOutputFilename (void)
 {
   return m_dlOutputFilename;
@@ -85,7 +85,7 @@ LteStatsCalculator::GetDlOutputFilename (void)
 
 
 bool
-LteStatsCalculator::ExistsImsiPath (std::string path)
+LteStatsCalculator::ExistsImsiPath (stdfwd::string path)
 {
   if (m_pathImsiMap.find (path) == m_pathImsiMap.end () )
     {
@@ -98,20 +98,20 @@ LteStatsCalculator::ExistsImsiPath (std::string path)
 }
 
 void
-LteStatsCalculator::SetImsiPath (std::string path, uint64_t imsi)
+LteStatsCalculator::SetImsiPath (stdfwd::string path, uint64_t imsi)
 {
   NS_LOG_FUNCTION (this << path << imsi);
   m_pathImsiMap[path] = imsi;
 }
 
 uint64_t
-LteStatsCalculator::GetImsiPath (std::string path)
+LteStatsCalculator::GetImsiPath (stdfwd::string path)
 {
   return m_pathImsiMap.find (path)->second;
 }
 
 bool
-LteStatsCalculator::ExistsCellIdPath (std::string path)
+LteStatsCalculator::ExistsCellIdPath (stdfwd::string path)
 {
   if (m_pathCellIdMap.find (path) == m_pathCellIdMap.end () )
     {
@@ -124,28 +124,28 @@ LteStatsCalculator::ExistsCellIdPath (std::string path)
 }
 
 void
-LteStatsCalculator::SetCellIdPath (std::string path, uint16_t cellId)
+LteStatsCalculator::SetCellIdPath (stdfwd::string path, uint16_t cellId)
 {
   NS_LOG_FUNCTION (this << path << cellId);
   m_pathCellIdMap[path] = cellId;
 }
 
 uint16_t
-LteStatsCalculator::GetCellIdPath (std::string path)
+LteStatsCalculator::GetCellIdPath (stdfwd::string path)
 {
   return m_pathCellIdMap.find (path)->second;
 }
 
 
 uint64_t
-LteStatsCalculator::FindImsiFromEnbRlcPath (std::string path)
+LteStatsCalculator::FindImsiFromEnbRlcPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
   // Sample path input:
   // /NodeList/#NodeId/DeviceList/#DeviceId/LteEnbRrc/UeMap/#C-RNTI/DataRadioBearerMap/#LCID/LteRlc/RxPDU
 
   // We retrieve the UeManager associated to the C-RNTI and perform the IMSI lookup
-  std::string ueMapPath = path.substr (0, path.find ("/DataRadioBearerMap"));
+  stdfwd::string ueMapPath = path.substr (0, path.find ("/DataRadioBearerMap"));
   Config::MatchContainer match = Config::LookupMatches (ueMapPath);
 
   if (match.GetN () != 0)
@@ -161,14 +161,14 @@ LteStatsCalculator::FindImsiFromEnbRlcPath (std::string path)
 }
 
 uint64_t
-LteStatsCalculator::FindImsiFromUePhy (std::string path)
+LteStatsCalculator::FindImsiFromUePhy (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
   // Sample path input:
   // /NodeList/#NodeId/DeviceList/#DeviceId/LteUePhy
 
   // We retrieve the UeInfo associated to the C-RNTI and perform the IMSI lookup
-  std::string ueRlcPath = path.substr (0, path.find ("/LteUePhy"));
+  stdfwd::string ueRlcPath = path.substr (0, path.find ("/LteUePhy"));
   ueRlcPath += "/LteUeRrc";
   Config::MatchContainer match = Config::LookupMatches (ueRlcPath);
 
@@ -186,7 +186,7 @@ LteStatsCalculator::FindImsiFromUePhy (std::string path)
 
 
 uint64_t
-LteStatsCalculator::FindImsiFromLteNetDevice (std::string path)
+LteStatsCalculator::FindImsiFromLteNetDevice (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
   // Sample path input:
@@ -208,14 +208,14 @@ LteStatsCalculator::FindImsiFromLteNetDevice (std::string path)
 }
 
 uint16_t
-LteStatsCalculator::FindCellIdFromEnbRlcPath (std::string path)
+LteStatsCalculator::FindCellIdFromEnbRlcPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
   // Sample path input:
   // /NodeList/#NodeId/DeviceList/#DeviceId/LteEnbRrc/UeMap/#C-RNTI/DataRadioBearerMap/#LCID/LteRlc/RxPDU
 
   // We retrieve the CellId associated to the Enb
-  std::string enbNetDevicePath = path.substr (0, path.find ("/LteEnbRrc"));
+  stdfwd::string enbNetDevicePath = path.substr (0, path.find ("/LteEnbRrc"));
   Config::MatchContainer match = Config::LookupMatches (enbNetDevicePath);
   if (match.GetN () != 0)
     {
@@ -230,13 +230,13 @@ LteStatsCalculator::FindCellIdFromEnbRlcPath (std::string path)
 }
 
 uint64_t
-LteStatsCalculator::FindImsiFromEnbMac (std::string path, uint16_t rnti)
+LteStatsCalculator::FindImsiFromEnbMac (stdfwd::string path, uint16_t rnti)
 {
   NS_LOG_FUNCTION (path << rnti);
 
   // /NodeList/#NodeId/DeviceList/#DeviceId/LteEnbMac/DlScheduling
   std::ostringstream oss;
-  std::string p = path.substr (0, path.find ("/LteEnbMac"));
+  stdfwd::string p = path.substr (0, path.find ("/LteEnbMac"));
   oss << rnti;
   p += "/LteEnbRrc/UeMap/" + oss.str ();
   uint64_t imsi = FindImsiFromEnbRlcPath (p);
@@ -245,12 +245,12 @@ LteStatsCalculator::FindImsiFromEnbMac (std::string path, uint16_t rnti)
 }
 
 uint16_t
-LteStatsCalculator::FindCellIdFromEnbMac (std::string path, uint16_t rnti)
+LteStatsCalculator::FindCellIdFromEnbMac (stdfwd::string path, uint16_t rnti)
 {
   NS_LOG_FUNCTION (path << rnti);
   // /NodeList/#NodeId/DeviceList/#DeviceId/LteEnbMac/DlScheduling
   std::ostringstream oss;
-  std::string p = path.substr (0, path.find ("/LteEnbMac"));
+  stdfwd::string p = path.substr (0, path.find ("/LteEnbMac"));
   oss << rnti;
   p += "/LteEnbRrc/UeMap/" + oss.str ();
   uint16_t cellId = FindCellIdFromEnbRlcPath (p);
@@ -260,7 +260,7 @@ LteStatsCalculator::FindCellIdFromEnbMac (std::string path, uint16_t rnti)
 
 
 uint64_t
-LteStatsCalculator::FindImsiForEnb (std::string path, uint16_t rnti)
+LteStatsCalculator::FindImsiForEnb (stdfwd::string path, uint16_t rnti)
 {
   NS_LOG_FUNCTION (path << rnti);
   uint64_t imsi = 0;
@@ -268,7 +268,7 @@ LteStatsCalculator::FindImsiForEnb (std::string path, uint16_t rnti)
     {
       // /NodeList/0/DeviceList/0/LteEnbPhy/DlPhyTransmission/LteEnbRrc/UeMap/1
       std::ostringstream oss;
-      std::string p = path.substr (0, path.find ("/LteEnbPhy"));
+      stdfwd::string p = path.substr (0, path.find ("/LteEnbPhy"));
       oss << rnti;
       p += "/LteEnbRrc/UeMap/" + oss.str ();
       imsi = FindImsiFromEnbRlcPath (p);
@@ -276,7 +276,7 @@ LteStatsCalculator::FindImsiForEnb (std::string path, uint16_t rnti)
     }
   else if (path.find ("/UlPhyReception"))
     {
-      std::string p = path.substr (0, path.find ("/LteUePhy"));
+      stdfwd::string p = path.substr (0, path.find ("/LteUePhy"));
       imsi = FindImsiFromLteNetDevice (p);
       NS_LOG_LOGIC ("FindImsiForEnb[Rx]: " << path << ", " << rnti << ", " << imsi);
     }
@@ -285,13 +285,13 @@ LteStatsCalculator::FindImsiForEnb (std::string path, uint16_t rnti)
 
 
 uint64_t
-LteStatsCalculator::FindImsiForUe (std::string path, uint16_t rnti)
+LteStatsCalculator::FindImsiForUe (stdfwd::string path, uint16_t rnti)
 {
   NS_LOG_FUNCTION (path << rnti);
   uint64_t imsi = 0;
   if (path.find ("/UlPhyTransmission"))
     {
-      std::string p = path.substr (0, path.find ("/LteUePhy"));
+      stdfwd::string p = path.substr (0, path.find ("/LteUePhy"));
       imsi = FindImsiFromLteNetDevice (p);
       NS_LOG_LOGIC ("FindImsiForUe[Tx]: " << path << ", " << rnti << ", " << imsi);
     }
@@ -299,7 +299,7 @@ LteStatsCalculator::FindImsiForUe (std::string path, uint16_t rnti)
     {
       // /NodeList/0/DeviceList/0/LteEnbPhy/LteSpectrumPhy
       std::ostringstream oss;
-      std::string p = path.substr (0, path.find ("/LteEnbPhy"));
+      stdfwd::string p = path.substr (0, path.find ("/LteEnbPhy"));
       oss << rnti;
       p += "/LteEnbRrc/UeMap/" + oss.str ();
       imsi = FindImsiFromEnbRlcPath (p);

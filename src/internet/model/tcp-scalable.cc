@@ -117,7 +117,7 @@ TcpScalable::CongestionAvoidance (Ptr<TcpSocketState> tcb,
     }
 }
 
-std::string
+stdfwd::string
 TcpScalable::GetName () const
 {
   return "TcpScalable";

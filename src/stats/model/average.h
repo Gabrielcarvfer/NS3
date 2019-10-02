@@ -23,7 +23,7 @@
 #include <cmath>
 #include <ostream>
 #include <limits>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "basic-data-calculators.h"
 
 namespace ns3 {

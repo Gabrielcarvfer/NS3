@@ -77,7 +77,7 @@ PacketProbe::SetValue (Ptr<const Packet> packet)
 }
 
 void
-PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet)
+PacketProbe::SetValueByPath (stdfwd::string path, Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION (path << packet);
   Ptr<PacketProbe> probe = Names::Find<PacketProbe> (path);
@@ -86,7 +86,7 @@ PacketProbe::SetValueByPath (std::string path, Ptr<const Packet> packet)
 }
 
 bool
-PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+PacketProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -95,7 +95,7 @@ PacketProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-PacketProbe::ConnectByPath (std::string path)
+PacketProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

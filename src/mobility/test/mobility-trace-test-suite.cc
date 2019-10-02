@@ -18,7 +18,7 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../network/utils/ascii-test.h"
 #include "../../network/helper/trace-helper.h"
@@ -89,8 +89,8 @@ MobilityTraceTestCase::DoRun (void)
   mobility.AssignStreams (sta, 0);
 
   SetDataDir ("src/mobility/test");
-  std::string referenceMobilityFilePath = CreateDataDirFilename ("mobility-trace-example.mob");
-  std::string testMobilityFilePath      = CreateTempDirFilename ("mobility-trace-test.mob");
+  stdfwd::string referenceMobilityFilePath = CreateDataDirFilename ("mobility-trace-example.mob");
+  stdfwd::string testMobilityFilePath      = CreateTempDirFilename ("mobility-trace-test.mob");
 
   AsciiTraceHelper ascii;
   MobilityHelper::EnableAsciiAll (ascii.CreateFileStream (testMobilityFilePath));

@@ -58,7 +58,7 @@ public:
                 uint32_t segmentsAcked,
                 SequenceNumber32 nextTxSeq,
                 SequenceNumber32 lastAckedSeq,
-                const std::string &name);
+                const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -91,7 +91,7 @@ TcpVegasTest::TcpVegasTest (uint32_t cWnd,
                             uint32_t segmentsAcked,
                             SequenceNumber32 nextTxSeq,
                             SequenceNumber32 lastAckedSeq,
-                            const std::string &name)
+                            const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

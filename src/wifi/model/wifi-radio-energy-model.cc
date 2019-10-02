@@ -428,7 +428,7 @@ WifiRadioEnergyModel::SetWifiRadioState (const WifiPhyState state)
 {
   NS_LOG_FUNCTION (this << state);
   m_currentState = state;
-  std::string stateName;
+  stdfwd::string stateName;
   switch (state)
     {
     case WifiPhyState::IDLE:

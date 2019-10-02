@@ -21,7 +21,7 @@
 
 #include "type-id.h"
 #include "callback.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 
 /**
@@ -65,7 +65,7 @@
  */
 #define NS_OBJECT_TEMPLATE_CLASS_DEFINE(type,param)                    \
   template class type<param>;                                          \
-  template <> std::string DoGetTypeParamName<type<param> > ()          \
+  template <> stdfwd::string DoGetTypeParamName<type<param> > ()          \
   {                                                                    \
     return #param;                                                     \
   }                                                                    \
@@ -90,7 +90,7 @@ namespace ns3 {
  * NS_OBJECT_TEMPLATE_CLASS_DEFINE macro.
  */
 template <typename T>
-std::string DoGetTypeParamName (void);
+stdfwd::string DoGetTypeParamName (void);
 
 /**
  * \brief Helper function to get the name (as a string) of the type parameter
@@ -98,7 +98,7 @@ std::string DoGetTypeParamName (void);
  * \return the name of the type parameter as a string
  */
 template <typename T>
-std::string GetTypeParamName (void)
+stdfwd::string GetTypeParamName (void)
 {
   return DoGetTypeParamName<T> ();
 }
@@ -155,7 +155,7 @@ public:
    * \param [in] name The name of the attribute to set.
    * \param [in] value The name of the attribute to set.
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
   /**
    * Set a single attribute without raising errors.
    *
@@ -167,7 +167,7 @@ public:
    * \return \c true if the requested attribute exists and could be set, 
    *         \c false otherwise.
    */
-  bool SetAttributeFailSafe (std::string name, const AttributeValue &value);
+  bool SetAttributeFailSafe (stdfwd::string name, const AttributeValue &value);
   /**
    * Get the value of an attribute, raising fatal errors if unsuccessful.
    *
@@ -182,7 +182,7 @@ public:
    * \param [in]  name The name of the attribute to read.
    * \param [out] value Where the result should be stored.
    */
-  void GetAttribute (std::string name, AttributeValue &value) const;
+  void GetAttribute (stdfwd::string name, AttributeValue &value) const;
   /**
    * Get the value of an attribute without raising erros.
    *
@@ -193,7 +193,7 @@ public:
    * \param [out] value Where the result value should be stored.
    * \return \c true if the requested attribute was found, \c false otherwise.
    */
-  bool GetAttributeFailSafe (std::string name, AttributeValue &value) const;
+  bool GetAttributeFailSafe (stdfwd::string name, AttributeValue &value) const;
 
   /**
    * Connect a TraceSource to a Callback with a context.
@@ -205,7 +205,7 @@ public:
    * \param [in] cb The callback to connect to the trace source.
    * \returns \c true on success, \c false if TraceSource was not found.
    */
-  bool TraceConnect (std::string name, std::string context, const CallbackBase &cb);
+  bool TraceConnect (stdfwd::string name, stdfwd::string context, const CallbackBase &cb);
   /**
    * Connect a TraceSource to a Callback without a context.
    *
@@ -215,7 +215,7 @@ public:
    * \param [in] cb The callback to connect to the trace source.
    * \returns \c true on success, \c false if TraceSource was not found.
    */
-  bool TraceConnectWithoutContext (std::string name, const CallbackBase &cb);
+  bool TraceConnectWithoutContext (stdfwd::string name, const CallbackBase &cb);
   /**
    * Disconnect from a TraceSource a Callback previously connected
    * with a context.
@@ -227,7 +227,7 @@ public:
    * \param [in] cb The callback to disconnect from the trace source.
    * \returns \c true on success, \c false if TraceSource was not found.
    */
-  bool TraceDisconnect (std::string name, std::string context, const CallbackBase &cb);
+  bool TraceDisconnect (stdfwd::string name, stdfwd::string context, const CallbackBase &cb);
   /**
    * Disconnect from a TraceSource a Callback previously connected
    * without a context.
@@ -238,7 +238,7 @@ public:
    * \param [in] cb The callback to disconnect from the trace source.
    * \returns \c true on success, \c false if TraceSource was not found.
    */
-  bool TraceDisconnectWithoutContext (std::string name, const CallbackBase &cb);
+  bool TraceDisconnectWithoutContext (stdfwd::string name, const CallbackBase &cb);
 
 protected:
   /**

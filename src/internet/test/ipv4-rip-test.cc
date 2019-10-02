@@ -42,7 +42,7 @@
 #include "../../network/helper/node-container.h"
 #include "../model/ipv4-static-routing.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 using namespace ns3;
@@ -62,13 +62,13 @@ class Ipv4RipTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -98,7 +98,7 @@ void Ipv4RipTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv4RipTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv4RipTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -106,7 +106,7 @@ Ipv4RipTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv4RipTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv4RipTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (60),
@@ -284,13 +284,13 @@ class Ipv4RipCountToInfinityTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -320,7 +320,7 @@ void Ipv4RipCountToInfinityTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv4RipCountToInfinityTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv4RipCountToInfinityTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -328,7 +328,7 @@ Ipv4RipCountToInfinityTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv4RipCountToInfinityTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv4RipCountToInfinityTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (60),

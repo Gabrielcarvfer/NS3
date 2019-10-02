@@ -3,12 +3,14 @@
 //
 
 #include "json_loader.h"
+#include <fstream>
+#include <sstream>
 
-picojson::object load_json(std::string jsonFile)
+picojson::object load_json(stdfwd::string jsonFile)
 {
     //File and content manipulator
-    std::ifstream errorDataFile;
-    std::stringstream ss;
+    stdfwd::ifstream errorDataFile;
+    stdfwd::stringstream ss;
 
     //Read input file
     errorDataFile.open(jsonFile, std::ios::binary);
@@ -18,7 +20,7 @@ picojson::object load_json(std::string jsonFile)
     //Parse input
     picojson::value v;
     ss >> v;
-    std::string err = picojson::get_last_error();
+    stdfwd::string err = picojson::get_last_error();
     if (!err.empty())
     {
         std::cerr << err << std::endl;

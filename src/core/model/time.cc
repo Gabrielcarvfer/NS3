@@ -93,54 +93,54 @@ bool Time::StaticInit ()
 }
 
 
-Time::Time (const std::string& s)
+Time::Time (const stdfwd::string& s)
 {
   NS_LOG_FUNCTION (this << &s);
-  std::string::size_type n = s.find_first_not_of ("+-0123456789.eE");
-  if (n != std::string::npos)
+  stdfwd::string::size_type n = s.find_first_not_of ("+-0123456789.eE");
+  if (n != stdfwd::string::npos)
     { // Found non-numeric
       std::istringstream iss;
       iss.str (s.substr (0, n));
       double r;
       iss >> r;
-      std::string trailer = s.substr (n, std::string::npos);
-      if (trailer == std::string ("s"))
+      stdfwd::string trailer = s.substr (n, stdfwd::string::npos);
+      if (trailer == stdfwd::string ("s"))
         {
           *this = Time::FromDouble (r, Time::S);
         }
-      else if (trailer == std::string ("ms"))
+      else if (trailer == stdfwd::string ("ms"))
         {
           *this = Time::FromDouble (r, Time::MS);
         }
-      else if (trailer == std::string ("us"))
+      else if (trailer == stdfwd::string ("us"))
         {
           *this = Time::FromDouble (r, Time::US);
         }
-      else if (trailer == std::string ("ns"))
+      else if (trailer == stdfwd::string ("ns"))
         {
           *this = Time::FromDouble (r, Time::NS);
         }
-      else if (trailer == std::string ("ps"))
+      else if (trailer == stdfwd::string ("ps"))
         {
           *this = Time::FromDouble (r, Time::PS);
         }
-      else if (trailer == std::string ("fs"))
+      else if (trailer == stdfwd::string ("fs"))
         {
           *this = Time::FromDouble (r, Time::FS);
         }
-      else if (trailer == std::string ("min"))
+      else if (trailer == stdfwd::string ("min"))
         {
           *this = Time::FromDouble (r, Time::MIN);
         }
-      else if (trailer == std::string ("h"))
+      else if (trailer == stdfwd::string ("h"))
         {
           *this = Time::FromDouble (r, Time::H);
         }
-      else if (trailer == std::string ("d"))
+      else if (trailer == stdfwd::string ("d"))
         {
           *this = Time::FromDouble (r, Time::D);
         }
-      else if (trailer == std::string ("y"))
+      else if (trailer == stdfwd::string ("y"))
         {
           *this = Time::FromDouble (r, Time::Y);
         }
@@ -402,7 +402,7 @@ operator << (std::ostream & os, const Time & time)
 std::ostream &
 operator << (std::ostream & os, const TimeWithUnit & timeU)
 {
-  std::string unit;
+  stdfwd::string unit;
 
   switch (timeU.m_unit)
     {
@@ -434,7 +434,7 @@ operator << (std::ostream & os, const TimeWithUnit & timeU)
 std::istream &
 operator >> (std::istream & is, Time & time)
 {
-  std::string value;
+  stdfwd::string value;
   is >> value;
   time = Time (value);
   return is;
@@ -461,7 +461,7 @@ MakeTimeChecker (const Time min, const Time max)
         }
       return v->Get () >= m_minValue && v->Get () <= m_maxValue;
     }
-    virtual std::string GetValueTypeName (void) const {
+    virtual stdfwd::string GetValueTypeName (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       return "ns3::TimeValue";
     }
@@ -469,7 +469,7 @@ MakeTimeChecker (const Time min, const Time max)
       NS_LOG_FUNCTION_NOARGS ();
       return true;
     }
-    virtual std::string GetUnderlyingTypeInformation (void) const {
+    virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       std::ostringstream oss;
       oss << "Time" << " " << m_minValue << ":" << m_maxValue;

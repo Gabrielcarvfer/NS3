@@ -20,7 +20,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <queue>
 #include "../../core/model/traced-value.h"
 #include "tcp-socket.h"

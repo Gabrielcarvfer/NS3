@@ -21,7 +21,7 @@
  */
 
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/object.h"
 #include "../../spectrum/model/spectrum-interference.h"
@@ -227,7 +227,7 @@ static LenaTestPssFfMacSchedulerSuite lenaTestPssFfMacSchedulerSuite;
 // --------------- T E S T - C A S E   # 1 ------------------------------
 
 
-std::string 
+stdfwd::string
 LenaPssFfMacSchedulerTestCase1::BuildNameString (uint16_t nUser, double dist)
 {
   std::ostringstream oss;
@@ -473,7 +473,7 @@ LenaPssFfMacSchedulerTestCase1::DoRun (void)
 // --------------- T E S T - C A S E   # 2 ------------------------------
 
 
-std::string 
+stdfwd::string
 LenaPssFfMacSchedulerTestCase2::BuildNameString (uint16_t nUser, std::vector<double> dist)
 {
   std::ostringstream oss;

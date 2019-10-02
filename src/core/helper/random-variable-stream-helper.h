@@ -18,7 +18,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file
@@ -55,7 +55,7 @@ public:
    *
    * Usage would look (for node 3) like this:
    * \code
-   * std::string path ("/$ns3::NodeListPriv/NodeList/3/$ns3::Node/$ns3::RandomWaypointMobilityModel/Speed/$ns3::UniformRandomVariable");
+   * stdfwd::string path ("/$ns3::NodeListPriv/NodeList/3/$ns3::Node/$ns3::RandomWaypointMobilityModel/Speed/$ns3::UniformRandomVariable");
    * int64_t retVal = RandomVariableStreamHelper::AssignStreams (path, 0);
    * \endcode
    *
@@ -63,7 +63,7 @@ public:
    * \param path (possibly wildcarded) path to a RandomVariableStream PointerValue
    * \param stream stream number to set; must be non-negative
    */
-  static int64_t AssignStreams (std::string path, int64_t stream);
+  static int64_t AssignStreams (stdfwd::string path, int64_t stream);
 };
 
 } // namespace ns3

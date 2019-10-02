@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <sstream>
 
 #include "gnuplot-helper.h"
@@ -49,11 +49,11 @@ GnuplotHelper::GnuplotHelper ()
   // constructed later when needed.
 }
 
-GnuplotHelper::GnuplotHelper (const std::string &outputFileNameWithoutExtension,
-                              const std::string &title,
-                              const std::string &xLegend,
-                              const std::string &yLegend,
-                              const std::string &terminalType)
+GnuplotHelper::GnuplotHelper (const stdfwd::string &outputFileNameWithoutExtension,
+                              const stdfwd::string &title,
+                              const stdfwd::string &xLegend,
+                              const stdfwd::string &yLegend,
+                              const stdfwd::string &terminalType)
   : m_aggregator                     (0),
     m_plotProbeCount                 (0),
     m_outputFileNameWithoutExtension (outputFileNameWithoutExtension),
@@ -74,11 +74,11 @@ GnuplotHelper::~GnuplotHelper ()
 }
 
 void
-GnuplotHelper::ConfigurePlot (const std::string &outputFileNameWithoutExtension,
-                              const std::string &title,
-                              const std::string &xLegend,
-                              const std::string &yLegend,
-                              const std::string &terminalType)
+GnuplotHelper::ConfigurePlot (const stdfwd::string &outputFileNameWithoutExtension,
+                              const stdfwd::string &title,
+                              const stdfwd::string &xLegend,
+                              const stdfwd::string &yLegend,
+                              const stdfwd::string &terminalType)
 {
   NS_LOG_FUNCTION (this << outputFileNameWithoutExtension << title
                         << xLegend << yLegend <<  terminalType);
@@ -102,10 +102,10 @@ GnuplotHelper::ConfigurePlot (const std::string &outputFileNameWithoutExtension,
 }
 
 void
-GnuplotHelper::PlotProbe (const std::string &typeId,
-                          const std::string &path,
-                          const std::string &probeTraceSource,
-                          const std::string &title,
+GnuplotHelper::PlotProbe (const stdfwd::string &typeId,
+                          const stdfwd::string &path,
+                          const stdfwd::string &probeTraceSource,
+                          const stdfwd::string &title,
                           enum GnuplotAggregator::KeyLocation keyLocation)
 {
   NS_LOG_FUNCTION (this << typeId << path << probeTraceSource << title << keyLocation);
@@ -122,16 +122,16 @@ GnuplotHelper::PlotProbe (const std::string &typeId,
   // Set the location of the key in the plot.
   aggregator->SetKeyLocation (keyLocation);
 
-  std::string pathWithoutLastToken;
-  std::string lastToken;
+  stdfwd::string pathWithoutLastToken;
+  stdfwd::string lastToken;
 
   // See if the path has any wildcards.
-  bool pathHasNoWildcards = path.find ("*") == std::string::npos;
+  bool pathHasNoWildcards = path.find ("*") == stdfwd::string::npos;
 
   // Remove the last token from the path; this should correspond to the 
   // trace source attribute.
   size_t lastSlash = path.find_last_of ("/");
-  if (lastSlash == std::string::npos)
+  if (lastSlash == stdfwd::string::npos)
     {
       pathWithoutLastToken = path;
       lastToken = "";
@@ -142,7 +142,7 @@ GnuplotHelper::PlotProbe (const std::string &typeId,
       pathWithoutLastToken = path.substr (0, lastSlash);
 
       // Save the last token without the last slash.
-      lastToken = path.substr (lastSlash + 1, std::string::npos);
+      lastToken = path.substr (lastSlash + 1, stdfwd::string::npos);
     }
 
   // See if there are any matches for the probe's path with the last
@@ -153,7 +153,7 @@ GnuplotHelper::PlotProbe (const std::string &typeId,
   NS_LOG_DEBUG ("Found " << matchCount << " matches for trace source " << path);
 
   // This is used to make the probe's context be unique.
-  std::string matchIdentifier;
+  stdfwd::string matchIdentifier;
 
   // Hook one or more probes and the aggregator together.
   if (matchCount == 1 && pathHasNoWildcards)
@@ -180,9 +180,9 @@ GnuplotHelper::PlotProbe (const std::string &typeId,
 
           // Construct the matched path and get the matches for each
           // of the wildcards.
-          std::string wildcardSeparator = " ";
-          std::string matchedPath = matches.GetMatchedPath (i) + lastToken;
-          std::string wildcardMatches = GetWildcardMatches (path,
+          stdfwd::string wildcardSeparator = " ";
+          stdfwd::string matchedPath = matches.GetMatchedPath (i) + lastToken;
+          stdfwd::string wildcardMatches = GetWildcardMatches (path,
                                                             matchedPath,
                                                             wildcardSeparator);
 
@@ -202,9 +202,9 @@ GnuplotHelper::PlotProbe (const std::string &typeId,
 }
 
 void
-GnuplotHelper::AddProbe (const std::string &typeId,
-                         const std::string &probeName,
-                         const std::string &path)
+GnuplotHelper::AddProbe (const stdfwd::string &typeId,
+                         const stdfwd::string &probeName,
+                         const stdfwd::string &path)
 {
   NS_LOG_FUNCTION (this << typeId << probeName << path);
 
@@ -238,7 +238,7 @@ GnuplotHelper::AddProbe (const std::string &typeId,
 }
 
 void
-GnuplotHelper::AddTimeSeriesAdaptor (const std::string &adaptorName)
+GnuplotHelper::AddTimeSeriesAdaptor (const stdfwd::string &adaptorName)
 {
   NS_LOG_FUNCTION (this << adaptorName);
 
@@ -259,10 +259,10 @@ GnuplotHelper::AddTimeSeriesAdaptor (const std::string &adaptorName)
 }
 
 Ptr<Probe>
-GnuplotHelper::GetProbe (std::string probeName) const
+GnuplotHelper::GetProbe (stdfwd::string probeName) const
 {
   // Look for the probe.
-  std::map<std::string, std::pair <Ptr<Probe>, std::string> >::const_iterator mapIterator = m_probeMap.find (probeName);
+  std::map<stdfwd::string, std::pair <Ptr<Probe>, stdfwd::string> >::const_iterator mapIterator = m_probeMap.find (probeName);
 
   // Return the probe if it has been added.
   if (mapIterator != m_probeMap.end ())
@@ -307,11 +307,11 @@ GnuplotHelper::ConstructAggregator ()
 }
 
 void
-GnuplotHelper::ConnectProbeToAggregator (const std::string &typeId,
-                                         const std::string &matchIdentifier,
-                                         const std::string &path,
-                                         const std::string &probeTraceSource,
-                                         const std::string &title)
+GnuplotHelper::ConnectProbeToAggregator (const stdfwd::string &typeId,
+                                         const stdfwd::string &matchIdentifier,
+                                         const stdfwd::string &path,
+                                         const stdfwd::string &probeTraceSource,
+                                         const stdfwd::string &title)
 {
   NS_LOG_FUNCTION (this << typeId << matchIdentifier << path << probeTraceSource
                         << title);
@@ -324,10 +324,10 @@ GnuplotHelper::ConnectProbeToAggregator (const std::string &typeId,
   // Create a unique name for this probe.
   std::ostringstream probeNameStream;
   probeNameStream << "PlotProbe-" << m_plotProbeCount;
-  std::string probeName = probeNameStream.str ();
+  stdfwd::string probeName = probeNameStream.str ();
 
   // Create a unique dataset context string for this probe.
-  std::string probeContext = probeName
+  stdfwd::string probeContext = probeName
     + "/" + matchIdentifier + "/" + probeTraceSource;
 
   // Add the probe to the map of probes, which will keep the probe in
@@ -416,7 +416,7 @@ GnuplotHelper::ConnectProbeToAggregator (const std::string &typeId,
     }
 
   // Connect the adaptor to the aggregator.
-  std::string adaptorTraceSource = "Output";
+  stdfwd::string adaptorTraceSource = "Output";
   m_timeSeriesAdaptorMap[probeContext]->TraceConnect
     (adaptorTraceSource,
     probeContext,

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../model/fd-net-device.h"
@@ -52,14 +52,14 @@ public:
    *
    * \returns The device name of this device.
    */
-  std::string GetDeviceName (void);
+  stdfwd::string GetDeviceName (void);
 
   /**
    * Set the device name of this device.
    *
    * \param deviceName The device name of this device.
    */
-  void SetDeviceName (std::string deviceName);
+  void SetDeviceName (stdfwd::string deviceName);
 
 protected:
 
@@ -87,7 +87,7 @@ protected:
   /**
    * The unix/linux name of the underlying device (e.g., eth0)
    */
-  std::string m_deviceName;
+  stdfwd::string m_deviceName;
 };
 
 } // namespace ns3

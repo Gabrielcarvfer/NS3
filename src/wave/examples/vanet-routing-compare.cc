@@ -425,7 +425,7 @@ public:
    * \param packet a received packet
    * \return none
    */
-  void OnOffTrace (std::string context, Ptr<const Packet> packet);
+  void OnOffTrace (stdfwd::string context, Ptr<const Packet> packet);
 
   /**
    * \brief Returns the RoutingStats instance
@@ -487,7 +487,7 @@ private:
   uint32_t m_nSinks;              ///< number of sink nodes (< all nodes)
   int m_routingTables;      ///< dump routing table (at t=5 sec).  0=No, 1=Yes
   RoutingStats routingStats; ///< routing statistics
-  std::string m_protocolName; ///< protocol name
+  stdfwd::string m_protocolName; ///< protocol name
   int m_log; ///< log
 };
 
@@ -659,7 +659,7 @@ RoutingHelper::SetupRoutingMessages (NodeContainer & c,
     }
 }
 
-static inline std::string
+static inline stdfwd::string
 PrintReceivedRoutingPacket (Ptr<Socket> socket, Ptr<Packet> packet, Address srcAddress)
 {
   std::ostringstream oss;
@@ -697,7 +697,7 @@ RoutingHelper::ReceiveRoutingPacket (Ptr<Socket> socket)
 }
 
 void
-RoutingHelper::OnOffTrace (std::string context, Ptr<const Packet> packet)
+RoutingHelper::OnOffTrace (stdfwd::string context, Ptr<const Packet> packet)
 {
   uint32_t pktBytes = packet->GetSize ();
   routingStats.IncTxBytes (pktBytes);
@@ -756,7 +756,7 @@ public:
    * \param txPower transmission power
    * \return none
    */
-  void PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
+  void PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
 
   /**
    * \brief Callback signiture for Phy/TxDrop
@@ -764,7 +764,7 @@ public:
    * \param packet the tx packet being dropped
    * \return none
    */
-  void PhyTxDrop (std::string context, Ptr<const Packet> packet);
+  void PhyTxDrop (stdfwd::string context, Ptr<const Packet> packet);
 
   /**
    * \brief Callback signiture for Phy/RxDrop
@@ -772,7 +772,7 @@ public:
    * \param packet the rx packet being dropped
    * \return none
    */
-  void PhyRxDrop (std::string context, Ptr<const Packet> packet);
+  void PhyRxDrop (stdfwd::string context, Ptr<const Packet> packet);
 
 private:
   uint32_t m_phyTxPkts; ///< phy transmit packets
@@ -801,7 +801,7 @@ WifiPhyStats::~WifiPhyStats ()
 }
 
 void
-WifiPhyStats::PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
+WifiPhyStats::PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
 {
   NS_LOG_FUNCTION (this << context << packet << "PHYTX mode=" << mode );
   ++m_phyTxPkts;
@@ -812,13 +812,13 @@ WifiPhyStats::PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMod
 }
 
 void
-WifiPhyStats::PhyTxDrop (std::string context, Ptr<const Packet> packet)
+WifiPhyStats::PhyTxDrop (stdfwd::string context, Ptr<const Packet> packet)
 {
   NS_LOG_UNCOND ("PHY Tx Drop");
 }
 
 void
-WifiPhyStats::PhyRxDrop (std::string context, Ptr<const Packet> packet)
+WifiPhyStats::PhyRxDrop (stdfwd::string context, Ptr<const Packet> packet)
 {
   NS_LOG_UNCOND ("PHY Rx Drop");
 }
@@ -1029,14 +1029,14 @@ public:
    * \param configFilename the name of the config-store raw text file
    * \return none
    */
-  void LoadConfig (std::string configFilename);
+  void LoadConfig (stdfwd::string configFilename);
 
   /**
    * \brief Saves a configuration to a given named config-store raw text configuration file
    * \param configFilename the name of the config-store raw text file
    * \return none
    */
-  void SaveConfig (std::string configFilename);
+  void SaveConfig (stdfwd::string configFilename);
 };
 
 ConfigStoreHelper::ConfigStoreHelper ()
@@ -1044,7 +1044,7 @@ ConfigStoreHelper::ConfigStoreHelper ()
 }
 
 void
-ConfigStoreHelper::LoadConfig (std::string configFilename)
+ConfigStoreHelper::LoadConfig (stdfwd::string configFilename)
 {
   // Input config store from txt format
   Config::SetDefault ("ns3::ConfigStore::Filename", StringValue (configFilename));
@@ -1056,7 +1056,7 @@ ConfigStoreHelper::LoadConfig (std::string configFilename)
 }
 
 void
-ConfigStoreHelper::SaveConfig (std::string configFilename)
+ConfigStoreHelper::SaveConfig (stdfwd::string configFilename)
 {
   // only save if a non-empty filename has been specified
   if (configFilename.compare ("") != 0)
@@ -1247,32 +1247,32 @@ private:
    * \param mobility the mobility model
    */
   static void
-  CourseChange (std::ostream *os, std::string context, Ptr<const MobilityModel> mobility);
+  CourseChange (std::ostream *os, stdfwd::string context, Ptr<const MobilityModel> mobility);
 
   uint32_t m_port; ///< port
-  std::string m_CSVfileName; ///< CSV file name
-  std::string m_CSVfileName2; ///< CSV file name
+  stdfwd::string m_CSVfileName; ///< CSV file name
+  stdfwd::string m_CSVfileName2; ///< CSV file name
   uint32_t m_nSinks; ///< number of sinks
-  std::string m_protocolName; ///< protocol name
+  stdfwd::string m_protocolName; ///< protocol name
   double m_txp; ///< distance
   bool m_traceMobility; ///< trace mobility
   uint32_t m_protocol; ///< protocol
 
   uint32_t m_lossModel; ///< loss model
   uint32_t m_fading; ///< fading
-  std::string m_lossModelName; ///< loss model name
+  stdfwd::string m_lossModelName; ///< loss model name
 
-  std::string m_phyMode; ///< phy mode
+  stdfwd::string m_phyMode; ///< phy mode
   uint32_t m_80211mode; ///< 80211 mode
 
-  std::string m_traceFile; ///< trace file 
-  std::string m_logFile; ///< log file
+  stdfwd::string m_traceFile; ///< trace file
+  stdfwd::string m_logFile; ///< log file
   uint32_t m_mobility; ///< mobility
   uint32_t m_nNodes; ///< number of nodes
   double m_TotalSimTime; ///< total sim time
-  std::string m_rate; ///< rate
-  std::string m_phyModeB; ///< phy mode
-  std::string m_trName; ///< trace file name
+  stdfwd::string m_rate; ///< rate
+  stdfwd::string m_phyModeB; ///< phy mode
+  stdfwd::string m_trName; ///< trace file name
   int m_nodeSpeed; ///< in m/s
   int m_nodePause; ///< in s
   uint32_t m_wavePacketSize; ///< bytes
@@ -1287,8 +1287,8 @@ private:
   int m_routingTables; ///< routing tables
   int m_asciiTrace; ///< ascii trace
   int m_pcap; ///< PCAP
-  std::string m_loadConfigFilename; ///< load config file name
-  std::string m_saveConfigFilename; ///< save configi file name
+  stdfwd::string m_loadConfigFilename; ///< load config file name
+  stdfwd::string m_saveConfigFilename; ///< save configi file name
 
   WaveBsmHelper m_waveBsmHelper; ///< helper
   Ptr<RoutingHelper> m_routingHelper; ///< routing helper
@@ -1308,7 +1308,7 @@ private:
   double m_txSafetyRange9; ///< range 9
   double m_txSafetyRange10; ///< range 10
   std::vector <double> m_txSafetyRanges; ///< list of ranges
-  std::string m_exp; ///< exp
+  stdfwd::string m_exp; ///< exp
   int m_cumulativeBsmCaptureStart; ///< capture start
 };
 
@@ -1730,7 +1730,7 @@ VanetRoutingExperiment::Run ()
 // Prints actual position and velocity when a course change event occurs
 void
 VanetRoutingExperiment::
-CourseChange (std::ostream *os, std::string context, Ptr<const MobilityModel> mobility)
+CourseChange (std::ostream *os, stdfwd::string context, Ptr<const MobilityModel> mobility)
 {
   Vector pos = mobility->GetPosition (); // Get position
   Vector vel = mobility->GetVelocity (); // Get velocity
@@ -2154,9 +2154,9 @@ VanetRoutingExperiment::SetupAdhocMobilityNodes ()
       Ptr<PositionAllocator> taPositionAlloc = pos.Create ()->GetObject<PositionAllocator> ();
       m_streamIndex += taPositionAlloc->AssignStreams (m_streamIndex);
 
-      std::stringstream ssSpeed;
+      stdfwd::stringstream ssSpeed;
       ssSpeed << "ns3::UniformRandomVariable[Min=0.0|Max=" << m_nodeSpeed << "]";
-      std::stringstream ssPause;
+      stdfwd::stringstream ssPause;
       ssPause << "ns3::ConstantRandomVariable[Constant=" << m_nodePause << "]";
       mobilityAdhoc.SetMobilityModel ("ns3::RandomWaypointMobilityModel",
                                       "Speed", StringValue (ssSpeed.str ()),

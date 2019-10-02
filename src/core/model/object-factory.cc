@@ -36,7 +36,7 @@ ObjectFactory::ObjectFactory ()
   NS_LOG_FUNCTION (this);
 }
 
-ObjectFactory::ObjectFactory (std::string typeId)
+ObjectFactory::ObjectFactory (stdfwd::string typeId)
 {
   NS_LOG_FUNCTION (this << typeId);
   SetTypeId (typeId);
@@ -49,7 +49,7 @@ ObjectFactory::SetTypeId (TypeId tid)
   m_tid = tid;
 }
 void
-ObjectFactory::SetTypeId (std::string tid)
+ObjectFactory::SetTypeId (stdfwd::string tid)
 {
   NS_LOG_FUNCTION (this << tid);
   m_tid = TypeId::LookupByName (tid);
@@ -70,7 +70,7 @@ ObjectFactory::IsTypeIdSet (void) const
   return false;
 }
 void
-ObjectFactory::Set (std::string name, const AttributeValue &value)
+ObjectFactory::Set (stdfwd::string name, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (this << name << &value);
   if (name == "")
@@ -131,38 +131,38 @@ std::ostream & operator << (std::ostream &os, const ObjectFactory &factory)
 }
 std::istream & operator >> (std::istream &is, ObjectFactory &factory)
 {
-  std::string v;
+  stdfwd::string v;
   is >> v;
-  std::string::size_type lbracket, rbracket;
+  stdfwd::string::size_type lbracket, rbracket;
   lbracket = v.find ("[");
   rbracket = v.find ("]");
-  if (lbracket == std::string::npos && rbracket == std::string::npos)
+  if (lbracket == stdfwd::string::npos && rbracket == stdfwd::string::npos)
     {
       factory.SetTypeId (v);
       return is;
     }
-  if (lbracket == std::string::npos || rbracket == std::string::npos)
+  if (lbracket == stdfwd::string::npos || rbracket == stdfwd::string::npos)
     {
       return is;
     }
-  NS_ASSERT (lbracket != std::string::npos);
-  NS_ASSERT (rbracket != std::string::npos);
-  std::string tid = v.substr (0, lbracket);
-  std::string parameters = v.substr (lbracket+1,rbracket-(lbracket+1));
+  NS_ASSERT (lbracket != stdfwd::string::npos);
+  NS_ASSERT (rbracket != stdfwd::string::npos);
+  stdfwd::string tid = v.substr (0, lbracket);
+  stdfwd::string parameters = v.substr (lbracket+1,rbracket-(lbracket+1));
   factory.SetTypeId (tid);
-  std::string::size_type cur;
+  stdfwd::string::size_type cur;
   cur = 0;
   while (cur != parameters.size ())
     {
-      std::string::size_type equal = parameters.find ("=", cur);
-      if (equal == std::string::npos)
+      stdfwd::string::size_type equal = parameters.find ("=", cur);
+      if (equal == stdfwd::string::npos)
         {
           is.setstate (std::ios_base::failbit);
           break;
         }
       else
         {
-          std::string name = parameters.substr (cur, equal-cur);
+          stdfwd::string name = parameters.substr (cur, equal-cur);
           struct TypeId::AttributeInformation info;
           if (!factory.m_tid.LookupAttributeByName (name, &info))
             {
@@ -171,9 +171,9 @@ std::istream & operator >> (std::istream &is, ObjectFactory &factory)
             }
           else
             {
-              std::string::size_type next = parameters.find ("|", cur);
-              std::string value;
-              if (next == std::string::npos)
+              stdfwd::string::size_type next = parameters.find ("|", cur);
+              stdfwd::string value;
+              if (next == stdfwd::string::npos)
                 {
                   value = parameters.substr (equal+1, parameters.size () - (equal+1));
                   cur = parameters.size ();

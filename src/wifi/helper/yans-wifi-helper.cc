@@ -47,15 +47,15 @@ YansWifiChannelHelper::Default (void)
 }
 
 void
-YansWifiChannelHelper::AddPropagationLoss (std::string type,
-                                           std::string n0, const AttributeValue &v0,
-                                           std::string n1, const AttributeValue &v1,
-                                           std::string n2, const AttributeValue &v2,
-                                           std::string n3, const AttributeValue &v3,
-                                           std::string n4, const AttributeValue &v4,
-                                           std::string n5, const AttributeValue &v5,
-                                           std::string n6, const AttributeValue &v6,
-                                           std::string n7, const AttributeValue &v7)
+YansWifiChannelHelper::AddPropagationLoss (stdfwd::string type,
+                                           stdfwd::string n0, const AttributeValue &v0,
+                                           stdfwd::string n1, const AttributeValue &v1,
+                                           stdfwd::string n2, const AttributeValue &v2,
+                                           stdfwd::string n3, const AttributeValue &v3,
+                                           stdfwd::string n4, const AttributeValue &v4,
+                                           stdfwd::string n5, const AttributeValue &v5,
+                                           stdfwd::string n6, const AttributeValue &v6,
+                                           stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -71,15 +71,15 @@ YansWifiChannelHelper::AddPropagationLoss (std::string type,
 }
 
 void
-YansWifiChannelHelper::SetPropagationDelay (std::string type,
-                                            std::string n0, const AttributeValue &v0,
-                                            std::string n1, const AttributeValue &v1,
-                                            std::string n2, const AttributeValue &v2,
-                                            std::string n3, const AttributeValue &v3,
-                                            std::string n4, const AttributeValue &v4,
-                                            std::string n5, const AttributeValue &v5,
-                                            std::string n6, const AttributeValue &v6,
-                                            std::string n7, const AttributeValue &v7)
+YansWifiChannelHelper::SetPropagationDelay (stdfwd::string type,
+                                            stdfwd::string n0, const AttributeValue &v0,
+                                            stdfwd::string n1, const AttributeValue &v1,
+                                            stdfwd::string n2, const AttributeValue &v2,
+                                            stdfwd::string n3, const AttributeValue &v3,
+                                            stdfwd::string n4, const AttributeValue &v4,
+                                            stdfwd::string n5, const AttributeValue &v5,
+                                            stdfwd::string n6, const AttributeValue &v6,
+                                            stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -144,7 +144,7 @@ YansWifiPhyHelper::SetChannel (Ptr<YansWifiChannel> channel)
 }
 
 void
-YansWifiPhyHelper::SetChannel (std::string channelName)
+YansWifiPhyHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<YansWifiChannel> channel = Names::Find<YansWifiChannel> (channelName);
   m_channel = channel;

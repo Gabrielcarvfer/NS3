@@ -75,7 +75,7 @@ public:
   /**
    * \return The string representation of the header.
    */
-  std::string ToString () const;
+  stdfwd::string ToString () const;
 
   /// The possible types of content (default = NOT_SET).
   enum ContentType_t

@@ -23,7 +23,7 @@
 #include "scheduler.h"
 #include <list>
 #include <utility>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file

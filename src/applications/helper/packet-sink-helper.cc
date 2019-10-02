@@ -25,7 +25,7 @@
 
 namespace ns3 {
 
-PacketSinkHelper::PacketSinkHelper (std::string protocol, Address address)
+PacketSinkHelper::PacketSinkHelper (stdfwd::string protocol, Address address)
 {
   m_factory.SetTypeId ("ns3::PacketSink");
   m_factory.Set ("Protocol", StringValue (protocol));
@@ -33,7 +33,7 @@ PacketSinkHelper::PacketSinkHelper (std::string protocol, Address address)
 }
 
 void 
-PacketSinkHelper::SetAttribute (std::string name, const AttributeValue &value)
+PacketSinkHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
@@ -45,7 +45,7 @@ PacketSinkHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-PacketSinkHelper::Install (std::string nodeName) const
+PacketSinkHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

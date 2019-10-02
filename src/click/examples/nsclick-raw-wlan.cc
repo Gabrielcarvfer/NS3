@@ -45,7 +45,7 @@ int main (int argc, char *argv[])
 {
 #ifdef NS3_CLICK
   double rss = -80;
-  std::string clickConfigFolder = "src/click/examples";
+  stdfwd::string clickConfigFolder = "src/click/examples";
 
   CommandLine cmd;
   cmd.AddValue ("clickConfigFolder", "Base folder for click configuration files", clickConfigFolder);
@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
 
   // Get Wifi devices installed on both nodes.
   // Adapted from examples/wireless/wifi-simple-adhoc.cc
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
 
   // disable fragmentation for frames below 2200 bytes
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("2200"));

@@ -35,11 +35,11 @@ namespace {
 
 void Create2DPlotFile ()
 {
-  std::string fileNameWithNoExtension = "plot-2d";
-  std::string graphicsFileName        = fileNameWithNoExtension + ".png";
-  std::string plotFileName            = fileNameWithNoExtension + ".plt";
-  std::string plotTitle               = "2-D Plot";
-  std::string dataTitle               = "2-D Data";
+  stdfwd::string fileNameWithNoExtension = "plot-2d";
+  stdfwd::string graphicsFileName        = fileNameWithNoExtension + ".png";
+  stdfwd::string plotFileName            = fileNameWithNoExtension + ".plt";
+  stdfwd::string plotTitle               = "2-D Plot";
+  stdfwd::string dataTitle               = "2-D Data";
 
   // Instantiate the plot and set its title.
   Gnuplot plot (graphicsFileName);
@@ -101,11 +101,11 @@ void Create2DPlotFile ()
 
 void Create2DPlotWithErrorBarsFile ()
 {
-  std::string fileNameWithNoExtension = "plot-2d-with-error-bars";
-  std::string graphicsFileName        = fileNameWithNoExtension + ".png";
-  std::string plotFileName            = fileNameWithNoExtension + ".plt";
-  std::string plotTitle               = "2-D Plot With Error Bars";
-  std::string dataTitle               = "2-D Data With Error Bars";
+  stdfwd::string fileNameWithNoExtension = "plot-2d-with-error-bars";
+  stdfwd::string graphicsFileName        = fileNameWithNoExtension + ".png";
+  stdfwd::string plotFileName            = fileNameWithNoExtension + ".plt";
+  stdfwd::string plotTitle               = "2-D Plot With Error Bars";
+  stdfwd::string dataTitle               = "2-D Data With Error Bars";
 
   // Instantiate the plot and set its title.
   Gnuplot plot (graphicsFileName);
@@ -179,11 +179,11 @@ void Create2DPlotWithErrorBarsFile ()
 
 void Create3DPlotFile ()
 {
-  std::string fileNameWithNoExtension = "plot-3d";
-  std::string graphicsFileName        = fileNameWithNoExtension + ".png";
-  std::string plotFileName            = fileNameWithNoExtension + ".plt";
-  std::string plotTitle               = "3-D Plot";
-  std::string dataTitle               = "3-D Data";
+  stdfwd::string fileNameWithNoExtension = "plot-3d";
+  stdfwd::string graphicsFileName        = fileNameWithNoExtension + ".png";
+  stdfwd::string plotFileName            = fileNameWithNoExtension + ".plt";
+  stdfwd::string plotTitle               = "3-D Plot";
+  stdfwd::string dataTitle               = "3-D Data";
 
   // Instantiate the plot and set its title.
   Gnuplot plot (graphicsFileName);

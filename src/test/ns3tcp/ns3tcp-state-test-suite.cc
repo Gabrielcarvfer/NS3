@@ -17,7 +17,7 @@
  */
 
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/log.h"
 #include "../../core/model/abort.h"
@@ -81,7 +81,7 @@ private:
   virtual void DoRun (void);
   virtual void DoTeardown (void);
 
-  std::string m_pcapFilename;
+  stdfwd::string m_pcapFilename;
   PcapFile m_pcapFile;
   uint32_t m_testCase;
   uint32_t m_totalTxBytes;
@@ -91,8 +91,8 @@ private:
   bool m_writeLogging;
   bool m_needToClose;
 
-  void Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
-  void Ipv4L3Rx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
+  void Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
+  void Ipv4L3Rx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
   void WriteUntilBufferFull (Ptr<Socket> localSocket, uint32_t txSpace);
   void StartFlow (Ptr<Socket> localSocket,
                   Ipv4Address servAddress,
@@ -157,7 +157,7 @@ Ns3TcpStateTestCase::DoTeardown (void)
 }
 
 void
-Ns3TcpStateTestCase::Ipv4L3Rx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
+Ns3TcpStateTestCase::Ipv4L3Rx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
 {
   Ptr<Packet> received = packet->Copy ();
   Ipv4Header ipHeader;
@@ -169,7 +169,7 @@ Ns3TcpStateTestCase::Ipv4L3Rx (std::string context, Ptr<const Packet> packet, Pt
 }
 
 void
-Ns3TcpStateTestCase::Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
+Ns3TcpStateTestCase::Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
 {
   //
   // We're not testing IP so remove and toss the header.  In order to do this,
@@ -302,7 +302,7 @@ Ns3TcpStateTestCase::DoRun (void)
   //           10Mb/s, 0.1ms      10Mb/s, 0.1ms
   //       n0-----------------n1-----------------n2
 
-  std::string tcpModel ("ns3::TcpNewReno");
+  stdfwd::string tcpModel ("ns3::TcpNewReno");
 
   Config::SetDefault ("ns3::TcpSocketBase::Sack", BooleanValue (false));
   Config::SetDefault ("ns3::TcpL4Protocol::SocketType", StringValue (tcpModel));
@@ -391,7 +391,7 @@ Ns3TcpStateTestCase::DoRun (void)
 
   std::list<uint32_t> dropListN0;
   std::list<uint32_t> dropListN1;
-  std::string caseDescription;
+  stdfwd::string caseDescription;
   switch (m_testCase)
     {
     case 0:

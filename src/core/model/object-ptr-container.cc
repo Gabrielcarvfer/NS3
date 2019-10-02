@@ -72,7 +72,7 @@ ObjectPtrContainerValue::Copy (void) const
   NS_LOG_FUNCTION (this);
   return ns3::Create<ObjectPtrContainerValue> (*this);
 }
-std::string 
+stdfwd::string
 ObjectPtrContainerValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 {
   NS_LOG_FUNCTION (this << checker);
@@ -89,7 +89,7 @@ ObjectPtrContainerValue::SerializeToString (Ptr<const AttributeChecker> checker)
   return oss.str ();
 }
 bool 
-ObjectPtrContainerValue::DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker)
+ObjectPtrContainerValue::DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker)
 {
   NS_LOG_FUNCTION (this << value << checker);
   NS_FATAL_ERROR ("cannot deserialize a set of object pointers.");

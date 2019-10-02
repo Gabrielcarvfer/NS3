@@ -58,7 +58,7 @@ public:
    * \param obj ns3::Object to connect to
    * \return true if the trace source was successfully connected
    */
-  virtual bool ConnectByObject (std::string traceSource, Ptr<Object> obj) = 0;
+  virtual bool ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj) = 0;
 
   /**
    * \brief connect to a trace source provided by a config path
@@ -68,7 +68,7 @@ public:
    * Note, if an invalid path is provided, the probe will not be connected
    * to anything.
    */
-  virtual void ConnectByPath (std::string path) = 0;
+  virtual void ConnectByPath (stdfwd::string path) = 0;
 
 protected:
   /// Time when logging starts.

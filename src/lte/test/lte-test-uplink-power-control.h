@@ -54,7 +54,7 @@ public:
    *
    * \param name the reference name
    */
-  LteUplinkPowerControlTestCase (std::string name);
+  LteUplinkPowerControlTestCase (stdfwd::string name);
   virtual ~LteUplinkPowerControlTestCase ();
 
   /**
@@ -136,7 +136,7 @@ public:
    *
    * \param name the reference name
    */
-  LteUplinkOpenLoopPowerControlTestCase (std::string name);
+  LteUplinkOpenLoopPowerControlTestCase (stdfwd::string name);
   virtual ~LteUplinkOpenLoopPowerControlTestCase ();
 
 private:
@@ -157,7 +157,7 @@ public:
    *
    * \param name the reference name
    */
-  LteUplinkClosedLoopPowerControlAbsoluteModeTestCase (std::string name);
+  LteUplinkClosedLoopPowerControlAbsoluteModeTestCase (stdfwd::string name);
   virtual ~LteUplinkClosedLoopPowerControlAbsoluteModeTestCase ();
 
 private:
@@ -178,7 +178,7 @@ public:
    *
    * \param name the reference name
    */
-  LteUplinkClosedLoopPowerControlAccumulatedModeTestCase (std::string name);
+  LteUplinkClosedLoopPowerControlAccumulatedModeTestCase (stdfwd::string name);
   virtual ~LteUplinkClosedLoopPowerControlAccumulatedModeTestCase ();
 
 private:

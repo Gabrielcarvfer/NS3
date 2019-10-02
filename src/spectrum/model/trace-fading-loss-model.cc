@@ -96,7 +96,7 @@ TraceFadingLossModel::GetTypeId (void)
 }
 
 void
-TraceFadingLossModel::SetTraceFileName (std::string fileName)
+TraceFadingLossModel::SetTraceFileName (stdfwd::string fileName)
 {
   NS_LOG_FUNCTION (this << "Set Fading Trace " << fileName);
   

@@ -63,11 +63,11 @@ void DataCollector::DoDispose () {
 }
 
 void
-DataCollector::DescribeRun (std::string experiment,
-                            std::string strategy,
-                            std::string input,
-                            std::string runID,
-                            std::string description)
+DataCollector::DescribeRun (stdfwd::string experiment,
+                            stdfwd::string strategy,
+                            stdfwd::string input,
+                            stdfwd::string runID,
+                            stdfwd::string description)
 {
   NS_LOG_FUNCTION (this << experiment << strategy << input << runID << description);
 
@@ -104,35 +104,35 @@ DataCollector::DataCalculatorEnd ()
 }
 
 void
-DataCollector::AddMetadata (std::string key, std::string value)
+DataCollector::AddMetadata (stdfwd::string key, stdfwd::string value)
 {
   NS_LOG_FUNCTION (this << key << value);
 
-  std::pair<std::string, std::string> blob (key, value);
+  std::pair<stdfwd::string, stdfwd::string> blob (key, value);
   m_metadata.push_back (blob);
   // end DataCollector::AddMetadata
 }
 void
-DataCollector::AddMetadata (std::string key, uint32_t value)
+DataCollector::AddMetadata (stdfwd::string key, uint32_t value)
 {
   NS_LOG_FUNCTION (this << key << value);
 
-  std::stringstream st;
+  stdfwd::stringstream st;
   st << value;
 
-  std::pair<std::string, std::string> blob (key, st.str ());
+  std::pair<stdfwd::string, stdfwd::string> blob (key, st.str ());
   m_metadata.push_back (blob);
   // end DataCollector::AddMetadata
 }
 void
-DataCollector::AddMetadata (std::string key, double value)
+DataCollector::AddMetadata (stdfwd::string key, double value)
 {
   NS_LOG_FUNCTION (this << key << value);
 
-  std::stringstream st;
+  stdfwd::stringstream st;
   st << value;
 
-  std::pair<std::string, std::string> blob (key, st.str ());
+  std::pair<stdfwd::string, stdfwd::string> blob (key, st.str ());
   m_metadata.push_back (blob);
   // end DataCollector::AddMetadata
 }

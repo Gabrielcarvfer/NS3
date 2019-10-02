@@ -45,7 +45,7 @@ public:
    * \param buffer Buffer to test.
    * \param size Buffer size.
    */
-  PbbTestCase (std::string name, Ptr<PbbPacket> packet,
+  PbbTestCase (stdfwd::string name, Ptr<PbbPacket> packet,
                uint8_t * buffer, uint32_t size);
   virtual ~PbbTestCase (void);
 
@@ -62,7 +62,7 @@ private:
   Buffer m_refBuffer; //!< Reference buffer
 };
 
-PbbTestCase::PbbTestCase (std::string name, Ptr<PbbPacket> packet,
+PbbTestCase::PbbTestCase (stdfwd::string name, Ptr<PbbPacket> packet,
                           uint8_t * buffer, uint32_t size)
   : TestCase (name)
 {

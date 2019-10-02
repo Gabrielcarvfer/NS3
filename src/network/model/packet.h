@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "buffer.h"
 #include "header.h"
 #include "trailer.h"
@@ -492,7 +492,7 @@ public:
    *
    * \return String representation
    */
-  std::string ToString (void) const;
+  stdfwd::string ToString (void) const;
 
   /**
    * \brief Returns an iterator which points to the first 'item'

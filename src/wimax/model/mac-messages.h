@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 
 namespace ns3 {
@@ -78,7 +78,7 @@ public:
   uint8_t GetType (void) const;
 
   /** \returns the name field */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -100,7 +100,7 @@ private:
 
 // ---------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/utils/mac48-address.h"
 #include "service-flow.h"
@@ -261,7 +261,7 @@ public:
   /**
    * \return name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * Register this type.
    * \return The TypeId.
@@ -348,7 +348,7 @@ private:
 
 // ---------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/model/buffer.h"
 #include "cid.h"
@@ -413,7 +413,7 @@ public:
   /**
    * \return the service name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -439,7 +439,7 @@ private:
 
 // ---------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/model/buffer.h"
 #include "cid.h"
@@ -517,7 +517,7 @@ public:
   /**
    * \return the service name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -544,7 +544,7 @@ private:
 
 // ---------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/model/buffer.h"
 
@@ -589,7 +589,7 @@ public:
    * Get name field
    * \return the name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -611,7 +611,7 @@ private:
 
 // ---------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/utils/mac48-address.h"
 #include "service-flow.h"
@@ -665,7 +665,7 @@ public:
    * \brief Get name field
    * \returns the name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId

@@ -53,7 +53,7 @@ public:
   Time m_sifs;           //!< SIFS time duration.
   Time m_simTime;        //!< Simulation time per trial
 
-  std::string m_gnuplotfile;    //!< Filename for GnuPlot.
+  stdfwd::string m_gnuplotfile;    //!< Filename for GnuPlot.
 
   uint32_t m_bytesTotal; //!< Total number of bytes received in a simulation run.
 
@@ -89,7 +89,7 @@ public:
   UanTxMode CreateMode (uint32_t kass,
                         uint32_t fc,
                         bool upperblock,
-                        std::string name);
+                        stdfwd::string name);
   /**
    * Create m_numRates matching control and data modes.
    *

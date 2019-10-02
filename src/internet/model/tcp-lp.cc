@@ -229,7 +229,7 @@ TcpLp::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked,
   m_lastDrop = timestamp;
 }
 
-std::string
+stdfwd::string
 TcpLp::GetName () const
 {
   return "TcpLp";

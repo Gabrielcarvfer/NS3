@@ -92,7 +92,7 @@ SpectrumAnalyzerHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-SpectrumAnalyzerHelper::SetChannel (std::string channelName)
+SpectrumAnalyzerHelper::SetChannel (stdfwd::string channelName)
 {
   NS_LOG_FUNCTION (this);
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
@@ -101,7 +101,7 @@ SpectrumAnalyzerHelper::SetChannel (std::string channelName)
 
 
 void
-SpectrumAnalyzerHelper::SetPhyAttribute (std::string name, const AttributeValue &v)
+SpectrumAnalyzerHelper::SetPhyAttribute (stdfwd::string name, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_phy.Set (name, v);
@@ -109,22 +109,22 @@ SpectrumAnalyzerHelper::SetPhyAttribute (std::string name, const AttributeValue 
 
 
 void
-SpectrumAnalyzerHelper::SetDeviceAttribute (std::string name, const AttributeValue &v)
+SpectrumAnalyzerHelper::SetDeviceAttribute (stdfwd::string name, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_device.Set (name, v);
 }
 
 void
-SpectrumAnalyzerHelper::SetAntenna (std::string type,
-                                    std::string n0, const AttributeValue &v0,
-                                    std::string n1, const AttributeValue &v1,
-                                    std::string n2, const AttributeValue &v2,
-                                    std::string n3, const AttributeValue &v3,
-                                    std::string n4, const AttributeValue &v4,
-                                    std::string n5, const AttributeValue &v5,
-                                    std::string n6, const AttributeValue &v6,
-                                    std::string n7, const AttributeValue &v7)
+SpectrumAnalyzerHelper::SetAntenna (stdfwd::string type,
+                                    stdfwd::string n0, const AttributeValue &v0,
+                                    stdfwd::string n1, const AttributeValue &v1,
+                                    stdfwd::string n2, const AttributeValue &v2,
+                                    stdfwd::string n3, const AttributeValue &v3,
+                                    stdfwd::string n4, const AttributeValue &v4,
+                                    stdfwd::string n5, const AttributeValue &v5,
+                                    stdfwd::string n6, const AttributeValue &v6,
+                                    stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -148,7 +148,7 @@ SpectrumAnalyzerHelper::SetRxSpectrumModel (Ptr<SpectrumModel> m)
 }
 
 void
-SpectrumAnalyzerHelper::EnableAsciiAll (std::string prefix)
+SpectrumAnalyzerHelper::EnableAsciiAll (stdfwd::string prefix)
 {
   NS_LOG_FUNCTION (this);
   m_prefix = prefix;
@@ -197,7 +197,7 @@ SpectrumAnalyzerHelper::Install (NodeContainer c) const
         {
           NS_LOG_LOGIC ("creating new output stream and binding it to the callback");
           AsciiTraceHelper asciiTraceHelper;
-          std::string filename;
+          stdfwd::string filename;
           filename = asciiTraceHelper.GetFilenameFromDevice (m_prefix, dev);
           Ptr<OutputStreamWrapper> stream = asciiTraceHelper.CreateFileStream (filename);
 
@@ -224,7 +224,7 @@ SpectrumAnalyzerHelper::Install (Ptr<Node> node) const
 }
 
 NetDeviceContainer
-SpectrumAnalyzerHelper::Install (std::string nodeName) const
+SpectrumAnalyzerHelper::Install (stdfwd::string nodeName) const
 {
   NS_LOG_FUNCTION (this);
   Ptr<Node> node = Names::Find<Node> (nodeName);

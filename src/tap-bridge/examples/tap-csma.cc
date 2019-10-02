@@ -72,8 +72,8 @@ NS_LOG_COMPONENT_DEFINE ("TapCsmaExample");
 int 
 main (int argc, char *argv[])
 {
-  std::string mode = "ConfigureLocal";
-  std::string tapName = "thetap";
+  stdfwd::string mode = "ConfigureLocal";
+  stdfwd::string tapName = "thetap";
 
   CommandLine cmd;
   cmd.AddValue ("mode", "Mode setting of TapBridge", mode);

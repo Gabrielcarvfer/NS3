@@ -48,7 +48,7 @@ public:
    * \param pkt the packet
    * \returns the text string
    */
-  static std::string sprintPacketContentsHex (Ptr<Packet> pkt)
+  static stdfwd::string sprintPacketContentsHex (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
     uint8_t buffer[psize];
@@ -58,7 +58,7 @@ public:
       {
         sprintf (&sbuffer[i * 3],"%02x ",buffer[i]);
       }
-    return std::string (sbuffer);
+    return stdfwd::string (sbuffer);
   }
 
   /**
@@ -66,7 +66,7 @@ public:
    * \param pkt the packet
    * \returns the text string
    */
-  static std::string sprintPacketContentsBin (Ptr<Packet> pkt)
+  static stdfwd::string sprintPacketContentsBin (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
     uint8_t buffer[psize];
@@ -76,7 +76,7 @@ public:
       {
         oss << (std::bitset<8> (buffer[i]));
       }
-    return std::string (oss.str () + "\n");
+    return stdfwd::string (oss.str () + "\n");
   }
 
   /**
@@ -96,7 +96,7 @@ public:
    * \param s the string
    */
   template <class T>
-  static void LogPacketInfo (T source,std::string s)
+  static void LogPacketInfo (T source,stdfwd::string s)
   {
     NS_LOG_DEBUG ("--------- " << s.data () << " INFO: -------");
     std::ostringstream oss (std::ostringstream::out);
@@ -120,7 +120,7 @@ public:
    * Constructor
    * \param s the reference name
    */
-  RrcHeaderTestCase (std::string s);
+  RrcHeaderTestCase (stdfwd::string s);
   virtual void DoRun (void) = 0;
   /**
    * \brief Create radio resource config dedicated
@@ -138,7 +138,7 @@ protected:
   Ptr<Packet> packet; ///< the packet
 };
 
-RrcHeaderTestCase::RrcHeaderTestCase (std::string s) : TestCase (s)
+RrcHeaderTestCase::RrcHeaderTestCase (stdfwd::string s) : TestCase (s)
 {
 }
 

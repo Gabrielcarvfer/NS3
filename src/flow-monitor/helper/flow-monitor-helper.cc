@@ -50,7 +50,7 @@ FlowMonitorHelper::~FlowMonitorHelper ()
 }
 
 void 
-FlowMonitorHelper::SetMonitorAttribute (std::string n1, const AttributeValue &v1)
+FlowMonitorHelper::SetMonitorAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_monitorFactory.Set (n1, v1);
 }
@@ -154,7 +154,7 @@ FlowMonitorHelper::SerializeToXmlStream (std::ostream &os, uint16_t indent, bool
     }
 }
 
-std::string
+stdfwd::string
 FlowMonitorHelper::SerializeToXmlString (uint16_t indent, bool enableHistograms, bool enableProbes)
 {
   std::ostringstream os;
@@ -166,7 +166,7 @@ FlowMonitorHelper::SerializeToXmlString (uint16_t indent, bool enableHistograms,
 }
 
 void
-FlowMonitorHelper::SerializeToXmlFile (std::string fileName, bool enableHistograms, bool enableProbes)
+FlowMonitorHelper::SerializeToXmlFile (stdfwd::string fileName, bool enableHistograms, bool enableProbes)
 {
   if (m_flowMonitor)
     {

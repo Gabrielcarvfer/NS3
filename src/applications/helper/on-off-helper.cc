@@ -29,7 +29,7 @@
 
 namespace ns3 {
 
-OnOffHelper::OnOffHelper (std::string protocol, Address address)
+OnOffHelper::OnOffHelper (stdfwd::string protocol, Address address)
 {
   m_factory.SetTypeId ("ns3::OnOffApplication");
   m_factory.Set ("Protocol", StringValue (protocol));
@@ -37,7 +37,7 @@ OnOffHelper::OnOffHelper (std::string protocol, Address address)
 }
 
 void 
-OnOffHelper::SetAttribute (std::string name, const AttributeValue &value)
+OnOffHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
@@ -49,7 +49,7 @@ OnOffHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-OnOffHelper::Install (std::string nodeName) const
+OnOffHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

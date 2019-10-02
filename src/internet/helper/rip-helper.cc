@@ -78,7 +78,7 @@ RipHelper::Create (Ptr<Node> node) const
 }
 
 void
-RipHelper::Set (std::string name, const AttributeValue &value)
+RipHelper::Set (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }

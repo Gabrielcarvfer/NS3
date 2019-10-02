@@ -18,7 +18,6 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#include <string>
 #include <vector>
 #include "get-wildcard-matches.h"
 #include "../../core/model/assert.h"

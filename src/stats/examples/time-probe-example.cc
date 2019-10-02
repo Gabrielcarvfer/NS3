@@ -35,7 +35,7 @@
 // The stopTime defaults to 100 seconds but can be changed by an argument.
 //
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "../model/time-probe.h"
@@ -111,7 +111,7 @@ Emitter::Emit (void)
 
 // This is a function to test hooking a raw function to the trace source
 void
-NotifyViaTraceSource (std::string context, Time oldVal, Time newVal)
+NotifyViaTraceSource (stdfwd::string context, Time oldVal, Time newVal)
 {
   BooleanValue verbose;
   GlobalValue::GetValueByName ("verbose", verbose);
@@ -123,7 +123,7 @@ NotifyViaTraceSource (std::string context, Time oldVal, Time newVal)
 
 // This is a function to test hooking it to the probe output
 void
-NotifyViaProbe (std::string context, double oldVal, double newVal)
+NotifyViaProbe (stdfwd::string context, double oldVal, double newVal)
 {
   BooleanValue verbose;
   GlobalValue::GetValueByName ("verbose", verbose);

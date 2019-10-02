@@ -654,20 +654,20 @@ private:
    * \param p the packet
    * \param adr the address
    */
-  void L7Receive (std::string context, Ptr<const Packet> p, const Address &adr);
+  void L7Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr);
   /**
    * Callback invoked when PHY transmits a packet
    * \param context the context
    * \param p the packet
    * \param power the tx power
    */
-  void Transmit (std::string context, Ptr<const Packet> p, double power);
+  void Transmit (stdfwd::string context, Ptr<const Packet> p, double power);
   /**
    * Callback invoked when PHY receives a packet
    * \param context the context
    * \param p the packet
    */
-  void Receive (std::string context, Ptr<const Packet> p);
+  void Receive (stdfwd::string context, Ptr<const Packet> p);
 };
 
 void
@@ -693,7 +693,7 @@ BlockAckAggregationDisabledTest::~BlockAckAggregationDisabledTest ()
 }
 
 void
-BlockAckAggregationDisabledTest::L7Receive (std::string context, Ptr<const Packet> p, const Address &adr)
+BlockAckAggregationDisabledTest::L7Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr)
 {
   if (p->GetSize () == 1400)
     {
@@ -702,7 +702,7 @@ BlockAckAggregationDisabledTest::L7Receive (std::string context, Ptr<const Packe
 }
 
 void
-BlockAckAggregationDisabledTest::Transmit (std::string context, Ptr<const Packet> p, double power)
+BlockAckAggregationDisabledTest::Transmit (stdfwd::string context, Ptr<const Packet> p, double power)
 {
   WifiMacHeader hdr;
   p->PeekHeader (hdr);
@@ -719,7 +719,7 @@ BlockAckAggregationDisabledTest::Transmit (std::string context, Ptr<const Packet
 }
 
 void
-BlockAckAggregationDisabledTest::Receive (std::string context, Ptr<const Packet> p)
+BlockAckAggregationDisabledTest::Receive (stdfwd::string context, Ptr<const Packet> p)
 {
   WifiMacHeader hdr;
   p->PeekHeader (hdr);

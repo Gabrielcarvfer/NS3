@@ -123,11 +123,11 @@ ReplaceTimePrinter (void)
 int main (int argc, char *argv[])
 {
   bool replaceTimePrinter = false;
-  std::string resolution = "Time::NS";
+  stdfwd::string resolution = "Time::NS";
   LogComponentEnable ("RandomVariableStream", LOG_LEVEL_ALL);
   LogComponentEnableAll (LOG_PREFIX_TIME);
 
-  std::map<std::string, Time::Unit> resolutionMap = {{"Time::US", Time::US}, {"Time::NS", Time::NS}, {"Time::PS", Time::PS}, {"Time::FS", Time::FS}};
+  std::map<stdfwd::string, Time::Unit> resolutionMap = {{"Time::US", Time::US}, {"Time::NS", Time::NS}, {"Time::PS", Time::PS}, {"Time::FS", Time::FS}};
 
   CommandLine cmd;
   cmd.AddValue ("replaceTimePrinter", "replace time printing function", replaceTimePrinter);

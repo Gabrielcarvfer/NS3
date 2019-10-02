@@ -69,7 +69,7 @@ double dround (double number, double precision)
 static GnuplotDataset
 Histogram (Ptr<RandomVariableStream> rndvar,
             unsigned int probes, double precision,
-            const std::string& title, bool impulses = false)
+            const stdfwd::string& title, bool impulses = false)
 {
   typedef std::map<double, unsigned int> histogram_maptype;
   histogram_maptype histogram;

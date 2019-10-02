@@ -158,7 +158,7 @@ PacketSocketClient::Send (void)
 
   Ptr<Packet> p = Create<Packet> (m_size);
 
-  std::stringstream peerAddressStringStream;
+  stdfwd::stringstream peerAddressStringStream;
   peerAddressStringStream << PacketSocketAddress::ConvertFrom (m_peerAddress);
 
   if ((m_socket->Send (p)) >= 0)

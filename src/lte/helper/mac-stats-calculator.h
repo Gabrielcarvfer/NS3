@@ -25,7 +25,7 @@
 #include "lte-stats-calculator.h"
 #include "../../core/model/nstime.h"
 #include "../../core/model/uinteger.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 #include "../model/lte-enb-mac.h"
 
@@ -69,26 +69,26 @@ public:
    *
    * \param outputFilename string with the name of the file
    */
-  void SetUlOutputFilename (std::string outputFilename);
+  void SetUlOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the uplink statistics will be stored.
    * @return the name of the file where the uplink statistics will be stored
    */
-  std::string GetUlOutputFilename (void);
+  stdfwd::string GetUlOutputFilename (void);
 
   /**
    * Set the name of the file where the downlink statistics will be stored.
    *
    * @param outputFilename string with the name of the file
    */
-  void SetDlOutputFilename (std::string outputFilename);
+  void SetDlOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the downlink statistics will be stored.
    * @return the name of the file where the downlink statistics will be stored
    */
-  std::string GetDlOutputFilename (void);
+  stdfwd::string GetDlOutputFilename (void);
 
   /**
    * Notifies the stats calculator that an downlink scheduling has occurred.
@@ -129,7 +129,7 @@ public:
    * \param path 
    * \param dlSchedulingCallbackInfo DlSchedulingCallbackInfo structure containing all downlink information that is generated what DlScheduling traces is fired
    */
-  static void DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path, DlSchedulingCallbackInfo dlSchedulingCallbackInfo);
+  static void DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, stdfwd::string path, DlSchedulingCallbackInfo dlSchedulingCallbackInfo);
 
   /** 
    * Trace sink for the ns3::LteEnbMac::UlScheduling trace source
@@ -143,7 +143,7 @@ public:
    * \param size 
    * \param componentCarrierId
    */
-  static void UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path,
+  static void UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, stdfwd::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                              uint8_t mcs, uint16_t size, uint8_t componentCarrierId);
 

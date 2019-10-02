@@ -129,7 +129,7 @@ UeMemberLteUePhySapProvider::NotifyConnectionSuccessful ()
 ////////////////////////////////////////
 
 /// Map each of UE PHY states to its string representation.
-static const std::string g_uePhyStateName[LteUePhy::NUM_STATES] =
+static const stdfwd::string g_uePhyStateName[LteUePhy::NUM_STATES] =
 {
   "CELL_SEARCH",
   "SYNCHRONIZED"
@@ -139,7 +139,7 @@ static const std::string g_uePhyStateName[LteUePhy::NUM_STATES] =
  * \param s The UE PHY state.
  * \return The string representation of the given state.
  */
-static inline const std::string & ToString (LteUePhy::State s)
+static inline const stdfwd::string & ToString (LteUePhy::State s)
 {
   return g_uePhyStateName[s];
 }

@@ -84,14 +84,14 @@ struct TestCaseFailure
    * \param [in] _file    The source file.
    * \param [in] _line    The source line.
    */
-  TestCaseFailure (std::string _cond, std::string _actual, 
-                   std::string _limit, std::string _message, 
-                   std::string _file, int32_t _line);
-  std::string cond;    /**< The name of the condition being tested. */
-  std::string actual;  /**< The actual value returned by the test. */
-  std::string limit;   /**< The expected value. */
-  std::string message; /**< The associated message. */
-  std::string file;    /**< The source file. */
+  TestCaseFailure (stdfwd::string _cond, stdfwd::string _actual,
+                   stdfwd::string _limit, stdfwd::string _message,
+                   stdfwd::string _file, int32_t _line);
+  stdfwd::string cond;    /**< The name of the condition being tested. */
+  stdfwd::string actual;  /**< The actual value returned by the test. */
+  stdfwd::string limit;   /**< The expected value. */
+  stdfwd::string message; /**< The associated message. */
+  stdfwd::string file;    /**< The source file. */
   int32_t line;        /**< The source line. */
 };
 /**
@@ -163,12 +163,12 @@ public:
    *
    * \returns The path to the root.
    */
-  std::string GetTopLevelSourceDir (void) const;
+  stdfwd::string GetTopLevelSourceDir (void) const;
   /**
    * Get the path to temporary directory.
    * \return The temporary directory path.
    */
-  std::string GetTempDir (void) const;
+  stdfwd::string GetTempDir (void) const;
   /** \copydoc TestRunner::Run() */
   int Run (int argc, char *argv[]);
 
@@ -179,7 +179,7 @@ private:
    * \param [in] path The path to test.
    * \returns \c true if \p path is the root.
    */
-  bool IsTopLevelSourceDir (std::string path) const;
+  bool IsTopLevelSourceDir (stdfwd::string path) const;
   /**
    * Clean up characters not allowed in XML.
    *
@@ -199,7 +199,7 @@ private:
    * \param [in] xml The raw string.
    * \returns The sanitized string.
    */
-  std::string ReplaceXmlSpecialCharacters (std::string xml) const;
+  stdfwd::string ReplaceXmlSpecialCharacters (stdfwd::string xml) const;
   /**
    * Print the test report.
    *
@@ -237,7 +237,7 @@ private:
    * \param [in] maximumTestDuration Restrict to tests shorter than this.
    * \returns The list of tests matching the filter constraints.
    */
-  std::list<TestCase *> FilterTests (std::string testName,
+  std::list<TestCase *> FilterTests (stdfwd::string testName,
                                      enum TestSuite::Type testType,
                                      enum TestCase::TestDuration maximumTestDuration);
 
@@ -246,7 +246,7 @@ private:
   typedef std::vector<TestSuite *> TestSuiteVector;
 
   TestSuiteVector m_suites;  //!< The list of tests.
-  std::string m_tempDir;     //!< The temporary directory.
+  stdfwd::string m_tempDir;     //!< The temporary directory.
   bool m_verbose;            //!< Produce verbose output.
   bool m_assertOnFailure;    //!< \c true if we should assert on failure.
   bool m_continueOnFailure;  //!< \c true if we should continue on failure.
@@ -255,9 +255,9 @@ private:
 
 
 
-TestCaseFailure::TestCaseFailure (std::string _cond, std::string _actual, 
-                                  std::string _limit, std::string _message, 
-                                  std::string _file, int32_t _line)
+TestCaseFailure::TestCaseFailure (stdfwd::string _cond, stdfwd::string _actual,
+                                  stdfwd::string _limit, stdfwd::string _message,
+                                  stdfwd::string _file, int32_t _line)
   : cond (_cond), actual (_actual), limit (_limit),
     message (_message), file (_file), line (_line)
 {
@@ -271,7 +271,7 @@ TestCase::Result::Result ()
 
 
 
-TestCase::TestCase (std::string name)
+TestCase::TestCase (stdfwd::string name)
   : m_parent (0),
     m_dataDir (""),
     m_runner (0),
@@ -312,15 +312,15 @@ TestCase::AddTestCase (TestCase *testCase, enum TestCase::TestDuration duration)
   // tests with "val = v1 * v2" or "v1 < 3" or "case: foo --> bar"
   // So we allow ':<>*" 
 
-  std::string badchars = "\"/\\|?";
+  stdfwd::string badchars = "\"/\\|?";
   // Badchar Class  Regex          Count of failing test names
   // All            ":<>\"/\\|?*"  611
   // Allow ':'      "<>\"/\\|?*"   128
   // Allow ':<>'    "\"/\\|?*"      12
   // Allow ':<>*'    "\"/\\|?"       0
 
-  std::string::size_type badch = testCase->m_name.find_first_of (badchars);
-  if (badch != std::string::npos)
+  stdfwd::string::size_type badch = testCase->m_name.find_first_of (badchars);
+  if (badch != stdfwd::string::npos)
     {
       /*
         To count the bad test names, use NS_LOG_UNCOND instead
@@ -366,7 +366,7 @@ TestCase::Run (TestRunnerImpl *runner)
   DoTeardown ();
   m_runner = 0;
 }
-std::string 
+stdfwd::string
 TestCase::GetName (void) const
 {
   NS_LOG_FUNCTION (this);
@@ -379,9 +379,9 @@ TestCase::GetParent () const
 }
 
 void
-TestCase::ReportTestFailure (std::string cond, std::string actual, 
-                             std::string limit, std::string message, 
-                             std::string file, int32_t line)
+TestCase::ReportTestFailure (stdfwd::string cond, stdfwd::string actual,
+                             stdfwd::string limit, stdfwd::string message,
+                             stdfwd::string file, int32_t line)
 {
   NS_LOG_FUNCTION (this << cond << actual << limit << message << file << line);
   m_result->failure.push_back (TestCaseFailure (cond, actual, limit,
@@ -408,8 +408,8 @@ TestCase::MustContinueOnFailure (void) const
   return m_runner->MustContinueOnFailure ();
 }
 
-std::string 
-TestCase::CreateDataDirFilename (std::string filename)
+stdfwd::string
+TestCase::CreateDataDirFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   const TestCase *current = this;
@@ -422,12 +422,12 @@ TestCase::CreateDataDirFilename (std::string filename)
       NS_FATAL_ERROR ("No one called SetDataDir prior to calling this function");
     }
 
-  std::string a = SystemPath::Append (m_runner->GetTopLevelSourceDir (), current->m_dataDir);
-  std::string b = SystemPath::Append (a, filename);
+  stdfwd::string a = SystemPath::Append (m_runner->GetTopLevelSourceDir (), current->m_dataDir);
+  stdfwd::string b = SystemPath::Append (a, filename);
   return b;
 }
-std::string 
-TestCase::CreateTempDirFilename (std::string filename)
+stdfwd::string
+TestCase::CreateTempDirFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   if (m_runner->MustUpdateData ())
@@ -436,12 +436,12 @@ TestCase::CreateTempDirFilename (std::string filename)
     }
   else
     {
-      std::list<std::string> names;
+      std::list<stdfwd::string> names;
       const TestCase *current = this;
       while (current != 0)
         {
           //Windows doesn't like paths with empty spaces or special symbols(e.g :), so enforce underline
-          std::string underlined_name = current->m_name;
+          stdfwd::string underlined_name = current->m_name;
           for (int i =0; i < underlined_name.size(); i++)
               switch(underlined_name[i])
               {
@@ -457,7 +457,7 @@ TestCase::CreateTempDirFilename (std::string filename)
           //names.push_front(current->m_name);
           current = current->m_parent;
         }
-      std::string tempDir = SystemPath::Append (m_runner->GetTempDir (), SystemPath::Join (names.begin (), names.end ()));
+      stdfwd::string tempDir = SystemPath::Append (m_runner->GetTempDir (), SystemPath::Join (names.begin (), names.end ()));
       SystemPath::MakeDirectories (tempDir);
       return SystemPath::Append (tempDir, filename);
     }
@@ -476,7 +476,7 @@ TestCase::IsStatusSuccess (void) const
 }
 
 void 
-TestCase::SetDataDir (std::string directory)
+TestCase::SetDataDir (stdfwd::string directory)
 {
   NS_LOG_FUNCTION (this << directory);
   m_dataDir = directory;
@@ -494,7 +494,7 @@ TestCase::DoTeardown (void)
 }
 
 
-TestSuite::TestSuite (std::string name, TestSuite::Type type)
+TestSuite::TestSuite (stdfwd::string name, TestSuite::Type type)
   : TestCase (name), 
     m_type (type)
 {
@@ -551,14 +551,14 @@ TestRunnerImpl::MustUpdateData (void) const
   NS_LOG_FUNCTION (this);
   return m_updateData;
 }
-std::string
+stdfwd::string
 TestRunnerImpl::GetTempDir (void) const
 {
   NS_LOG_FUNCTION (this);
   return m_tempDir;
 }
 bool
-TestRunnerImpl::IsTopLevelSourceDir (std::string path) const
+TestRunnerImpl::IsTopLevelSourceDir (stdfwd::string path) const
 {
   NS_LOG_FUNCTION (this << path);
   bool haveVersion = false;
@@ -569,8 +569,8 @@ TestRunnerImpl::IsTopLevelSourceDir (std::string path) const
   // directory, we assume it's our top level source directory.
   //
 
-  std::list<std::string> files = SystemPath::ReadFiles (path);
-  for (std::list<std::string>::const_iterator i = files.begin (); i != files.end (); ++i)
+  std::list<stdfwd::string> files = SystemPath::ReadFiles (path);
+  for (std::list<stdfwd::string>::const_iterator i = files.begin (); i != files.end (); ++i)
     {
       if (*i == "VERSION")
         {
@@ -585,15 +585,15 @@ TestRunnerImpl::IsTopLevelSourceDir (std::string path) const
   return haveVersion && haveLicense;
 }
 
-std::string 
+stdfwd::string
 TestRunnerImpl::GetTopLevelSourceDir (void) const
 {
   NS_LOG_FUNCTION (this);
-  std::string self = SystemPath::FindSelfDirectory ();
-  std::list<std::string> elements = SystemPath::Split (self);
+  stdfwd::string self = SystemPath::FindSelfDirectory ();
+  std::list<stdfwd::string> elements = SystemPath::Split (self);
   while (!elements.empty ())
     {
-      std::string path = SystemPath::Join (elements.begin (), elements.end ());
+      stdfwd::string path = SystemPath::Join (elements.begin (), elements.end ());
       if (IsTopLevelSourceDir (path))
         {
           return path;
@@ -608,11 +608,11 @@ TestRunnerImpl::GetTopLevelSourceDir (void) const
 // data.  We need to replace these characters with their alternate 
 // representation on the way into the XML file.
 //
-std::string
-TestRunnerImpl::ReplaceXmlSpecialCharacters (std::string xml) const
+stdfwd::string
+TestRunnerImpl::ReplaceXmlSpecialCharacters (stdfwd::string xml) const
 {
   NS_LOG_FUNCTION (this << xml);
-  typedef std::map <char, std::string> specials_map;
+  typedef std::map <char, stdfwd::string> specials_map;
   specials_map specials;
   specials['<'] = "&lt;";
   specials['>'] = "&gt;";
@@ -620,7 +620,7 @@ TestRunnerImpl::ReplaceXmlSpecialCharacters (std::string xml) const
   specials['"'] = "&#39;";
   specials['\''] = "&quot;";
 
-  std::string result;
+  stdfwd::string result;
   std::size_t length = xml.length ();
 
   for (size_t i = 0; i < length; ++i)
@@ -690,7 +690,7 @@ TestRunnerImpl::PrintReport (TestCase *test, std::ostream *os, bool xml, int lev
   std::streamsize oldPrecision = (*os).precision (3);
   *os << std::fixed;
 
-  std::string statusString = test->IsFailed ()?"FAIL":"PASS";
+  stdfwd::string statusString = test->IsFailed ()?"FAIL":"PASS";
   if (xml)
     {
       *os << Indent (level) << "<Test>" << std::endl;
@@ -788,7 +788,7 @@ TestRunnerImpl::PrintTestNameList (std::list<TestCase *>::const_iterator begin,
                                    bool printTestType) const
 {
   NS_LOG_FUNCTION (this << &begin << &end << printTestType);
-  std::map<TestSuite::Type, std::string> label;
+  std::map<TestSuite::Type, stdfwd::string> label;
 
   label[TestSuite::ALL]         = "all          ";
   label[TestSuite::BVT]         = "bvt          ";
@@ -823,7 +823,7 @@ TestRunnerImpl::PrintTestTypeList (void) const
 
 
 std::list<TestCase *>
-TestRunnerImpl::FilterTests (std::string testName,
+TestRunnerImpl::FilterTests (stdfwd::string testName,
                              enum TestSuite::Type testType,
                              enum TestCase::TestDuration maximumTestDuration)
 {
@@ -878,10 +878,10 @@ int
 TestRunnerImpl::Run (int argc, char *argv[])
 {
   NS_LOG_FUNCTION (this << argc << argv);
-  std::string testName = "";
-  std::string testTypeString = "";
-  std::string out = "";
-  std::string fullness = "";
+  stdfwd::string testName = "";
+  stdfwd::string testTypeString = "";
+  stdfwd::string out = "";
+  stdfwd::string fullness = "";
   bool xml = false;
   bool append = false;
   bool printTempDir = false;
@@ -1096,10 +1096,10 @@ TestRunnerImpl::Run (int argc, char *argv[])
           with test-runner as argv[1]
           then the rest of the original arguments.
         */
-        std::string testname = test->GetName ();
-        std::string runner = "[" + SystemPath::Split (argv[0]).back () + "]";
+        stdfwd::string testname = test->GetName ();
+        stdfwd::string runner = "[" + SystemPath::Split (argv[0]).back () + "]";
 
-        std::vector<std::string> desargs;
+        std::vector<stdfwd::string> desargs;
         desargs.push_back (testname);
         desargs.push_back (runner);
         for (int i = 1; i < argc; ++i)

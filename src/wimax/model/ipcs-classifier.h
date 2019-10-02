@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "ss-service-flow-manager.h"
 #include "../../core/model/ptr.h"

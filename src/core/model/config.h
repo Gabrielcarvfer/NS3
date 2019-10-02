@@ -161,7 +161,7 @@ public:
    * \param [in] path The path used for object matching.
    */
   MatchContainer (const std::vector<Ptr<Object> > &objects, 
-                  const std::vector<std::string> &contexts, 
+                  const std::vector<std::string> &contexts,
                   std::string path);
 
   /**

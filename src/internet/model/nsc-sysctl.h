@@ -16,7 +16,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../../core/model/object.h"
@@ -58,13 +58,13 @@ private:
    * \param name the attribute name
    * \param value the attribute value
    */
-  void Set (std::string name, std::string value);
+  void Set (stdfwd::string name, stdfwd::string value);
   /**
    * \brief Get an attribute
    * \param name the attribute name
    * \returns the attribute value
    */
-  std::string Get (std::string name) const;
+  stdfwd::string Get (stdfwd::string name) const;
   INetStack *m_stack; //!< the underlying stack
 };
 } // namespace ns3

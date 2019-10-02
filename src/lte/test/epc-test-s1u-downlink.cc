@@ -104,7 +104,7 @@ public:
    * \param name the name of the test case instance
    * \param v list of eNodeB downlink test data information
    */
-  EpcS1uDlTestCase (std::string name, std::vector<EnbDlTestData> v);
+  EpcS1uDlTestCase (stdfwd::string name, std::vector<EnbDlTestData> v);
   virtual ~EpcS1uDlTestCase ();
 
 private:
@@ -113,7 +113,7 @@ private:
 };
 
 
-EpcS1uDlTestCase::EpcS1uDlTestCase (std::string name, std::vector<EnbDlTestData> v)
+EpcS1uDlTestCase::EpcS1uDlTestCase (stdfwd::string name, std::vector<EnbDlTestData> v)
   : TestCase (name),
     m_enbDlTestData (v)
 {

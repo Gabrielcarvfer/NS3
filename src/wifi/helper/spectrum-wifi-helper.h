@@ -59,7 +59,7 @@ public:
    *
    * Every PHY created by a call to Install is associated to this channel.
    */
-  void SetChannel (std::string channelName);
+  void SetChannel (stdfwd::string channelName);
 
 private:
   /**

@@ -22,7 +22,7 @@
 #include "../../core/model/test.h"
 #include "../model/antenna-model.h"
 #include <cmath>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <sstream>
 
@@ -31,7 +31,7 @@ using namespace ns3;
 class DegreesToRadiansTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (double a);
+  static stdfwd::string BuildNameString (double a);
   DegreesToRadiansTestCase (double a, double b);
 
 
@@ -42,7 +42,7 @@ private:
   double m_b;
 };
 
-std::string DegreesToRadiansTestCase::BuildNameString (double a)
+stdfwd::string DegreesToRadiansTestCase::BuildNameString (double a)
 {
   std::ostringstream oss;
   oss <<  "angle = " << a << " degrees";
@@ -69,7 +69,7 @@ DegreesToRadiansTestCase::DoRun ()
 class RadiansToDegreesTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (double a);
+  static stdfwd::string BuildNameString (double a);
   RadiansToDegreesTestCase (double a, double b);
 
 
@@ -80,7 +80,7 @@ private:
   double m_b;
 };
 
-std::string RadiansToDegreesTestCase::BuildNameString (double a)
+stdfwd::string RadiansToDegreesTestCase::BuildNameString (double a)
 {
   std::ostringstream oss;
   oss <<  "angle = " << a << " degrees";

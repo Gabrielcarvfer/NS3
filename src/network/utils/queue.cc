@@ -75,7 +75,7 @@ QueueBase::~QueueBase ()
 }
 
 void
-QueueBase::AppendItemTypeIfNotPresent (std::string& typeId, const std::string& itemType)
+QueueBase::AppendItemTypeIfNotPresent (stdfwd::string& typeId, const stdfwd::string& itemType)
 {
   if (typeId.back () != '>')
     {

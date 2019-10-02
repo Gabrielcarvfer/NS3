@@ -29,7 +29,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cassert>
 
 #include "ns3/core-module.h"
@@ -44,7 +44,7 @@ NS_LOG_COMPONENT_DEFINE ("CsmaPacketSocketExample");
 std::ofstream g_os;
 
 static void
-SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   g_os << p->GetSize () << std::endl;
 }

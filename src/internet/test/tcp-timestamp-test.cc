@@ -218,7 +218,7 @@ public:
    * \param name Test description.
    */
   TimestampValueTestCase (double startTime, double timeToWait,
-                          std::string name);
+                          stdfwd::string name);
 
 private:
   virtual void DoRun (void);
@@ -240,7 +240,7 @@ private:
 
 TimestampValueTestCase::TimestampValueTestCase (double startTime,
                                                 double timeToWait,
-                                                std::string name)
+                                                stdfwd::string name)
   : TestCase (name)
 {
   m_startTime = startTime;

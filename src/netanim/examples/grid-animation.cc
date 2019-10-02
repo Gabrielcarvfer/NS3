@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
 
   uint32_t xSize = 5;
   uint32_t ySize = 5;
-  std::string animFile = "grid-animation.xml";
+  stdfwd::string animFile = "grid-animation.xml";
 
   CommandLine cmd;
   cmd.AddValue ("xSize", "Number of rows of nodes", xSize);

@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <sstream>
 #include <vector>
 
@@ -115,7 +115,7 @@ namespace ns3 {
  * to make it easy to set the \c Application::StartTime using
  * the argument \c --start, and have its help string show as part
  * of the help message.  This can be done using the
- * \link AddValue(const std::string&, const std::string&) AddValue (name, attributePath) \endlink
+ * \link AddValue(const stdfwd::string&, const stdfwd::string&) AddValue (name, attributePath) \endlink
  * method.
  *
  * CommandLine can also set the value of every GlobalValue
@@ -131,7 +131,7 @@ namespace ns3 {
  * \code
  *    int         intArg  = 1;
  *    bool        boolArg = false;
- *    std::string strArg  = "strArg default";
+ *    stdfwd::string strArg  = "strArg default";
  *  
  *    CommandLine cmd;
  *    cmd.Usage ("CommandLine example program.\n"
@@ -235,7 +235,7 @@ public:
    *
    * \param [in] usage Program usage message to write with \c --help.
    */
-  void Usage (const std::string usage);
+  void Usage (const stdfwd::string usage);
   
   /**
    * Add a program argument, assigning to POD
@@ -247,8 +247,8 @@ public:
    *        is parsed, this variable is not modified).
    */
   template <typename T>
-  void AddValue (const std::string &name,
-                 const std::string &help,
+  void AddValue (const stdfwd::string &name,
+                 const stdfwd::string &help,
                  T &value);
 
   /**
@@ -260,11 +260,11 @@ public:
    *   store the value.
    *
    * The callback should have the signature
-   * <tt>bool callback (const std::string value)</tt>
+   * <tt>bool callback (const stdfwd::string value)</tt>
    */
-  void AddValue (const std::string &name,
-                 const std::string &help,
-                 Callback<bool, std::string> callback);
+  void AddValue (const stdfwd::string &name,
+                 const stdfwd::string &help,
+                 Callback<bool, stdfwd::string> callback);
 
   /**
    * Add a program argument as a shorthand for an Attribute.
@@ -272,8 +272,8 @@ public:
    * \param [in] name The name of the program-supplied argument.
    * \param [out] attributePath The fully-qualified name of the Attribute
    */
-  void AddValue (const std::string &name,
-                 const std::string &attributePath);
+  void AddValue (const stdfwd::string &name,
+                 const stdfwd::string &attributePath);
   
   /**
    * Add a non-option argument, assigning to POD
@@ -285,7 +285,7 @@ public:
    *        is parsed, this variable is not modified).
    */
   template <typename T>
-  void AddNonOption (const std::string name, const std::string help, T & value);
+  void AddNonOption (const stdfwd::string name, const stdfwd::string help, T & value);
 
   /**
    * Get extra non-option arguments by index.
@@ -297,7 +297,7 @@ public:
    * \param [in] i The index of the non-option argument to return.
    * \return The i'th non-option argument, as a string.
    */
-  std::string GetExtraNonOption (std::size_t i) const;
+  stdfwd::string GetExtraNonOption (std::size_t i) const;
   
   /**
    * Get the total number of non-option arguments found,
@@ -335,14 +335,14 @@ public:
    *
    * \param [in] args The vector of arguments.
    */
-  void Parse (std::vector<std::string> args);
+  void Parse (std::vector<stdfwd::string> args);
 
   /**
    * Get the program name
    *
    * \return The program name.  Only valid after calling Parse()
    */
-  std::string GetName () const;
+  stdfwd::string GetName () const;
 
   /**
    * \brief Print program usage to the desired output stream
@@ -371,8 +371,8 @@ private:
   class Item 
   {
   public:
-    std::string m_name;       /**< Argument label:  \c \-\--m_name=... */
-    std::string m_help;       /**< Argument help string */
+    stdfwd::string m_name;       /**< Argument label:  \c \-\--m_name=... */
+    stdfwd::string m_help;       /**< Argument help string */
     virtual ~Item ();         /**< Destructor */
     /**
      * Parse from a string.
@@ -380,7 +380,7 @@ private:
      * \param [in] value The string representation
      * \return \c true if parsing the value succeeded
      */
-    virtual bool Parse (const std::string value) = 0;
+    virtual bool Parse (const stdfwd::string value) = 0;
     /**
      * \return \c true if this item has a default value.
      */
@@ -388,7 +388,7 @@ private:
     /**
      * \return The default value
      */
-    virtual std::string GetDefault () const;
+    virtual stdfwd::string GetDefault () const;
   };  // class Item
 
   /**
@@ -400,23 +400,23 @@ private:
   {
   public:
     // Inherited
-    virtual bool Parse (const std::string value);
+    virtual bool Parse (const stdfwd::string value);
     bool HasDefault () const;
-    std::string GetDefault () const;
+    stdfwd::string GetDefault () const;
       
     T *m_valuePtr;            /**< Pointer to the POD location */
-    std::string m_default;    /**< String representation of default value */
+    stdfwd::string m_default;    /**< String representation of default value */
   };  // class UserItem
 
   class StringItem : public Item
   {
   public:
     // Inherited
-    bool Parse (const std::string value);
+    bool Parse (const stdfwd::string value);
     bool HasDefault (void) const;
-    std::string GetDefault (void) const;
+    stdfwd::string GetDefault (void) const;
     
-    std::string m_value;     /**< The argument value. */
+    stdfwd::string m_value;     /**< The argument value. */
   };  // class StringItem
 
   /**
@@ -432,8 +432,8 @@ private:
      * \param [in] value The string representation
      * \return \c true if parsing the value succeeded
      */
-    virtual bool Parse (const std::string value);
-    Callback<bool, std::string> m_callback;  /**< The Callback */
+    virtual bool Parse (const stdfwd::string value);
+    Callback<bool, stdfwd::string> m_callback;  /**< The Callback */
   };  // class CallbackItem
 
 
@@ -443,7 +443,7 @@ private:
    * \param [in] param The option string. 
    * \returns \c true if this was really an option.
    */
-  bool HandleOption (const std::string & param) const;
+  bool HandleOption (const stdfwd::string & param) const;
   
   /**
    * Handle a non-option
@@ -451,7 +451,7 @@ private:
    * \param [in] value The command line non-option value.
    * \return \c true if \c value could be parsed correctly.
    */
-  bool HandleNonOption (const std::string &value);
+  bool HandleNonOption (const stdfwd::string &value);
   
   /**
    * Match name against the program or general arguments,
@@ -460,7 +460,7 @@ private:
    * \param [in] name The argument name
    * \param [in] value The command line value
    */
-  void HandleArgument (const std::string &name, const std::string &value) const;
+  void HandleArgument (const stdfwd::string &name, const stdfwd::string &value) const;
   /**
    * Callback function to handle attributes.
    *
@@ -468,7 +468,7 @@ private:
    * \param [in] value The value to assign to \p name.
    * \return \c true if the value was set successfully, false otherwise.
    */  
-  static bool HandleAttribute (const std::string name, const std::string value);
+  static bool HandleAttribute (const stdfwd::string name, const stdfwd::string value);
 
   /**
    * Handler for \c \-\-PrintGlobals:  print all global variables and values
@@ -481,14 +481,14 @@ private:
    * \param [in,out] os the output stream.
    * \param [in] type The TypeId whose Attributes should be displayed
    */
-  void PrintAttributes (std::ostream &os, const std::string &type) const;
+  void PrintAttributes (std::ostream &os, const stdfwd::string &type) const;
   /**
    * Handler for \c \-\-PrintGroup:  print all types belonging to a given group.
    *
    * \param [in,out] os The output stream.
    * \param [in] group The name of the TypeId group to display
    */
-  void PrintGroup (std::ostream &os, const std::string &group) const;
+  void PrintGroup (std::ostream &os, const stdfwd::string &group) const;
   /**
    * Handler for \c \-\-PrintTypeIds:  print all TypeId names.
    *
@@ -515,8 +515,8 @@ private:
   Items m_nonOptions;                   /**< The list of non-option arguments */
   std::size_t m_NNonOptions;            /**< The expected number of non-option arguments */
   std::size_t m_nonOptionCount;         /**< The number of actual non-option arguments seen so far. */
-  std::string m_usage;                  /**< The Usage string */
-  std::string m_name;                   /**< The program name */
+  stdfwd::string m_usage;                  /**< The Usage string */
+  stdfwd::string m_name;                   /**< The program name */
 
 };  // class CommandLine
 
@@ -540,9 +540,9 @@ namespace CommandLineHelper {
    * @{
    */
   template <typename T>
-  bool UserItemParse (const std::string value, T & val);
+  bool UserItemParse (const stdfwd::string value, T & val);
   template <>
-  bool UserItemParse<bool> (const std::string value, bool & val);
+  bool UserItemParse<bool> (const stdfwd::string value, bool & val);
   /**@}*/
 
   /**
@@ -554,9 +554,9 @@ namespace CommandLineHelper {
    * @{
    */
   template <typename T>
-  std::string GetDefault (const T & val);
+  stdfwd::string GetDefault (const T & val);
   template <>
-  std::string GetDefault<bool> (const bool & val);
+  stdfwd::string GetDefault<bool> (const bool & val);
   /**@}*/
 
 }  // namespace CommandLineHelper
@@ -574,8 +574,8 @@ namespace ns3 {
 
 template <typename T>
 void 
-CommandLine::AddValue (const std::string &name,
-                       const std::string &help,
+CommandLine::AddValue (const stdfwd::string &name,
+                       const stdfwd::string &help,
                        T &value)
 {
   UserItem<T> *item = new UserItem<T> ();
@@ -583,7 +583,7 @@ CommandLine::AddValue (const std::string &name,
   item->m_help = help;
   item->m_valuePtr = &value;
   
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   ss << value;
   ss >> item->m_default;
     
@@ -592,8 +592,8 @@ CommandLine::AddValue (const std::string &name,
 
 template <typename T>
 void
-CommandLine::AddNonOption (const std::string name,
-                           const std::string help,
+CommandLine::AddNonOption (const stdfwd::string name,
+                           const stdfwd::string help,
                            T & value)
 {
   UserItem<T> *item = new UserItem<T> ();
@@ -601,7 +601,7 @@ CommandLine::AddNonOption (const std::string name,
   item->m_help = help;
   item->m_valuePtr = &value;
   
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   ss << value;
   ss >> item->m_default;
   m_nonOptions.push_back (item);
@@ -617,14 +617,14 @@ CommandLine::UserItem<T>::HasDefault () const
 }
 
 template <typename T>
-std::string
+stdfwd::string
 CommandLine::UserItem<T>::GetDefault () const
 {
   return CommandLineHelper::GetDefault<T> (*m_valuePtr);
 }
 
 template <typename T>
-std::string
+stdfwd::string
 CommandLineHelper::GetDefault (const T & val)
 {
   std::ostringstream oss;
@@ -635,14 +635,14 @@ CommandLineHelper::GetDefault (const T & val)
 
 template <typename T>
 bool
-CommandLine::UserItem<T>::Parse (const std::string value)
+CommandLine::UserItem<T>::Parse (const stdfwd::string value)
 {
   return CommandLineHelper::UserItemParse<T> (value, *m_valuePtr);
 }
 
 template <typename T>
 bool
-CommandLineHelper::UserItemParse (const std::string value, T & val)
+CommandLineHelper::UserItemParse (const stdfwd::string value, T & val)
 {
   std::istringstream iss;
   iss.str (value);

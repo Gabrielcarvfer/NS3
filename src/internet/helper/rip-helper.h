@@ -76,7 +76,7 @@ public:
    *
    * This method controls the attributes of ns3::Ripng
    */
-  void Set (std::string name, const AttributeValue &value);
+  void Set (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Assign a fixed random variable stream number to the random variables

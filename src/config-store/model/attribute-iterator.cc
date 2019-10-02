@@ -65,8 +65,8 @@ AttributeIterator::IsExamined (Ptr<const Object> object)
 }
 
 
-std::string
-AttributeIterator::GetCurrentPath (std::string attr) const
+stdfwd::string
+AttributeIterator::GetCurrentPath (stdfwd::string attr) const
 {
   std::ostringstream oss;
   for (uint32_t i = 0; i < m_currentPath.size (); ++i)
@@ -80,7 +80,7 @@ AttributeIterator::GetCurrentPath (std::string attr) const
   return oss.str ();
 }
 
-std::string
+stdfwd::string
 AttributeIterator::GetCurrentPath (void) const
 {
   std::ostringstream oss;
@@ -100,7 +100,7 @@ AttributeIterator::DoEndVisitObject (void)
 {
 }
 void 
-AttributeIterator::DoStartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> item)
+AttributeIterator::DoStartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> item)
 {
 }
 void 
@@ -108,7 +108,7 @@ AttributeIterator::DoEndVisitPointerAttribute (void)
 {
 }
 void 
-AttributeIterator::DoStartVisitArrayAttribute (Ptr<Object> object, std::string name, const ObjectPtrContainerValue &vector)
+AttributeIterator::DoStartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name, const ObjectPtrContainerValue &vector)
 {
 }
 void 
@@ -125,7 +125,7 @@ AttributeIterator::DoEndVisitArrayItem (void)
 }
 
 void 
-AttributeIterator::VisitAttribute (Ptr<Object> object, std::string name)
+AttributeIterator::VisitAttribute (Ptr<Object> object, stdfwd::string name)
 {
   m_currentPath.push_back (name);
   DoVisitAttribute (object, name);
@@ -145,7 +145,7 @@ AttributeIterator::EndVisitObject (void)
   DoEndVisitObject ();
 }
 void 
-AttributeIterator::StartVisitPointerAttribute (Ptr<Object> object, std::string name, Ptr<Object> value)
+AttributeIterator::StartVisitPointerAttribute (Ptr<Object> object, stdfwd::string name, Ptr<Object> value)
 {
   m_currentPath.push_back (name);
   m_currentPath.push_back ("$" + value->GetInstanceTypeId ().GetName ());
@@ -159,7 +159,7 @@ AttributeIterator::EndVisitPointerAttribute (void)
   DoEndVisitPointerAttribute ();
 }
 void 
-AttributeIterator::StartVisitArrayAttribute (Ptr<Object> object, std::string name, const ObjectPtrContainerValue &vector)
+AttributeIterator::StartVisitArrayAttribute (Ptr<Object> object, stdfwd::string name, const ObjectPtrContainerValue &vector)
 {
   m_currentPath.push_back (name);
   DoStartVisitArrayAttribute (object, name, vector);

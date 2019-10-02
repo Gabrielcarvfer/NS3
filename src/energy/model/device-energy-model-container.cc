@@ -40,7 +40,7 @@ DeviceEnergyModelContainer::DeviceEnergyModelContainer (Ptr<DeviceEnergyModel> m
   m_models.push_back (model);
 }
 
-DeviceEnergyModelContainer::DeviceEnergyModelContainer (std::string modelName)
+DeviceEnergyModelContainer::DeviceEnergyModelContainer (stdfwd::string modelName)
 {
   NS_LOG_FUNCTION (this << modelName);
   Ptr<DeviceEnergyModel> model = Names::Find<DeviceEnergyModel> (modelName);
@@ -103,7 +103,7 @@ DeviceEnergyModelContainer::Add (Ptr<DeviceEnergyModel> model)
 }
 
 void
-DeviceEnergyModelContainer::Add (std::string modelName)
+DeviceEnergyModelContainer::Add (stdfwd::string modelName)
 {
   NS_LOG_FUNCTION (this << modelName);
   Ptr<DeviceEnergyModel> model = Names::Find<DeviceEnergyModel> (modelName);

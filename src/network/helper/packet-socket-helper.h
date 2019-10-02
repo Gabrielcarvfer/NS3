@@ -44,7 +44,7 @@ public:
    *
    * \param nodeName The name of the node on which to aggregate the ns3::PacketSocketFactory.
    */
-  void Install (std::string nodeName) const;
+  void Install (stdfwd::string nodeName) const;
 
   /**
    * For each node in the provided container, aggregate an instance of a

@@ -28,7 +28,7 @@
 #include "../../network/model/net-device.h"
 #include "../../spectrum/model/spectrum-phy.h"
 #include "../../spectrum/model/spectrum-channel.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 
 namespace ns3 {

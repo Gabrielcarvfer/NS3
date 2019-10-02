@@ -64,7 +64,7 @@ private:
    * \param dist distance between nodes
    * \returns name string
    */
-  static std::string BuildNameString (uint16_t nUser, double dist);
+  static stdfwd::string BuildNameString (uint16_t nUser, double dist);
   virtual void DoRun (void);
   uint16_t m_nUser; ///< number of UE nodes
   double m_dist; ///< distance between the nodes

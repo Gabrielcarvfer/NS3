@@ -60,7 +60,7 @@ public:
    * \param dlMcs DL MCS
    * \param ulMcs UL MCS
    */
-  LteCqiGenerationTestCase (std::string name, bool usePdcchForCqiGeneration,
+  LteCqiGenerationTestCase (stdfwd::string name, bool usePdcchForCqiGeneration,
                             uint16_t dlMcs, uint16_t ulMcs);
   virtual ~LteCqiGenerationTestCase ();
 
@@ -110,7 +110,7 @@ public:
    * \param dlMcs DL MCS
    * \param ulMcs UL MCS
    */
-  LteCqiGenerationDlPowerControlTestCase (std::string name, uint8_t cell0Pa, uint8_t cell1Pa,
+  LteCqiGenerationDlPowerControlTestCase (stdfwd::string name, uint8_t cell0Pa, uint8_t cell1Pa,
                                           uint16_t dlMcs, uint16_t ulMcs);
   virtual ~LteCqiGenerationDlPowerControlTestCase ();
 

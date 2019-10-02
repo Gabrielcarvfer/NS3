@@ -92,13 +92,13 @@ PrintList::PrintList ()
     {
       return;
     }
-  std::string env = envVar;
-  std::string::size_type cur = 0;
-  std::string::size_type next = 0;
-  while (next != std::string::npos)
+  stdfwd::string env = envVar;
+  stdfwd::string::size_type cur = 0;
+  stdfwd::string::size_type next = 0;
+  while (next != stdfwd::string::npos)
     {
       next = env.find_first_of (":", cur);
-      std::string tmp = std::string (env, cur, next-cur);
+      stdfwd::string tmp = stdfwd::string (env, cur, next-cur);
       if (tmp == "print-list")
         {
           LogComponentPrintList ();
@@ -111,8 +111,8 @@ PrintList::PrintList ()
 }
 
 
-LogComponent::LogComponent (const std::string & name,
-                            const std::string & file,
+LogComponent::LogComponent (const stdfwd::string & name,
+                            const stdfwd::string & file,
                             const enum LogLevel mask /* = 0 */)
   : m_levels (0), m_mask (mask), m_name (name), m_file (file)
 {
@@ -132,7 +132,7 @@ LogComponent::LogComponent (const std::string & name,
 }
 
 LogComponent &
-GetLogComponent (const std::string name)
+GetLogComponent (const stdfwd::string name)
 {
   LogComponent::ComponentList *components = LogComponent::GetComponentList ();
   LogComponent* ret;
@@ -157,17 +157,17 @@ LogComponent::EnvVarCheck (void)
     {
       return;
     }
-  std::string env = envVar;
+  stdfwd::string env = envVar;
 
-  std::string::size_type cur = 0;
-  std::string::size_type next = 0;
-  while (next != std::string::npos)
+  stdfwd::string::size_type cur = 0;
+  stdfwd::string::size_type next = 0;
+  while (next != stdfwd::string::npos)
     {
       next = env.find_first_of (":", cur);
-      std::string tmp = std::string (env, cur, next-cur);
-      std::string::size_type equal = tmp.find ("=");
-      std::string component;
-      if (equal == std::string::npos)
+      stdfwd::string tmp = stdfwd::string (env, cur, next-cur);
+      stdfwd::string::size_type equal = tmp.find ("=");
+      stdfwd::string component;
+      if (equal == stdfwd::string::npos)
         {
           component = tmp;
           if (component == m_name || component == "*" || component == "***")
@@ -183,14 +183,14 @@ LogComponent::EnvVarCheck (void)
           if (component == m_name || component == "*")
             {
               int level = 0;
-              std::string::size_type cur_lev;
-              std::string::size_type next_lev = equal;
+              stdfwd::string::size_type cur_lev;
+              stdfwd::string::size_type next_lev = equal;
               bool pre_pipe = true;  // before the first '|', enables positional 'all', '*'
               do
                 {
                   cur_lev = next_lev + 1;
                   next_lev = tmp.find ("|", cur_lev);
-                  std::string lev = tmp.substr (cur_lev, next_lev - cur_lev);
+                  stdfwd::string lev = tmp.substr (cur_lev, next_lev - cur_lev);
                   if (lev == "error")
                     {
                       level |= LOG_ERROR;
@@ -275,7 +275,7 @@ LogComponent::EnvVarCheck (void)
                     }
 
                   pre_pipe = false;
-                } while (next_lev != std::string::npos);
+                } while (next_lev != stdfwd::string::npos);
 
               Enable ((enum LogLevel)level);
             }
@@ -323,14 +323,14 @@ LogComponent::Name (void) const
   return m_name.c_str ();
 }
 
-std::string
+stdfwd::string
 LogComponent::File (void) const
 {
   return m_file;
 }
 
 /* static */
-std::string
+stdfwd::string
 LogComponent::GetLevelLabel(const enum LogLevel level)
 {
   if (level == LOG_ERROR)
@@ -509,7 +509,7 @@ LogComponentPrintList (void)
  * \param [in] componentName The putative log component name.
  * \returns \c true if \c componentName exists.
  */
-static bool ComponentExists(std::string componentName) 
+static bool ComponentExists(stdfwd::string componentName)
 {
   char const*name=componentName.c_str();
   LogComponent::ComponentList *components = LogComponent::GetComponentList ();
@@ -541,18 +541,18 @@ static void CheckEnvironmentVariables (void)
     {
       return;
     }
-  std::string env = envVar;
+  stdfwd::string env = envVar;
 
-  std::string::size_type cur = 0;
-  std::string::size_type next = 0;
+  stdfwd::string::size_type cur = 0;
+  stdfwd::string::size_type next = 0;
   
-  while (next != std::string::npos)
+  while (next != stdfwd::string::npos)
     {
       next = env.find_first_of (":", cur);
-      std::string tmp = std::string (env, cur, next-cur);
-      std::string::size_type equal = tmp.find ("=");
-      std::string component;
-      if (equal == std::string::npos)
+      stdfwd::string tmp = stdfwd::string (env, cur, next-cur);
+      stdfwd::string::size_type equal = tmp.find ("=");
+      stdfwd::string component;
+      if (equal == stdfwd::string::npos)
         {
           // ie no '=' characters found 
           component = tmp;
@@ -572,13 +572,13 @@ static void CheckEnvironmentVariables (void)
           component = tmp.substr (0, equal);
           if (ComponentExists(component) || component == "*")
             {
-              std::string::size_type cur_lev;
-              std::string::size_type next_lev = equal;
+              stdfwd::string::size_type cur_lev;
+              stdfwd::string::size_type next_lev = equal;
               do
                 {
                   cur_lev = next_lev + 1;
                   next_lev = tmp.find ("|", cur_lev);
-                  std::string lev = tmp.substr (cur_lev, next_lev - cur_lev);
+                  stdfwd::string lev = tmp.substr (cur_lev, next_lev - cur_lev);
                   if (lev == "error"
                       || lev == "warn"
                       || lev == "debug"
@@ -613,7 +613,7 @@ static void CheckEnvironmentVariables (void)
                       NS_FATAL_ERROR("Invalid log level \"" << lev <<
                                      "\" in env variable NS_LOG for component name " << component);
                     }
-                } while (next_lev != std::string::npos);
+                } while (next_lev != stdfwd::string::npos);
             }
           else 
             {
@@ -658,7 +658,7 @@ ParameterLogger::ParameterLogger (std::ostream &os)
 
 template<>
 ParameterLogger&
-ParameterLogger::operator<< <std::string>(const std::string param)
+ParameterLogger::operator<< <stdfwd::string>(const stdfwd::string param)
 {
   if (m_first)
     {
@@ -676,7 +676,7 @@ template<>
 ParameterLogger&
 ParameterLogger::operator<< <const char *>(const char * param)
 {
-  (*this) << std::string (param);
+  (*this) << stdfwd::string (param);
   return *this;
 }
 

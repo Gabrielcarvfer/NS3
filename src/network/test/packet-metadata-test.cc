@@ -896,10 +896,10 @@ PacketMetadataTest::DoRun (void)
 
   uint8_t *buf = new uint8_t[p3->GetSize ()];
   p3->CopyData (buf, p3->GetSize ());
-  std::string msg = std::string (reinterpret_cast<const char *>(buf),
+  stdfwd::string msg = stdfwd::string (reinterpret_cast<const char *>(buf),
                                  p3->GetSize ());
   delete [] buf;
-  NS_TEST_EXPECT_MSG_EQ (msg, std::string ("hello world"), "Could not find original data in received packet");
+  NS_TEST_EXPECT_MSG_EQ (msg, stdfwd::string ("hello world"), "Could not find original data in received packet");
 }
 
 

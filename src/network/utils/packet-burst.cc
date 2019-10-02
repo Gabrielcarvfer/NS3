@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 #include "../model/packet.h"
 #include "packet-burst.h"

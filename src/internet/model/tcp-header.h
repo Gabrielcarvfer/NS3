@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "tcp-option.h"
 #include "../../network/model/buffer.h"
@@ -72,7 +72,7 @@ public:
    *
    * \return the generated string
    **/
-  static std::string FlagsToString (uint8_t flags, const std::string& delimiter = "|");
+  static stdfwd::string FlagsToString (uint8_t flags, const stdfwd::string& delimiter = "|");
 
   /**
    * \brief Enable checksum calculation for TCP

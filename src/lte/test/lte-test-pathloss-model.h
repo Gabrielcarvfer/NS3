@@ -62,7 +62,7 @@ class LtePathlossModelSystemTestCase : public TestCase
    * \param dist the distance
    * \param mcsIndex the MCS index
    */
-    LtePathlossModelSystemTestCase (std::string name, double snrDb, double dist, uint16_t mcsIndex);
+    LtePathlossModelSystemTestCase (stdfwd::string name, double snrDb, double dist, uint16_t mcsIndex);
     LtePathlossModelSystemTestCase ();
     virtual ~LtePathlossModelSystemTestCase ();
     

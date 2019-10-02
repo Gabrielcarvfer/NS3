@@ -105,7 +105,7 @@ public:
    * @param name the name of the attribute to set
    * @param val the value of the attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &val);
+  void SetAttribute (stdfwd::string name, const AttributeValue &val);
 
   /** 
    * Set up and start the TV Transmitter's transmission on the spectrum channel.

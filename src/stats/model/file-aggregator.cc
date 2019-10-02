@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "file-aggregator.h"
 #include "../../core/model/abort.h"
@@ -43,7 +43,7 @@ FileAggregator::GetTypeId ()
   return tid;
 }
 
-FileAggregator::FileAggregator (const std::string &outputFileName,
+FileAggregator::FileAggregator (const stdfwd::string &outputFileName,
                                 enum FileType fileType)
   : m_outputFileName    (outputFileName),
     m_fileType          (fileType),
@@ -93,7 +93,7 @@ FileAggregator::SetFileType (enum FileType fileType)
 }
 
 void
-FileAggregator::SetHeading (const std::string &heading)
+FileAggregator::SetHeading (const stdfwd::string &heading)
 {
   NS_LOG_FUNCTION (this << heading);
   if (!m_hasHeadingBeenSet)
@@ -107,77 +107,77 @@ FileAggregator::SetHeading (const std::string &heading)
 }
 
 void
-FileAggregator::Set1dFormat (const std::string &format)
+FileAggregator::Set1dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_1dFormat = format;
 }
 
 void
-FileAggregator::Set2dFormat (const std::string &format)
+FileAggregator::Set2dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_2dFormat = format;
 }
 
 void
-FileAggregator::Set3dFormat (const std::string &format)
+FileAggregator::Set3dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_3dFormat = format;
 }
 
 void
-FileAggregator::Set4dFormat (const std::string &format)
+FileAggregator::Set4dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_4dFormat = format;
 }
 
 void
-FileAggregator::Set5dFormat (const std::string &format)
+FileAggregator::Set5dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_5dFormat = format;
 }
 
 void
-FileAggregator::Set6dFormat (const std::string &format)
+FileAggregator::Set6dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_6dFormat = format;
 }
 
 void
-FileAggregator::Set7dFormat (const std::string &format)
+FileAggregator::Set7dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_7dFormat = format;
 }
 
 void
-FileAggregator::Set8dFormat (const std::string &format)
+FileAggregator::Set8dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_8dFormat = format;
 }
 
 void
-FileAggregator::Set9dFormat (const std::string &format)
+FileAggregator::Set9dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_9dFormat = format;
 }
 
 void
-FileAggregator::Set10dFormat (const std::string &format)
+FileAggregator::Set10dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
   m_10dFormat = format;
 }
 
 void
-FileAggregator::Write1d (std::string context,
+FileAggregator::Write1d (stdfwd::string context,
                          double v1)
 {
   NS_LOG_FUNCTION (this << context << v1);
@@ -215,7 +215,7 @@ FileAggregator::Write1d (std::string context,
 }
 
 void
-FileAggregator::Write2d (std::string context,
+FileAggregator::Write2d (stdfwd::string context,
                          double v1,
                          double v2)
 {
@@ -256,7 +256,7 @@ FileAggregator::Write2d (std::string context,
 }
 
 void
-FileAggregator::Write3d (std::string context,
+FileAggregator::Write3d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3)
@@ -300,7 +300,7 @@ FileAggregator::Write3d (std::string context,
 }
 
 void
-FileAggregator::Write4d (std::string context,
+FileAggregator::Write4d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -347,7 +347,7 @@ FileAggregator::Write4d (std::string context,
 }
 
 void
-FileAggregator::Write5d (std::string context,
+FileAggregator::Write5d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -397,7 +397,7 @@ FileAggregator::Write5d (std::string context,
 }
 
 void
-FileAggregator::Write6d (std::string context,
+FileAggregator::Write6d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -450,7 +450,7 @@ FileAggregator::Write6d (std::string context,
 }
 
 void
-FileAggregator::Write7d (std::string context,
+FileAggregator::Write7d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -506,7 +506,7 @@ FileAggregator::Write7d (std::string context,
 }
 
 void
-FileAggregator::Write8d (std::string context,
+FileAggregator::Write8d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -565,7 +565,7 @@ FileAggregator::Write8d (std::string context,
 }
 
 void
-FileAggregator::Write9d (std::string context,
+FileAggregator::Write9d (stdfwd::string context,
                          double v1,
                          double v2,
                          double v3,
@@ -626,7 +626,7 @@ FileAggregator::Write9d (std::string context,
 }
 
 void
-FileAggregator::Write10d (std::string context,
+FileAggregator::Write10d (stdfwd::string context,
                           double v1,
                           double v2,
                           double v3,

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/buffer.h"
 #include <list>
 
@@ -116,7 +116,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/utils/mac48-address.h"
 
 namespace ns3 {
@@ -229,7 +229,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/buffer.h"
 
 namespace ns3 {
@@ -331,7 +331,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include <vector>
 
@@ -394,7 +394,7 @@ public:
    * Get name field
    * \returns the name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -420,7 +420,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "cid.h"
 
 namespace ns3 {
@@ -510,7 +510,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../../network/model/header.h"
 #include "../../network/utils/mac48-address.h"
@@ -564,7 +564,7 @@ public:
    * Get name field
    * \returns the name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId

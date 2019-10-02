@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../../network/model/buffer.h"
 #include "../mesh-information-element-vector.h"
 
@@ -40,7 +40,7 @@ public:
    *
    * \param s reference id
    */
-  IeMeshId (std::string s);
+  IeMeshId (stdfwd::string s);
 
   /**
    * Equality test

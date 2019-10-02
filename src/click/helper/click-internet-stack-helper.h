@@ -73,7 +73,7 @@ public:
    *
    * \param nodeName The name of the node on which to install the stack.
    */
-  void Install (std::string nodeName) const;
+  void Install (stdfwd::string nodeName) const;
 
   /**
    * Aggregate implementations of the ns3::Ipv4L3ClickProtocol, ns3::ArpL3Protocol,
@@ -111,7 +111,7 @@ public:
    *
    * \param tid the type id, typically it is set to  "ns3::TcpL4Protocol"
    */
-  void SetTcp (std::string tid);
+  void SetTcp (stdfwd::string tid);
 
   /**
    * \brief This function is used to setup the Network Simulation Cradle stack with library value.
@@ -125,49 +125,49 @@ public:
    * \param attr The attribute name that must be setup, for example "Library"
    * \param val The attribute value, which will be in fact the shared library name (example:"liblinux2.6.26.so")
    */
-  void SetTcp (std::string tid, std::string attr, const AttributeValue &val);
+  void SetTcp (stdfwd::string tid, stdfwd::string attr, const AttributeValue &val);
 
   /**
    * \brief Set a Click file to be used for a group of nodes.
    * \param c NodeContainer of nodes
    * \param clickfile Click file to be used
    */
-  void SetClickFile (NodeContainer c, std::string clickfile);
+  void SetClickFile (NodeContainer c, stdfwd::string clickfile);
 
   /**
    * \brief Set a Click file to be used for a node.
    * \param node Node for which Click file is to be set
    * \param clickfile Click file to be used
    */
-  void SetClickFile (Ptr<Node> node, std::string clickfile);
+  void SetClickFile (Ptr<Node> node, stdfwd::string clickfile);
 
   /**
    * \brief Set defines to be used for a group of nodes.
    * \param c NodeContainer of nodes
    * \param defines Defines mapping to be used
    */
-  void SetDefines (NodeContainer c, std::map<std::string, std::string> defines);
+  void SetDefines (NodeContainer c, std::map<stdfwd::string, stdfwd::string> defines);
 
   /**
    * \brief Set defines to be used for a node.
    * \param node Node for which the defines are to be set
    * \param defines Defines mapping to be used
    */
-  void SetDefines (Ptr<Node> node, std::map<std::string, std::string> defines);
+  void SetDefines (Ptr<Node> node, std::map<stdfwd::string, stdfwd::string> defines);
 
   /**
    * \brief Set a Click routing table element for a group of nodes.
    * \param c NodeContainer of nodes
    * \param rt Click Routing Table element name
    */
-  void SetRoutingTableElement (NodeContainer c, std::string rt);
+  void SetRoutingTableElement (NodeContainer c, stdfwd::string rt);
 
   /**
    * \brief Set a Click routing table element for a node.
    * \param node Node for which Click file is to be set
    * \param rt Click Routing Table element name
    */
-  void SetRoutingTableElement (Ptr<Node> node, std::string rt);
+  void SetRoutingTableElement (Ptr<Node> node, stdfwd::string rt);
 private:
   /**
    * @brief Enable pcap output the indicated Ipv4 and interface pair.
@@ -176,7 +176,7 @@ private:
    * @param ipv4 Ptr to the Ipv4 interface on which you want to enable tracing.
    * @param interface Interface ID on the Ipv4 on which you want to enable tracing.
    */
-  virtual void EnablePcapIpv4Internal (std::string prefix,
+  virtual void EnablePcapIpv4Internal (stdfwd::string prefix,
                                        Ptr<Ipv4> ipv4,
                                        uint32_t interface,
                                        bool explicitFilename);
@@ -191,7 +191,7 @@ private:
    * @param interface Interface ID on the Ipv4 on which you want to enable tracing.
    */
   virtual void EnableAsciiIpv4Internal (Ptr<OutputStreamWrapper> stream,
-                                        std::string prefix,
+                                        stdfwd::string prefix,
                                         Ptr<Ipv4> ipv4,
                                         uint32_t interface,
                                         bool explicitFilename);
@@ -199,7 +199,7 @@ private:
   void Initialize (void);
   ObjectFactory m_tcpFactory;
 
-  static void CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const std::string typeId);
+  static void CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const stdfwd::string typeId);
 
   static void Cleanup (void);
 
@@ -215,17 +215,17 @@ private:
   /**
    * \brief Node to Click file mapping
    */
-  std::map < Ptr<Node>, std::string  > m_nodeToClickFileMap;
+  std::map < Ptr<Node>, stdfwd::string  > m_nodeToClickFileMap;
 
   /**
    * \brief Node to Click defines mapping
    */
-  std::map < Ptr<Node>, std::map<std::string, std::string>  > m_nodeToDefinesMap;
+  std::map < Ptr<Node>, std::map<stdfwd::string, stdfwd::string>  > m_nodeToDefinesMap;
 
   /**
    * \brief Node to Routing Table Element mapping
    */
-  std::map < Ptr<Node>, std::string  > m_nodeToRoutingTableElementMap;
+  std::map < Ptr<Node>, stdfwd::string  > m_nodeToRoutingTableElementMap;
 };
 
 } // namespace ns3

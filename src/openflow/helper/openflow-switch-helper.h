@@ -22,7 +22,7 @@
 #include "../model/openflow-interface.h"
 #include "../../network/helper/net-device-container.h"
 #include "../../core/model/object-factory.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -49,7 +49,7 @@ public:
    * \param v1 the value of the attribute to set
    */
   void
-  SetDeviceAttribute (std::string n1, const AttributeValue &v1);
+  SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * This method creates an ns3::OpenFlowSwitchNetDevice with the attributes
@@ -90,7 +90,7 @@ public:
    * \returns A container holding the added net device.
    */
   NetDeviceContainer
-  Install (std::string nodeName, NetDeviceContainer c);
+  Install (stdfwd::string nodeName, NetDeviceContainer c);
 
 private:
   ObjectFactory m_deviceFactory; //!< Object factory

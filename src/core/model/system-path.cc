@@ -96,16 +96,16 @@ namespace SystemPath {
  * \param [in] path The full path to a file.
  * \returns The full path to the containing directory.
  */
-std::string Dirname (std::string path)
+stdfwd::string Dirname (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
-  std::list<std::string> elements = Split (path);
-  std::list<std::string>::const_iterator last = elements.end();
+  std::list<stdfwd::string> elements = Split (path);
+  std::list<stdfwd::string>::const_iterator last = elements.end();
   last--;
   return Join (elements.begin (), last);
 }
 
-std::string FindSelfDirectory (void)
+stdfwd::string FindSelfDirectory (void)
 {
   /** 
    * This function returns the path to the running $PREFIX.
@@ -117,7 +117,7 @@ std::string FindSelfDirectory (void)
    * Windows: GetModuleFileName() with hModule = NULL
    */
   NS_LOG_FUNCTION_NOARGS ();
-  std::string filename;
+  stdfwd::string filename;
 #if defined(__linux__)
   {
     ssize_t size = 1024;
@@ -196,47 +196,47 @@ std::string FindSelfDirectory (void)
     return Dirname (filename);
 }
   
-std::string Append (std::string left, std::string right)
+stdfwd::string Append (stdfwd::string left, stdfwd::string right)
 {
   // removing trailing separators from 'left'
   NS_LOG_FUNCTION (left << right);
   while (true)
     {
-      std::string::size_type lastSep = left.rfind (SYSTEM_PATH_SEP);
+      stdfwd::string::size_type lastSep = left.rfind (SYSTEM_PATH_SEP);
       if (lastSep != left.size () - 1)
 	{
 	  break;
 	}
       left = left.substr (0, left.size () - 1);
     } 
-  std::string retval = left + SYSTEM_PATH_SEP + right;
+  stdfwd::string retval = left + SYSTEM_PATH_SEP + right;
   return retval;
 }
 
-std::list<std::string> Split (std::string path)
+std::list<stdfwd::string> Split (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
-  std::list<std::string> retval;
-  std::string::size_type current = 0, next = 0;
+  std::list<stdfwd::string> retval;
+  stdfwd::string::size_type current = 0, next = 0;
   next = path.find (SYSTEM_PATH_SEP, current);
-  while (next != std::string::npos)
+  while (next != stdfwd::string::npos)
     {
-      std::string item = path.substr (current, next - current);
+      stdfwd::string item = path.substr (current, next - current);
       retval.push_back (item);
       current = next + 1;
       next = path.find (SYSTEM_PATH_SEP, current);
     }
-  std::string item = path.substr (current, next - current);
+  stdfwd::string item = path.substr (current, next - current);
   retval.push_back (item);
   return retval;
 }
 
-std::string Join (std::list<std::string>::const_iterator begin,
-		  std::list<std::string>::const_iterator end)
+stdfwd::string Join (std::list<stdfwd::string>::const_iterator begin,
+		  std::list<stdfwd::string>::const_iterator end)
 {
   NS_LOG_FUNCTION (&begin << &end);
-  std::string retval = "";
-  for (std::list<std::string>::const_iterator i = begin; i != end; i++)
+  stdfwd::string retval = "";
+  for (std::list<stdfwd::string>::const_iterator i = begin; i != end; i++)
     {
       if (i == begin)
 	{
@@ -250,10 +250,10 @@ std::string Join (std::list<std::string>::const_iterator begin,
   return retval;
 }
   
-std::list<std::string> ReadFiles (std::string path)
+std::list<stdfwd::string> ReadFiles (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
-  std::list<std::string> files;
+  std::list<stdfwd::string> files;
 #if defined HAVE_OPENDIR
   DIR *dp = opendir (path.c_str ());
   if (dp == NULL)
@@ -273,7 +273,7 @@ std::list<std::string> ReadFiles (std::string path)
   return files;
 }
 
-std::string 
+stdfwd::string
 MakeTemporaryDirectoryName (void)
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -321,12 +321,12 @@ MakeTemporaryDirectoryName (void)
 }
 
 void 
-MakeDirectories (std::string path)
+MakeDirectories (stdfwd::string path)
 {
   NS_LOG_FUNCTION (path);
 
   // Make sure all directories on the path exist
-  std::list<std::string> elements = Split (path);
+  std::list<stdfwd::string> elements = Split (path);
   auto i = elements.begin ();
   while (i != elements.end ())
     {
@@ -338,7 +338,7 @@ MakeDirectories (std::string path)
         }
       NS_LOG_LOGIC ("creating directory " << *i);
       ++i;  // Now points to one past the directory we want to create
-      std::string tmp = Join (elements.begin (), i);
+      stdfwd::string tmp = Join (elements.begin (), i);
       bool makeDirErr = false;
       
 #if defined(HAVE_MKDIR_H)

@@ -95,7 +95,7 @@ private:
   * \brief Set the trace file name
   * \param fileName the trace file
   */
-  void SetTraceFileName (std::string fileName);
+  void SetTraceFileName (stdfwd::string fileName);
   /**
   * \brief Set the trace time
   * \param t the trace time
@@ -122,7 +122,7 @@ private:
 
 
   
-  std::string m_traceFile; ///< the trace file name
+  stdfwd::string m_traceFile; ///< the trace file name
   
   FadingTrace m_fadingTrace; ///< fading trace
 

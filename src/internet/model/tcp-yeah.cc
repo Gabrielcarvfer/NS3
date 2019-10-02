@@ -306,7 +306,7 @@ TcpYeah::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
     }
 }
 
-std::string
+stdfwd::string
 TcpYeah::GetName () const
 {
   return "TcpYeah";

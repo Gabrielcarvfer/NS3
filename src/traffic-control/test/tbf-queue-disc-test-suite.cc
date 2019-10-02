@@ -115,7 +115,7 @@ private:
    * \param flag the boolean value against which the return value of dequeue () has to be compared with
    * \param printStatement the string to be printed in the NS_TEST_EXPECT_MSG_EQ
    */
-  void DequeueAndCheck (Ptr<TbfQueueDisc> queue, bool flag, std::string printStatement);
+  void DequeueAndCheck (Ptr<TbfQueueDisc> queue, bool flag, stdfwd::string printStatement);
   /**
    * Run TBF test function
    * \param mode the mode
@@ -417,7 +417,7 @@ TbfQueueDiscTestCase::Enqueue (Ptr<TbfQueueDisc> queue, Address dest, uint32_t s
 }
 
 void
-TbfQueueDiscTestCase::DequeueAndCheck (Ptr<TbfQueueDisc> queue, bool flag, std::string printStatement)
+TbfQueueDiscTestCase::DequeueAndCheck (Ptr<TbfQueueDisc> queue, bool flag, stdfwd::string printStatement)
 {
   Ptr<QueueDiscItem> item = queue->Dequeue ();
   NS_TEST_EXPECT_MSG_EQ ((item != 0), flag, printStatement);

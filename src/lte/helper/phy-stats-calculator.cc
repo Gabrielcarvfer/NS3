@@ -71,36 +71,36 @@ PhyStatsCalculator::GetTypeId (void)
 }
 
 void
-PhyStatsCalculator::SetCurrentCellRsrpSinrFilename (std::string filename)
+PhyStatsCalculator::SetCurrentCellRsrpSinrFilename (stdfwd::string filename)
 {
   m_RsrpSinrFilename = filename;
 }
 
-std::string
+stdfwd::string
 PhyStatsCalculator::GetCurrentCellRsrpSinrFilename (void)
 {
   return m_RsrpSinrFilename;
 }
 
 void
-PhyStatsCalculator::SetUeSinrFilename (std::string filename)
+PhyStatsCalculator::SetUeSinrFilename (stdfwd::string filename)
 {
   m_ueSinrFilename = filename;
 }
 
-std::string
+stdfwd::string
 PhyStatsCalculator::GetUeSinrFilename (void)
 {
   return m_ueSinrFilename;
 }
 
 void
-PhyStatsCalculator::SetInterferenceFilename (std::string filename)
+PhyStatsCalculator::SetInterferenceFilename (stdfwd::string filename)
 {
   m_interferenceFilename = filename;
 }
 
-std::string
+stdfwd::string
 PhyStatsCalculator::GetInterferenceFilename (void)
 {
   return m_interferenceFilename;
@@ -224,12 +224,12 @@ PhyStatsCalculator::ReportInterference (uint16_t cellId, Ptr<SpectrumValue> inte
 
 void
 PhyStatsCalculator::ReportCurrentCellRsrpSinrCallback (Ptr<PhyStatsCalculator> phyStats,
-                      std::string path, uint16_t cellId, uint16_t rnti,
+                      stdfwd::string path, uint16_t cellId, uint16_t rnti,
                       double rsrp, double sinr, uint8_t componentCarrierId)
 {
   NS_LOG_FUNCTION (phyStats << path);
   uint64_t imsi = 0;
-  std::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
+  stdfwd::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
   if (phyStats->ExistsImsiPath (pathUePhy) == true)
     {
       imsi = phyStats->GetImsiPath (pathUePhy);
@@ -244,7 +244,7 @@ PhyStatsCalculator::ReportCurrentCellRsrpSinrCallback (Ptr<PhyStatsCalculator> p
 }
 
 void
-PhyStatsCalculator::ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, std::string path,
+PhyStatsCalculator::ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, stdfwd::string path,
                                   uint16_t cellId, uint16_t rnti, double sinrLinear, uint8_t componentCarrierId)
 {
   NS_LOG_FUNCTION (phyStats << path);
@@ -252,7 +252,7 @@ PhyStatsCalculator::ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, std::string 
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
   pathAndRnti << path << "/" << rnti;
-  std::string pathEnbMac  = path.substr (0, path.find ("/ComponentCarrierMap"));
+  stdfwd::string pathEnbMac  = path.substr (0, path.find ("/ComponentCarrierMap"));
   pathEnbMac += "/LteEnbMac/DlScheduling";
   if (phyStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {
@@ -268,7 +268,7 @@ PhyStatsCalculator::ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, std::string 
 }
 
 void
-PhyStatsCalculator::ReportInterference (Ptr<PhyStatsCalculator> phyStats, std::string path,
+PhyStatsCalculator::ReportInterference (Ptr<PhyStatsCalculator> phyStats, stdfwd::string path,
                     uint16_t cellId, Ptr<SpectrumValue> interference)
 {
   NS_LOG_FUNCTION (phyStats << path);

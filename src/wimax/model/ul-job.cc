@@ -19,7 +19,7 @@
  * S. da Fonseca - wimaxgroup@lrc.ic.unicamp.br
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ul-job.h"
 
 namespace ns3 {

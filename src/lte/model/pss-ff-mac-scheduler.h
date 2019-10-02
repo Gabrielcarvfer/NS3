@@ -392,7 +392,7 @@ private:
 
   std::map <uint16_t,uint8_t> m_uesTxMode; ///< txMode of the UEs
 
-  std::string m_fdSchedulerType; ///< FD scheduler type
+  stdfwd::string m_fdSchedulerType; ///< FD scheduler type
 
   uint32_t m_nMux; ///< TD scheduler selects nMux UEs and transfer them to FD scheduler
 

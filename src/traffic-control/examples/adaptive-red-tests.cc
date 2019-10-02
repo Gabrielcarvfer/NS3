@@ -99,8 +99,8 @@ Ipv4InterfaceContainer i2i3;
 Ipv4InterfaceContainer i3i4;
 Ipv4InterfaceContainer i3i5;
 
-std::stringstream filePlotQueueDisc;
-std::stringstream filePlotQueueDiscAvg;
+stdfwd::stringstream filePlotQueueDisc;
+stdfwd::stringstream filePlotQueueDiscAvg;
 
 void
 CheckQueueDiscSize (Ptr<QueueDisc> queue)
@@ -181,10 +181,10 @@ main (int argc, char *argv[])
   LogComponentEnable ("RedQueueDisc", LOG_LEVEL_INFO);
 
   uint32_t aredTest;
-  std::string aredLinkDataRate = "1.5Mbps";
-  std::string aredLinkDelay = "20ms";
+  stdfwd::string aredLinkDataRate = "1.5Mbps";
+  stdfwd::string aredLinkDelay = "20ms";
 
-  std::string pathOut;
+  stdfwd::string pathOut;
   bool writeForPlot = false;
   bool writePcap = false;
   bool flowMonitor = false;
@@ -475,7 +475,7 @@ main (int argc, char *argv[])
   if (writePcap)
     {
       PointToPointHelper ptp;
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/ared";
       ptp.EnablePcapAll (stmp.str ().c_str ());
     }
@@ -529,7 +529,7 @@ main (int argc, char *argv[])
 
   if (flowMonitor)
     {
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/ared.flowmon";
 
       flowmon->SerializeToXmlFile (stmp.str ().c_str (), false, false);

@@ -6,10 +6,8 @@
 #define NS3_JSON_LOADER_H
 
 #include <ns3/picojson.h>
-#include <iosfwd>
-#include <fstream>
-#include <sstream>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
-picojson::object load_json(std::string jsonFile);
+picojson::object load_json(stdfwd::string jsonFile);
 
 #endif //NS3_JSON_LOADER_H

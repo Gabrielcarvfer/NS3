@@ -89,7 +89,7 @@ private:
    * \param numberOfComponentCarriers number of component carriers
    * \returns the test name
    */   
-  static std::string BuildNameString  (uint16_t nUser, uint16_t dist, uint32_t dlBandwidth, uint32_t ulBandwidth, uint32_t numberOfComponentCarriers);
+  static stdfwd::string BuildNameString  (uint16_t nUser, uint16_t dist, uint32_t dlBandwidth, uint32_t ulBandwidth, uint32_t numberOfComponentCarriers);
 
   uint16_t m_nUser; ///< the number of users
   uint16_t m_dist; ///< the distance

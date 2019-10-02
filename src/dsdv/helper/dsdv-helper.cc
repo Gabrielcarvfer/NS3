@@ -59,7 +59,7 @@ DsdvHelper::Create (Ptr<Node> node) const
 }
 
 void
-DsdvHelper::Set (std::string name, const AttributeValue &value)
+DsdvHelper::Set (stdfwd::string name, const AttributeValue &value)
 {
   m_agentFactory.Set (name, value);
 }

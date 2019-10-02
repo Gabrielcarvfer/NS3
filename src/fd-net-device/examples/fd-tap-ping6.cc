@@ -45,7 +45,7 @@
 //                 
 
 #include <sstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "ns3/internet-module.h"
@@ -110,8 +110,8 @@ main (int argc, char *argv[])
   
   ipv6.SetBase (Ipv6Address ("2001:0DB8:2::"), Ipv6Prefix (64));
   Ipv6Address tapAddr = ipv6.NewAddress ();
-  std::stringstream ss;
-  std::string tapIp; 
+  stdfwd::stringstream ss;
+  stdfwd::string tapIp;
   tapAddr.Print (ss);
   ss >> tapIp;
 

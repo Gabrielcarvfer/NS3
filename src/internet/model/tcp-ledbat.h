@@ -83,7 +83,7 @@ public:
    *
    * \return The name of the TCP
    */
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Get information from the acked packet

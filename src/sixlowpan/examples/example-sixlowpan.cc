@@ -127,7 +127,7 @@ int main (int argc, char** argv)
 
   AsciiTraceHelper ascii;
   csma.EnableAsciiAll (ascii.CreateFileStream ("example-sixlowpan.tr"));
-  csma.EnablePcapAll (std::string ("example-sixlowpan"), true);
+  csma.EnablePcapAll (stdfwd::string ("example-sixlowpan"), true);
 
   Simulator::Stop (Seconds (100));
   NS_LOG_INFO ("Run Simulation.");

@@ -59,7 +59,7 @@ public:
  * \param packetSize
  */
 void
-DlTxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
+DlTxPduCallback (Ptr<BoundCallbackArgument> arg, stdfwd::string path,
                  uint16_t rnti, uint8_t lcid, uint32_t packetSize)
 {
   NS_LOG_FUNCTION (path << rnti << (uint16_t)lcid << packetSize);
@@ -76,7 +76,7 @@ DlTxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
  * \param delay
  */
 void
-DlRxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
+DlRxPduCallback (Ptr<BoundCallbackArgument> arg, stdfwd::string path,
                  uint16_t rnti, uint8_t lcid, uint32_t packetSize, uint64_t delay)
 {
   NS_LOG_FUNCTION (path << rnti << (uint16_t)lcid << packetSize << delay);
@@ -92,7 +92,7 @@ DlRxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
  * \param packetSize
  */
 void
-UlTxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
+UlTxPduCallback (Ptr<BoundCallbackArgument> arg, stdfwd::string path,
                  uint16_t rnti, uint8_t lcid, uint32_t packetSize)
 {
   NS_LOG_FUNCTION (path << rnti << (uint16_t)lcid << packetSize);
@@ -109,7 +109,7 @@ UlTxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
  * \param delay
  */
 void
-UlRxPduCallback (Ptr<BoundCallbackArgument> arg, std::string path,
+UlRxPduCallback (Ptr<BoundCallbackArgument> arg, stdfwd::string path,
                  uint16_t rnti, uint8_t lcid, uint32_t packetSize, uint64_t delay)
 {
   NS_LOG_FUNCTION (path << rnti << (uint16_t)lcid << packetSize << delay);
@@ -159,10 +159,10 @@ RadioBearerStatsConnector::EnsureConnected ()
 }
 
 void
-RadioBearerStatsConnector::StoreUeManagerPath (std::string context, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::StoreUeManagerPath (stdfwd::string context, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << context << cellId << rnti);
-  std::string ueManagerPath;
+  stdfwd::string ueManagerPath;
   ueManagerPath = context.substr (0, context.rfind ("/")) + "/UeMap/" + std::to_string (rnti);
   NS_LOG_DEBUG ("ueManagerPath = " << ueManagerPath);
   CellIdRnti key;
@@ -175,52 +175,52 @@ RadioBearerStatsConnector::StoreUeManagerPath (std::string context, uint16_t cel
 }
 
 void
-RadioBearerStatsConnector::NotifyNewUeContextEnb (RadioBearerStatsConnector* c, std::string context, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::NotifyNewUeContextEnb (RadioBearerStatsConnector* c, stdfwd::string context, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (c << context << cellId << rnti);
   c->StoreUeManagerPath (context, cellId, rnti);
 }
 
 void
-RadioBearerStatsConnector::NotifyRandomAccessSuccessfulUe (RadioBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::NotifyRandomAccessSuccessfulUe (RadioBearerStatsConnector* c, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (c << context << imsi << cellId << rnti);
   c->ConnectTracesSrb0 (context, imsi, cellId, rnti);
 }
 
 void
-RadioBearerStatsConnector::CreatedDrbEnb (RadioBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
+RadioBearerStatsConnector::CreatedDrbEnb (RadioBearerStatsConnector* c, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
 {
   NS_LOG_FUNCTION (c << context << imsi << cellId << rnti << (uint16_t)lcid);
   c->ConnectTracesDrbEnb (context, imsi, cellId, rnti, lcid);
 }
 
 void
-RadioBearerStatsConnector::CreatedSrb1Ue (RadioBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::CreatedSrb1Ue (RadioBearerStatsConnector* c, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (c << context << imsi << cellId << rnti);
   c->ConnectTracesSrb1 (context, imsi, cellId, rnti);
 }
 
 void
-RadioBearerStatsConnector::CreatedDrbUe (RadioBearerStatsConnector* c, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
+RadioBearerStatsConnector::CreatedDrbUe (RadioBearerStatsConnector* c, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
 {
   NS_LOG_FUNCTION (c << context << imsi << cellId << rnti << (uint16_t)lcid);
   c->ConnectTracesDrbUe (context, imsi, cellId, rnti, lcid);
 }
 
 void
-RadioBearerStatsConnector::ConnectTracesSrb0 (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::ConnectTracesSrb0 (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << context << imsi << cellId << rnti);
-  std::string ueRrcPath = context.substr (0, context.rfind ("/"));
+  stdfwd::string ueRrcPath = context.substr (0, context.rfind ("/"));
   NS_LOG_LOGIC ("ueRrcPath = " << ueRrcPath);
   CellIdRnti key;
   key.cellId = cellId;
   key.rnti = rnti;
-  std::map<CellIdRnti, std::string>::iterator it = m_ueManagerPathByCellIdRnti.find (key);
+  std::map<CellIdRnti, stdfwd::string>::iterator it = m_ueManagerPathByCellIdRnti.find (key);
   NS_ASSERT (it != m_ueManagerPathByCellIdRnti.end ());
-  std::string ueManagerPath = it->second;
+  stdfwd::string ueManagerPath = it->second;
   NS_LOG_LOGIC ("ueManagerPath = " << ueManagerPath);
   if (m_rlcStats)
     {
@@ -240,17 +240,17 @@ RadioBearerStatsConnector::ConnectTracesSrb0 (std::string context, uint64_t imsi
 }
 
 void
-RadioBearerStatsConnector::ConnectTracesSrb1 (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::ConnectTracesSrb1 (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << context << imsi << cellId << rnti);
-  std::string ueRrcPath = context.substr (0, context.rfind ("/"));
+  stdfwd::string ueRrcPath = context.substr (0, context.rfind ("/"));
   NS_LOG_LOGIC ("ueRrcPath = " << ueRrcPath);
   CellIdRnti key;
   key.cellId = cellId;
   key.rnti = rnti;
-  std::map<CellIdRnti, std::string>::iterator it = m_ueManagerPathByCellIdRnti.find (key);
+  std::map<CellIdRnti, stdfwd::string>::iterator it = m_ueManagerPathByCellIdRnti.find (key);
   NS_ASSERT (it != m_ueManagerPathByCellIdRnti.end ());
-  std::string ueManagerPath = it->second;
+  stdfwd::string ueManagerPath = it->second;
   NS_LOG_LOGIC ("ueManagerPath = " << ueManagerPath);
   if (m_rlcStats)
     {
@@ -285,11 +285,11 @@ RadioBearerStatsConnector::ConnectTracesSrb1 (std::string context, uint64_t imsi
 }
 
 void
-RadioBearerStatsConnector::ConnectTracesDrbEnb (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
+RadioBearerStatsConnector::ConnectTracesDrbEnb (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
 {
   NS_LOG_FUNCTION (this << context << imsi << cellId << rnti << (uint16_t)lcid);
   NS_LOG_LOGIC ("expected context should match /NodeList/*/DeviceList/*/LteEnbRrc/");
-  std::string basePath;
+  stdfwd::string basePath;
   basePath = context.substr (0, context.rfind ("/")) + "/DataRadioBearerMap/" + std::to_string (lcid - 2);
   NS_LOG_LOGIC ("basePath = " << basePath);
   if (m_rlcStats)
@@ -317,11 +317,11 @@ RadioBearerStatsConnector::ConnectTracesDrbEnb (std::string context, uint64_t im
 }
 
 void
-RadioBearerStatsConnector::ConnectTracesDrbUe (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
+RadioBearerStatsConnector::ConnectTracesDrbUe (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti, uint8_t lcid)
 {
   NS_LOG_FUNCTION (this << context << imsi << cellId << rnti << (uint16_t)lcid);
   NS_LOG_LOGIC ("expected context should match /NodeList/*/DeviceList/*/LteUeRrc/");
-  std::string basePath;
+  stdfwd::string basePath;
   basePath = context.substr (0, context.rfind ("/")) + "/DataRadioBearerMap/" + std::to_string (lcid);
   NS_LOG_LOGIC ("basePath = " << basePath);
   if (m_rlcStats)
@@ -349,7 +349,7 @@ RadioBearerStatsConnector::ConnectTracesDrbUe (std::string context, uint64_t ims
 }
 
 void
-RadioBearerStatsConnector::DisconnectTracesEnb (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::DisconnectTracesEnb (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this);
   /**
@@ -364,7 +364,7 @@ RadioBearerStatsConnector::DisconnectTracesEnb (std::string context, uint64_t im
 }
 
 void
-RadioBearerStatsConnector::DisconnectTracesUe (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+RadioBearerStatsConnector::DisconnectTracesUe (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this);
   /**

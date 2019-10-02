@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 #include "../../core/model/attribute.h"
 #include "../../core/model/attribute-helper.h"

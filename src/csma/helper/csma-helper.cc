@@ -33,7 +33,7 @@
 #include "../../network/helper/trace-helper.h"
 #include "csma-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -47,11 +47,11 @@ CsmaHelper::CsmaHelper ()
 }
 
 void 
-CsmaHelper::SetQueue (std::string type,
-                      std::string n1, const AttributeValue &v1,
-                      std::string n2, const AttributeValue &v2,
-                      std::string n3, const AttributeValue &v3,
-                      std::string n4, const AttributeValue &v4)
+CsmaHelper::SetQueue (stdfwd::string type,
+                      stdfwd::string n1, const AttributeValue &v1,
+                      stdfwd::string n2, const AttributeValue &v2,
+                      stdfwd::string n3, const AttributeValue &v3,
+                      stdfwd::string n4, const AttributeValue &v4)
 {
   QueueBase::AppendItemTypeIfNotPresent (type, "Packet");
 
@@ -63,19 +63,19 @@ CsmaHelper::SetQueue (std::string type,
 }
 
 void 
-CsmaHelper::SetDeviceAttribute (std::string n1, const AttributeValue &v1)
+CsmaHelper::SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_deviceFactory.Set (n1, v1);
 }
 
 void 
-CsmaHelper::SetChannelAttribute (std::string n1, const AttributeValue &v1)
+CsmaHelper::SetChannelAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_channelFactory.Set (n1, v1);
 }
 
 void 
-CsmaHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+CsmaHelper::EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   //
   // All of the Pcap enable functions vector through here including the ones
@@ -91,7 +91,7 @@ CsmaHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool prom
 
   PcapHelper pcapHelper;
 
-  std::string filename;
+  stdfwd::string filename;
   if (explicitFilename)
     {
       filename = prefix;
@@ -116,7 +116,7 @@ CsmaHelper::EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool prom
 void 
 CsmaHelper::EnableAsciiInternal (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
+  stdfwd::string prefix,
   Ptr<NetDevice> nd,
   bool explicitFilename)
 {
@@ -153,7 +153,7 @@ CsmaHelper::EnableAsciiInternal (
       //
       AsciiTraceHelper asciiTraceHelper;
 
-      std::string filename;
+      stdfwd::string filename;
       if (explicitFilename)
         {
           filename = prefix;
@@ -222,7 +222,7 @@ CsmaHelper::Install (Ptr<Node> node) const
 }
 
 NetDeviceContainer
-CsmaHelper::Install (std::string nodeName) const
+CsmaHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (node);
@@ -235,21 +235,21 @@ CsmaHelper::Install (Ptr<Node> node, Ptr<CsmaChannel> channel) const
 }
 
 NetDeviceContainer
-CsmaHelper::Install (Ptr<Node> node, std::string channelName) const
+CsmaHelper::Install (Ptr<Node> node, stdfwd::string channelName) const
 {
   Ptr<CsmaChannel> channel = Names::Find<CsmaChannel> (channelName);
   return NetDeviceContainer (InstallPriv (node, channel));
 }
 
 NetDeviceContainer
-CsmaHelper::Install (std::string nodeName, Ptr<CsmaChannel> channel) const
+CsmaHelper::Install (stdfwd::string nodeName, Ptr<CsmaChannel> channel) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return NetDeviceContainer (InstallPriv (node, channel));
 }
 
 NetDeviceContainer
-CsmaHelper::Install (std::string nodeName, std::string channelName) const
+CsmaHelper::Install (stdfwd::string nodeName, stdfwd::string channelName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Ptr<CsmaChannel> channel = Names::Find<CsmaChannel> (channelName);
@@ -278,7 +278,7 @@ CsmaHelper::Install (const NodeContainer &c, Ptr<CsmaChannel> channel) const
 }
 
 NetDeviceContainer 
-CsmaHelper::Install (const NodeContainer &c, std::string channelName) const
+CsmaHelper::Install (const NodeContainer &c, stdfwd::string channelName) const
 {
   Ptr<CsmaChannel> channel = Names::Find<CsmaChannel> (channelName);
   return Install (c, channel);

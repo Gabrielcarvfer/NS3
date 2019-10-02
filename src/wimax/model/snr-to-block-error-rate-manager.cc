@@ -86,7 +86,7 @@ SNRToBlockErrorRateManager::LoadTraces (void)
 
   for (int i = 0; i < 7; i++)
     {
-      std::stringstream traceFilePath;
+      stdfwd::stringstream traceFilePath;
       traceFilePath << m_traceFilePath << "/modulation" << i << ".txt";
 
       traceFile.open (traceFilePath.str ().c_str (), std::ifstream::in);
@@ -244,7 +244,7 @@ SNRToBlockErrorRateManager::ReLoadTraces (void)
 
   for (int i = 0; i < 7; i++)
     {
-      std::stringstream traceFilePath;
+      stdfwd::stringstream traceFilePath;
       traceFilePath << m_traceFilePath << "/Modulation" << i << ".txt";
 
       traceFile.open (traceFilePath.str ().c_str (), std::ifstream::in);
@@ -278,7 +278,7 @@ SNRToBlockErrorRateManager::SetTraceFilePath (char *traceFilePath)
   m_traceFilePath = traceFilePath;
 }
 
-std::string
+stdfwd::string
 SNRToBlockErrorRateManager::GetTraceFilePath (void)
 {
   return m_traceFilePath;

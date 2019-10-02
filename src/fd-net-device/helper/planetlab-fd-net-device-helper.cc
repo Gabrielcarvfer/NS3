@@ -56,7 +56,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -154,7 +154,7 @@ PlanetLabFdNetDeviceHelper::CreateFileDescriptor (void) const
   //
   // Now encode that socket name (family and path) as a string of hex digits
   //
-  std::string path = BufferToString ((uint8_t *)&un, len);
+  stdfwd::string path = BufferToString ((uint8_t *)&un, len);
   NS_LOG_INFO ("Encoded Unix socket as \"" << path << "\"");
 
   //

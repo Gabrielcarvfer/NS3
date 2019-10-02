@@ -51,7 +51,7 @@ public:
    * \brief Constructor.
    * \param name testcase name
    */
-  AbstractAnimationInterfaceTestCase (std::string name);
+  AbstractAnimationInterfaceTestCase (stdfwd::string name);
   /**
    * \brief Destructor.
    */
@@ -83,7 +83,7 @@ private:
   const char* m_traceFileName; ///< trace file name
 };
 
-AbstractAnimationInterfaceTestCase::AbstractAnimationInterfaceTestCase (std::string name) :
+AbstractAnimationInterfaceTestCase::AbstractAnimationInterfaceTestCase (stdfwd::string name) :
   TestCase (name), m_anim (NULL), m_traceFileName ("netanim-test.xml")
 {
 }

@@ -718,7 +718,7 @@ BatteryLifetimeTest::ConstantLoadTest (double load, Time expLifetime)
   NodeContainer c;
   c.Create (1);
 
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
 
   // disable fragmentation for frames below 2200 bytes
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold",
@@ -805,7 +805,7 @@ BatteryLifetimeTest::VariableLoadTest (std::vector<double> loads,
   NodeContainer c;
   c.Create (1);
 
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
 
   // disable fragmentation for frames below 2200 bytes
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold",

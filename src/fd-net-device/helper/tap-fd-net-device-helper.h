@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../model/fd-net-device.h"

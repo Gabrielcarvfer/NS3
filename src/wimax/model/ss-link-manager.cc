@@ -21,7 +21,7 @@
  */
 
 #include "ss-link-manager.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/node.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/simulator.h"

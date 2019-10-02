@@ -35,7 +35,7 @@ LiIonEnergySourceHelper::~LiIonEnergySourceHelper ()
 }
 
 void 
-LiIonEnergySourceHelper::Set (std::string name, const AttributeValue &v)
+LiIonEnergySourceHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_liIonEnergySource.Set (name, v);
 }

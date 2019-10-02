@@ -43,7 +43,7 @@ public:
    * \param name Test description.
    */
   TcpHighSpeedIncrementTest (uint32_t cWnd, uint32_t segmentSize,
-                             const std::string &name);
+                             const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -55,7 +55,7 @@ private:
 
 TcpHighSpeedIncrementTest::TcpHighSpeedIncrementTest (uint32_t cWnd,
                                                       uint32_t segmentSize,
-                                                      const std::string &name)
+                                                      const stdfwd::string &name)
   : TestCase (name),
   m_cWnd (cWnd),
   m_segmentSize (segmentSize)
@@ -100,7 +100,7 @@ public:
    * \param name Test description.
    */
   TcpHighSpeedDecrementTest (uint32_t cWnd, uint32_t segmentSize,
-                             const std::string &name);
+                             const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -112,7 +112,7 @@ private:
 
 TcpHighSpeedDecrementTest::TcpHighSpeedDecrementTest (uint32_t cWnd,
                                                       uint32_t segmentSize,
-                                                      const std::string &name)
+                                                      const stdfwd::string &name)
   : TestCase (name),
   m_cWnd (cWnd),
   m_segmentSize (segmentSize)
@@ -239,7 +239,7 @@ class TcpHighSpeedTestSuite : public TestSuite
 public:
   TcpHighSpeedTestSuite () : TestSuite ("tcp-highspeed-test", UNIT)
   {
-    std::stringstream ss;
+    stdfwd::stringstream ss;
 
     for (uint32_t i = 0; i < HIGHSPEED_VALUES_N; ++i)
       {

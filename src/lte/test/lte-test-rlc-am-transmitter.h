@@ -61,7 +61,7 @@ class LteRlcAmTransmitterTestCase : public TestCase
      *
      * \param name the reference name
      */
-    LteRlcAmTransmitterTestCase (std::string name);
+    LteRlcAmTransmitterTestCase (stdfwd::string name);
     LteRlcAmTransmitterTestCase ();
     virtual ~LteRlcAmTransmitterTestCase ();
 
@@ -71,7 +71,7 @@ class LteRlcAmTransmitterTestCase : public TestCase
      * \param shouldReceived shoul dhave received indicator
      * \param assertMsg the assert message
      */
-    void CheckDataReceived (Time time, std::string shouldReceived, std::string assertMsg);
+    void CheckDataReceived (Time time, stdfwd::string shouldReceived, stdfwd::string assertMsg);
 
   protected:
     virtual void DoRun (void);
@@ -86,7 +86,7 @@ class LteRlcAmTransmitterTestCase : public TestCase
      * \param shouldReceived shoul dhave received indicator
      * \param assertMsg the assert message
      */
-    void DoCheckDataReceived (std::string shouldReceived, std::string assertMsg);
+    void DoCheckDataReceived (stdfwd::string shouldReceived, stdfwd::string assertMsg);
 
 };
 
@@ -105,7 +105,7 @@ class LteRlcAmTransmitterOneSduTestCase : public LteRlcAmTransmitterTestCase
      *
      * \param name the reference name
      */
-    LteRlcAmTransmitterOneSduTestCase (std::string name);
+    LteRlcAmTransmitterOneSduTestCase (stdfwd::string name);
     LteRlcAmTransmitterOneSduTestCase ();
     virtual ~LteRlcAmTransmitterOneSduTestCase ();
 
@@ -129,7 +129,7 @@ class LteRlcAmTransmitterSegmentationTestCase : public LteRlcAmTransmitterTestCa
      *
      * \param name the reference name
      */
-    LteRlcAmTransmitterSegmentationTestCase (std::string name);
+    LteRlcAmTransmitterSegmentationTestCase (stdfwd::string name);
     LteRlcAmTransmitterSegmentationTestCase ();
     virtual ~LteRlcAmTransmitterSegmentationTestCase ();
 
@@ -153,7 +153,7 @@ class LteRlcAmTransmitterConcatenationTestCase : public LteRlcAmTransmitterTestC
      *
      * \param name the reference name
      */
-    LteRlcAmTransmitterConcatenationTestCase (std::string name);
+    LteRlcAmTransmitterConcatenationTestCase (stdfwd::string name);
     LteRlcAmTransmitterConcatenationTestCase ();
     virtual ~LteRlcAmTransmitterConcatenationTestCase ();
 
@@ -177,7 +177,7 @@ class LteRlcAmTransmitterReportBufferStatusTestCase : public LteRlcAmTransmitter
      *
      * \param name the reference name
      */
-    LteRlcAmTransmitterReportBufferStatusTestCase (std::string name);
+    LteRlcAmTransmitterReportBufferStatusTestCase (stdfwd::string name);
     LteRlcAmTransmitterReportBufferStatusTestCase ();
     virtual ~LteRlcAmTransmitterReportBufferStatusTestCase ();
 

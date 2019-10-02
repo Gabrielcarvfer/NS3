@@ -18,7 +18,7 @@
  */
 
 #define __STDC_LIMIT_MACROS
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/test.h"
 #include "ns3/core-module.h"
 #include "../model/tcp-header.h"
@@ -54,7 +54,7 @@ public:
    * Constructor.
    * \param name Test description.
    */
-  TcpHeaderGetSetTestCase (std::string name);
+  TcpHeaderGetSetTestCase (stdfwd::string name);
 protected:
 private:
   virtual void DoRun (void);
@@ -62,7 +62,7 @@ private:
 
 };
 
-TcpHeaderGetSetTestCase::TcpHeaderGetSetTestCase (std::string name) : TestCase (name)
+TcpHeaderGetSetTestCase::TcpHeaderGetSetTestCase (stdfwd::string name) : TestCase (name)
 {
 }
 
@@ -159,7 +159,7 @@ public:
    * Constructor.
    * \param name Test description.
    */
-  TcpHeaderWithRFC793OptionTestCase (std::string name);
+  TcpHeaderWithRFC793OptionTestCase (stdfwd::string name);
 
 private:
   virtual void DoRun (void);
@@ -180,7 +180,7 @@ private:
 };
 
 
-TcpHeaderWithRFC793OptionTestCase::TcpHeaderWithRFC793OptionTestCase (std::string name)
+TcpHeaderWithRFC793OptionTestCase::TcpHeaderWithRFC793OptionTestCase (stdfwd::string name)
   : TestCase (name)
 {
 
@@ -248,7 +248,7 @@ TcpHeaderWithRFC793OptionTestCase::CheckNoPadding ()
 
     for (uint32_t j = 0; j < 4; ++j)
       {
-        std::stringstream ss;
+        stdfwd::stringstream ss;
         ss << j;
         uint8_t value = i.ReadU8 ();
         NS_TEST_ASSERT_MSG_EQ (value, TcpOption::NOP,
@@ -364,13 +364,13 @@ public:
    * Constructor.
    * \param name Test description.
    */
-  TcpHeaderFlagsToString (std::string name);
+  TcpHeaderFlagsToString (stdfwd::string name);
 
 private:
   virtual void DoRun (void);
 };
 
-TcpHeaderFlagsToString::TcpHeaderFlagsToString (std::string name)
+TcpHeaderFlagsToString::TcpHeaderFlagsToString (stdfwd::string name)
   : TestCase (name)
 {
 }
@@ -378,7 +378,7 @@ TcpHeaderFlagsToString::TcpHeaderFlagsToString (std::string name)
 void
 TcpHeaderFlagsToString::DoRun (void)
 {
-  std::string str, target;
+  stdfwd::string str, target;
   str = TcpHeader::FlagsToString (0x0);
   target = "";
   NS_TEST_ASSERT_MSG_EQ (str, target, "str " << str <<  " does not equal target " << target);

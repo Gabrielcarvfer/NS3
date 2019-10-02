@@ -20,7 +20,7 @@
  */
 
 #include "ipcs-classifier.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/log.h"
 #include "service-flow.h"
 #include "../../network/model/packet.h"

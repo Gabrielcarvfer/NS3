@@ -39,7 +39,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("GlobalValue");
 
-GlobalValue::GlobalValue (std::string name, std::string help,
+GlobalValue::GlobalValue (stdfwd::string name, stdfwd::string help,
                           const AttributeValue &initialValue,
                           Ptr<const AttributeChecker> checker)
   : m_name (name),
@@ -73,18 +73,18 @@ GlobalValue::InitializeFromEnv (void)
     {
       return;
     }
-  std::string env = std::string (envVar);
-  std::string::size_type cur = 0;
-  std::string::size_type next = 0;
-  while (next != std::string::npos)
+  stdfwd::string env = stdfwd::string (envVar);
+  stdfwd::string::size_type cur = 0;
+  stdfwd::string::size_type next = 0;
+  while (next != stdfwd::string::npos)
     {
       next = env.find (";", cur);
-      std::string tmp = std::string (env, cur, next-cur);
-      std::string::size_type equal = tmp.find ("=");
-      if (equal != std::string::npos)
+      stdfwd::string tmp = stdfwd::string (env, cur, next-cur);
+      stdfwd::string::size_type equal = tmp.find ("=");
+      if (equal != stdfwd::string::npos)
         {
-          std::string name = tmp.substr (0, equal);
-          std::string value = tmp.substr (equal+1, tmp.size () - equal - 1);
+          stdfwd::string name = tmp.substr (0, equal);
+          stdfwd::string value = tmp.substr (equal+1, tmp.size () - equal - 1);
           if (name == m_name)
             {
               Ptr<AttributeValue> v = m_checker->CreateValidValue (StringValue (value));
@@ -101,13 +101,13 @@ GlobalValue::InitializeFromEnv (void)
 #endif /* HAVE_GETENV */
 }
 
-std::string 
+stdfwd::string
 GlobalValue::GetName (void) const
 {
   NS_LOG_FUNCTION_NOARGS ();
   return m_name;
 }
-std::string 
+stdfwd::string
 GlobalValue::GetHelp (void) const
 {
   NS_LOG_FUNCTION_NOARGS ();
@@ -152,7 +152,7 @@ GlobalValue::SetValue (const AttributeValue &value)
 }
 
 void 
-GlobalValue::Bind (std::string name, const AttributeValue &value)
+GlobalValue::Bind (stdfwd::string name, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (name << &value);
 
@@ -170,7 +170,7 @@ GlobalValue::Bind (std::string name, const AttributeValue &value)
   NS_FATAL_ERROR ("Non-existant global value: "<<name);
 }
 bool 
-GlobalValue::BindFailSafe (std::string name, const AttributeValue &value)
+GlobalValue::BindFailSafe (stdfwd::string name, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (name << &value);
 
@@ -205,7 +205,7 @@ GlobalValue::ResetInitialValue (void)
 }
 
 bool
-GlobalValue::GetValueByNameFailSafe (std::string name, AttributeValue &value)
+GlobalValue::GetValueByNameFailSafe (stdfwd::string name, AttributeValue &value)
 {
   NS_LOG_FUNCTION (name << &value);
   for (GlobalValue::Iterator gvit = GlobalValue::Begin (); gvit != GlobalValue::End (); ++gvit)
@@ -220,7 +220,7 @@ GlobalValue::GetValueByNameFailSafe (std::string name, AttributeValue &value)
 }
 
 void
-GlobalValue::GetValueByName (std::string name, AttributeValue &value)
+GlobalValue::GetValueByName (stdfwd::string name, AttributeValue &value)
 {
   NS_LOG_FUNCTION (name << &value);
   if (!GetValueByNameFailSafe (name, value))

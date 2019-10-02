@@ -286,13 +286,13 @@ private:
    * \param reason Drop reason.
    */
   ///
-  void Drop (DsrErrorBuffEntry en, std::string reason);
+  void Drop (DsrErrorBuffEntry en, stdfwd::string reason);
   /**
    * Notify that packet is dropped from queue by link error
    * \param en Error Buffer Entry
    * \param reason Drop reason.
    */
-  void DropLink (DsrErrorBuffEntry en, std::string reason);
+  void DropLink (DsrErrorBuffEntry en, stdfwd::string reason);
   /// The maximum number of packets that we allow a routing protocol to buffer.
   uint32_t m_maxLen;
   /// The maximum period of time that a routing protocol is allowed to buffer a packet for, seconds.

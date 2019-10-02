@@ -20,8 +20,8 @@
  */
 #pragma once
 
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "ptr.h"
 #include "attribute.h"

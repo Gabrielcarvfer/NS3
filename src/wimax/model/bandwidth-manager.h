@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "wimax-net-device.h"
 #include "ul-job.h"
 #include "bs-uplink-scheduler.h"

@@ -82,8 +82,8 @@ public:
     Time interval; ///< interval
     double xA; ///< x A
     double xB; ///< x B
-    std::string txModeA; ///< transmit mode A
-    std::string txModeB; ///< transmit mode B
+    stdfwd::string txModeA; ///< transmit mode A
+    stdfwd::string txModeB; ///< transmit mode B
     double txPowerLevelA; ///< transmit power level A
     double txPowerLevelB; ///< transmit power level B
     uint32_t packetSizeA; ///< packet size A
@@ -252,8 +252,8 @@ InterferenceExperiment::Run (struct InterferenceExperiment::Input input)
 int main (int argc, char *argv[])
 {
   InterferenceExperiment::Input input;
-  std::string str_standard = "WIFI_PHY_STANDARD_80211a";
-  std::string str_preamble = "WIFI_PREAMBLE_LONG";
+  stdfwd::string str_standard = "WIFI_PHY_STANDARD_80211a";
+  stdfwd::string str_preamble = "WIFI_PREAMBLE_LONG";
   uint64_t delay = 0; //microseconds
 
   CommandLine cmd;

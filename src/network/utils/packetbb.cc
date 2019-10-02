@@ -253,7 +253,7 @@ void
 PbbTlvBlock::Print (std::ostream &os, int level) const
 {
   NS_LOG_FUNCTION (this << &os << level);
-  std::string prefix = "";
+  stdfwd::string prefix = "";
   for (int i = 0; i < level; i++)
     {
       prefix.append ("\t");
@@ -494,7 +494,7 @@ void
 PbbAddressTlvBlock::Print (std::ostream &os, int level) const
 {
   NS_LOG_FUNCTION (this << &os << level);
-  std::string prefix = "";
+  stdfwd::string prefix = "";
   for (int i = 0; i < level; i++)
     {
       prefix.append ("\t");
@@ -1583,7 +1583,7 @@ void
 PbbMessage::Print (std::ostream &os, int level) const
 {
   NS_LOG_FUNCTION (this << &os << level);
-  std::string prefix = "";
+  stdfwd::string prefix = "";
   for (int i = 0; i < level; i++)
     {
       prefix.append ("\t");
@@ -2385,7 +2385,7 @@ void
 PbbAddressBlock::Print (std::ostream &os, int level) const
 {
   NS_LOG_FUNCTION (this << &os << level);
-  std::string prefix = "";
+  stdfwd::string prefix = "";
   for (int i = 0; i < level; i++)
     {
       prefix.append ("\t");
@@ -2941,7 +2941,7 @@ void
 PbbTlv::Print (std::ostream &os, int level) const
 {
   NS_LOG_FUNCTION (this << &os << level);
-  std::string prefix = "";
+  stdfwd::string prefix = "";
   for (int i = 0; i < level; i++)
     {
       prefix.append ("\t");

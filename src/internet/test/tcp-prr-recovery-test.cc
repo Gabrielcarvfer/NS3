@@ -58,8 +58,8 @@ public:
                    uint32_t bytesInFlight,
                    uint32_t m_lastSackedBytes,
                    uint32_t bytesSent,
-                   const std::string &reductionBound,
-                   const std::string &name);
+                   const stdfwd::string &reductionBound,
+                   const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -71,7 +71,7 @@ private:
   uint32_t m_bytesInFlight;           //!< Current bytes in flight.
   uint32_t m_lastSackedBytes;         //!< Bytes SACKed on last acknowledgment.
   uint32_t m_bytesSent;               //!< Bytes sent while in recovery phase.
-  const std::string m_reductionBound; //!< Type of reduction bound to be used.
+  const stdfwd::string m_reductionBound; //!< Type of reduction bound to be used.
 
   Ptr<TcpSocketState> m_state;  //!< TCP socket state.
 };
@@ -83,8 +83,8 @@ PrrRecoveryTest::PrrRecoveryTest (uint32_t cWnd,
                                   uint32_t bytesInFlight,
                                   uint32_t lastSackedBytes,
                                   uint32_t bytesSent,
-                                  const std::string &reductionBound,
-                                  const std::string &name)
+                                  const stdfwd::string &reductionBound,
+                                  const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

@@ -97,7 +97,7 @@ private:
    * \param socket Sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
 };
 
 Ipv6PacketInfoTagTest::Ipv6PacketInfoTagTest ()
@@ -122,7 +122,7 @@ Ipv6PacketInfoTagTest::RxCb (Ptr<Socket> socket)
 }
 
 void
-Ipv6PacketInfoTagTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv6PacketInfoTagTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 200);
   if (DynamicCast<UdpSocket> (socket) != 0)
@@ -195,7 +195,7 @@ Ipv6PacketInfoTagTest::DoRun (void)
 
   Ptr<SocketFactory> factory2 = node1->GetObject<SocketFactory> (Ipv6RawSocketFactory::GetTypeId ());
   Ptr<Socket> socket2 = factory2->CreateSocket ();
-  std::stringstream dst;
+  stdfwd::stringstream dst;
   dst << ifaceAddr1.GetAddress ();
   Simulator::ScheduleWithContext (socket2->GetNode ()->GetId (), Seconds (0),
                                   &Ipv6PacketInfoTagTest::DoSendData, this, socket,

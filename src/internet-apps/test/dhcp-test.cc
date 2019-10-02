@@ -54,7 +54,7 @@ public:
    * \param context The test name.
    * \param newAddress The leased address.
    */
-  void LeaseObtained (std::string context, const Ipv4Address& newAddress);
+  void LeaseObtained (stdfwd::string context, const Ipv4Address& newAddress);
 private:
   virtual void DoRun (void);
   Ipv4Address m_leasedAddress[3]; //!< Address given to the nodes
@@ -70,7 +70,7 @@ DhcpTestCase::~DhcpTestCase ()
 }
 
 void
-DhcpTestCase::LeaseObtained (std::string context, const Ipv4Address& newAddress)
+DhcpTestCase::LeaseObtained (stdfwd::string context, const Ipv4Address& newAddress)
 {
   uint8_t numericalContext = std::stoi (context, nullptr, 10);
 

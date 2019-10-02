@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/ptr.h"
 
 namespace ns3 {
@@ -77,7 +77,7 @@ public:
    *
    * \param mode the access mode for the file.
    */
-  void Open (std::string const &filename, std::ios::openmode mode);
+  void Open (stdfwd::string const &filename, std::ios::openmode mode);
 
   /**
    * Close the underlying file.
@@ -284,7 +284,7 @@ public:
    * \param  packets    [out] Number of first different packet. Total number of parsed packets if files doesn't differ.
    * \param  snapLen    Snap length (if used)
    */
-  static bool Diff (std::string const & f1, std::string const & f2, 
+  static bool Diff (stdfwd::string const & f1, stdfwd::string const & f2,
                     uint32_t & sec, uint32_t & usec, uint32_t & packets,
                     uint32_t snapLen = SNAPLEN_DEFAULT);
 
@@ -365,7 +365,7 @@ private:
    */
   void ReadAndVerifyFileHeader (void);
 
-  std::string    m_filename;    //!< file name
+  stdfwd::string    m_filename;    //!< file name
   std::fstream   m_file;        //!< file stream
   PcapFileHeader m_fileHeader;  //!< file header
   bool m_swapMode;              //!< swap mode

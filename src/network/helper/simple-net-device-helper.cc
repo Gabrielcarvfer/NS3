@@ -34,7 +34,7 @@
 #include "trace-helper.h"
 #include "simple-net-device-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -49,11 +49,11 @@ SimpleNetDeviceHelper::SimpleNetDeviceHelper ()
 }
 
 void 
-SimpleNetDeviceHelper::SetQueue (std::string type,
-                                 std::string n1, const AttributeValue &v1,
-                                 std::string n2, const AttributeValue &v2,
-                                 std::string n3, const AttributeValue &v3,
-                                 std::string n4, const AttributeValue &v4)
+SimpleNetDeviceHelper::SetQueue (stdfwd::string type,
+                                 stdfwd::string n1, const AttributeValue &v1,
+                                 stdfwd::string n2, const AttributeValue &v2,
+                                 stdfwd::string n3, const AttributeValue &v3,
+                                 stdfwd::string n4, const AttributeValue &v4)
 {
   QueueBase::AppendItemTypeIfNotPresent (type, "Packet");
 
@@ -65,11 +65,11 @@ SimpleNetDeviceHelper::SetQueue (std::string type,
 }
 
 void
-SimpleNetDeviceHelper::SetChannel (std::string type,
-                                   std::string n1, const AttributeValue &v1,
-                                   std::string n2, const AttributeValue &v2,
-                                   std::string n3, const AttributeValue &v3,
-                                   std::string n4, const AttributeValue &v4)
+SimpleNetDeviceHelper::SetChannel (stdfwd::string type,
+                                   stdfwd::string n1, const AttributeValue &v1,
+                                   stdfwd::string n2, const AttributeValue &v2,
+                                   stdfwd::string n3, const AttributeValue &v3,
+                                   stdfwd::string n4, const AttributeValue &v4)
 {
   m_channelFactory.SetTypeId (type);
   m_channelFactory.Set (n1, v1);
@@ -79,13 +79,13 @@ SimpleNetDeviceHelper::SetChannel (std::string type,
 }
 
 void
-SimpleNetDeviceHelper::SetDeviceAttribute (std::string n1, const AttributeValue &v1)
+SimpleNetDeviceHelper::SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_deviceFactory.Set (n1, v1);
 }
 
 void
-SimpleNetDeviceHelper::SetChannelAttribute (std::string n1, const AttributeValue &v1)
+SimpleNetDeviceHelper::SetChannelAttribute (stdfwd::string n1, const AttributeValue &v1)
 {
   m_channelFactory.Set (n1, v1);
 }

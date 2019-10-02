@@ -46,12 +46,12 @@ namespace internal {
  * \returns The AttributeChecker.
  */
 Ptr<const AttributeChecker>
-MakeIntegerChecker (int64_t min, int64_t max, std::string name)
+MakeIntegerChecker (int64_t min, int64_t max, stdfwd::string name)
 {
   NS_LOG_FUNCTION (min << max << name);
   struct IntegerChecker : public AttributeChecker
   {
-    IntegerChecker (int64_t minValue, int64_t maxValue, std::string name)
+    IntegerChecker (int64_t minValue, int64_t maxValue, stdfwd::string name)
       : m_minValue (minValue),
         m_maxValue (maxValue),
         m_name (name) {}
@@ -64,7 +64,7 @@ MakeIntegerChecker (int64_t min, int64_t max, std::string name)
         }
       return v->Get () >= m_minValue && v->Get () <= m_maxValue;
     }
-    virtual std::string GetValueTypeName (void) const {
+    virtual stdfwd::string GetValueTypeName (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       return "ns3::IntegerValue";
     }
@@ -72,7 +72,7 @@ MakeIntegerChecker (int64_t min, int64_t max, std::string name)
       NS_LOG_FUNCTION_NOARGS ();
       return true;
     }
-    virtual std::string GetUnderlyingTypeInformation (void) const {
+    virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
       NS_LOG_FUNCTION_NOARGS ();
       std::ostringstream oss;
       oss << m_name << " " << m_minValue << ":" << m_maxValue;
@@ -95,7 +95,7 @@ MakeIntegerChecker (int64_t min, int64_t max, std::string name)
     }
     int64_t m_minValue;
     int64_t m_maxValue;
-    std::string m_name;
+    stdfwd::string m_name;
   } *checker = new IntegerChecker (min, max, name);
   return Ptr<AttributeChecker> (checker, false);
 }

@@ -61,7 +61,7 @@ public:
                         SequenceNumber32 lastAckedSeq,
                         uint32_t segmentsAcked,
                         Time minRtt,
-                        const std::string &name);
+                        const stdfwd::string &name);
 
 private:
   virtual void DoRun ();
@@ -91,7 +91,7 @@ TcpYeahIncrementTest::TcpYeahIncrementTest (uint32_t cWnd,
                                             SequenceNumber32 lastAckedSeq,
                                             uint32_t segmentsAcked,
                                             Time minRtt,
-                                            const std::string &name)
+                                            const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_ssThresh (ssThresh),
@@ -247,7 +247,7 @@ public:
                         SequenceNumber32 lastAckedSeq,
                         Time minRtt,
                         UintegerValue rho,
-                        const std::string &name);
+                        const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -277,7 +277,7 @@ TcpYeahDecrementTest::TcpYeahDecrementTest (uint32_t cWnd,
                                             SequenceNumber32 lastAckedSeq,
                                             Time minRtt,
                                             UintegerValue rho,
-                                            const std::string &name)
+                                            const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_ssThresh (ssThresh),

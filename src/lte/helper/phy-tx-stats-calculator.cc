@@ -66,24 +66,24 @@ PhyTxStatsCalculator::GetTypeId (void)
 }
 
 void
-PhyTxStatsCalculator::SetUlTxOutputFilename (std::string outputFilename)
+PhyTxStatsCalculator::SetUlTxOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetUlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 PhyTxStatsCalculator::GetUlTxOutputFilename (void)
 {
   return LteStatsCalculator::GetUlOutputFilename ();
 }
 
 void
-PhyTxStatsCalculator::SetDlTxOutputFilename (std::string outputFilename)
+PhyTxStatsCalculator::SetDlTxOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetDlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 PhyTxStatsCalculator::GetDlTxOutputFilename (void)
 {
   return LteStatsCalculator::GetDlOutputFilename ();
@@ -181,12 +181,12 @@ PhyTxStatsCalculator::UlPhyTransmission (PhyTransmissionStatParameters params)
 
 void
 PhyTxStatsCalculator::DlPhyTransmissionCallback (Ptr<PhyTxStatsCalculator> phyTxStats,
-                      std::string path, PhyTransmissionStatParameters params)
+                      stdfwd::string path, PhyTransmissionStatParameters params)
 {
   NS_LOG_FUNCTION (phyTxStats << path);
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
-  std::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
+  stdfwd::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
   pathAndRnti << pathEnb << "/LteEnbRrc/UeMap/" << params.m_rnti;
   if (phyTxStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {
@@ -204,13 +204,13 @@ PhyTxStatsCalculator::DlPhyTransmissionCallback (Ptr<PhyTxStatsCalculator> phyTx
 
 void
 PhyTxStatsCalculator::UlPhyTransmissionCallback (Ptr<PhyTxStatsCalculator> phyTxStats,
-                      std::string path, PhyTransmissionStatParameters params)
+                      stdfwd::string path, PhyTransmissionStatParameters params)
 {
   NS_LOG_FUNCTION (phyTxStats << path);
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
   pathAndRnti << path << "/" << params.m_rnti;
-  std::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
+  stdfwd::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
   if (phyTxStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {
       imsi = phyTxStats->GetImsiPath (pathAndRnti.str ());

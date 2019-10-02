@@ -162,7 +162,7 @@ PrioQueueDiscTestCase::DoRun (void)
 {
   Ptr<PrioQueueDisc> qdisc;
   Ptr<QueueDiscItem> item;
-  std::string priomap ("0 1 2 3 0 1 2 3 0 1 2 3 0 1 2 3");
+  stdfwd::string priomap ("0 1 2 3 0 1 2 3 0 1 2 3 0 1 2 3");
   Address dest;
   std::array<std::queue<uint64_t>,4> uids;
 

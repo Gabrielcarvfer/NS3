@@ -162,7 +162,7 @@ public:
    * \returns a human-readable representation of this WifiMode
    * instance.
    */
-  std::string GetUniqueName (void) const;
+  stdfwd::string GetUniqueName (void) const;
   /**
    * \returns true if this mode is a mandatory mode, false
    *          otherwise.
@@ -215,9 +215,9 @@ public:
    * Create a WifiMode if the given string represents a valid
    * WifiMode name.
    *
-   * \param name std::string of a valid WifiMode name
+   * \param name stdfwd::string of a valid WifiMode name
    */
-  WifiMode (std::string name);
+  WifiMode (stdfwd::string name);
 
 
 private:
@@ -279,7 +279,7 @@ public:
    *
    * Create a WifiMode (not used for HT or VHT).
    */
-  static WifiMode CreateWifiMode (std::string uniqueName,
+  static WifiMode CreateWifiMode (stdfwd::string uniqueName,
                                   WifiModulationClass modClass,
                                   bool isMandatory,
                                   WifiCodeRate codingRate,
@@ -295,7 +295,7 @@ public:
    *
    * Create a HT or VHT WifiMode.
    */
-  static WifiMode CreateWifiMcs (std::string uniqueName,
+  static WifiMode CreateWifiMcs (stdfwd::string uniqueName,
                                  uint8_t mcsValue,
                                  WifiModulationClass modClass);
 
@@ -320,7 +320,7 @@ private:
    */
   struct WifiModeItem
   {
-    std::string uniqueUid; ///< unique UID
+    stdfwd::string uniqueUid; ///< unique UID
     WifiModulationClass modClass; ///< modulation class
     uint16_t constellationSize; ///< constellation size
     WifiCodeRate codingRate; ///< coding rate
@@ -335,7 +335,7 @@ private:
    *
    * \return WifiMode
    */
-  WifiMode Search (std::string name) const;
+  WifiMode Search (stdfwd::string name) const;
   /**
    * Allocate a WifiModeItem from a given uniqueUid.
    *
@@ -343,7 +343,7 @@ private:
    *
    * \return uid
    */
-  uint32_t AllocateUid (std::string uniqueUid);
+  uint32_t AllocateUid (stdfwd::string uniqueUid);
   /**
    * Return a WifiModeItem at the given uid index.
    *

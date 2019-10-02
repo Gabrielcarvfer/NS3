@@ -526,7 +526,7 @@ private:
    * \param sphType the sphere type
    * \returns the name string
    */
-  static std::string Name (double latitude, 
+  static stdfwd::string Name (double latitude,
                            double longitude, 
                            double altitude,
                            GeographicPositions::EarthSpheroidType sphType);
@@ -537,7 +537,7 @@ private:
   int m_i; ///< index
 };
 
-std::string 
+stdfwd::string
 GeoToCartesianTestCase::Name (double latitude, 
                               double longitude, 
                               double altitude,

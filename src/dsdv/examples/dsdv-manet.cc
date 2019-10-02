@@ -74,21 +74,21 @@ public:
   void CaseRun (uint32_t nWifis,
                 uint32_t nSinks,
                 double totalTime,
-                std::string rate,
-                std::string phyMode,
+                stdfwd::string rate,
+                stdfwd::string phyMode,
                 uint32_t nodeSpeed,
                 uint32_t periodicUpdateInterval,
                 uint32_t settlingTime,
                 double dataStart,
                 bool printRoutes,
-                std::string CSVfileName);
+                stdfwd::string CSVfileName);
 
 private:
   uint32_t m_nWifis; ///< total number of nodes
   uint32_t m_nSinks; ///< number of receiver nodes
   double m_totalTime; ///< total simulation time (in seconds)
-  std::string m_rate; ///< network bandwidth
-  std::string m_phyMode; ///< remote station manager data mode
+  stdfwd::string m_rate; ///< network bandwidth
+  stdfwd::string m_phyMode; ///< remote station manager data mode
   uint32_t m_nodeSpeed; ///< mobility speed
   uint32_t m_periodicUpdateInterval; ///< routing update interval
   uint32_t m_settlingTime; ///< routing setting time
@@ -96,7 +96,7 @@ private:
   uint32_t bytesTotal; ///< total bytes received by all nodes
   uint32_t packetsReceived; ///< total packets received by all nodes
   bool m_printRoutes; ///< print routing table
-  std::string m_CSVfileName; ///< CSV file name
+  stdfwd::string m_CSVfileName; ///< CSV file name
 
   NodeContainer nodes; ///< the collection of nodes
   NetDeviceContainer devices; ///< the collection of devices
@@ -109,12 +109,12 @@ private:
    * Create and initialize all devices
    * \param tr_name The trace file name
    */
-  void CreateDevices (std::string tr_name);
+  void CreateDevices (stdfwd::string tr_name);
   /**
    * Create network
    * \param tr_name The trace file name
    */
-  void InstallInternetStack (std::string tr_name);
+  void InstallInternetStack (stdfwd::string tr_name);
   /// Create data sinks and sources
   void InstallApplications ();
   /// Setup mobility model
@@ -142,15 +142,15 @@ int main (int argc, char **argv)
   uint32_t nWifis = 30;
   uint32_t nSinks = 10;
   double totalTime = 100.0;
-  std::string rate ("8kbps");
-  std::string phyMode ("DsssRate11Mbps");
+  stdfwd::string rate ("8kbps");
+  stdfwd::string phyMode ("DsssRate11Mbps");
   uint32_t nodeSpeed = 10; // in m/s
-  std::string appl = "all";
+  stdfwd::string appl = "all";
   uint32_t periodicUpdateInterval = 15;
   uint32_t settlingTime = 6;
   double dataStart = 50.0;
   bool printRoutingTable = true;
-  std::string CSVfileName = "DsdvManetExample.csv";
+  stdfwd::string CSVfileName = "DsdvManetExample.csv";
 
   CommandLine cmd;
   cmd.AddValue ("nWifis", "Number of wifi nodes[Default:30]", nWifis);
@@ -235,9 +235,9 @@ DsdvManetExample::SetupPacketReceive (Ipv4Address addr, Ptr <Node> node)
 }
 
 void
-DsdvManetExample::CaseRun (uint32_t nWifis, uint32_t nSinks, double totalTime, std::string rate,
-                           std::string phyMode, uint32_t nodeSpeed, uint32_t periodicUpdateInterval, uint32_t settlingTime,
-                           double dataStart, bool printRoutes, std::string CSVfileName)
+DsdvManetExample::CaseRun (uint32_t nWifis, uint32_t nSinks, double totalTime, stdfwd::string rate,
+                           stdfwd::string phyMode, uint32_t nodeSpeed, uint32_t periodicUpdateInterval, uint32_t settlingTime,
+                           double dataStart, bool printRoutes, stdfwd::string CSVfileName)
 {
   m_nWifis = nWifis;
   m_nSinks = nSinks;
@@ -251,15 +251,15 @@ DsdvManetExample::CaseRun (uint32_t nWifis, uint32_t nSinks, double totalTime, s
   m_printRoutes = printRoutes;
   m_CSVfileName = CSVfileName;
 
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   ss << m_nWifis;
-  std::string t_nodes = ss.str ();
+  stdfwd::string t_nodes = ss.str ();
 
-  std::stringstream ss3;
+  stdfwd::stringstream ss3;
   ss3 << m_totalTime;
-  std::string sTotalTime = ss3.str ();
+  stdfwd::string sTotalTime = ss3.str ();
 
-  std::string tr_name = "Dsdv_Manet_" + t_nodes + "Nodes_" + sTotalTime + "SimTime";
+  stdfwd::string tr_name = "Dsdv_Manet_" + t_nodes + "Nodes_" + sTotalTime + "SimTime";
   std::cout << "Trace file generated is " << tr_name << ".tr\n";
 
   CreateNodes ();
@@ -307,7 +307,7 @@ DsdvManetExample::SetupMobility ()
 }
 
 void
-DsdvManetExample::CreateDevices (std::string tr_name)
+DsdvManetExample::CreateDevices (stdfwd::string tr_name)
 {
   WifiMacHelper wifiMac;
   wifiMac.SetType ("ns3::AdhocWifiMac");
@@ -328,7 +328,7 @@ DsdvManetExample::CreateDevices (std::string tr_name)
 }
 
 void
-DsdvManetExample::InstallInternetStack (std::string tr_name)
+DsdvManetExample::InstallInternetStack (stdfwd::string tr_name)
 {
   DsdvHelper dsdv;
   dsdv.Set ("PeriodicUpdateInterval", TimeValue (Seconds (m_periodicUpdateInterval)));

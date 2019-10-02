@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../../core/model/object-factory.h"
@@ -65,11 +65,11 @@ public:
    * Set the type of queue to create and associated to each
    * CsmaNetDevice created through CsmaHelper::Install.
    */
-  void SetQueue (std::string type,
-                 std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                 std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                 std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                 std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
+  void SetQueue (stdfwd::string type,
+                 stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                 stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                 stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                 stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue ());
 
   /**
    * \param n1 the name of the attribute to set
@@ -78,7 +78,7 @@ public:
    * Set these attributes on each ns3::CsmaNetDevice created
    * by CsmaHelper::Install
    */
-  void SetDeviceAttribute (std::string n1, const AttributeValue &v1);
+  void SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * \param n1 the name of the attribute to set
@@ -87,7 +87,7 @@ public:
    * Set these attributes on each ns3::CsmaChannel created
    * by CsmaHelper::Install
    */
-  void SetChannelAttribute (std::string n1, const AttributeValue &v1);
+  void SetChannelAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * This method creates an ns3::CsmaChannel with the attributes configured by
@@ -109,7 +109,7 @@ public:
    * \param name The name of the node to install the device in
    * \returns A container holding the added net device.
    */
-  NetDeviceContainer Install (std::string name) const;
+  NetDeviceContainer Install (stdfwd::string name) const;
 
   /**
    * This method creates an ns3::CsmaNetDevice with the attributes configured by
@@ -131,7 +131,7 @@ public:
    * \param channelName The name of the channel to attach to the device.
    * \returns A container holding the added net device.
    */
-  NetDeviceContainer Install (Ptr<Node> node, std::string channelName) const;
+  NetDeviceContainer Install (Ptr<Node> node, stdfwd::string channelName) const;
 
   /**
    * This method creates an ns3::CsmaNetDevice with the attributes configured by
@@ -142,7 +142,7 @@ public:
    * \param channel The channel to attach to the device.
    * \returns A container holding the added net device.
    */
-  NetDeviceContainer Install (std::string nodeName, Ptr<CsmaChannel> channel) const;
+  NetDeviceContainer Install (stdfwd::string nodeName, Ptr<CsmaChannel> channel) const;
 
   /**
    * This method creates an ns3::CsmaNetDevice with the attributes configured by
@@ -153,7 +153,7 @@ public:
    * \param channelName The name of the channel to attach to the device.
    * \returns A container holding the added net device.
    */
-  NetDeviceContainer Install (std::string nodeName, std::string channelName) const;
+  NetDeviceContainer Install (stdfwd::string nodeName, stdfwd::string channelName) const;
 
   /**
    * This method creates an ns3::CsmaChannel with the attributes configured by
@@ -189,7 +189,7 @@ public:
    * \param channelName The name of the channel to attach to the devices.
    * \returns A container holding the added net devices.
    */
-  NetDeviceContainer Install (const NodeContainer &c, std::string channelName) const;
+  NetDeviceContainer Install (const NodeContainer &c, stdfwd::string channelName) const;
 
   /**
   * Assign a fixed random variable stream number to the random variables
@@ -228,7 +228,7 @@ private:
    * \param promiscuous If true capture all possible packets available at the device.
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
+  virtual void EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
 
   /**
    * \brief Enable ascii trace output on the indicated net device.
@@ -242,7 +242,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream, 
-                                    std::string prefix, 
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 

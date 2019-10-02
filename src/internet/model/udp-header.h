@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/utils/ipv4-address.h"
 #include "../../network/utils/ipv6-address.h"

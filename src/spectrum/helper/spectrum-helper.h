@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/attribute.h"
 #include "../../core/model/object-factory.h"
 #include "../../network/helper/node-container.h"
@@ -72,15 +72,15 @@ public:
    * \param n7 the name of the attribute to set
    * \param v7 the value of the attribute to set
    */
-  void SetChannel (std::string type,
-                   std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                   std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                   std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                   std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                   std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                   std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                   std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                   std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetChannel (stdfwd::string type,
+                   stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                   stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                   stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                   stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                   stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                   stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                   stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                   stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * \param name the name of the model to set
    * \param n0 the name of the attribute to set
@@ -102,15 +102,15 @@ public:
    *
    * Add a new single-frequency propagation loss model to this channel helper.
    */
-  void AddPropagationLoss (std::string name,
-                           std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                           std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                           std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                           std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                           std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                           std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                           std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                           std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void AddPropagationLoss (stdfwd::string name,
+                           stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                           stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                           stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                           stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                           stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                           stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                           stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                           stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
 
   /** 
@@ -141,15 +141,15 @@ public:
    *
    * Add a new frequency-dependent propagation loss model to this channel helper.
    */
-  void AddSpectrumPropagationLoss (std::string name,
-                                   std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                                   std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                                   std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                                   std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                                   std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                                   std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                                   std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                                   std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void AddSpectrumPropagationLoss (stdfwd::string name,
+                                   stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                                   stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                                   stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                                   stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                                   stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                                   stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                                   stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                                   stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /** 
    * Add a new frequency-dependent propagation loss model instance to this channel helper.
@@ -179,15 +179,15 @@ public:
    *
    * Configure a propagation delay for this channel.
    */
-  void SetPropagationDelay (std::string name,
-                            std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                            std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                            std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                            std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                            std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                            std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                            std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                            std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetPropagationDelay (stdfwd::string name,
+                            stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                            stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                            stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                            stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                            stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                            stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                            stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                            stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * \returns a new channel
@@ -232,15 +232,15 @@ public:
    * \param n7 the name of the attribute to set
    * \param v7 the value of the attribute to set
    */
-  void SetPhy (std::string name,
-               std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-               std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-               std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-               std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-               std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-               std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-               std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-               std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetPhy (stdfwd::string name,
+               stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+               stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+               stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+               stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+               stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+               stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+               stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+               stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * set the channel that will be used by SpectrumPhy instances created by this helper
@@ -254,7 +254,7 @@ public:
    *
    * @param channelName
    */
-  void SetChannel (std::string channelName);
+  void SetChannel (stdfwd::string channelName);
 
   /**
    * \param name the name of the attribute to set
@@ -262,7 +262,7 @@ public:
    *
    * Set an attribute of the SpectrumPhy instances to be created
    */
-  void SetPhyAttribute (std::string name, const AttributeValue &v);
+  void SetPhyAttribute (stdfwd::string name, const AttributeValue &v);
 
   /**
    *

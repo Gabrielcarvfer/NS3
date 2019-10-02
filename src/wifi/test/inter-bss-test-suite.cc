@@ -41,9 +41,9 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("InterBssTestSuite");
 
 uint32_t
-ConvertContextToNodeId (std::string context)
+ConvertContextToNodeId (stdfwd::string context)
 {
-  std::string sub = context.substr (10);
+  stdfwd::string sub = context.substr (10);
   uint32_t pos = sub.find ("/Device");
   uint32_t nodeId = atoi (sub.substr (0, pos).c_str ());
   return nodeId;
@@ -134,14 +134,14 @@ private:
    * \param p the packet
    * \param txPowerW the tx power
    */
-  void NotifyPhyTxBegin (std::string context, Ptr<const Packet> p, double txPowerW);
+  void NotifyPhyTxBegin (stdfwd::string context, Ptr<const Packet> p, double txPowerW);
 
   /**
    * Notify Phy receive endsn
    * \param context the context
    * \param p the packet
    */
-  void NotifyPhyRxEnd (std::string context, Ptr<const Packet> p);
+  void NotifyPhyRxEnd (stdfwd::string context, Ptr<const Packet> p);
 
   unsigned int m_numSta1PacketsSent; ///< number of sent packets from STA1
   unsigned int m_numSta2PacketsSent; ///< number of sent packets from STA2
@@ -321,7 +321,7 @@ TestInterBssConstantObssPdAlgo::CheckResults ()
 }
 
 void
-TestInterBssConstantObssPdAlgo::NotifyPhyTxBegin (std::string context, Ptr<const Packet> p, double txPowerW)
+TestInterBssConstantObssPdAlgo::NotifyPhyTxBegin (stdfwd::string context, Ptr<const Packet> p, double txPowerW)
 {
   uint32_t idx = ConvertContextToNodeId (context);
   uint32_t pktSize = p->GetSize () - 38;
@@ -348,7 +348,7 @@ TestInterBssConstantObssPdAlgo::NotifyPhyTxBegin (std::string context, Ptr<const
 }
 
 void
-TestInterBssConstantObssPdAlgo::NotifyPhyRxEnd (std::string context, Ptr<const Packet> p)
+TestInterBssConstantObssPdAlgo::NotifyPhyRxEnd (stdfwd::string context, Ptr<const Packet> p)
 {
   uint32_t idx = ConvertContextToNodeId (context);
   uint32_t pktSize = p->GetSize () - 38;

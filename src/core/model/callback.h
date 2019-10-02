@@ -151,14 +151,14 @@ public:
    * Get the name of this object type.
    * \return The object type as a string.
    */
-  virtual std::string GetTypeid (void) const = 0;
+  virtual stdfwd::string GetTypeid (void) const = 0;
 
 protected:
   /**
    * \param [in] mangled The mangled string
    * \return The demangled form of mangled
    */
-  static std::string Demangle (const std::string& mangled);
+  static stdfwd::string Demangle (const stdfwd::string& mangled);
   /**
    * Helper to get the C++ typeid as a string.
    *
@@ -166,9 +166,9 @@ protected:
    * \returns The result of applying typeid to the template type \p T.
    */
   template <typename T>
-  static std::string GetCppTypeid (void)
+  static stdfwd::string GetCppTypeid (void)
   {
-    std::string typeName;
+    stdfwd::string typeName;
     try
       {
         typeName = typeid (T).name ();
@@ -201,14 +201,14 @@ class CallbackImpl<R,empty,empty,empty,empty,empty,empty,empty,empty,empty> : pu
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (void) = 0;      //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () +
       ">";
     return id;
@@ -220,14 +220,14 @@ class CallbackImpl<R,T1,empty,empty,empty,empty,empty,empty,empty,empty> : publi
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1) = 0;        //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () +
       ">";
@@ -240,14 +240,14 @@ class CallbackImpl<R,T1,T2,empty,empty,empty,empty,empty,empty,empty> : public C
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2) = 0;    //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () +
@@ -261,14 +261,14 @@ class CallbackImpl<R,T1,T2,T3,empty,empty,empty,empty,empty,empty> : public Call
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -283,14 +283,14 @@ class CallbackImpl<R,T1,T2,T3,T4,empty,empty,empty,empty,empty> : public Callbac
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -306,14 +306,14 @@ class CallbackImpl<R,T1,T2,T3,T4,T5,empty,empty,empty,empty> : public CallbackIm
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4, T5) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -330,14 +330,14 @@ class CallbackImpl<R,T1,T2,T3,T4,T5,T6,empty,empty,empty> : public CallbackImplB
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4, T5, T6) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -355,14 +355,14 @@ class CallbackImpl<R,T1,T2,T3,T4,T5,T6,T7,empty,empty> : public CallbackImplBase
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4, T5, T6, T7) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -381,14 +381,14 @@ class CallbackImpl<R,T1,T2,T3,T4,T5,T6,T7,T8,empty> : public CallbackImplBase {
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4, T5, T6, T7, T8) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -408,14 +408,14 @@ class CallbackImpl : public CallbackImplBase {
 public:
   virtual ~CallbackImpl () {}
   virtual R operator() (T1, T2, T3, T4, T5, T6, T7, T8, T9) = 0;  //!< Abstract operator
-  virtual std::string GetTypeid (void) const
+  virtual stdfwd::string GetTypeid (void) const
   {
     return DoGetTypeid ();
   }
   /** \copydoc GetTypeid(). */
-  static std::string DoGetTypeid (void)
+  static stdfwd::string DoGetTypeid (void)
   {
-    static std::string id = "CallbackImpl<" +
+    static stdfwd::string id = "CallbackImpl<" +
       GetCppTypeid<R> () + "," +
       GetCppTypeid<T1> () + "," +
       GetCppTypeid<T2> () + "," +
@@ -1441,8 +1441,8 @@ private:
   bool DoAssign (Ptr<const CallbackImplBase> other) {
     if (!DoCheckType (other))
       {
-        std::string othTid = other->GetTypeid ();
-        std::string myTid = CallbackImpl<R,T1,T2,T3,T4,T5,T6,T7,T8,T9>::DoGetTypeid ();
+        stdfwd::string othTid = other->GetTypeid ();
+        stdfwd::string myTid = CallbackImpl<R,T1,T2,T3,T4,T5,T6,T7,T8,T9>::DoGetTypeid ();
         NS_FATAL_ERROR_CONT ("Incompatible types. (feed to \"c++filt -t\" if needed)" << std::endl <<
                         "got=" << othTid << std::endl <<
                         "expected=" << myTid);
@@ -1905,7 +1905,7 @@ public:
    * \param [in] checker The checker to validate with
    * \return Serialized form of this Callback.
    */
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const;
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const;
   /**
    * Deserialize from string (not implemented)
    *
@@ -1913,7 +1913,7 @@ public:
    * \param [in] checker Checker to validate with
    * \return \c true if successful
    */
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker);
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker);
 private:
   CallbackBase m_value;                 //!< the CallbackBase
 };

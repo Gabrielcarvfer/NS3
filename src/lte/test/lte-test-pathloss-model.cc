@@ -58,7 +58,7 @@ NS_LOG_COMPONENT_DEFINE ("LtePathlossModelTest");
 
 
 void
-LteTestPathlossDlSchedCallback (LtePathlossModelSystemTestCase *testcase, std::string path,
+LteTestPathlossDlSchedCallback (LtePathlossModelSystemTestCase *testcase, stdfwd::string path,
 		                        DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
@@ -173,7 +173,7 @@ static LtePathlossModelTestSuite ltePathlossModelTestSuite;
 
 
 
-LtePathlossModelSystemTestCase::LtePathlossModelSystemTestCase (std::string name, double snrDb, double dist, uint16_t mcsIndex)
+LtePathlossModelSystemTestCase::LtePathlossModelSystemTestCase (stdfwd::string name, double snrDb, double dist, uint16_t mcsIndex)
 : TestCase (name),
 m_snrDb (snrDb),
 m_distance (dist),

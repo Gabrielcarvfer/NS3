@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 
 #include "../../network/model/channel.h"
@@ -65,16 +65,16 @@ public:
    * \param seedFile a BRITE seed file
    * \param newseedFile a BRITE seed file with newly generated values
    */
-  BriteTopologyHelper (std::string confFile,
-                       std::string seedFile,
-                       std::string newseedFile);
+  BriteTopologyHelper (stdfwd::string confFile,
+                       stdfwd::string seedFile,
+                       stdfwd::string newseedFile);
 
   /**
    * Construct a BriteTopologyHelper using NS3 to generate seed values
    * need by BRITE
    *
    */
-  BriteTopologyHelper (std::string confFile);
+  BriteTopologyHelper (stdfwd::string confFile);
 
   ~BriteTopologyHelper ();
 
@@ -204,7 +204,7 @@ private:
     int inDegree;
     int outDegree;
     int asId;
-    std::string type;
+    stdfwd::string type;
   };
 
   /**
@@ -224,7 +224,7 @@ private:
     double bandwidth;
     int asFrom;
     int asTo;
-    std::string type;
+    stdfwd::string type;
   };
 
   //stores all of the nodes used in the BRITE generated topology
@@ -236,13 +236,13 @@ private:
   void GenerateBriteTopology (void);
 
   /// brite configuration file to use
-  std::string m_confFile;
+  stdfwd::string m_confFile;
 
   /// brite seed file to use
-  std::string m_seedFile;
+  stdfwd::string m_seedFile;
 
   /// brite seed file to generate for next run
-  std::string m_newSeedFile;
+  stdfwd::string m_newSeedFile;
 
   /// stores the number of AS in the BRITE generated topology
   uint32_t m_numAs;

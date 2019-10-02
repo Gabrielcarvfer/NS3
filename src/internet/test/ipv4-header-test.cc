@@ -40,7 +40,7 @@
 #include "../../traffic-control/model/traffic-control-layer.h"
 #include "../helper/internet-stack-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <sstream>
 #include <limits>
 #include "../model/inet-headers.h"
@@ -67,7 +67,7 @@ class Ipv4HeaderTest : public TestCase
    * \param dscp The DSCP field.
    * \param ecn The ECN field.
    */
-  void DoSendData_IpHdr_Dscp (Ptr<Socket> socket, std::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn);
+  void DoSendData_IpHdr_Dscp (Ptr<Socket> socket, stdfwd::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn);
 
   /**
    * \brief Send a packet with speciic DSCP and ECN fields.
@@ -76,7 +76,7 @@ class Ipv4HeaderTest : public TestCase
    * \param dscp The DSCP field.
    * \param ecn The ECN field.
    */
-  void SendData_IpHdr_Dscp (Ptr<Socket> socket, std::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn);
+  void SendData_IpHdr_Dscp (Ptr<Socket> socket, stdfwd::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn);
 
 public:
   virtual void DoRun (void);
@@ -119,7 +119,7 @@ void Ipv4HeaderTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv4HeaderTest::DoSendData_IpHdr_Dscp (Ptr<Socket> socket, std::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn)
+Ipv4HeaderTest::DoSendData_IpHdr_Dscp (Ptr<Socket> socket, stdfwd::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 0);
   socket->SetAttribute ("IpHeaderInclude", BooleanValue (true));
@@ -140,7 +140,7 @@ Ipv4HeaderTest::DoSendData_IpHdr_Dscp (Ptr<Socket> socket, std::string to, Ipv4H
 }
 
 void
-Ipv4HeaderTest::SendData_IpHdr_Dscp (Ptr<Socket> socket, std::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn)
+Ipv4HeaderTest::SendData_IpHdr_Dscp (Ptr<Socket> socket, stdfwd::string to, Ipv4Header::DscpType dscp, Ipv4Header::EcnType ecn)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (0),

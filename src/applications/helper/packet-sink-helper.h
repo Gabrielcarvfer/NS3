@@ -44,7 +44,7 @@ public:
    * \param address the address of the sink,
    *
    */
-  PacketSinkHelper (std::string protocol, Address address);
+  PacketSinkHelper (stdfwd::string protocol, Address address);
 
   /**
    * Helper function used to set the underlying application attributes.
@@ -52,7 +52,7 @@ public:
    * \param name the name of the application attribute to set
    * \param value the value of the application attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Install an ns3::PacketSinkApplication on each node of the input container
@@ -80,7 +80,7 @@ public:
    * \param nodeName The name of the node on which a PacketSinkApplication will be installed.
    * \returns Container of Ptr to the applications installed.
    */
-  ApplicationContainer Install (std::string nodeName) const;
+  ApplicationContainer Install (stdfwd::string nodeName) const;
 
 private:
   /**

@@ -58,7 +58,7 @@ private:
    * \param path the path
    * \param model the mobility model
    */
-  void CourseChangeCallback (std::string path, Ptr<const MobilityModel> model);
+  void CourseChangeCallback (stdfwd::string path, Ptr<const MobilityModel> model);
   virtual void DoRun (void);
   Ptr<Node> m_node; ///< mode
   Ptr<WaypointMobilityModel> m_mob; ///< modility model
@@ -83,7 +83,7 @@ WaypointLazyNotifyFalse::TestXPosition (double expectedXPos)
 }
 
 void
-WaypointLazyNotifyFalse::CourseChangeCallback (std::string path, Ptr<const MobilityModel> model)
+WaypointLazyNotifyFalse::CourseChangeCallback (stdfwd::string path, Ptr<const MobilityModel> model)
 {
   // All waypoints (at 10 second intervals) should trigger a course change
   NS_TEST_EXPECT_MSG_EQ_TOL_INTERNAL (m_courseChanges * 10.0, Simulator::Now ().GetSeconds (), 0.001, "Course change not notified correctly", __FILE__, __LINE__);
@@ -132,7 +132,7 @@ private:
    * \param path the path
    * \param model the mobility model
    */
-  void CourseChangeCallback (std::string path, Ptr<const MobilityModel> model);
+  void CourseChangeCallback (stdfwd::string path, Ptr<const MobilityModel> model);
   virtual void DoRun (void);
   Ptr<Node> m_node; ///< node
   Ptr<WaypointMobilityModel> m_mob; ///< modility model
@@ -155,7 +155,7 @@ WaypointLazyNotifyTrue::TestXPosition (double expectedXPos)
 }
 
 void
-WaypointLazyNotifyTrue::CourseChangeCallback (std::string path, Ptr<const MobilityModel> model)
+WaypointLazyNotifyTrue::CourseChangeCallback (stdfwd::string path, Ptr<const MobilityModel> model)
 {
   // This should trigger at time 15 only, since that is the first time that
   // position is updated due to LazyNotify

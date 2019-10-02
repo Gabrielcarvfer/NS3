@@ -22,9 +22,9 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -55,7 +55,7 @@ public:
    * \param filename String containing the name of the file.
    * \param mode the access mode for the file.
    */
-  void Open (std::string const &filename, std::ios::openmode mode);
+  void Open (stdfwd::string const &filename, std::ios::openmode mode);
 
   /**
    * Close the underlying file.
@@ -68,7 +68,7 @@ public:
    * \param line    [out] line from file
    * 
    */
-  void Read (std::string& line);
+  void Read (stdfwd::string& line);
 
   /**
    * \brief Compare two ASCII files line-by-line
@@ -79,12 +79,12 @@ public:
    * \param  f2         Second ASCII file name
    * \param  lineNumber   [out] Line number of first different line.
    */
-  static bool Diff (std::string const & f1,
-		    std::string const & f2, 
+  static bool Diff (stdfwd::string const & f1,
+		    stdfwd::string const & f2,
                     uint64_t & lineNumber);
 
 private:
-  std::string    m_filename; //!< output file name
+  stdfwd::string    m_filename; //!< output file name
   std::fstream   m_file;     //!< output file
 };
 

@@ -341,7 +341,7 @@ BasicEnergyDepletionTest::DepletionTestCase (double simTimeS,
   NodeContainer c;
   c.Create (m_numOfNodes);
 
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
 
   // disable fragmentation for frames below 2200 bytes
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold",

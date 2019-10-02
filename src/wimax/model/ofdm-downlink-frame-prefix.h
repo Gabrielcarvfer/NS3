@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 
 namespace ns3 {
@@ -122,7 +122,7 @@ private:
 
 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "../../network/utils/mac48-address.h"
 
@@ -199,7 +199,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   void Print (std::ostream &os) const;
   uint32_t GetSerializedSize (void) const;
   void Serialize (Buffer::Iterator start) const;

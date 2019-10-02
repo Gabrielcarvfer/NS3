@@ -77,7 +77,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void TraceSink (std::string context, double oldValue, double newValue);
+  void TraceSink (stdfwd::string context, double oldValue, double newValue);
   uint32_t m_objectProbed;
   uint32_t m_pathProbed;
   Ptr<SampleEmitter> m_s;
@@ -95,7 +95,7 @@ ProbeTestCase1::~ProbeTestCase1 ()
 }
 
 void
-ProbeTestCase1::TraceSink (std::string context, double oldValue, double newValue)
+ProbeTestCase1::TraceSink (stdfwd::string context, double oldValue, double newValue)
 {
   NS_TEST_ASSERT_MSG_GT (Simulator::Now (), Seconds (100), "Probed a value outside of the time window");
   NS_TEST_ASSERT_MSG_LT (Simulator::Now (), Seconds (200), "Probed a value outside of the time window");

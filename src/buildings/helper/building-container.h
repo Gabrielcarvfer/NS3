@@ -21,7 +21,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../model/building.h"
 
@@ -61,7 +61,7 @@ public:
    *
    * \param buildingName The name of the Building Object to add to the container.
    */
-  BuildingContainer (std::string buildingName);
+  BuildingContainer (stdfwd::string buildingName);
 
   /**
    * \brief Get an iterator which refers to the first Building in the 
@@ -183,7 +183,7 @@ public:
    *
    * \param buildingName The name of the Building Object to add to the container.
    */
-  void Add (std::string buildingName);
+  void Add (stdfwd::string buildingName);
 
   /**
    * \brief Create a BuildingContainer that contains a list of _all_ buildings

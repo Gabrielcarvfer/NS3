@@ -28,7 +28,7 @@
 #include "../helper/radio-bearer-stats-calculator.h"
 
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 using namespace ns3;
 
@@ -130,9 +130,9 @@ int main (int argc, char *argv[])
   Simulator::Stop (Seconds (simTime));
 
   // Insert RLC Performance Calculator
-  std::string dlOutFname = "DlRlcStats";
+  stdfwd::string dlOutFname = "DlRlcStats";
   dlOutFname.append (tag.str ());
-  std::string ulOutFname = "UlRlcStats";
+  stdfwd::string ulOutFname = "UlRlcStats";
   ulOutFname.append (tag.str ());
 
   lteHelper->EnableMacTraces ();

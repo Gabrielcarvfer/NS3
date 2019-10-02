@@ -27,7 +27,7 @@
 #include "../../mobility/model/constant-position-mobility-model.h"
 
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 
 using namespace ns3;

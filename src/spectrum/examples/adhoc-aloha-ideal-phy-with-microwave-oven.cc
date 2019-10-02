@@ -31,7 +31,7 @@
 #include "../model/waveform-generator.h"
 #include "../model/spectrum-analyzer.h"
 #include "../../core/model/log.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../model/friis-spectrum-propagation-loss.h"
 #include "../../propagation/model/propagation-delay-model.h"
 #include <ns3/mobility-module.h>
@@ -51,7 +51,7 @@ static bool g_verbose = false;
 
 
 void
-PhyTxStartTrace (std::string context, Ptr<const Packet> p)
+PhyTxStartTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {
@@ -61,7 +61,7 @@ PhyTxStartTrace (std::string context, Ptr<const Packet> p)
 
 
 void
-PhyTxEndTrace (std::string context, Ptr<const Packet> p)
+PhyTxEndTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {
@@ -70,7 +70,7 @@ PhyTxEndTrace (std::string context, Ptr<const Packet> p)
 }
 
 void
-PhyRxStartTrace (std::string context, Ptr<const Packet> p)
+PhyRxStartTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {
@@ -79,7 +79,7 @@ PhyRxStartTrace (std::string context, Ptr<const Packet> p)
 }
 
 void
-PhyRxEndOkTrace (std::string context, Ptr<const Packet> p)
+PhyRxEndOkTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {
@@ -88,7 +88,7 @@ PhyRxEndOkTrace (std::string context, Ptr<const Packet> p)
 }
 
 void
-PhyRxEndErrorTrace (std::string context, Ptr<const Packet> p)
+PhyRxEndErrorTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {

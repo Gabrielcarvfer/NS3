@@ -141,7 +141,7 @@ TcpPrrRecovery::Fork (void)
   return CopyObject<TcpPrrRecovery> (this);
 }
 
-std::string
+stdfwd::string
 TcpPrrRecovery::GetName () const
 {
   return "PrrRecovery";

@@ -30,17 +30,17 @@ ATTRIBUTE_HELPER_CPP (QueueSize);
 
 /* static */
 bool
-QueueSize::DoParse (const std::string s, QueueSizeUnit *unit, uint32_t *value)
+QueueSize::DoParse (const stdfwd::string s, QueueSizeUnit *unit, uint32_t *value)
 {
   NS_LOG_FUNCTION (s << unit << value);
-  std::string::size_type n = s.find_first_not_of ("0123456789.");
-  if (n != std::string::npos)
+  stdfwd::string::size_type n = s.find_first_not_of ("0123456789.");
+  if (n != stdfwd::string::npos)
     { // Found non-numeric
       std::istringstream iss;
       iss.str (s.substr (0, n));
       double r;
       iss >> r;
-      std::string trailer = s.substr (n, std::string::npos);
+      stdfwd::string trailer = s.substr (n, stdfwd::string::npos);
       if (trailer == "B")
         {
           // bytes
@@ -178,7 +178,7 @@ uint32_t QueueSize::GetValue () const
   return m_value;
 }
 
-QueueSize::QueueSize (std::string size)
+QueueSize::QueueSize (stdfwd::string size)
 {
   NS_LOG_FUNCTION (this << size);
   bool ok = DoParse (size, &m_unit, &m_value);
@@ -195,7 +195,7 @@ std::ostream &operator << (std::ostream &os, const QueueSize &size)
 /* Initialize a queue size from an input stream */
 std::istream &operator >> (std::istream &is, QueueSize &size)
 {
-  std::string value;
+  stdfwd::string value;
   is >> value;
   QueueSizeUnit m;
   uint32_t l;

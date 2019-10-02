@@ -46,9 +46,9 @@ struct ModelTypeid
     NODE_TYPEID
   } type; ///< node type
   /// TypeId name
-  std::string name;
+  stdfwd::string name;
   /// TypeId default value
-  std::string defaultValue;
+  stdfwd::string defaultValue;
   /// The TypeId object and if it is an attribute, it's the TypeId object of the attribute
   TypeId tid;
   /// stores the index of the attribute in list of attributes for a given TypeId
@@ -72,11 +72,11 @@ private:
   /**
    * \brief This method will add a ModelTypeid to the GtkTreeIterator
    */
-  virtual void VisitAttribute (TypeId tid, std::string name, std::string defaultValue, uint32_t index);
+  virtual void VisitAttribute (TypeId tid, stdfwd::string name, stdfwd::string defaultValue, uint32_t index);
   /**
    * \brief Add a node for the new TypeId object
    */
-  virtual void StartVisitTypeId (std::string name);
+  virtual void StartVisitTypeId (stdfwd::string name);
   /**
    * \brief Remove the last gtk tree iterator
    */

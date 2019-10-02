@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 #include "../../core/model/callback.h"
 #include "../../core/model/nstime.h"

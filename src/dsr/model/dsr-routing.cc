@@ -519,21 +519,21 @@ void DsrRouting::Start ()
 }
 
 Ptr<NetDevice>
-DsrRouting::GetNetDeviceFromContext (std::string context)
+DsrRouting::GetNetDeviceFromContext (stdfwd::string context)
 {
   // Use "NodeList/*/DeviceList/*/ as reference
   // where element [1] is the Node Id
   // element [2] is the NetDevice Id
-  std::vector <std::string> elements = GetElementsFromContext (context);
+  std::vector <stdfwd::string> elements = GetElementsFromContext (context);
   Ptr<Node> n = NodeList::GetNode (atoi (elements[1].c_str ()));
   NS_ASSERT (n);
   return n->GetDevice (atoi (elements[3].c_str ()));
 }
 
-std::vector<std::string>
-DsrRouting::GetElementsFromContext (std::string context)
+std::vector<stdfwd::string>
+DsrRouting::GetElementsFromContext (stdfwd::string context)
 {
-  std::vector <std::string> elements;
+  std::vector <stdfwd::string> elements;
   size_t pos1 = 0, pos2;
   while (pos1 != context.npos)
     {

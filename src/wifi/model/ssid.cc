@@ -31,7 +31,7 @@ Ssid::Ssid ()
     }
 }
 
-Ssid::Ssid (std::string s)
+Ssid::Ssid (stdfwd::string s)
 {
   NS_ASSERT (s.size () < 32);
   const char *ssid = s.c_str ();
@@ -142,7 +142,7 @@ operator << (std::ostream &os, const Ssid &ssid)
  */
 std::istream &operator >> (std::istream &is, Ssid &ssid)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   ssid = Ssid (str.c_str ());
   return is;

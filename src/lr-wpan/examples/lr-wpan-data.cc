@@ -49,7 +49,7 @@ static void DataConfirm (McpsDataConfirmParams params)
   NS_LOG_UNCOND ("LrWpanMcpsDataConfirmStatus = " << params.m_status);
 }
 
-static void StateChangeNotification (std::string context, Time now, LrWpanPhyEnumeration oldState, LrWpanPhyEnumeration newState)
+static void StateChangeNotification (stdfwd::string context, Time now, LrWpanPhyEnumeration oldState, LrWpanPhyEnumeration newState)
 {
   NS_LOG_UNCOND (context << " state change at " << now.GetSeconds ()
                          << " from " << LrWpanHelper::LrWpanPhyEnumerationPrinter (oldState)
@@ -112,8 +112,8 @@ int main (int argc, char *argv[])
   n1->AddDevice (dev1);
 
   // Trace state changes in the phy
-  dev0->GetPhy ()->TraceConnect ("TrxState", std::string ("phy0"), MakeCallback (&StateChangeNotification));
-  dev1->GetPhy ()->TraceConnect ("TrxState", std::string ("phy1"), MakeCallback (&StateChangeNotification));
+  dev0->GetPhy ()->TraceConnect ("TrxState", stdfwd::string ("phy0"), MakeCallback (&StateChangeNotification));
+  dev1->GetPhy ()->TraceConnect ("TrxState", stdfwd::string ("phy1"), MakeCallback (&StateChangeNotification));
 
   Ptr<ConstantPositionMobilityModel> sender0Mobility = CreateObject<ConstantPositionMobilityModel> ();
   sender0Mobility->SetPosition (Vector (0,0,0));
@@ -140,7 +140,7 @@ int main (int argc, char *argv[])
   dev1->GetMac ()->SetMcpsDataIndicationCallback (cb3);
 
   // Tracing
-  lrWpanHelper.EnablePcapAll (std::string ("lr-wpan-data"), true);
+  lrWpanHelper.EnablePcapAll (stdfwd::string ("lr-wpan-data"), true);
   AsciiTraceHelper ascii;
   Ptr<OutputStreamWrapper> stream = ascii.CreateFileStream ("lr-wpan-data.tr");
   lrWpanHelper.EnableAsciiAll (stream);

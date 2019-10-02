@@ -79,7 +79,7 @@ public:
    * \param name the node on which the routing protocol will run
    * \param value newly-created L4 protocol
    */
-  void Set (std::string name, const AttributeValue &value);
+  void Set (stdfwd::string name, const AttributeValue &value);
 private:
   /**
    * \brief Assignment operator declared private and not implemented to disallow

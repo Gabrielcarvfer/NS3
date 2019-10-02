@@ -94,7 +94,7 @@ GridBuildingAllocator::GetTypeId (void)
 }
 
 void
-GridBuildingAllocator::SetBuildingAttribute (std::string n, const AttributeValue &v)
+GridBuildingAllocator::SetBuildingAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_buildingFactory.Set (n, v);

@@ -116,7 +116,7 @@ static LteUplinkSinrTestSuite lteUplinkSinrTestSuite;
  * TestCase Data
  */
 
-LteUplinkDataSinrTestCase::LteUplinkDataSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, std::string name)
+LteUplinkDataSinrTestCase::LteUplinkDataSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, stdfwd::string name)
   : TestCase ("SINR calculation in uplink data frame: " + name),
     m_sv1 (sv1),
     m_sv2 (sv2),
@@ -313,7 +313,7 @@ LteUplinkDataSinrTestCase::DoRun (void)
 * TestCase Srs
 */
 
-LteUplinkSrsSinrTestCase::LteUplinkSrsSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, std::string name)
+LteUplinkSrsSinrTestCase::LteUplinkSrsSinrTestCase (Ptr<SpectrumValue> sv1, Ptr<SpectrumValue> sv2, Ptr<SpectrumValue> sinr, stdfwd::string name)
   : TestCase ("SINR calculation in uplink srs frame: " + name),
     m_sv1 (sv1),
     m_sv2 (sv2),

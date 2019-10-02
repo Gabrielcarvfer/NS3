@@ -1169,11 +1169,11 @@ Buffer::Iterator::GetRemainingSize (void) const
 }
 
 
-std::string 
+stdfwd::string
 Buffer::Iterator::GetReadErrorMessage (void) const
 {
   NS_LOG_FUNCTION (this);
-  std::string str = "You have attempted to read beyond the bounds of the "
+  stdfwd::string str = "You have attempted to read beyond the bounds of the "
     "available buffer space. This usually indicates that a "
     "Header::Deserialize or Trailer::Deserialize method "
     "is trying to read data which was not written by "
@@ -1182,11 +1182,11 @@ Buffer::Iterator::GetReadErrorMessage (void) const
     "methods.";
   return str;
 }
-std::string 
+stdfwd::string
 Buffer::Iterator::GetWriteErrorMessage (void) const
 {
   NS_LOG_FUNCTION (this);
-  std::string str;
+  stdfwd::string str;
   if (m_current < m_dataStart)
     {
       str = "You have attempted to write before the start of the available "

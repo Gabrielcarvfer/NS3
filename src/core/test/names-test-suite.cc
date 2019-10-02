@@ -91,7 +91,7 @@ public:
  * Add associations between Objects using the lowest level add 
  * function, which is:
  *
- *     Add (Ptr<Object> context, std::string name, Ptr<Object> object);
+ *     Add (Ptr<Object> context, stdfwd::string name, Ptr<Object> object);
  *
  * All other add functions will just translate into this form, so this is the
  * most basic Add functionality.
@@ -127,7 +127,7 @@ BasicAddTestCase::DoTeardown (void)
 void
 BasicAddTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add (Ptr<Object> (0, false), "Name One", objectOne);
@@ -158,7 +158,7 @@ BasicAddTestCase::DoRun (void)
  * \ingroup names-tests
  * Test the Object Name Service can correctly use a string context.
  *
- *     Add (std::string context, std::string name, Ptr<Object> object);
+ *     Add (stdfwd::string context, stdfwd::string name, Ptr<Object> object);
  *
  * High level path-based functions will translate into this form, so this is 
  * the second most basic Add functionality.
@@ -195,7 +195,7 @@ StringContextAddTestCase::DoTeardown (void)
 void
 StringContextAddTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("/Names", "Name One", objectOne);
@@ -227,7 +227,7 @@ StringContextAddTestCase::DoRun (void)
  * Test the Object Name Service can correctly use a 
  * fully qualified path to add associations.
  *
- *     Add (std::string name, Ptr<Object> object);
+ *     Add (stdfwd::string name, Ptr<Object> object);
  * 
  */
 class FullyQualifiedAddTestCase : public TestCase
@@ -262,7 +262,7 @@ FullyQualifiedAddTestCase::DoTeardown (void)
 void
 FullyQualifiedAddTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("/Names/Name One", objectOne);
@@ -298,7 +298,7 @@ FullyQualifiedAddTestCase::DoRun (void)
  * don't always have to provide the name service namespace name
  * in all of their strings.
  *
- *     Add (std::string name, Ptr<Object> object);
+ *     Add (stdfwd::string name, Ptr<Object> object);
  * 
  */
 class RelativeAddTestCase : public TestCase
@@ -333,7 +333,7 @@ RelativeAddTestCase::DoTeardown (void)
 void
 RelativeAddTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("Name One", objectOne);
@@ -364,7 +364,7 @@ RelativeAddTestCase::DoRun (void)
  * \ingroup names-tests
  * Test the Object Name Service can rename objects.
  *
- *     Rename (Ptr<Object> context, std::string oldname, std::string newname);
+ *     Rename (Ptr<Object> context, stdfwd::string oldname, stdfwd::string newname);
  *
  * All other rename functions will just translate into this form, so this is the
  * most basic rename functionality.
@@ -400,7 +400,7 @@ BasicRenameTestCase::DoTeardown (void)
 void
 BasicRenameTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add (Ptr<Object> (0, false), "Name", objectOne);
@@ -430,7 +430,7 @@ BasicRenameTestCase::DoRun (void)
  * Test the Object Name Service can rename objects 
  * using a string context.
  *
- *     Rename (std::string context, std::string oldname, std::string newname);
+ *     Rename (stdfwd::string context, stdfwd::string oldname, stdfwd::string newname);
  * 
  */
 class StringContextRenameTestCase : public TestCase
@@ -464,7 +464,7 @@ StringContextRenameTestCase::DoTeardown (void)
 void
 StringContextRenameTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("/Names", "Name", objectOne);
@@ -494,7 +494,7 @@ StringContextRenameTestCase::DoRun (void)
  * Test the Object Name Service can rename objects 
  * using a fully qualified path name.
  *
- *     Rename (std::string oldpath, std::string newname);
+ *     Rename (stdfwd::string oldpath, stdfwd::string newname);
  * 
  */
 class FullyQualifiedRenameTestCase : public TestCase
@@ -528,7 +528,7 @@ FullyQualifiedRenameTestCase::DoTeardown (void)
 void
 FullyQualifiedRenameTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("/Names/Name", objectOne);
@@ -558,7 +558,7 @@ FullyQualifiedRenameTestCase::DoRun (void)
  * Test the Object Name Service can rename objects 
  * using a relative path name.
  *
- *     Rename (std::string oldpath, std::string newname);
+ *     Rename (stdfwd::string oldpath, stdfwd::string newname);
  * 
  */
 class RelativeRenameTestCase : public TestCase
@@ -592,7 +592,7 @@ RelativeRenameTestCase::DoTeardown (void)
 void
 RelativeRenameTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("Name", objectOne);
@@ -656,7 +656,7 @@ FindPathTestCase::DoTeardown (void)
 void
 FindPathTestCase::DoRun (void)
 {
-  std::string found;
+  stdfwd::string found;
 
   Ptr<TestObject> objectOne = CreateObject<TestObject> ();
   Names::Add ("Name", objectOne);
@@ -679,7 +679,7 @@ FindPathTestCase::DoRun (void)
  * \ingroup names-tests
  * Test the Object Name Service can find Objects.
  *
- *     Find (Ptr<Object> context, std::string name);
+ *     Find (Ptr<Object> context, stdfwd::string name);
  * 
  */
 class BasicFindTestCase : public TestCase
@@ -745,7 +745,7 @@ BasicFindTestCase::DoRun (void)
  * Test the Object Name Service can find Objects using 
  * a string context.
  *
- *     Find (std::string context, std::string name);
+ *     Find (stdfwd::string context, stdfwd::string name);
  * 
  */
 class StringContextFindTestCase : public TestCase
@@ -811,7 +811,7 @@ StringContextFindTestCase::DoRun (void)
  * Test the Object Name Service can find Objects using 
  * a fully qualified path name.
  *
- *     Find (std::string name);
+ *     Find (stdfwd::string name);
  * 
  */
 class FullyQualifiedFindTestCase : public TestCase
@@ -877,7 +877,7 @@ FullyQualifiedFindTestCase::DoRun (void)
  * Test the Object Name Service can find Objects using 
  * a relative path name.
  *
- *     Find (std::string name);
+ *     Find (stdfwd::string name);
  * 
  */
 class RelativeFindTestCase : public TestCase

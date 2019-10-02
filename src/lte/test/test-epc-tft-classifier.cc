@@ -66,8 +66,8 @@ public:
    */
   EpcTftClassifierTestCase (Ptr<EpcTftClassifier> c,
                             EpcTft::Direction d,
-                            std::string sa,
-                            std::string da,
+                            stdfwd::string sa,
+                            stdfwd::string da,
                             uint16_t sp,
                             uint16_t dp,
                             uint8_t tos,
@@ -100,10 +100,10 @@ private:
    * \param useIpv6 use IPv6 or IPv4 addresses. If set, addresses will be used as IPv4 mapped addresses
    * \returns the name string
    */
-  static std::string BuildNameString (Ptr<EpcTftClassifier> c,
+  static stdfwd::string BuildNameString (Ptr<EpcTftClassifier> c,
                                       EpcTft::Direction d,
-                                      std::string sa,
-                                      std::string da,
+                                      stdfwd::string sa,
+                                      stdfwd::string da,
                                       uint16_t sp,
                                       uint16_t dp,
                                       uint8_t tos,
@@ -116,8 +116,8 @@ private:
 
 EpcTftClassifierTestCase::EpcTftClassifierTestCase (Ptr<EpcTftClassifier> c,
                                                     EpcTft::Direction d,
-                                                    std::string sa,
-                                                    std::string da,
+                                                    stdfwd::string sa,
+                                                    stdfwd::string da,
                                                     uint16_t sp,
                                                     uint16_t dp,
                                                     uint8_t tos,
@@ -156,11 +156,11 @@ EpcTftClassifierTestCase::~EpcTftClassifierTestCase ()
 {
 }
 
-std::string
+stdfwd::string
 EpcTftClassifierTestCase::BuildNameString (Ptr<EpcTftClassifier> c,
                                            EpcTft::Direction d,
-                                           std::string sa,
-                                           std::string da,
+                                           stdfwd::string sa,
+                                           stdfwd::string da,
                                            uint16_t sp,
                                            uint16_t dp,
                                            uint8_t tos,

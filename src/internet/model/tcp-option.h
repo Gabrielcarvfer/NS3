@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object.h"
 #include "../../network/model/buffer.h"
 #include "../../core/model/object-factory.h"

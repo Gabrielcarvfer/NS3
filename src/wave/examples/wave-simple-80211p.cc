@@ -99,7 +99,7 @@ static void GenerateTraffic (Ptr<Socket> socket, uint32_t pktSize,
 
 int main (int argc, char *argv[])
 {
-  std::string phyMode ("OfdmRate6MbpsBW10MHz");
+  stdfwd::string phyMode ("OfdmRate6MbpsBW10MHz");
   uint32_t packetSize = 1000; // bytes
   uint32_t numPackets = 1;
   double interval = 1.0; // seconds

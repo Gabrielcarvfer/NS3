@@ -230,7 +230,7 @@ TcpVeno::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
   m_minRtt = Time::Max ();
 }
 
-std::string
+stdfwd::string
 TcpVeno::GetName () const
 {
   return "TcpVeno";

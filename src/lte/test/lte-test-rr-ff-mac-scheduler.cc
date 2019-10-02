@@ -155,7 +155,7 @@ LenaTestRrFfMacSchedulerSuite::LenaTestRrFfMacSchedulerSuite ()
 
 static LenaTestRrFfMacSchedulerSuite lenaTestRrFfMacSchedulerSuite;
 
-std::string 
+stdfwd::string
 LenaRrFfMacSchedulerTestCase::BuildNameString (uint16_t nUser, double dist)
 {
   std::ostringstream oss;

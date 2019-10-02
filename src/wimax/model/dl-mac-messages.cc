@@ -21,7 +21,7 @@
  */
 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "dl-mac-messages.h"
 #include "../../network/utils/address-utils.h"
 
@@ -373,7 +373,7 @@ Dcd::GetNrDlBurstProfiles (void) const
   return m_nrDlBurstProfiles;
 }
 
-std::string
+stdfwd::string
 Dcd::GetName (void) const
 {
   return "DCD";
@@ -593,7 +593,7 @@ DlMap::GetDlMapElements (void) const
   return m_dlMapElements;
 }
 
-std::string
+stdfwd::string
 DlMap::GetName (void) const
 {
   return "DL-MAP";

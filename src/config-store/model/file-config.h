@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -37,7 +37,7 @@ public:
    * Set the file name
    * \param filename the filename
    */
-  virtual void SetFilename (std::string filename) = 0;
+  virtual void SetFilename (stdfwd::string filename) = 0;
   /**
    * Load or save the default values
    */
@@ -61,7 +61,7 @@ class NoneFileConfig : public FileConfig
 public:
   NoneFileConfig ();
   virtual ~NoneFileConfig ();
-  virtual void SetFilename (std::string filename);
+  virtual void SetFilename (stdfwd::string filename);
   virtual void Default (void);
   virtual void Global (void);
   virtual void Attributes (void);

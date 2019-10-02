@@ -49,12 +49,12 @@ TopologyReader::~TopologyReader ()
 }
 
 void
-TopologyReader::SetFileName (const std::string &fileName)
+TopologyReader::SetFileName (const stdfwd::string &fileName)
 {
   m_fileName = fileName;
 }
 
-std::string
+stdfwd::string
 TopologyReader::GetFileName () const
 {
   return m_fileName;
@@ -94,7 +94,7 @@ TopologyReader::AddLink (Link link)
 }
 
 
-TopologyReader::Link::Link ( Ptr<Node> fromPtr, const std::string &fromName, Ptr<Node> toPtr, const std::string &toName )
+TopologyReader::Link::Link ( Ptr<Node> fromPtr, const stdfwd::string &fromName, Ptr<Node> toPtr, const stdfwd::string &toName )
 {
   m_fromPtr = fromPtr;
   m_fromName = fromName;
@@ -112,7 +112,7 @@ Ptr<Node> TopologyReader::Link::GetFromNode (void) const
   return m_fromPtr;
 }
 
-std::string
+stdfwd::string
 TopologyReader::Link::GetFromNodeName (void) const
 {
   return m_fromName;
@@ -124,21 +124,21 @@ TopologyReader::Link::GetToNode (void) const
   return m_toPtr;
 }
 
-std::string
+stdfwd::string
 TopologyReader::Link::GetToNodeName (void) const
 {
   return m_toName;
 }
 
-std::string
-TopologyReader::Link::GetAttribute (const std::string &name) const
+stdfwd::string
+TopologyReader::Link::GetAttribute (const stdfwd::string &name) const
 {
   NS_ASSERT_MSG (m_linkAttr.find (name) != m_linkAttr.end (), "Requested topology link attribute not found");
   return m_linkAttr.find (name)->second;
 }
 
 bool
-TopologyReader::Link::GetAttributeFailSafe (const std::string &name, std::string &value) const
+TopologyReader::Link::GetAttributeFailSafe (const stdfwd::string &name, stdfwd::string &value) const
 {
   if ( m_linkAttr.find (name) == m_linkAttr.end () )
     {
@@ -149,7 +149,7 @@ TopologyReader::Link::GetAttributeFailSafe (const std::string &name, std::string
 }
 
 void
-TopologyReader::Link::SetAttribute (const std::string &name, const std::string &value)
+TopologyReader::Link::SetAttribute (const stdfwd::string &name, const stdfwd::string &value)
 {
   m_linkAttr[name] = value;
 }

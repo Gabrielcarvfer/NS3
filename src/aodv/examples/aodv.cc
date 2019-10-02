@@ -201,7 +201,7 @@ AodvExample::CreateDevices ()
 
   if (pcap)
     {
-      wifiPhy.EnablePcapAll (std::string ("aodv"));
+      wifiPhy.EnablePcapAll (stdfwd::string ("aodv"));
     }
 }
 

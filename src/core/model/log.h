@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include <string>
-#include <cstdint>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -354,8 +353,8 @@ public:
    *                  a log level helps prevent recursion by logging in
    *                  functions which help implement the logging facility.
    */
-  LogComponent (const std::string & name,
-                const std::string & file,
+  LogComponent (const stdfwd::string & name,
+                const stdfwd::string & file,
                 const enum LogLevel mask = LOG_NONE);
   /**
    * Check if this LogComponent is enabled for \c level
@@ -392,14 +391,14 @@ public:
    * Get the compilation unit defining this LogComponent.
    * \returns The file name.
    */
-  std::string File (void) const;
+  stdfwd::string File (void) const;
   /**
    * Get the string label for the given LogLevel.
    *
    * \param [in] level The LogLevel to get the label for.
    * \return The string label for \c level.
    */
-  static std::string GetLevelLabel(const enum LogLevel level);
+  static stdfwd::string GetLevelLabel(const enum LogLevel level);
   /**
    * Prevent the enabling of a specific LogLevel.
    *
@@ -415,7 +414,7 @@ public:
    * It is exposed here to allow print-introspected-doxygen.cc
    * to generate a list of all LogComponents.
    */
-  typedef std::map<std::string, LogComponent *> ComponentList;
+  typedef std::map<stdfwd::string, LogComponent *> ComponentList;
 
   /**
    * Get the list of LogComponnents.
@@ -439,8 +438,8 @@ private:
   
   int32_t     m_levels;  //!< Enabled LogLevels.
   int32_t     m_mask;    //!< Blocked LogLevels.
-  std::string m_name;    //!< LogComponent name.
-  std::string m_file;    //!< File defining this LogComponent.
+  stdfwd::string m_name;    //!< LogComponent name.
+  stdfwd::string m_file;    //!< File defining this LogComponent.
 
 };  // class LogComponent
 
@@ -450,7 +449,7 @@ private:
  * \param [in] name The name of the LogComponent.
  * \return a reference to the requested LogComponent
  */
-LogComponent & GetLogComponent (const std::string name);
+LogComponent & GetLogComponent (const stdfwd::string name);
 
 /**
  * Insert `, ` when streaming function arguments.
@@ -522,7 +521,7 @@ ParameterLogger::operator<< (std::vector<T> vector)
  */
 template<>
 ParameterLogger&
-ParameterLogger::operator<< <std::string>(const std::string param);
+ParameterLogger::operator<< <stdfwd::string>(const stdfwd::string param);
   
 /**
  * Specialization for C-strings.

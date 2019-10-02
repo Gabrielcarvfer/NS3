@@ -30,7 +30,7 @@ NetDeviceContainer::NetDeviceContainer (Ptr<NetDevice> dev)
 {
   m_devices.push_back (dev);
 }
-NetDeviceContainer::NetDeviceContainer (std::string devName)
+NetDeviceContainer::NetDeviceContainer (stdfwd::string devName)
 {
   Ptr<NetDevice> dev = Names::Find<NetDevice> (devName);
   m_devices.push_back (dev);
@@ -77,7 +77,7 @@ NetDeviceContainer::Add (Ptr<NetDevice> device)
   m_devices.push_back (device);
 }
 void 
-NetDeviceContainer::Add (std::string deviceName)
+NetDeviceContainer::Add (stdfwd::string deviceName)
 {
   Ptr<NetDevice> device = Names::Find<NetDevice> (deviceName);
   m_devices.push_back (device);

@@ -20,7 +20,7 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ul-mac-messages.h"
 
 namespace ns3 {
@@ -365,7 +365,7 @@ Ucd::GetNrUlBurstProfiles (void) const
   return m_nrUlBurstProfiles;
 }
 
-std::string
+stdfwd::string
 Ucd::GetName (void) const
 {
   return "UCD";
@@ -627,7 +627,7 @@ UlMap::GetUlMapElements (void) const
   return m_ulMapElements;
 }
 
-std::string
+stdfwd::string
 UlMap::GetName (void) const
 {
   return "UL-MAP";

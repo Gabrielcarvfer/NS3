@@ -34,7 +34,7 @@
 #endif
 
 #include <map>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 class ClickTrivialTest;
 class ClickIfidFromNameTest;
@@ -79,25 +79,25 @@ public:
   * \brief Click configuration file to be used by the node's Click Instance.
   * \param clickfile name of .click configuration file
   */
-  void SetClickFile (std::string clickfile);
+  void SetClickFile (stdfwd::string clickfile);
 
   /**
   * \brief Click defines to be used by the node's Click Instance.
   * \param defines mapping of defines for .click configuration file parsing
   */
-  void SetDefines (std::map<std::string, std::string> defines);
+  void SetDefines (std::map<stdfwd::string, stdfwd::string> defines);
 
   /**
    * \brief Name of the node as to be used by Click. Required for Click Dumps.
    * \param name Name to be assigned to the node.
    */
-  void SetNodeName (std::string name);
+  void SetNodeName (stdfwd::string name);
 
   /**
    * \brief Name of the routing table element being used by Click. Required for RouteOutput ()
    * \param name Name of the routing table element.
    */
-  void SetClickRoutingTableElement (std::string name);
+  void SetClickRoutingTableElement (stdfwd::string name);
 
   /**
    * \brief Read Handler interface for a node's Click Elements.
@@ -105,7 +105,7 @@ public:
    * \param elementName name of the Click element
    * \param handlerName name of the handler to be read
    */
-  std::string ReadHandler (std::string elementName, std::string handlerName);
+  stdfwd::string ReadHandler (stdfwd::string elementName, stdfwd::string handlerName);
 
   /**
    * \brief Write Handler interface for a node's Click Elements
@@ -114,7 +114,7 @@ public:
    * \param handlerName name of the handler to be read
    * \param writeString string to be written using the write handler
    */
-  int WriteHandler (std::string elementName, std::string handlerName, std::string writeString);
+  int WriteHandler (stdfwd::string elementName, stdfwd::string handlerName, stdfwd::string writeString);
 
   /**
    *
@@ -144,7 +144,7 @@ public:
    * \brief Provides for SIMCLICK_GET_DEFINES
    * \return The defines mapping for .click configuration file parsing
    */
-  std::map<std::string, std::string> GetDefines (void);
+  std::map<stdfwd::string, stdfwd::string> GetDefines (void);
 
   /**
    * \brief Provides for SIMCLICK_IFID_FROM_NAME
@@ -158,27 +158,27 @@ public:
    * \param ifid The interface ID for which the IP Address is required
    * \return The IP Address of the interface in string format
    */
-  std::string GetIpAddressFromInterfaceId (int ifid);
+  stdfwd::string GetIpAddressFromInterfaceId (int ifid);
 
   /**
    * \brief Provides for SIMCLICK_IPPREFIX_FROM_NAME
    * \param ifid The interface ID for which the IP Prefix is required
    * \return The IP Prefix of the interface in string format
    */
-  std::string GetIpPrefixFromInterfaceId (int ifid);
+  stdfwd::string GetIpPrefixFromInterfaceId (int ifid);
 
   /**
    * \brief Provides for SIMCLICK_MACADDR_FROM_NAME
    * \param ifid The interface ID for which the MAC Address is required
    * \return The MAC Address of the interface in string format
    */
-  std::string GetMacAddressFromInterfaceId (int ifid);
+  stdfwd::string GetMacAddressFromInterfaceId (int ifid);
 
   /**
    * \brief Provides for SIMCLICK_GET_NODE_NAME
    * \return The Node name
    */
-  std::string GetNodeName ();
+  stdfwd::string GetNodeName ();
 
   /**
    * \brief Provides for SIMCLICK_IF_READY
@@ -261,15 +261,15 @@ public:
   virtual void NotifyRemoveAddress (uint32_t interface, Ipv4InterfaceAddress address);
 
 private:
-  std::string m_clickFile;
-  std::map < std::string, std::string > m_defines;
-  std::string m_nodeName;
-  std::string m_clickRoutingTableElement;
+  stdfwd::string m_clickFile;
+  std::map < stdfwd::string, stdfwd::string > m_defines;
+  stdfwd::string m_nodeName;
+  stdfwd::string m_clickRoutingTableElement;
 
 
-  std::map < std::string, uint32_t > m_ifaceIdFromName;
-  std::map < std::string, Address > m_ifaceMacFromName;
-  std::map < std::string, Ipv4Address > m_ifaceAddrFromName;
+  std::map < stdfwd::string, uint32_t > m_ifaceIdFromName;
+  std::map < stdfwd::string, Address > m_ifaceMacFromName;
+  std::map < stdfwd::string, Ipv4Address > m_ifaceAddrFromName;
   bool m_clickInitialised;
   bool m_nonDefaultName;
 

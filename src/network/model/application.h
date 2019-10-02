@@ -119,8 +119,8 @@ public:
    * \param oldState The name of the previous state.
    * \param newState The name of the current state.
    */
-  typedef void (*StateTransitionCallback)(const std::string &oldState,
-                                          const std::string &newState);
+  typedef void (*StateTransitionCallback)(const stdfwd::string &oldState,
+                                          const stdfwd::string &newState);
 
 private:
   /**

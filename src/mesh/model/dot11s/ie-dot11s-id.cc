@@ -31,7 +31,7 @@ IeMeshId::IeMeshId ()
       m_meshId[i] = 0;
     }
 }
-IeMeshId::IeMeshId (std::string s)
+IeMeshId::IeMeshId (stdfwd::string s)
 {
   NS_ASSERT (s.size () < 32);
   const char *meshid = s.c_str ();
@@ -143,7 +143,7 @@ operator << (std::ostream &os, const IeMeshId &a)
 
 std::istream &operator >> (std::istream &is, IeMeshId &a)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   a = IeMeshId (str.c_str ());
   return is;

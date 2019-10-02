@@ -37,7 +37,7 @@ public:
   BasicEnergyHarvesterHelper ();
   ~BasicEnergyHarvesterHelper ();
 
-  void Set (std::string name, const AttributeValue &v);
+  void Set (stdfwd::string name, const AttributeValue &v);
 
 private:
   virtual Ptr<EnergyHarvester> DoInstall (Ptr<EnergySource> source) const;

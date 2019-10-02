@@ -62,7 +62,7 @@
               actualStream << i->fl << " <-- " << i->fc << " --> " << i->fh; \
               std::ostringstream expectedStream;        \
               expectedStream << j->fl << " <-- " << j->fc << " --> " << j->fh;          \
-              ReportTestFailure (std::string (# actual) + indexStream.str () + " == " + std::string (# expected) + indexStream.str (),    \
+              ReportTestFailure (stdfwd::string (# actual) + indexStream.str () + " == " + stdfwd::string (# expected) + indexStream.str (),    \
                                  actualStream.str (), expectedStream.str (), msgStream.str (), (file), (line)); \
               CONTINUE_ON_FAILURE;                                      \
             }                   \
@@ -121,7 +121,7 @@
               actualStream << actual;           \
               std::ostringstream expectedStream;        \
               expectedStream << expected;               \
-              ReportTestFailure (std::string (# actual) + indexStream.str () + " == " + std::string (# expected) + indexStream.str (),    \
+              ReportTestFailure (stdfwd::string (# actual) + indexStream.str () + " == " + stdfwd::string (# expected) + indexStream.str (),    \
                                  actualStream.str (), expectedStream.str (), msgStream.str (), file, line);     \
               CONTINUE_ON_FAILURE;                                      \
             }                   \

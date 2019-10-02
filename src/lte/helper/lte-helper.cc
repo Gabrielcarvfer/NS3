@@ -276,34 +276,34 @@ LteHelper::SetEpcHelper (Ptr<EpcHelper> h)
 }
 
 void 
-LteHelper::SetSchedulerType (std::string type) 
+LteHelper::SetSchedulerType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_schedulerFactory = ObjectFactory ();
   m_schedulerFactory.SetTypeId (type);
 }
 
-std::string
+stdfwd::string
 LteHelper::GetSchedulerType () const
 {
   return m_schedulerFactory.GetTypeId ().GetName ();
 } 
 
 void 
-LteHelper::SetSchedulerAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetSchedulerAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_schedulerFactory.Set (n, v);
 }
 
-std::string
+stdfwd::string
 LteHelper::GetFfrAlgorithmType () const
 {
   return m_ffrAlgorithmFactory.GetTypeId ().GetName ();
 }
 
 void
-LteHelper::SetFfrAlgorithmType (std::string type)
+LteHelper::SetFfrAlgorithmType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_ffrAlgorithmFactory = ObjectFactory ();
@@ -311,20 +311,20 @@ LteHelper::SetFfrAlgorithmType (std::string type)
 }
 
 void
-LteHelper::SetFfrAlgorithmAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetFfrAlgorithmAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_ffrAlgorithmFactory.Set (n, v);
 }
 
-std::string
+stdfwd::string
 LteHelper::GetHandoverAlgorithmType () const
 {
   return m_handoverAlgorithmFactory.GetTypeId ().GetName ();
 }
 
 void
-LteHelper::SetHandoverAlgorithmType (std::string type)
+LteHelper::SetHandoverAlgorithmType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_handoverAlgorithmFactory = ObjectFactory ();
@@ -332,21 +332,21 @@ LteHelper::SetHandoverAlgorithmType (std::string type)
 }
 
 void
-LteHelper::SetHandoverAlgorithmAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetHandoverAlgorithmAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_handoverAlgorithmFactory.Set (n, v);
 }
 
 
-std::string
+stdfwd::string
 LteHelper::GetEnbComponentCarrierManagerType () const
 {
   return m_enbComponentCarrierManagerFactory.GetTypeId ().GetName ();
 }
 
 void
-LteHelper::SetEnbComponentCarrierManagerType (std::string type)
+LteHelper::SetEnbComponentCarrierManagerType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_enbComponentCarrierManagerFactory = ObjectFactory ();
@@ -354,20 +354,20 @@ LteHelper::SetEnbComponentCarrierManagerType (std::string type)
 }
 
 void
-LteHelper::SetEnbComponentCarrierManagerAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetEnbComponentCarrierManagerAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_enbComponentCarrierManagerFactory.Set (n, v);
 }
 
-std::string
+stdfwd::string
 LteHelper::GetUeComponentCarrierManagerType () const
 {
   return m_ueComponentCarrierManagerFactory.GetTypeId ().GetName ();
 }
 
 void
-LteHelper::SetUeComponentCarrierManagerType (std::string type)
+LteHelper::SetUeComponentCarrierManagerType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_ueComponentCarrierManagerFactory = ObjectFactory ();
@@ -375,7 +375,7 @@ LteHelper::SetUeComponentCarrierManagerType (std::string type)
 }
 
 void
-LteHelper::SetUeComponentCarrierManagerAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetUeComponentCarrierManagerAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_ueComponentCarrierManagerFactory.Set (n, v);
@@ -390,14 +390,14 @@ LteHelper::SetPathlossModelType (TypeId type)
 }
 
 void 
-LteHelper::SetPathlossModelAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetPathlossModelAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_pathlossModelFactory.Set (n, v);
 }
 
 void
-LteHelper::SetEnbDeviceAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetEnbDeviceAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_enbNetDeviceFactory.Set (n, v);
@@ -405,42 +405,42 @@ LteHelper::SetEnbDeviceAttribute (std::string n, const AttributeValue &v)
 
 
 void 
-LteHelper::SetEnbAntennaModelType (std::string type)
+LteHelper::SetEnbAntennaModelType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this);
   m_enbAntennaModelFactory.SetTypeId (type);
 }
 
 void 
-LteHelper::SetEnbAntennaModelAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetEnbAntennaModelAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_enbAntennaModelFactory.Set (n, v);
 }
 
 void
-LteHelper::SetUeDeviceAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetUeDeviceAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_ueNetDeviceFactory.Set (n, v);
 }
 
 void 
-LteHelper::SetUeAntennaModelType (std::string type)
+LteHelper::SetUeAntennaModelType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this);
   m_ueAntennaModelFactory.SetTypeId (type);
 }
 
 void 
-LteHelper::SetUeAntennaModelAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetUeAntennaModelAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this);
   m_ueAntennaModelFactory.Set (n, v);
 }
 
 void 
-LteHelper::SetFadingModel (std::string type) 
+LteHelper::SetFadingModel (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_fadingModelType = type;
@@ -452,20 +452,20 @@ LteHelper::SetFadingModel (std::string type)
 }
 
 void 
-LteHelper::SetFadingModelAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetFadingModelAttribute (stdfwd::string n, const AttributeValue &v)
 {
   m_fadingModelFactory.Set (n, v);
 }
 
 void 
-LteHelper::SetSpectrumChannelType (std::string type) 
+LteHelper::SetSpectrumChannelType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
   m_channelFactory.SetTypeId (type);
 }
 
 void 
-LteHelper::SetSpectrumChannelAttribute (std::string n, const AttributeValue &v)
+LteHelper::SetSpectrumChannelAttribute (stdfwd::string n, const AttributeValue &v)
 {
   m_channelFactory.Set (n, v);
 }
@@ -1120,7 +1120,7 @@ public:
    * \param cellId
    * \param rnti
    */
-  static void ActivateCallback (Ptr<DrbActivator> a, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
+  static void ActivateCallback (Ptr<DrbActivator> a, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti);
 
   /**
    * Procedure firstly checks if bearer was not activated, if IMSI
@@ -1163,7 +1163,7 @@ DrbActivator::DrbActivator (Ptr<NetDevice> ueDevice, EpsBearer bearer)
 }
 
 void
-DrbActivator::ActivateCallback (Ptr<DrbActivator> a, std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+DrbActivator::ActivateCallback (Ptr<DrbActivator> a, stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (a << context << imsi << cellId << rnti);
   a->ActivateDrb (imsi, cellId, rnti);

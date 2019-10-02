@@ -275,7 +275,7 @@ Ns3TcpCwndTestCase1::DoRun (void)
   // The other node, node one, is going to be set up to use a Linux TCP
   // implementation that we consider a known good TCP.
   //
-  std::string nscStack = "liblinux2.6.26.so";
+  stdfwd::string nscStack = "liblinux2.6.26.so";
   stack.SetTcp ("ns3::NscTcpL4Protocol", "Library", StringValue ("liblinux2.6.26.so"));
   stack.Install (nodes.Get (1));
 

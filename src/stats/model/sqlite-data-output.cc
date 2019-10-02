@@ -66,7 +66,7 @@ SqliteDataOutput::DoDispose ()
 }
 
 int
-SqliteDataOutput::Exec (std::string exe) {
+SqliteDataOutput::Exec (stdfwd::string exe) {
   NS_LOG_FUNCTION (this << exe);
 
   int res;
@@ -116,7 +116,7 @@ SqliteDataOutput::Output (DataCollector &dc)
 {
   NS_LOG_FUNCTION (this << &dc);
 
-  std::string m_dbFile = m_filePrefix + ".db";
+  stdfwd::string m_dbFile = m_filePrefix + ".db";
 
   if (sqlite3_open (m_dbFile.c_str (), &m_db)) {
       NS_LOG_ERROR ("Could not open sqlite3 database \"" << m_dbFile << "\"");
@@ -136,7 +136,7 @@ SqliteDataOutput::Output (DataCollector &dc)
     NULL
   );
 
-  std::string run = dc.GetRunLabel ();
+  stdfwd::string run = dc.GetRunLabel ();
   sqlite3_bind_text (stmt, 1, run.c_str (), run.length (), SQLITE_TRANSIENT);
   sqlite3_bind_text (stmt, 2, dc.GetExperimentLabel ().c_str (),
                               dc.GetExperimentLabel ().length (), SQLITE_TRANSIENT);
@@ -159,7 +159,7 @@ SqliteDataOutput::Output (DataCollector &dc)
   );
   for (MetadataList::iterator i = dc.MetadataBegin ();
        i != dc.MetadataEnd (); i++) {
-      std::pair<std::string, std::string> blob = (*i);
+      std::pair<stdfwd::string, stdfwd::string> blob = (*i);
 
       sqlite3_reset (stmt);
       sqlite3_bind_text (stmt, 1, run.c_str (),
@@ -186,7 +186,7 @@ SqliteDataOutput::Output (DataCollector &dc)
 }
 
 SqliteDataOutput::SqliteOutputCallback::SqliteOutputCallback
-  (Ptr<SqliteDataOutput> owner, std::string run) :
+  (Ptr<SqliteDataOutput> owner, stdfwd::string run) :
   m_owner (owner),
   m_runLabel (run)
 {
@@ -211,8 +211,8 @@ SqliteDataOutput::SqliteOutputCallback::~SqliteOutputCallback ()
 }
 
 void
-SqliteDataOutput::SqliteOutputCallback::OutputStatistic (std::string key,
-                                                         std::string variable,
+SqliteDataOutput::SqliteOutputCallback::OutputStatistic (stdfwd::string key,
+                                                         stdfwd::string variable,
                                                          const StatisticalSummary *statSum)
 {
   NS_LOG_FUNCTION (this << key << variable << statSum);
@@ -232,8 +232,8 @@ SqliteDataOutput::SqliteOutputCallback::OutputStatistic (std::string key,
 
 
 void
-SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
-                                                         std::string variable,
+SqliteDataOutput::SqliteOutputCallback::OutputSingleton (stdfwd::string key,
+                                                         stdfwd::string variable,
                                                          int val)
 {
   NS_LOG_FUNCTION (this << key << variable << val);
@@ -245,8 +245,8 @@ SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
   sqlite3_step (m_insertSingletonStatement);
 }
 void
-SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
-                                                         std::string variable,
+SqliteDataOutput::SqliteOutputCallback::OutputSingleton (stdfwd::string key,
+                                                         stdfwd::string variable,
                                                          uint32_t val)
 {
   NS_LOG_FUNCTION (this << key << variable << val);
@@ -259,8 +259,8 @@ SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
 }
 
 void
-SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
-                                                         std::string variable,
+SqliteDataOutput::SqliteOutputCallback::OutputSingleton (stdfwd::string key,
+                                                         stdfwd::string variable,
                                                          double val)
 {
   NS_LOG_FUNCTION (this << key << variable << val);
@@ -273,9 +273,9 @@ SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
 }
 
 void
-SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
-                                                         std::string variable,
-                                                         std::string val)
+SqliteDataOutput::SqliteOutputCallback::OutputSingleton (stdfwd::string key,
+                                                         stdfwd::string variable,
+                                                         stdfwd::string val)
 {
   NS_LOG_FUNCTION (this << key << variable << val);
 
@@ -287,8 +287,8 @@ SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
 }
 
 void
-SqliteDataOutput::SqliteOutputCallback::OutputSingleton (std::string key,
-                                                         std::string variable,
+SqliteDataOutput::SqliteOutputCallback::OutputSingleton (stdfwd::string key,
+                                                         stdfwd::string variable,
                                                          Time val)
 {
   NS_LOG_FUNCTION (this << key << variable << val);

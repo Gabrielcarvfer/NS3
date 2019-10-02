@@ -79,7 +79,7 @@ public:
    * \param rsrqDbUe1 RSRQ in dBm UE 1
    * \param rsrqDbUe2 RSRQ in dBm UE 2
    */
-  LteUeMeasurementsTestCase (std::string name, double d1, double d2, double rsrpDbmUe1, double rsrpDbmUe2, double rsrqDbUe1, double rsrqDbUe2);
+  LteUeMeasurementsTestCase (stdfwd::string name, double d1, double d2, double rsrpDbmUe1, double rsrpDbmUe2, double rsrqDbUe1, double rsrqDbUe2);
   virtual ~LteUeMeasurementsTestCase ();
 
   /**
@@ -161,7 +161,7 @@ public:
    * \param expectedTime the expected time
    * \param expectedRsrp the expected RSRP
    */
-  LteUeMeasurementsPiecewiseTestCase1 (std::string name,
+  LteUeMeasurementsPiecewiseTestCase1 (stdfwd::string name,
                                        LteRrcSap::ReportConfigEutra config,
                                        std::vector<Time> expectedTime,
                                        std::vector<uint8_t> expectedRsrp);
@@ -184,7 +184,7 @@ public:
    * \param rnti  the RNTI
    * \param report LteRrcSap::MeasurementReport
    */
-  void RecvMeasurementReportCallback (std::string context, uint64_t imsi,
+  void RecvMeasurementReportCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti,
                                       LteRrcSap::MeasurementReport report);
 
@@ -300,7 +300,7 @@ public:
    * \param expectedTime the expected time
    * \param expectedRsrp the expected RSRP
    */
-  LteUeMeasurementsPiecewiseTestCase2 (std::string name,
+  LteUeMeasurementsPiecewiseTestCase2 (stdfwd::string name,
                                        LteRrcSap::ReportConfigEutra config,
                                        std::vector<Time> expectedTime,
                                        std::vector<uint8_t> expectedRsrp);
@@ -323,7 +323,7 @@ public:
    * \param rnti  the RNTI
    * \param report LteRrcSap::MeasurementReport
    */
-  void RecvMeasurementReportCallback (std::string context, uint64_t imsi,
+  void RecvMeasurementReportCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti,
                                       LteRrcSap::MeasurementReport report);
 
@@ -441,7 +441,7 @@ public:
    * \param expectedRsrp the expected RSRP
    * \param duration the duration
    */
-  LteUeMeasurementsHandoverTestCase (std::string name,
+  LteUeMeasurementsHandoverTestCase (stdfwd::string name,
                                      std::list<LteRrcSap::ReportConfigEutra> sourceConfigList,
                                      std::list<LteRrcSap::ReportConfigEutra> targetConfigList,
                                      std::vector<Time> expectedTime,
@@ -466,7 +466,7 @@ public:
    * \param rnti  the RNTI
    * \param report LteRrcSap::MeasurementReport
    */
-  void RecvMeasurementReportCallback (std::string context, uint64_t imsi,
+  void RecvMeasurementReportCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti,
                                       LteRrcSap::MeasurementReport report);
 

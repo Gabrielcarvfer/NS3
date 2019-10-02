@@ -22,7 +22,7 @@
 #include "../../core/model/test.h"
 #include "../../core/model/unused.h"
 #include <limits>     // std:numeric_limits
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cstdarg>
 #include <iosfwd>
 #include <iomanip>
@@ -488,7 +488,7 @@ PacketTest::DoRun (void)
   uint8_t *buf = new uint8_t[packet->GetSize ()];
   packet->CopyData (buf, packet->GetSize ());
 
-  std::string msg = std::string (reinterpret_cast<const char *>(buf),
+  stdfwd::string msg = stdfwd::string (reinterpret_cast<const char *>(buf),
                                  packet->GetSize ());
   delete [] buf;
 

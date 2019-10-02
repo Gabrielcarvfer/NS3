@@ -229,7 +229,7 @@ TcpBic::Update (Ptr<TcpSocketState> tcb)
   return cnt;
 }
 
-std::string
+stdfwd::string
 TcpBic::GetName () const
 {
   return "TcpBic";

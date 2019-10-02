@@ -87,7 +87,7 @@ public:
    * \brief Set the channel associated to this helper
    * \param channelName the channel name
    */
-  void SetChannel (std::string channelName);
+  void SetChannel (stdfwd::string channelName);
 
   /**
    * \brief Add mobility model to a physical device
@@ -121,14 +121,14 @@ public:
    * \param e the LrWpanPhyEnumeration
    * \return a string
    */
-  static std::string LrWpanPhyEnumerationPrinter (LrWpanPhyEnumeration e);
+  static stdfwd::string LrWpanPhyEnumerationPrinter (LrWpanPhyEnumeration e);
 
   /**
    * \brief Transform the LrWpanMacState enumeration into a printable string.
    * \param e the LrWpanMacState
    * \return a string
    */
-  static std::string LrWpanMacStatePrinter (LrWpanMacState e);
+  static stdfwd::string LrWpanMacStatePrinter (LrWpanMacState e);
 
   /**
    * Assign a fixed random variable stream number to the random variables
@@ -165,7 +165,7 @@ private:
    * \param promiscuous If true capture all possible packets available at the device.
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
+  virtual void EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
 
   /**
    * \brief Enable ascii trace output on the indicated net device.
@@ -179,7 +179,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                    std::string prefix,
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 

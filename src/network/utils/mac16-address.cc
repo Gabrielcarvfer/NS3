@@ -176,16 +176,16 @@ std::ostream & operator<< (std::ostream& os, const Mac16Address & address)
 
 std::istream& operator>> (std::istream& is, Mac16Address & address)
 {
-  std::string v;
+  stdfwd::string v;
   is >> v;
 
-  std::string::size_type col = 0;
+  stdfwd::string::size_type col = 0;
   for (uint8_t i = 0; i < 2; ++i)
     {
-      std::string tmp;
-      std::string::size_type next;
+      stdfwd::string tmp;
+      stdfwd::string::size_type next;
       next = v.find (":", col);
-      if (next == std::string::npos)
+      if (next == stdfwd::string::npos)
         {
           tmp = v.substr (col, v.size ()-col);
           address.m_address[i] = strtoul (tmp.c_str(), 0, 16);

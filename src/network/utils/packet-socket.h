@@ -20,7 +20,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <queue>
 #include "../../core/model/callback.h"
 #include "../../core/model/traced-callback.h"
@@ -272,12 +272,12 @@ public:
    * Set the device name
    * @param n the device name from where the corresponding packet is coming.
    */
-  void SetDeviceName (std::string n);
+  void SetDeviceName (stdfwd::string n);
   /**
    * Get the device name from where the corresponding packet is coming.
    * @return the device name from where the corresponding packet is coming.
    */
-  std::string GetDeviceName (void) const;
+  stdfwd::string GetDeviceName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -290,7 +290,7 @@ public:
   virtual void Print (std::ostream &os) const;
 
 private:
-  std::string m_deviceName; //!< Device name
+  stdfwd::string m_deviceName; //!< Device name
 };
 
 } // namespace ns3

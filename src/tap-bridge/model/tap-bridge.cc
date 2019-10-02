@@ -335,7 +335,7 @@ TapBridge::CreateTap (void)
   //
   // Now encode that socket name (family and path) as a string of hex digits
   //
-  std::string path = TapBufferToString ((uint8_t *)&un, len);
+  stdfwd::string path = TapBufferToString ((uint8_t *)&un, len);
   NS_LOG_INFO ("Encoded Unix socket as \"" << path << "\"");
 
   //

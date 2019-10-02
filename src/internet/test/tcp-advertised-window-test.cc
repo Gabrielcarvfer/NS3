@@ -288,7 +288,7 @@ public:
    * \param packets number of packets to send
    * \param lossRatio error ratio
    */
-  TcpAdvertisedWindowTest (const std::string &desc, uint32_t size, uint32_t packets, double lossRatio);
+  TcpAdvertisedWindowTest (const stdfwd::string &desc, uint32_t size, uint32_t packets, double lossRatio);
 
 protected:
   virtual void ConfigureEnvironment ();
@@ -306,7 +306,7 @@ private:
   double m_lossRatio; //!< Loss ratio
 };
 
-TcpAdvertisedWindowTest::TcpAdvertisedWindowTest (const std::string &desc,
+TcpAdvertisedWindowTest::TcpAdvertisedWindowTest (const stdfwd::string &desc,
                                               uint32_t size, uint32_t packets, double lossRatio)
   : TcpGeneralTest (desc),
     m_pktSize (size),
@@ -363,7 +363,7 @@ public:
    * \param packets number of packets to send
    * \param lossRatio error ratio
    */
-  TcpAdvWindowOnLossTest (const std::string &desc, uint32_t size, uint32_t packets,
+  TcpAdvWindowOnLossTest (const stdfwd::string &desc, uint32_t size, uint32_t packets,
                           std::vector<uint32_t> &toDrop);
 
 protected:
@@ -383,7 +383,7 @@ private:
   std::vector<uint32_t> m_toDrop; //!< Sequences to drop
 };
 
-TcpAdvWindowOnLossTest::TcpAdvWindowOnLossTest (const std::string &desc,
+TcpAdvWindowOnLossTest::TcpAdvWindowOnLossTest (const stdfwd::string &desc,
                                                 uint32_t size, uint32_t packets,
                                                 std::vector<uint32_t> &toDrop)
   : TcpGeneralTest (desc),

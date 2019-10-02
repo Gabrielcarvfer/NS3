@@ -24,7 +24,7 @@
 \brief  Defines a linked list of Packet tags, including copy-on-write semantics.
 */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 #include "../../core/model/type-id.h"
 

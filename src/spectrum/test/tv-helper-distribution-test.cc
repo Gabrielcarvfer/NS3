@@ -53,11 +53,11 @@ public:
 
 private:
   virtual void DoRun (void);
-  static std::string Name (uint32_t maxNumTransmitters);
+  static stdfwd::string Name (uint32_t maxNumTransmitters);
   uint32_t m_maxNumTransmitters;
 };
 
-std::string 
+stdfwd::string
 TvHelperDistributionTestCase::Name (uint32_t maxNumTransmitters)
 {
   std::ostringstream oss;

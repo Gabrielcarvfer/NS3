@@ -40,7 +40,7 @@ using namespace ns3;
 class ThreadedSimulatorEventsTestCase : public TestCase
 {
 public:
-  ThreadedSimulatorEventsTestCase (ObjectFactory schedulerFactory, const std::string &simulatorType, unsigned int threads);
+  ThreadedSimulatorEventsTestCase (ObjectFactory schedulerFactory, const stdfwd::string &simulatorType, unsigned int threads);
   void EventA (int a);
   void EventB (int b);
   void EventC (int c);
@@ -56,8 +56,8 @@ public:
   bool m_threadWaiting[MAXTHREADS];
   bool m_stop;
   ObjectFactory m_schedulerFactory;
-  std::string m_simulatorType;
-  std::string m_error;
+  stdfwd::string m_simulatorType;
+  stdfwd::string m_error;
   std::list<Ptr<SystemThread> > m_threadlist;
 
 private:
@@ -66,7 +66,7 @@ private:
   virtual void DoTeardown (void);
 };
 
-ThreadedSimulatorEventsTestCase::ThreadedSimulatorEventsTestCase (ObjectFactory schedulerFactory, const std::string &simulatorType, unsigned int threads)
+ThreadedSimulatorEventsTestCase::ThreadedSimulatorEventsTestCase (ObjectFactory schedulerFactory, const stdfwd::string &simulatorType, unsigned int threads)
   : TestCase ("Check threaded event handling with " +
               std::to_string (threads) + " threads, " +
               schedulerFactory.GetTypeId ().GetName () + " scheduler, in " +
@@ -232,13 +232,13 @@ public:
   ThreadedSimulatorTestSuite ()
     : TestSuite ("threaded-simulator")
   {
-    std::string simulatorTypes[] = {
+    stdfwd::string simulatorTypes[] = {
 #ifdef HAVE_RT
       "ns3::RealtimeSimulatorImpl",
 #endif
       "ns3::DefaultSimulatorImpl"
     };
-    std::string schedulerTypes[] = {
+    stdfwd::string schedulerTypes[] = {
       "ns3::ListScheduler",
       "ns3::HeapScheduler",
       "ns3::MapScheduler",

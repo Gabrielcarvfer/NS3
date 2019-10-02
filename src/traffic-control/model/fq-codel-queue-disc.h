@@ -141,8 +141,8 @@ private:
    */
   uint32_t FqCoDelDrop (void);
 
-  std::string m_interval;    //!< CoDel interval attribute
-  std::string m_target;      //!< CoDel target attribute
+  stdfwd::string m_interval;    //!< CoDel interval attribute
+  stdfwd::string m_target;      //!< CoDel target attribute
   uint32_t m_quantum;        //!< Deficit assigned to flows at each round
   uint32_t m_flows;          //!< Number of flow queues
   uint32_t m_dropBatchSize;  //!< Max number of packets dropped from the fat flow

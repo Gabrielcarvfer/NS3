@@ -36,7 +36,7 @@ NS_LOG_COMPONENT_DEFINE ("ItuR1411LosPropagationLossModelTest");
 class ItuR1411LosPropagationLossModelTestCase : public TestCase
 {
 public:
-  ItuR1411LosPropagationLossModelTestCase (double freq, double dist, double hb, double hm, double refValue, std::string name);
+  ItuR1411LosPropagationLossModelTestCase (double freq, double dist, double hb, double hm, double refValue, stdfwd::string name);
   virtual ~ItuR1411LosPropagationLossModelTestCase ();
 
 private:
@@ -51,7 +51,7 @@ private:
 
 };
 
-ItuR1411LosPropagationLossModelTestCase::ItuR1411LosPropagationLossModelTestCase (double freq, double dist, double hb, double hm, double refValue, std::string name)
+ItuR1411LosPropagationLossModelTestCase::ItuR1411LosPropagationLossModelTestCase (double freq, double dist, double hb, double hm, double refValue, stdfwd::string name)
   : TestCase (name),
     m_freq (freq),
     m_dist (dist),

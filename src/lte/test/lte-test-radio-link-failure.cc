@@ -104,11 +104,11 @@ static LteRadioLinkFailureTestSuite g_lteRadioLinkFailureTestSuite;
  * Test Case
  */
 
-std::string
+stdfwd::string
 LteRadioLinkFailureTestCase::BuildNameString (uint32_t numEnbs, uint32_t numUes, bool isIdealRrc)
 {
   std::ostringstream oss;
-  std::string rrcProtocol;
+  stdfwd::string rrcProtocol;
   if (isIdealRrc)
     {
       rrcProtocol = "RRC Ideal";
@@ -502,7 +502,7 @@ LteRadioLinkFailureTestCase::CheckUeExistAtEnb (uint16_t rnti, Ptr<NetDevice> en
 }
 
 void
-LteRadioLinkFailureTestCase::UeStateTransitionCallback (std::string context,
+LteRadioLinkFailureTestCase::UeStateTransitionCallback (stdfwd::string context,
                                                         uint64_t imsi, uint16_t cellId,
                                                         uint16_t rnti, LteUeRrc::State oldState,
                                                         LteUeRrc::State newState)
@@ -513,14 +513,14 @@ LteRadioLinkFailureTestCase::UeStateTransitionCallback (std::string context,
 
 void
 LteRadioLinkFailureTestCase::ConnectionEstablishedEnbCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
 }
 
 void
 LteRadioLinkFailureTestCase::ConnectionEstablishedUeCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
   NS_TEST_ASSERT_MSG_EQ (m_numOfOutOfSyncIndications, 0,
@@ -530,14 +530,14 @@ LteRadioLinkFailureTestCase::ConnectionEstablishedUeCallback (
 }
 
 void
-LteRadioLinkFailureTestCase::ConnectionReleaseAtEnbCallback (std::string context, uint64_t imsi,
+LteRadioLinkFailureTestCase::ConnectionReleaseAtEnbCallback (stdfwd::string context, uint64_t imsi,
                                                              uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
 }
 
 void
-LteRadioLinkFailureTestCase::PhySyncDetectionCallback (std::string context, uint64_t imsi, uint16_t rnti, uint16_t cellId, std::string type, uint8_t count)
+LteRadioLinkFailureTestCase::PhySyncDetectionCallback (stdfwd::string context, uint64_t imsi, uint16_t rnti, uint16_t cellId, stdfwd::string type, uint8_t count)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
   if (type == "Notify out of sync")
@@ -551,7 +551,7 @@ LteRadioLinkFailureTestCase::PhySyncDetectionCallback (std::string context, uint
 }
 
 void
-LteRadioLinkFailureTestCase::RadioLinkFailureCallback (std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+LteRadioLinkFailureTestCase::RadioLinkFailureCallback (stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId << rnti);
   NS_LOG_DEBUG ("RLF at " << Simulator::Now ());

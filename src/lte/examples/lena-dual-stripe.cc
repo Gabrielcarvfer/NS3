@@ -30,7 +30,7 @@
 #include "../../core/model/log.h"
 #include <iomanip>
 #include <ios>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 
 // The topology of this simulation program is inspired from 
@@ -160,7 +160,7 @@ FemtocellBlockAllocator::OverlapsWithAnyPrevious (Box box)
 }
 
 void 
-PrintGnuplottableBuildingListToFile (std::string filename)
+PrintGnuplottableBuildingListToFile (stdfwd::string filename)
 {
   std::ofstream outFile;
   outFile.open (filename.c_str (), std::ios_base::out | std::ios_base::trunc);
@@ -183,7 +183,7 @@ PrintGnuplottableBuildingListToFile (std::string filename)
 }
 
 void 
-PrintGnuplottableUeListToFile (std::string filename)
+PrintGnuplottableUeListToFile (stdfwd::string filename)
 {
   std::ofstream outFile;
   outFile.open (filename.c_str (), std::ios_base::out | std::ios_base::trunc);
@@ -211,7 +211,7 @@ PrintGnuplottableUeListToFile (std::string filename)
 }
 
 void 
-PrintGnuplottableEnbListToFile (std::string filename)
+PrintGnuplottableEnbListToFile (stdfwd::string filename)
 {
   std::ofstream outFile;
   outFile.open (filename.c_str (), std::ios_base::out | std::ios_base::trunc);
@@ -444,7 +444,7 @@ main (int argc, char *argv[])
   GlobalValue::GetValueByName ("remRbId", integerValue);
   int32_t remRbId = integerValue.Get ();
   GlobalValue::GetValueByName ("fadingTrace", stringValue);
-  std::string fadingTrace = stringValue.Get ();
+  stdfwd::string fadingTrace = stringValue.Get ();
   GlobalValue::GetValueByName ("numBearersPerUe", uintegerValue);
   uint16_t numBearersPerUe = uintegerValue.Get ();
   GlobalValue::GetValueByName ("srsPeriodicity", uintegerValue);

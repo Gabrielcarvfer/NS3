@@ -87,7 +87,7 @@ public:
   TcpVeno (const TcpVeno& sock);
   virtual ~TcpVeno (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Perform RTT sampling needed to execute Veno algorithm

@@ -20,7 +20,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "file-helper.h"
 #include "../../core/model/abort.h"
@@ -45,7 +45,7 @@ FileHelper::FileHelper ()
   // constructed later when needed.
 }
 
-FileHelper::FileHelper (const std::string &outputFileNameWithoutExtension,
+FileHelper::FileHelper (const stdfwd::string &outputFileNameWithoutExtension,
                         enum FileAggregator::FileType fileType)
   : m_aggregator                     (0),
     m_fileProbeCount                 (0),
@@ -65,7 +65,7 @@ FileHelper::~FileHelper ()
 }
 
 void
-FileHelper::ConfigureFile (const std::string &outputFileNameWithoutExtension,
+FileHelper::ConfigureFile (const stdfwd::string &outputFileNameWithoutExtension,
                            enum FileAggregator::FileType fileType)
 {
   NS_LOG_FUNCTION (this << outputFileNameWithoutExtension << fileType);
@@ -87,21 +87,21 @@ FileHelper::ConfigureFile (const std::string &outputFileNameWithoutExtension,
 }
 
 void
-FileHelper::WriteProbe (const std::string &typeId,
-                        const std::string &path,
-                        const std::string &probeTraceSource)
+FileHelper::WriteProbe (const stdfwd::string &typeId,
+                        const stdfwd::string &path,
+                        const stdfwd::string &probeTraceSource)
 {
   NS_LOG_FUNCTION (this << typeId << path << probeTraceSource);
 
-  std::string pathWithoutLastToken;
-  std::string lastToken;
+  stdfwd::string pathWithoutLastToken;
+  stdfwd::string lastToken;
 
   // See if the path has any wildcards.
-  bool pathHasNoWildcards = path.find ("*") == std::string::npos;
+  bool pathHasNoWildcards = path.find ("*") == stdfwd::string::npos;
 
   // Remove the last token from the path.
   size_t lastSlash = path.find_last_of ("/");
-  if (lastSlash == std::string::npos)
+  if (lastSlash == stdfwd::string::npos)
     {
       pathWithoutLastToken = path;
       lastToken = "";
@@ -112,7 +112,7 @@ FileHelper::WriteProbe (const std::string &typeId,
       pathWithoutLastToken = path.substr (0, lastSlash);
 
       // Save the last token without the last slash.
-      lastToken = path.substr (lastSlash + 1, std::string::npos);
+      lastToken = path.substr (lastSlash + 1, stdfwd::string::npos);
     }
 
   // See if there are any matches for the probe's path with the last
@@ -121,7 +121,7 @@ FileHelper::WriteProbe (const std::string &typeId,
   uint32_t matchCount = matches.GetN ();
 
   // This is used to make the probe's context be unique.
-  std::string matchIdentifier;
+  stdfwd::string matchIdentifier;
 
   /// This is used to indicate if multiple aggregators are needed.
   bool onlyOneAggregator;
@@ -154,9 +154,9 @@ FileHelper::WriteProbe (const std::string &typeId,
 
           // Construct the matched path and get the matches for each
           // of the wildcards.
-          std::string wildcardSeparator = "-";
-          std::string matchedPath = matches.GetMatchedPath (i) + lastToken;
-          std::string wildcardMatches = GetWildcardMatches (path,
+          stdfwd::string wildcardSeparator = "-";
+          stdfwd::string matchedPath = matches.GetMatchedPath (i) + lastToken;
+          stdfwd::string wildcardMatches = GetWildcardMatches (path,
                                                             matchedPath,
                                                             wildcardSeparator);
 
@@ -177,9 +177,9 @@ FileHelper::WriteProbe (const std::string &typeId,
 }
 
 void
-FileHelper::AddProbe (const std::string &typeId,
-                      const std::string &probeName,
-                      const std::string &path)
+FileHelper::AddProbe (const stdfwd::string &typeId,
+                      const stdfwd::string &probeName,
+                      const stdfwd::string &path)
 {
   NS_LOG_FUNCTION (this << typeId << probeName << path);
 
@@ -213,7 +213,7 @@ FileHelper::AddProbe (const std::string &typeId,
 }
 
 void
-FileHelper::AddTimeSeriesAdaptor (const std::string &adaptorName)
+FileHelper::AddTimeSeriesAdaptor (const stdfwd::string &adaptorName)
 {
   NS_LOG_FUNCTION (this << adaptorName);
 
@@ -234,8 +234,8 @@ FileHelper::AddTimeSeriesAdaptor (const std::string &adaptorName)
 }
 
 void
-FileHelper::AddAggregator (const std::string &aggregatorName,
-                           const std::string &outputFileName,
+FileHelper::AddAggregator (const stdfwd::string &aggregatorName,
+                           const stdfwd::string &outputFileName,
                            bool onlyOneAggregator)
 {
   NS_LOG_FUNCTION (this << aggregatorName << outputFileName << onlyOneAggregator);
@@ -284,12 +284,12 @@ FileHelper::AddAggregator (const std::string &aggregatorName,
 }
 
 Ptr<Probe>
-FileHelper::GetProbe (std::string probeName) const
+FileHelper::GetProbe (stdfwd::string probeName) const
 {
   NS_LOG_FUNCTION (this << probeName);
 
   // Look for the probe.
-  std::map<std::string, std::pair <Ptr<Probe>, std::string> >::const_iterator mapIterator = m_probeMap.find (probeName);
+  std::map<stdfwd::string, std::pair <Ptr<Probe>, stdfwd::string> >::const_iterator mapIterator = m_probeMap.find (probeName);
 
   // Return the probe if it has been added.
   if (mapIterator != m_probeMap.end ())
@@ -312,7 +312,7 @@ FileHelper::GetAggregatorSingle ()
   if (!m_aggregator)
     {
       // Create the aggregator.
-      std::string outputFileName = m_outputFileNameWithoutExtension + ".txt";
+      stdfwd::string outputFileName = m_outputFileNameWithoutExtension + ".txt";
       m_aggregator = CreateObject<FileAggregator> (outputFileName, m_fileType);
 
       // Set all of the format strings for the aggregator.
@@ -337,8 +337,8 @@ FileHelper::GetAggregatorSingle ()
 }
 
 Ptr<FileAggregator>
-FileHelper::GetAggregatorMultiple (const std::string &aggregatorName,
-                                   const std::string &outputFileName)
+FileHelper::GetAggregatorMultiple (const stdfwd::string &aggregatorName,
+                                   const stdfwd::string &outputFileName)
 {
   NS_LOG_FUNCTION (this);
 
@@ -359,7 +359,7 @@ FileHelper::GetAggregatorMultiple (const std::string &aggregatorName,
 }
 
 void
-FileHelper::SetHeading (const std::string &heading)
+FileHelper::SetHeading (const stdfwd::string &heading)
 {
   NS_LOG_FUNCTION (this << heading);
 
@@ -368,7 +368,7 @@ FileHelper::SetHeading (const std::string &heading)
 }
 
 void
-FileHelper::Set1dFormat (const std::string &format)
+FileHelper::Set1dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -376,7 +376,7 @@ FileHelper::Set1dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set2dFormat (const std::string &format)
+FileHelper::Set2dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -384,7 +384,7 @@ FileHelper::Set2dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set3dFormat (const std::string &format)
+FileHelper::Set3dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -392,7 +392,7 @@ FileHelper::Set3dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set4dFormat (const std::string &format)
+FileHelper::Set4dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -400,7 +400,7 @@ FileHelper::Set4dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set5dFormat (const std::string &format)
+FileHelper::Set5dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -408,7 +408,7 @@ FileHelper::Set5dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set6dFormat (const std::string &format)
+FileHelper::Set6dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -416,7 +416,7 @@ FileHelper::Set6dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set7dFormat (const std::string &format)
+FileHelper::Set7dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -424,7 +424,7 @@ FileHelper::Set7dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set8dFormat (const std::string &format)
+FileHelper::Set8dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -432,7 +432,7 @@ FileHelper::Set8dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set9dFormat (const std::string &format)
+FileHelper::Set9dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -440,7 +440,7 @@ FileHelper::Set9dFormat (const std::string &format)
 }
 
 void
-FileHelper::Set10dFormat (const std::string &format)
+FileHelper::Set10dFormat (const stdfwd::string &format)
 {
   NS_LOG_FUNCTION (this << format);
 
@@ -448,11 +448,11 @@ FileHelper::Set10dFormat (const std::string &format)
 }
 
 void
-FileHelper::ConnectProbeToAggregator (const std::string &typeId,
-                                      const std::string &matchIdentifier,
-                                      const std::string &path,
-                                      const std::string &probeTraceSource,
-                                      const std::string &outputFileNameWithoutExtension,
+FileHelper::ConnectProbeToAggregator (const stdfwd::string &typeId,
+                                      const stdfwd::string &matchIdentifier,
+                                      const stdfwd::string &path,
+                                      const stdfwd::string &probeTraceSource,
+                                      const stdfwd::string &outputFileNameWithoutExtension,
                                       bool onlyOneAggregator)
 {
   NS_LOG_FUNCTION (this << typeId << matchIdentifier << path << probeTraceSource
@@ -464,10 +464,10 @@ FileHelper::ConnectProbeToAggregator (const std::string &typeId,
   // Create a unique name for this probe.
   std::ostringstream probeNameStream;
   probeNameStream << "FileProbe-" << m_fileProbeCount;
-  std::string probeName = probeNameStream.str ();
+  stdfwd::string probeName = probeNameStream.str ();
 
   // Create a unique dataset context string for this probe.
-  std::string probeContext = probeName
+  stdfwd::string probeContext = probeName
     + "/" + matchIdentifier + "/" + probeTraceSource;
 
   // Add the probe to the map of probes, which will keep the probe in
@@ -557,11 +557,11 @@ FileHelper::ConnectProbeToAggregator (const std::string &typeId,
 
   // Add the aggregator to the map of aggregators, which will keep the
   // aggregator in memory after this function ends.
-  std::string outputFileName = outputFileNameWithoutExtension + ".txt";
+  stdfwd::string outputFileName = outputFileNameWithoutExtension + ".txt";
   AddAggregator (probeContext, outputFileName, onlyOneAggregator);
 
   // Connect the adaptor to the aggregator.
-  std::string adaptorTraceSource = "Output";
+  stdfwd::string adaptorTraceSource = "Output";
   m_timeSeriesAdaptorMap[probeContext]->TraceConnect
     (adaptorTraceSource,
     probeContext,

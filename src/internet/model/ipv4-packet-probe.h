@@ -73,7 +73,7 @@ public:
    * \param ipv4 set the IPv4 object for the traced packet equal to this
    * \param interface set the IPv4 interface for the traced packet equal to this
    */
-  static void SetValueByPath (std::string path, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
+  static void SetValueByPath (stdfwd::string path, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
 
   /**
    * \brief connect to a trace source attribute provided by a given object
@@ -82,7 +82,7 @@ public:
    * \param obj ns3::Object to connect to
    * \return true if the trace source was successfully connected
    */
-  virtual bool ConnectByObject (std::string traceSource, Ptr<Object> obj);
+  virtual bool ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj);
 
   /**
    * \brief connect to a trace source provided by a config path
@@ -92,7 +92,7 @@ public:
    * Note, if an invalid path is provided, the probe will not be connected
    * to anything.
    */
-  virtual void ConnectByPath (std::string path);
+  virtual void ConnectByPath (stdfwd::string path);
 
 private:
   /**

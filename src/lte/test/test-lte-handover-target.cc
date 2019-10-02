@@ -87,10 +87,10 @@ public:
    * \param handoverAlgorithmType the type of handover algorithm to be used in
    *                              all eNodeBs
    */
-  LteHandoverTargetTestCase (std::string name, Vector uePosition,
+  LteHandoverTargetTestCase (stdfwd::string name, Vector uePosition,
                              uint8_t gridSizeX, uint8_t gridSizeY,
                              uint16_t sourceCellId, uint16_t targetCellId,
-                             std::string handoverAlgorithmType);
+                             stdfwd::string handoverAlgorithmType);
 
   virtual ~LteHandoverTargetTestCase ();
 
@@ -107,7 +107,7 @@ public:
    * \param rnti the RNTI
    * \param targetCellId the target cell ID
    */
-  void HandoverStartCallback (std::string context, uint64_t imsi,
+  void HandoverStartCallback (stdfwd::string context, uint64_t imsi,
                               uint16_t sourceCellId, uint16_t rnti,
                               uint16_t targetCellId);
 
@@ -136,7 +136,7 @@ private:
   uint8_t m_gridSizeY; ///< Y grid size
   uint16_t m_sourceCellId; ///< source cell ID
   uint16_t m_targetCellId; ///< target cell ID
-  std::string m_handoverAlgorithmType; ///< handover algorithm type
+  stdfwd::string m_handoverAlgorithmType; ///< handover algorithm type
 
   Ptr<LteEnbNetDevice> m_sourceEnbDev; ///< source ENB device
   bool m_hasHandoverOccurred; ///< has handover occurred?
@@ -144,10 +144,10 @@ private:
 }; // end of class LteHandoverTargetTestCase
 
 
-LteHandoverTargetTestCase::LteHandoverTargetTestCase (std::string name, Vector uePosition,
+LteHandoverTargetTestCase::LteHandoverTargetTestCase (stdfwd::string name, Vector uePosition,
                                                       uint8_t gridSizeX, uint8_t gridSizeY,
                                                       uint16_t sourceCellId, uint16_t targetCellId,
-                                                      std::string handoverAlgorithmType)
+                                                      stdfwd::string handoverAlgorithmType)
   : TestCase (name),
     m_uePosition (uePosition),
     m_gridSizeX (gridSizeX),
@@ -183,7 +183,7 @@ LteHandoverTargetTestCase::~LteHandoverTargetTestCase ()
 
 
 void
-LteHandoverTargetTestCase::HandoverStartCallback (std::string context, uint64_t imsi,
+LteHandoverTargetTestCase::HandoverStartCallback (stdfwd::string context, uint64_t imsi,
                                                   uint16_t sourceCellId, uint16_t rnti,
                                                   uint16_t targetCellId)
 {

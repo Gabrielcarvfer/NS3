@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 #include "file-config.h"
 
@@ -36,7 +36,7 @@ class RawTextConfigSave : public FileConfig
 public:
   RawTextConfigSave ();
   virtual ~RawTextConfigSave ();
-  virtual void SetFilename (std::string filename);
+  virtual void SetFilename (stdfwd::string filename);
   virtual void Default (void);
   virtual void Global (void);
   virtual void Attributes (void);
@@ -55,7 +55,7 @@ class RawTextConfigLoad : public FileConfig
 public:
   RawTextConfigLoad ();
   virtual ~RawTextConfigLoad ();
-  virtual void SetFilename (std::string filename);
+  virtual void SetFilename (stdfwd::string filename);
   virtual void Default (void);
   virtual void Global (void);
   virtual void Attributes (void);
@@ -65,7 +65,7 @@ private:
    * \param value the input string
    * \returns the updated string
    */
-  std::string Strip (std::string value); 
+  stdfwd::string Strip (stdfwd::string value);
   /// Config store input stream
   std::ifstream *m_is;
 };

@@ -91,7 +91,7 @@ EnergySource::FindDeviceEnergyModels (TypeId tid)
 }
 
 DeviceEnergyModelContainer
-EnergySource::FindDeviceEnergyModels (std::string name)
+EnergySource::FindDeviceEnergyModels (stdfwd::string name)
 {
   NS_LOG_FUNCTION (this << name);
   DeviceEnergyModelContainer container;

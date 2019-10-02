@@ -104,9 +104,9 @@ RocketfuelTopologyReader::~RocketfuelTopologyReader ()
  * \param radius node radius
  */
 static inline void
-PrintNodeInfo (std::string & uid, std::string & loc, bool dns, bool bb,
-               std::vector <std::string>::size_type neighListSize,
-               std::string & name, int radius)
+PrintNodeInfo (stdfwd::string & uid, stdfwd::string & loc, bool dns, bool bb,
+               std::vector <stdfwd::string>::size_type neighListSize,
+               stdfwd::string & name, int radius)
 {
   /* uid @loc [+] [bb] (num_neigh) [&ext] -> <nuid-1> <nuid-2> ... {-euid} ... =name[!] rn */
   NS_LOG_INFO ("Load Node[" << uid << "]: location: " << loc << " dns: " << dns
@@ -118,17 +118,17 @@ PrintNodeInfo (std::string & uid, std::string & loc, bool dns, bool bb,
 NodeContainer
 RocketfuelTopologyReader::GenerateFromMapsFile (int argc, char *argv[])
 {
-  std::string uid;
-  std::string loc;
-  std::string ptr;
-  std::string name;
-  std::string nuid;
+  stdfwd::string uid;
+  stdfwd::string loc;
+  stdfwd::string ptr;
+  stdfwd::string name;
+  stdfwd::string nuid;
   bool dns = false;
   bool bb = false;
   int num_neigh_s = 0;
   unsigned int num_neigh = 0;
   int radius = 0;
-  std::vector <std::string> neigh_list;
+  std::vector <stdfwd::string> neigh_list;
   NodeContainer nodes;
 
   uid = argv[0];
@@ -234,8 +234,8 @@ NodeContainer
 RocketfuelTopologyReader::GenerateFromWeightsFile (int argc, char *argv[])
 {
   /* uid @loc [+] [bb] (num_neigh) [&ext] -> <nuid-1> <nuid-2> ... {-euid} ... =name[!] rn */
-  std::string sname;
-  std::string tname;
+  stdfwd::string sname;
+  stdfwd::string tname;
   char *endptr;
   NodeContainer nodes;
 
@@ -343,7 +343,7 @@ RocketfuelTopologyReader::Read (void)
   NodeContainer nodes;
 
   std::istringstream lineBuffer;
-  std::string line;
+  stdfwd::string line;
   int lineNumber = 0;
   enum RF_FileType ftype = RF_UNKNOWN;
   char errbuf[512];

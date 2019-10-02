@@ -404,7 +404,7 @@ private:
   uint8_t m_ulGrantMcs; ///< MCS for UL grant (default 0)
 
 
-  std::string m_CqaMetric; ///< CQA metric name
+  stdfwd::string m_CqaMetric; ///< CQA metric name
 
 };
 

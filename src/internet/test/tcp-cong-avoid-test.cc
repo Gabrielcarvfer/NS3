@@ -67,7 +67,7 @@ public:
    */
   TcpNewRenoCongAvoidNormalTest (uint32_t segmentSize, uint32_t packetSize,
                                  uint32_t packets, TypeId& congControl,
-                                 const std::string &desc);
+                                 const stdfwd::string &desc);
 protected:
   virtual void CWndTrace (uint32_t oldValue, uint32_t newValue);
   virtual void QueueDrop (SocketWho who);
@@ -96,7 +96,7 @@ TcpNewRenoCongAvoidNormalTest::TcpNewRenoCongAvoidNormalTest (uint32_t segmentSi
                                                               uint32_t packetSize,
                                                               uint32_t packets,
                                                               TypeId &typeId,
-                                                              const std::string &desc)
+                                                              const stdfwd::string &desc)
   : TcpGeneralTest (desc),
     m_segmentSize (segmentSize),
     m_packetSize (packetSize),

@@ -70,7 +70,7 @@ EnergyHarvesterHelper::Install (EnergySourceContainer sourceContainer) const
 }
 
 EnergyHarvesterContainer
-EnergyHarvesterHelper::Install (std::string sourceName) const
+EnergyHarvesterHelper::Install (stdfwd::string sourceName) const
 {
   Ptr<EnergySource> source  = Names::Find<EnergySource> (sourceName);
   return Install (source);

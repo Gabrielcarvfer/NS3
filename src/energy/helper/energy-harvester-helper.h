@@ -52,7 +52,7 @@ public:
    *
    * Sets one of the attributes of underlying EnergyHarvester.
    */
-  virtual void Set (std::string name, const AttributeValue &v) = 0;
+  virtual void Set (stdfwd::string name, const AttributeValue &v) = 0;
 
   /**
    * \param source Pointer to the energy source where EnergyHarvester will be installed.
@@ -76,7 +76,7 @@ public:
    *
    * This function installs an EnergyHarvester onto a node.
    */
-  EnergyHarvesterContainer Install (std::string sourceName) const;
+  EnergyHarvesterContainer Install (stdfwd::string sourceName) const;
 
 private:
   /**

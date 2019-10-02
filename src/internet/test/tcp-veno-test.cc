@@ -59,7 +59,7 @@ public:
                Time rtt,
                uint32_t segmentsAcked,
                uint32_t numRtt,
-               const std::string &name);
+               const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -120,7 +120,7 @@ TcpVenoTest::TcpVenoTest (uint32_t cWnd,
                           Time rtt,
                           uint32_t segmentsAcked,
                           uint32_t numRtt,
-                          const std::string &name)
+                          const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

@@ -78,22 +78,22 @@ private:
   /**
    * The name of the device used for the S1-U interface of the SGW
    */
-  std::string m_sgwDeviceName;
+  stdfwd::string m_sgwDeviceName;
 
   /**
    * The name of the device used for the S1-U interface of the eNB
    */
-  std::string m_enbDeviceName;
+  stdfwd::string m_enbDeviceName;
 
   /**
    * MAC address used for the SGW
    */
-  std::string m_sgwMacAddress;
+  stdfwd::string m_sgwMacAddress;
 
   /**
    * First 5 bytes of the Enb MAC address base
    */
-  std::string m_enbMacAddressBase;
+  stdfwd::string m_enbMacAddressBase;
 };
 
 } // namespace ns3

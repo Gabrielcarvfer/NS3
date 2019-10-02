@@ -61,7 +61,7 @@ NS_LOG_COMPONENT_DEFINE ("LteUeMeasurementsTest");
 
 void
 ReportUeMeasurementsCallback (LteUeMeasurementsTestCase *testcase,
-                              std::string path, uint16_t rnti, uint16_t cellId,
+                              stdfwd::string path, uint16_t rnti, uint16_t cellId,
                               double rsrp, double rsrq, bool servingCell, uint8_t componentCarrierId)
 {
   testcase->ReportUeMeasurements (rnti, cellId, rsrp, rsrq, servingCell);
@@ -69,7 +69,7 @@ ReportUeMeasurementsCallback (LteUeMeasurementsTestCase *testcase,
 
 void
 RecvMeasurementReportCallback (LteUeMeasurementsTestCase *testcase,
-                               std::string path, uint64_t imsi, uint16_t cellId,
+                               stdfwd::string path, uint64_t imsi, uint16_t cellId,
                                uint16_t rnti, LteRrcSap::MeasurementReport meas)
 {
   testcase->RecvMeasurementReport (imsi, cellId, rnti, meas);
@@ -111,7 +111,7 @@ static LteUeMeasurementsTestSuite lteUeMeasurementsTestSuite;
  * Test Case
  */
 
-LteUeMeasurementsTestCase::LteUeMeasurementsTestCase (std::string name,
+LteUeMeasurementsTestCase::LteUeMeasurementsTestCase (stdfwd::string name,
                                                       double d1, double d2,
                                                       double rsrpDbmUe1,
                                                       double rsrpDbmUe2,
@@ -518,7 +518,7 @@ static LteUeMeasurementsPiecewiseTestSuite1 lteUeMeasurementsPiecewiseTestSuite1
  */
 
 LteUeMeasurementsPiecewiseTestCase1::LteUeMeasurementsPiecewiseTestCase1 (
-  std::string name, LteRrcSap::ReportConfigEutra config,
+  stdfwd::string name, LteRrcSap::ReportConfigEutra config,
   std::vector<Time> expectedTime, std::vector<uint8_t> expectedRsrp)
   : TestCase (name),
     m_config (config),
@@ -664,7 +664,7 @@ LteUeMeasurementsPiecewiseTestCase1::DoTeardown ()
 
 void
 LteUeMeasurementsPiecewiseTestCase1::RecvMeasurementReportCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
   LteRrcSap::MeasurementReport report)
 {
   NS_LOG_FUNCTION (this << context);
@@ -1103,7 +1103,7 @@ static LteUeMeasurementsPiecewiseTestSuite2 lteUeMeasurementsPiecewiseTestSuite2
  */
 
 LteUeMeasurementsPiecewiseTestCase2::LteUeMeasurementsPiecewiseTestCase2 (
-  std::string name, LteRrcSap::ReportConfigEutra config,
+  stdfwd::string name, LteRrcSap::ReportConfigEutra config,
   std::vector<Time> expectedTime, std::vector<uint8_t> expectedRsrp)
   : TestCase (name),
     m_config (config),
@@ -1254,7 +1254,7 @@ LteUeMeasurementsPiecewiseTestCase2::DoTeardown ()
 
 void
 LteUeMeasurementsPiecewiseTestCase2::RecvMeasurementReportCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
   LteRrcSap::MeasurementReport report)
 {
   NS_LOG_FUNCTION (this << context);
@@ -1649,7 +1649,7 @@ static LteUeMeasurementsHandoverTestSuite lteUeMeasurementsHandoverTestSuite;
  */
 
 LteUeMeasurementsHandoverTestCase::LteUeMeasurementsHandoverTestCase (
-  std::string name,
+  stdfwd::string name,
   std::list<LteRrcSap::ReportConfigEutra> sourceConfigList,
   std::list<LteRrcSap::ReportConfigEutra> targetConfigList,
   std::vector<Time> expectedTime, std::vector<uint8_t> expectedRsrp,
@@ -1834,7 +1834,7 @@ LteUeMeasurementsHandoverTestCase::DoTeardown ()
 
 void
 LteUeMeasurementsHandoverTestCase::RecvMeasurementReportCallback (
-  std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+  stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
   LteRrcSap::MeasurementReport report)
 {
   uint8_t measId = report.measResults.measId;

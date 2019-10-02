@@ -68,7 +68,7 @@ EnergySourceHelper::Install (NodeContainer c) const
 }
 
 EnergySourceContainer
-EnergySourceHelper::Install (std::string nodeName) const
+EnergySourceHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (node);

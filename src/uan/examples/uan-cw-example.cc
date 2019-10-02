@@ -269,9 +269,9 @@ main (int argc, char **argv)
   Experiment exp;
   bool quiet = false;
 
-  std::string gnudatfile ("cwexpgnuout.dat");
-  std::string perModel = "ns3::UanPhyPerGenDefault";
-  std::string sinrModel = "ns3::UanPhyCalcSinrDefault";
+  stdfwd::string gnudatfile ("cwexpgnuout.dat");
+  stdfwd::string perModel = "ns3::UanPhyPerGenDefault";
+  stdfwd::string sinrModel = "ns3::UanPhyCalcSinrDefault";
 
   CommandLine cmd;
   cmd.AddValue ("NumNodes", "Number of transmitting nodes", exp.m_numNodes);

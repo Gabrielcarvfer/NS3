@@ -48,7 +48,7 @@ def configure(conf):
     if int64x64_impl == 'default' or int64x64_impl == 'int128':
 
         code_snip_type='''
-        #include <stdint.h>
+        #include "stdfwd.h"
         
         int main(int argc, char **argv) {
 	(void)argc; (void)argv;
@@ -62,7 +62,7 @@ def configure(conf):
                                             code=code_snip_type)
 
         code_snip_type='''
-        #include <stdint.h>
+        #include "stdfwd.h"
         
         int main(int argc, char **argv) {
 	(void)argc; (void)argv;

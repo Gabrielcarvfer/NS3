@@ -47,7 +47,7 @@
 #include "../helper/internet-stack-helper.h"
 #include "../../network/utils/error-channel.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 #include "../model/inet-headers.h"
 

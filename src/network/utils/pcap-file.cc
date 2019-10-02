@@ -322,7 +322,7 @@ PcapFile::ReadAndVerifyFileHeader (void)
 }
 
 void
-PcapFile::Open (std::string const &filename, std::ios::openmode mode)
+PcapFile::Open (stdfwd::string const &filename, std::ios::openmode mode)
 {
   NS_LOG_FUNCTION (this << filename << mode);
   NS_ASSERT ((mode & std::ios::app) == 0);
@@ -525,7 +525,7 @@ PcapFile::Read (
 }
 
 bool
-PcapFile::Diff (std::string const & f1, std::string const & f2, 
+PcapFile::Diff (stdfwd::string const & f1, stdfwd::string const & f2,
                 uint32_t & sec, uint32_t & usec, uint32_t & packets,
                 uint32_t snapLen)
 {

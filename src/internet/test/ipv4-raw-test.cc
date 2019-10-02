@@ -42,7 +42,7 @@
 #include "../model/ipv4-static-routing.h"
 #include "../helper/internet-stack-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 #include "../model/inet-headers.h"
 #include <sys/types.h>
@@ -66,25 +66,25 @@ class Ipv4RawSocketImplTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData_IpHdr (Ptr<Socket> socket, std::string to);
+  void DoSendData_IpHdr (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData_IpHdr (Ptr<Socket> socket, std::string to);
+  void SendData_IpHdr (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -153,7 +153,7 @@ void Ipv4RawSocketImplTest::ReceivePkt2 (Ptr<Socket> socket)
 }
 
 void
-Ipv4RawSocketImplTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv4RawSocketImplTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 0);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -161,7 +161,7 @@ Ipv4RawSocketImplTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv4RawSocketImplTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv4RawSocketImplTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   m_receivedPacket2 = Create<Packet> ();
@@ -171,7 +171,7 @@ Ipv4RawSocketImplTest::SendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv4RawSocketImplTest::DoSendData_IpHdr (Ptr<Socket> socket, std::string to)
+Ipv4RawSocketImplTest::DoSendData_IpHdr (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 0);
   socket->SetAttribute ("IpHeaderInclude", BooleanValue (true));
@@ -190,7 +190,7 @@ Ipv4RawSocketImplTest::DoSendData_IpHdr (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv4RawSocketImplTest::SendData_IpHdr (Ptr<Socket> socket, std::string to)
+Ipv4RawSocketImplTest::SendData_IpHdr (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   m_receivedPacket2 = Create<Packet> ();

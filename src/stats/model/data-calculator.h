@@ -135,23 +135,23 @@ public:
    * Sets the DataCalculator key to the provided key
    * \param key Key value as a string
    */
-  void SetKey (const std::string key);
+  void SetKey (const stdfwd::string key);
   /**
    * Gets the DataCalculator key
    * \return Key value as a string
    */
-  std::string GetKey () const;
+  stdfwd::string GetKey () const;
 
   /**
    * Sets the DataCalculator context to the provided context
    * \param context Context value as a string
    */
-  void SetContext (const std::string context);
+  void SetContext (const stdfwd::string context);
   /**
    * Gets the DataCalculator context
    * \return Context value as a string
    */
-  std::string GetContext () const;
+  stdfwd::string GetContext () const;
 
   /**
    * Starts DataCalculator at a given time in the simulation
@@ -173,8 +173,8 @@ public:
 protected:
   bool m_enabled;    //!< Descendant classes *must* check & respect m_enabled!
 
-  std::string m_key;      //!< Key value
-  std::string m_context;  //!< Context value
+  stdfwd::string m_key;      //!< Key value
+  stdfwd::string m_context;  //!< Context value
 
   virtual void DoDispose (void);
 

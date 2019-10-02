@@ -27,7 +27,7 @@
 
 namespace ns3 {
 
-ATTRIBUTE_CHECKER_IMPLEMENT_WITH_NAME (String, "std::string");
-ATTRIBUTE_VALUE_IMPLEMENT_WITH_NAME (std::string, String);
+ATTRIBUTE_CHECKER_IMPLEMENT_WITH_NAME (String, "stdfwd::string");
+ATTRIBUTE_VALUE_IMPLEMENT_WITH_NAME (stdfwd::string, String);
 
 } // namespace ns3

@@ -118,7 +118,7 @@ TvSpectrumTransmitterHelper::SetChannel (Ptr<SpectrumChannel> c)
 }
 
 void
-TvSpectrumTransmitterHelper::SetAttribute (std::string name, const AttributeValue &val)
+TvSpectrumTransmitterHelper::SetAttribute (stdfwd::string name, const AttributeValue &val)
 {
   m_factory.Set (name, val);
 }

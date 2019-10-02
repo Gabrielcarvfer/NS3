@@ -22,7 +22,7 @@
 #include "../../core/model/test.h"
 #include "../model/antenna-model.h"
 #include <cmath>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <sstream>
 
@@ -31,7 +31,7 @@ using namespace ns3;
 class OneVectorConstructorTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (Vector v);
+  static stdfwd::string BuildNameString (Vector v);
   OneVectorConstructorTestCase (Vector v, Angles a);
 
 private:
@@ -41,7 +41,7 @@ private:
   Angles m_a;
 };
 
-std::string OneVectorConstructorTestCase::BuildNameString (Vector v)
+stdfwd::string OneVectorConstructorTestCase::BuildNameString (Vector v)
 {
   std::ostringstream oss;
   oss <<  " v = " << v;
@@ -71,7 +71,7 @@ OneVectorConstructorTestCase::DoRun ()
 class TwoVectorsConstructorTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (Vector v, Vector o);
+  static stdfwd::string BuildNameString (Vector v, Vector o);
   TwoVectorsConstructorTestCase (Vector v, Vector o, Angles a);
 
 private:
@@ -82,7 +82,7 @@ private:
   Angles m_a;
 };
 
-std::string TwoVectorsConstructorTestCase::BuildNameString (Vector v, Vector o)
+stdfwd::string TwoVectorsConstructorTestCase::BuildNameString (Vector v, Vector o)
 {
   std::ostringstream oss;
   oss <<  " v = " << v << ", o = " << o;

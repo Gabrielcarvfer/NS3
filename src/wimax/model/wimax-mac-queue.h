@@ -21,7 +21,7 @@
 #pragma once
 
 #include <queue>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "wimax-mac-header.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/object.h"

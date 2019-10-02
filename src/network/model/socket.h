@@ -28,7 +28,7 @@
 #include "../../core/model/object.h"
 #include "net-device.h"
 #include "address.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../utils/inet-socket-address.h"
 #include "../utils/inet6-socket-address.h"
 

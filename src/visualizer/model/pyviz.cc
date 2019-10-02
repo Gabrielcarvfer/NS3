@@ -39,10 +39,10 @@ NS_LOG_COMPONENT_DEFINE ("PyViz");
 #define NUM_LAST_PACKETS 10
 
 static
-std::vector<std::string>
-PathSplit (std::string str)
+std::vector<stdfwd::string>
+PathSplit (stdfwd::string str)
 {
-  std::vector<std::string> results;
+  std::vector<stdfwd::string> results;
   size_t cutAt;
   while ((cutAt = str.find_first_of ('/')) != str.npos)
     {
@@ -177,7 +177,7 @@ PyViz::PyViz ()
 }
 
 void
-PyViz::RegisterCsmaLikeDevice (std::string const &deviceTypeName)
+PyViz::RegisterCsmaLikeDevice (stdfwd::string const &deviceTypeName)
 {
   TypeId::LookupByName (deviceTypeName); // this will assert if the type name is invalid
 
@@ -195,7 +195,7 @@ PyViz::RegisterCsmaLikeDevice (std::string const &deviceTypeName)
 }
 
 void
-PyViz::RegisterWifiLikeDevice (std::string const &deviceTypeName)
+PyViz::RegisterWifiLikeDevice (stdfwd::string const &deviceTypeName)
 {
   TypeId::LookupByName (deviceTypeName); // this will assert if the type name is invalid
 
@@ -209,7 +209,7 @@ PyViz::RegisterWifiLikeDevice (std::string const &deviceTypeName)
 }
 
 void
-PyViz::RegisterPointToPointLikeDevice (std::string const &deviceTypeName)
+PyViz::RegisterPointToPointLikeDevice (stdfwd::string const &deviceTypeName)
 {
   TypeId::LookupByName (deviceTypeName); // this will assert if the type name is invalid
 
@@ -233,7 +233,7 @@ PyViz::SetPacketCaptureOptions (uint32_t nodeId, PacketCaptureOptions options)
 }
 
 void
-PyViz::RegisterDropTracePath (std::string const &tracePath)
+PyViz::RegisterDropTracePath (stdfwd::string const &tracePath)
 {
   Config::Connect (tracePath, MakeCallback (&PyViz::TraceDevQueueDrop, this));
 }
@@ -246,7 +246,7 @@ PyViz::~PyViz ()
   g_visualizer = NULL;
 }
 
-void PyViz::DoPause (std::string const &message)
+void PyViz::DoPause (stdfwd::string const &message)
 {
   m_pauseMessages.push_back (message);
   m_stop = true;
@@ -254,13 +254,13 @@ void PyViz::DoPause (std::string const &message)
                                                 << g_visualizer->m_pauseMessages.size () << " pause messages");
 }
 
-void PyViz::Pause (std::string const &message)
+void PyViz::Pause (stdfwd::string const &message)
 {
   NS_ASSERT (g_visualizer);
   g_visualizer->DoPause (message);
 }
 
-std::vector<std::string>
+std::vector<stdfwd::string>
 PyViz::GetPauseMessages () const
 {
   NS_LOG_LOGIC (Simulator::Now ().GetSeconds () << ": GetPauseMessages: have "
@@ -463,10 +463,10 @@ bool PyViz::FilterPacket (Ptr<const Packet> packet, const PacketCaptureOptions &
 }
 
 void
-PyViz::TraceDevQueueDrop (std::string context, Ptr<const Packet> packet)
+PyViz::TraceDevQueueDrop (stdfwd::string context, Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION (context << packet->GetUid ());
-  std::vector<std::string> splitPath = PathSplit (context);
+  std::vector<stdfwd::string> splitPath = PathSplit (context);
   int nodeIndex = std::atoi (splitPath[1].c_str ());
   Ptr<Node> node = NodeList::GetNode (nodeIndex);
 
@@ -509,7 +509,7 @@ PyViz::TraceDevQueueDrop (std::string context, Ptr<const Packet> packet)
 }
 
 void
-PyViz::TraceIpv4Drop (std::string context, ns3::Ipv4Header const &hdr, Ptr<const Packet> packet,
+PyViz::TraceIpv4Drop (stdfwd::string context, ns3::Ipv4Header const &hdr, Ptr<const Packet> packet,
                       ns3::Ipv4L3Protocol::DropReason reason, Ptr<Ipv4> dummy_ipv4, uint32_t interface)
 {
   Ptr<Packet> packetCopy = packet->Copy ();
@@ -521,12 +521,12 @@ PyViz::TraceIpv4Drop (std::string context, ns3::Ipv4Header const &hdr, Ptr<const
 // --------- TX device tracing -------------------
 
 void
-PyViz::TraceNetDevTxCommon (std::string const &context, Ptr<const Packet> packet,
+PyViz::TraceNetDevTxCommon (stdfwd::string const &context, Ptr<const Packet> packet,
                             Mac48Address const &destinationAddress)
 {
   NS_LOG_FUNCTION (context << packet->GetUid () << *packet);
 
-  std::vector<std::string> splitPath = PathSplit (context);
+  std::vector<stdfwd::string> splitPath = PathSplit (context);
   int nodeIndex = std::atoi (splitPath[1].c_str ());
   int devIndex = std::atoi (splitPath[3].c_str ());
   Ptr<Node> node = NodeList::GetNode (nodeIndex);
@@ -587,7 +587,7 @@ PyViz::TraceNetDevTxCommon (std::string const &context, Ptr<const Packet> packet
 }
 
 void
-PyViz::TraceNetDevTxWifi (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevTxWifi (stdfwd::string context, Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION (context << packet->GetUid () << *packet);
 
@@ -623,7 +623,7 @@ PyViz::TraceNetDevTxWifi (std::string context, Ptr<const Packet> packet)
 
 
 void
-PyViz::TraceNetDevTxCsma (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevTxCsma (stdfwd::string context, Ptr<const Packet> packet)
 {
   EthernetHeader ethernetHeader;
   NS_ABORT_IF (packet->PeekHeader (ethernetHeader) == 0);
@@ -631,7 +631,7 @@ PyViz::TraceNetDevTxCsma (std::string context, Ptr<const Packet> packet)
 }
 
 void
-PyViz::TraceNetDevTxPointToPoint (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevTxPointToPoint (stdfwd::string context, Ptr<const Packet> packet)
 {
   TraceNetDevTxCommon (context, packet, Mac48Address ());
 }
@@ -642,7 +642,7 @@ PyViz::TraceNetDevTxPointToPoint (std::string context, Ptr<const Packet> packet)
 // --------- RX device tracing -------------------
 
 void
-PyViz::TraceNetDevRxCommon (std::string const &context, Ptr<const Packet> packet, Mac48Address const &from)
+PyViz::TraceNetDevRxCommon (stdfwd::string const &context, Ptr<const Packet> packet, Mac48Address const &from)
 {
   uint32_t uid;
   PyVizPacketTag tag;
@@ -658,7 +658,7 @@ PyViz::TraceNetDevRxCommon (std::string const &context, Ptr<const Packet> packet
     }
 
   NS_LOG_FUNCTION (context << uid);
-  std::vector<std::string> splitPath = PathSplit (context);
+  std::vector<stdfwd::string> splitPath = PathSplit (context);
   int nodeIndex = std::atoi (splitPath[1].c_str ());
   int devIndex = std::atoi (splitPath[3].c_str ());
 
@@ -756,7 +756,7 @@ PyViz::TraceNetDevRxCommon (std::string const &context, Ptr<const Packet> packet
 }
 
 void
-PyViz::TraceNetDevRxWifi (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevRxWifi (stdfwd::string context, Ptr<const Packet> packet)
 {
   NS_LOG_FUNCTION (context << packet->GetUid ());
 
@@ -795,7 +795,7 @@ PyViz::TraceNetDevRxWifi (std::string context, Ptr<const Packet> packet)
 
 
 void
-PyViz::TraceNetDevRxCsma (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevRxCsma (stdfwd::string context, Ptr<const Packet> packet)
 {
   EthernetHeader ethernetHeader;
   NS_ABORT_IF (packet->PeekHeader (ethernetHeader) == 0);
@@ -803,13 +803,13 @@ PyViz::TraceNetDevRxCsma (std::string context, Ptr<const Packet> packet)
 }
 
 void
-PyViz::TraceNetDevRxPointToPoint (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevRxPointToPoint (stdfwd::string context, Ptr<const Packet> packet)
 {
   TraceNetDevRxCommon (context, packet, Mac48Address ());
 }
 
 void
-PyViz::TraceNetDevPromiscRxCsma (std::string context, Ptr<const Packet> packet)
+PyViz::TraceNetDevPromiscRxCsma (stdfwd::string context, Ptr<const Packet> packet)
 {
   EthernetHeader ethernetHeader;
   NS_ABORT_IF (packet->PeekHeader (ethernetHeader) == 0);
@@ -825,28 +825,28 @@ PyViz::TraceNetDevPromiscRxCsma (std::string context, Ptr<const Packet> packet)
 }
 
 void
-PyViz::TraceNetDevTxWimax (std::string context, Ptr<const Packet> packet, Mac48Address const &destination)
+PyViz::TraceNetDevTxWimax (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &destination)
 {
   NS_LOG_FUNCTION (context);
   TraceNetDevTxCommon (context, packet, destination);
 }
 
 void
-PyViz::TraceNetDevRxWimax (std::string context, Ptr<const Packet> packet, Mac48Address const &source)
+PyViz::TraceNetDevRxWimax (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &source)
 {
   NS_LOG_FUNCTION (context);
   TraceNetDevRxCommon (context, packet, source);
 }
 
 void
-PyViz::TraceNetDevTxLte (std::string context, Ptr<const Packet> packet, Mac48Address const &destination)
+PyViz::TraceNetDevTxLte (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &destination)
 {
   NS_LOG_FUNCTION (context);
   TraceNetDevTxCommon (context, packet, destination);
 }
 
 void
-PyViz::TraceNetDevRxLte (std::string context, Ptr<const Packet> packet, Mac48Address const &source)
+PyViz::TraceNetDevRxLte (stdfwd::string context, Ptr<const Packet> packet, Mac48Address const &source)
 {
   NS_LOG_FUNCTION (context);
   TraceNetDevRxCommon (context, packet, source);

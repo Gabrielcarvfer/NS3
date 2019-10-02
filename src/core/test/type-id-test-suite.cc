@@ -36,7 +36,7 @@ using namespace std;
 using namespace ns3;
 
 
-const std::string suite("type-id: ");
+const stdfwd::string suite("type-id: ");
   
 //----------------------------
 //
@@ -338,7 +338,7 @@ public:
 private:
   void DoRun (void);
   void DoSetup (void);
-  void Report (const std::string how, const uint32_t delta) const ;
+  void Report (const stdfwd::string how, const uint32_t delta) const ;
 
   enum { REPETITIONS = 100000 };
 };
@@ -398,7 +398,7 @@ LookupTimeTestCase::DoSetup (void)
 }
 
 void
-LookupTimeTestCase::Report (const std::string how,
+LookupTimeTestCase::Report (const stdfwd::string how,
                             const uint32_t    delta) const
 {
   double nids = TypeId::GetRegisteredN ();

@@ -36,7 +36,7 @@ NS_LOG_COMPONENT_DEFINE ("ItuR1411NlosOverRooftopPropagationLossModelTest");
 class ItuR1411NlosOverRooftopPropagationLossModelTestCase : public TestCase
 {
 public:
-  ItuR1411NlosOverRooftopPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, std::string name);
+  ItuR1411NlosOverRooftopPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, stdfwd::string name);
   virtual ~ItuR1411NlosOverRooftopPropagationLossModelTestCase ();
 
 private:
@@ -53,7 +53,7 @@ private:
 
 };
 
-ItuR1411NlosOverRooftopPropagationLossModelTestCase::ItuR1411NlosOverRooftopPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, std::string name)
+ItuR1411NlosOverRooftopPropagationLossModelTestCase::ItuR1411NlosOverRooftopPropagationLossModelTestCase (double freq, double dist, double hb, double hm, EnvironmentType env, CitySize city, double refValue, stdfwd::string name)
   : TestCase (name),
     m_freq (freq),
     m_dist (dist),

@@ -141,7 +141,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetPathlossModelAttribute (std::string n, const AttributeValue &v);
+  void SetPathlossModelAttribute (stdfwd::string n, const AttributeValue &v);
 
   /** 
    * Set the type of scheduler to be used by eNodeB devices.
@@ -152,13 +152,13 @@ public:
    *
    * Equivalent with setting the `Scheduler` attribute.
    */
-  void SetSchedulerType (std::string type);
+  void SetSchedulerType (stdfwd::string type);
 
   /**
    *
    * \return the scheduler type
    */
-  std::string GetSchedulerType () const; 
+  stdfwd::string GetSchedulerType () const;
 
   /**
    * Set an attribute for the scheduler to be created.
@@ -166,7 +166,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetSchedulerAttribute (std::string n, const AttributeValue &v);
+  void SetSchedulerAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set the type of FFR algorithm to be used by eNodeB devices.
@@ -177,13 +177,13 @@ public:
    *
    * Equivalent with setting the `FfrAlgorithm` attribute.
    */
-  void SetFfrAlgorithmType (std::string type);
+  void SetFfrAlgorithmType (stdfwd::string type);
 
   /**
    *
    * \return the FFR algorithm type
    */
-  std::string GetFfrAlgorithmType () const;
+  stdfwd::string GetFfrAlgorithmType () const;
 
   /**
    * Set an attribute for the FFR algorithm to be created.
@@ -191,7 +191,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetFfrAlgorithmAttribute (std::string n, const AttributeValue &v);
+  void SetFfrAlgorithmAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set the type of handover algorithm to be used by eNodeB devices.
@@ -202,13 +202,13 @@ public:
    *
    * Equivalent with setting the `HandoverAlgorithm` attribute.
    */
-  void SetHandoverAlgorithmType (std::string type);
+  void SetHandoverAlgorithmType (stdfwd::string type);
 
   /**
    *
    * \return the handover algorithm type
    */
-  std::string GetHandoverAlgorithmType () const;
+  stdfwd::string GetHandoverAlgorithmType () const;
 
   /**
    * Set an attribute for the handover algorithm to be created.
@@ -216,7 +216,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetHandoverAlgorithmAttribute (std::string n, const AttributeValue &v);
+  void SetHandoverAlgorithmAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set an attribute for the eNodeB devices (LteEnbNetDevice) to be created.
@@ -224,7 +224,7 @@ public:
    * \param n the name of the attribute.
    * \param v the value of the attribute
    */
-  void SetEnbDeviceAttribute (std::string n, const AttributeValue &v);
+  void SetEnbDeviceAttribute (stdfwd::string n, const AttributeValue &v);
 
   /** 
    * Set the type of antenna model to be used by eNodeB devices.
@@ -233,7 +233,7 @@ public:
    *             inheriting from ns3::AntennaModel, for example:
    *             "ns3::IsotropicAntennaModel"
    */
-  void SetEnbAntennaModelType (std::string type);
+  void SetEnbAntennaModelType (stdfwd::string type);
 
   /**
    * Set an attribute for the eNodeB antenna model to be created.
@@ -241,7 +241,7 @@ public:
    * \param n the name of the attribute.
    * \param v the value of the attribute
    */
-  void SetEnbAntennaModelAttribute (std::string n, const AttributeValue &v);
+  void SetEnbAntennaModelAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set an attribute for the UE devices (LteUeNetDevice) to be created.
@@ -249,7 +249,7 @@ public:
    * \param n the name of the attribute.
    * \param v the value of the attribute
    */
-  void SetUeDeviceAttribute (std::string n, const AttributeValue &v);
+  void SetUeDeviceAttribute (stdfwd::string n, const AttributeValue &v);
 
   /** 
    * Set the type of antenna model to be used by UE devices.
@@ -258,7 +258,7 @@ public:
    *             inheriting from ns3::AntennaModel, for example:
    *             "ns3::IsotropicAntennaModel"
    */
-  void SetUeAntennaModelType (std::string type);
+  void SetUeAntennaModelType (stdfwd::string type);
 
   /**
    * Set an attribute for the UE antenna model to be created.
@@ -266,7 +266,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetUeAntennaModelAttribute (std::string n, const AttributeValue &v);
+  void SetUeAntennaModelAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set the type of spectrum channel to be used in both DL and UL.
@@ -275,7 +275,7 @@ public:
    *             class inheriting from ns3::SpectrumChannel, for example:
    *             "ns3::MultiModelSpectrumChannel"
    */
-  void SetSpectrumChannelType (std::string type);
+  void SetSpectrumChannelType (stdfwd::string type);
 
   /**
    * Set an attribute for the spectrum channel to be created (both DL and UL).
@@ -283,7 +283,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetSpectrumChannelAttribute (std::string n, const AttributeValue &v);
+  void SetSpectrumChannelAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set the type of carrier component algorithm to be used by eNodeB devices.
@@ -291,13 +291,13 @@ public:
    * \param type type of carrier component manager
    *
    */
-  void SetEnbComponentCarrierManagerType (std::string type);
+  void SetEnbComponentCarrierManagerType (stdfwd::string type);
 
   /**
    *
    * \return the carrier enb component carrier manager type
    */
-  std::string GetEnbComponentCarrierManagerType () const;
+  stdfwd::string GetEnbComponentCarrierManagerType () const;
 
   /**
    * Set an attribute for the enb component carrier manager to be created.
@@ -305,7 +305,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetEnbComponentCarrierManagerAttribute (std::string n, const AttributeValue &v);
+  void SetEnbComponentCarrierManagerAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Set the type of Component Carrier Manager to be used by Ue devices.
@@ -313,14 +313,14 @@ public:
    * \param type type of UE Component Carrier Manager
    *
    */
-  void SetUeComponentCarrierManagerType (std::string type);
+  void SetUeComponentCarrierManagerType (stdfwd::string type);
 
 
   /**
    *
    * \return the carrier ue component carrier manager type
    */
-  std::string GetUeComponentCarrierManagerType () const;
+  stdfwd::string GetUeComponentCarrierManagerType () const;
 
   /**
    * Set an attribute for the ue component carrier manager to be created.
@@ -328,7 +328,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetUeComponentCarrierManagerAttribute (std::string n, const AttributeValue &v);
+  void SetUeComponentCarrierManagerAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Create a set of eNodeB devices.
@@ -547,7 +547,7 @@ public:
    *             inheriting from ns3::SpectrumPropagationLossModel, for
    *             example: "ns3::TraceFadingLossModel"
    */
-  void SetFadingModel (std::string type);
+  void SetFadingModel (stdfwd::string type);
 
   /**
    * Set an attribute for the fading model to be created (both DL and UL).
@@ -555,7 +555,7 @@ public:
    * \param n the name of the attribute
    * \param v the value of the attribute
    */
-  void SetFadingModelAttribute (std::string n, const AttributeValue &v);
+  void SetFadingModelAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
    * Enables full-blown logging for major components of the LENA architecture.
@@ -765,7 +765,7 @@ private:
   ObjectFactory m_channelFactory;
 
   /// Name of fading model type, e.g., "ns3::TraceFadingLossModel".
-  std::string m_fadingModelType;
+  stdfwd::string m_fadingModelType;
   /// Factory of fading model object for both the downlink and uplink channels.
   ObjectFactory m_fadingModelFactory;
   /// The fading model used in both the downlink and uplink channels.

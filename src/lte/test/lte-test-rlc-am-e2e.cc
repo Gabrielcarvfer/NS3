@@ -98,7 +98,7 @@ LteRlcAmE2eTestSuite::LteRlcAmE2eTestSuite ()
 
 static LteRlcAmE2eTestSuite lteRlcAmE2eTestSuite;
 
-LteRlcAmE2eTestCase::LteRlcAmE2eTestCase (std::string name, uint32_t run, double losses, bool bulkSduArrival)
+LteRlcAmE2eTestCase::LteRlcAmE2eTestCase (stdfwd::string name, uint32_t run, double losses, bool bulkSduArrival)
    : TestCase (name),
      m_run (run),
      m_losses (losses),

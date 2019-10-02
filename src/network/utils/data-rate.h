@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/nstime.h"
 #include "../../core/model/attribute.h"
 #include "../../core/model/attribute-helper.h"
@@ -115,7 +115,7 @@ public:
    *
    * \param rate string representing the desired rate
    */
-  DataRate (std::string rate);
+  DataRate (stdfwd::string rate);
 
   /**
    * \return true if this rate is less than rhs
@@ -212,7 +212,7 @@ private:
    * \param [in,out] v The location to put the value, in bits/sec.
    * \return true if parsing was successful.
    */
-  static bool DoParse (const std::string s, uint64_t *v);
+  static bool DoParse (const stdfwd::string s, uint64_t *v);
 
   // Uses DoParse
   friend std::istream &operator >> (std::istream &is, DataRate &rate);

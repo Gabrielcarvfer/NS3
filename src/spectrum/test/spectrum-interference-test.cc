@@ -37,7 +37,7 @@ NS_LOG_COMPONENT_DEFINE ("SpectrumInterferenceTest");
 class SpectrumInterferenceTestCase : public TestCase
 {
 public:
-  SpectrumInterferenceTestCase (Ptr<SpectrumValue> s, uint32_t txBytes, bool rxCorrect, std::string name);
+  SpectrumInterferenceTestCase (Ptr<SpectrumValue> s, uint32_t txBytes, bool rxCorrect, stdfwd::string name);
   virtual ~SpectrumInterferenceTestCase ();
   virtual void DoRun (void);
   void RetrieveTestResult (SpectrumInterference* si);
@@ -51,7 +51,7 @@ private:
 
 
 
-SpectrumInterferenceTestCase::SpectrumInterferenceTestCase (Ptr<SpectrumValue> s, uint32_t txBytes, bool rxCorrect, std::string name)
+SpectrumInterferenceTestCase::SpectrumInterferenceTestCase (Ptr<SpectrumValue> s, uint32_t txBytes, bool rxCorrect, stdfwd::string name)
   : TestCase (name),
     m_s (s),
     m_txBytes (txBytes),

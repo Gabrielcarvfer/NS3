@@ -873,7 +873,7 @@ std::ostream& operator << (std::ostream& os, Ipv6Address const& address)
 
 std::istream& operator >> (std::istream& is, Ipv6Address& address)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   address = Ipv6Address (str.c_str ());
   return is;
@@ -1040,7 +1040,7 @@ std::ostream& operator << (std::ostream& os, Ipv6Prefix const& prefix)
 
 std::istream& operator >> (std::istream& is, Ipv6Prefix& prefix)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   prefix = Ipv6Prefix (str.c_str ());
   return is;

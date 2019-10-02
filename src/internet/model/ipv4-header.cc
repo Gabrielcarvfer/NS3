@@ -109,7 +109,7 @@ Ipv4Header::GetDscp (void) const
   return DscpType ((m_tos & 0xFC) >> 2);
 }
 
-std::string 
+stdfwd::string
 Ipv4Header::DscpTypeToString (DscpType dscp) const
 {
   NS_LOG_FUNCTION (this << dscp);
@@ -171,7 +171,7 @@ Ipv4Header::GetEcn (void) const
   return EcnType (m_tos & 0x3);
 }
 
-std::string 
+stdfwd::string
 Ipv4Header::EcnTypeToString (EcnType ecn) const
 {
   NS_LOG_FUNCTION (this << ecn);
@@ -336,7 +336,7 @@ Ipv4Header::Print (std::ostream &os) const
 {
   NS_LOG_FUNCTION (this << &os);
   // ipv4, right ?
-  std::string flags;
+  stdfwd::string flags;
   if (m_flags == 0)
     {
       flags = "none";

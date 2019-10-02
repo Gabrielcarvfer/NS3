@@ -68,7 +68,7 @@ public:
    *
    * Set an attribute of the underlying PHY object.
    */
-  void Set (std::string name, const AttributeValue &v);
+  void Set (stdfwd::string name, const AttributeValue &v);
   /**
    * \param name the name of the error rate model to set.
    * \param n0 the name of the attribute to set
@@ -90,15 +90,15 @@ public:
    *
    * Set the error rate model and its attributes to use when Install is called.
    */
-  void SetErrorRateModel (std::string name,
-                          std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                          std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                          std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                          std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                          std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                          std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                          std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                          std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetErrorRateModel (stdfwd::string name,
+                          stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                          stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                          stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                          stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                          stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                          stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                          stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                          stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * \param name the name of the frame capture model to set.
    * \param n0 the name of the attribute to set
@@ -120,15 +120,15 @@ public:
    *
    * Set the frame capture model and its attributes to use when Install is called.
    */
-  void SetFrameCaptureModel (std::string name,
-                             std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                             std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                             std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                             std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                             std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                             std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                             std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                             std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetFrameCaptureModel (stdfwd::string name,
+                             stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                             stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                             stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                             stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                             stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                             stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                             stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                             stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * \param name the name of the preamble detection model to set.
    * \param n0 the name of the attribute to set
@@ -150,15 +150,15 @@ public:
    *
    * Set the preamble detection model and its attributes to use when Install is called.
    */
-  void SetPreambleDetectionModel (std::string name,
-                                  std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                                  std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                                  std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                                  std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                                  std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                                  std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                                  std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                                  std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetPreambleDetectionModel (stdfwd::string name,
+                                  stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                                  stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                                  stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                                  stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                                  stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                                  stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                                  stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                                  stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * Disable the preamble detection model.
@@ -263,7 +263,7 @@ private:
    * \param promiscuous If true capture all possible packets available at the device.
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix,
+  virtual void EnablePcapInternal (stdfwd::string prefix,
                                    Ptr<NetDevice> nd,
                                    bool promiscuous,
                                    bool explicitFilename);
@@ -280,7 +280,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                    std::string prefix,
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 
@@ -332,15 +332,15 @@ public:
    * All the attributes specified in this method should exist
    * in the requested station manager.
    */
-  void SetRemoteStationManager (std::string type,
-                                std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                                std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                                std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                                std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                                std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                                std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                                std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                                std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetRemoteStationManager (stdfwd::string type,
+                                stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                                stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                                stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                                stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                                stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                                stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                                stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                                stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * \param type the type of ns3::ObssPdAlgorithm to create.
@@ -364,15 +364,15 @@ public:
    * All the attributes specified in this method should exist
    * in the requested algorithm.
    */
-  void SetObssPdAlgorithm (std::string type,
-                           std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                           std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                           std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                           std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                           std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                           std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                           std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                           std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetObssPdAlgorithm (stdfwd::string type,
+                           stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                           stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                           stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                           stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                           stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                           stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                           stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                           stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /// Callback invoked to determine the MAC queue selected for a given packet
   typedef std::function<std::size_t (Ptr<QueueItem>)> SelectQueueCallback;
@@ -419,7 +419,7 @@ public:
    * \returns a device container which contains all the devices created by this method.
    */
   virtual NetDeviceContainer Install (const WifiPhyHelper &phy,
-                                      const WifiMacHelper &mac, std::string nodeName) const;
+                                      const WifiMacHelper &mac, stdfwd::string nodeName) const;
   /**
    * \param standard the phy standard to configure during installation
    *

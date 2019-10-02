@@ -22,7 +22,7 @@
 using namespace ns3;
 
 static void 
-CourseChange (std::string foo, Ptr<const MobilityModel> mobility)
+CourseChange (stdfwd::string foo, Ptr<const MobilityModel> mobility)
 {
   Vector pos = mobility->GetPosition ();
   Vector vel = mobility->GetVelocity ();

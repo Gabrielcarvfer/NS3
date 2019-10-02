@@ -85,13 +85,13 @@ FlowProbe::GetStats () const
 void
 FlowProbe::SerializeToXmlStream (std::ostream &os, uint16_t indent, uint32_t index) const
 {
-  os << std::string ( indent, ' ' ) << "<FlowProbe index=\"" << index << "\">\n";
+  os << stdfwd::string ( indent, ' ' ) << "<FlowProbe index=\"" << index << "\">\n";
 
   indent += 2;
 
   for (Stats::const_iterator iter = m_stats.begin (); iter != m_stats.end (); iter++)
     {
-      os << std::string ( indent, ' ' );
+      os << stdfwd::string ( indent, ' ' );
       os << "<FlowStats "
          << " flowId=\"" << iter->first << "\""
          << " packets=\"" << iter->second.packets << "\""
@@ -101,23 +101,23 @@ FlowProbe::SerializeToXmlStream (std::ostream &os, uint16_t indent, uint32_t ind
       indent += 2;
       for (uint32_t reasonCode = 0; reasonCode < iter->second.packetsDropped.size (); reasonCode++)
         {
-          os << std::string ( indent, ' ' );
+          os << stdfwd::string ( indent, ' ' );
           os << "<packetsDropped reasonCode=\"" << reasonCode << "\""
              << " number=\"" << iter->second.packetsDropped[reasonCode]
              << "\" />\n";
         }
       for (uint32_t reasonCode = 0; reasonCode < iter->second.bytesDropped.size (); reasonCode++)
         {
-          os << std::string ( indent, ' ' );
+          os << stdfwd::string ( indent, ' ' );
           os << "<bytesDropped reasonCode=\"" << reasonCode << "\""
              << " bytes=\"" << iter->second.bytesDropped[reasonCode]
              << "\" />\n";
         }
       indent -= 2;
-      os << std::string ( indent, ' ' ) << "</FlowStats>\n";
+      os << stdfwd::string ( indent, ' ' ) << "</FlowStats>\n";
     }
   indent -= 2;
-  os << std::string ( indent, ' ' ) << "</FlowProbe>\n";
+  os << stdfwd::string ( indent, ' ' ) << "</FlowProbe>\n";
 }
 
 

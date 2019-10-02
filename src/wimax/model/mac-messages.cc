@@ -58,7 +58,7 @@ ManagementMessageType::GetType (void) const
   return m_type;
 }
 
-std::string
+stdfwd::string
 ManagementMessageType::GetName (void) const
 {
   return "Management Message Type";
@@ -161,7 +161,7 @@ RngReq::GetRangingAnomalies (void) const
   return m_rangingAnomalies;
 }
 
-std::string
+stdfwd::string
 RngReq::GetName (void) const
 {
   return "RNG-REQ";
@@ -422,7 +422,7 @@ RngRsp::GetRangSubchnl (void) const
   return m_rangSubchnl;
 }
 
-std::string
+stdfwd::string
 RngRsp::GetName (void) const
 {
   return "RNG-RSP";
@@ -567,7 +567,7 @@ DsaReq::GetCid (void) const
 }
 
 
-std::string
+stdfwd::string
 DsaReq::GetName (void) const
 {
   return "DSA-REQ";
@@ -712,7 +712,7 @@ DsaRsp::GetCid (void) const
   return m_cid;
 }
 
-std::string
+stdfwd::string
 DsaRsp::GetName (void) const
 {
   return "DSA-RSP";
@@ -810,7 +810,7 @@ DsaAck::GetConfirmationCode (void) const
   return m_confirmationCode;
 }
 
-std::string
+stdfwd::string
 DsaAck::GetName (void) const
 {
   return "DSA-ACK";

@@ -262,7 +262,7 @@ public:
    *
    * \param desc description of the test
    */
-  TcpGeneralTest (const std::string &desc);
+  TcpGeneralTest (const stdfwd::string &desc);
   ~TcpGeneralTest ();
 
   /**
@@ -1025,13 +1025,13 @@ private:
    * \param context The context.
    * \param p The packet.
    */
-  void QueueDropCb    (std::string context, Ptr<const Packet> p);
+  void QueueDropCb    (stdfwd::string context, Ptr<const Packet> p);
   /**
    * \brief Drop at Phy layer Callback.
    * \param context The context.
    * \param p The packet.
    */
-  void PhyDropCb      (std::string context, Ptr<const Packet> p);
+  void PhyDropCb      (stdfwd::string context, Ptr<const Packet> p);
   /**
    * \brief Receive ACK Callback.
    * \param p The packet.

@@ -41,7 +41,7 @@ public:
    *
    * \param s SSID in string
    */
-  Ssid (std::string s);
+  Ssid (stdfwd::string s);
 
   /**
    * Check if the two SSIDs are equal.

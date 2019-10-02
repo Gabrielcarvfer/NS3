@@ -78,7 +78,7 @@ public:
    * \param [in] callback Callback to add to chain.
    * \param [in] path Context string to provide when invoking the Callback.
    */
-  void Connect (const CallbackBase & callback, std::string path);
+  void Connect (const CallbackBase & callback, stdfwd::string path);
   /**
    * Remove from the chain a Callback which was connected without a context.
    *
@@ -91,7 +91,7 @@ public:
    * \param [in] callback Callback to remove from the chain.
    * \param [in] path Context path which was used to connect the Callback.
    */
-  void Disconnect (const CallbackBase & callback, std::string path);
+  void Disconnect (const CallbackBase & callback, stdfwd::string path);
   /**
    * \name Functors taking various numbers of arguments.
    *
@@ -272,9 +272,9 @@ template<typename T1, typename T2,
          typename T5, typename T6,
          typename T7, typename T8>
 void
-TracedCallback<T1,T2,T3,T4,T5,T6,T7,T8>::Connect (const CallbackBase & callback, std::string path)
+TracedCallback<T1,T2,T3,T4,T5,T6,T7,T8>::Connect (const CallbackBase & callback, stdfwd::string path)
 {
-  Callback<void,std::string,T1,T2,T3,T4,T5,T6,T7,T8> cb;
+  Callback<void,stdfwd::string,T1,T2,T3,T4,T5,T6,T7,T8> cb;
   if (!cb.Assign (callback))
     NS_FATAL_ERROR ("when connecting to " << path);
   Callback<void,T1,T2,T3,T4,T5,T6,T7,T8> realCb = cb.Bind (path);
@@ -305,9 +305,9 @@ template<typename T1, typename T2,
          typename T5, typename T6,
          typename T7, typename T8>
 void 
-TracedCallback<T1,T2,T3,T4,T5,T6,T7,T8>::Disconnect (const CallbackBase & callback, std::string path)
+TracedCallback<T1,T2,T3,T4,T5,T6,T7,T8>::Disconnect (const CallbackBase & callback, stdfwd::string path)
 {
-  Callback<void,std::string,T1,T2,T3,T4,T5,T6,T7,T8> cb;
+  Callback<void,stdfwd::string,T1,T2,T3,T4,T5,T6,T7,T8> cb;
   if (!cb.Assign (callback))
     NS_FATAL_ERROR ("when disconnecting from " << path);
   Callback<void,T1,T2,T3,T4,T5,T6,T7,T8> realCb = cb.Bind (path);

@@ -135,7 +135,7 @@ static BuildingsPathlossTestSuite buildingsPathlossTestSuite;
  * TestCase
  */
 
-BuildingsPathlossTestCase::BuildingsPathlossTestCase (double freq, uint16_t m1, uint16_t m2, EnvironmentType env, CitySize city, double refValue, std::string name)
+BuildingsPathlossTestCase::BuildingsPathlossTestCase (double freq, uint16_t m1, uint16_t m2, EnvironmentType env, CitySize city, double refValue, stdfwd::string name)
   : TestCase ("LOSS calculation: " + name),
     m_freq (freq),
     m_mobilityModelIndex1 (m1),

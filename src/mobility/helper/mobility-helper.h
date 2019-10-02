@@ -81,16 +81,16 @@ public:
    * \param n9 the name of the attribute to set in the mobility model.
    * \param v9 the value of the attribute to set in the mobility model.
    */
-  void SetPositionAllocator (std::string type,
-                             std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                             std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                             std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                             std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                             std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                             std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                             std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                             std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                             std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetPositionAllocator (stdfwd::string type,
+                             stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                             stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                             stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                             stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                             stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                             stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                             stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
+                             stdfwd::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
+                             stdfwd::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
 
   /**
    * \param type the type of mobility model to use.
@@ -116,16 +116,16 @@ public:
    * Calls to MobilityHelper::Install will create an instance of a matching 
    * mobility model for each node.
    */
-  void SetMobilityModel (std::string type,
-                         std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                         std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                         std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                         std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                         std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                         std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                         std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                         std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                         std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetMobilityModel (stdfwd::string type,
+                         stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                         stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                         stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                         stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                         stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                         stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                         stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
+                         stdfwd::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
+                         stdfwd::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
 
   /**
    * \param reference item to push.
@@ -164,7 +164,7 @@ public:
    * features, and, then, defining the smaller-scale movements relative
    * to a few reference points in the large-scale model.
    */
-  void PushReferenceMobilityModel (std::string referenceName);
+  void PushReferenceMobilityModel (stdfwd::string referenceName);
   /**
    * Remove the top item from the top of the stack of
    * "reference mobility models".
@@ -175,7 +175,7 @@ public:
    * \return a string which contains the TypeId of the currently-selected
    *          mobility model.
    */
-  std::string GetMobilityModelType (void) const;
+  stdfwd::string GetMobilityModelType (void) const;
 
   /**
    * \brief "Layout" a single node according to the current position allocator type.
@@ -198,7 +198,7 @@ public:
    *
    * \param nodeName The name of the node to "layout."
    */
-  void Install (std::string nodeName) const;
+  void Install (stdfwd::string nodeName) const;
 
   /**
    * \brief Layout a collection of nodes according to the current position allocator type.

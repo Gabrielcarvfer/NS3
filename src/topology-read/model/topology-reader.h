@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <map>
 #include <list>
 #include "../../core/model/object.h"
@@ -57,7 +57,7 @@ public:
     /**
      * \brief Constant iterator to scan the map of link attributes.
      */
-    typedef std::map<std::string, std::string>::const_iterator ConstAttributesIterator;
+    typedef std::map<stdfwd::string, stdfwd::string>::const_iterator ConstAttributesIterator;
 
     /**
      * \brief Constructor.
@@ -66,7 +66,7 @@ public:
      * \param [in] toPtr Ptr to the node the link is directed to.
      * \param [in] toName Name of the node the link is directed to.
      */
-    Link ( Ptr<Node> fromPtr, const std::string &fromName, Ptr<Node> toPtr, const std::string &toName );
+    Link ( Ptr<Node> fromPtr, const stdfwd::string &fromName, Ptr<Node> toPtr, const stdfwd::string &toName );
 
     /**
      * \brief Returns a Ptr<Node> to the "from" node of the link.
@@ -77,7 +77,7 @@ public:
      * \brief Returns the name of the "from" node of the link.
      * \return The name of the "from" node of the link.
      */
-    std::string GetFromNodeName (void) const;
+    stdfwd::string GetFromNodeName (void) const;
     /**
      * \brief Returns a Ptr<Node> to the "to" node of the link.
      * \return A Ptr<Node> to the "to" node of the link.
@@ -87,13 +87,13 @@ public:
      * \brief Returns the name of the "to" node of the link.
      * \return The name of the "to" node of the link.
      */
-    std::string GetToNodeName (void) const;
+    stdfwd::string GetToNodeName (void) const;
     /**
      * \brief Returns the value of a link attribute. The attribute must exist.
      * \param [in] name the name of the attribute.
      * \return The value of the attribute.
      */
-    std::string GetAttribute (const std::string &name) const;
+    stdfwd::string GetAttribute (const stdfwd::string &name) const;
     /**
      * \brief Returns the value of a link attribute.
      * \param [in] name The name of the attribute.
@@ -101,13 +101,13 @@ public:
      *
      * \return True if the attribute was defined, false otherwise.
      */
-    bool GetAttributeFailSafe (const std::string &name, std::string &value) const;
+    bool GetAttributeFailSafe (const stdfwd::string &name, stdfwd::string &value) const;
     /**
      * \brief Sets an arbitrary link attribute.
      * \param [in] name The name of the attribute.
      * \param [in] value The value of the attribute.
      */
-    void SetAttribute (const std::string &name, const std::string &value);
+    void SetAttribute (const stdfwd::string &name, const stdfwd::string &value);
     /**
      * \brief Returns an iterator to the begin of the attributes.
      * \return A const iterator to the first attribute of a link.
@@ -121,11 +121,11 @@ public:
 
 private:
     Link ();
-    std::string m_fromName; //!< Name of the node the links originates from.
+    stdfwd::string m_fromName; //!< Name of the node the links originates from.
     Ptr< Node > m_fromPtr;  //!< The node the links originates from.
-    std::string m_toName;   //!< Name of the node the links is directed to.
+    stdfwd::string m_toName;   //!< Name of the node the links is directed to.
     Ptr< Node > m_toPtr;    //!< The node the links is directed to.
-    std::map<std::string, std::string> m_linkAttr;  //!< Container of the link attributes (if any).
+    std::map<stdfwd::string, stdfwd::string> m_linkAttr;  //!< Container of the link attributes (if any).
   };
 
   /**
@@ -159,13 +159,13 @@ private:
    * \brief Sets the input file name.
    * \param [in] fileName The input file name.
    */
-  void SetFileName (const std::string &fileName);
+  void SetFileName (const stdfwd::string &fileName);
 
   /**
    * \brief Returns the input file name.
    * \return The input file name.
    */
-  std::string GetFileName (void) const;
+  stdfwd::string GetFileName (void) const;
 
   /**
    * \brief Returns an iterator to the the first link in this block.
@@ -216,7 +216,7 @@ private:
   /**
    * The name of the input file.
    */
-  std::string m_fileName;
+  stdfwd::string m_fileName;
 
   /**
    * The container of the links between the nodes.

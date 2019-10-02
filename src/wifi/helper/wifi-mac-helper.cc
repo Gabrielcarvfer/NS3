@@ -37,18 +37,18 @@ WifiMacHelper::~WifiMacHelper ()
 }
 
 void
-WifiMacHelper::SetType (std::string type,
-                        std::string n0, const AttributeValue &v0,
-                        std::string n1, const AttributeValue &v1,
-                        std::string n2, const AttributeValue &v2,
-                        std::string n3, const AttributeValue &v3,
-                        std::string n4, const AttributeValue &v4,
-                        std::string n5, const AttributeValue &v5,
-                        std::string n6, const AttributeValue &v6,
-                        std::string n7, const AttributeValue &v7,
-                        std::string n8, const AttributeValue &v8,
-                        std::string n9, const AttributeValue &v9,
-                        std::string n10, const AttributeValue &v10)
+WifiMacHelper::SetType (stdfwd::string type,
+                        stdfwd::string n0, const AttributeValue &v0,
+                        stdfwd::string n1, const AttributeValue &v1,
+                        stdfwd::string n2, const AttributeValue &v2,
+                        stdfwd::string n3, const AttributeValue &v3,
+                        stdfwd::string n4, const AttributeValue &v4,
+                        stdfwd::string n5, const AttributeValue &v5,
+                        stdfwd::string n6, const AttributeValue &v6,
+                        stdfwd::string n7, const AttributeValue &v7,
+                        stdfwd::string n8, const AttributeValue &v8,
+                        stdfwd::string n9, const AttributeValue &v9,
+                        stdfwd::string n10, const AttributeValue &v10)
 {
   m_mac.SetTypeId (type);
   m_mac.Set (n0, v0);

@@ -50,16 +50,16 @@ MobilityHelper::SetPositionAllocator (Ptr<PositionAllocator> allocator)
 }
 
 void
-MobilityHelper::SetPositionAllocator (std::string type,
-                                      std::string n1, const AttributeValue &v1,
-                                      std::string n2, const AttributeValue &v2,
-                                      std::string n3, const AttributeValue &v3,
-                                      std::string n4, const AttributeValue &v4,
-                                      std::string n5, const AttributeValue &v5,
-                                      std::string n6, const AttributeValue &v6,
-                                      std::string n7, const AttributeValue &v7,
-                                      std::string n8, const AttributeValue &v8,
-                                      std::string n9, const AttributeValue &v9)
+MobilityHelper::SetPositionAllocator (stdfwd::string type,
+                                      stdfwd::string n1, const AttributeValue &v1,
+                                      stdfwd::string n2, const AttributeValue &v2,
+                                      stdfwd::string n3, const AttributeValue &v3,
+                                      stdfwd::string n4, const AttributeValue &v4,
+                                      stdfwd::string n5, const AttributeValue &v5,
+                                      stdfwd::string n6, const AttributeValue &v6,
+                                      stdfwd::string n7, const AttributeValue &v7,
+                                      stdfwd::string n8, const AttributeValue &v8,
+                                      stdfwd::string n9, const AttributeValue &v9)
 {
   ObjectFactory pos;
   pos.SetTypeId (type);
@@ -76,16 +76,16 @@ MobilityHelper::SetPositionAllocator (std::string type,
 }
 
 void 
-MobilityHelper::SetMobilityModel (std::string type,
-                                  std::string n1, const AttributeValue &v1,
-                                  std::string n2, const AttributeValue &v2,
-                                  std::string n3, const AttributeValue &v3,
-                                  std::string n4, const AttributeValue &v4,
-                                  std::string n5, const AttributeValue &v5,
-                                  std::string n6, const AttributeValue &v6,
-                                  std::string n7, const AttributeValue &v7,
-                                  std::string n8, const AttributeValue &v8,
-                                  std::string n9, const AttributeValue &v9)
+MobilityHelper::SetMobilityModel (stdfwd::string type,
+                                  stdfwd::string n1, const AttributeValue &v1,
+                                  stdfwd::string n2, const AttributeValue &v2,
+                                  stdfwd::string n3, const AttributeValue &v3,
+                                  stdfwd::string n4, const AttributeValue &v4,
+                                  stdfwd::string n5, const AttributeValue &v5,
+                                  stdfwd::string n6, const AttributeValue &v6,
+                                  stdfwd::string n7, const AttributeValue &v7,
+                                  stdfwd::string n8, const AttributeValue &v8,
+                                  stdfwd::string n9, const AttributeValue &v9)
 {
   m_mobility.SetTypeId (type);
   m_mobility.Set (n1, v1);
@@ -107,7 +107,7 @@ MobilityHelper::PushReferenceMobilityModel (Ptr<Object> reference)
 }
 
 void 
-MobilityHelper::PushReferenceMobilityModel (std::string referenceName)
+MobilityHelper::PushReferenceMobilityModel (stdfwd::string referenceName)
 {
   Ptr<MobilityModel> mobility = Names::Find<MobilityModel> (referenceName);
   m_mobilityStack.push_back (mobility);
@@ -120,7 +120,7 @@ MobilityHelper::PopReferenceMobilityModel (void)
 }
 
 
-std::string 
+stdfwd::string
 MobilityHelper::GetMobilityModelType (void) const
 {
   return m_mobility.GetTypeId ().GetName ();
@@ -160,7 +160,7 @@ MobilityHelper::Install (Ptr<Node> node) const
 }
 
 void
-MobilityHelper::Install (std::string nodeName) const
+MobilityHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   Install (node);

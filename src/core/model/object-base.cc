@@ -129,18 +129,18 @@ ObjectBase::ConstructSelf (const AttributeConstructionList &attributes)
           char *envVar = getenv ("NS_ATTRIBUTE_DEFAULT");
           if (envVar != 0)
             {
-              std::string env = std::string (envVar);
-              std::string::size_type cur = 0;
-              std::string::size_type next = 0;
-              while (next != std::string::npos)
+              stdfwd::string env = stdfwd::string (envVar);
+              stdfwd::string::size_type cur = 0;
+              stdfwd::string::size_type next = 0;
+              while (next != stdfwd::string::npos)
                 {
                   next = env.find (";", cur);
-                  std::string tmp = std::string (env, cur, next-cur);
-                  std::string::size_type equal = tmp.find ("=");
-                  if (equal != std::string::npos)
+                  stdfwd::string tmp = stdfwd::string (env, cur, next-cur);
+                  stdfwd::string::size_type equal = tmp.find ("=");
+                  if (equal != stdfwd::string::npos)
                     {
-                      std::string name = tmp.substr (0, equal);
-                      std::string envval = tmp.substr (equal+1, tmp.size () - equal - 1);
+                      stdfwd::string name = tmp.substr (0, equal);
+                      stdfwd::string envval = tmp.substr (equal+1, tmp.size () - equal - 1);
                       if (name == tid.GetAttributeFullName (i))
                         {
                           if (DoSet (info.accessor, info.checker, StringValue (envval)))
@@ -182,7 +182,7 @@ ObjectBase::DoSet (Ptr<const AttributeAccessor> accessor,
 }
 
 void
-ObjectBase::SetAttribute (std::string name, const AttributeValue &value)
+ObjectBase::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (this << name << &value);
   struct TypeId::AttributeInformation info;
@@ -202,7 +202,7 @@ ObjectBase::SetAttribute (std::string name, const AttributeValue &value)
     }
 }
 bool 
-ObjectBase::SetAttributeFailSafe (std::string name, const AttributeValue &value)
+ObjectBase::SetAttributeFailSafe (stdfwd::string name, const AttributeValue &value)
 {
   NS_LOG_FUNCTION (this << name << &value);
   struct TypeId::AttributeInformation info;
@@ -220,7 +220,7 @@ ObjectBase::SetAttributeFailSafe (std::string name, const AttributeValue &value)
 }
 
 void
-ObjectBase::GetAttribute (std::string name, AttributeValue &value) const
+ObjectBase::GetAttribute (stdfwd::string name, AttributeValue &value) const
 {
   NS_LOG_FUNCTION (this << name << &value);
   struct TypeId::AttributeInformation info;
@@ -255,7 +255,7 @@ ObjectBase::GetAttribute (std::string name, AttributeValue &value) const
 
 
 bool
-ObjectBase::GetAttributeFailSafe (std::string name, AttributeValue &value) const
+ObjectBase::GetAttributeFailSafe (stdfwd::string name, AttributeValue &value) const
 {
   NS_LOG_FUNCTION (this << name << &value);
   struct TypeId::AttributeInformation info;
@@ -290,7 +290,7 @@ ObjectBase::GetAttributeFailSafe (std::string name, AttributeValue &value) const
 }
 
 bool 
-ObjectBase::TraceConnectWithoutContext (std::string name, const CallbackBase &cb)
+ObjectBase::TraceConnectWithoutContext (stdfwd::string name, const CallbackBase &cb)
 {
   NS_LOG_FUNCTION (this << name << &cb);
   TypeId tid = GetInstanceTypeId ();
@@ -303,7 +303,7 @@ ObjectBase::TraceConnectWithoutContext (std::string name, const CallbackBase &cb
   return ok;
 }
 bool 
-ObjectBase::TraceConnect (std::string name, std::string context, const CallbackBase &cb)
+ObjectBase::TraceConnect (stdfwd::string name, stdfwd::string context, const CallbackBase &cb)
 {
   NS_LOG_FUNCTION (this << name << context << &cb);
   TypeId tid = GetInstanceTypeId ();
@@ -316,7 +316,7 @@ ObjectBase::TraceConnect (std::string name, std::string context, const CallbackB
   return ok;
 }
 bool 
-ObjectBase::TraceDisconnectWithoutContext (std::string name, const CallbackBase &cb)
+ObjectBase::TraceDisconnectWithoutContext (stdfwd::string name, const CallbackBase &cb)
 {
   NS_LOG_FUNCTION (this << name << &cb);
   TypeId tid = GetInstanceTypeId ();
@@ -329,7 +329,7 @@ ObjectBase::TraceDisconnectWithoutContext (std::string name, const CallbackBase 
   return ok;
 }
 bool 
-ObjectBase::TraceDisconnect (std::string name, std::string context, const CallbackBase &cb)
+ObjectBase::TraceDisconnect (stdfwd::string name, stdfwd::string context, const CallbackBase &cb)
 {
   NS_LOG_FUNCTION (this << name << context << &cb);
   TypeId tid = GetInstanceTypeId ();

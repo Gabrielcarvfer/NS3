@@ -40,7 +40,7 @@ public:
   {
     Input ();
     double distance; ///< distance
-    std::string txMode; ///< transmit mode
+    stdfwd::string txMode; ///< transmit mode
     uint8_t txPowerLevel; ///< transmit power level
     uint32_t packetSize; ///< packet size
     uint32_t nPackets; ///< number of packets
@@ -157,8 +157,8 @@ public:
     Time interval; ///< interval
     double xA; ///< x A
     double xB; ///< x B
-    std::string txModeA; ///< transmit mode A
-    std::string txModeB; ///< transmit mode B
+    stdfwd::string txModeA; ///< transmit mode A
+    stdfwd::string txModeB; ///< transmit mode B
     uint8_t txPowerLevelA; ///< transmit power level A
     uint8_t txPowerLevelB; ///< transmit power level B
     uint32_t packetSizeA; ///< packet size A
@@ -480,7 +480,7 @@ int main (int argc, char *argv[])
                 << std::endl;
       return 0;
     }
-  std::string type = argv[1];
+  stdfwd::string type = argv[1];
   argc--;
   argv[1] = argv[0];
   argv++;

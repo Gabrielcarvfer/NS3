@@ -171,7 +171,7 @@ NscTcpL4Protocol::~NscTcpL4Protocol ()
 }
 
 void
-NscTcpL4Protocol::SetNscLibrary (const std::string &soname)
+NscTcpL4Protocol::SetNscLibrary (const stdfwd::string &soname)
 {
   if (soname!="")
     {
@@ -183,7 +183,7 @@ NscTcpL4Protocol::SetNscLibrary (const std::string &soname)
     }
 }
 
-std::string 
+stdfwd::string
 NscTcpL4Protocol::GetNscLibrary () const
 {
   return m_nscLibrary;
@@ -471,8 +471,8 @@ void NscTcpL4Protocol::AddInterface (void)
 
       NS_LOG_LOGIC ("if_attach " << addrOss.str ().c_str () << " " << maskOss.str ().c_str () << " " << mtu);
 
-      std::string addrStr = addrOss.str ();
-      std::string maskStr = maskOss.str ();
+      stdfwd::string addrStr = addrOss.str ();
+      stdfwd::string maskStr = maskOss.str ();
       const char* addrCStr = addrStr.c_str ();
       const char* maskCStr = maskStr.c_str ();
       m_nscStack->if_attach (addrCStr, maskCStr, mtu);

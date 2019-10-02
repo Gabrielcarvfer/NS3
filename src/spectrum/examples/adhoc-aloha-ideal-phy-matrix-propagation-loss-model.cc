@@ -31,7 +31,7 @@
 #include "../model/waveform-generator.h"
 #include "../model/spectrum-analyzer.h"
 #include "../../core/model/log.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iomanip>
 #include "../model/friis-spectrum-propagation-loss.h"
 #include "../../propagation/model/propagation-delay-model.h"
@@ -49,7 +49,7 @@ static bool g_verbose = false;
 static uint64_t g_rxBytes;
 
 void
-PhyRxEndOkTrace (std::string context, Ptr<const Packet> p)
+PhyRxEndOkTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   if (g_verbose)
     {
@@ -80,7 +80,7 @@ public:
    * \param rxPhy the receiving PHY
    * \param lossDb the loss in dB
    */
-  void UpdatePathloss (std::string context, Ptr<SpectrumPhy> txPhy, Ptr<SpectrumPhy> rxPhy, double lossDb);
+  void UpdatePathloss (stdfwd::string context, Ptr<SpectrumPhy> txPhy, Ptr<SpectrumPhy> rxPhy, double lossDb);
 
   /** 
    * print the stored pathloss values to standard output
@@ -93,7 +93,7 @@ private:
 };
 
 void
-GlobalPathlossDatabase::UpdatePathloss (std::string context, 
+GlobalPathlossDatabase::UpdatePathloss (stdfwd::string context,
                                         Ptr<SpectrumPhy> txPhy, 
                                         Ptr<SpectrumPhy> rxPhy, 
                                         double lossDb)
@@ -129,7 +129,7 @@ int main (int argc, char** argv)
   uint64_t phyRate = 500000;
   uint32_t pktSize = 1000;
   double simDuration = 0.5;
-  std::string channelType ("ns3::SingleModelSpectrumChannel");
+  stdfwd::string channelType ("ns3::SingleModelSpectrumChannel");
   cmd.AddValue ("verbose", "Print trace information if true", g_verbose);
   cmd.AddValue ("lossDb", "link loss in dB", lossDb);
   cmd.AddValue ("txPowerW", "txPower in Watts", txPowerW);

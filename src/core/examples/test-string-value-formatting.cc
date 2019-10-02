@@ -105,7 +105,7 @@ public:
    * \param name the attribute
    * \param value the attribute value
    */ 
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
   /**
    * Create an Object as configured by SetAttribute
    * \returns the newly created Object
@@ -121,7 +121,7 @@ FormattingTestObjectHelper::FormattingTestObjectHelper ()
 }
 
 void
-FormattingTestObjectHelper::SetAttribute (std::string name, const AttributeValue &value)
+FormattingTestObjectHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }

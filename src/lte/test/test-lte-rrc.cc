@@ -60,7 +60,7 @@ public:
                                          bool errorExpected,
                                          bool useIdealRrc,
                                          bool admitRrcConnectionRequest,
-                                         std::string description = "");
+                                         stdfwd::string description = "");
 
 protected:
 
@@ -80,14 +80,14 @@ protected:
    * \param description additional description of the test case
    * \returns the name string
    */
-  static std::string BuildNameString (uint32_t nUes,
+  static stdfwd::string BuildNameString (uint32_t nUes,
                                       uint32_t nBearers,
                                       uint32_t tConnBase,
                                       uint32_t tConnIncrPerUe,
                                       uint32_t delayDiscStart,
                                       bool useIdealRrc,
                                       bool admitRrcConnectionRequest,
-                                      std::string description = "");
+                                      stdfwd::string description = "");
   /**
    * Connect function
    * \param ueDevice the UE device
@@ -113,7 +113,7 @@ protected:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionEstablishedCallback (std::string context, uint64_t imsi,
+  void ConnectionEstablishedCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti);
   /**
    * Connection timeout callback function
@@ -123,7 +123,7 @@ protected:
    * \param rnti the RNTI
    * \param connEstFailCount the T300 timer expiration counter value
    */
-  void ConnectionTimeoutCallback (std::string context, uint64_t imsi,
+  void ConnectionTimeoutCallback (stdfwd::string context, uint64_t imsi,
                                   uint16_t cellId, uint16_t rnti,
                                   uint8_t connEstFailCount);
 
@@ -142,7 +142,7 @@ protected:
 };
 
 
-std::string
+stdfwd::string
 LteRrcConnectionEstablishmentTestCase::BuildNameString (uint32_t nUes,
                                                         uint32_t nBearers,
                                                         uint32_t tConnBase,
@@ -150,7 +150,7 @@ LteRrcConnectionEstablishmentTestCase::BuildNameString (uint32_t nUes,
                                                         uint32_t delayDiscStart,
                                                         bool useIdealRrc,
                                                         bool admitRrcConnectionRequest,
-                                                        std::string description)
+                                                        stdfwd::string description)
 {
   std::ostringstream oss;
   oss << "nUes=" << nUes
@@ -189,7 +189,7 @@ LteRrcConnectionEstablishmentTestCase::LteRrcConnectionEstablishmentTestCase (
     uint32_t nUes, uint32_t nBearers,
     uint32_t tConnBase, uint32_t tConnIncrPerUe, uint32_t delayDiscStart,
     bool errorExpected, bool useIdealRrc, bool admitRrcConnectionRequest,
-    std::string description)
+    stdfwd::string description)
   : TestCase (BuildNameString (nUes, nBearers,
                                tConnBase, tConnIncrPerUe, delayDiscStart,
                                useIdealRrc, admitRrcConnectionRequest,
@@ -527,7 +527,7 @@ LteRrcConnectionEstablishmentTestCase::CheckNotConnected (Ptr<NetDevice> ueDevic
 
 void
 LteRrcConnectionEstablishmentTestCase::ConnectionEstablishedCallback (
-    std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+    stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   NS_LOG_FUNCTION (this << imsi << cellId);
   m_isConnectionEstablished[imsi] = true;
@@ -536,7 +536,7 @@ LteRrcConnectionEstablishmentTestCase::ConnectionEstablishedCallback (
 
 void
 LteRrcConnectionEstablishmentTestCase::ConnectionTimeoutCallback (
-    std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
+    stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti,
     uint8_t connEstFailCount)
 {
   NS_LOG_FUNCTION (this << imsi << cellId);
@@ -562,7 +562,7 @@ public:
    * \param description additional description of the test case
    */
   LteRrcConnectionEstablishmentErrorTestCase (Time jumpAwayTime,
-                                              std::string description = "");
+                                              stdfwd::string description = "");
 protected:
   virtual void DoRun (void);
 
@@ -578,7 +578,7 @@ private:
 
 
 LteRrcConnectionEstablishmentErrorTestCase::LteRrcConnectionEstablishmentErrorTestCase (
-  Time jumpAwayTime, std::string description)
+  Time jumpAwayTime, stdfwd::string description)
   : LteRrcConnectionEstablishmentTestCase (1, 1, 0, 0, 1, true, false, true,
                                            description),
     m_jumpAwayTime (jumpAwayTime)

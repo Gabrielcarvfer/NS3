@@ -1096,7 +1096,7 @@ public:
    */
   typedef void (*TimerExpiryTracedCallback)
       (const uint64_t imsi, const uint16_t rnti, const uint16_t cellId,
-       const std::string cause);
+       const stdfwd::string cause);
 
 
 private:
@@ -1684,7 +1684,7 @@ private:
    * at eNB expires. Exporting IMSI, cell ID, and RNTI and name of timer
    * which expired.
    */
-  TracedCallback<uint64_t, uint16_t, uint16_t, std::string> m_rrcTimeoutTrace;
+  TracedCallback<uint64_t, uint16_t, uint16_t, stdfwd::string> m_rrcTimeoutTrace;
 
   uint16_t m_numberOfComponentCarriers; ///< number of component carriers
 

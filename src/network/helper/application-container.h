@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "../model/application.h"
 #include "../../core/model/random-variable-stream.h"
@@ -62,7 +62,7 @@ public:
    *
    * \param name The name of the Application Object to add to the container.
    */
-  ApplicationContainer (std::string name);
+  ApplicationContainer (stdfwd::string name);
 
   /// Application container iterator
   typedef std::vector<Ptr<Application> >::const_iterator Iterator;
@@ -175,7 +175,7 @@ public:
    *
    * \param name The name of the Application Object to add to the container.
    */
-  void Add (std::string name);
+  void Add (stdfwd::string name);
 
   /**
    * \brief Arrange for all of the Applications in this container to Start()

@@ -21,7 +21,7 @@
 #include "llc-snap-header.h"
 #include "../../core/model/assert.h"
 #include "../../core/model/log.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

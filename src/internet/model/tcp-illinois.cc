@@ -370,7 +370,7 @@ TcpIllinois::Fork (void)
   return CopyObject<TcpIllinois> (this);
 }
 
-std::string
+stdfwd::string
 TcpIllinois::GetName () const
 {
   NS_LOG_FUNCTION (this);

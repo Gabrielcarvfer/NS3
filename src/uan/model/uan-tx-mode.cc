@@ -71,7 +71,7 @@ UanTxMode::GetConstellationSize (void) const
   return UanTxModeFactory::GetFactory ().GetModeItem (m_uid).m_constSize;
 }
 
-std::string
+stdfwd::string
 UanTxMode::GetName (void) const
 {
   return UanTxModeFactory::GetFactory ().GetModeItem (m_uid).m_name;
@@ -93,7 +93,7 @@ operator<< (std::ostream & os, const UanTxMode &mode)
 std::istream &
 operator>> (std::istream & is, UanTxMode &mode)
 {
-  std::string name;
+  stdfwd::string name;
   uint32_t duh;
 
   is >> duh;
@@ -114,7 +114,7 @@ UanTxModeFactory::~UanTxModeFactory ()
   m_modes.clear ();
 }
 bool
-UanTxModeFactory::NameUsed (std::string name)
+UanTxModeFactory::NameUsed (stdfwd::string name)
 {
   std::map<uint32_t, UanTxModeItem>::iterator it = m_modes.begin ();
 
@@ -135,7 +135,7 @@ UanTxModeFactory::CreateMode (UanTxMode::ModulationType type,
                               uint32_t cfHz,
                               uint32_t bwHz,
                               uint32_t constSize,
-                              std::string name)
+                              stdfwd::string name)
 {
   UanTxModeFactory &factory = UanTxModeFactory::GetFactory ();
 
@@ -176,7 +176,7 @@ UanTxModeFactory::GetModeItem (uint32_t uid)
 }
 
 UanTxModeFactory::UanTxModeItem &
-UanTxModeFactory::GetModeItem (std::string name)
+UanTxModeFactory::GetModeItem (stdfwd::string name)
 {
   std::map<uint32_t, UanTxModeItem>::iterator it = m_modes.begin ();
   for (; it != m_modes.end (); it++)
@@ -191,7 +191,7 @@ UanTxModeFactory::GetModeItem (std::string name)
 }
 
 UanTxMode
-UanTxModeFactory::GetMode (std::string name)
+UanTxModeFactory::GetMode (stdfwd::string name)
 {
   UanTxModeFactory &factory = UanTxModeFactory::GetFactory ();
   return factory.MakeModeFromItem (factory.GetModeItem (name));

@@ -53,7 +53,7 @@ public:
    */
   TcpLedbatToNewReno (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                       uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                      SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name);
+                      SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -73,7 +73,7 @@ private:
 
 TcpLedbatToNewReno::TcpLedbatToNewReno (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                                         uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                                        SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name)
+                                        SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -142,7 +142,7 @@ public:
    */
   TcpLedbatIncrementTest (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                           uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                          SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name);
+                          SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -162,7 +162,7 @@ private:
 
 TcpLedbatIncrementTest::TcpLedbatIncrementTest (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                                                 uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                                                SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name)
+                                                SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),
@@ -235,7 +235,7 @@ public:
    */
   TcpLedbatDecrementTest (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                           uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                          SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name);
+                          SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -255,7 +255,7 @@ private:
 
 TcpLedbatDecrementTest::TcpLedbatDecrementTest (uint32_t cWnd, uint32_t segmentSize, uint32_t ssThresh,
                                                 uint32_t segmentsAcked, SequenceNumber32 highTxMark,
-                                                SequenceNumber32 lastAckedSeq, Time rtt, const std::string &name)
+                                                SequenceNumber32 lastAckedSeq, Time rtt, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

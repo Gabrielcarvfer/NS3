@@ -35,7 +35,7 @@
 
 #include <iosfwd>
 #include <fstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
@@ -61,7 +61,7 @@ CwndTracer (Ptr<OutputStreamWrapper>stream, uint32_t oldval, uint32_t newval)
 }
 
 static void
-TraceCwnd (std::string cwndTrFileName)
+TraceCwnd (stdfwd::string cwndTrFileName)
 {
   AsciiTraceHelper ascii;
   if (cwndTrFileName.compare ("") == 0)
@@ -78,12 +78,12 @@ TraceCwnd (std::string cwndTrFileName)
 
 int main (int argc, char *argv[])
 {
-  std::string bottleneckBandwidth = "5Mbps";
-  std::string bottleneckDelay = "5ms";
-  std::string accessBandwidth = "100Mbps";
-  std::string accessDelay = "0.1ms";
+  stdfwd::string bottleneckBandwidth = "5Mbps";
+  stdfwd::string bottleneckDelay = "5ms";
+  stdfwd::string accessBandwidth = "100Mbps";
+  stdfwd::string accessDelay = "0.1ms";
 
-  std::string queueDiscType = "PfifoFast";       //PfifoFast or CoDel
+  stdfwd::string queueDiscType = "PfifoFast";       //PfifoFast or CoDel
   uint32_t queueDiscSize = 1000;  //in packets
   uint32_t queueSize = 10;        //in packets
   uint32_t pktSize = 1458;        //in bytes. 1458 to prevent fragments
@@ -91,8 +91,8 @@ int main (int argc, char *argv[])
   float simDuration = 60;         //in seconds
 
   bool isPcapEnabled = true;
-  std::string pcapFileName = "pcapFilePfifoFast.pcap";
-  std::string cwndTrFileName = "cwndPfifoFast.tr";
+  stdfwd::string pcapFileName = "pcapFilePfifoFast.pcap";
+  stdfwd::string cwndTrFileName = "cwndPfifoFast.tr";
   bool logging = false;
 
   CommandLine cmd;

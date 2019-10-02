@@ -46,7 +46,7 @@ public:
    */
   TcpHyblaIncrementTest (uint32_t cWnd, uint32_t ssThresh,
                          uint32_t segmentSize, const Time& rtt,
-                         const std::string &name);
+                         const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -68,7 +68,7 @@ private:
 
 TcpHyblaIncrementTest::TcpHyblaIncrementTest (uint32_t cWnd, uint32_t ssThresh,
                                               uint32_t segmentSize, const Time &rtt,
-                                              const std::string &name)
+                                              const stdfwd::string &name)
   : TestCase (name),
   m_cWnd (cWnd),
   m_ssThresh (ssThresh),

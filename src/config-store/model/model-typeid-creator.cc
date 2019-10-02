@@ -52,7 +52,7 @@ ModelTypeidCreator::Remove (void)
 }
 
 void 
-ModelTypeidCreator::VisitAttribute (TypeId tid, std::string name, std::string defaultValue, uint32_t index)
+ModelTypeidCreator::VisitAttribute (TypeId tid, stdfwd::string name, stdfwd::string defaultValue, uint32_t index)
 {
   ModelTypeid *node = new ModelTypeid ();
   node->type = ModelTypeid::NODE_ATTRIBUTE;
@@ -65,7 +65,7 @@ ModelTypeidCreator::VisitAttribute (TypeId tid, std::string name, std::string de
 }
 
 void 
-ModelTypeidCreator::StartVisitTypeId (std::string name)
+ModelTypeidCreator::StartVisitTypeId (stdfwd::string name)
 {
   ModelTypeid *node = new ModelTypeid ();
   node->type = ModelTypeid::NODE_TYPEID;

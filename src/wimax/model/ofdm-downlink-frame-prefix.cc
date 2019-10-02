@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ofdm-downlink-frame-prefix.h"
 #include "../../network/utils/address-utils.h"
 
@@ -213,7 +213,7 @@ OfdmDownlinkFramePrefix::GetHcs (void) const
   return m_hcs;
 }
 
-std::string
+stdfwd::string
 OfdmDownlinkFramePrefix::GetName (void) const
 {
   return "OFDM Downlink Frame Prefix";

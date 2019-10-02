@@ -20,7 +20,7 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ss-manager.h"
 #include "../../core/model/log.h"
 #include "service-flow.h"

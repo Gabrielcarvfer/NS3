@@ -237,7 +237,7 @@ private:
   /**
    * Prefix for the PCAP file for the X2 link
    */
-  std::string m_x2LinkPcapPrefix;
+  stdfwd::string m_x2LinkPcapPrefix;
 
 };
 

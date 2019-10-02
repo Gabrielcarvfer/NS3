@@ -265,7 +265,7 @@ ArpCache::PrintArpCache (Ptr<OutputStreamWrapper> stream)
   for (CacheI i = m_arpCache.begin (); i != m_arpCache.end (); i++)
     {
       *os << i->first << " dev ";
-      std::string found = Names::FindName (m_device);
+      stdfwd::string found = Names::FindName (m_device);
       if (Names::FindName (m_device) != "")
         {
           *os << found;

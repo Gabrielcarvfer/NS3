@@ -1419,7 +1419,7 @@ std::ostream &
 operator<< (std::ostream & os, TcpTxBuffer const & tcpTxBuf)
 {
   TcpTxBuffer::PacketList::const_iterator it;
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   SequenceNumber32 beginOfCurrentPacket = tcpTxBuf.m_firstByteSeq;
   uint32_t sentSize = 0, appSize = 0;
 

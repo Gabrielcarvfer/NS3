@@ -18,7 +18,7 @@
  * Author: Jahanzeb Farooq <jahanzeb.farooq@sophia.inria.fr>
  */
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "burst-profile-manager.h"
 #include "bs-net-device.h"
 #include "ss-net-device.h"

@@ -52,7 +52,7 @@ public:
    * \param name The name of the attribute to set.
    * \param v The value of the attribute.
    */
-  void Set (std::string name, const AttributeValue &v);
+  void Set (stdfwd::string name, const AttributeValue &v);
 
   /**
    * Sets the callback to be invoked when energy is depleted.

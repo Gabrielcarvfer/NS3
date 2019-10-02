@@ -339,7 +339,7 @@ NscTcpSocketImpl::Connect (const Address & address)
 
   std::ostringstream ss;
   m_remoteAddress.Print (ss);
-  std::string ipstring = ss.str ();
+  stdfwd::string ipstring = ss.str ();
 
   m_nscTcpSocket->connect (ipstring.c_str (), m_remotePort);
   m_state = SYN_SENT;

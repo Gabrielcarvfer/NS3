@@ -22,7 +22,7 @@
 
 #include "../model/address.h"
 #include "ipv4-address.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

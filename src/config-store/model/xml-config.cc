@@ -39,7 +39,7 @@ XmlConfigSave::XmlConfigSave ()
   NS_LOG_FUNCTION (this);
 }
 void
-XmlConfigSave::SetFilename (std::string filename)
+XmlConfigSave::SetFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (filename);
   if (filename == "")
@@ -107,17 +107,17 @@ public:
       m_writer = writer;
     }
 private:
-    virtual void StartVisitTypeId (std::string name) {
+    virtual void StartVisitTypeId (stdfwd::string name) {
       m_typeid = name;
     }
-    virtual void DoVisitAttribute (std::string name, std::string defaultValue) {
+    virtual void DoVisitAttribute (stdfwd::string name, stdfwd::string defaultValue) {
       int rc;
       rc = xmlTextWriterStartElement (m_writer, BAD_CAST "default");
       if (rc < 0)
         {
           NS_FATAL_ERROR ("Error at xmlTextWriterStartElement");
         }
-      std::string fullname = m_typeid + "::" + name;
+      stdfwd::string fullname = m_typeid + "::" + name;
       rc = xmlTextWriterWriteAttribute (m_writer, BAD_CAST "name",
                                         BAD_CAST fullname.c_str ());
       if (rc < 0)
@@ -137,7 +137,7 @@ private:
         }
     }
     xmlTextWriterPtr m_writer;
-    std::string m_typeid;
+    stdfwd::string m_typeid;
   };
   XmlDefaultIterator iterator = XmlDefaultIterator (m_writer);
   iterator.Iterate ();
@@ -152,7 +152,7 @@ public:
     XmlTextAttributeIterator (xmlTextWriterPtr writer)
       : m_writer (writer) {}
 private:
-    virtual void DoVisitAttribute (Ptr<Object> object, std::string name) {
+    virtual void DoVisitAttribute (Ptr<Object> object, stdfwd::string name) {
       StringValue str;
       object->GetAttribute (name, str);
       int rc;
@@ -230,7 +230,7 @@ XmlConfigLoad::~XmlConfigLoad ()
 }
 
 void
-XmlConfigLoad::SetFilename (std::string filename)
+XmlConfigLoad::SetFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (filename);
   m_filename = filename;
@@ -252,7 +252,7 @@ XmlConfigLoad::Default (void)
         {
           NS_FATAL_ERROR ("Invalid value");
         }
-      if (std::string ((char*)type) == "default")
+      if (stdfwd::string ((char*)type) == "default")
         {
           xmlChar *name = xmlTextReaderGetAttribute (reader, BAD_CAST "name");
           if (name == 0)
@@ -290,7 +290,7 @@ XmlConfigLoad::Global (void)
         {
           NS_FATAL_ERROR ("Invalid value");
         }
-      if (std::string ((char*)type) == "global")
+      if (stdfwd::string ((char*)type) == "global")
         {
           xmlChar *name = xmlTextReaderGetAttribute (reader, BAD_CAST "name");
           if (name == 0)
@@ -328,7 +328,7 @@ XmlConfigLoad::Attributes (void)
         {
           NS_FATAL_ERROR ("Invalid value");
         }
-      if (std::string ((char*)type) == "value")
+      if (stdfwd::string ((char*)type) == "value")
         {
           xmlChar *path = xmlTextReaderGetAttribute (reader, BAD_CAST "path");
           if (path == 0)

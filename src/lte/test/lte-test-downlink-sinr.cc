@@ -108,7 +108,7 @@ static LteDownlinkSinrTestSuite lteDownlinkSinrTestSuite;
  * TestCase Data
  */
 
-LteDownlinkDataSinrTestCase::LteDownlinkDataSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, std::string name)
+LteDownlinkDataSinrTestCase::LteDownlinkDataSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, stdfwd::string name)
   : TestCase ("SINR calculation in downlink Data frame: " + name),
     m_sv (sv),
     m_sm (sv->GetSpectrumModel ()),
@@ -277,7 +277,7 @@ LteDownlinkDataSinrTestCase::DoRun (void)
 * TestCase CTRL
 */
 
-LteDownlinkCtrlSinrTestCase::LteDownlinkCtrlSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, std::string name)
+LteDownlinkCtrlSinrTestCase::LteDownlinkCtrlSinrTestCase (Ptr<SpectrumValue> sv, Ptr<SpectrumValue> sinr, stdfwd::string name)
 : TestCase ("SINR calculation in downlink Ctrl Frame: " + name),
 m_sv (sv),
 m_sm (sv->GetSpectrumModel ()),

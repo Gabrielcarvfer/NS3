@@ -18,7 +18,7 @@
  */
 
 #include "int64x64.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <iomanip>  // showpos
 #include <sstream>
@@ -129,14 +129,14 @@ std::ostream &operator << (std::ostream &os, const int64x64_t &value)
 
   // Check if we need to round the last printed digit,
   // based on the first unprinted digit
-  std::string digits = oss.str ();
+  stdfwd::string digits = oss.str ();
   low *= 10;
   int64_t nextDigit = low.GetHigh ();
   if ( (nextDigit > 5) || ((nextDigit == 5) && (digit % 2 == 1)) )
     {
       // Walk backwards with the carry
       bool carry = true;
-      for (std::string::reverse_iterator rit = digits.rbegin ();
+      for (stdfwd::string::reverse_iterator rit = digits.rbegin ();
            rit != digits.rend ();
            ++rit)
         {
@@ -176,7 +176,7 @@ std::ostream &operator << (std::ostream &os, const int64x64_t &value)
  *             of a number, with no fractional part or decimal point.
  * \returns    The integer.
  */
-static uint64_t ReadHiDigits (std::string str)
+static uint64_t ReadHiDigits (stdfwd::string str)
 {
   const char *buf = str.c_str ();
   uint64_t retval = 0;
@@ -199,12 +199,12 @@ static uint64_t ReadHiDigits (std::string str)
  *             of a number, without integral part or decimal point.
  * \returns    The decimal portion of the input number.
  */
-static uint64_t ReadLoDigits (std::string str)
+static uint64_t ReadLoDigits (stdfwd::string str)
 {
   int64x64_t low;
   const int64x64_t round (0, 5);  // Round last place in division
 
-  for (std::string::const_reverse_iterator rit = str.rbegin ();
+  for (stdfwd::string::const_reverse_iterator rit = str.rbegin ();
        rit != str.rend ();
        ++rit)
     {
@@ -220,17 +220,17 @@ static uint64_t ReadLoDigits (std::string str)
 
 std::istream &operator >> (std::istream &is, int64x64_t &value)
 {
-  std::string str;
+  stdfwd::string str;
 
   is >> str;
   bool negative;
   // skip heading spaces
-  std::string::size_type cur;
+  stdfwd::string::size_type cur;
   cur = str.find_first_not_of (" ");
-  std::string::size_type next;
+  stdfwd::string::size_type next;
   // first, remove the sign.
   next = str.find ("-", cur);
-  if (next != std::string::npos)
+  if (next != stdfwd::string::npos)
     {
       negative = true;
       next++;
@@ -238,7 +238,7 @@ std::istream &operator >> (std::istream &is, int64x64_t &value)
   else
     {
       next = str.find ("+", cur);
-      if (next != std::string::npos)
+      if (next != stdfwd::string::npos)
         {
           next++;
         }
@@ -252,12 +252,12 @@ std::istream &operator >> (std::istream &is, int64x64_t &value)
   int64_t hi;
   uint64_t lo;
   next = str.find (".", cur);
-  if (next != std::string::npos)
+  if (next != stdfwd::string::npos)
     {
       hi = ReadHiDigits (str.substr (cur, next-cur));
       lo = ReadLoDigits (str.substr (next+1, str.size ()-(next+1)));
     }
-  else if (cur != std::string::npos)
+  else if (cur != stdfwd::string::npos)
     {
       hi = ReadHiDigits (str.substr (cur, str.size ()-cur));
       lo = 0;

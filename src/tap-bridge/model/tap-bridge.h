@@ -395,7 +395,7 @@ private:
    * The name of the device to create on the host.  If the device name is the
    * empty string, we allow the host kernel to choose a name.
    */
-  std::string m_tapDeviceName;
+  stdfwd::string m_tapDeviceName;
 
   /**
    * The IP address to use as the device default gateway on the host.

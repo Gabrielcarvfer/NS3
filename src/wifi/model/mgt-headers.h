@@ -977,13 +977,13 @@ private:
    * \param value the category value
    * \returns the categoty value string
    */
-  std::string CategoryValueToString (CategoryValue value) const;
+  stdfwd::string CategoryValueToString (CategoryValue value) const;
   /**
    * Self protected action value to string function
    * \param value the protected action value
    * \returns the self protected action value string
    */
-  std::string SelfProtectedActionValueToString (SelfProtectedActionValue value) const;
+  stdfwd::string SelfProtectedActionValueToString (SelfProtectedActionValue value) const;
   uint8_t m_category; //!< Category of the action
   uint8_t m_actionValue; //!< Action value
 };

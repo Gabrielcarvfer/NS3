@@ -21,7 +21,7 @@
  */
 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "cid-factory.h"
 #include "../../core/model/uinteger.h"
 

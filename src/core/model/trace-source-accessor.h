@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "callback.h"
 #include "ptr.h"
 #include "simple-ref-count.h"
@@ -71,7 +71,7 @@ public:
    * \return \c true unless the connection could not be made, typically because
    *         the \c obj couldn't be cast to the correct type.
    */
-  virtual bool Connect (ObjectBase *obj, std::string context, const CallbackBase &cb) const = 0;
+  virtual bool Connect (ObjectBase *obj, stdfwd::string context, const CallbackBase &cb) const = 0;
   /**
    * Disconnect a Callback from a TraceSource (without context).
    *
@@ -93,7 +93,7 @@ public:
    * \return \c true unless the connection could not be made, typically because
    *         the \c obj couldn't be cast to the correct type.
    */
-  virtual bool Disconnect (ObjectBase *obj, std::string context, const CallbackBase &cb) const = 0;
+  virtual bool Disconnect (ObjectBase *obj, stdfwd::string context, const CallbackBase &cb) const = 0;
 };
 
 /**
@@ -160,7 +160,7 @@ DoMakeTraceSourceAccessor (SOURCE T::*a)
       (p->*m_source).ConnectWithoutContext (cb);
       return true;
     }
-    virtual bool Connect (ObjectBase *obj, std::string context, const CallbackBase &cb) const {
+    virtual bool Connect (ObjectBase *obj, stdfwd::string context, const CallbackBase &cb) const {
       T *p = dynamic_cast<T*> (obj);
       if (p == 0)
         {
@@ -178,7 +178,7 @@ DoMakeTraceSourceAccessor (SOURCE T::*a)
       (p->*m_source).DisconnectWithoutContext (cb);
       return true;
     }
-    virtual bool Disconnect (ObjectBase *obj, std::string context, const CallbackBase &cb) const {
+    virtual bool Disconnect (ObjectBase *obj, stdfwd::string context, const CallbackBase &cb) const {
       T *p = dynamic_cast<T*> (obj);
       if (p == 0)
         {

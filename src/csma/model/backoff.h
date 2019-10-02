@@ -21,7 +21,7 @@ Transmi */
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/nstime.h"
 #include "../../core/model/random-variable-stream.h"
 

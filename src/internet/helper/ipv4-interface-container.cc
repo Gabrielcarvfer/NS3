@@ -80,7 +80,7 @@ void Ipv4InterfaceContainer::Add (std::pair<Ptr<Ipv4>, uint32_t> a)
   Add (a.first, a.second);
 }
 void 
-Ipv4InterfaceContainer::Add (std::string ipv4Name, uint32_t interface)
+Ipv4InterfaceContainer::Add (stdfwd::string ipv4Name, uint32_t interface)
 {
   Ptr<Ipv4> ipv4 = Names::Find<Ipv4> (ipv4Name);
   m_interfaces.push_back (std::make_pair (ipv4, interface));

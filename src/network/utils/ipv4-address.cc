@@ -423,14 +423,14 @@ std::ostream& operator<< (std::ostream& os, Ipv4Mask const& mask)
 }
 std::istream & operator >> (std::istream &is, Ipv4Address &address)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   address = Ipv4Address (str.c_str ());
   return is;
 }
 std::istream & operator >> (std::istream &is, Ipv4Mask &mask)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   mask = Ipv4Mask (str.c_str ());
   return is;

@@ -30,7 +30,7 @@
 #include "../../core/model/log.h"
 #include "queue-size.h"
 #include "queue-item.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <sstream>
 #include <list>
 
@@ -79,7 +79,7 @@ public:
    * This allows users to call SetQueue ("ns3::DropTailQueue")
    * instead of SetQueue ("ns3::DropTailQueue<Packet>")
    */
-  static void AppendItemTypeIfNotPresent (std::string& typeId, const std::string& itemType);
+  static void AppendItemTypeIfNotPresent (stdfwd::string& typeId, const stdfwd::string& itemType);
 
   /**
    * \return true if the queue is empty; false otherwise
@@ -442,7 +442,7 @@ template <typename Item>
 TypeId
 Queue<Item>::GetTypeId (void)
 {
-  std::string name = GetTypeParamName<Queue<Item> > ();
+  stdfwd::string name = GetTypeParamName<Queue<Item> > ();
   static TypeId tid = TypeId (("ns3::Queue<" + name + ">").c_str ())
     .SetParent<QueueBase> ()
     .SetGroupName ("Network")

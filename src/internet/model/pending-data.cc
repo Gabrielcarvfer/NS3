@@ -55,7 +55,7 @@ PendingData::PendingData (uint32_t s, uint8_t* d, uint32_t msg, uint32_t resp)
     }
 }
 
-PendingData::PendingData(const std::string& s) 
+PendingData::PendingData(const stdfwd::string& s)
   : size (s.length () + 1), data (0),
     msgSize (0), responseSize (0)
 {

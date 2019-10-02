@@ -24,7 +24,7 @@
 #include "../model/cosine-antenna-model.h"
 #include "../../core/model/simulator.h"
 #include <cmath>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <sstream>
 
@@ -41,7 +41,7 @@ enum CosineAntennaModelGainTestCondition  {
 class CosineAntennaModelTestCase : public TestCase
 {
 public:
-  static std::string BuildNameString (Angles a, double b, double o, double g);
+  static stdfwd::string BuildNameString (Angles a, double b, double o, double g);
   CosineAntennaModelTestCase (Angles a, double b, double o, double g, double expectedGainDb, CosineAntennaModelGainTestCondition cond);
 
 
@@ -56,7 +56,7 @@ private:
   CosineAntennaModelGainTestCondition m_cond;
 };
 
-std::string CosineAntennaModelTestCase::BuildNameString (Angles a, double b, double o, double g)
+stdfwd::string CosineAntennaModelTestCase::BuildNameString (Angles a, double b, double o, double g)
 {
   std::ostringstream oss;
   oss <<  "theta=" << a.theta << " , phi=" << a.phi 

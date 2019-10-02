@@ -93,9 +93,9 @@ public:
    */
   LteX2HandoverMeasuresTestCase (uint32_t nEnbs, uint32_t nUes, uint32_t nDedicatedBearers,
                                  std::list<CheckPointEvent> checkPointEventList,
-                                 std::string checkPointEventListName,
-                                 bool useUdp, std::string schedulerType,
-                                 std::string handoverAlgorithmType, bool admitHo,
+                                 stdfwd::string checkPointEventListName,
+                                 bool useUdp, stdfwd::string schedulerType,
+                                 stdfwd::string handoverAlgorithmType, bool admitHo,
                                  bool useIdealRrc);
 
 private:
@@ -112,10 +112,10 @@ private:
    * \param useIdealRrc true if the ideal RRC should be used 
    * \returns the name string
    */
-  static std::string BuildNameString (uint32_t nEnbs, uint32_t nUes, uint32_t nDedicatedBearers,
-                                      std::string checkPointEventListName,
-                                      bool useUdp, std::string schedulerType,
-                                      std::string handoverAlgorithmType, bool admitHo,
+  static stdfwd::string BuildNameString (uint32_t nEnbs, uint32_t nUes, uint32_t nDedicatedBearers,
+                                      stdfwd::string checkPointEventListName,
+                                      bool useUdp, stdfwd::string schedulerType,
+                                      stdfwd::string handoverAlgorithmType, bool admitHo,
                                       bool useIdealRrc);
   virtual void DoRun (void);
   /**
@@ -129,11 +129,11 @@ private:
   uint32_t m_nUes; ///< number of UEs in the test
   uint32_t m_nDedicatedBearers; ///< number of UEs in the test
   std::list<CheckPointEvent> m_checkPointEventList; ///< check point event list
-  std::string m_checkPointEventListName; ///< check point event list name
+  stdfwd::string m_checkPointEventListName; ///< check point event list name
   bool m_epc; ///< whether to use EPC
   bool m_useUdp; ///<  whether to use UDP traffic
-  std::string m_schedulerType; ///< scheduler type
-  std::string m_handoverAlgorithmType; ///< handover algorithm type
+  stdfwd::string m_schedulerType; ///< scheduler type
+  stdfwd::string m_handoverAlgorithmType; ///< handover algorithm type
   bool m_admitHo; ///< whether to configure to admit handover
   bool m_useIdealRrc; ///< whether to use ideal RRC
   Ptr<LteHelper> m_lteHelper; ///< LTE helper
@@ -186,11 +186,11 @@ private:
 };
 
 
-std::string
+stdfwd::string
 LteX2HandoverMeasuresTestCase::BuildNameString (uint32_t nEnbs, uint32_t nUes, uint32_t nDedicatedBearers,
-                                                std::string checkPointEventListName,
-                                                bool useUdp, std::string schedulerType,
-                                                std::string handoverAlgorithmType, bool admitHo,
+                                                stdfwd::string checkPointEventListName,
+                                                bool useUdp, stdfwd::string schedulerType,
+                                                stdfwd::string handoverAlgorithmType, bool admitHo,
                                                 bool useIdealRrc)
 {
   std::ostringstream oss;
@@ -215,9 +215,9 @@ LteX2HandoverMeasuresTestCase::BuildNameString (uint32_t nEnbs, uint32_t nUes, u
 
 LteX2HandoverMeasuresTestCase::LteX2HandoverMeasuresTestCase (uint32_t nEnbs, uint32_t nUes, uint32_t nDedicatedBearers,
                                                               std::list<CheckPointEvent> checkPointEventList,
-                                                              std::string checkPointEventListName,
-                                                              bool useUdp, std::string schedulerType,
-                                                              std::string handoverAlgorithmType, bool admitHo,
+                                                              stdfwd::string checkPointEventListName,
+                                                              bool useUdp, stdfwd::string schedulerType,
+                                                              stdfwd::string handoverAlgorithmType, bool admitHo,
                                                               bool useIdealRrc)
   : TestCase (BuildNameString (nEnbs, nUes, nDedicatedBearers,
                                checkPointEventListName, useUdp, schedulerType,
@@ -709,18 +709,18 @@ LteX2HandoverMeasuresTestSuite::LteX2HandoverMeasuresTestSuite ()
 {
   Time checkInterval = Seconds (1);
 
-  std::string cel1name ("ho: 0 -> 1");
+  stdfwd::string cel1name ("ho: 0 -> 1");
   std::list<CheckPointEvent> cel1;
   cel1.push_back (CheckPointEvent (Seconds (1), Seconds (10.1), checkInterval, 0, 0));
   cel1.push_back (CheckPointEvent (Seconds (11), Seconds (17), checkInterval, 0, 1));
 
-  std::string cel2name ("ho: 0 -> 1 -> 2");
+  stdfwd::string cel2name ("ho: 0 -> 1 -> 2");
   std::list<CheckPointEvent> cel2;
   cel2.push_back (CheckPointEvent (Seconds (1), Seconds (10.1), checkInterval, 0, 0));
   cel2.push_back (CheckPointEvent (Seconds (11), Seconds (17.1), checkInterval, 0, 1));
   cel2.push_back (CheckPointEvent (Seconds (18), Seconds (24), checkInterval, 0, 2));
 
-  std::string cel3name ("ho: 0 -> 1 -> 2 -> 3");
+  stdfwd::string cel3name ("ho: 0 -> 1 -> 2 -> 3");
   std::list<CheckPointEvent> cel3;
   cel3.push_back (CheckPointEvent (Seconds (1), Seconds (10.1), checkInterval,  0, 0));
   cel3.push_back (CheckPointEvent (Seconds (11), Seconds (17.1), checkInterval, 0, 1));
@@ -729,8 +729,8 @@ LteX2HandoverMeasuresTestSuite::LteX2HandoverMeasuresTestSuite ()
 
 
   int32_t useIdealRrc;
-  std::string sched = "ns3::PfFfMacScheduler";
-  std::string ho = "ns3::A2A4RsrqHandoverAlgorithm";
+  stdfwd::string sched = "ns3::PfFfMacScheduler";
+  stdfwd::string ho = "ns3::A2A4RsrqHandoverAlgorithm";
   for (useIdealRrc = 1; useIdealRrc >= 0; --useIdealRrc)
     {
       //                                          nEnbs, nUes, nDBearers, celist, name, useUdp, sched, ho, admitHo, idealRrc

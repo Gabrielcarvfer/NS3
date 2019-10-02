@@ -21,11 +21,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include <list>
 #include <limits>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "non-copyable.h"
 #include "system-wall-clock-ms.h"
@@ -127,8 +127,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) == " +    \
-                           std::string (#limit) + " (limit)",           \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) == " +    \
+                           stdfwd::string (#limit) + " (limit)",           \
                            actualStream.str (), limitStream.str (),     \
                            msgStream.str (), file, line);               \
         CONTINUE_ON_FAILURE;                                            \
@@ -183,8 +183,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) == " +    \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) == " +    \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE_RETURNS_BOOL;                               \
@@ -245,8 +245,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) == " +    \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) == " +    \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -584,8 +584,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) != " +    \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) != " +    \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE;                                            \
@@ -639,8 +639,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) != " +    \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) != " +    \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE_RETURNS_BOOL;                               \
@@ -700,8 +700,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) != " +    \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) != " +    \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -758,8 +758,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) < " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) < " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE;                                            \
@@ -782,8 +782,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) < " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) < " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE;                                            \
@@ -849,8 +849,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) < " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) < " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -875,8 +875,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) < " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) < " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -943,8 +943,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) > " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) > " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE;                                            \
@@ -967,8 +967,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) > " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) > " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
         CONTINUE_ON_FAILURE;                                            \
@@ -1035,8 +1035,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) > " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) > " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -1061,8 +1061,8 @@ namespace ns3 {
         actualStream << actual;                                         \
         std::ostringstream limitStream;                                 \
         limitStream << limit;                                           \
-        ReportTestFailure (std::string (#actual) + " (actual) > " +     \
-                       std::string (#limit) + " (limit)",               \
+        ReportTestFailure (stdfwd::string (#actual) + " (actual) > " +     \
+                       stdfwd::string (#limit) + " (limit)",               \
                        actualStream.str (), limitStream.str (),         \
                        msgStream.str (), file, line);                   \
       }                                                                 \
@@ -1169,7 +1169,7 @@ public:
   /**
    * \return The name of this test
    */
-  std::string GetName (void) const;  
+  stdfwd::string GetName (void) const;
 
 protected:
   /**
@@ -1177,7 +1177,7 @@ protected:
    *
    * \param [in] name The name of the new TestCase created
    */
-  TestCase (std::string name);
+  TestCase (stdfwd::string name);
 
   /**
    * \brief Add an individual child TestCase to this test suite.
@@ -1204,7 +1204,7 @@ protected:
    *
    * Note that NS_TEST_SOURCEDIR is set in src/wscript for each module
    */
-  void SetDataDir (std::string directory);
+  void SetDataDir (stdfwd::string directory);
 
   /**
    * \brief Check if any tests failed.
@@ -1242,9 +1242,9 @@ protected:
    * \param [in] file The file where the test failed.
    * \param [in] line The line number in \p file where the test failed.
    */
-  void ReportTestFailure (std::string cond, std::string actual, 
-                      std::string limit, std::string message, 
-                      std::string file, int32_t line);
+  void ReportTestFailure (stdfwd::string cond, stdfwd::string actual,
+                      stdfwd::string limit, stdfwd::string message,
+                      stdfwd::string file, int32_t line);
   /**
    * \brief Check if this run should assert on failure.
    *
@@ -1265,7 +1265,7 @@ protected:
    * \param [in] filename The bare (no path) file name
    * \return The full path to \p filename in the data directory
    */
-  std::string CreateDataDirFilename (std::string filename);
+  stdfwd::string CreateDataDirFilename (stdfwd::string filename);
   /**
    * \brief Construct the full path to a file in a temporary directory.
    *
@@ -1275,7 +1275,7 @@ protected:
    * \param [in] filename The bare (no path) file name
    * \return The full path to \p filename in the temporary directory.
    */
-  std::string CreateTempDirFilename (std::string filename);
+  stdfwd::string CreateTempDirFilename (stdfwd::string filename);
   /**@}*/
   
 private:
@@ -1324,10 +1324,10 @@ private:
 
   TestCase *m_parent;                   //!< Pointer to my parent TestCase
   std::vector<TestCase *> m_children;   //!< Vector of my children
-  std::string m_dataDir;                //!< My data directory
+  stdfwd::string m_dataDir;                //!< My data directory
   TestRunnerImpl *m_runner;             //!< Pointer to the TestRunner
   struct Result *m_result;              //!< Results data
-  std::string m_name;                   //!< TestCase name
+  stdfwd::string m_name;                   //!< TestCase name
   enum TestDuration m_duration;         //!< TestCase duration
 };
 
@@ -1360,7 +1360,7 @@ public:
    * \param [in] name The name of the test suite.
    * \param [in] type The TestType of the test suite (defaults to UNIT test).
    */
-  TestSuite (std::string name, Type type = UNIT);
+  TestSuite (stdfwd::string name, Type type = UNIT);
 
   /**
    * \brief get the kind of test this test suite implements

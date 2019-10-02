@@ -45,14 +45,14 @@ DhcpHelper::DhcpHelper ()
 }
 
 void DhcpHelper::SetClientAttribute (
-  std::string name,
+  stdfwd::string name,
   const AttributeValue &value)
 {
   m_clientFactory.Set (name, value);
 }
 
 void DhcpHelper::SetServerAttribute (
-  std::string name,
+  stdfwd::string name,
   const AttributeValue &value)
 {
   m_serverFactory.Set (name, value);

@@ -34,7 +34,7 @@ BasicEnergyHarvesterHelper::~BasicEnergyHarvesterHelper ()
 }
 
 void
-BasicEnergyHarvesterHelper::Set (std::string name, const AttributeValue &v)
+BasicEnergyHarvesterHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_basicEnergyHarvester.Set (name, v);
 }

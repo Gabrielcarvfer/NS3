@@ -49,7 +49,7 @@ public:
    * \param pkt the packet
    * \returns a text string
    */
-  static std::string sprintPacketContentsHex (Ptr<Packet> pkt)
+  static stdfwd::string sprintPacketContentsHex (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
     uint8_t buffer[psize];
@@ -67,7 +67,7 @@ public:
    * \param pkt the packet
    * \returns a text string
    */
-  static std::string sprintPacketContentsBin (Ptr<Packet> pkt)
+  static stdfwd::string sprintPacketContentsBin (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
     uint8_t buffer[psize];
@@ -77,7 +77,7 @@ public:
       {
         oss << (std::bitset<8> (buffer[i]));
       }
-    return std::string (oss.str () + "\n");
+    return stdfwd::string (oss.str () + "\n");
   }
 
   /**
@@ -97,7 +97,7 @@ public:
    * \param s text string to log
    */
   template <class T>
-  static void LogPacketInfo (T source,std::string s)
+  static void LogPacketInfo (T source,stdfwd::string s)
   {
     NS_LOG_DEBUG ("--------- " << s.data () << " INFO: -------");
     std::ostringstream oss (std::ostringstream::out);
@@ -125,21 +125,21 @@ public:
    */
   RlcAmStatusPduTestCase (SequenceNumber10 ackSn, 
 			  std::list<SequenceNumber10> nackSnList,
-			  std::string hex);
+			  stdfwd::string hex);
 
 protected:  
   virtual void DoRun (void);
   
   SequenceNumber10 m_ackSn; ///< ack sequence number  
   std::list<SequenceNumber10> m_nackSnList; ///< list of nack sequence numbers
-  std::string m_hex; ///< hex string
+  stdfwd::string m_hex; ///< hex string
   
 };
 
 
 RlcAmStatusPduTestCase::RlcAmStatusPduTestCase (SequenceNumber10 ackSn, 
 						std::list<SequenceNumber10> nackSnList ,
-						std::string hex)
+						stdfwd::string hex)
   : TestCase (hex), 
     m_ackSn (ackSn),
     m_nackSnList (nackSnList),
@@ -167,7 +167,7 @@ RlcAmStatusPduTestCase::DoRun ()
   p->AddHeader (h);  
 
   TestUtils::LogPacketContents (p);
-  std::string hex = TestUtils::sprintPacketContentsHex (p);
+  stdfwd::string hex = TestUtils::sprintPacketContentsHex (p);
   NS_TEST_ASSERT_MSG_EQ (m_hex, hex, "serialized packet content " << hex << " differs from test vector " << m_hex);
   
   LteRlcAmHeader h2;
@@ -208,14 +208,14 @@ LteRlcHeaderTestSuite::LteRlcHeaderTestSuite ()
   {
     SequenceNumber10 ackSn (8);
     std::list<SequenceNumber10> nackSnList;
-    std::string hex ("0020");
+    stdfwd::string hex ("0020");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 
   {
     SequenceNumber10 ackSn (873);
     std::list<SequenceNumber10> nackSnList;
-    std::string hex ("0da4");
+    stdfwd::string hex ("0da4");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 
@@ -223,7 +223,7 @@ LteRlcHeaderTestSuite::LteRlcHeaderTestSuite ()
     SequenceNumber10 ackSn (2);
     std::list<SequenceNumber10> nackSnList;
     nackSnList.push_back (SequenceNumber10 (873));
-    std::string hex ("000bb480");
+    stdfwd::string hex ("000bb480");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 
@@ -233,7 +233,7 @@ LteRlcHeaderTestSuite::LteRlcHeaderTestSuite ()
     std::list<SequenceNumber10> nackSnList;
     nackSnList.push_back (SequenceNumber10 (1021));
     nackSnList.push_back (SequenceNumber10 (754));
-    std::string hex ("000bfed790");
+    stdfwd::string hex ("000bfed790");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 
@@ -244,7 +244,7 @@ LteRlcHeaderTestSuite::LteRlcHeaderTestSuite ()
     nackSnList.push_back (SequenceNumber10 (1021));
     nackSnList.push_back (SequenceNumber10 (754));
     nackSnList.push_back (SequenceNumber10 (947));
-    std::string hex ("000bfed795d980");
+    stdfwd::string hex ("000bfed795d980");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 
@@ -256,7 +256,7 @@ LteRlcHeaderTestSuite::LteRlcHeaderTestSuite ()
     nackSnList.push_back (SequenceNumber10 (754));
     nackSnList.push_back (SequenceNumber10 (947));
     nackSnList.push_back (SequenceNumber10 (347));
-    std::string hex ("000bfed795d9cad8");
+    stdfwd::string hex ("000bfed795d9cad8");
     AddTestCase (new RlcAmStatusPduTestCase (ackSn, nackSnList, hex), TestCase::QUICK);
   }
 

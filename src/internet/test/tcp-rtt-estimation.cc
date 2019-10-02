@@ -47,7 +47,7 @@ public:
    * \param enableTs Enable TimeStamp option.
    * \param pktCount Packet number.
    */
-  TcpRttEstimationTest (const std::string &desc, bool enableTs, uint32_t pktCount);
+  TcpRttEstimationTest (const stdfwd::string &desc, bool enableTs, uint32_t pktCount);
 
 protected:
   virtual Ptr<TcpSocketMsgBase> CreateReceiverSocket (Ptr<Node> node);
@@ -70,7 +70,7 @@ private:
   uint32_t m_dataCount; //!< Data counter.
 };
 
-TcpRttEstimationTest::TcpRttEstimationTest (const std::string &desc, bool enableTs,
+TcpRttEstimationTest::TcpRttEstimationTest (const stdfwd::string &desc, bool enableTs,
                                             uint32_t pktCount)
   : TcpGeneralTest (desc),
     m_enableTs (enableTs),
@@ -202,7 +202,7 @@ public:
    * \param pktCount Packet number.
    * \param toDrop List of packet to drop.
    */
-  TcpRttEstimationWithLossTest (const std::string &desc, bool enableTs,
+  TcpRttEstimationWithLossTest (const stdfwd::string &desc, bool enableTs,
                                 uint32_t pktCount, std::vector<uint32_t> toDrop);
 
 protected:
@@ -212,7 +212,7 @@ private:
   std::vector<uint32_t> m_toDrop; //!< Packets to drop.
 };
 
-TcpRttEstimationWithLossTest::TcpRttEstimationWithLossTest (const std::string &desc,
+TcpRttEstimationWithLossTest::TcpRttEstimationWithLossTest (const stdfwd::string &desc,
                                                             bool enableTs,
                                                             uint32_t pktCount,
                                                             std::vector<uint32_t> toDrop)

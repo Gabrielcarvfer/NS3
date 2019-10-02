@@ -87,7 +87,7 @@ public:
    * \param useIpv6 If true, IPv6 will be used to address both client and
    *                server. Otherwise, IPv4 will be used.
    */
-  ThreeGppHttpObjectTestCase (const std::string &name,
+  ThreeGppHttpObjectTestCase (const stdfwd::string &name,
                               uint32_t           rngRun,
                               const TypeId      &tcpType,
                               const Time        &channelDelay,
@@ -236,8 +236,8 @@ private:
    * \param oldState The name of the previous state.
    * \param newState The name of the current state.
    */
-  void ClientStateTransitionCallback (const std::string &oldState,
-                                      const std::string &newState);
+  void ClientStateTransitionCallback (const stdfwd::string &oldState,
+                                      const stdfwd::string &newState);
   /**
    * Connected with `RxDelay` trace source of the client.
    * Updates the statistics in #m_delayCalculator.
@@ -292,7 +292,7 @@ private:
 
 }; // end of `class HttpClientServerTestCase`
 
-ThreeGppHttpObjectTestCase::ThreeGppHttpObjectTestCase (const std::string &name,
+ThreeGppHttpObjectTestCase::ThreeGppHttpObjectTestCase (const stdfwd::string &name,
                                                         uint32_t           rngRun,
                                                         const TypeId      &tcpType,
                                                         const Time        &channelDelay,
@@ -732,8 +732,8 @@ ThreeGppHttpObjectTestCase::ClientRxEmbeddedObjectCallback (Ptr<const ThreeGppHt
 }
 
 void
-ThreeGppHttpObjectTestCase::ClientStateTransitionCallback (const std::string &oldState,
-                                                           const std::string &newState)
+ThreeGppHttpObjectTestCase::ClientStateTransitionCallback (const stdfwd::string &oldState,
+                                                           const stdfwd::string &newState)
 {
   NS_LOG_FUNCTION (this << oldState << newState);
 

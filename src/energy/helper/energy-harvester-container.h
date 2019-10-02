@@ -24,7 +24,7 @@
 #include "../model/energy-harvester.h"
 #include "../../core/model/object.h"
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
     
@@ -69,7 +69,7 @@ public:
    * previously instantiated and assigned a name using the Object name service.
    * This EnergyHarvester is specified by its assigned name.
    */
-  EnergyHarvesterContainer (std::string harvesterName);
+  EnergyHarvesterContainer (stdfwd::string harvesterName);
 
   /**
    * \param a A EnergyHarvesterContainer.
@@ -163,7 +163,7 @@ public:
    *
    * \param harvesterName Name of EnergyHarvester object.
    */
-  void Add (std::string harvesterName);
+  void Add (stdfwd::string harvesterName);
 
   /**
    * \brief Removes all elements in the container.

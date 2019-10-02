@@ -25,7 +25,7 @@
 #include "../model/energy-source.h"
 #include "../../core/model/object.h"
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -68,7 +68,7 @@ public:
    * instantiated and assigned a name using the Object name service. This
    * EnergySource is specified by its assigned name.
    */
-  EnergySourceContainer (std::string sourceName);
+  EnergySourceContainer (stdfwd::string sourceName);
 
   /**
    * \param a A EnergySourceContainer.
@@ -161,7 +161,7 @@ public:
    *
    * \param sourceName Name of EnergySource object.
    */
-  void Add (std::string sourceName);
+  void Add (stdfwd::string sourceName);
 
 private:
   virtual void DoDispose (void);

@@ -69,7 +69,7 @@ class Ns3TcpLossTestCase : public TestCase
 {
 public:
   Ns3TcpLossTestCase ();
-  Ns3TcpLossTestCase (std::string tcpModel, uint32_t testCase);
+  Ns3TcpLossTestCase (stdfwd::string tcpModel, uint32_t testCase);
   virtual ~Ns3TcpLossTestCase ()
   {
   }
@@ -80,7 +80,7 @@ private:
   virtual void DoTeardown (void);
 
   Ptr<OutputStreamWrapper> m_osw;
-  std::string m_pcapFilename;
+  stdfwd::string m_pcapFilename;
   PcapFile m_pcapFile;
   uint32_t m_testCase;
   uint32_t m_totalTxBytes;
@@ -89,9 +89,9 @@ private:
   bool m_writeResults;
   bool m_writeLogging;
   bool m_needToClose;
-  std::string m_tcpModel;
+  stdfwd::string m_tcpModel;
 
-  void Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
+  void Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface);
   void CwndTracer (uint32_t oldval, uint32_t newval);
   void WriteUntilBufferFull (Ptr<Socket> localSocket, uint32_t txSpace);
   void StartFlow (Ptr<Socket> localSocket,
@@ -113,7 +113,7 @@ Ns3TcpLossTestCase::Ns3TcpLossTestCase ()
 {
 }
 
-Ns3TcpLossTestCase::Ns3TcpLossTestCase (std::string tcpModel, uint32_t testCase)
+Ns3TcpLossTestCase::Ns3TcpLossTestCase (stdfwd::string tcpModel, uint32_t testCase)
   : TestCase ("Check the behaviour of TCP upon packet losses"),
     m_testCase (testCase),
     m_totalTxBytes (200000),
@@ -161,7 +161,7 @@ Ns3TcpLossTestCase::DoTeardown (void)
 }
 
 void
-Ns3TcpLossTestCase::Ipv4L3Tx (std::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
+Ns3TcpLossTestCase::Ipv4L3Tx (stdfwd::string context, Ptr<const Packet> packet, Ptr<Ipv4> ipv4, uint32_t interface)
 {
   //
   // We're not testing IP so remove and toss the header.  In order to do this,

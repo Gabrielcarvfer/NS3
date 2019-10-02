@@ -45,25 +45,25 @@ public:
    * \param nodeid the node ID
    * \param deviceid the device ID
    */
-  void EnableAthstats (std::string filename,  uint32_t nodeid, uint32_t deviceid);
+  void EnableAthstats (stdfwd::string filename,  uint32_t nodeid, uint32_t deviceid);
   /**
    * Enable athstats
    * \param filename the file name
    * \param nd the device
    */
-  void EnableAthstats (std::string filename, Ptr<NetDevice> nd);
+  void EnableAthstats (stdfwd::string filename, Ptr<NetDevice> nd);
   /**
    * Enable athstats
    * \param filename the file name
    * \param d the collection of devices
    */
-  void EnableAthstats (std::string filename, NetDeviceContainer d);
+  void EnableAthstats (stdfwd::string filename, NetDeviceContainer d);
   /**
    * Enable athstats
    * \param filename the file name
    * \param n the collection of nodes
    */
-  void EnableAthstats (std::string filename, NodeContainer n);
+  void EnableAthstats (stdfwd::string filename, NodeContainer n);
 
 private:
   Time m_interval; ///< interval
@@ -108,7 +108,7 @@ public:
    * @param context
    * @param p the packet being transmitted
    */
-  void DevTxTrace (std::string context, Ptr<const Packet> p);
+  void DevTxTrace (stdfwd::string context, Ptr<const Packet> p);
 
   /**
    * function to be called when the net device receives a packet
@@ -116,7 +116,7 @@ public:
    * @param context
    * @param p the packet being received
    */
-  void DevRxTrace (std::string context, Ptr<const Packet> p);
+  void DevRxTrace (stdfwd::string context, Ptr<const Packet> p);
 
   /**
    * Function to be called when a RTS frame transmission by the considered
@@ -125,7 +125,7 @@ public:
    * @param context
    * @param address the MAC address of the remote station
    */
-  void TxRtsFailedTrace (std::string context, Mac48Address address);
+  void TxRtsFailedTrace (stdfwd::string context, Mac48Address address);
 
   /**
    * Function to be called when a data frame transmission by the considered
@@ -134,7 +134,7 @@ public:
    * @param context
    * @param address the MAC address of the remote station
    */
-  void TxDataFailedTrace (std::string context, Mac48Address address);
+  void TxDataFailedTrace (stdfwd::string context, Mac48Address address);
 
   /**
    * Function to be called when the transmission of a RTS frame has
@@ -143,7 +143,7 @@ public:
    * @param context
    * @param address the MAC address of the remote station
    */
-  void TxFinalRtsFailedTrace (std::string context, Mac48Address address);
+  void TxFinalRtsFailedTrace (stdfwd::string context, Mac48Address address);
 
   /**
    * Function to be called when the transmission of a data frame has
@@ -152,7 +152,7 @@ public:
    * @param context
    * @param address the MAC address of the remote station
    */
-  void TxFinalDataFailedTrace (std::string context, Mac48Address address);
+  void TxFinalDataFailedTrace (stdfwd::string context, Mac48Address address);
 
   /**
    * Function to be called when the PHY layer  of the considered
@@ -164,7 +164,7 @@ public:
    * @param mode
    * @param preamble
    */
-  void PhyRxOkTrace (std::string context, Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble);
+  void PhyRxOkTrace (stdfwd::string context, Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble);
 
   /**
    * Function to be called when a frame reception by the PHY
@@ -175,7 +175,7 @@ public:
    * @param packet
    * @param snr
    */
-  void PhyRxErrorTrace (std::string context, Ptr<const Packet> packet, double snr);
+  void PhyRxErrorTrace (stdfwd::string context, Ptr<const Packet> packet, double snr);
 
   /**
    * Function to be called when a frame is being transmitted by the
@@ -187,7 +187,7 @@ public:
    * @param preamble
    * @param txPower
    */
-  void PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
+  void PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower);
 
   /**
    * Function to be called when the PHY layer of the considered device
@@ -198,14 +198,14 @@ public:
    * @param duration
    * @param state
    */
-  void PhyStateTrace (std::string context, Time start, Time duration, WifiPhyState state);
+  void PhyStateTrace (stdfwd::string context, Time start, Time duration, WifiPhyState state);
 
   /**
    * Open a file for output
    *
    * @param name the name of the file to be opened.
    */
-  void Open (std::string const& name);
+  void Open (stdfwd::string const& name);
 
 
 private:

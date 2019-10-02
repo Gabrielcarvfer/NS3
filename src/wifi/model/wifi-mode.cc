@@ -75,7 +75,7 @@ std::ostream & operator << (std::ostream & os, const WifiMode &mode)
  */
 std::istream & operator >> (std::istream &is, WifiMode &mode)
 {
-  std::string str;
+  stdfwd::string str;
   is >> str;
   mode = WifiModeFactory::GetFactory ()->Search (str);
   return is;
@@ -453,7 +453,7 @@ WifiMode::GetConstellationSize (void) const
     }
 }
 
-std::string
+stdfwd::string
 WifiMode::GetUniqueName (void) const
 {
   //needed for ostream printing of the invalid mode
@@ -673,7 +673,7 @@ WifiMode::WifiMode (uint32_t uid)
 {
 }
 
-WifiMode::WifiMode (std::string name)
+WifiMode::WifiMode (stdfwd::string name)
 {
   *this = WifiModeFactory::GetFactory ()->Search (name);
 }
@@ -685,7 +685,7 @@ WifiModeFactory::WifiModeFactory ()
 }
 
 WifiMode
-WifiModeFactory::CreateWifiMode (std::string uniqueName,
+WifiModeFactory::CreateWifiMode (stdfwd::string uniqueName,
                                  WifiModulationClass modClass,
                                  bool isMandatory,
                                  WifiCodeRate codingRate,
@@ -723,7 +723,7 @@ WifiModeFactory::CreateWifiMode (std::string uniqueName,
 }
 
 WifiMode
-WifiModeFactory::CreateWifiMcs (std::string uniqueName,
+WifiModeFactory::CreateWifiMcs (stdfwd::string uniqueName,
                                 uint8_t mcsValue,
                                 WifiModulationClass modClass)
 {
@@ -746,7 +746,7 @@ WifiModeFactory::CreateWifiMcs (std::string uniqueName,
 }
 
 WifiMode
-WifiModeFactory::Search (std::string name) const
+WifiModeFactory::Search (stdfwd::string name) const
 {
   WifiModeItemList::const_iterator i;
   uint32_t j = 0;
@@ -781,7 +781,7 @@ WifiModeFactory::Search (std::string name) const
 }
 
 uint32_t
-WifiModeFactory::AllocateUid (std::string uniqueUid)
+WifiModeFactory::AllocateUid (stdfwd::string uniqueUid)
 {
   uint32_t j = 0;
   for (WifiModeItemList::const_iterator i = m_itemList.begin ();

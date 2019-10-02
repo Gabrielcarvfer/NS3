@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <map>
 #include "../../core/model/traced-callback.h"
 #include "../../core/model/nstime.h"

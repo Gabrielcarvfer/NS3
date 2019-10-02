@@ -85,8 +85,8 @@ public:
   bool GetAccessor (Ptr<T> &value) const;
 
   virtual Ptr<AttributeValue> Copy (void) const;
-  virtual std::string SerializeToString (Ptr<const AttributeChecker> checker) const;
-  virtual bool DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker);
+  virtual stdfwd::string SerializeToString (Ptr<const AttributeChecker> checker) const;
+  virtual bool DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker);
 
 private:
   Ptr<Object> m_value;
@@ -145,13 +145,13 @@ class PointerChecker : public ns3::PointerChecker
       }
     return true;
   }
-  virtual std::string GetValueTypeName (void) const {
+  virtual stdfwd::string GetValueTypeName (void) const {
     return "ns3::PointerValue";
   }
   virtual bool HasUnderlyingTypeInformation (void) const {
     return true;
   }
-  virtual std::string GetUnderlyingTypeInformation (void) const {
+  virtual stdfwd::string GetUnderlyingTypeInformation (void) const {
     TypeId tid = T::GetTypeId ();
     return "ns3::Ptr< " + tid.GetName () + " >";
   }

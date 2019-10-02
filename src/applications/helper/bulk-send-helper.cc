@@ -28,7 +28,7 @@
 
 namespace ns3 {
 
-BulkSendHelper::BulkSendHelper (std::string protocol, Address address)
+BulkSendHelper::BulkSendHelper (stdfwd::string protocol, Address address)
 {
   m_factory.SetTypeId ("ns3::BulkSendApplication");
   m_factory.Set ("Protocol", StringValue (protocol));
@@ -36,7 +36,7 @@ BulkSendHelper::BulkSendHelper (std::string protocol, Address address)
 }
 
 void
-BulkSendHelper::SetAttribute (std::string name, const AttributeValue &value)
+BulkSendHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
@@ -48,7 +48,7 @@ BulkSendHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-BulkSendHelper::Install (std::string nodeName) const
+BulkSendHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

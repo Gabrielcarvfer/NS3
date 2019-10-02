@@ -36,7 +36,7 @@ public:
   {
     // We do not use NS_TEST_SOURCEDIR variable here since mesh/test has 
     // subdirectories
-    SetDataDir (std::string ("src/mesh/test/flame"));
+    SetDataDir (stdfwd::string ("src/mesh/test/flame"));
     AddTestCase (new FlameRegressionTest, TestCase::QUICK);
   }
 } g_flameRegressionSuite; ///< the test suite

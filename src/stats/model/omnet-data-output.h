@@ -71,8 +71,8 @@ public:
      * \param name the output name
      * \param statSum the stats to print
      */
-    void OutputStatistic (std::string context,
-                          std::string name,
+    void OutputStatistic (stdfwd::string context,
+                          stdfwd::string name,
                           const StatisticalSummary *statSum);
 
     /**
@@ -81,8 +81,8 @@ public:
      * \param name the output name
      * \param val the value
      */
-    void OutputSingleton (std::string context,
-                          std::string name,
+    void OutputSingleton (stdfwd::string context,
+                          stdfwd::string name,
                           int val);
 
     /**
@@ -91,8 +91,8 @@ public:
      * \param name the output name
      * \param val the value
      */
-    void OutputSingleton (std::string context,
-                          std::string name,
+    void OutputSingleton (stdfwd::string context,
+                          stdfwd::string name,
                           uint32_t val);
 
     /**
@@ -101,8 +101,8 @@ public:
      * \param name the output name
      * \param val the value
      */
-    void OutputSingleton (std::string context,
-                          std::string name,
+    void OutputSingleton (stdfwd::string context,
+                          stdfwd::string name,
                           double val);
 
     /**
@@ -111,9 +111,9 @@ public:
      * \param name the output name
      * \param val the value
      */
-    void OutputSingleton (std::string context,
-                          std::string name,
-                          std::string val);
+    void OutputSingleton (stdfwd::string context,
+                          stdfwd::string name,
+                          stdfwd::string val);
 
     /**
      * \brief Generates a single data output
@@ -121,8 +121,8 @@ public:
      * \param name the output name
      * \param val the value
      */
-    void OutputSingleton (std::string context,
-                          std::string name,
+    void OutputSingleton (stdfwd::string context,
+                          stdfwd::string name,
                           Time val);
 
 private:

@@ -61,7 +61,7 @@ main (int argc, char *argv[])
   
   uint16_t sinkPort = 8000;
   uint32_t packetSize = 10000; // bytes
-  std::string dataRate("1000Mb/s");
+  stdfwd::string dataRate("1000Mb/s");
 
   GlobalValue::Bind ("SimulatorImplementationType", StringValue ("ns3::RealtimeSimulatorImpl"));
   GlobalValue::Bind ("ChecksumEnabled", BooleanValue (true));

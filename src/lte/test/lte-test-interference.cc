@@ -45,14 +45,14 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("LteInterferenceTest");
 
 void
-LteTestDlSchedulingCallback (LteInterferenceTestCase *testcase, std::string path,
+LteTestDlSchedulingCallback (LteInterferenceTestCase *testcase, stdfwd::string path,
 		                     DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
 }
 
 void
-LteTestUlSchedulingCallback (LteInterferenceTestCase *testcase, std::string path,
+LteTestUlSchedulingCallback (LteInterferenceTestCase *testcase, stdfwd::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                              uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
 {
@@ -94,7 +94,7 @@ static LteInterferenceTestSuite lteLinkAdaptationWithInterferenceTestSuite;
  * TestCase
  */
 
-LteInterferenceTestCase::LteInterferenceTestCase (std::string name, double d1, double d2, double dlSinr, double ulSinr, double dlSe, double ulSe, uint16_t dlMcs, uint16_t ulMcs)
+LteInterferenceTestCase::LteInterferenceTestCase (stdfwd::string name, double d1, double d2, double dlSinr, double ulSinr, double dlSe, double ulSe, uint16_t dlMcs, uint16_t ulMcs)
   : TestCase (name),
     m_d1 (d1),
     m_d2 (d2),

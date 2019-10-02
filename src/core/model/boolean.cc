@@ -78,7 +78,7 @@ BooleanValue::Copy (void) const
 
   return Create<BooleanValue> (*this);
 }
-std::string 
+stdfwd::string
 BooleanValue::SerializeToString (Ptr<const AttributeChecker> checker) const
 {
   NS_LOG_FUNCTION (this << checker);
@@ -93,7 +93,7 @@ BooleanValue::SerializeToString (Ptr<const AttributeChecker> checker) const
     }
 }
 bool 
-BooleanValue::DeserializeFromString (std::string value, Ptr<const AttributeChecker> checker)
+BooleanValue::DeserializeFromString (stdfwd::string value, Ptr<const AttributeChecker> checker)
 {
   NS_LOG_FUNCTION (this << value << checker);
 

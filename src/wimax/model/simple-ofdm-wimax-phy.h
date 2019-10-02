@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 #include "../../core/model/callback.h"
 #include "../../core/model/nstime.h"
@@ -425,12 +425,12 @@ private:
    * Get trace file path
    * \returns the trace file path name
    */
-  std::string GetTraceFilePath (void) const;
+  stdfwd::string GetTraceFilePath (void) const;
   /**
    * Set trace file path
    * \param path the trace file path
    */
-  void SetTraceFilePath (std::string path);
+  void SetTraceFilePath (stdfwd::string path);
 
   uint16_t m_fecBlockSize; ///< in bits, size of FEC block transmitted after PHY operations
   uint32_t m_currentBurstSize; ///< current burst size

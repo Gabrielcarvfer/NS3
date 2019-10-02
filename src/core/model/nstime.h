@@ -24,7 +24,7 @@
 #include "attribute-helper.h"
 #include "int64x64.h"
 #include "unused.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 #include <cmath>
 #include <ostream>
@@ -262,7 +262,7 @@ public:
    * occur.
    * \param [in] s The string to parse into a Time
    */
-  explicit Time (const std::string & s);
+  explicit Time (const stdfwd::string & s);
 
   /** Minimum representable Time */
   static Time Min ()
@@ -999,7 +999,7 @@ std::ostream & operator << (std::ostream & os, const Time & time);
  * \ingroup time
  * \brief Time input streamer
  *
- * Uses the Time::Time (const std::string &) constructor
+ * Uses the Time::Time (const stdfwd::string &) constructor
  *
  * \param [in,out] is The input stream.
  * \param [out] time The Time variable to set from the stream data.

@@ -154,7 +154,7 @@ ThreeGppHttpServer::GetState () const
 }
 
 
-std::string
+stdfwd::string
 ThreeGppHttpServer::GetStateString () const
 {
   return GetStateString (m_state);
@@ -162,7 +162,7 @@ ThreeGppHttpServer::GetStateString () const
 
 
 // static
-std::string
+stdfwd::string
 ThreeGppHttpServer::GetStateString (ThreeGppHttpServer::State_t state)
 {
   switch (state)
@@ -676,8 +676,8 @@ ThreeGppHttpServer::ServeFromTxBuffer (Ptr<Socket> socket)
 void
 ThreeGppHttpServer::SwitchToState (ThreeGppHttpServer::State_t state)
 {
-  const std::string oldState = GetStateString ();
-  const std::string newState = GetStateString (state);
+  const stdfwd::string oldState = GetStateString ();
+  const stdfwd::string newState = GetStateString (state);
   NS_LOG_FUNCTION (this << oldState << newState);
   m_state = state;
   NS_LOG_INFO (this << " ThreeGppHttpServer " << oldState

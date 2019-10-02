@@ -25,7 +25,7 @@
  * ns3::GnuplotHelper.
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "ns3/core-module.h"
 #include "ns3/stats-module.h"

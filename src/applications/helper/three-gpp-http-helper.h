@@ -54,7 +54,7 @@ public:
    * \param name The name of the application attribute to set.
    * \param value The value of the application attribute to set.
    */
-  void SetAttribute (const std::string &name,
+  void SetAttribute (const stdfwd::string &name,
                      const AttributeValue &value);
 
   /**
@@ -81,7 +81,7 @@ public:
    *                 will be installed.
    * \return Container of Ptr to the applications installed.
    */
-  ApplicationContainer Install (const std::string &nodeName) const;
+  ApplicationContainer Install (const stdfwd::string &nodeName) const;
 
 private:
   /**
@@ -120,7 +120,7 @@ public:
    * \param name The name of the application attribute to set.
    * \param value The value of the application attribute to set.
    */
-  void SetAttribute (const std::string &name,
+  void SetAttribute (const stdfwd::string &name,
                      const AttributeValue &value);
 
   /**
@@ -147,7 +147,7 @@ public:
    *                             will be installed.
    * \return Container of Ptr to the applications installed.
    */
-  ApplicationContainer Install (const std::string &nodeName) const;
+  ApplicationContainer Install (const stdfwd::string &nodeName) const;
 
 private:
   /**

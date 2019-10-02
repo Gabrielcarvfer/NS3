@@ -103,7 +103,7 @@ public:
    * \param input Input NetDevice.
    * \param output Output NetDevices.
    */
-  void AddMulticastRoute (std::string n, Ipv4Address source, Ipv4Address group,
+  void AddMulticastRoute (stdfwd::string n, Ipv4Address source, Ipv4Address group,
                           Ptr<NetDevice> input, NetDeviceContainer output);
 
   /**
@@ -117,7 +117,7 @@ public:
    * \param output Output NetDevices.
    */
   void AddMulticastRoute (Ptr<Node> n, Ipv4Address source, Ipv4Address group,
-                          std::string inputName, NetDeviceContainer output);
+                          stdfwd::string inputName, NetDeviceContainer output);
 
   /**
    * \brief Add a multicast route to a node and device using name strings
@@ -130,8 +130,8 @@ public:
    * \param inputName Input NetDevice.
    * \param output Output NetDevices.
    */
-  void AddMulticastRoute (std::string nName, Ipv4Address source, Ipv4Address group,
-                          std::string inputName, NetDeviceContainer output);
+  void AddMulticastRoute (stdfwd::string nName, Ipv4Address source, Ipv4Address group,
+                          stdfwd::string inputName, NetDeviceContainer output);
 
   /**
    * \brief Add a default route to the static routing protocol to forward
@@ -154,7 +154,7 @@ public:
    * \param ndName string with name previously associated to device using the 
    *        Object Name Service
    */
-  void SetDefaultMulticastRoute (Ptr<Node> n, std::string ndName);
+  void SetDefaultMulticastRoute (Ptr<Node> n, stdfwd::string ndName);
 
   /**
    * \brief Add a default route to the static routing protocol to forward
@@ -166,7 +166,7 @@ public:
    *        Object Name Service
    * \param nd device of the node to add default route
    */
-  void SetDefaultMulticastRoute (std::string nName, Ptr<NetDevice> nd);
+  void SetDefaultMulticastRoute (stdfwd::string nName, Ptr<NetDevice> nd);
 
   /**
    * \brief Add a default route to the static routing protocol to forward
@@ -179,7 +179,7 @@ public:
    * \param ndName string with name previously associated to device using the 
    *        Object Name Service
    */
-  void SetDefaultMulticastRoute (std::string nName, std::string ndName);
+  void SetDefaultMulticastRoute (stdfwd::string nName, stdfwd::string ndName);
 private:
   /**
    * \brief Assignment operator declared private and not implemented to disallow

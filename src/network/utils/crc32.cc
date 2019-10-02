@@ -25,7 +25,7 @@
  * COPYRIGHT (C) 1986 Gary S. Brown.  You may use this program, or
  * code or tables extracted from it, as desired without restriction.
  */
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

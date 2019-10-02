@@ -21,7 +21,7 @@
 #pragma once
 
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/attribute.h"
 #include "../../core/model/object-factory.h"
 #include "../../network/helper/node-container.h"
@@ -59,7 +59,7 @@ public:
    *
    * @param channelName
    */
-  void SetChannel (std::string channelName);
+  void SetChannel (stdfwd::string channelName);
 
 
   /**
@@ -75,7 +75,7 @@ public:
    *
    * Set these attributes on each HdOfdmSpectrumPhy instance to be created
    */
-  void SetPhyAttribute (std::string name, const AttributeValue &v);
+  void SetPhyAttribute (stdfwd::string name, const AttributeValue &v);
 
   /**
    * @param n1 the name of the attribute to set
@@ -83,7 +83,7 @@ public:
    *
    * Set these attributes on each AlohaNoackNetDevice created
    */
-  void SetDeviceAttribute (std::string n1, const AttributeValue &v1);
+  void SetDeviceAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * \param type the type of the model to set
@@ -106,15 +106,15 @@ public:
    *
    * Configure the AntennaModel instance for each new device to be created
    */
-  void SetAntenna (std::string type,
-                   std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                   std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                   std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                   std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                   std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                   std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                   std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                   std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetAntenna (stdfwd::string type,
+                   stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                   stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                   stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                   stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                   stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                   stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                   stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                   stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
     * @param c the set of nodes on which a device must be created
@@ -130,7 +130,7 @@ public:
    * @param nodeName the name of node on which a device must be created
    * @return a device container which contains all the devices created by this method.
    */
-  NetDeviceContainer Install (std::string nodeName) const;
+  NetDeviceContainer Install (stdfwd::string nodeName) const;
 
 
 protected:

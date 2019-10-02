@@ -69,12 +69,12 @@ NS_LOG_COMPONENT_DEFINE ("Ns2MobilityHelper");
  */
 struct ParseResult
 {
-  std::vector<std::string> tokens; //!< tokens from a line
+  std::vector<stdfwd::string> tokens; //!< tokens from a line
   std::vector<int> ivals;     //!< int values for each tokens
   std::vector<bool> has_ival; //!< points if a tokens has an int value
   std::vector<double> dvals;  //!< double values for each tokens
   std::vector<bool> has_dval; //!< points if a tokens has a double value
-  std::vector<std::string> svals;  //!< string value for each token
+  std::vector<stdfwd::string> svals;  //!< string value for each token
 };
 /**
  * Keeps last movement schedule. If new movement occurs during
@@ -104,17 +104,17 @@ struct DestinationPoint
 /**
  * Parses a line of ns2 mobility
  */
-static ParseResult ParseNs2Line (const std::string& str);
+static ParseResult ParseNs2Line (const stdfwd::string& str);
 
 /** 
  * Put out blank spaces at the start and end of a line
  */
-static std::string TrimNs2Line (const std::string& str);
+static stdfwd::string TrimNs2Line (const stdfwd::string& str);
 
 /**
  * Checks if a string represents a number or it has others characters than digits an point.
  */
-static bool IsNumber (const std::string& s);
+static bool IsNumber (const stdfwd::string& s);
 
 /**
  * Check if s string represents a numeric value
@@ -123,17 +123,17 @@ static bool IsNumber (const std::string& s);
  * \return true if string represents a numeric value
  */
 template<class T>
-static bool IsVal (const std::string& str, T& ret);
+static bool IsVal (const stdfwd::string& str, T& ret);
 
 /**
  * Checks if the value between brackets is a correct nodeId number
  */ 
-static bool HasNodeIdNumber (std::string str);
+static bool HasNodeIdNumber (stdfwd::string str);
 
 /** 
  * Gets nodeId number in string format from the string like $node_(4)
  */
-static std::string GetNodeIdFromToken (std::string str);
+static stdfwd::string GetNodeIdFromToken (stdfwd::string str);
 
 /** 
  * Get node id number in int format
@@ -143,12 +143,12 @@ static int GetNodeIdInt (ParseResult pr);
 /**  
  * Get node id number in string format
  */
-static std::string GetNodeIdString (ParseResult pr);
+static stdfwd::string GetNodeIdString (ParseResult pr);
 
 /**
  * Add one coord to a vector position
  */
-static Vector SetOneInitialCoord (Vector actPos, std::string& coord, double value);
+static Vector SetOneInitialCoord (Vector actPos, stdfwd::string& coord, double value);
 
 /** 
  * Check if this corresponds to a line like this: $node_(0) set X_ 123
@@ -174,15 +174,15 @@ static DestinationPoint SetMovement (Ptr<ConstantVelocityMobilityModel> model, V
 /**
  * Set initial position for a node
  */
-static Vector SetInitialPosition (Ptr<ConstantVelocityMobilityModel> model, std::string coord, double coordVal);
+static Vector SetInitialPosition (Ptr<ConstantVelocityMobilityModel> model, stdfwd::string coord, double coordVal);
 
 /** 
  * Schedule a set of position for a node
  */
-static Vector SetSchedPosition (Ptr<ConstantVelocityMobilityModel> model, double at, std::string coord, double coordVal);
+static Vector SetSchedPosition (Ptr<ConstantVelocityMobilityModel> model, double at, stdfwd::string coord, double coordVal);
 
 
-Ns2MobilityHelper::Ns2MobilityHelper (std::string filename)
+Ns2MobilityHelper::Ns2MobilityHelper (stdfwd::string filename)
   : m_filename (filename)
 {
   std::ifstream file (m_filename.c_str (), std::ios::in);
@@ -190,7 +190,7 @@ Ns2MobilityHelper::Ns2MobilityHelper (std::string filename)
 }
 
 Ptr<ConstantVelocityMobilityModel>
-Ns2MobilityHelper::GetMobilityModel (std::string idString, const ObjectStore &store) const
+Ns2MobilityHelper::GetMobilityModel (stdfwd::string idString, const ObjectStore &store) const
 {
   std::istringstream iss;
   iss.str (idString);
@@ -229,8 +229,8 @@ Ns2MobilityHelper::ConfigNodesMovements (const ObjectStore &store) const
       while (!file.eof () )
         {
           int         iNodeId = 0;
-          std::string nodeId;
-          std::string line;
+          stdfwd::string nodeId;
+          stdfwd::string line;
 
           getline (file, line);
 
@@ -300,8 +300,8 @@ Ns2MobilityHelper::ConfigNodesMovements (const ObjectStore &store) const
       while (!file.eof () )
         {
           int         iNodeId = 0;
-          std::string nodeId;
-          std::string line;
+          stdfwd::string nodeId;
+          stdfwd::string line;
 
           getline (file, line);
 
@@ -431,15 +431,15 @@ Ns2MobilityHelper::ConfigNodesMovements (const ObjectStore &store) const
 
 
 ParseResult
-ParseNs2Line (const std::string& str)
+ParseNs2Line (const stdfwd::string& str)
 {
   ParseResult ret;
   std::istringstream s;
-  std::string line;
+  stdfwd::string line;
 
   // ignore comments (#)
   size_t pos_sharp = str.find_first_of ('#');
-  if (pos_sharp != std::string::npos)
+  if (pos_sharp != stdfwd::string::npos)
     {
       line = str.substr (0, pos_sharp);
     }
@@ -461,7 +461,7 @@ ParseNs2Line (const std::string& str)
 
   while (!s.eof ())
     {
-      std::string x;
+      stdfwd::string x;
       s >> x;
       if (x.length () == 0)
         {
@@ -493,7 +493,7 @@ ParseNs2Line (const std::string& str)
       // removes " from the last position
       ret.tokens[tokensLength - 1] = ret.tokens[tokensLength - 1].substr (0,lasTokenLength - 1);
 
-      std::string x;
+      stdfwd::string x;
       x = ret.tokens[tokensLength - 1];
 
       if (HasNodeIdNumber (x))
@@ -532,10 +532,10 @@ ParseNs2Line (const std::string& str)
 }
 
 
-std::string
-TrimNs2Line (const std::string& s)
+stdfwd::string
+TrimNs2Line (const stdfwd::string& s)
 {
-  std::string ret = s;
+  stdfwd::string ret = s;
 
   while (ret.size () > 0 && isblank (ret[0]))
     {
@@ -552,7 +552,7 @@ TrimNs2Line (const std::string& s)
 
 
 bool
-IsNumber (const std::string& s)
+IsNumber (const stdfwd::string& s)
 {
   char *endp;
   double v = strtod (s.c_str (), &endp); // declared with warn_unused_result
@@ -562,7 +562,7 @@ IsNumber (const std::string& s)
 
 
 template<class T>
-bool IsVal (const std::string& str, T& ret)
+bool IsVal (const stdfwd::string& str, T& ret)
 {
   if (str.size () == 0)
     {
@@ -570,7 +570,7 @@ bool IsVal (const std::string& str, T& ret)
     }
   else if (IsNumber (str))
     {
-      std::string s2 = str;
+      stdfwd::string s2 = str;
       std::istringstream s (s2);
       s >> ret;
       return true;
@@ -583,18 +583,18 @@ bool IsVal (const std::string& str, T& ret)
 
 
 bool
-HasNodeIdNumber (std::string str)
+HasNodeIdNumber (stdfwd::string str)
 {
 
   // find brackets
-  std::string::size_type startNodeId = str.find_first_of ("("); // index of left bracket
-  std::string::size_type endNodeId   = str.find_first_of (")"); // index of right bracket
+  stdfwd::string::size_type startNodeId = str.find_first_of ("("); // index of left bracket
+  stdfwd::string::size_type endNodeId   = str.find_first_of (")"); // index of right bracket
 
   // Get de nodeId in a string and in a int value
-  std::string nodeId;     // node id
+  stdfwd::string nodeId;     // node id
 
   // if no brackets, continue!
-  if (startNodeId == std::string::npos || endNodeId == std::string::npos)
+  if (startNodeId == stdfwd::string::npos || endNodeId == stdfwd::string::npos)
     {
       return false;
     }
@@ -602,7 +602,7 @@ HasNodeIdNumber (std::string str)
   nodeId = str.substr (startNodeId + 1, endNodeId - (startNodeId + 1)); // set node id
 
   //   is number              is integer                                       is not negative
-  if (IsNumber (nodeId) && (nodeId.find_first_of (".") == std::string::npos) && (nodeId[0] != '-'))
+  if (IsNumber (nodeId) && (nodeId.find_first_of (".") == stdfwd::string::npos) && (nodeId[0] != '-'))
     {
       return true;
     }
@@ -613,14 +613,14 @@ HasNodeIdNumber (std::string str)
 }
 
 
-std::string
-GetNodeIdFromToken (std::string str)
+stdfwd::string
+GetNodeIdFromToken (stdfwd::string str)
 {
   if (HasNodeIdNumber (str))
     {
       // find brackets
-      std::string::size_type startNodeId = str.find_first_of ("(");     // index of left bracket
-      std::string::size_type endNodeId   = str.find_first_of (")");     // index of right bracket
+      stdfwd::string::size_type startNodeId = str.find_first_of ("(");     // index of left bracket
+      stdfwd::string::size_type endNodeId   = str.find_first_of (")");     // index of right bracket
 
       return str.substr (startNodeId + 1, endNodeId - (startNodeId + 1)); // set node id
     }
@@ -653,7 +653,7 @@ GetNodeIdInt (ParseResult pr)
 }
 
 // Get node id number in string format
-std::string
+stdfwd::string
 GetNodeIdString (ParseResult pr)
 {
   switch (pr.tokens.size ())
@@ -674,7 +674,7 @@ GetNodeIdString (ParseResult pr)
 
 
 Vector
-SetOneInitialCoord (Vector position, std::string& coord, double value)
+SetOneInitialCoord (Vector position, stdfwd::string& coord, double value)
 {
 
   // set the position for the coord.
@@ -777,7 +777,7 @@ SetMovement (Ptr<ConstantVelocityMobilityModel> model, Vector last_pos, double a
 
 
 Vector
-SetInitialPosition (Ptr<ConstantVelocityMobilityModel> model, std::string coord, double coordVal)
+SetInitialPosition (Ptr<ConstantVelocityMobilityModel> model, stdfwd::string coord, double coordVal)
 {
   model->SetPosition (SetOneInitialCoord (model->GetPosition (), coord, coordVal));
 
@@ -791,7 +791,7 @@ SetInitialPosition (Ptr<ConstantVelocityMobilityModel> model, std::string coord,
 
 // Schedule a set of position for a node
 Vector
-SetSchedPosition (Ptr<ConstantVelocityMobilityModel> model, double at, std::string coord, double coordVal)
+SetSchedPosition (Ptr<ConstantVelocityMobilityModel> model, double at, stdfwd::string coord, double coordVal)
 {
   // update position
   model->SetPosition (SetOneInitialCoord (model->GetPosition (), coord, coordVal));

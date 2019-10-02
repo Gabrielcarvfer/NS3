@@ -74,7 +74,7 @@ public:
    * \param mode String containing the access mode for the file.
    *
    */
-  void Open (std::string const &filename, std::ios::openmode mode);
+  void Open (stdfwd::string const &filename, std::ios::openmode mode);
 
   /**
    * Close the underlying pcap file.

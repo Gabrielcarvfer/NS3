@@ -34,7 +34,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("RandomVariableStreamHelper");
 
-int64_t RandomVariableStreamHelper::AssignStreams (std::string path, int64_t stream)
+int64_t RandomVariableStreamHelper::AssignStreams (stdfwd::string path, int64_t stream)
 {
   NS_LOG_FUNCTION_NOARGS ();
   NS_ASSERT (stream >= 0);

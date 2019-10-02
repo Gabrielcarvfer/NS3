@@ -307,17 +307,17 @@ template <typename T>
 class AttributeTestCase : public TestCase
 {
 public:
-  AttributeTestCase (std::string description);
+  AttributeTestCase (stdfwd::string description);
   virtual ~AttributeTestCase ();
 
 private:
   virtual void DoRun (void);
 
-  bool CheckGetCodePaths (Ptr<Object> p, std::string attributeName, std::string expectedString, T expectedValue);
+  bool CheckGetCodePaths (Ptr<Object> p, stdfwd::string attributeName, stdfwd::string expectedString, T expectedValue);
 };
 
 template <typename T>
-AttributeTestCase<T>::AttributeTestCase (std::string description)
+AttributeTestCase<T>::AttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -330,8 +330,8 @@ AttributeTestCase<T>::~AttributeTestCase ()
 template <typename T> bool
 AttributeTestCase<T>::CheckGetCodePaths (
   Ptr<Object> p, 
-  std::string attributeName,
-  std::string expectedString,
+  stdfwd::string attributeName,
+  stdfwd::string expectedString,
   T expectedValue)
 {
   StringValue stringValue;
@@ -787,7 +787,7 @@ AttributeTestCase<TimeValue>::DoRun (void)
 class RandomVariableStreamAttributeTestCase : public TestCase
 {
 public:
-  RandomVariableStreamAttributeTestCase (std::string description);
+  RandomVariableStreamAttributeTestCase (stdfwd::string description);
   virtual ~RandomVariableStreamAttributeTestCase () {}
 
   void InvokeCbValue (int8_t a)
@@ -807,7 +807,7 @@ private:
   int16_t m_gotCbValue;
 };
 
-RandomVariableStreamAttributeTestCase::RandomVariableStreamAttributeTestCase (std::string description)
+RandomVariableStreamAttributeTestCase::RandomVariableStreamAttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -841,14 +841,14 @@ RandomVariableStreamAttributeTestCase::DoRun (void)
 class ObjectVectorAttributeTestCase : public TestCase
 {
 public:
-  ObjectVectorAttributeTestCase (std::string description);
+  ObjectVectorAttributeTestCase (stdfwd::string description);
   virtual ~ObjectVectorAttributeTestCase () {}
 
 private:
   virtual void DoRun (void);
 };
 
-ObjectVectorAttributeTestCase::ObjectVectorAttributeTestCase (std::string description)
+ObjectVectorAttributeTestCase::ObjectVectorAttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -906,14 +906,14 @@ ObjectVectorAttributeTestCase::DoRun (void)
 class ObjectMapAttributeTestCase : public TestCase
 {
 public:
-  ObjectMapAttributeTestCase (std::string description);
+  ObjectMapAttributeTestCase (stdfwd::string description);
   virtual ~ObjectMapAttributeTestCase () {}
 
 private:
   virtual void DoRun (void);
 };
 
-ObjectMapAttributeTestCase::ObjectMapAttributeTestCase (std::string description)
+ObjectMapAttributeTestCase::ObjectMapAttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -972,14 +972,14 @@ ObjectMapAttributeTestCase::DoRun (void)
 class IntegerTraceSourceAttributeTestCase : public TestCase
 {
 public:
-  IntegerTraceSourceAttributeTestCase (std::string description);
+  IntegerTraceSourceAttributeTestCase (stdfwd::string description);
   virtual ~IntegerTraceSourceAttributeTestCase () {}
 
 private:
   virtual void DoRun (void);
 };
 
-IntegerTraceSourceAttributeTestCase::IntegerTraceSourceAttributeTestCase (std::string description)
+IntegerTraceSourceAttributeTestCase::IntegerTraceSourceAttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -1064,7 +1064,7 @@ IntegerTraceSourceAttributeTestCase::DoRun (void)
 class IntegerTraceSourceTestCase : public TestCase
 {
 public:
-  IntegerTraceSourceTestCase (std::string description);
+  IntegerTraceSourceTestCase (stdfwd::string description);
   virtual ~IntegerTraceSourceTestCase () {}
 
 private:
@@ -1078,7 +1078,7 @@ private:
   int64_t m_got1;
 };
 
-IntegerTraceSourceTestCase::IntegerTraceSourceTestCase (std::string description)
+IntegerTraceSourceTestCase::IntegerTraceSourceTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -1140,7 +1140,7 @@ IntegerTraceSourceTestCase::DoRun (void)
 class TracedCallbackTestCase : public TestCase
 {
 public:
-  TracedCallbackTestCase (std::string description);
+  TracedCallbackTestCase (stdfwd::string description);
   virtual ~TracedCallbackTestCase () {}
 
 private:
@@ -1156,7 +1156,7 @@ private:
   double m_got2;
 };
 
-TracedCallbackTestCase::TracedCallbackTestCase (std::string description)
+TracedCallbackTestCase::TracedCallbackTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -1219,7 +1219,7 @@ TracedCallbackTestCase::DoRun (void)
 class PointerAttributeTestCase : public TestCase
 {
 public:
-  PointerAttributeTestCase (std::string description);
+  PointerAttributeTestCase (stdfwd::string description);
   virtual ~PointerAttributeTestCase () {}
 
 private:
@@ -1235,7 +1235,7 @@ private:
   double m_got2;
 };
 
-PointerAttributeTestCase::PointerAttributeTestCase (std::string description)
+PointerAttributeTestCase::PointerAttributeTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -1335,7 +1335,7 @@ PointerAttributeTestCase::DoRun (void)
 class CallbackValueTestCase : public TestCase
 {
 public:
-  CallbackValueTestCase (std::string description);
+  CallbackValueTestCase (stdfwd::string description);
   virtual ~CallbackValueTestCase () {}
 
   void InvokeCbValue (int8_t a)
@@ -1355,7 +1355,7 @@ private:
   int16_t m_gotCbValue;
 };
 
-CallbackValueTestCase::CallbackValueTestCase (std::string description)
+CallbackValueTestCase::CallbackValueTestCase (stdfwd::string description)
   : TestCase (description)
 {
 }

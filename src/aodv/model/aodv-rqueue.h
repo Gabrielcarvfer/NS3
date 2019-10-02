@@ -265,7 +265,7 @@ private:
    * \param en the queue entry to drop
    * \param reason the reason to drop the entry
    */
-  void Drop (QueueEntry en, std::string reason);
+  void Drop (QueueEntry en, stdfwd::string reason);
   /// The maximum number of packets that we allow a routing protocol to buffer.
   uint32_t m_maxLen;
   /// The maximum period of time that a routing protocol is allowed to buffer a packet for, seconds.

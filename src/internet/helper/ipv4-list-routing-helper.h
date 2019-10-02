@@ -20,7 +20,7 @@
 #pragma once
 
 #include "ipv4-routing-helper.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 
 namespace ns3 {

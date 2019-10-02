@@ -80,7 +80,7 @@ LenaTestHarqSuite::LenaTestHarqSuite ()
 
 static LenaTestHarqSuite lenaTestHarqSuite;
 
-std::string
+stdfwd::string
 LenaHarqTestCase::BuildNameString (uint16_t nUser, uint16_t dist, uint16_t tbSize)
 {
   std::ostringstream oss;

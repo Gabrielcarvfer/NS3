@@ -65,7 +65,7 @@ public:
   TcpHighSpeed (const TcpHighSpeed& sock);
   virtual ~TcpHighSpeed (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb,
                                 uint32_t bytesInFlight);

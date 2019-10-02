@@ -39,7 +39,7 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("TcpGeneralTest");
 
-TcpGeneralTest::TcpGeneralTest (const std::string &desc)
+TcpGeneralTest::TcpGeneralTest (const stdfwd::string &desc)
   : TestCase (desc),
     m_congControlTypeId (TcpNewReno::GetTypeId ()),
     m_recoveryTypeId (TcpClassicRecovery::GetTypeId ()),
@@ -329,7 +329,7 @@ TcpGeneralTest::CreateReceiverSocket (Ptr<Node> node)
 }
 
 void
-TcpGeneralTest::QueueDropCb ( std::string context, Ptr<const Packet> p)
+TcpGeneralTest::QueueDropCb ( stdfwd::string context, Ptr<const Packet> p)
 {
   if (context.compare ("SENDER") == 0)
     {
@@ -346,7 +346,7 @@ TcpGeneralTest::QueueDropCb ( std::string context, Ptr<const Packet> p)
 }
 
 void
-TcpGeneralTest::PhyDropCb (std::string context, Ptr<const Packet> p)
+TcpGeneralTest::PhyDropCb (stdfwd::string context, Ptr<const Packet> p)
 {
   NS_UNUSED (p);
   if (context.compare ("SENDER") == 0)

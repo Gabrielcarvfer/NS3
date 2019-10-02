@@ -144,7 +144,7 @@ public:
    * 
    * \param nodeName The name of the node on which to install the stack.
    */
-  void Install (std::string nodeName) const;
+  void Install (stdfwd::string nodeName) const;
 
   /**
    * Aggregate implementations of the ns3::Ipv4, ns3::Ipv6, ns3::Udp, and ns3::Tcp classes
@@ -182,7 +182,7 @@ public:
    *
    * \param tid the type id, typically it is set to  "ns3::TcpL4Protocol"
    */
-  void SetTcp (std::string tid);
+  void SetTcp (stdfwd::string tid);
 
   /**
    * \brief This function is used to setup the Network Simulation Cradle stack with library value.
@@ -196,7 +196,7 @@ public:
    * \param attr The attribute name that must be setup, for example "Library"
    * \param val The attribute value, which will be in fact the shared library name (example:"liblinux2.6.26.so")
    */
-  void SetTcp (std::string tid, std::string attr, const AttributeValue &val); 
+  void SetTcp (stdfwd::string tid, stdfwd::string attr, const AttributeValue &val);
 
   /**
    * \brief Enable/disable IPv4 stack install.
@@ -244,7 +244,7 @@ private:
    * @param interface Interface ID on the Ipv4 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapIpv4Internal (std::string prefix, 
+  virtual void EnablePcapIpv4Internal (stdfwd::string prefix,
                                        Ptr<Ipv4> ipv4, 
                                        uint32_t interface,
                                        bool explicitFilename);
@@ -260,7 +260,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiIpv4Internal (Ptr<OutputStreamWrapper> stream, 
-                                        std::string prefix, 
+                                        stdfwd::string prefix,
                                         Ptr<Ipv4> ipv4, 
                                         uint32_t interface,
                                         bool explicitFilename);
@@ -273,7 +273,7 @@ private:
    * @param interface Interface ID on the Ipv6 on which you want to enable tracing.
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapIpv6Internal (std::string prefix, 
+  virtual void EnablePcapIpv6Internal (stdfwd::string prefix,
                                        Ptr<Ipv6> ipv6, 
                                        uint32_t interface,
                                        bool explicitFilename);
@@ -289,7 +289,7 @@ private:
    * @param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiIpv6Internal (Ptr<OutputStreamWrapper> stream, 
-                                        std::string prefix, 
+                                        stdfwd::string prefix,
                                         Ptr<Ipv6> ipv6, 
                                         uint32_t interface,
                                         bool explicitFilename);
@@ -319,7 +319,7 @@ private:
    * \param node the node
    * \param typeId the object TypeId
    */
-  static void CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const std::string typeId);
+  static void CreateAndAggregateObjectFromTypeId (Ptr<Node> node, const stdfwd::string typeId);
 
   /**
    * \brief checks if there is an hook to a Pcap wrapper

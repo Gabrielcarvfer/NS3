@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 #include "ptr.h"
 #include "attribute.h"
@@ -89,7 +89,7 @@ public:
    *        that any user-supplied value to override the initial
    *        value matches the requested type constraints.
    */
-  GlobalValue (std::string name, std::string help,
+  GlobalValue (stdfwd::string name, stdfwd::string help,
                const AttributeValue &initialValue,
                Ptr<const AttributeChecker> checker);
 
@@ -97,12 +97,12 @@ public:
    * Get the name.
    * \returns The name of this GlobalValue.
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * Get the help string.
    * \returns The help text of this GlobalValue.
    */
-  std::string GetHelp (void) const;
+  stdfwd::string GetHelp (void) const;
   /**
    * Get the value.
    * \param [out] value The AttributeValue to set to the value
@@ -134,7 +134,7 @@ public:
    *
    * This method cannot fail. It will crash if the input is not valid.
    */
-  static void Bind (std::string name, const AttributeValue &value);
+  static void Bind (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Iterate over the set of GlobalValues until a matching name is found
@@ -145,7 +145,7 @@ public:
    * \returns \c true if the value could be set successfully,
    *          \c false otherwise.
    */
-  static bool BindFailSafe (std::string name, const AttributeValue &value);
+  static bool BindFailSafe (stdfwd::string name, const AttributeValue &value);
 
   /**
    * The Begin iterator.
@@ -167,7 +167,7 @@ public:
    * 
    * \return \c true if the GlobalValue was found, \c false otherwise
    */
-  static bool GetValueByNameFailSafe (std::string name, AttributeValue &value);
+  static bool GetValueByNameFailSafe (stdfwd::string name, AttributeValue &value);
 
   /** 
    * Finds the GlobalValue with the given name and returns its
@@ -179,7 +179,7 @@ public:
    * \param [in] name the name of the GlobalValue to be found
    * \param [out] value where to store the value of the found GlobalValue
    */
-  static void GetValueByName (std::string name, AttributeValue &value);
+  static void GetValueByName (stdfwd::string name, AttributeValue &value);
 
 
 private:
@@ -196,9 +196,9 @@ private:
   void InitializeFromEnv (void);
 
   /** The name of this GlobalValue. */
-  std::string m_name;
+  stdfwd::string m_name;
   /** The help string. */
-  std::string m_help;
+  stdfwd::string m_help;
   /** The initial value. */
   Ptr<AttributeValue> m_initialValue;
   /** The current value. */

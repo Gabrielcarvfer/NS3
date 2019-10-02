@@ -81,12 +81,12 @@ class LteTestRrc : public Object
     * \param at the time to send
     * \param dataToSend the data to send
     */
-    void SendData (Time at, std::string dataToSend);
+    void SendData (Time at, stdfwd::string dataToSend);
     /**
     * \brief Get data received function
     * \returns the received data string
     */
-    std::string GetDataReceived (void);
+    stdfwd::string GetDataReceived (void);
 
     // Stats
     /**
@@ -148,7 +148,7 @@ class LteTestRrc : public Object
     LtePdcpSapUser* m_pdcpSapUser; ///< PDCP SAP user
     LtePdcpSapProvider* m_pdcpSapProvider; ///< PDCP SAP provider
 
-    std::string m_receivedData; ///< the received data
+    stdfwd::string m_receivedData; ///< the received data
 
     uint32_t m_txPdus; ///< number of transmit PDUs
     uint32_t m_txBytes; ///< number of transmit bytes
@@ -208,12 +208,12 @@ class LteTestPdcp : public Object
     * \param time the time to send
     * \param dataToSend the data to send
     */
-    void SendData (Time time, std::string dataToSend);
+    void SendData (Time time, stdfwd::string dataToSend);
     /**
     * \brief Get data received function
     * \returns the received data string
     */
-    std::string GetDataReceived (void);
+    stdfwd::string GetDataReceived (void);
 
   private:
     /**
@@ -225,7 +225,7 @@ class LteTestPdcp : public Object
     LteRlcSapUser* m_rlcSapUser; ///< RLC SAP user
     LteRlcSapProvider* m_rlcSapProvider; ///< RLC SAP provider
 
-    std::string m_receivedData; ///< the received data 
+    stdfwd::string m_receivedData; ///< the received data
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -272,7 +272,7 @@ class LteTestMac : public Object
     * \brief Get data received function
     * \returns the received data string
     */
-    std::string GetDataReceived (void);
+    stdfwd::string GetDataReceived (void);
 
     /**
     * \brief the Receive function
@@ -382,7 +382,7 @@ class LteTestMac : public Object
     LteMacSapUser* m_macSapUser; ///< MAC SAP user
     Ptr<LteTestMac> m_macLoopback; ///< MAC loopback
 
-    std::string m_receivedData; ///< the received data string
+    stdfwd::string m_receivedData; ///< the received data string
 
     uint8_t m_rlcHeaderType; ///< RLC header type
     bool m_pdcpHeaderPresent; ///< PDCP header present?

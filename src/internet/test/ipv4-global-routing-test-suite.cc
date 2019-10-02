@@ -1111,13 +1111,13 @@ public:
    * \param socket The sending socket.
    * \param to The address of the receiver.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send a packet.
    * \param socket The sending socket.
    * \param to The address of the receiver.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 private:
   virtual void DoRun (void);
@@ -1146,7 +1146,7 @@ Ipv4GlobalRoutingSlash32TestCase::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv4GlobalRoutingSlash32TestCase::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv4GlobalRoutingSlash32TestCase::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -1154,7 +1154,7 @@ Ipv4GlobalRoutingSlash32TestCase::DoSendData (Ptr<Socket> socket, std::string to
 }
 
 void
-Ipv4GlobalRoutingSlash32TestCase::SendData (Ptr<Socket> socket, std::string to)
+Ipv4GlobalRoutingSlash32TestCase::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (60),

@@ -19,6 +19,7 @@
  */
 
 #include "file-config.h"
+#include <string>
 
 namespace ns3 {
 
@@ -33,7 +34,7 @@ NoneFileConfig::~NoneFileConfig ()
 {
 }
 void 
-NoneFileConfig::SetFilename (std::string filename)
+NoneFileConfig::SetFilename (stdfwd::string filename)
 {}
 void 
 NoneFileConfig::Default (void)

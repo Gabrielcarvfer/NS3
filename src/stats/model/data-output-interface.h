@@ -56,17 +56,17 @@ public:
    * Sets the DataOutputInterface prefix to the provided prefix
    * \param prefix prefix as a string
    */
-  void SetFilePrefix (const std::string prefix);
+  void SetFilePrefix (const stdfwd::string prefix);
   /**
    * Gets the file prefix of the DataOutputInterface
    * \return File prefix as a string
    */
-  std::string GetFilePrefix () const;
+  stdfwd::string GetFilePrefix () const;
 
 protected:
   virtual void DoDispose ();
 
-  std::string m_filePrefix; //!< File prefix for the DataOutputInterface
+  stdfwd::string m_filePrefix; //!< File prefix for the DataOutputInterface
 
   // end class DataOutputInterface
 };
@@ -90,8 +90,8 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param statSum Pointer to a StatisticalSummary object
    */
-  virtual void OutputStatistic (std::string key,
-                                std::string variable,
+  virtual void OutputStatistic (stdfwd::string key,
+                                stdfwd::string variable,
                                 const StatisticalSummary *statSum) = 0;
 
   /**
@@ -100,8 +100,8 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param val Value to be stored
    */
-  virtual void OutputSingleton (std::string key,
-                                std::string variable,
+  virtual void OutputSingleton (stdfwd::string key,
+                                stdfwd::string variable,
                                 int val) = 0;
 
   /**
@@ -110,8 +110,8 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param val Value to be stored
    */
-  virtual void OutputSingleton (std::string key,
-                                std::string variable,
+  virtual void OutputSingleton (stdfwd::string key,
+                                stdfwd::string variable,
                                 uint32_t val) = 0;
 
   /**
@@ -120,8 +120,8 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param val Value to be stored
    */
-  virtual void OutputSingleton (std::string key,
-                                std::string variable,
+  virtual void OutputSingleton (stdfwd::string key,
+                                stdfwd::string variable,
                                 double val) = 0;
 
   /**
@@ -130,9 +130,9 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param val Value to be stored
    */
-  virtual void OutputSingleton (std::string key,
-                                std::string variable,
-                                std::string val) = 0;
+  virtual void OutputSingleton (stdfwd::string key,
+                                stdfwd::string variable,
+                                stdfwd::string val) = 0;
 
   /**
    * Associates the Time value with the variable name for a specific output format
@@ -140,8 +140,8 @@ public:
    * \param variable Name of the variable for which statistics are being provided
    * \param val Value to be stored
    */
-  virtual void OutputSingleton (std::string key,
-                                std::string variable,
+  virtual void OutputSingleton (stdfwd::string key,
+                                stdfwd::string variable,
                                 Time val) = 0;
   // end class DataOutputCallback
 };

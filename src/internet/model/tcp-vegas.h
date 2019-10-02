@@ -81,7 +81,7 @@ public:
   TcpVegas (const TcpVegas& sock);
   virtual ~TcpVegas (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Compute RTTs needed to execute Vegas algorithm

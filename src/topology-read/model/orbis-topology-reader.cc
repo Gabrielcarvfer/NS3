@@ -58,7 +58,7 @@ OrbisTopologyReader::Read (void)
 {
   std::ifstream topgen;
   topgen.open (GetFileName ().c_str ());
-  std::map<std::string, Ptr<Node> > nodeMap;
+  std::map<stdfwd::string, Ptr<Node> > nodeMap;
   NodeContainer nodes;
 
   if ( !topgen.is_open () )
@@ -66,10 +66,10 @@ OrbisTopologyReader::Read (void)
       return nodes;
     }
 
-  std::string from;
-  std::string to;
+  stdfwd::string from;
+  stdfwd::string to;
   std::istringstream lineBuffer;
-  std::string line;
+  stdfwd::string line;
 
   int linksNumber = 0;
   int nodesNumber = 0;

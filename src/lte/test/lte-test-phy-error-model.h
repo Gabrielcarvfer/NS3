@@ -65,7 +65,7 @@ private:
    * \param rngRun the rng run
    * \returns the name string
    */
-  static std::string BuildNameString (uint16_t nUser, uint16_t dist, uint32_t rngRun);
+  static stdfwd::string BuildNameString (uint16_t nUser, uint16_t dist, uint32_t rngRun);
   uint16_t m_nUser; ///< number of UE nodes
   double m_dist; ///< the distance between nodes
   double m_blerRef; ///< the expected BLER
@@ -110,7 +110,7 @@ private:
    * \param rngRun the rng run
    * \returns the name string
    */
-  static std::string BuildNameString (uint16_t nUser, uint16_t dist, uint32_t rngRun);
+  static stdfwd::string BuildNameString (uint16_t nUser, uint16_t dist, uint32_t rngRun);
   uint16_t m_nEnb; ///< the number of ENB nodes
   double m_dist; ///< the distance between nodes
   double m_blerRef; ///< the expected BLER

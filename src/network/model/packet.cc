@@ -21,7 +21,7 @@
 #include "../../core/model/assert.h"
 #include "../../core/model/log.h"
 #include "../../core/model/simulator.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cstdarg>
 
 namespace ns3 {
@@ -422,7 +422,7 @@ Packet::PrintByteTags (std::ostream &os) const
     }
 }
 
-std::string
+stdfwd::string
 Packet::ToString() const
 {
   std::ostringstream oss;
@@ -539,8 +539,8 @@ Packet::Print (std::ostream &os) const
                 chunk->Deserialize (item.current);
                 for (uint32_t j = 0; j < item.tid.GetAttributeN (); j++)
                   {
-                    std::string attrName = item.tid.GetAttributeName (j);
-                    std::string value;
+                    stdfwd::string attrName = item.tid.GetAttributeName (j);
+                    stdfwd::string value;
                     bool ok = chunk->GetAttribute (attrName, value);
                     NS_ASSERT (ok);
                     os << attrName << "=" << value;

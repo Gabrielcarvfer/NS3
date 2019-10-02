@@ -288,14 +288,14 @@ DsrRouteCache::LookupRoute (Ipv4Address id, DsrRouteCacheEntry & rt)
 }
 
 void
-DsrRouteCache::SetCacheType (std::string type)
+DsrRouteCache::SetCacheType (stdfwd::string type)
 {
   NS_LOG_FUNCTION (this << type);
-  if (type == std::string ("LinkCache"))
+  if (type == stdfwd::string ("LinkCache"))
     {
       m_isLinkCache = true;
     }
-  else if (type == std::string ("PathCache"))
+  else if (type == stdfwd::string ("PathCache"))
     {
       m_isLinkCache = false;
     }

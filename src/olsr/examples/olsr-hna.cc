@@ -53,7 +53,7 @@
 #include <iosfwd>
 #include <fstream>
 #include <vector>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/mobility-module.h"
@@ -91,7 +91,7 @@ static void GenerateTraffic (Ptr<Socket> socket, uint32_t pktSize,
 
 int main (int argc, char *argv[])
 {
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
   double rss = -80;  // -dBm
   uint32_t packetSize = 1000; // bytes
   uint32_t numPackets = 1;

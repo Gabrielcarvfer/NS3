@@ -23,7 +23,7 @@
 #include <list>
 #include <map>
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/utils/ipv4-address.h"
 #include "../../core/model/ptr.h"
 #include "../../network/model/net-device.h"

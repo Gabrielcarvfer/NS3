@@ -63,7 +63,7 @@ public:
    * \param dlMcs the DL MCS
    * \param ulMcs the UL MCS
    */
-  LteInterferenceTestCase (std::string name, double d1, double d2, double dlSinr, double ulSinr, double dlSe, double ulSe, uint16_t dlMcs, uint16_t ulMcs);
+  LteInterferenceTestCase (stdfwd::string name, double d1, double d2, double dlSinr, double ulSinr, double dlSe, double ulSe, uint16_t dlMcs, uint16_t ulMcs);
   virtual ~LteInterferenceTestCase ();
 
   /**

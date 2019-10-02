@@ -67,7 +67,7 @@ public:
   virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked,
                           const Time& rtt);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   virtual Ptr<TcpCongestionOps> Fork ();
 

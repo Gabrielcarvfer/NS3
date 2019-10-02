@@ -46,7 +46,7 @@ public:
     /** The value of the Attribute. */
     Ptr<AttributeValue> value;
     /** The name of the Attribute. */
-    std::string name;
+    stdfwd::string name;
   };
   /** Iterator type. */
   typedef std::list<struct Item>::const_iterator CIterator;
@@ -61,7 +61,7 @@ public:
    * \param [in] checker The checker to use for this Attribute.
    * \param [in] value The AttributeValue to add.
    */
-  void Add (std::string name, Ptr<const AttributeChecker> checker,
+  void Add (stdfwd::string name, Ptr<const AttributeChecker> checker,
             Ptr<AttributeValue> value);
 
   /**

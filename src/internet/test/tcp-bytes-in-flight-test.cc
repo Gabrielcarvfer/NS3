@@ -48,7 +48,7 @@ public:
    * \param desc Description.
    * \param toDrop Packets to drop.
    */
-  TcpBytesInFlightTest (const std::string &desc, std::vector<uint32_t> &toDrop);
+  TcpBytesInFlightTest (const stdfwd::string &desc, std::vector<uint32_t> &toDrop);
 
 protected:
   /**
@@ -117,7 +117,7 @@ private:
   std::vector<uint32_t> m_toDrop;     //!< List of SequenceNumber to drop
 };
 
-TcpBytesInFlightTest::TcpBytesInFlightTest (const std::string &desc,
+TcpBytesInFlightTest::TcpBytesInFlightTest (const stdfwd::string &desc,
                                             std::vector<uint32_t> &toDrop)
   : TcpGeneralTest (desc),
     m_guessedBytesInFlight (0),

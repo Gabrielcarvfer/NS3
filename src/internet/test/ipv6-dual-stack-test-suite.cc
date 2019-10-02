@@ -46,7 +46,7 @@
 #include "../model/tcp-l4-protocol.h"
 #include "../../traffic-control/model/traffic-control-layer.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 using namespace ns3;
 

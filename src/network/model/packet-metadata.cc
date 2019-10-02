@@ -1202,7 +1202,7 @@ PacketMetadata::Serialize (uint8_t* buffer, uint32_t maxSize) const
         {
           TypeId tid;
           tid.SetUid (uid);
-          std::string uidString = tid.GetName ();
+          stdfwd::string uidString = tid.GetName ();
           uint32_t uidStringSize = uidString.size ();
           buffer = AddToRawU32 (uidStringSize, start, buffer, maxSize);
           if (buffer == 0) 
@@ -1300,7 +1300,7 @@ PacketMetadata::Deserialize (const uint8_t* buffer, uint32_t size)
         }
       else
         {
-          std::string uidString;
+          stdfwd::string uidString;
           for (uint32_t j = 0; j < uidStringSize; j++)
             {
               uint8_t ch = 0;

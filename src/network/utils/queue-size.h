@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include "../../core/model/attribute.h"
 #include "../../core/model/attribute-helper.h"
@@ -119,7 +119,7 @@ public:
    *
    * \param size string representing the size
    */
-  QueueSize (std::string size);
+  QueueSize (stdfwd::string size);
 
   /**
    * \return true if this size is less than rhs
@@ -190,7 +190,7 @@ private:
    * \param [in,out] value The location to put the value, in bytes or packets.
    * \return true if parsing was successful.
    */
-  static bool DoParse (const std::string s, QueueSizeUnit *unit, uint32_t *value);
+  static bool DoParse (const stdfwd::string s, QueueSizeUnit *unit, uint32_t *value);
 
   // Uses DoParse
   friend std::istream &operator >> (std::istream &is, QueueSize &size);

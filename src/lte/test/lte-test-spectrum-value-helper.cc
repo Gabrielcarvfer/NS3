@@ -60,7 +60,7 @@ private:
 };
 
 LteSpectrumModelTestCase::LteSpectrumModelTestCase (const char* str, uint16_t earfcn, uint8_t bw, std::vector<double> fcs)
-  :   TestCase (std::string ("SpectrumModel ") + str)
+  :   TestCase (stdfwd::string ("SpectrumModel ") + str)
 {
   NS_LOG_FUNCTION (this << str << earfcn << bw);
   m_actual = LteSpectrumValueHelper::GetSpectrumModel (earfcn, bw);

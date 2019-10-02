@@ -43,11 +43,11 @@ int main (int argc, char *argv[])
   double      minTh = 50;
   double      maxTh = 80;
   uint32_t    pktSize = 512;
-  std::string appDataRate = "10Mbps";
-  std::string queueDiscType = "PfifoFast";
+  stdfwd::string appDataRate = "10Mbps";
+  stdfwd::string queueDiscType = "PfifoFast";
   uint16_t port = 5001;
-  std::string bottleNeckLinkBw = "1Mbps";
-  std::string bottleNeckLinkDelay = "50ms";
+  stdfwd::string bottleNeckLinkBw = "1Mbps";
+  stdfwd::string bottleNeckLinkDelay = "50ms";
 
   CommandLine cmd;
   cmd.AddValue ("nLeaf",     "Number of left and right side leaf nodes", nLeaf);

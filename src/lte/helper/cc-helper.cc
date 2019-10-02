@@ -100,7 +100,7 @@ CcHelper::DoDispose ()
 }
 
 void 
-CcHelper::SetCcAttribute (std::string n, const AttributeValue &v)
+CcHelper::SetCcAttribute (stdfwd::string n, const AttributeValue &v)
 {
   NS_LOG_FUNCTION (this << n);
   m_ccFactory.Set (n, v);

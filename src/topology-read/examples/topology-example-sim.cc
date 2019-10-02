@@ -56,8 +56,8 @@ static void SinkRx (Ptr<const Packet> p, const Address &ad)
 int main (int argc, char *argv[])
 {
 
-  std::string format ("Inet");
-  std::string input ("src/topology-read/examples/Inet_small_toposample.txt");
+  stdfwd::string format ("Inet");
+  stdfwd::string input ("src/topology-read/examples/Inet_small_toposample.txt");
 
   // Set up command line parameters used to control the experiment.
   CommandLine cmd;

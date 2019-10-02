@@ -20,7 +20,7 @@
 #pragma once
 
 #include "../../core/model/type-id.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -44,7 +44,7 @@ private:
   /**
    * \brief Just an interface that needs to be implemented
    */
-  virtual void StartVisitTypeId (std::string name);
+  virtual void StartVisitTypeId (stdfwd::string name);
   /**
    * \brief Just an interface that needs to be implemented
    */
@@ -52,11 +52,11 @@ private:
   /**
    * \brief This method can be implemented, otherwise, it will call DoVisitAttribute
    */
-  virtual void VisitAttribute (TypeId tid, std::string name, std::string defaultValue, uint32_t index);
+  virtual void VisitAttribute (TypeId tid, stdfwd::string name, stdfwd::string defaultValue, uint32_t index);
   /**
    * \brief This method is just an interface and needs to be implemented
    */
-  virtual void DoVisitAttribute (std::string name, std::string defaultValue);
+  virtual void DoVisitAttribute (stdfwd::string name, stdfwd::string defaultValue);
 };
 
 } // namespace ns3

@@ -218,7 +218,7 @@ NetAnimExperiment::Run (UanHelper &uan)
 
     m_bytesTotal = 0;
 
-    std::string traceFileName = "uan-animation.xml";
+    stdfwd::string traceFileName = "uan-animation.xml";
     AnimationInterface anim(traceFileName.c_str ());
 
     Simulator::Run ();
@@ -258,8 +258,8 @@ main (int argc, char **argv)
 
   NetAnimExperiment exp;
 
-  std::string perModel = "ns3::UanPhyPerGenDefault";
-  std::string sinrModel = "ns3::UanPhyCalcSinrDefault";
+  stdfwd::string perModel = "ns3::UanPhyPerGenDefault";
+  stdfwd::string sinrModel = "ns3::UanPhyCalcSinrDefault";
 
   CommandLine cmd;
   cmd.AddValue ("NumNodes", "Number of transmitting nodes", exp.m_numNodes);

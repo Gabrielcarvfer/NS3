@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "wimax-phy.h"
 #include "wimax-connection.h"
 #include "cs-parameters.h"
@@ -255,7 +255,7 @@ public:
    * Get service class name
    * \returns the service class name
    */
-  std::string GetServiceClassName () const;
+  stdfwd::string GetServiceClassName () const;
   /**
    * Get QOS parameter set type
    * \returns the QOS parameter set type
@@ -405,7 +405,7 @@ public:
   /** Set service class name
    * \param name the service class name
    */
-  void SetServiceClassName (std::string name);
+  void SetServiceClassName (stdfwd::string name);
   /**
    * Set QOS parameter set type
    * \param type the QOS paraneter set type
@@ -552,7 +552,7 @@ public:
 
 private:
   uint32_t m_sfid; ///< SFID
-  std::string m_serviceClassName; ///< service class name
+  stdfwd::string m_serviceClassName; ///< service class name
   uint8_t m_qosParamSetType; ///< QOS parameter type
   uint8_t m_trafficPriority; ///< traffic priority
   uint32_t m_maxSustainedTrafficRate; ///< maximum sustained traffic rate

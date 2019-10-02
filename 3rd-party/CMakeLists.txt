@@ -16,3 +16,4 @@ add_subdirectory(picojson)   # https://github.com/kazuho/picojson/commit/8ba7113
 #add_subdirectory(slowness) # https://github.com/jpakkane/slowness/commit/3669baff5da70a4c0e90b2cc026b0492fd9530ba
 #add_subdirectory(ninjatracing) # https://github.com/nico/ninjatracing/commit/3bb34bbb0657b2b7dbbe8c42720a9d91f576b341
 #add_subdirectory(cpp-std-fwd) # https://github.com/Philip-Trettner/cpp-std-fwd/commit/ea132558e70051a1e49cf2a805ebf5bc2eacef4e
+#add_subdirectory(ns3_global_includes_to_relative_paths) #https://gist.github.com/Gabrielcarvfer/b78cf9db32358e4867939525211185ca

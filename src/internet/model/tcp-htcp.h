@@ -62,7 +62,7 @@ public:
    */
   TcpHtcp (const TcpHtcp& sock);
   virtual ~TcpHtcp (void);
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
   virtual Ptr<TcpCongestionOps> Fork ();
   virtual uint32_t GetSsThresh (Ptr<const TcpSocketState> tcb,
                                 uint32_t bytesInFlight);

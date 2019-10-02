@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <list>
 
 /**
@@ -52,7 +52,7 @@ namespace SystemPath {
    *
    * \return The directory in which the currently-executing binary is located
    */
-  std::string FindSelfDirectory (void);
+  stdfwd::string FindSelfDirectory (void);
   
   /**
    * \ingroup systempath
@@ -62,7 +62,7 @@ namespace SystemPath {
    * \param [in] right A path element
    * \return A concatenation of the two input paths
    */
-  std::string Append (std::string left, std::string right);
+  stdfwd::string Append (stdfwd::string left, stdfwd::string right);
 
   /**
    * \ingroup systempath
@@ -76,7 +76,7 @@ namespace SystemPath {
    *         the Join function.
    * \sa ns3::SystemPath::Join
    */
-  std::list<std::string> Split (std::string path);
+  std::list<stdfwd::string> Split (stdfwd::string path);
 
   /**
    * Join a list of file system path directories into a single
@@ -89,8 +89,8 @@ namespace SystemPath {
    * \param [in] end Iterator to one past the last element to join
    * \return A path that is a concatenation of all the input elements.
    */
-  std::string Join (std::list<std::string>::const_iterator begin,
-		    std::list<std::string>::const_iterator end);
+  stdfwd::string Join (std::list<stdfwd::string>::const_iterator begin,
+		    std::list<stdfwd::string>::const_iterator end);
   
   /**
    * \ingroup systempath
@@ -99,7 +99,7 @@ namespace SystemPath {
    * \param [in] path A path which identifies a directory
    * \return A list of the filenames which are located in the input directory
    */
-  std::list<std::string> ReadFiles (std::string path);
+  std::list<stdfwd::string> ReadFiles (stdfwd::string path);
 
   /**
    * \ingroup systempath
@@ -111,7 +111,7 @@ namespace SystemPath {
    *
    * \return A path which identifies a temporary directory.
    */
-  std::string MakeTemporaryDirectoryName (void);
+  stdfwd::string MakeTemporaryDirectoryName (void);
 
   /**
    * \ingroup systempath
@@ -119,7 +119,7 @@ namespace SystemPath {
    *
    * \param [in] path A path to a directory
    */
-  void MakeDirectories (std::string path);
+  void MakeDirectories (stdfwd::string path);
 
 } // namespace SystemPath
 

@@ -579,7 +579,7 @@ private:
    * \param p the packet
    * \param adr the address
    */
-  void Receive (std::string context, Ptr<const Packet> p, const Address &adr);
+  void Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr);
 
 };
 
@@ -594,7 +594,7 @@ Bug730TestCase::~Bug730TestCase ()
 }
 
 void
-Bug730TestCase::Receive (std::string context, Ptr<const Packet> p, const Address &adr)
+Bug730TestCase::Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr)
 {
   if ((p->GetSize () == 1460) && (Simulator::Now () > Seconds (20)))
     {
@@ -717,7 +717,7 @@ private:
    * \param p the packet
    * \param adr the address
    */
-  void Receive (std::string context, Ptr<const Packet> p, const Address &adr);
+  void Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr);
 
   /**
    * Callback invoked when PHY transmits a packet
@@ -725,7 +725,7 @@ private:
    * \param p the packet
    * \param power the tx power
    */
-  void Transmit (std::string context, Ptr<const Packet> p, double power);
+  void Transmit (stdfwd::string context, Ptr<const Packet> p, double power);
 };
 
 QosFragmentationTestCase::QosFragmentationTestCase ()
@@ -740,7 +740,7 @@ QosFragmentationTestCase::~QosFragmentationTestCase ()
 }
 
 void
-QosFragmentationTestCase::Receive (std::string context, Ptr<const Packet> p, const Address &adr)
+QosFragmentationTestCase::Receive (stdfwd::string context, Ptr<const Packet> p, const Address &adr)
 {
   if (p->GetSize () == 1400)
     {
@@ -749,7 +749,7 @@ QosFragmentationTestCase::Receive (std::string context, Ptr<const Packet> p, con
 }
 
 void
-QosFragmentationTestCase::Transmit (std::string context, Ptr<const Packet> p, double power)
+QosFragmentationTestCase::Transmit (stdfwd::string context, Ptr<const Packet> p, double power)
 {
   WifiMacHeader hdr;
   p->PeekHeader (hdr);
@@ -1219,7 +1219,7 @@ private:
    * \param context the context
    * \param adr the MAC address
    */
-  void TxDataFailedTrace (std::string context, Mac48Address adr);
+  void TxDataFailedTrace (stdfwd::string context, Mac48Address adr);
 };
 
 Bug2222TestCase::Bug2222TestCase ()
@@ -1233,7 +1233,7 @@ Bug2222TestCase::~Bug2222TestCase ()
 }
 
 void
-Bug2222TestCase::TxDataFailedTrace (std::string context, Mac48Address adr)
+Bug2222TestCase::TxDataFailedTrace (stdfwd::string context, Mac48Address adr)
 {
   //Indicate the long retry counter has been increased in the wifi remote station manager
   m_countInternalCollisions++;
@@ -1359,7 +1359,7 @@ private:
    * \param context the context
    * \param txParams spectrum signal parameters set by transmitter
    */
-  void StoreDistinctTuple (std::string context, Ptr<SpectrumSignalParameters> txParams);
+  void StoreDistinctTuple (stdfwd::string context, Ptr<SpectrumSignalParameters> txParams);
   /**
    * Triggers the arrival of a burst of 1000 Byte-long packets in the source device
    * \param numPackets number of packets in burst (maximum: 255)
@@ -1382,7 +1382,7 @@ Bug2843TestCase::~Bug2843TestCase ()
 }
 
 void
-Bug2843TestCase::StoreDistinctTuple (std::string context,  Ptr<SpectrumSignalParameters> txParams)
+Bug2843TestCase::StoreDistinctTuple (stdfwd::string context,  Ptr<SpectrumSignalParameters> txParams)
 {
   // Extract starting frequency and number of subbands
   Ptr<const SpectrumModel> c = txParams->psd->GetSpectrumModel ();
@@ -1549,7 +1549,7 @@ private:
    * \param context the context
    * \param p the received packet
    */
-  void RxCallback (std::string context, Ptr<const Packet> p);
+  void RxCallback (stdfwd::string context, Ptr<const Packet> p);
 
   Ptr<YansWifiPhy> m_apPhy; ///< AP PHY
   Ptr<YansWifiPhy> m_staPhy; ///< STA PHY
@@ -1583,7 +1583,7 @@ Bug2831TestCase::ChangeSupportedChannelWidth ()
 }
 
 void
-Bug2831TestCase::RxCallback (std::string context, Ptr<const Packet> p)
+Bug2831TestCase::RxCallback (stdfwd::string context, Ptr<const Packet> p)
 {
   Ptr<Packet> packet = p->Copy ();
   WifiMacHeader hdr;
@@ -1727,7 +1727,7 @@ private:
    * \param context context string
    * \param bssid the associated AP's bssid
    */
-  void AssocCallback (std::string context, Mac48Address bssid);
+  void AssocCallback (stdfwd::string context, Mac48Address bssid);
   /**
    * Turn beacon generation on the AP node
    * \param apNode the AP node
@@ -1759,7 +1759,7 @@ StaWifiMacScanningTestCase::~StaWifiMacScanningTestCase ()
 }
 
 void
-StaWifiMacScanningTestCase::AssocCallback (std::string context, Mac48Address bssid)
+StaWifiMacScanningTestCase::AssocCallback (stdfwd::string context, Mac48Address bssid)
 {
   m_associatedApBssid = bssid;
 }
@@ -1922,7 +1922,7 @@ private:
    * \param tid the TID
    * \param state the state
    */
-  void AddbaStateChangedCallback (std::string context, Time t, Mac48Address recipient, uint8_t tid, OriginatorBlockAckAgreement::State state);
+  void AddbaStateChangedCallback (stdfwd::string context, Time t, Mac48Address recipient, uint8_t tid, OriginatorBlockAckAgreement::State state);
   /**
    * Callback when packet is received
    * \param context node context
@@ -1932,14 +1932,14 @@ private:
    * \param aMpdu the A-MPDU info
    * \param signalNoise the signal noise in dBm
    */
-  void RxCallback (std::string context, Ptr<const Packet> p, uint16_t channelFreqMhz, WifiTxVector txVector, MpduInfo aMpdu, SignalNoiseDbm signalNoise);
+  void RxCallback (stdfwd::string context, Ptr<const Packet> p, uint16_t channelFreqMhz, WifiTxVector txVector, MpduInfo aMpdu, SignalNoiseDbm signalNoise);
   /**
    * Callback when packet is dropped
    * \param context node context
    * \param p the dropped packet
    * \param reason the reason
    */
-  void RxDropCallback (std::string context, Ptr<const Packet> p, WifiPhyRxfailureReason reason);
+  void RxDropCallback (stdfwd::string context, Ptr<const Packet> p, WifiPhyRxfailureReason reason);
   /**
    * Triggers the arrival of a burst of 1000 Byte-long packets in the source device
    * \param numPackets number of packets in burst
@@ -1982,7 +1982,7 @@ Bug2470TestCase::~Bug2470TestCase ()
 }
 
 void
-Bug2470TestCase::AddbaStateChangedCallback (std::string context, Time t, Mac48Address recipient, uint8_t tid, OriginatorBlockAckAgreement::State state)
+Bug2470TestCase::AddbaStateChangedCallback (stdfwd::string context, Time t, Mac48Address recipient, uint8_t tid, OriginatorBlockAckAgreement::State state)
 {
   switch (state)
     {
@@ -2005,7 +2005,7 @@ Bug2470TestCase::AddbaStateChangedCallback (std::string context, Time t, Mac48Ad
 }
 
 void
-Bug2470TestCase::RxCallback (std::string context, Ptr<const Packet> p, uint16_t channelFreqMhz, WifiTxVector txVector, MpduInfo aMpdu, SignalNoiseDbm signalNoise)
+Bug2470TestCase::RxCallback (stdfwd::string context, Ptr<const Packet> p, uint16_t channelFreqMhz, WifiTxVector txVector, MpduInfo aMpdu, SignalNoiseDbm signalNoise)
 {
   Ptr<Packet> packet = p->Copy ();
   if (aMpdu.type != MpduType::NORMAL_MPDU)
@@ -2024,7 +2024,7 @@ Bug2470TestCase::RxCallback (std::string context, Ptr<const Packet> p, uint16_t 
 }
 
 void
-Bug2470TestCase::RxDropCallback (std::string context, Ptr<const Packet> p, WifiPhyRxfailureReason reason)
+Bug2470TestCase::RxDropCallback (stdfwd::string context, Ptr<const Packet> p, WifiPhyRxfailureReason reason)
 {
   Ptr<Packet> packet = p->Copy ();
   WifiMacHeader hdr;

@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/helper/application-container.h"
 #include "../../network/helper/net-device-container.h"
 #include "../../core/model/object-factory.h"
@@ -49,14 +49,14 @@ public:
    * \param name Name of the attribute
    * \param value Value to be set
    */
-  void SetClientAttribute (std::string name, const AttributeValue &value);
+  void SetClientAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * \brief Set DHCP server attributes
    * \param name Name of the attribute
    * \param value Value to be set
    */
-  void SetServerAttribute (std::string name, const AttributeValue &value);
+  void SetServerAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * \brief Install DHCP client of a nodes / NetDevice

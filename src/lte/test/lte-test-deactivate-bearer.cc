@@ -19,7 +19,7 @@
  */
 
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/object.h"
 #include "../../spectrum/model/spectrum-error-model.h"
@@ -90,7 +90,7 @@ LenaTestBearerDeactivateSuite::LenaTestBearerDeactivateSuite ()
 static LenaTestBearerDeactivateSuite lenaTestBearerDeactivateSuite; ///< the test suite
 
 
-std::string
+stdfwd::string
 LenaDeactivateBearerTestCase::BuildNameString (uint16_t nUser, std::vector<uint16_t> dist)
 {
   std::ostringstream oss;

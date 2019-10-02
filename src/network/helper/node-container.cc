@@ -31,7 +31,7 @@ NodeContainer::NodeContainer (Ptr<Node> node)
 {
   m_nodes.push_back (node);
 }
-NodeContainer::NodeContainer (std::string nodeName)
+NodeContainer::NodeContainer (stdfwd::string nodeName)
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   m_nodes.push_back (node);
@@ -119,7 +119,7 @@ NodeContainer::Add (Ptr<Node> node)
   m_nodes.push_back (node);
 }
 void 
-NodeContainer::Add (std::string nodeName)
+NodeContainer::Add (stdfwd::string nodeName)
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   m_nodes.push_back (node);

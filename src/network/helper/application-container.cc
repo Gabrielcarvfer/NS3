@@ -35,7 +35,7 @@ ApplicationContainer::ApplicationContainer (Ptr<Application> app)
   m_applications.push_back (app);
 }
 
-ApplicationContainer::ApplicationContainer (std::string name)
+ApplicationContainer::ApplicationContainer (stdfwd::string name)
 {
   Ptr<Application> app = Names::Find<Application> (name);
   m_applications.push_back (app);
@@ -77,7 +77,7 @@ ApplicationContainer::Add (Ptr<Application> application)
   m_applications.push_back (application);
 }
 void 
-ApplicationContainer::Add (std::string name)
+ApplicationContainer::Add (stdfwd::string name)
 {
   Ptr<Application> application = Names::Find<Application> (name);
   m_applications.push_back (application);

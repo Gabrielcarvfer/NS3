@@ -74,7 +74,7 @@ public:
    * \param filename file name
    * \param filemode std::ios::openmode flags
    */
-  OutputStreamWrapper (std::string filename, std::ios::openmode filemode);
+  OutputStreamWrapper (stdfwd::string filename, std::ios::openmode filemode);
   /**
    * Constructor
    * \param os output stream

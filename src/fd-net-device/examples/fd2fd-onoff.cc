@@ -65,7 +65,7 @@ main (int argc, char *argv[])
   cmd.AddValue ("tcpMode", "1:true, 0:false, default mode UDP",tcpMode);
   cmd.Parse (argc, argv);
    
-  std::string factory;
+  stdfwd::string factory;
   if (tcpMode==1)
     {
       factory = "ns3::TcpSocketFactory";
@@ -79,7 +79,7 @@ main (int argc, char *argv[])
 
   uint16_t sinkPort = 8000;
   uint32_t packetSize = 10000; // bytes
-  std::string dataRate("10Mb/s");
+  stdfwd::string dataRate("10Mb/s");
 
   NS_LOG_INFO ("Create Node");
   NodeContainer nodes;

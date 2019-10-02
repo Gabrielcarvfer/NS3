@@ -78,15 +78,15 @@ public:
    * are therefore not commutative. The final receive power (excluding receiver
    * gains) are calculated in the order the models are added.
    */
-  void AddPropagationLoss (std::string name,
-                           std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                           std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                           std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                           std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                           std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                           std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                           std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                           std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void AddPropagationLoss (stdfwd::string name,
+                           stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                           stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                           stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                           stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                           stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                           stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                           stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                           stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
   /**
    * \param name the name of the model to set
    * \param n0 the name of the attribute to set
@@ -108,15 +108,15 @@ public:
    *
    * Configure a propagation delay for this channel.
    */
-  void SetPropagationDelay (std::string name,
-                            std::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
-                            std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                            std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                            std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                            std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                            std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                            std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                            std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
+  void SetPropagationDelay (stdfwd::string name,
+                            stdfwd::string n0 = "", const AttributeValue &v0 = EmptyAttributeValue (),
+                            stdfwd::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
+                            stdfwd::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
+                            stdfwd::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
+                            stdfwd::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
+                            stdfwd::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
+                            stdfwd::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
+                            stdfwd::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue ());
 
   /**
    * \returns a new channel
@@ -182,7 +182,7 @@ public:
    *
    * Every PHY created by a call to Install is associated to this channel.
    */
-  void SetChannel (std::string channelName);
+  void SetChannel (stdfwd::string channelName);
 
 private:
   /**

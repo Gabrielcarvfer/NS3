@@ -103,7 +103,7 @@ void RadvdHelper::ClearPrefixes()
   m_radvdInterfaces.clear();
 }
 
-void RadvdHelper::SetAttribute (std::string name, const AttributeValue& value)
+void RadvdHelper::SetAttribute (stdfwd::string name, const AttributeValue& value)
 {
   m_factory.Set (name, value);
 }

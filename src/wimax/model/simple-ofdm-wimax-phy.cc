@@ -32,7 +32,7 @@
 #include "wimax-mac-header.h"
 #include "simple-ofdm-wimax-channel.h"
 #include "../../core/model/trace-source-accessor.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cmath>
 
 namespace ns3 {
@@ -1056,14 +1056,14 @@ SimpleOfdmWimaxPhy::GetRxGain (void) const
   return m_rxGain;
 }
 
-std::string
+stdfwd::string
 SimpleOfdmWimaxPhy::GetTraceFilePath (void) const
 {
   return (m_snrToBlockErrorRateManager->GetTraceFilePath ());
 }
 
 void
-SimpleOfdmWimaxPhy::SetTraceFilePath (std::string path)
+SimpleOfdmWimaxPhy::SetTraceFilePath (stdfwd::string path)
 {
 
   m_snrToBlockErrorRateManager->SetTraceFilePath ((char*) path.c_str ());

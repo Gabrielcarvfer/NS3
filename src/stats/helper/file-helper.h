@@ -21,7 +21,7 @@
 #pragma once
 
 #include <map>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object-factory.h"
 #include "../../core/model/ptr.h"
 #include "../model/probe.h"
@@ -53,7 +53,7 @@ public:
    * from wildcard matches plus ".txt" with values printed as
    * specified by fileType.  The default file type is space-separated.
    */
-  FileHelper (const std::string &outputFileNameWithoutExtension,
+  FileHelper (const stdfwd::string &outputFileNameWithoutExtension,
               enum FileAggregator::FileType fileType = FileAggregator::SPACE_SEPARATED);
 
   virtual ~FileHelper ();
@@ -69,7 +69,7 @@ public:
    * values printed as specified by fileType.  The default file type
    * is space-separated.
    */
-  void ConfigureFile (const std::string &outputFileNameWithoutExtension,
+  void ConfigureFile (const stdfwd::string &outputFileNameWithoutExtension,
                       enum FileAggregator::FileType fileType = FileAggregator::SPACE_SEPARATED);
 
   /**
@@ -102,16 +102,16 @@ public:
    *
    * A fatal error will result if an unknown probe type is used.
    */
-  void WriteProbe (const std::string &typeId,
-                   const std::string &path,
-                   const std::string &probeTraceSource);
+  void WriteProbe (const stdfwd::string &typeId,
+                   const stdfwd::string &path,
+                   const stdfwd::string &probeTraceSource);
 
   /**
    * \param adaptorName the timeSeriesAdaptor's name.
    *
    * \brief Adds a time series adaptor to be used to write the file.
    */
-  void AddTimeSeriesAdaptor (const std::string &adaptorName);
+  void AddTimeSeriesAdaptor (const stdfwd::string &adaptorName);
 
   /**
    * \param aggregatorName the aggregator's name.
@@ -121,8 +121,8 @@ public:
    *
    * \brief Adds an aggregator to be used to write values to files.
    */
-  void AddAggregator (const std::string &aggregatorName,
-                      const std::string &outputFileName,
+  void AddAggregator (const stdfwd::string &aggregatorName,
+                      const stdfwd::string &outputFileName,
                       bool onlyOneAggregator);
 
   /**
@@ -130,7 +130,7 @@ public:
    * \return Ptr to the probe
    * \brief Gets the specified probe.
    */
-  Ptr<Probe> GetProbe (std::string probeName) const;
+  Ptr<Probe> GetProbe (stdfwd::string probeName) const;
 
   /**
    * \return Ptr to a FileAggregator object
@@ -150,8 +150,8 @@ public:
    * This function is non-const because an aggregator may be lazily
    * created by this method.
    */
-  Ptr<FileAggregator> GetAggregatorMultiple (const std::string &aggregatorName,
-                                             const std::string &outputFileName);
+  Ptr<FileAggregator> GetAggregatorMultiple (const stdfwd::string &aggregatorName,
+                                             const stdfwd::string &outputFileName);
 
   /**
    * \param heading the heading string.
@@ -162,7 +162,7 @@ public:
    * Note that the heading string will only be printed if it has been
    * set by calling this function.
    */
-  void SetHeading (const std::string &heading);
+  void SetHeading (const stdfwd::string &heading);
 
   /**
    * \param format the 1D format string.
@@ -170,7 +170,7 @@ public:
    * \brief Sets the 1D format string for the C-style sprintf()
    * function.
    */
-  void Set1dFormat (const std::string &format);
+  void Set1dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 2D format string.
@@ -178,7 +178,7 @@ public:
    * \brief Sets the 2D format string for the C-style sprintf()
    * function.
    */
-  void Set2dFormat (const std::string &format);
+  void Set2dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 3D format string.
@@ -186,7 +186,7 @@ public:
    * \brief Sets the 3D format string for the C-style sprintf()
    * function.
    */
-  void Set3dFormat (const std::string &format);
+  void Set3dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 4D format string.
@@ -194,7 +194,7 @@ public:
    * \brief Sets the 4D format string for the C-style sprintf()
    * function.
    */
-  void Set4dFormat (const std::string &format);
+  void Set4dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 5D format string.
@@ -202,7 +202,7 @@ public:
    * \brief Sets the 5D format string for the C-style sprintf()
    * function.
    */
-  void Set5dFormat (const std::string &format);
+  void Set5dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 6D format string.
@@ -210,7 +210,7 @@ public:
    * \brief Sets the 6D format string for the C-style sprintf()
    * function.
    */
-  void Set6dFormat (const std::string &format);
+  void Set6dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 7D format string.
@@ -218,7 +218,7 @@ public:
    * \brief Sets the 7D format string for the C-style sprintf()
    * function.
    */
-  void Set7dFormat (const std::string &format);
+  void Set7dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 8D format string.
@@ -226,7 +226,7 @@ public:
    * \brief Sets the 8D format string for the C-style sprintf()
    * function.
    */
-  void Set8dFormat (const std::string &format);
+  void Set8dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 9D format string.
@@ -234,7 +234,7 @@ public:
    * \brief Sets the 9D format string for the C-style sprintf()
    * function.
    */
-  void Set9dFormat (const std::string &format);
+  void Set9dFormat (const stdfwd::string &format);
 
   /**
    * \param format the 10D format string.
@@ -242,7 +242,7 @@ public:
    * \brief Sets the 10D format string for the C-style sprintf()
    * function.
    */
-  void Set10dFormat (const std::string &format);
+  void Set10dFormat (const stdfwd::string &format);
 
 private:
   /**
@@ -252,9 +252,9 @@ private:
    *
    * \brief Adds a probe to be used to write values to files.
    */
-  void AddProbe (const std::string &typeId,
-                 const std::string &probeName,
-                 const std::string &path);
+  void AddProbe (const stdfwd::string &typeId,
+                 const stdfwd::string &probeName,
+                 const stdfwd::string &path);
 
   /**
    * \param typeId the type ID for the probe used when it is created.
@@ -271,11 +271,11 @@ private:
    *
    * A fatal error will result if an unknown probe type is used.
    */
-  void ConnectProbeToAggregator (const std::string &typeId,
-                                 const std::string &matchIdentifier,
-                                 const std::string &path,
-                                 const std::string &probeTraceSource,
-                                 const std::string &outputFileNameWithoutExtension,
+  void ConnectProbeToAggregator (const stdfwd::string &typeId,
+                                 const stdfwd::string &matchIdentifier,
+                                 const stdfwd::string &path,
+                                 const stdfwd::string &probeTraceSource,
+                                 const stdfwd::string &outputFileNameWithoutExtension,
                                  bool onlyOneAggregator);
 
   /// Used to create the probes and collectors as they are added.
@@ -286,13 +286,13 @@ private:
 
   /// Maps aggregator names to aggregators when multiple aggregators
   /// are needed.
-  std::map<std::string, Ptr<FileAggregator> > m_aggregatorMap;
+  std::map<stdfwd::string, Ptr<FileAggregator> > m_aggregatorMap;
 
   /// Maps probe names to probes.
-  std::map<std::string, std::pair <Ptr<Probe>, std::string> > m_probeMap;
+  std::map<stdfwd::string, std::pair <Ptr<Probe>, stdfwd::string> > m_probeMap;
 
   /// Maps time series adaptor names to time series adaptors.
-  std::map<std::string, Ptr<TimeSeriesAdaptor> > m_timeSeriesAdaptorMap;
+  std::map<stdfwd::string, Ptr<TimeSeriesAdaptor> > m_timeSeriesAdaptorMap;
 
   /// Number of file probes that have been created.
   uint32_t m_fileProbeCount;
@@ -301,24 +301,24 @@ private:
   enum FileAggregator::FileType m_fileType;
 
   /// The name of the output file to created without its extension.
-  std::string m_outputFileNameWithoutExtension;
+  stdfwd::string m_outputFileNameWithoutExtension;
 
   /// Indicates if the heading line for the file has been set.
   bool m_hasHeadingBeenSet;
 
   /// Heading line for the outputfile.
-  std::string m_heading;
+  stdfwd::string m_heading;
 
-  std::string m_1dFormat;  //!< Format string for 1D format C-style sprintf() function.
-  std::string m_2dFormat;  //!< Format string for 2D format C-style sprintf() function.
-  std::string m_3dFormat;  //!< Format string for 3D format C-style sprintf() function.
-  std::string m_4dFormat;  //!< Format string for 4D format C-style sprintf() function.
-  std::string m_5dFormat;  //!< Format string for 5D format C-style sprintf() function.
-  std::string m_6dFormat;  //!< Format string for 6D format C-style sprintf() function.
-  std::string m_7dFormat;  //!< Format string for 7D format C-style sprintf() function.
-  std::string m_8dFormat;  //!< Format string for 8D format C-style sprintf() function.
-  std::string m_9dFormat;  //!< Format string for 9D format C-style sprintf() function.
-  std::string m_10dFormat; //!< Format string for 10D format C-style sprintf() function.
+  stdfwd::string m_1dFormat;  //!< Format string for 1D format C-style sprintf() function.
+  stdfwd::string m_2dFormat;  //!< Format string for 2D format C-style sprintf() function.
+  stdfwd::string m_3dFormat;  //!< Format string for 3D format C-style sprintf() function.
+  stdfwd::string m_4dFormat;  //!< Format string for 4D format C-style sprintf() function.
+  stdfwd::string m_5dFormat;  //!< Format string for 5D format C-style sprintf() function.
+  stdfwd::string m_6dFormat;  //!< Format string for 6D format C-style sprintf() function.
+  stdfwd::string m_7dFormat;  //!< Format string for 7D format C-style sprintf() function.
+  stdfwd::string m_8dFormat;  //!< Format string for 8D format C-style sprintf() function.
+  stdfwd::string m_9dFormat;  //!< Format string for 9D format C-style sprintf() function.
+  stdfwd::string m_10dFormat; //!< Format string for 10D format C-style sprintf() function.
 
 }; // class FileHelper
 

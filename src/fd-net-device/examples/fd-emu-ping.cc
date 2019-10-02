@@ -81,7 +81,7 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("PingEmulationExample");
 
 static void
-PingRtt (std::string context, Time rtt)
+PingRtt (stdfwd::string context, Time rtt)
 {
   NS_LOG_UNCOND ("Received Response with RTT = " << rtt);
 }
@@ -91,8 +91,8 @@ main (int argc, char *argv[])
 {
   NS_LOG_INFO ("Ping Emulation Example");
 
-  std::string deviceName ("eth0");
-  std::string remote ("173.194.34.51"); // example.com
+  stdfwd::string deviceName ("eth0");
+  stdfwd::string remote ("173.194.34.51"); // example.com
 
   //
   // Allow the user to override any of the defaults at run-time, via

@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 #include "cid.h"
 #include "wimax-mac-header.h"
@@ -125,7 +125,7 @@ public:
    * Get type string
    * \returns the type string
    */
-  std::string GetTypeStr (void) const;
+  stdfwd::string GetTypeStr (void) const;
 
   /// Definition of Fragments Queue data type
   typedef std::list<Ptr<const Packet> > FragmentsQueue;

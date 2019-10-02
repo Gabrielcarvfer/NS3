@@ -59,7 +59,7 @@ public:
    *
    * \param description purpose of this TestCase
    */
-  CommandLineTestCaseBase (std::string description);
+  CommandLineTestCaseBase (stdfwd::string description);
   /** Destructor */
   virtual ~CommandLineTestCaseBase () {}
 
@@ -77,7 +77,7 @@ public:
 
 int CommandLineTestCaseBase::m_count = 0;
 
-CommandLineTestCaseBase::CommandLineTestCaseBase (std::string description)
+CommandLineTestCaseBase::CommandLineTestCaseBase (stdfwd::string description)
   : TestCase (description)
 {
 }
@@ -85,7 +85,7 @@ CommandLineTestCaseBase::CommandLineTestCaseBase (std::string description)
 void
 CommandLineTestCaseBase::Parse (CommandLine &cmd, int n, ...)
 {
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   ss << GetParent ()->GetName () << "-testcase-" << m_count << "-" << GetName ();
   ++m_count;
   
@@ -265,7 +265,7 @@ CommandLineStringTestCase::DoRun (void)
 {
   CommandLine cmd;
   uint32_t myUint32 = 10;
-  std::string myStr = "MyStr";
+  stdfwd::string myStr = "MyStr";
 
   cmd.AddValue ("my-uint32", "help", myUint32);
   cmd.AddValue ("my-str", "help", myStr);
@@ -368,7 +368,7 @@ CommandLineNonOptionTestCase::DoRun (void)
   CommandLine cmd;
   bool myBool = false;
   int32_t myInt = 1;
-  std::string myStr = "MyStr";
+  stdfwd::string myStr = "MyStr";
 
   cmd.AddNonOption ("my-bool", "help", myBool);
   cmd.AddNonOption ("my-int", "help", myInt);

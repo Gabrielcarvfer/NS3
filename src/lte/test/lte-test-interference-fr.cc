@@ -80,7 +80,7 @@ static LteInterferenceFrTestSuite LteInterferenceFrTestSuite;
 /**
  * TestCase Data
  */
-LteInterferenceHardFrTestCase::LteInterferenceHardFrTestCase (std::string name, double d1, double d2, double dlSinr, double ulSinr)
+LteInterferenceHardFrTestCase::LteInterferenceHardFrTestCase (stdfwd::string name, double d1, double d2, double dlSinr, double ulSinr)
   : TestCase ("Test: " + name),
     m_d1 (d1),
     m_d2 (d2),
@@ -238,7 +238,7 @@ LteInterferenceHardFrTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteInterferenceStrictFrTestCase::LteInterferenceStrictFrTestCase (std::string name, double d1, double d2,
+LteInterferenceStrictFrTestCase::LteInterferenceStrictFrTestCase (stdfwd::string name, double d1, double d2,
                                                                   double commonDlSinr, double commonUlSinr, double edgeDlSinr, double edgeUlSinr,
                                                                   uint32_t rspqThreshold)
   : TestCase ("Test: " + name),

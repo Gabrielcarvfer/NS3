@@ -22,7 +22,7 @@
 #if defined (INT64X64_USE_128) && !defined(PYTHON_SCAN)
 #pragma once 
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <cmath>  // pow
 
 #if defined(HAVE___UINT128_T) && !defined(HAVE_UINT128_T)

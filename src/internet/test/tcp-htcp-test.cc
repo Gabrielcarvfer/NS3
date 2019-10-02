@@ -57,7 +57,7 @@ public:
    */
   TcpHtcpIncrementTest (uint32_t cWnd, uint32_t segmentSize,
                      uint32_t segmentsAcked, Time lastCongestion, Time firstAck,
-                     Time secondAck, uint32_t expectedCwnd, const std::string &name);
+                     Time secondAck, uint32_t expectedCwnd, const stdfwd::string &name);
 
 private:
   virtual void DoRun (void);
@@ -74,7 +74,7 @@ private:
 
 TcpHtcpIncrementTest::TcpHtcpIncrementTest (uint32_t cWnd, uint32_t segmentSize,
                                       uint32_t segmentsAcked, Time lastCongestion, Time firstAck,
-                                      Time secondAck, uint32_t expectedCwnd, const std::string &name)
+                                      Time secondAck, uint32_t expectedCwnd, const stdfwd::string &name)
   : TestCase (name),
     m_cWnd (cWnd),
     m_segmentSize (segmentSize),

@@ -150,14 +150,14 @@ ThreeGppHttpClient::GetState () const
 }
 
 
-std::string
+stdfwd::string
 ThreeGppHttpClient::GetStateString () const
 {
   return GetStateString (m_state);
 }
 
 // static
-std::string
+stdfwd::string
 ThreeGppHttpClient::GetStateString (ThreeGppHttpClient::State_t state)
 {
   switch (state)
@@ -853,8 +853,8 @@ ThreeGppHttpClient::CancelAllPendingEvents ()
 void
 ThreeGppHttpClient::SwitchToState (ThreeGppHttpClient::State_t state)
 {
-  const std::string oldState = GetStateString ();
-  const std::string newState = GetStateString (state);
+  const stdfwd::string oldState = GetStateString ();
+  const stdfwd::string newState = GetStateString (state);
   NS_LOG_FUNCTION (this << oldState << newState);
 
   if ((state == EXPECTING_MAIN_OBJECT) || (state == EXPECTING_EMBEDDED_OBJECT))

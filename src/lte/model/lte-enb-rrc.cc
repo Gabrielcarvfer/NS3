@@ -118,7 +118,7 @@ EnbRrcMemberLteEnbCmacSapUser::IsRandomAccessCompleted (uint16_t rnti)
 
 
 /// Map each of UE Manager states to its string representation.
-static const std::string g_ueManagerStateName[UeManager::NUM_STATES] =
+static const stdfwd::string g_ueManagerStateName[UeManager::NUM_STATES] =
 {
   "INITIAL_RANDOM_ACCESS",
   "CONNECTION_SETUP",
@@ -137,7 +137,7 @@ static const std::string g_ueManagerStateName[UeManager::NUM_STATES] =
  * \param s The UE manager state.
  * \return The string representation of the given state.
  */
-static const std::string & ToString (UeManager::State s)
+static const stdfwd::string & ToString (UeManager::State s)
 {
   return g_ueManagerStateName[s];
 }

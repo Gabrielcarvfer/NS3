@@ -42,11 +42,11 @@ int main (int argc, char *argv[])
   double      minTh = 5;
   double      maxTh = 15;
   uint32_t    pktSize = 512;
-  std::string appDataRate = "10Mbps";
-  std::string queueDiscType = "RED";
+  stdfwd::string appDataRate = "10Mbps";
+  stdfwd::string queueDiscType = "RED";
   uint16_t port = 5001;
-  std::string bottleNeckLinkBw = "1Mbps";
-  std::string bottleNeckLinkDelay = "50ms";
+  stdfwd::string bottleNeckLinkBw = "1Mbps";
+  stdfwd::string bottleNeckLinkDelay = "50ms";
 
   CommandLine cmd;
   cmd.AddValue ("nLeaf",     "Number of left and right side leaf nodes", nLeaf);

@@ -37,7 +37,7 @@ WifiRadioEnergyModelHelper::~WifiRadioEnergyModelHelper ()
 }
 
 void
-WifiRadioEnergyModelHelper::Set (std::string name, const AttributeValue &v)
+WifiRadioEnergyModelHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_radioEnergy.Set (name, v);
 }
@@ -57,15 +57,15 @@ WifiRadioEnergyModelHelper::SetRechargedCallback (
 }
 
 void
-WifiRadioEnergyModelHelper::SetTxCurrentModel (std::string name,
-                                               std::string n0, const AttributeValue& v0,
-                                               std::string n1, const AttributeValue& v1,
-                                               std::string n2, const AttributeValue& v2,
-                                               std::string n3, const AttributeValue& v3,
-                                               std::string n4, const AttributeValue& v4,
-                                               std::string n5, const AttributeValue& v5,
-                                               std::string n6, const AttributeValue& v6,
-                                               std::string n7, const AttributeValue& v7)
+WifiRadioEnergyModelHelper::SetTxCurrentModel (stdfwd::string name,
+                                               stdfwd::string n0, const AttributeValue& v0,
+                                               stdfwd::string n1, const AttributeValue& v1,
+                                               stdfwd::string n2, const AttributeValue& v2,
+                                               stdfwd::string n3, const AttributeValue& v3,
+                                               stdfwd::string n4, const AttributeValue& v4,
+                                               stdfwd::string n5, const AttributeValue& v5,
+                                               stdfwd::string n6, const AttributeValue& v6,
+                                               stdfwd::string n7, const AttributeValue& v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (name);
@@ -92,7 +92,7 @@ WifiRadioEnergyModelHelper::DoInstall (Ptr<NetDevice> device,
   NS_ASSERT (device != NULL);
   NS_ASSERT (source != NULL);
   // check if device is WifiNetDevice
-  std::string deviceName = device->GetInstanceTypeId ().GetName ();
+  stdfwd::string deviceName = device->GetInstanceTypeId ().GetName ();
   if (deviceName.compare ("ns3::WifiNetDevice") != 0)
     {
       NS_FATAL_ERROR ("NetDevice type is not WifiNetDevice!");

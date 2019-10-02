@@ -23,7 +23,7 @@
 #include "../../network/model/header.h"
 
 #include <bitset>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -89,7 +89,7 @@ protected:
    * \param nmax max value to serialize
    */
   void SerializeInteger (int n, int nmin, int nmax) const;
-  // void SerializeOctetstring (std::string s) const;
+  // void SerializeOctetstring (stdfwd::string s) const;
   /**
    * Serialize a Sequence
    * \param numElems element number to serialize

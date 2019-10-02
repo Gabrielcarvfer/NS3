@@ -27,7 +27,7 @@
 #include "../../core/model/object.h"
 #include "../../stats/model/basic-data-calculators.h"
 #include "../model/lte-common.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <map>
 #include <fstream>
 
@@ -78,7 +78,7 @@ public:
     * Class constructor
     * \param protocolType the name of the protocol type
     */
-  RadioBearerStatsCalculator (std::string protocolType);
+  RadioBearerStatsCalculator (stdfwd::string protocolType);
 
   /**
    * Class destructor
@@ -98,39 +98,39 @@ public:
    * Get the name of the file where the uplink statistics will be stored.
    * @return the name of the file where the uplink statistics will be stored
    */
-  std::string GetUlOutputFilename (void);
+  stdfwd::string GetUlOutputFilename (void);
 
   /**
    * Get the name of the file where the downlink statistics will be stored.
    * @return the name of the file where the downlink statistics will be stored
    */
-  std::string GetDlOutputFilename (void);
+  stdfwd::string GetDlOutputFilename (void);
 
   /**
    * Set the name of the file where the uplink PDCP statistics will be stored.
    *
    * @param outputFilename string with the name of the file
    */
-  void SetUlPdcpOutputFilename (std::string outputFilename);
+  void SetUlPdcpOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the uplink PDCP statistics will be stored.
    * @return the name of the file where the uplink PDCP statistics will be stored
    */
-  std::string GetUlPdcpOutputFilename (void);
+  stdfwd::string GetUlPdcpOutputFilename (void);
 
   /**
    * Set the name of the file where the downlink PDCP statistics will be stored.
    *
    * @param outputFilename string with the name of the file
    */
-  void SetDlPdcpOutputFilename (std::string outputFilename);
+  void SetDlPdcpOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the downlink PDCP statistics will be stored.
    * @return the name of the file where the downlink PDCP statistics will be stored
    */
-  std::string GetDlPdcpOutputFilename (void);
+  stdfwd::string GetDlPdcpOutputFilename (void);
 
 
   /** 
@@ -435,17 +435,17 @@ private:
   /**
    * Protocol type, by default RLC
    */
-  std::string m_protocolType;
+  stdfwd::string m_protocolType;
 
   /**
    * Name of the file where the downlink PDCP statistics will be saved
    */
-  std::string m_dlPdcpOutputFilename;
+  stdfwd::string m_dlPdcpOutputFilename;
 
   /**
    * Name of the file where the uplink PDCP statistics will be saved
    */
-  std::string m_ulPdcpOutputFilename;
+  stdfwd::string m_ulPdcpOutputFilename;
 
 };
 

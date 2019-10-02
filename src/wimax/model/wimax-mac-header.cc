@@ -53,7 +53,7 @@ MacHeaderType::GetType (void) const
   return m_type;
 }
 
-std::string
+stdfwd::string
 MacHeaderType::GetName (void) const
 {
   return "MAC Header Type";
@@ -197,7 +197,7 @@ uint8_t GenericMacHeader::GetHcs (void) const
   return m_hcs;
 }
 
-std::string GenericMacHeader::GetName (void) const
+stdfwd::string GenericMacHeader::GetName (void) const
 {
   return "Generic Mac Header";
 }
@@ -380,7 +380,7 @@ uint8_t BandwidthRequestHeader::GetHcs (void) const
   return m_hcs;
 }
 
-std::string BandwidthRequestHeader::GetName (void) const
+stdfwd::string BandwidthRequestHeader::GetName (void) const
 {
   return "Bandwidth Request Header";
 }
@@ -532,7 +532,7 @@ uint16_t GrantManagementSubheader::GetPbr (void) const
   return m_pbr;
 }
 
-std::string GrantManagementSubheader::GetName (void) const
+stdfwd::string GrantManagementSubheader::GetName (void) const
 {
   return "Grant Management Subheader";
 }
@@ -620,7 +620,7 @@ FragmentationSubheader::GetFsn (void) const
 }
 
 
-std::string
+stdfwd::string
 FragmentationSubheader::GetName (void) const
 {
   return "Fragmentation Subheader";

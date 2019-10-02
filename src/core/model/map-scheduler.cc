@@ -23,7 +23,7 @@
 #include "event-impl.h"
 #include "assert.h"
 #include "log.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file

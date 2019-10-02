@@ -19,7 +19,7 @@
 // directory, converted into system tests.  Writing a test suite
 // to test Csma itself is for further study.
 
-#include <string>
+#include "../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../network/model/address.h"
 #include "../network/helper/application-container.h"
@@ -571,7 +571,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
   void DropEvent (Ptr<const Packet> p);
   uint32_t m_count;
   uint32_t m_drops;
@@ -588,7 +588,7 @@ CsmaPacketSocketTestCase::~CsmaPacketSocketTestCase ()
 }
 
 void 
-CsmaPacketSocketTestCase::SinkRx (std::string path, Ptr<const Packet> p, const Address& address)
+CsmaPacketSocketTestCase::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address& address)
 {
   m_count++;
 }
@@ -678,7 +678,7 @@ public:
 private:
   virtual void DoRun (void);
   void SinkRx (Ptr<const Packet> p, const Address &ad);
-  void PingRtt (std::string context, Time rtt);
+  void PingRtt (stdfwd::string context, Time rtt);
   void DropEvent (Ptr<const Packet> p);
   uint32_t m_countSinkRx;
   uint32_t m_countPingRtt;
@@ -702,7 +702,7 @@ CsmaPingTestCase::SinkRx (Ptr<const Packet> p, const Address &ad)
 }
 
 void 
-CsmaPingTestCase::PingRtt (std::string context, Time rtt)
+CsmaPingTestCase::PingRtt (stdfwd::string context, Time rtt)
 {
   m_countPingRtt++;
 }

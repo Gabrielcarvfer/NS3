@@ -92,8 +92,8 @@ private:
   bool      m_chan; ///< channel
   bool      m_pcap; ///< PCAP
   bool      m_ascii; ///< ASCII
-  std::string m_stack; ///< stack
-  std::string m_root; ///< root
+  stdfwd::string m_stack; ///< stack
+  stdfwd::string m_root; ///< root
   /// List of network nodes
   NodeContainer nodes;
   /// List of all mesh point devices
@@ -207,7 +207,7 @@ MeshTest::CreateNodes ()
   mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
   mobility.Install (nodes);
   if (m_pcap)
-    wifiPhy.EnablePcapAll (std::string ("mp-"));
+    wifiPhy.EnablePcapAll (stdfwd::string ("mp-"));
   if (m_ascii)
     {
       AsciiTraceHelper ascii;

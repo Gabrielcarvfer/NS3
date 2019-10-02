@@ -42,7 +42,7 @@ void Ping6Helper::SetRemote (Ipv6Address ip)
   m_remoteIp = ip;
 }
 
-void Ping6Helper::SetAttribute (std::string name, const AttributeValue& value)
+void Ping6Helper::SetAttribute (stdfwd::string name, const AttributeValue& value)
 {
   m_factory.Set (name, value);
 }

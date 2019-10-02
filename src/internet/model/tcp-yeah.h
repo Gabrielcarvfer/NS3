@@ -89,7 +89,7 @@ public:
   TcpYeah (const TcpYeah& sock);
   virtual ~TcpYeah (void);
 
-  virtual std::string GetName () const;
+  virtual stdfwd::string GetName () const;
 
   /**
    * \brief Compute RTTs needed to execute YeAH algorithm

@@ -75,7 +75,7 @@ public:
    *             prepended with a path to that object.
    * \param [in] object A smart pointer to the object itself.
    */
-  static void Add (std::string name, Ptr<Object> object);
+  static void Add (stdfwd::string name, Ptr<Object> object);
 
   /**
    * \brief An intermediate form of Names::Add allowing you to provide
@@ -110,9 +110,9 @@ public:
    * \param [in] name The name of the object you want to associate.
    * \param [in] object A smart pointer to the object itself.
    *
-   * \see Names::Add (Ptr<Object>,std::string,Ptr<Object>);
+   * \see Names::Add (Ptr<Object>,stdfwd::string,Ptr<Object>);
    */
-  static void Add (std::string path, std::string name, Ptr<Object> object);
+  static void Add (stdfwd::string path, stdfwd::string name, Ptr<Object> object);
 
   /**
    * \brief A low-level form of Names::Add allowing you to specify the
@@ -168,7 +168,7 @@ public:
    * \param [in] name The name of the object you want to associate.
    * \param [in] object A smart pointer to the object itself.
    */
-  static void Add (Ptr<Object> context, std::string name, Ptr<Object> object);
+  static void Add (Ptr<Object> context, stdfwd::string name, Ptr<Object> object);
 
   /**
    * \brief Rename a previously associated name.
@@ -198,9 +198,9 @@ public:
    *             to change.
    * \param [in] newname The new name of the object you want to change.
    *
-   * \see Names::Add (std::string name, Ptr<Object> obj)
+   * \see Names::Add (stdfwd::string name, Ptr<Object> obj)
    */
-  static void Rename (std::string oldpath, std::string newname);
+  static void Rename (stdfwd::string oldpath, stdfwd::string newname);
 
   /**
    * \brief An intermediate form of Names::Rename allowing you to
@@ -225,7 +225,7 @@ public:
    * \param [in] oldname The currently defined name of the object.
    * \param [in] newname The new name you want the object to have.
    */
-  static void Rename (std::string path, std::string oldname, std::string newname);
+  static void Rename (stdfwd::string path, stdfwd::string oldname, stdfwd::string newname);
 
   /**
    * \brief A low-level form of Names::Rename allowing you to specify
@@ -271,7 +271,7 @@ public:
    * \param [in] newname The new shortname of the object you want
    *             to change.
    */
-  static void Rename (Ptr<Object> context, std::string oldname, std::string newname);
+  static void Rename (Ptr<Object> context, stdfwd::string oldname, stdfwd::string newname);
 
   /**
    * \brief Given a pointer to an object, look to see if that object
@@ -291,7 +291,7 @@ public:
    * \returns A string containing the name of the object if found,
    *          otherwise the empty string.
    */
-  static std::string FindName (Ptr<Object> object);
+  static stdfwd::string FindName (Ptr<Object> object);
 
   /**
    * \brief Given a pointer to an object, look to see if that object
@@ -312,7 +312,7 @@ public:
    * \returns A string containing the name path of the object,
    *          otherwise the empty string.
    */
-  static std::string FindPath (Ptr<Object> object);
+  static stdfwd::string FindPath (Ptr<Object> object);
 
   /**
    * \brief Clear the list of objects associated with names.
@@ -341,7 +341,7 @@ public:
    *          the requested type.
    */
   template <typename T>
-  static Ptr<T> Find (std::string path);
+  static Ptr<T> Find (stdfwd::string path);
 
   /**
    * \brief Given a path to an object and an object name, look through
@@ -368,7 +368,7 @@ public:
    *          the requested type.
    */
   template <typename T>
-  static Ptr<T> Find (std::string path, std::string name);
+  static Ptr<T> Find (stdfwd::string path, stdfwd::string name);
 
   /**
    * \brief Given a path to an object and an object name, look through
@@ -411,7 +411,7 @@ public:
    *          the requested type.
    */
   template <typename T>
-  static Ptr<T> Find (Ptr<Object> context, std::string name);
+  static Ptr<T> Find (Ptr<Object> context, stdfwd::string name);
 
 private:
   /**
@@ -422,7 +422,7 @@ private:
    *
    * \returns A smart pointer to the named object.
    */
-  static Ptr<Object> FindInternal (std::string path);
+  static Ptr<Object> FindInternal (stdfwd::string path);
 
   /**
    * \brief Non-templated internal version of Names::Find
@@ -434,7 +434,7 @@ private:
    *
    * \returns A smart pointer to the named object.
    */
-  static Ptr<Object> FindInternal (std::string path, std::string name);
+  static Ptr<Object> FindInternal (stdfwd::string path, stdfwd::string name);
 
   /**
    * \brief Non-templated internal version of Names::Find
@@ -445,14 +445,14 @@ private:
    *
    * \returns A smart pointer to the named object.
    */
-  static Ptr<Object> FindInternal (Ptr<Object> context, std::string name);
+  static Ptr<Object> FindInternal (Ptr<Object> context, stdfwd::string name);
 };
 
   
 template <typename T>
 /* static */
 Ptr<T> 
-Names::Find (std::string path)
+Names::Find (stdfwd::string path)
 {
   Ptr<Object> obj = FindInternal (path);
   if (obj)
@@ -468,7 +468,7 @@ Names::Find (std::string path)
 template <typename T>
 /* static */
 Ptr<T> 
-Names::Find (std::string path, std::string name)
+Names::Find (stdfwd::string path, stdfwd::string name)
 {
   Ptr<Object> obj = FindInternal (path, name);
   if (obj)
@@ -484,7 +484,7 @@ Names::Find (std::string path, std::string name)
 template <typename T>
 /* static */
 Ptr<T> 
-Names::Find (Ptr<Object> context, std::string name)
+Names::Find (Ptr<Object> context, stdfwd::string name)
 {
   Ptr<Object> obj = FindInternal (context, name);
   if (obj)

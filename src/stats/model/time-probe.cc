@@ -75,7 +75,7 @@ TimeProbe::SetValue (Time newVal)
 }
 
 void
-TimeProbe::SetValueByPath (std::string path, Time newVal)
+TimeProbe::SetValueByPath (stdfwd::string path, Time newVal)
 {
   NS_LOG_FUNCTION (path << newVal.GetSeconds ());
   Ptr<TimeProbe> probe = Names::Find<TimeProbe> (path);
@@ -84,7 +84,7 @@ TimeProbe::SetValueByPath (std::string path, Time newVal)
 }
 
 bool
-TimeProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+TimeProbe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of trace source (if any) in names database: " << Names::FindPath (obj));
@@ -93,7 +93,7 @@ TimeProbe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-TimeProbe::ConnectByPath (std::string path)
+TimeProbe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of trace source to search for in config database: " << path);

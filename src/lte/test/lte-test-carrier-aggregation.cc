@@ -48,18 +48,18 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("TestCarrierAggregation");
 
 bool CarrierAggregationTestCase::s_writeResults = false; // set to true to write response vectors
-const std::string dlResultsFileName = "carrier_aggregation_results_dl.txt";
-const std::string ulResultsFileName = "carrier_aggregation_results_ul.txt";
+const stdfwd::string dlResultsFileName = "carrier_aggregation_results_dl.txt";
+const stdfwd::string ulResultsFileName = "carrier_aggregation_results_ul.txt";
 
 
 void
-LteTestDlSchedulingCallback (CarrierAggregationTestCase *testcase, std::string path, DlSchedulingCallbackInfo dlInfo)
+LteTestDlSchedulingCallback (CarrierAggregationTestCase *testcase, stdfwd::string path, DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
 }
 
 void
-LteTestUlSchedulingCallback (CarrierAggregationTestCase *testcase, std::string path,
+LteTestUlSchedulingCallback (CarrierAggregationTestCase *testcase, stdfwd::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                              uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
 {
@@ -237,7 +237,7 @@ TestCarrierAggregationSuite::TestCarrierAggregationSuite ()
 
 static TestCarrierAggregationSuite lenaTestRrFfMacSchedulerSuite;
 
-std::string 
+stdfwd::string
 CarrierAggregationTestCase::BuildNameString (uint16_t nUser, uint16_t dist, uint32_t dlBandwidth, uint32_t ulBandwidth, uint32_t numberOfComponentCarriers)
 {
   std::ostringstream oss;

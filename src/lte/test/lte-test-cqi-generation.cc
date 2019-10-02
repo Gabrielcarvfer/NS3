@@ -44,13 +44,13 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("LteCqiGenerationTest");
 
 void
-LteTestDlSchedulingCallback (LteCqiGenerationTestCase *testcase, std::string path, DlSchedulingCallbackInfo dlInfo)
+LteTestDlSchedulingCallback (LteCqiGenerationTestCase *testcase, stdfwd::string path, DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
 }
 
 void
-LteTestUlSchedulingCallback (LteCqiGenerationTestCase *testcase, std::string path,
+LteTestUlSchedulingCallback (LteCqiGenerationTestCase *testcase, stdfwd::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                              uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
 {
@@ -58,14 +58,14 @@ LteTestUlSchedulingCallback (LteCqiGenerationTestCase *testcase, std::string pat
 }
 
 void
-LteTestDlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, std::string path,
+LteTestDlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, stdfwd::string path,
 		                      DlSchedulingCallbackInfo dlInfo)
 {
   testcase->DlScheduling (dlInfo);
 }
 
 void
-LteTestUlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, std::string path,
+LteTestUlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, stdfwd::string path,
                               uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
                               uint8_t mcs, uint16_t sizeTb, uint8_t componentCarrierId)
 {
@@ -106,7 +106,7 @@ LteCqiGenerationTestSuite::LteCqiGenerationTestSuite ()
 static LteCqiGenerationTestSuite lteCqiGenerationTestSuite;
 
 
-LteCqiGenerationTestCase::LteCqiGenerationTestCase (std::string name, bool usePdcchForCqiGeneration,
+LteCqiGenerationTestCase::LteCqiGenerationTestCase (stdfwd::string name, bool usePdcchForCqiGeneration,
                                                     uint16_t dlMcs, uint16_t ulMcs)
   : TestCase ("Downlink Power Control: " + name),
     m_dlMcs (dlMcs),
@@ -238,7 +238,7 @@ LteCqiGenerationTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteCqiGenerationDlPowerControlTestCase::LteCqiGenerationDlPowerControlTestCase (std::string name,
+LteCqiGenerationDlPowerControlTestCase::LteCqiGenerationDlPowerControlTestCase (stdfwd::string name,
                                                                                 uint8_t cell0Pa, uint8_t cell1Pa, uint16_t dlMcs, uint16_t ulMcs)
   : TestCase ("Downlink Power Control: " + name),
     m_cell0Pa (cell0Pa),

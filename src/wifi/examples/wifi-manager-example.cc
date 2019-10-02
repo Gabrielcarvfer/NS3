@@ -108,7 +108,7 @@ struct StandardInfo
    * \param xMax x maximum
    * \param yMax y maximum
    */
-  StandardInfo (std::string name, WifiPhyStandard standard, uint16_t width, double snrLow, double snrHigh, double xMin, double xMax, double yMax)
+  StandardInfo (stdfwd::string name, WifiPhyStandard standard, uint16_t width, double snrLow, double snrHigh, double xMin, double xMax, double yMax)
     : m_name (name),
       m_standard (standard),
       m_width (width),
@@ -119,7 +119,7 @@ struct StandardInfo
       m_yMax (yMax)
   {
   }
-  std::string m_name; ///< name
+  stdfwd::string m_name; ///< name
   WifiPhyStandard m_standard; ///< standard
   uint16_t m_width; ///< channel width
   double m_snrLow; ///< lowest SNR
@@ -165,8 +165,8 @@ int main (int argc, char *argv[])
   uint16_t clientShortGuardInterval = 800;
   uint16_t serverChannelWidth = 20;
   uint16_t clientChannelWidth = 20;
-  std::string wifiManager ("Ideal");
-  std::string standard ("802.11a");
+  stdfwd::string wifiManager ("Ideal");
+  stdfwd::string standard ("802.11a");
   StandardInfo serverSelectedStandard;
   StandardInfo clientSelectedStandard;
   bool infrastructure = false;
@@ -295,8 +295,8 @@ int main (int argc, char *argv[])
   Ptr<Node> clientNode = CreateObject<Node> ();
   Ptr<Node> serverNode = CreateObject<Node> ();
 
-  std::string plotName = "wifi-manager-example-";
-  std::string dataName = "wifi-manager-example-";
+  stdfwd::string plotName = "wifi-manager-example-";
+  stdfwd::string dataName = "wifi-manager-example-";
   plotName += wifiManager;
   dataName += wifiManager;
   plotName += "-";
@@ -389,8 +389,8 @@ int main (int argc, char *argv[])
   mobility.Install (clientNode);
   mobility.Install (serverNode);
 
-  Gnuplot2dDataset rateDataset (clientSelectedStandard.m_name + std::string ("-rate selected"));
-  Gnuplot2dDataset actualDataset (clientSelectedStandard.m_name + std::string ("-observed"));
+  Gnuplot2dDataset rateDataset (clientSelectedStandard.m_name + stdfwd::string ("-rate selected"));
+  Gnuplot2dDataset actualDataset (clientSelectedStandard.m_name + stdfwd::string ("-observed"));
   struct Step step;
   step.stepSize = stepSize;
   step.stepTime = stepTime;
@@ -489,19 +489,19 @@ int main (int argc, char *argv[])
   gnuplot.AddDataset (actualDataset);
 
   std::ostringstream xMinStr, xMaxStr, yMaxStr;
-  std::string xRangeStr ("set xrange [");
+  stdfwd::string xRangeStr ("set xrange [");
   xMinStr << clientSelectedStandard.m_xMin;
   xRangeStr.append (xMinStr.str ());
   xRangeStr.append (":");
   xMaxStr << clientSelectedStandard.m_xMax;
   xRangeStr.append (xMaxStr.str ());
   xRangeStr.append ("]");
-  std::string yRangeStr ("set yrange [0:");
+  stdfwd::string yRangeStr ("set yrange [0:");
   yMaxStr << clientSelectedStandard.m_yMax;
   yRangeStr.append (yMaxStr.str ());
   yRangeStr.append ("]");
 
-  std::string title ("Results for ");
+  stdfwd::string title ("Results for ");
   title.append (standard);
   title.append (" with ");
   title.append (wifiManager);

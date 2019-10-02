@@ -93,7 +93,7 @@ public:
    *
    * \return Name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * Get a unique id for the mode.
    *
@@ -158,7 +158,7 @@ public:
                                uint32_t cfHz,
                                uint32_t bwHz,
                                uint32_t constSize,
-                               std::string name);
+                               stdfwd::string name);
 
   /**
    * Get a mode by name.
@@ -166,7 +166,7 @@ public:
    * \param name String name of mode.
    * \return Mode with given name.
    */
-  static UanTxMode GetMode (std::string name);
+  static UanTxMode GetMode (stdfwd::string name);
   /**
    * Get a mode by id.
    *
@@ -192,7 +192,7 @@ private:
     uint32_t m_phyRateSps;             //!< Symbol rate in symbols per second.
     uint32_t m_constSize;              //!< Modulation constellation size (2 for BPSK, 4 for QPSK).
     uint32_t m_uid;                    //!< Unique id.
-    std::string m_name;                //!< Unique string name for this transmission mode.
+    stdfwd::string m_name;                //!< Unique string name for this transmission mode.
   };
 
   /**
@@ -212,7 +212,7 @@ private:
    * \param name The mode name to test.
    * \return True if \pname{name} exists.
    */
-  bool NameUsed (std::string name);
+  bool NameUsed (stdfwd::string name);
 
   /**
    * Construct and get the static global factory instance.
@@ -234,7 +234,7 @@ private:
    * \param name The mode name to find.
    * \return The corresponding mode.
    */
-  UanTxModeItem &GetModeItem (std::string name);
+  UanTxModeItem &GetModeItem (stdfwd::string name);
 
   /**
    * Create a public UanTxMode from an internal UanTxModeItem.

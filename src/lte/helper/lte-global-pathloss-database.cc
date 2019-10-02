@@ -71,7 +71,7 @@ LteGlobalPathlossDatabase::GetPathloss (uint16_t cellId, uint64_t imsi)
  
 
 void
-DownlinkLteGlobalPathlossDatabase::UpdatePathloss (std::string context, 
+DownlinkLteGlobalPathlossDatabase::UpdatePathloss (stdfwd::string context,
                                         Ptr<const SpectrumPhy> txPhy,
                                         Ptr<const SpectrumPhy> rxPhy,
                                         double lossDb)
@@ -84,7 +84,7 @@ DownlinkLteGlobalPathlossDatabase::UpdatePathloss (std::string context,
 
 
 void
-UplinkLteGlobalPathlossDatabase::UpdatePathloss (std::string context, 
+UplinkLteGlobalPathlossDatabase::UpdatePathloss (stdfwd::string context,
                                         Ptr<const SpectrumPhy> txPhy,
                                         Ptr<const SpectrumPhy> rxPhy,
                                         double lossDb)

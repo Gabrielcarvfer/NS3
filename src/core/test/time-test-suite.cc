@@ -22,7 +22,7 @@
 
 #include <iomanip>
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <sstream>
 
 #include "../model/nstime.h"
@@ -164,7 +164,7 @@ public:
   TimeInputOutputTestCase ();
 private:
   virtual void DoRun (void);
-  void Check (const std::string & str);
+  void Check (const stdfwd::string & str);
 };
 
 TimeInputOutputTestCase::TimeInputOutputTestCase ()
@@ -173,9 +173,9 @@ TimeInputOutputTestCase::TimeInputOutputTestCase ()
 }
 
 void
-TimeInputOutputTestCase::Check (const std::string & str)
+TimeInputOutputTestCase::Check (const stdfwd::string & str)
 {
-  std::stringstream ss (str);
+  stdfwd::stringstream ss (str);
   Time time;
   ss >> time;
   ss << time;

@@ -162,7 +162,7 @@ main (int argc, char *argv[])
   LogComponentEnable ("UdpEchoClientApplication", LOG_LEVEL_ALL);
   LogComponentEnable ("UdpEchoServerApplication", LOG_LEVEL_ALL);
 
- // PcapHelperForIpv6::EnablePcapIpv6 (std::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename)
+ // PcapHelperForIpv6::EnablePcapIpv6 (stdfwd::string prefix, uint32_t nodeid, uint32_t interface, bool explicitFilename)
 
   internet.EnablePcapIpv6 ("LenaIpv6-Ue-Rh-Ue0.pcap", ueNodes.Get (0)->GetId (), 1, true);
   internet.EnablePcapIpv6 ("LenaIpv6-Ue-Rh-Ue1.pcap", ueNodes.Get (1)->GetId (), 1, true);

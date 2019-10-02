@@ -31,15 +31,15 @@
 
 #include <ctime>    // time_t, time()
 #include <sstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
 /* static */
-std::string DesMetrics::m_outputDir; // = "";
+stdfwd::string DesMetrics::m_outputDir; // = "";
 
 void 
-DesMetrics::Initialize (std::vector<std::string> args, std::string outDir /* = "" */ )
+DesMetrics::Initialize (std::vector<stdfwd::string> args, stdfwd::string outDir /* = "" */ )
 {
   if (m_initialized)
     {
@@ -49,13 +49,13 @@ DesMetrics::Initialize (std::vector<std::string> args, std::string outDir /* = "
 
   m_initialized = true;
 
-  std::string model_name ("desTraceFile");
+  stdfwd::string model_name ("desTraceFile");
   if (args.size () > 0)
     {
-      std::string arg0 = args[0];
+      stdfwd::string arg0 = args[0];
       model_name = SystemPath::Split (arg0).back ();
     }
-  std::string jsonFile = model_name + ".json";
+  stdfwd::string jsonFile = model_name + ".json";
   if (outDir != "")
     {
       DesMetrics::m_outputDir = outDir;
@@ -68,7 +68,7 @@ DesMetrics::Initialize (std::vector<std::string> args, std::string outDir /* = "
   time_t current_time;
   time (&current_time);
   const char * date = ctime (&current_time);
-  std::string capture_date (date, 24);  // discard trailing newline from ctime
+  stdfwd::string capture_date (date, 24);  // discard trailing newline from ctime
 
   m_os.open (jsonFile.c_str ());
   m_os << "{" << std::endl;
@@ -106,7 +106,7 @@ DesMetrics::TraceWithContext (uint32_t context, const Time & now, const Time & d
 {
   if (!m_initialized)
     {
-      std::vector<std::string> args;
+      std::vector<stdfwd::string> args;
       Initialize (args);
     }
 

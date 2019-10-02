@@ -91,7 +91,7 @@ private:
    * \param maxDistFromOrigin the maximum distance from the origin
    * \returns the name string
    */
-  static std::string Name (double originLatitude, 
+  static stdfwd::string Name (double originLatitude,
                            double originLongitude,
                            double maxDistFromOrigin);
   double m_originLatitude; ///< origin latitude
@@ -102,7 +102,7 @@ private:
   Ptr<UniformRandomVariable> m_uniRand; ///< random number
 };
 
-std::string 
+stdfwd::string
 RandCartAroundGeoTestCase::Name (double originLatitude, 
                                  double originLongitude,
                                  double maxDistFromOrigin)

@@ -19,7 +19,7 @@
 #pragma once
 
 #include <unistd.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>

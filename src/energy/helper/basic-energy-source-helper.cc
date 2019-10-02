@@ -33,7 +33,7 @@ BasicEnergySourceHelper::~BasicEnergySourceHelper ()
 }
 
 void
-BasicEnergySourceHelper::Set (std::string name, const AttributeValue &v)
+BasicEnergySourceHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_basicEnergySource.Set (name, v);
 }

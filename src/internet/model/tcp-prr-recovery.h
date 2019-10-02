@@ -69,7 +69,7 @@ public:
     SSRB                /**< Slow Start Reduction Bound */
   } ReductionBound_t;
 
-  std::string GetName () const override;
+  stdfwd::string GetName () const override;
 
   virtual void EnterRecovery (Ptr<TcpSocketState> tcb, uint32_t dupAckCount,
                               uint32_t unAckDataCount, uint32_t lastSackedBytes) override;

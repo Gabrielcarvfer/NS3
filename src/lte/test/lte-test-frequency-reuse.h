@@ -62,7 +62,7 @@ public:
    * \param availableDlRb the available DL per RB
    * \param availableUlRb the available UL per RB
    */
-  LteFrTestCase (std::string name,
+  LteFrTestCase (stdfwd::string name,
                  uint32_t userNum,uint8_t dlBandwidth,uint8_t ulBandwidth,
                  std::vector<bool> availableDlRb, std::vector<bool> availableUlRb);
   virtual ~LteFrTestCase ();
@@ -118,8 +118,8 @@ public:
    * \param availableDlRb the available DL per RB
    * \param availableUlRb the avaialbel UL per RB
    */
-  LteHardFrTestCase (std::string name, uint32_t userNum,
-                     std::string schedulerType,
+  LteHardFrTestCase (stdfwd::string name, uint32_t userNum,
+                     stdfwd::string schedulerType,
                      uint8_t dlBandwidth, uint8_t ulBandwidth,
                      uint8_t dlSubBandOffset, uint8_t dlSubBandwidth,
                      uint8_t ulSubBandOffset, uint8_t ulSubBandwidth,
@@ -129,7 +129,7 @@ public:
 private:
   virtual void DoRun (void);
 
-  std::string m_schedulerType; ///< the scheduler type
+  stdfwd::string m_schedulerType; ///< the scheduler type
 
   uint8_t m_dlSubBandOffset; ///< the DL subband offset
   uint8_t m_dlSubBandwidth; ///< the DL subband width
@@ -165,8 +165,8 @@ public:
    * \param availableDlRb the available DL per RB
    * \param availableUlRb the avaialbel UL per RB
    */
-  LteStrictFrTestCase (std::string name, uint32_t userNum,
-                       std::string schedulerType,
+  LteStrictFrTestCase (stdfwd::string name, uint32_t userNum,
+                       stdfwd::string schedulerType,
                        uint8_t dlBandwidth, uint8_t ulBandwidth,
                        uint8_t dlCommonSubBandwidth, uint8_t dlEdgeSubBandOffset, uint8_t dlEdgeSubBandwidth,
                        uint8_t ulCommonSubBandwidth, uint8_t ulEdgeSubBandOffset, uint8_t ulEdgeSubBandwidth,
@@ -176,7 +176,7 @@ public:
 private:
   virtual void DoRun (void);
 
-  std::string m_schedulerType; ///< scheduler type
+  stdfwd::string m_schedulerType; ///< scheduler type
 
   uint8_t m_dlCommonSubBandwidth; ///< DL common subbandwidth
   uint8_t m_dlEdgeSubBandOffset; ///< DL edge subband offset
@@ -205,7 +205,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteFrAreaTestCase (std::string name, std::string schedulerType);
+  LteFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteFrAreaTestCase ();
 
   /**
@@ -260,7 +260,7 @@ public:
 protected:
   virtual void DoRun (void);
 
-  std::string m_schedulerType; ///< the scheduler type
+  stdfwd::string m_schedulerType; ///< the scheduler type
  
   uint8_t m_dlBandwidth; ///< the DL bandwidth
   uint8_t m_ulBandwidth; ///< the UL bandwidth
@@ -295,7 +295,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteStrictFrAreaTestCase (std::string name, std::string schedulerType);
+  LteStrictFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteStrictFrAreaTestCase ();
 
 private:
@@ -317,7 +317,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteSoftFrAreaTestCase (std::string name, std::string schedulerType);
+  LteSoftFrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteSoftFrAreaTestCase ();
 
 private:
@@ -340,7 +340,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteSoftFfrAreaTestCase (std::string name, std::string schedulerType);
+  LteSoftFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteSoftFfrAreaTestCase ();
 
 private:
@@ -363,7 +363,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteEnhancedFfrAreaTestCase (std::string name, std::string schedulerType);
+  LteEnhancedFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteEnhancedFfrAreaTestCase ();
 
 private:
@@ -386,7 +386,7 @@ public:
    * \param name the reference name
    * \param schedulerType the scheduler type
    */
-  LteDistributedFfrAreaTestCase (std::string name, std::string schedulerType);
+  LteDistributedFfrAreaTestCase (stdfwd::string name, stdfwd::string schedulerType);
   virtual ~LteDistributedFfrAreaTestCase ();
 
 private:

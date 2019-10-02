@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/object.h"
 
 namespace ns3 {
@@ -54,17 +54,17 @@ public:
   virtual bool IsEnabled (void) const;
 
   /// Get the object's name.
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
 
   /// Set the object's name.  All spaces are replaced by underscores.
-  void SetName (std::string name);
+  void SetName (stdfwd::string name);
 
 protected:
   /// Object's activation state.
   bool m_enabled;
 
   /// Name of the object within the data collection framework
-  std::string m_name;
+  stdfwd::string m_name;
 
 };
 

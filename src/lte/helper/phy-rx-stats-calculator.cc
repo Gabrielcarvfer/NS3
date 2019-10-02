@@ -66,24 +66,24 @@ PhyRxStatsCalculator::GetTypeId (void)
 }
 
 void
-PhyRxStatsCalculator::SetUlRxOutputFilename (std::string outputFilename)
+PhyRxStatsCalculator::SetUlRxOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetUlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 PhyRxStatsCalculator::GetUlRxOutputFilename (void)
 {
   return LteStatsCalculator::GetUlOutputFilename ();
 }
 
 void
-PhyRxStatsCalculator::SetDlRxOutputFilename (std::string outputFilename)
+PhyRxStatsCalculator::SetDlRxOutputFilename (stdfwd::string outputFilename)
 {
   LteStatsCalculator::SetDlOutputFilename (outputFilename);
 }
 
-std::string
+stdfwd::string
 PhyRxStatsCalculator::GetDlRxOutputFilename (void)
 {
   return LteStatsCalculator::GetDlOutputFilename ();
@@ -180,13 +180,13 @@ PhyRxStatsCalculator::UlPhyReception (PhyReceptionStatParameters params)
 
 void
 PhyRxStatsCalculator::DlPhyReceptionCallback (Ptr<PhyRxStatsCalculator> phyRxStats,
-                      std::string path, PhyReceptionStatParameters params)
+                      stdfwd::string path, PhyReceptionStatParameters params)
 {
   NS_LOG_FUNCTION (phyRxStats << path);
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
   pathAndRnti << path << "/" << params.m_rnti;
-  std::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
+  stdfwd::string pathUePhy  = path.substr (0, path.find ("/ComponentCarrierMapUe"));
   if (phyRxStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {
       imsi = phyRxStats->GetImsiPath (pathAndRnti.str ());
@@ -203,12 +203,12 @@ PhyRxStatsCalculator::DlPhyReceptionCallback (Ptr<PhyRxStatsCalculator> phyRxSta
 
 void
 PhyRxStatsCalculator::UlPhyReceptionCallback (Ptr<PhyRxStatsCalculator> phyRxStats,
-                      std::string path, PhyReceptionStatParameters params)
+                      stdfwd::string path, PhyReceptionStatParameters params)
 {
   NS_LOG_FUNCTION (phyRxStats << path);
   uint64_t imsi = 0;
   std::ostringstream pathAndRnti;
-  std::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
+  stdfwd::string pathEnb  = path.substr (0, path.find ("/ComponentCarrierMap"));
   pathAndRnti << pathEnb << "/LteEnbRrc/UeMap/" << params.m_rnti;
   if (phyRxStats->ExistsImsiPath (pathAndRnti.str ()) == true)
     {

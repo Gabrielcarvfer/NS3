@@ -36,7 +36,7 @@ NS_LOG_COMPONENT_DEFINE ("Kun2600MhzPropagationLossModelTest");
 class Kun2600MhzPropagationLossModelTestCase : public TestCase
 {
 public:
-  Kun2600MhzPropagationLossModelTestCase (double dist, double hb, double hm, double refValue, std::string name);
+  Kun2600MhzPropagationLossModelTestCase (double dist, double hb, double hm, double refValue, stdfwd::string name);
   virtual ~Kun2600MhzPropagationLossModelTestCase ();
 
 private:
@@ -50,7 +50,7 @@ private:
 
 };
 
-Kun2600MhzPropagationLossModelTestCase::Kun2600MhzPropagationLossModelTestCase (double dist, double hb, double hm, double refValue, std::string name)
+Kun2600MhzPropagationLossModelTestCase::Kun2600MhzPropagationLossModelTestCase (double dist, double hb, double hm, double refValue, stdfwd::string name)
   : TestCase (name),
     m_dist (dist),
     m_hb (hb),

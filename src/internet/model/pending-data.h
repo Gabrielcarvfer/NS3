@@ -51,7 +51,7 @@ public:
    * Constructor from string
    * \param s string
    */
-  PendingData (const std::string& s); // Construct from string
+  PendingData (const stdfwd::string& s); // Construct from string
 
   /**
    * Copy constructor

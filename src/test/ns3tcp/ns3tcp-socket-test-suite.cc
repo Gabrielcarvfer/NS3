@@ -55,7 +55,7 @@ private:
   virtual void DoRun (void);
   bool m_writeResults;
 
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
 
   TestVectors<uint32_t> m_inputs;
   TestVectors<uint32_t> m_responses;
@@ -68,7 +68,7 @@ Ns3TcpSocketTestCase1::Ns3TcpSocketTestCase1 ()
 }
 
 void 
-Ns3TcpSocketTestCase1::SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+Ns3TcpSocketTestCase1::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   m_responses.Add (p->GetSize ());
 }
@@ -160,7 +160,7 @@ private:
   virtual void DoRun (void);
   bool m_writeResults;
 
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
 
   TestVectors<uint32_t> m_inputs;
   TestVectors<uint32_t> m_responses;
@@ -173,7 +173,7 @@ Ns3TcpSocketTestCase2::Ns3TcpSocketTestCase2 ()
 }
 
 void 
-Ns3TcpSocketTestCase2::SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+Ns3TcpSocketTestCase2::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   m_responses.Add (p->GetSize ());
 }

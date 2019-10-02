@@ -27,7 +27,7 @@
 #include <vector>
 #include <map>
 #include <functional>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "packet-filter.h"
 
 namespace ns3 {
@@ -204,21 +204,21 @@ public:
     /// Total packets dropped before enqueue
     uint32_t nTotalDroppedPacketsBeforeEnqueue;
     /// Packets dropped before enqueue, for each reason
-    std::map<std::string, uint32_t> nDroppedPacketsBeforeEnqueue;
+    std::map<stdfwd::string, uint32_t> nDroppedPacketsBeforeEnqueue;
     /// Total packets dropped after dequeue
     uint32_t nTotalDroppedPacketsAfterDequeue;
     /// Packets dropped after dequeue, for each reason
-    std::map<std::string, uint32_t> nDroppedPacketsAfterDequeue;
+    std::map<stdfwd::string, uint32_t> nDroppedPacketsAfterDequeue;
     /// Total dropped bytes
     uint64_t nTotalDroppedBytes;
     /// Total bytes dropped before enqueue
     uint64_t nTotalDroppedBytesBeforeEnqueue;
     /// Bytes dropped before enqueue, for each reason
-    std::map<std::string, uint64_t> nDroppedBytesBeforeEnqueue;
+    std::map<stdfwd::string, uint64_t> nDroppedBytesBeforeEnqueue;
     /// Total bytes dropped after dequeue
     uint64_t nTotalDroppedBytesAfterDequeue;
     /// Bytes dropped after dequeue, for each reason
-    std::map<std::string, uint64_t> nDroppedBytesAfterDequeue;
+    std::map<stdfwd::string, uint64_t> nDroppedBytesAfterDequeue;
     /// Total requeued packets
     uint32_t nTotalRequeuedPackets;
     /// Total requeued bytes
@@ -226,11 +226,11 @@ public:
     /// Total marked packets
     uint32_t nTotalMarkedPackets;
     /// Marked packets, for each reason
-    std::map<std::string, uint32_t> nMarkedPackets;
+    std::map<stdfwd::string, uint32_t> nMarkedPackets;
     /// Total marked bytes
     uint32_t nTotalMarkedBytes;
     /// Marked bytes, for each reason
-    std::map<std::string, uint64_t> nMarkedBytes;
+    std::map<stdfwd::string, uint64_t> nMarkedBytes;
 
     /// constructor
     Stats ();
@@ -240,25 +240,25 @@ public:
      * \param reason the reason why packets were dropped
      * \return the number of packets dropped for the given reason
      */
-    uint32_t GetNDroppedPackets (std::string reason) const;
+    uint32_t GetNDroppedPackets (stdfwd::string reason) const;
     /**
      * \brief Get the amount of bytes dropped for the given reason
      * \param reason the reason why packets were dropped
      * \return the amount of bytes dropped for the given reason
      */
-    uint64_t GetNDroppedBytes (std::string reason) const;
+    uint64_t GetNDroppedBytes (stdfwd::string reason) const;
     /**
      * \brief Get the number of packets marked for the given reason
      * \param reason the reason why packets were marked
      * \return the number of packets marked for the given reason
      */
-    uint32_t GetNMarkedPackets (std::string reason) const;
+    uint32_t GetNMarkedPackets (stdfwd::string reason) const;
     /**
      * \brief Get the amount of bytes marked for the given reason
      * \param reason the reason why packets were marked
      * \return the amount of bytes marked for the given reason
      */
-    uint64_t GetNMarkedBytes (std::string reason) const;
+    uint64_t GetNMarkedBytes (stdfwd::string reason) const;
     /**
      * \brief Print the statistics.
      * \param os output stream in which the data should be printed.
@@ -697,7 +697,7 @@ private:
   bool m_running;                   //!< The queue disc is performing multiple dequeue operations
   Ptr<QueueDiscItem> m_requeued;    //!< The last packet that failed to be transmitted
   bool m_peeked;                    //!< A packet was dequeued because Peek was called
-  std::string m_childQueueDiscDropMsg;  //!< Reason why a packet was dropped by a child queue disc
+  stdfwd::string m_childQueueDiscDropMsg;  //!< Reason why a packet was dropped by a child queue disc
   QueueDiscSizePolicy m_sizePolicy;     //!< The queue disc size policy
   bool m_prohibitChangeMode;            //!< True if changing mode is prohibited
 

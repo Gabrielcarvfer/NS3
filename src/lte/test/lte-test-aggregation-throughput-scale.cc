@@ -56,7 +56,7 @@ LteAggregationThroughputScaleTestSuite::LteAggregationThroughputScaleTestSuite (
 
 static LteAggregationThroughputScaleTestSuite g_lteAggregationThroughputScaleTestSuite;
 
-LteAggregationThroughputScaleTestCase::LteAggregationThroughputScaleTestCase (std::string name)
+LteAggregationThroughputScaleTestCase::LteAggregationThroughputScaleTestCase (stdfwd::string name)
   : TestCase (name)
 {
   NS_LOG_FUNCTION (this << GetName ());

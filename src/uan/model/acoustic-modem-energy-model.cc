@@ -355,7 +355,7 @@ AcousticModemEnergyModel::SetMicroModemState (const int state)
   if (IsStateTransitionValid (state))
     {
       m_currentState = state;
-      std::string stateName;
+      stdfwd::string stateName;
       switch (state)
         {
         case UanPhy::TX:

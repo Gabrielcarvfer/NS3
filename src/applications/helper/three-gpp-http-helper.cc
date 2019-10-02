@@ -39,7 +39,7 @@ ThreeGppHttpClientHelper::ThreeGppHttpClientHelper (const Address &address)
 }
 
 void
-ThreeGppHttpClientHelper::SetAttribute (const std::string &name,
+ThreeGppHttpClientHelper::SetAttribute (const stdfwd::string &name,
                                         const AttributeValue &value)
 {
   m_factory.Set (name, value);
@@ -52,7 +52,7 @@ ThreeGppHttpClientHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-ThreeGppHttpClientHelper::Install (const std::string &nodeName) const
+ThreeGppHttpClientHelper::Install (const stdfwd::string &nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));
@@ -89,7 +89,7 @@ ThreeGppHttpServerHelper::ThreeGppHttpServerHelper (const Address &address)
 }
 
 void
-ThreeGppHttpServerHelper::SetAttribute (const std::string &name,
+ThreeGppHttpServerHelper::SetAttribute (const stdfwd::string &name,
                                         const AttributeValue &value)
 {
   m_factory.Set (name, value);
@@ -102,7 +102,7 @@ ThreeGppHttpServerHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-ThreeGppHttpServerHelper::Install (const std::string &nodeName) const
+ThreeGppHttpServerHelper::Install (const stdfwd::string &nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

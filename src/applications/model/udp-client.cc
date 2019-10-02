@@ -177,7 +177,7 @@ UdpClient::Send (void)
   Ptr<Packet> p = Create<Packet> (m_size-(8+4)); // 8+4 : the size of the seqTs header
   p->AddHeader (seqTs);
 
-  std::stringstream peerAddressStringStream;
+  stdfwd::stringstream peerAddressStringStream;
   if (Ipv4Address::IsMatchingType (m_peerAddress))
     {
       peerAddressStringStream << Ipv4Address::ConvertFrom (m_peerAddress);

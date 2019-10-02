@@ -21,7 +21,7 @@
 #include "../../network/helper/net-device-container.h"
 #include "../../core/model/object-factory.h"
 #include "../model/tap-bridge.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -59,7 +59,7 @@ public:
    * \param n1 the name of the attribute to set
    * \param v1 the value of the attribute to set
    */
-  void SetAttribute (std::string n1, const AttributeValue &v1);
+  void SetAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * This method installs a TapBridge on the specified Node and forms the 
@@ -82,7 +82,7 @@ public:
    * \param nd The Ptr<NetDevice> to attach to the bridge.
    * \returns A pointer to the new TapBridge NetDevice.
    */
-  Ptr<NetDevice> Install (std::string nodeName, Ptr<NetDevice> nd);
+  Ptr<NetDevice> Install (stdfwd::string nodeName, Ptr<NetDevice> nd);
 
   /**
    * This method installs a TapBridge on the specified Node and forms the 
@@ -94,7 +94,7 @@ public:
    * \param ndName The name of the NetDevice to attach to the bridge.
    * \returns A pointer to the new TapBridge NetDevice.
    */
-  Ptr<NetDevice> Install (Ptr<Node> node, std::string ndName);
+  Ptr<NetDevice> Install (Ptr<Node> node, stdfwd::string ndName);
 
   /**
    * This method installs a TapBridge on the specified Node and forms the 
@@ -108,7 +108,7 @@ public:
    * \param ndName The name of the NetDevice to attach to the bridge.
    * \returns A pointer to the new TapBridge NetDevice.
    */
-  Ptr<NetDevice> Install (std::string nodeName, std::string ndName);
+  Ptr<NetDevice> Install (stdfwd::string nodeName, stdfwd::string ndName);
 
   /**
    * This method installs a TapBridge on the specified Node and forms the 

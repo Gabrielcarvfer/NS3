@@ -22,7 +22,7 @@
 // Unit tests
 //-----------------------------------------------------------------------------
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/test.h"
 #include "../model/ipv4-packet-info-tag.h"
@@ -76,7 +76,7 @@ private:
    * \param socket Sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
 };
 
 Ipv4PacketInfoTagTest::Ipv4PacketInfoTagTest ()
@@ -101,7 +101,7 @@ Ipv4PacketInfoTagTest::RxCb (Ptr<Socket> socket)
 }
 
 void
-Ipv4PacketInfoTagTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv4PacketInfoTagTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = InetSocketAddress (Ipv4Address (to.c_str ()), 200);
   if (DynamicCast<UdpSocket> (socket) != 0)

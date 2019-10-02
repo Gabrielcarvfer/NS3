@@ -31,7 +31,7 @@ V4PingHelper::V4PingHelper (Ipv4Address remote)
 }
 
 void 
-V4PingHelper::SetAttribute (std::string name, const AttributeValue &value)
+V4PingHelper::SetAttribute (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
@@ -43,7 +43,7 @@ V4PingHelper::Install (Ptr<Node> node) const
 }
 
 ApplicationContainer
-V4PingHelper::Install (std::string nodeName) const
+V4PingHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return ApplicationContainer (InstallPriv (node));

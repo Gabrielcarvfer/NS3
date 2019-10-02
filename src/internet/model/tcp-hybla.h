@@ -66,7 +66,7 @@ public:
   // Inherited
   virtual void PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked,
                           const Time& rtt) override;
-  virtual std::string GetName () const override;
+  virtual stdfwd::string GetName () const override;
   virtual Ptr<TcpCongestionOps> Fork () override;
 
 protected:

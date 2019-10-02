@@ -15,7 +15,7 @@
  *
  */
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -42,7 +42,7 @@ main (int argc, char *argv[])
   // BRITE needs a configuration file to build its graph. By default, this
   // example will use the TD_ASBarabasi_RTWaxman.conf file. There are many others
   // which can be found in the BRITE/conf_files directory
-  std::string confFile = "src/brite/examples/conf_files/TD_ASBarabasi_RTWaxman.conf";
+  stdfwd::string confFile = "src/brite/examples/conf_files/TD_ASBarabasi_RTWaxman.conf";
   bool tracing = false;
   bool nix = false;
 

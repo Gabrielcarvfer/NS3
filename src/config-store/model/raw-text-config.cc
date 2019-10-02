@@ -46,7 +46,7 @@ RawTextConfigSave::~RawTextConfigSave ()
   m_os = 0;
 }
 void 
-RawTextConfigSave::SetFilename (std::string filename)
+RawTextConfigSave::SetFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   m_os = new std::ofstream ();
@@ -63,14 +63,14 @@ public:
       m_os = os;
     }
 private:
-    virtual void StartVisitTypeId (std::string name) {
+    virtual void StartVisitTypeId (stdfwd::string name) {
       m_typeId = name;
     }
-    virtual void DoVisitAttribute (std::string name, std::string defaultValue) {
+    virtual void DoVisitAttribute (stdfwd::string name, stdfwd::string defaultValue) {
       NS_LOG_DEBUG ("Saving " << m_typeId << "::" << name);
       *m_os << "default " << m_typeId << "::" << name << " \"" << defaultValue << "\"" << std::endl;
     }
-    std::string m_typeId;
+    stdfwd::string m_typeId;
     std::ostream *m_os;
   };
 
@@ -99,7 +99,7 @@ public:
     RawTextAttributeIterator (std::ostream *os)
       : m_os (os) {}
 private:
-    virtual void DoVisitAttribute (Ptr<Object> object, std::string name) {
+    virtual void DoVisitAttribute (Ptr<Object> object, stdfwd::string name) {
       StringValue str;
       object->GetAttribute (name, str);
       NS_LOG_DEBUG ("Saving " << GetCurrentPath ());
@@ -128,17 +128,17 @@ RawTextConfigLoad::~RawTextConfigLoad ()
     }
 }
 void 
-RawTextConfigLoad::SetFilename (std::string filename)
+RawTextConfigLoad::SetFilename (stdfwd::string filename)
 {
   NS_LOG_FUNCTION (this << filename);
   m_is = new std::ifstream ();
   m_is->open (filename.c_str (), std::ios::in);
 }
-std::string
-RawTextConfigLoad::Strip (std::string value)
+stdfwd::string
+RawTextConfigLoad::Strip (stdfwd::string value)
 {
-  std::string::size_type start = value.find ("\"");
-  std::string::size_type end = value.find ("\"", 1);
+  stdfwd::string::size_type start = value.find ("\"");
+  stdfwd::string::size_type end = value.find ("\"", 1);
   NS_ASSERT (start == 0);
   NS_ASSERT (end == value.size () - 1);
   return value.substr (start+1, end-start-1);
@@ -150,7 +150,7 @@ RawTextConfigLoad::Default (void)
   NS_LOG_FUNCTION (this);
   m_is->clear ();
   m_is->seekg (0);
-  std::string type, name, value;
+  stdfwd::string type, name, value;
   *m_is >> type >> name >> value;
   while (m_is->good ())
     {
@@ -169,7 +169,7 @@ RawTextConfigLoad::Global (void)
   NS_LOG_FUNCTION (this);
   m_is->clear ();
   m_is->seekg (0);
-  std::string type, name, value;
+  stdfwd::string type, name, value;
   *m_is >> type >> name >> value;
   while (m_is->good ())
     {
@@ -188,7 +188,7 @@ RawTextConfigLoad::Attributes (void)
   NS_LOG_FUNCTION (this);
   m_is->clear ();
   m_is->seekg (0);
-  std::string type, path, value;
+  stdfwd::string type, path, value;
   *m_is >> type >> path >> value;
   while (m_is->good ())
     {

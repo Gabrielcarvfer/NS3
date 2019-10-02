@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <ostream>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/attribute.h"
 #include "../../core/model/attribute-helper.h"
 #include "tag-buffer.h"

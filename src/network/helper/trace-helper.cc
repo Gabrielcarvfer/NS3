@@ -16,8 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 
 #include "../../core/model/abort.h"
@@ -47,7 +47,7 @@ PcapHelper::~PcapHelper ()
 
 Ptr<PcapFileWrapper>
 PcapHelper::CreateFile (
-  std::string filename, 
+  stdfwd::string filename,
   std::ios::openmode filemode,
   DataLinkType dataLinkType,
   uint32_t    snapLen, 
@@ -76,8 +76,8 @@ PcapHelper::CreateFile (
   return file;
 }
 
-std::string
-PcapHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> device, bool useObjectNames)
+stdfwd::string
+PcapHelper::GetFilenameFromDevice (stdfwd::string prefix, Ptr<NetDevice> device, bool useObjectNames)
 {
   NS_LOG_FUNCTION (prefix << device << useObjectNames);
   NS_ABORT_MSG_UNLESS (prefix.size (), "Empty prefix string");
@@ -85,8 +85,8 @@ PcapHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> device, bo
   std::ostringstream oss;
   oss << prefix << "-";
 
-  std::string nodename;
-  std::string devicename;
+  stdfwd::string nodename;
+  stdfwd::string devicename;
 
   Ptr<Node> node = device->GetNode ();
 
@@ -121,8 +121,8 @@ PcapHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> device, bo
   return oss.str ();
 }
 
-std::string
-PcapHelper::GetFilenameFromInterfacePair (std::string prefix, Ptr<Object> object, uint32_t interface, bool useObjectNames)
+stdfwd::string
+PcapHelper::GetFilenameFromInterfacePair (stdfwd::string prefix, Ptr<Object> object, uint32_t interface, bool useObjectNames)
 {
   NS_LOG_FUNCTION (prefix << object << interface << useObjectNames);
   NS_ABORT_MSG_UNLESS (prefix.size (), "Empty prefix string");
@@ -130,8 +130,8 @@ PcapHelper::GetFilenameFromInterfacePair (std::string prefix, Ptr<Object> object
   std::ostringstream oss;
   oss << prefix << "-";
 
-  std::string objname;
-  std::string nodename;
+  stdfwd::string objname;
+  stdfwd::string nodename;
 
   Ptr<Node> node = object->GetObject<Node> ();
 
@@ -188,7 +188,7 @@ AsciiTraceHelper::~AsciiTraceHelper ()
 }
 
 Ptr<OutputStreamWrapper>
-AsciiTraceHelper::CreateFileStream (std::string filename, std::ios::openmode filemode)
+AsciiTraceHelper::CreateFileStream (stdfwd::string filename, std::ios::openmode filemode)
 {
   NS_LOG_FUNCTION (filename << filemode);
 
@@ -208,8 +208,8 @@ AsciiTraceHelper::CreateFileStream (std::string filename, std::ios::openmode fil
   return StreamWrapper;
 }
 
-std::string
-AsciiTraceHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> device, bool useObjectNames)
+stdfwd::string
+AsciiTraceHelper::GetFilenameFromDevice (stdfwd::string prefix, Ptr<NetDevice> device, bool useObjectNames)
 {
   NS_LOG_FUNCTION (prefix << device << useObjectNames);
   NS_ABORT_MSG_UNLESS (prefix.size (), "Empty prefix string");
@@ -217,8 +217,8 @@ AsciiTraceHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> devi
   std::ostringstream oss;
   oss << prefix << "-";
 
-  std::string nodename;
-  std::string devicename;
+  stdfwd::string nodename;
+  stdfwd::string devicename;
 
   Ptr<Node> node = device->GetNode ();
 
@@ -253,9 +253,9 @@ AsciiTraceHelper::GetFilenameFromDevice (std::string prefix, Ptr<NetDevice> devi
   return oss.str ();
 }
 
-std::string
+stdfwd::string
 AsciiTraceHelper::GetFilenameFromInterfacePair (
-  std::string prefix, 
+  stdfwd::string prefix,
   Ptr<Object> object, 
   uint32_t interface, 
   bool useObjectNames)
@@ -266,8 +266,8 @@ AsciiTraceHelper::GetFilenameFromInterfacePair (
   std::ostringstream oss;
   oss << prefix << "-";
 
-  std::string objname;
-  std::string nodename;
+  stdfwd::string objname;
+  stdfwd::string nodename;
 
   Ptr<Node> node = object->GetObject<Node> ();
 
@@ -314,7 +314,7 @@ AsciiTraceHelper::DefaultEnqueueSinkWithoutContext (Ptr<OutputStreamWrapper> str
 }
 
 void
-AsciiTraceHelper::DefaultEnqueueSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
+AsciiTraceHelper::DefaultEnqueueSinkWithContext (Ptr<OutputStreamWrapper> stream, stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
   *stream->GetStream () << "+ " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
@@ -340,7 +340,7 @@ AsciiTraceHelper::DefaultDropSinkWithoutContext (Ptr<OutputStreamWrapper> stream
 }
 
 void
-AsciiTraceHelper::DefaultDropSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
+AsciiTraceHelper::DefaultDropSinkWithContext (Ptr<OutputStreamWrapper> stream, stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
   *stream->GetStream () << "d " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
@@ -367,7 +367,7 @@ AsciiTraceHelper::DefaultDequeueSinkWithoutContext (Ptr<OutputStreamWrapper> str
 }
 
 void
-AsciiTraceHelper::DefaultDequeueSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
+AsciiTraceHelper::DefaultDequeueSinkWithContext (Ptr<OutputStreamWrapper> stream, stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
   *stream->GetStream () << "- " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
@@ -391,27 +391,27 @@ AsciiTraceHelper::DefaultReceiveSinkWithoutContext (Ptr<OutputStreamWrapper> str
 }
 
 void
-AsciiTraceHelper::DefaultReceiveSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
+AsciiTraceHelper::DefaultReceiveSinkWithContext (Ptr<OutputStreamWrapper> stream, stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
   *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
 }
 
 void 
-PcapHelperForDevice::EnablePcap (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
+PcapHelperForDevice::EnablePcap (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename)
 {
   EnablePcapInternal (prefix, nd, promiscuous, explicitFilename);
 }
 
 void 
-PcapHelperForDevice::EnablePcap (std::string prefix, std::string ndName, bool promiscuous, bool explicitFilename)
+PcapHelperForDevice::EnablePcap (stdfwd::string prefix, stdfwd::string ndName, bool promiscuous, bool explicitFilename)
 {
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);
   EnablePcap (prefix, nd, promiscuous, explicitFilename);
 }
 
 void 
-PcapHelperForDevice::EnablePcap (std::string prefix, NetDeviceContainer d, bool promiscuous)
+PcapHelperForDevice::EnablePcap (stdfwd::string prefix, NetDeviceContainer d, bool promiscuous)
 {
   for (NetDeviceContainer::Iterator i = d.Begin (); i != d.End (); ++i)
     {
@@ -421,7 +421,7 @@ PcapHelperForDevice::EnablePcap (std::string prefix, NetDeviceContainer d, bool 
 }
 
 void
-PcapHelperForDevice::EnablePcap (std::string prefix, NodeContainer n, bool promiscuous)
+PcapHelperForDevice::EnablePcap (stdfwd::string prefix, NodeContainer n, bool promiscuous)
 {
   NetDeviceContainer devs;
   for (NodeContainer::Iterator i = n.Begin (); i != n.End (); ++i)
@@ -436,13 +436,13 @@ PcapHelperForDevice::EnablePcap (std::string prefix, NodeContainer n, bool promi
 }
 
 void
-PcapHelperForDevice::EnablePcapAll (std::string prefix, bool promiscuous)
+PcapHelperForDevice::EnablePcapAll (stdfwd::string prefix, bool promiscuous)
 {
   EnablePcap (prefix, NodeContainer::GetGlobal (), promiscuous);
 }
 
 void 
-PcapHelperForDevice::EnablePcap (std::string prefix, uint32_t nodeid, uint32_t deviceid, bool promiscuous)
+PcapHelperForDevice::EnablePcap (stdfwd::string prefix, uint32_t nodeid, uint32_t deviceid, bool promiscuous)
 {
   NodeContainer n = NodeContainer::GetGlobal ();
 
@@ -466,7 +466,7 @@ PcapHelperForDevice::EnablePcap (std::string prefix, uint32_t nodeid, uint32_t d
 // Public API
 //
 void 
-AsciiTraceHelperForDevice::EnableAscii (std::string prefix, Ptr<NetDevice> nd, bool explicitFilename)
+AsciiTraceHelperForDevice::EnableAscii (stdfwd::string prefix, Ptr<NetDevice> nd, bool explicitFilename)
 {
   EnableAsciiInternal (Ptr<OutputStreamWrapper> (), prefix, nd, explicitFilename);
 }
@@ -477,14 +477,14 @@ AsciiTraceHelperForDevice::EnableAscii (std::string prefix, Ptr<NetDevice> nd, b
 void 
 AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, Ptr<NetDevice> nd)
 {
-  EnableAsciiInternal (stream, std::string (), nd, false);
+  EnableAsciiInternal (stream, stdfwd::string (), nd, false);
 }
 
 //
 // Public API
 //
 void 
-AsciiTraceHelperForDevice::EnableAscii (std::string prefix, std::string ndName, bool explicitFilename)
+AsciiTraceHelperForDevice::EnableAscii (stdfwd::string prefix, stdfwd::string ndName, bool explicitFilename)
 {
   EnableAsciiImpl (Ptr<OutputStreamWrapper> (), prefix, ndName, explicitFilename);
 }
@@ -493,9 +493,9 @@ AsciiTraceHelperForDevice::EnableAscii (std::string prefix, std::string ndName, 
 // Public API
 //
 void 
-AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, std::string ndName)
+AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, stdfwd::string ndName)
 {
-  EnableAsciiImpl (stream, std::string (), ndName, false);
+  EnableAsciiImpl (stream, stdfwd::string (), ndName, false);
 }
 
 //
@@ -504,8 +504,8 @@ AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, std::st
 void 
 AsciiTraceHelperForDevice::EnableAsciiImpl (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
-  std::string ndName,
+  stdfwd::string prefix,
+  stdfwd::string ndName,
   bool explicitFilename)
 {
   Ptr<NetDevice> nd = Names::Find<NetDevice> (ndName);
@@ -516,7 +516,7 @@ AsciiTraceHelperForDevice::EnableAsciiImpl (
 // Public API
 //
 void 
-AsciiTraceHelperForDevice::EnableAscii (std::string prefix, NetDeviceContainer d)
+AsciiTraceHelperForDevice::EnableAscii (stdfwd::string prefix, NetDeviceContainer d)
 {
   EnableAsciiImpl (Ptr<OutputStreamWrapper> (), prefix, d);
 }
@@ -527,14 +527,14 @@ AsciiTraceHelperForDevice::EnableAscii (std::string prefix, NetDeviceContainer d
 void 
 AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, NetDeviceContainer d)
 {
-  EnableAsciiImpl (stream, std::string (), d);
+  EnableAsciiImpl (stream, stdfwd::string (), d);
 }
 
 //
 // Private API
 //
 void 
-AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, std::string prefix, NetDeviceContainer d)
+AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, NetDeviceContainer d)
 {
   for (NetDeviceContainer::Iterator i = d.Begin (); i != d.End (); ++i)
     {
@@ -547,7 +547,7 @@ AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, std
 // Public API
 //
 void
-AsciiTraceHelperForDevice::EnableAscii (std::string prefix, NodeContainer n)
+AsciiTraceHelperForDevice::EnableAscii (stdfwd::string prefix, NodeContainer n)
 {
   EnableAsciiImpl (Ptr<OutputStreamWrapper> (), prefix, n);
 }
@@ -558,14 +558,14 @@ AsciiTraceHelperForDevice::EnableAscii (std::string prefix, NodeContainer n)
 void
 AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, NodeContainer n)
 {
-  EnableAsciiImpl (stream, std::string (), n);
+  EnableAsciiImpl (stream, stdfwd::string (), n);
 }
 
 //
 // Private API
 //
 void
-AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, std::string prefix, NodeContainer n)
+AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, stdfwd::string prefix, NodeContainer n)
 {
   NetDeviceContainer devs;
   for (NodeContainer::Iterator i = n.Begin (); i != n.End (); ++i)
@@ -583,7 +583,7 @@ AsciiTraceHelperForDevice::EnableAsciiImpl (Ptr<OutputStreamWrapper> stream, std
 // Public API
 //
 void
-AsciiTraceHelperForDevice::EnableAsciiAll (std::string prefix)
+AsciiTraceHelperForDevice::EnableAsciiAll (stdfwd::string prefix)
 {
   EnableAsciiImpl (Ptr<OutputStreamWrapper> (), prefix, NodeContainer::GetGlobal ());
 }
@@ -594,7 +594,7 @@ AsciiTraceHelperForDevice::EnableAsciiAll (std::string prefix)
 void
 AsciiTraceHelperForDevice::EnableAsciiAll (Ptr<OutputStreamWrapper> stream)
 {
-  EnableAsciiImpl (stream, std::string (), NodeContainer::GetGlobal ());
+  EnableAsciiImpl (stream, stdfwd::string (), NodeContainer::GetGlobal ());
 }
 
 //
@@ -603,7 +603,7 @@ AsciiTraceHelperForDevice::EnableAsciiAll (Ptr<OutputStreamWrapper> stream)
 void 
 AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, uint32_t nodeid, uint32_t deviceid)
 {
-  EnableAsciiImpl (stream, std::string (), nodeid, deviceid, false);
+  EnableAsciiImpl (stream, stdfwd::string (), nodeid, deviceid, false);
 }
 
 //
@@ -611,7 +611,7 @@ AsciiTraceHelperForDevice::EnableAscii (Ptr<OutputStreamWrapper> stream, uint32_
 //
 void 
 AsciiTraceHelperForDevice::EnableAscii (
-  std::string prefix, 
+  stdfwd::string prefix,
   uint32_t nodeid, 
   uint32_t deviceid,
   bool explicitFilename)
@@ -625,7 +625,7 @@ AsciiTraceHelperForDevice::EnableAscii (
 void 
 AsciiTraceHelperForDevice::EnableAsciiImpl (
   Ptr<OutputStreamWrapper> stream, 
-  std::string prefix, 
+  stdfwd::string prefix,
   uint32_t nodeid, 
   uint32_t deviceid,
   bool explicitFilename)

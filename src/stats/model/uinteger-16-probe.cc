@@ -73,7 +73,7 @@ Uinteger16Probe::SetValue (uint16_t newVal)
 }
 
 void
-Uinteger16Probe::SetValueByPath (std::string path, uint16_t newVal)
+Uinteger16Probe::SetValueByPath (stdfwd::string path, uint16_t newVal)
 {
   NS_LOG_FUNCTION (path << newVal);
   Ptr<Uinteger16Probe> probe = Names::Find<Uinteger16Probe> (path);
@@ -82,7 +82,7 @@ Uinteger16Probe::SetValueByPath (std::string path, uint16_t newVal)
 }
 
 bool
-Uinteger16Probe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
+Uinteger16Probe::ConnectByObject (stdfwd::string traceSource, Ptr<Object> obj)
 {
   NS_LOG_FUNCTION (this << traceSource << obj);
   NS_LOG_DEBUG ("Name of probe (if any) in names database: " << Names::FindPath (obj));
@@ -91,7 +91,7 @@ Uinteger16Probe::ConnectByObject (std::string traceSource, Ptr<Object> obj)
 }
 
 void
-Uinteger16Probe::ConnectByPath (std::string path)
+Uinteger16Probe::ConnectByPath (stdfwd::string path)
 {
   NS_LOG_FUNCTION (this << path);
   NS_LOG_DEBUG ("Name of probe to search for in config database: " << path);

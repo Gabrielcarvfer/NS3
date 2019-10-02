@@ -40,7 +40,7 @@ AthstatsHelper::AthstatsHelper ()
 }
 
 void
-AthstatsHelper::EnableAthstats (std::string filename,  uint32_t nodeid, uint32_t deviceid)
+AthstatsHelper::EnableAthstats (stdfwd::string filename,  uint32_t nodeid, uint32_t deviceid)
 {
   Ptr<AthstatsWifiTraceSink> athstats = CreateObject<AthstatsWifiTraceSink> ();
   std::ostringstream oss;
@@ -51,7 +51,7 @@ AthstatsHelper::EnableAthstats (std::string filename,  uint32_t nodeid, uint32_t
 
   oss.str ("");
   oss << "/NodeList/" << nodeid << "/DeviceList/" << deviceid;
-  std::string devicepath = oss.str ();
+  stdfwd::string devicepath = oss.str ();
 
   Config::Connect (devicepath + "/Mac/MacTx", MakeCallback (&AthstatsWifiTraceSink::DevTxTrace, athstats));
   Config::Connect (devicepath + "/Mac/MacRx", MakeCallback (&AthstatsWifiTraceSink::DevRxTrace, athstats));
@@ -68,13 +68,13 @@ AthstatsHelper::EnableAthstats (std::string filename,  uint32_t nodeid, uint32_t
 }
 
 void
-AthstatsHelper::EnableAthstats (std::string filename, Ptr<NetDevice> nd)
+AthstatsHelper::EnableAthstats (stdfwd::string filename, Ptr<NetDevice> nd)
 {
   EnableAthstats (filename, nd->GetNode ()->GetId (), nd->GetIfIndex ());
 }
 
 void
-AthstatsHelper::EnableAthstats (std::string filename, NetDeviceContainer d)
+AthstatsHelper::EnableAthstats (stdfwd::string filename, NetDeviceContainer d)
 {
   for (NetDeviceContainer::Iterator i = d.Begin (); i != d.End (); ++i)
     {
@@ -84,7 +84,7 @@ AthstatsHelper::EnableAthstats (std::string filename, NetDeviceContainer d)
 }
 
 void
-AthstatsHelper::EnableAthstats (std::string filename, NodeContainer n)
+AthstatsHelper::EnableAthstats (stdfwd::string filename, NodeContainer n)
 {
   NetDeviceContainer devs;
   for (NodeContainer::Iterator i = n.Begin (); i != n.End (); ++i)
@@ -169,76 +169,76 @@ AthstatsWifiTraceSink::ResetCounters ()
 }
 
 void
-AthstatsWifiTraceSink::DevTxTrace (std::string context, Ptr<const Packet> p)
+AthstatsWifiTraceSink::DevTxTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (this << context << p);
   ++m_txCount;
 }
 
 void
-AthstatsWifiTraceSink::DevRxTrace (std::string context, Ptr<const Packet> p)
+AthstatsWifiTraceSink::DevRxTrace (stdfwd::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (this << context << p);
   ++m_rxCount;
 }
 
 void
-AthstatsWifiTraceSink::TxRtsFailedTrace (std::string context, Mac48Address address)
+AthstatsWifiTraceSink::TxRtsFailedTrace (stdfwd::string context, Mac48Address address)
 {
   NS_LOG_FUNCTION (this << context << address);
   ++m_shortRetryCount;
 }
 
 void
-AthstatsWifiTraceSink::TxDataFailedTrace (std::string context, Mac48Address address)
+AthstatsWifiTraceSink::TxDataFailedTrace (stdfwd::string context, Mac48Address address)
 {
   NS_LOG_FUNCTION (this << context << address);
   ++m_longRetryCount;
 }
 
 void
-AthstatsWifiTraceSink::TxFinalRtsFailedTrace (std::string context, Mac48Address address)
+AthstatsWifiTraceSink::TxFinalRtsFailedTrace (stdfwd::string context, Mac48Address address)
 {
   NS_LOG_FUNCTION (this << context << address);
   ++m_exceededRetryCount;
 }
 
 void
-AthstatsWifiTraceSink::TxFinalDataFailedTrace (std::string context, Mac48Address address)
+AthstatsWifiTraceSink::TxFinalDataFailedTrace (stdfwd::string context, Mac48Address address)
 {
   NS_LOG_FUNCTION (this << context << address);
   ++m_exceededRetryCount;
 }
 
 void
-AthstatsWifiTraceSink::PhyRxOkTrace (std::string context, Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble)
+AthstatsWifiTraceSink::PhyRxOkTrace (stdfwd::string context, Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble)
 {
   NS_LOG_FUNCTION (this << context << packet << " mode=" << mode << " snr=" << snr << "preamble=" << preamble);
   ++m_phyRxOkCount;
 }
 
 void
-AthstatsWifiTraceSink::PhyRxErrorTrace (std::string context, Ptr<const Packet> packet, double snr)
+AthstatsWifiTraceSink::PhyRxErrorTrace (stdfwd::string context, Ptr<const Packet> packet, double snr)
 {
   NS_LOG_FUNCTION (this << context << packet << " snr=" << snr );
   ++m_phyRxErrorCount;
 }
 
 void
-AthstatsWifiTraceSink::PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
+AthstatsWifiTraceSink::PhyTxTrace (stdfwd::string context, Ptr<const Packet> packet, WifiMode mode, WifiPreamble preamble, uint8_t txPower)
 {
   NS_LOG_FUNCTION (this << context << packet << "PHYTX mode=" << mode << "Preamble=" << preamble << "Power=" << txPower);
   ++m_phyTxCount;
 }
 
 void
-AthstatsWifiTraceSink::PhyStateTrace (std::string context, Time start, Time duration, WifiPhyState state)
+AthstatsWifiTraceSink::PhyStateTrace (stdfwd::string context, Time start, Time duration, WifiPhyState state)
 {
   NS_LOG_FUNCTION (this << context << start << duration << state);
 }
 
 void
-AthstatsWifiTraceSink::Open (std::string const &name)
+AthstatsWifiTraceSink::Open (stdfwd::string const &name)
 {
   NS_LOG_FUNCTION (this << name);
   NS_ABORT_MSG_UNLESS (m_writer == 0, "AthstatsWifiTraceSink::Open (): m_writer already allocated (std::ofstream leak detected)");

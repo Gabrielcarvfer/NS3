@@ -65,7 +65,7 @@ public:
    * \param y position of UE
    * \returns the name string
    */
-  static std::string BuildNameString (double orientationDegrees, double beamwidthDegrees, double x, double y);
+  static stdfwd::string BuildNameString (double orientationDegrees, double beamwidthDegrees, double x, double y);
   /**
    * Constructor
    *
@@ -92,7 +92,7 @@ private:
 
 
 
-std::string LteEnbAntennaTestCase::BuildNameString (double orientationDegrees, double beamwidthDegrees, double x, double y)
+stdfwd::string LteEnbAntennaTestCase::BuildNameString (double orientationDegrees, double beamwidthDegrees, double x, double y)
 {
   std::ostringstream oss;
   oss <<  "o=" << orientationDegrees

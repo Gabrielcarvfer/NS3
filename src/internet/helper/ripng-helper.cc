@@ -78,7 +78,7 @@ RipNgHelper::Create (Ptr<Node> node) const
 }
 
 void
-RipNgHelper::Set (std::string name, const AttributeValue &value)
+RipNgHelper::Set (stdfwd::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }

@@ -21,7 +21,7 @@
 
 #include "attribute.h"
 #include "attribute-helper.h"
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 /**
@@ -84,7 +84,7 @@ namespace ns3 {
 
 namespace internal {
 
-Ptr<const AttributeChecker> MakeIntegerChecker (int64_t min, int64_t max, std::string name);
+Ptr<const AttributeChecker> MakeIntegerChecker (int64_t min, int64_t max, stdfwd::string name);
 
 } // internal
 

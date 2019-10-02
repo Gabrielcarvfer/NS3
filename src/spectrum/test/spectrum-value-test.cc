@@ -37,7 +37,7 @@ using namespace ns3;
 class SpectrumValueTestCase : public TestCase
 {
 public:
-  SpectrumValueTestCase (SpectrumValue a, SpectrumValue b, std::string name);
+  SpectrumValueTestCase (SpectrumValue a, SpectrumValue b, stdfwd::string name);
   virtual ~SpectrumValueTestCase ();
   virtual void DoRun (void);
 
@@ -49,7 +49,7 @@ private:
 
 
 
-SpectrumValueTestCase::SpectrumValueTestCase (SpectrumValue a, SpectrumValue b, std::string name)
+SpectrumValueTestCase::SpectrumValueTestCase (SpectrumValue a, SpectrumValue b, stdfwd::string name)
   : TestCase (name),
     m_a (a),
     m_b (b)

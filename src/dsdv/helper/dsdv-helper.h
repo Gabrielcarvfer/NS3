@@ -68,7 +68,7 @@ public:
    *
    * This method controls the attributes of ns3::dsdv::RoutingProtocol
    */
-  void Set (std::string name, const AttributeValue &value);
+  void Set (stdfwd::string name, const AttributeValue &value);
 
 private:
   ObjectFactory m_agentFactory; //!< Object factory

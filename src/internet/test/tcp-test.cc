@@ -46,7 +46,7 @@
 #include "../model/tcp-l4-protocol.h"
 #include "../../traffic-control/model/traffic-control-layer.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 using namespace ns3;
 
@@ -163,7 +163,7 @@ private:
   bool m_useIpv6; //!< Use IPv6 instead of IPv4.
 };
 
-static std::string Name (std::string str, uint32_t totalStreamSize,
+static stdfwd::string Name (stdfwd::string str, uint32_t totalStreamSize,
                          uint32_t sourceWriteSize,
                          uint32_t serverReadSize,
                          uint32_t serverWriteSize,
@@ -177,7 +177,7 @@ static std::string Name (std::string str, uint32_t totalStreamSize,
   return oss.str ();
 }
 
-static inline std::string GetString (Ptr<Packet> p)
+static inline stdfwd::string GetString (Ptr<Packet> p)
 {
   std::ostringstream oss;
   p->CopyData (&oss, p->GetSize ());

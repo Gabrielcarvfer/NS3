@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include <vector>
 
@@ -163,7 +163,7 @@ public:
    * \param ipv6Name name of a node
    * \param interface interface index to add
    */
-  void Add (std::string ipv6Name, uint32_t interface);
+  void Add (stdfwd::string ipv6Name, uint32_t interface);
 
   /**
    * \brief Set the state of the stack (act as a router or as an host) for the specified index.

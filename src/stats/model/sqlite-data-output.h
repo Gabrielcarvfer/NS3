@@ -66,7 +66,7 @@ public:
      * \param owner pointer to the instance this object belongs to
      * \param run experiment descriptor
      */
-    SqliteOutputCallback(Ptr<SqliteDataOutput> owner, std::string run);
+    SqliteOutputCallback(Ptr<SqliteDataOutput> owner, stdfwd::string run);
 
     /**
      * Destructor
@@ -79,8 +79,8 @@ public:
      * \param variable the variable name
      * \param statSum the stats to print
      */
-    void OutputStatistic (std::string key,
-                          std::string variable,
+    void OutputStatistic (stdfwd::string key,
+                          stdfwd::string variable,
                           const StatisticalSummary *statSum);
 
     /**
@@ -89,8 +89,8 @@ public:
      * \param variable the variable name
      * \param val the value
      */
-    void OutputSingleton (std::string key,
-                          std::string variable,
+    void OutputSingleton (stdfwd::string key,
+                          stdfwd::string variable,
                           int val);
 
     /**
@@ -99,8 +99,8 @@ public:
      * \param variable the variable name
      * \param val the value
      */
-    void OutputSingleton (std::string key,
-                          std::string variable,
+    void OutputSingleton (stdfwd::string key,
+                          stdfwd::string variable,
                           uint32_t val);
 
     /**
@@ -109,8 +109,8 @@ public:
      * \param variable the variable name
      * \param val the value
      */
-    void OutputSingleton (std::string key,
-                          std::string variable,
+    void OutputSingleton (stdfwd::string key,
+                          stdfwd::string variable,
                           double val);
 
     /**
@@ -119,9 +119,9 @@ public:
      * \param variable the variable name
      * \param val the value
      */
-    void OutputSingleton (std::string key,
-                          std::string variable,
-                          std::string val);
+    void OutputSingleton (stdfwd::string key,
+                          stdfwd::string variable,
+                          stdfwd::string val);
 
     /**
      * \brief Generates a single data output
@@ -129,13 +129,13 @@ public:
      * \param variable the variable name
      * \param val the value
      */
-    void OutputSingleton (std::string key,
-                          std::string variable,
+    void OutputSingleton (stdfwd::string key,
+                          stdfwd::string variable,
                           Time val);
 
 private:
     Ptr<SqliteDataOutput> m_owner; //!< the instance this object belongs to
-    std::string m_runLabel; //!< Run label
+    stdfwd::string m_runLabel; //!< Run label
     sqlite3_stmt *m_insertSingletonStatement; //!< Prepared singleton insert statement
 
     // end class SqliteOutputCallback
@@ -149,7 +149,7 @@ private:
    * \param exe the query to execute
    * \return sqlite return code.
    */
-  int Exec (std::string exe);
+  int Exec (stdfwd::string exe);
 
   // end class SqliteDataOutput
 };

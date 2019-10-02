@@ -66,7 +66,7 @@ PrintUePosition (uint64_t imsi)
 }
 
 void
-NotifyConnectionEstablishedUe (std::string context,
+NotifyConnectionEstablishedUe (stdfwd::string context,
                                uint64_t imsi,
                                uint16_t cellid,
                                uint16_t rnti)
@@ -79,7 +79,7 @@ NotifyConnectionEstablishedUe (std::string context,
 }
 
 void
-NotifyConnectionEstablishedEnb (std::string context,
+NotifyConnectionEstablishedEnb (stdfwd::string context,
                                 uint64_t imsi,
                                 uint16_t cellId,
                                 uint16_t rnti)
@@ -103,7 +103,7 @@ NotifyConnectionEstablishedEnb (std::string context,
 }
 
 /// Map each of UE RRC states to its string representation.
-static const std::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
+static const stdfwd::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
 {
   "IDLE_START",
   "IDLE_CELL_SEARCH",
@@ -124,7 +124,7 @@ static const std::string g_ueRrcStateName[LteUeRrc::NUM_STATES] =
  * \param s The UE RRC state.
  * \return The string representation of the given state.
  */
-static const std::string & ToString (LteUeRrc::State s)
+static const stdfwd::string & ToString (LteUeRrc::State s)
 {
   return g_ueRrcStateName[s];
 }
@@ -138,7 +138,7 @@ UeStateTransition (uint64_t imsi, uint16_t cellId, uint16_t rnti, LteUeRrc::Stat
 }
 
 void
-EnbRrcTimeout (uint64_t imsi, uint16_t rnti, uint16_t cellId, std::string cause)
+EnbRrcTimeout (uint64_t imsi, uint16_t rnti, uint16_t cellId, stdfwd::string cause)
 {
   std::cout << Simulator::Now ().GetSeconds ()
             << " IMSI " << imsi << ", RNTI " << rnti << ", Cell id " << cellId
@@ -153,7 +153,7 @@ NotifyConnectionReleaseAtEnodeB (uint64_t imsi, uint16_t cellId, uint16_t rnti)
             << ", UE context destroyed at eNodeB" << std::endl;
 }
 
-void PhySyncDetection (uint16_t n310, uint64_t imsi, uint16_t rnti, uint16_t cellId, std::string type, uint8_t count)
+void PhySyncDetection (uint16_t n310, uint64_t imsi, uint16_t rnti, uint16_t cellId, stdfwd::string type, uint8_t count)
 {
   std::cout << Simulator::Now ().GetSeconds ()
             << " IMSI " << imsi << ", RNTI " << rnti
@@ -225,7 +225,7 @@ ReceivePacket (Ptr<const Packet> packet, const Address &)
 }
 
 void
-Throughput(bool firstWrite, Time binSize, std::string fileName)
+Throughput(bool firstWrite, Time binSize, stdfwd::string fileName)
 {
   std::ofstream output;
 
@@ -534,8 +534,8 @@ main (int argc, char *argv[])
   Config::ConnectWithoutContext (oss.str (), MakeCallback (&ReceivePacket));
 
   bool firstWrite = true;
-  std::string rrcType = useIdealRrc == 1 ? "ideal_rrc":"real_rrc";
-  std::string fileName = "rlf_dl_thrput_" + std::to_string (enbNodes.GetN ()) + "_eNB_" + rrcType;
+  stdfwd::string rrcType = useIdealRrc == 1 ? "ideal_rrc":"real_rrc";
+  stdfwd::string fileName = "rlf_dl_thrput_" + std::to_string (enbNodes.GetN ()) + "_eNB_" + rrcType;
   Time binSize = Seconds (0.2);
   Simulator::Schedule (Seconds(0.47), &Throughput, firstWrite, binSize, fileName);
 

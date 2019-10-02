@@ -54,7 +54,7 @@ public:
    *
    * \param name reference name
    */
-  SpectrumWifiPhyBasicTest (std::string name);
+  SpectrumWifiPhyBasicTest (stdfwd::string name);
   virtual ~SpectrumWifiPhyBasicTest ();
 
 protected:
@@ -96,7 +96,7 @@ SpectrumWifiPhyBasicTest::SpectrumWifiPhyBasicTest ()
 {
 }
 
-SpectrumWifiPhyBasicTest::SpectrumWifiPhyBasicTest (std::string name)
+SpectrumWifiPhyBasicTest::SpectrumWifiPhyBasicTest (stdfwd::string name)
   : TestCase (name),
     m_count (0)
 {

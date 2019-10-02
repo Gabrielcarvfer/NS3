@@ -24,7 +24,7 @@
 
 #include "device-energy-model.h"
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -65,7 +65,7 @@ public:
    * previously instantiated and assigned a name using the Object name service.
    * This DeviceEnergyModel is specified by its assigned name.
    */
-  DeviceEnergyModelContainer (std::string modelName);
+  DeviceEnergyModelContainer (stdfwd::string modelName);
 
   /**
    * \param a A DeviceEnergyModelContainer.
@@ -159,7 +159,7 @@ public:
    *
    * \param modelName Name of DeviceEnergyModel object.
    */
-  void Add (std::string modelName);
+  void Add (stdfwd::string modelName);
 
   /**
    * \brief Removes all elements in the container.

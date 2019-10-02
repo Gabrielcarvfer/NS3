@@ -40,7 +40,7 @@
 #include "../helper/ipv6-address-helper.h"
 #include "../helper/ipv6-routing-helper.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 using namespace ns3;
@@ -60,13 +60,13 @@ class Ipv6ForwardingTest : public TestCase
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void DoSendData (Ptr<Socket> socket, std::string to);
+  void DoSendData (Ptr<Socket> socket, stdfwd::string to);
   /**
    * \brief Send data.
    * \param socket The sending socket.
    * \param to Destination address.
    */
-  void SendData (Ptr<Socket> socket, std::string to);
+  void SendData (Ptr<Socket> socket, stdfwd::string to);
 
 public:
   virtual void DoRun (void);
@@ -96,7 +96,7 @@ void Ipv6ForwardingTest::ReceivePkt (Ptr<Socket> socket)
 }
 
 void
-Ipv6ForwardingTest::DoSendData (Ptr<Socket> socket, std::string to)
+Ipv6ForwardingTest::DoSendData (Ptr<Socket> socket, stdfwd::string to)
 {
   Address realTo = Inet6SocketAddress (Ipv6Address (to.c_str ()), 1234);
   NS_TEST_EXPECT_MSG_EQ (socket->SendTo (Create<Packet> (123), 0, realTo),
@@ -104,7 +104,7 @@ Ipv6ForwardingTest::DoSendData (Ptr<Socket> socket, std::string to)
 }
 
 void
-Ipv6ForwardingTest::SendData (Ptr<Socket> socket, std::string to)
+Ipv6ForwardingTest::SendData (Ptr<Socket> socket, stdfwd::string to)
 {
   m_receivedPacket = Create<Packet> ();
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (0),

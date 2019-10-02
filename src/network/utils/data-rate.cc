@@ -31,17 +31,17 @@ ATTRIBUTE_HELPER_CPP (DataRate);
 
 /* static */
 bool
-DataRate::DoParse (const std::string s, uint64_t *v)
+DataRate::DoParse (const stdfwd::string s, uint64_t *v)
 {
   NS_LOG_FUNCTION (s << v);
-  std::string::size_type n = s.find_first_not_of ("0123456789.");
-  if (n != std::string::npos)
+  stdfwd::string::size_type n = s.find_first_not_of ("0123456789.");
+  if (n != stdfwd::string::npos)
     { // Found non-numeric
       std::istringstream iss;
       iss.str (s.substr (0, n));
       double r;
       iss >> r;
-      std::string trailer = s.substr (n, std::string::npos);
+      stdfwd::string trailer = s.substr (n, stdfwd::string::npos);
       if (trailer == "bps")
         {
           // bit/s
@@ -252,7 +252,7 @@ uint64_t DataRate::GetBitRate () const
   return m_bps;
 }
 
-DataRate::DataRate (std::string rate)
+DataRate::DataRate (stdfwd::string rate)
 {
   NS_LOG_FUNCTION (this << rate);
   bool ok = DoParse (rate, &m_bps);
@@ -271,7 +271,7 @@ std::ostream &operator << (std::ostream &os, const DataRate &rate)
 /* Initialize a data rate from an input stream */
 std::istream &operator >> (std::istream &is, DataRate &rate)
 {
-  std::string value;
+  stdfwd::string value;
   is >> value;
   uint64_t v;
   bool ok = DataRate::DoParse (value, &v);

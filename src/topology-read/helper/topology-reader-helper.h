@@ -22,7 +22,7 @@
 #pragma once
 
 #include "../model/topology-reader.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -40,13 +40,13 @@ public:
    * \brief Sets the input file name.
    * \param [in] fileName The input file name.
    */
-  void SetFileName (const std::string fileName);
+  void SetFileName (const stdfwd::string fileName);
 
   /**
    * \brief Sets the input file type. Supported file types are "Orbis", "Inet", "Rocketfuel".
    * \param [in] fileType The input file type.
    */
-  void SetFileType (const std::string fileType);
+  void SetFileType (const stdfwd::string fileType);
 
   /**
    * \brief Gets a Ptr<TopologyReader> to the actual TopologyReader.
@@ -56,8 +56,8 @@ public:
 
 private:
   Ptr<TopologyReader> m_inputModel;  //!< Smart pointer to the actual topology model.
-  std::string m_fileName;  //!< Name of the input file.
-  std::string m_fileType;  //!< Type of the input file (e.g., "Inet", "Orbis", etc.).
+  stdfwd::string m_fileName;  //!< Name of the input file.
+  stdfwd::string m_fileType;  //!< Type of the input file (e.g., "Inet", "Orbis", etc.).
 };
 
 } // namespace ns3

@@ -155,7 +155,7 @@ public:
    * Set mesh ID to a string value 
    * \param s the mesh ID string value
    */
-  void SetMeshId (std::string s);
+  void SetMeshId (stdfwd::string s);
   /**
    * Get mesh ID information element
    * \returns the mesh ID information element

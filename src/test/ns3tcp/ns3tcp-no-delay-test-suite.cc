@@ -55,7 +55,7 @@ private:
   bool m_noDelay;
   bool m_writeResults;
 
-  void SinkRx (std::string path, Ptr<const Packet> p, const Address &address);
+  void SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address);
 
   TestVectors<uint32_t> m_inputs;
   TestVectors<uint32_t> m_responses;
@@ -69,7 +69,7 @@ Ns3TcpNoDelayTestCase::Ns3TcpNoDelayTestCase (bool noDelay)
 }
 
 void 
-Ns3TcpNoDelayTestCase::SinkRx (std::string path, Ptr<const Packet> p, const Address &address)
+Ns3TcpNoDelayTestCase::SinkRx (stdfwd::string path, Ptr<const Packet> p, const Address &address)
 {
   m_responses.Add (p->GetSize ());
 }

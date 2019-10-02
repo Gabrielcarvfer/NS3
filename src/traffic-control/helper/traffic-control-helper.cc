@@ -128,22 +128,22 @@ TrafficControlHelper::Default (std::size_t nTxQueues)
 }
 
 uint16_t
-TrafficControlHelper::SetRootQueueDisc (std::string type,
-                                        std::string n01, const AttributeValue& v01,
-                                        std::string n02, const AttributeValue& v02,
-                                        std::string n03, const AttributeValue& v03,
-                                        std::string n04, const AttributeValue& v04,
-                                        std::string n05, const AttributeValue& v05,
-                                        std::string n06, const AttributeValue& v06,
-                                        std::string n07, const AttributeValue& v07,
-                                        std::string n08, const AttributeValue& v08,
-                                        std::string n09, const AttributeValue& v09,
-                                        std::string n10, const AttributeValue& v10,
-                                        std::string n11, const AttributeValue& v11,
-                                        std::string n12, const AttributeValue& v12,
-                                        std::string n13, const AttributeValue& v13,
-                                        std::string n14, const AttributeValue& v14,
-                                        std::string n15, const AttributeValue& v15)
+TrafficControlHelper::SetRootQueueDisc (stdfwd::string type,
+                                        stdfwd::string n01, const AttributeValue& v01,
+                                        stdfwd::string n02, const AttributeValue& v02,
+                                        stdfwd::string n03, const AttributeValue& v03,
+                                        stdfwd::string n04, const AttributeValue& v04,
+                                        stdfwd::string n05, const AttributeValue& v05,
+                                        stdfwd::string n06, const AttributeValue& v06,
+                                        stdfwd::string n07, const AttributeValue& v07,
+                                        stdfwd::string n08, const AttributeValue& v08,
+                                        stdfwd::string n09, const AttributeValue& v09,
+                                        stdfwd::string n10, const AttributeValue& v10,
+                                        stdfwd::string n11, const AttributeValue& v11,
+                                        stdfwd::string n12, const AttributeValue& v12,
+                                        stdfwd::string n13, const AttributeValue& v13,
+                                        stdfwd::string n14, const AttributeValue& v14,
+                                        stdfwd::string n15, const AttributeValue& v15)
 {
   NS_ABORT_MSG_UNLESS (m_queueDiscFactory.empty (), "A root queue disc has been already added to this factory");
 
@@ -170,15 +170,15 @@ TrafficControlHelper::SetRootQueueDisc (std::string type,
 }
 
 void
-TrafficControlHelper::AddInternalQueues (uint16_t handle, uint16_t count, std::string type,
-                                         std::string n01, const AttributeValue& v01,
-                                         std::string n02, const AttributeValue& v02,
-                                         std::string n03, const AttributeValue& v03,
-                                         std::string n04, const AttributeValue& v04,
-                                         std::string n05, const AttributeValue& v05,
-                                         std::string n06, const AttributeValue& v06,
-                                         std::string n07, const AttributeValue& v07,
-                                         std::string n08, const AttributeValue& v08)
+TrafficControlHelper::AddInternalQueues (uint16_t handle, uint16_t count, stdfwd::string type,
+                                         stdfwd::string n01, const AttributeValue& v01,
+                                         stdfwd::string n02, const AttributeValue& v02,
+                                         stdfwd::string n03, const AttributeValue& v03,
+                                         stdfwd::string n04, const AttributeValue& v04,
+                                         stdfwd::string n05, const AttributeValue& v05,
+                                         stdfwd::string n06, const AttributeValue& v06,
+                                         stdfwd::string n07, const AttributeValue& v07,
+                                         stdfwd::string n08, const AttributeValue& v08)
 {
   NS_ABORT_MSG_IF (handle >= m_queueDiscFactory.size (), "A queue disc with handle "
                    << handle << " does not exist");
@@ -203,15 +203,15 @@ TrafficControlHelper::AddInternalQueues (uint16_t handle, uint16_t count, std::s
 }
 
 void
-TrafficControlHelper::AddPacketFilter (uint16_t handle, std::string type,
-                                       std::string n01, const AttributeValue& v01,
-                                       std::string n02, const AttributeValue& v02,
-                                       std::string n03, const AttributeValue& v03,
-                                       std::string n04, const AttributeValue& v04,
-                                       std::string n05, const AttributeValue& v05,
-                                       std::string n06, const AttributeValue& v06,
-                                       std::string n07, const AttributeValue& v07,
-                                       std::string n08, const AttributeValue& v08)
+TrafficControlHelper::AddPacketFilter (uint16_t handle, stdfwd::string type,
+                                       stdfwd::string n01, const AttributeValue& v01,
+                                       stdfwd::string n02, const AttributeValue& v02,
+                                       stdfwd::string n03, const AttributeValue& v03,
+                                       stdfwd::string n04, const AttributeValue& v04,
+                                       stdfwd::string n05, const AttributeValue& v05,
+                                       stdfwd::string n06, const AttributeValue& v06,
+                                       stdfwd::string n07, const AttributeValue& v07,
+                                       stdfwd::string n08, const AttributeValue& v08)
 {
   NS_ABORT_MSG_IF (handle >= m_queueDiscFactory.size (), "A queue disc with handle "
                    << handle << " does not exist");
@@ -231,15 +231,15 @@ TrafficControlHelper::AddPacketFilter (uint16_t handle, std::string type,
 }
 
 TrafficControlHelper::ClassIdList
-TrafficControlHelper::AddQueueDiscClasses (uint16_t handle, uint16_t count, std::string type,
-                                           std::string n01, const AttributeValue& v01,
-                                           std::string n02, const AttributeValue& v02,
-                                           std::string n03, const AttributeValue& v03,
-                                           std::string n04, const AttributeValue& v04,
-                                           std::string n05, const AttributeValue& v05,
-                                           std::string n06, const AttributeValue& v06,
-                                           std::string n07, const AttributeValue& v07,
-                                           std::string n08, const AttributeValue& v08)
+TrafficControlHelper::AddQueueDiscClasses (uint16_t handle, uint16_t count, stdfwd::string type,
+                                           stdfwd::string n01, const AttributeValue& v01,
+                                           stdfwd::string n02, const AttributeValue& v02,
+                                           stdfwd::string n03, const AttributeValue& v03,
+                                           stdfwd::string n04, const AttributeValue& v04,
+                                           stdfwd::string n05, const AttributeValue& v05,
+                                           stdfwd::string n06, const AttributeValue& v06,
+                                           stdfwd::string n07, const AttributeValue& v07,
+                                           stdfwd::string n08, const AttributeValue& v08)
 {
   NS_ABORT_MSG_IF (handle >= m_queueDiscFactory.size (), "A queue disc with handle "
                    << handle << " does not exist");
@@ -267,22 +267,22 @@ TrafficControlHelper::AddQueueDiscClasses (uint16_t handle, uint16_t count, std:
 }
 
 uint16_t
-TrafficControlHelper::AddChildQueueDisc (uint16_t handle, uint16_t classId, std::string type,
-                                         std::string n01, const AttributeValue& v01,
-                                         std::string n02, const AttributeValue& v02,
-                                         std::string n03, const AttributeValue& v03,
-                                         std::string n04, const AttributeValue& v04,
-                                         std::string n05, const AttributeValue& v05,
-                                         std::string n06, const AttributeValue& v06,
-                                         std::string n07, const AttributeValue& v07,
-                                         std::string n08, const AttributeValue& v08,
-                                         std::string n09, const AttributeValue& v09,
-                                         std::string n10, const AttributeValue& v10,
-                                         std::string n11, const AttributeValue& v11,
-                                         std::string n12, const AttributeValue& v12,
-                                         std::string n13, const AttributeValue& v13,
-                                         std::string n14, const AttributeValue& v14,
-                                         std::string n15, const AttributeValue& v15)
+TrafficControlHelper::AddChildQueueDisc (uint16_t handle, uint16_t classId, stdfwd::string type,
+                                         stdfwd::string n01, const AttributeValue& v01,
+                                         stdfwd::string n02, const AttributeValue& v02,
+                                         stdfwd::string n03, const AttributeValue& v03,
+                                         stdfwd::string n04, const AttributeValue& v04,
+                                         stdfwd::string n05, const AttributeValue& v05,
+                                         stdfwd::string n06, const AttributeValue& v06,
+                                         stdfwd::string n07, const AttributeValue& v07,
+                                         stdfwd::string n08, const AttributeValue& v08,
+                                         stdfwd::string n09, const AttributeValue& v09,
+                                         stdfwd::string n10, const AttributeValue& v10,
+                                         stdfwd::string n11, const AttributeValue& v11,
+                                         stdfwd::string n12, const AttributeValue& v12,
+                                         stdfwd::string n13, const AttributeValue& v13,
+                                         stdfwd::string n14, const AttributeValue& v14,
+                                         stdfwd::string n15, const AttributeValue& v15)
 {
   NS_ABORT_MSG_IF (handle >= m_queueDiscFactory.size (), "A queue disc with handle "
                    << handle << " does not exist");
@@ -314,22 +314,22 @@ TrafficControlHelper::AddChildQueueDisc (uint16_t handle, uint16_t classId, std:
 
 TrafficControlHelper::HandleList
 TrafficControlHelper::AddChildQueueDiscs (uint16_t handle, const TrafficControlHelper::ClassIdList &classes,
-                                          std::string type,
-                                          std::string n01, const AttributeValue& v01,
-                                          std::string n02, const AttributeValue& v02,
-                                          std::string n03, const AttributeValue& v03,
-                                          std::string n04, const AttributeValue& v04,
-                                          std::string n05, const AttributeValue& v05,
-                                          std::string n06, const AttributeValue& v06,
-                                          std::string n07, const AttributeValue& v07,
-                                          std::string n08, const AttributeValue& v08,
-                                          std::string n09, const AttributeValue& v09,
-                                          std::string n10, const AttributeValue& v10,
-                                          std::string n11, const AttributeValue& v11,
-                                          std::string n12, const AttributeValue& v12,
-                                          std::string n13, const AttributeValue& v13,
-                                          std::string n14, const AttributeValue& v14,
-                                          std::string n15, const AttributeValue& v15)
+                                          stdfwd::string type,
+                                          stdfwd::string n01, const AttributeValue& v01,
+                                          stdfwd::string n02, const AttributeValue& v02,
+                                          stdfwd::string n03, const AttributeValue& v03,
+                                          stdfwd::string n04, const AttributeValue& v04,
+                                          stdfwd::string n05, const AttributeValue& v05,
+                                          stdfwd::string n06, const AttributeValue& v06,
+                                          stdfwd::string n07, const AttributeValue& v07,
+                                          stdfwd::string n08, const AttributeValue& v08,
+                                          stdfwd::string n09, const AttributeValue& v09,
+                                          stdfwd::string n10, const AttributeValue& v10,
+                                          stdfwd::string n11, const AttributeValue& v11,
+                                          stdfwd::string n12, const AttributeValue& v12,
+                                          stdfwd::string n13, const AttributeValue& v13,
+                                          stdfwd::string n14, const AttributeValue& v14,
+                                          stdfwd::string n15, const AttributeValue& v15)
 {
   HandleList list;
   for (ClassIdList::const_iterator c = classes.begin (); c != classes.end (); c++)
@@ -343,15 +343,15 @@ TrafficControlHelper::AddChildQueueDiscs (uint16_t handle, const TrafficControlH
 }
 
 void
-TrafficControlHelper::SetQueueLimits (std::string type,
-                                      std::string n01, const AttributeValue& v01,
-                                      std::string n02, const AttributeValue& v02,
-                                      std::string n03, const AttributeValue& v03,
-                                      std::string n04, const AttributeValue& v04,
-                                      std::string n05, const AttributeValue& v05,
-                                      std::string n06, const AttributeValue& v06,
-                                      std::string n07, const AttributeValue& v07,
-                                      std::string n08, const AttributeValue& v08)
+TrafficControlHelper::SetQueueLimits (stdfwd::string type,
+                                      stdfwd::string n01, const AttributeValue& v01,
+                                      stdfwd::string n02, const AttributeValue& v02,
+                                      stdfwd::string n03, const AttributeValue& v03,
+                                      stdfwd::string n04, const AttributeValue& v04,
+                                      stdfwd::string n05, const AttributeValue& v05,
+                                      stdfwd::string n06, const AttributeValue& v06,
+                                      stdfwd::string n07, const AttributeValue& v07,
+                                      stdfwd::string n08, const AttributeValue& v08)
 {
   m_queueLimitsFactory.SetTypeId (type);
   m_queueLimitsFactory.Set (n01, v01);

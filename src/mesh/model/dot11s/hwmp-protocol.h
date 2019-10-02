@@ -44,7 +44,7 @@ class IePrep;
  */
 struct RouteChange
 {
-  std::string type;             ///< type of change
+  stdfwd::string type;             ///< type of change
   Mac48Address destination;     ///< route destination
   Mac48Address retransmitter;   ///< route source
   uint32_t interface;           ///< interface index

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/buffer.h"
 #include <list>
 
@@ -117,7 +117,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -183,7 +183,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/buffer.h"
 
 namespace ns3 {
@@ -293,7 +293,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include <vector>
 
@@ -396,7 +396,7 @@ public:
    * Get name
    * \returns the name string
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -425,7 +425,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "cid.h"
 
@@ -543,7 +543,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include <vector>
 
@@ -596,7 +596,7 @@ public:
    * Get name
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId

@@ -53,7 +53,7 @@ SpectrumWifiPhyHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-SpectrumWifiPhyHelper::SetChannel (std::string channelName)
+SpectrumWifiPhyHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
   m_channel = channel;

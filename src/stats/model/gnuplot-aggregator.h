@@ -24,7 +24,7 @@
 #pragma once
 
 #include <map>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "gnuplot.h"
 #include "data-collection-object.h"
 
@@ -63,7 +63,7 @@ public:
    * generate the gnuplot named outputFileNameWithoutExtension +
    * ".sh".
    */
-  GnuplotAggregator (const std::string &outputFileNameWithoutExtension);
+  GnuplotAggregator (const stdfwd::string &outputFileNameWithoutExtension);
 
   virtual ~GnuplotAggregator ();
 
@@ -80,7 +80,7 @@ public:
    *
    * Use this method with error bar style NONE.
    */
-  void Write2d (std::string context, double x, double y);
+  void Write2d (stdfwd::string context, double x, double y);
 
   /**
    * \param context specifies the gnuplot 2D dataset for these values
@@ -93,7 +93,7 @@ public:
    *
    * Use this method with error bar style X.
    */
-  void Write2dWithXErrorDelta (std::string context,
+  void Write2dWithXErrorDelta (stdfwd::string context,
                                double x,
                                double y,
                                double errorDelta);
@@ -109,7 +109,7 @@ public:
    *
    * Use this method with error bar style Y.
    */
-  void Write2dWithYErrorDelta (std::string context,
+  void Write2dWithYErrorDelta (stdfwd::string context,
                                double x,
                                double y,
                                double errorDelta);
@@ -126,7 +126,7 @@ public:
    *
    * Use this method with error bar style XY.
    */
-  void Write2dWithXYErrorDelta (std::string context,
+  void Write2dWithXYErrorDelta (stdfwd::string context,
                                 double x,
                                 double y,
                                 double xErrorDelta,
@@ -138,28 +138,28 @@ public:
    * \param terminal terminal setting string for output. The default terminal
    * string is "png"
    */
-  void SetTerminal (const std::string &terminal);
+  void SetTerminal (const stdfwd::string &terminal);
 
   /**
    * \param title set new plot title string to use for this plot.
    */
-  void SetTitle (const std::string &title);
+  void SetTitle (const stdfwd::string &title);
 
   /**
    * \param xLegend the legend for the x horizontal axis
    * \param yLegend the legend for the y vertical axis
    */
-  void SetLegend (const std::string &xLegend, const std::string &yLegend);
+  void SetLegend (const stdfwd::string &xLegend, const stdfwd::string &yLegend);
 
   /**
    * \param extra set extra gnuplot directive for output.
    */
-  void SetExtra (const std::string &extra);
+  void SetExtra (const stdfwd::string &extra);
 
   /**
    * \param extra append extra gnuplot directive for output.
    */
-  void AppendExtra (const std::string &extra);
+  void AppendExtra (const stdfwd::string &extra);
 
   // Methods for datasets
 
@@ -175,7 +175,7 @@ public:
    * The string in dataset should match the context for the Collector
    * it is connected to.
    */
-  void Add2dDataset (const std::string &dataset, const std::string &title);
+  void Add2dDataset (const stdfwd::string &dataset, const stdfwd::string &title);
 
   /**
    * \param extra       extra formatting
@@ -183,7 +183,7 @@ public:
    * \brief Change extra formatting style parameters for newly created
    * objects.
    */
-  static void Set2dDatasetDefaultExtra (const std::string &extra);
+  static void Set2dDatasetDefaultExtra (const stdfwd::string &extra);
 
   /**
    * \param dataset the gnuplot 2D dataset to be plotted.
@@ -194,7 +194,7 @@ public:
    * The string in dataset should match the context for the Collector
    * it is connected to.
    */
-  void Set2dDatasetExtra (const std::string &dataset, const std::string &extra);
+  void Set2dDatasetExtra (const stdfwd::string &dataset, const stdfwd::string &extra);
 
   /**
    * \param dataset the gnuplot 2D dataset to be plotted.
@@ -207,7 +207,7 @@ public:
    * The string in dataset should match the context for the Collector
    * it is connected to.
    */
-  void Write2dDatasetEmptyLine (const std::string &dataset);
+  void Write2dDatasetEmptyLine (const stdfwd::string &dataset);
 
   /**
    * \param style the style of plotting to use for newly created datasets.
@@ -225,7 +225,7 @@ public:
    * The string in dataset should match the context for the Collector
    * it is connected to.
    */
-  void Set2dDatasetStyle (const std::string &dataset, enum Gnuplot2dDataset::Style style);
+  void Set2dDatasetStyle (const stdfwd::string &dataset, enum Gnuplot2dDataset::Style style);
 
   /**
    * \param errorBars the style of errorbars to use for newly created datasets.
@@ -248,7 +248,7 @@ public:
    * The string in dataset should match the context for the Collector
    * it is connected to.
    */
-  void Set2dDatasetErrorBars (const std::string &dataset, enum Gnuplot2dDataset::ErrorBars errorBars);
+  void Set2dDatasetErrorBars (const stdfwd::string &dataset, enum Gnuplot2dDataset::ErrorBars errorBars);
 
   /**
    * \param keyLocation the location of the key in the plot.
@@ -259,26 +259,26 @@ public:
 
 private:
   /// The output file name without any extension.
-  std::string m_outputFileNameWithoutExtension;
+  stdfwd::string m_outputFileNameWithoutExtension;
 
   /// The graphics file name with its extension.
-  std::string m_graphicsFileName;
+  stdfwd::string m_graphicsFileName;
 
   /// The title.
-  std::string m_title;
+  stdfwd::string m_title;
 
   /// The terminal.
-  std::string m_terminal;
+  stdfwd::string m_terminal;
 
   /// The x legend.
-  std::string m_xLegend;
+  stdfwd::string m_xLegend;
 
   /// The y legend.
-  std::string m_yLegend;
+  stdfwd::string m_yLegend;
 
   /// The extra gnuplot command that will be added to the gnuplot
   /// control statements.
-  std::string m_extra;
+  stdfwd::string m_extra;
 
   /// Set equal to true after setting the title.
   bool m_titleSet;
@@ -290,7 +290,7 @@ private:
   Gnuplot m_gnuplot;
 
   /// Maps context strings to 2D datasets.
-  std::map<std::string, Gnuplot2dDataset> m_2dDatasetMap;
+  std::map<stdfwd::string, Gnuplot2dDataset> m_2dDatasetMap;
 
 }; // class GnuplotAggregator
 

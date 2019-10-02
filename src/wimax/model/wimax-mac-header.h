@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 
 namespace ns3 {
@@ -68,7 +68,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -89,7 +89,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "cid.h"
 
@@ -192,7 +192,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -230,7 +230,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 #include "cid.h"
 
@@ -319,7 +319,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -352,7 +352,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 
 namespace ns3 {
@@ -405,7 +405,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId
@@ -431,7 +431,7 @@ private:
 
 // ----------------------------------------------------------------------------------------------------------
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/model/header.h"
 
 namespace ns3 {
@@ -473,7 +473,7 @@ public:
    * Get name field
    * \returns the name
    */
-  std::string GetName (void) const;
+  stdfwd::string GetName (void) const;
   /**
    * \brief Get the type ID.
    * \return the object TypeId

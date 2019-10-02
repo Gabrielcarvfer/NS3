@@ -39,7 +39,7 @@
 #include "../model/uan-noise-model-default.h"
 
 #include <sstream>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 
@@ -54,7 +54,7 @@ NS_LOG_COMPONENT_DEFINE ("UanHelper");
  * \param txPowerDb The transmission power.
  * \param mode The transmission mode.
  */
-static void AsciiPhyTxEvent (std::ostream *os, std::string context,
+static void AsciiPhyTxEvent (std::ostream *os, stdfwd::string context,
                              Ptr<const Packet> packet, double txPowerDb, UanTxMode mode)
 {
   NS_UNUSED (txPowerDb);
@@ -70,7 +70,7 @@ static void AsciiPhyTxEvent (std::ostream *os, std::string context,
  * \param snr The received signal to noise ratio.
  * \param mode The channel transmission mode.
  */
-static void AsciiPhyRxOkEvent (std::ostream *os, std::string context,
+static void AsciiPhyRxOkEvent (std::ostream *os, stdfwd::string context,
                                Ptr<const Packet> packet, double snr, UanTxMode mode)
 {
   NS_UNUSED (snr);
@@ -92,15 +92,15 @@ UanHelper::~UanHelper ()
 
 
 void
-UanHelper::SetMac (std::string macType,
-                   std::string n0, const AttributeValue &v0,
-                   std::string n1, const AttributeValue &v1,
-                   std::string n2, const AttributeValue &v2,
-                   std::string n3, const AttributeValue &v3,
-                   std::string n4, const AttributeValue &v4,
-                   std::string n5, const AttributeValue &v5,
-                   std::string n6, const AttributeValue &v6,
-                   std::string n7, const AttributeValue &v7)
+UanHelper::SetMac (stdfwd::string macType,
+                   stdfwd::string n0, const AttributeValue &v0,
+                   stdfwd::string n1, const AttributeValue &v1,
+                   stdfwd::string n2, const AttributeValue &v2,
+                   stdfwd::string n3, const AttributeValue &v3,
+                   stdfwd::string n4, const AttributeValue &v4,
+                   stdfwd::string n5, const AttributeValue &v5,
+                   stdfwd::string n6, const AttributeValue &v6,
+                   stdfwd::string n7, const AttributeValue &v7)
 {
   m_mac = ObjectFactory ();
   m_mac.SetTypeId (macType);
@@ -115,15 +115,15 @@ UanHelper::SetMac (std::string macType,
 }
 
 void
-UanHelper::SetPhy (std::string phyType,
-                   std::string n0, const AttributeValue &v0,
-                   std::string n1, const AttributeValue &v1,
-                   std::string n2, const AttributeValue &v2,
-                   std::string n3, const AttributeValue &v3,
-                   std::string n4, const AttributeValue &v4,
-                   std::string n5, const AttributeValue &v5,
-                   std::string n6, const AttributeValue &v6,
-                   std::string n7, const AttributeValue &v7)
+UanHelper::SetPhy (stdfwd::string phyType,
+                   stdfwd::string n0, const AttributeValue &v0,
+                   stdfwd::string n1, const AttributeValue &v1,
+                   stdfwd::string n2, const AttributeValue &v2,
+                   stdfwd::string n3, const AttributeValue &v3,
+                   stdfwd::string n4, const AttributeValue &v4,
+                   stdfwd::string n5, const AttributeValue &v5,
+                   stdfwd::string n6, const AttributeValue &v6,
+                   stdfwd::string n7, const AttributeValue &v7)
 {
   m_phy = ObjectFactory ();
   m_phy.SetTypeId (phyType);
@@ -139,15 +139,15 @@ UanHelper::SetPhy (std::string phyType,
 }
 
 void
-UanHelper::SetTransducer (std::string type,
-                          std::string n0, const AttributeValue &v0,
-                          std::string n1, const AttributeValue &v1,
-                          std::string n2, const AttributeValue &v2,
-                          std::string n3, const AttributeValue &v3,
-                          std::string n4, const AttributeValue &v4,
-                          std::string n5, const AttributeValue &v5,
-                          std::string n6, const AttributeValue &v6,
-                          std::string n7, const AttributeValue &v7)
+UanHelper::SetTransducer (stdfwd::string type,
+                          stdfwd::string n0, const AttributeValue &v0,
+                          stdfwd::string n1, const AttributeValue &v1,
+                          stdfwd::string n2, const AttributeValue &v2,
+                          stdfwd::string n3, const AttributeValue &v3,
+                          stdfwd::string n4, const AttributeValue &v4,
+                          stdfwd::string n5, const AttributeValue &v5,
+                          stdfwd::string n6, const AttributeValue &v6,
+                          stdfwd::string n7, const AttributeValue &v7)
 {
   m_transducer = ObjectFactory ();
   m_transducer.SetTypeId (type);

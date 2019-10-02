@@ -84,7 +84,7 @@ public:
   * \param n the name of the attribute.
   * \param v the value of the attribute
   */
-  void SetCcAttribute (std::string n, const AttributeValue &v);
+  void SetCcAttribute (stdfwd::string n, const AttributeValue &v);
 
   /**
   * EquallySpacedCcs() create a valid std::map< uint8_t, Ptr<ComponentCarrier> >

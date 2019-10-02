@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../core/model/attribute.h"
 #include "../model/fd-net-device.h"
@@ -60,7 +60,7 @@ public:
    * Set these attributes on each ns3::FdNetDevice created
    * by FdNetDeviceHelper::Install
    */
-  void SetAttribute (std::string n1, const AttributeValue &v1);
+  void SetAttribute (stdfwd::string n1, const AttributeValue &v1);
 
   /**
    * This method creates a FdNetDevice and associates it to a node
@@ -76,7 +76,7 @@ public:
    * \param name The name of the node to install the device in
    * \returns A container holding the added net device.
    */
-  virtual NetDeviceContainer Install (std::string name) const;
+  virtual NetDeviceContainer Install (stdfwd::string name) const;
 
   /**
    * This method creates a FdNetDevice and associates it to a node.
@@ -111,7 +111,7 @@ private:
    * \param promiscuous If true capture all possible packets available at the device.
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
-  virtual void EnablePcapInternal (std::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
+  virtual void EnablePcapInternal (stdfwd::string prefix, Ptr<NetDevice> nd, bool promiscuous, bool explicitFilename);
 
   /**
    * \brief Enable ascii trace output on the indicated net device.
@@ -125,7 +125,7 @@ private:
    * \param explicitFilename Treat the prefix as an explicit filename if true
    */
   virtual void EnableAsciiInternal (Ptr<OutputStreamWrapper> stream,
-                                    std::string prefix,
+                                    stdfwd::string prefix,
                                     Ptr<NetDevice> nd,
                                     bool explicitFilename);
 

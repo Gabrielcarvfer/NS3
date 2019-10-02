@@ -350,7 +350,7 @@ BufferTest::DoRun (void)
   ENSURE_WRITTEN_BYTES (other, 9, 0x1, 0x2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3, 0x4);
 
   /// \internal See \bugid{1001}
-  std::string ct ("This is the next content of the buffer.");
+  stdfwd::string ct ("This is the next content of the buffer.");
   buffer = Buffer ();
   buffer.AddAtStart (ct.size ());
   i = buffer.Begin ();

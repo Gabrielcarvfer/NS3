@@ -19,7 +19,7 @@
  */
 #pragma once
 
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../network/helper/application-container.h"
 #include "../../network/helper/node-container.h"
 #include "../../core/model/object-factory.h"
@@ -50,7 +50,7 @@ public:
    * \param name the name of the attribute to set
    * \param value the value of the attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Create a UdpEchoServerApplication on the specified Node.
@@ -71,7 +71,7 @@ public:
    *
    * \returns An ApplicationContainer holding the Application created.
    */
-  ApplicationContainer Install (std::string nodeName) const;
+  ApplicationContainer Install (stdfwd::string nodeName) const;
 
   /**
    * \param c The nodes on which to create the Applications.  The nodes
@@ -129,7 +129,7 @@ public:
    * \param name the name of the attribute to set
    * \param value the value of the attribute to set
    */
-  void SetAttribute (std::string name, const AttributeValue &value);
+  void SetAttribute (stdfwd::string name, const AttributeValue &value);
 
   /**
    * Given a pointer to a UdpEchoClient application, set the data fill of the 
@@ -143,7 +143,7 @@ public:
    * \param app Smart pointer to the application (real type must be UdpEchoClient).
    * \param fill The string to use as the actual echo data bytes.
    */
-  void SetFill (Ptr<Application> app, std::string fill);
+  void SetFill (Ptr<Application> app, stdfwd::string fill);
 
   /**
    * Given a pointer to a UdpEchoClient application, set the data fill of the 
@@ -203,7 +203,7 @@ public:
    * \returns An ApplicationContainer that holds a Ptr<Application> to the 
    *          application created
    */
-  ApplicationContainer Install (std::string nodeName) const;
+  ApplicationContainer Install (stdfwd::string nodeName) const;
 
   /**
    * \param c the nodes

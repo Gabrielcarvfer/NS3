@@ -67,8 +67,8 @@ Ipv4InterfaceContainer i2i3;
 Ipv4InterfaceContainer i3i4;
 Ipv4InterfaceContainer i3i5;
 
-std::stringstream filePlotQueueDisc;
-std::stringstream filePlotQueueDiscAvg;
+stdfwd::stringstream filePlotQueueDisc;
+stdfwd::stringstream filePlotQueueDiscAvg;
 
 void
 CheckQueueDiscSize (Ptr<QueueDisc> queue)
@@ -139,10 +139,10 @@ main (int argc, char *argv[])
 {
   LogComponentEnable ("PieQueueDisc", LOG_LEVEL_INFO);
 
-  std::string pieLinkDataRate = "1.5Mbps";
-  std::string pieLinkDelay = "20ms";
+  stdfwd::string pieLinkDataRate = "1.5Mbps";
+  stdfwd::string pieLinkDelay = "20ms";
 
-  std::string pathOut;
+  stdfwd::string pathOut;
   bool writeForPlot = false;
   bool writePcap = false;
   bool flowMonitor = false;
@@ -277,7 +277,7 @@ main (int argc, char *argv[])
   if (writePcap)
     {
       PointToPointHelper ptp;
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/pie";
       ptp.EnablePcapAll (stmp.str ().c_str ());
     }
@@ -313,7 +313,7 @@ main (int argc, char *argv[])
 
   if (flowMonitor)
     {
-      std::stringstream stmp;
+      stdfwd::stringstream stmp;
       stmp << pathOut << "/pie.flowmon";
 
       flowmon->SerializeToXmlFile (stmp.str ().c_str (), false, false);

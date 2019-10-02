@@ -62,7 +62,7 @@ private:
    * \param dist the distnace between nodes
    * \returns the name string
    */
-  static std::string BuildNameString (uint16_t nUser, double dist);
+  static stdfwd::string BuildNameString (uint16_t nUser, double dist);
   virtual void DoRun (void);
   uint16_t m_nUser; ///< number of UE nodes
   double m_dist; ///< the distance between nodes
@@ -99,7 +99,7 @@ private:
    * \param dist the distnace between nodes
    * \returns the name string
    */
-  static std::string BuildNameString (uint16_t nUser, std::vector<double> dist);
+  static stdfwd::string BuildNameString (uint16_t nUser, std::vector<double> dist);
   virtual void DoRun (void);
   uint16_t m_nUser; ///< number of UE nodes
   std::vector<double> m_dist; ///< the distance between nodes

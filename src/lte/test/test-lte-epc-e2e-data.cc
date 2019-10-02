@@ -114,7 +114,7 @@ public:
    * \param name the reference name
    * \param v the ENB test data
    */
-  LteEpcE2eDataTestCase (std::string name, std::vector<EnbTestData> v);
+  LteEpcE2eDataTestCase (stdfwd::string name, std::vector<EnbTestData> v);
   virtual ~LteEpcE2eDataTestCase ();
 
 private:
@@ -123,7 +123,7 @@ private:
 };
 
 
-LteEpcE2eDataTestCase::LteEpcE2eDataTestCase (std::string name, std::vector<EnbTestData> v)
+LteEpcE2eDataTestCase::LteEpcE2eDataTestCase (stdfwd::string name, std::vector<EnbTestData> v)
   : TestCase (name),
     m_enbTestData (v)
 {

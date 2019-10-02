@@ -21,8 +21,8 @@
 #pragma once
 
 #include <sstream>
-#include <string>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "pcap-file.h"
 #include "../../core/model/test.h"
 
@@ -38,8 +38,8 @@
   do {                                                                  \
     std::ostringstream oss;                                             \
     oss << filename;                                                    \
-    std::string expected = CreateDataDirFilename (oss.str());           \
-    std::string got = CreateTempDirFilename (oss.str());                \
+    stdfwd::string expected = CreateDataDirFilename (oss.str());           \
+    stdfwd::string got = CreateTempDirFilename (oss.str());                \
     uint32_t sec(0), usec(0), packets(0);				\
     /** \todo support default PcapWriter snap length here */		\
     bool diff = PcapFile::Diff (got, expected, sec, usec, packets);	\

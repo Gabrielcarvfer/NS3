@@ -41,7 +41,7 @@ public:
    * \param name Test description.
    * \param scale Window scaling.
    */
-  TcpOptionWSTestCase (std::string name, uint8_t scale);
+  TcpOptionWSTestCase (stdfwd::string name, uint8_t scale);
 
   /**
    * \brief Serialization test.
@@ -61,7 +61,7 @@ private:
 };
 
 
-TcpOptionWSTestCase::TcpOptionWSTestCase (std::string name, uint8_t scale)
+TcpOptionWSTestCase::TcpOptionWSTestCase (stdfwd::string name, uint8_t scale)
   : TestCase (name)
 {
   m_scale = scale;
@@ -122,7 +122,7 @@ public:
    * \brief Constructor.
    * \param name Test description.
    */
-  TcpOptionTSTestCase (std::string name);
+  TcpOptionTSTestCase (stdfwd::string name);
 
   /**
    * \brief Serialization test.
@@ -143,7 +143,7 @@ private:
 };
 
 
-TcpOptionTSTestCase::TcpOptionTSTestCase (std::string name)
+TcpOptionTSTestCase::TcpOptionTSTestCase (stdfwd::string name)
   : TestCase (name)
 {
   m_timestamp = 0;

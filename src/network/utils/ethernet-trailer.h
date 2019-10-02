@@ -22,7 +22,7 @@
 
 #include "../model/trailer.h"
 #include "../model/packet.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

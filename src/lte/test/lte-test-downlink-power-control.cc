@@ -355,7 +355,7 @@ static LteDownlinkPowerControlTestSuite lteDownlinkPowerControlTestSuite;
  * TestCase Data
  */
 
-LteDownlinkPowerControlSpectrumValueTestCase::LteDownlinkPowerControlSpectrumValueTestCase (std::string name,
+LteDownlinkPowerControlSpectrumValueTestCase::LteDownlinkPowerControlSpectrumValueTestCase (stdfwd::string name,
                                                                                             uint16_t earfcn, uint8_t bw, double powerTx,
                                                                                             std::map<int, double> powerTxMap, std::vector <int> activeRbs,
                                                                                             SpectrumValue& expected)
@@ -379,7 +379,7 @@ LteDownlinkPowerControlSpectrumValueTestCase::DoRun (void)
 
 }
 
-LteDownlinkPowerControlTestCase::LteDownlinkPowerControlTestCase (bool changePower, uint8_t pa, std::string name)
+LteDownlinkPowerControlTestCase::LteDownlinkPowerControlTestCase (bool changePower, uint8_t pa, stdfwd::string name)
   : TestCase ("Downlink Power Control: " + name)
 {
   m_changePdschConfigDedicated = changePower;
@@ -473,27 +473,27 @@ LteDownlinkPowerControlTestCase::DoRun (void)
 
 void
 NotifyConnectionReconfigurationUe (LteDownlinkPowerControlRrcConnectionReconfigurationTestCase *testcase,
-                                   std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+                                   stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   testcase->ConnectionReconfigurationUe (context, imsi, cellId, rnti);
 }
 
 void
 NotifyConnectionReconfigurationEnb (LteDownlinkPowerControlRrcConnectionReconfigurationTestCase *testcase,
-                                    std::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
+                                    stdfwd::string context, uint64_t imsi, uint16_t cellId, uint16_t rnti)
 {
   testcase->ConnectionReconfigurationEnb (context, imsi, cellId, rnti);
 }
 
 void
 ChangePdschConfigDedicatedCallback (LteDownlinkPowerControlRrcConnectionReconfigurationTestCase *testcase,
-                                    std::string context, uint16_t rnti, uint8_t pa)
+                                    stdfwd::string context, uint16_t rnti, uint8_t pa)
 {
   testcase->ChangePdschConfigDedicated (rnti, pa);
 }
 
 
-LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::LteDownlinkPowerControlRrcConnectionReconfigurationTestCase (bool useIdealRrc, std::string name)
+LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::LteDownlinkPowerControlRrcConnectionReconfigurationTestCase (bool useIdealRrc, stdfwd::string name)
   : TestCase ("Downlink Power Control: " + name),
     m_useIdealRrc (useIdealRrc),
     m_changePdschConfigDedicatedTriggered (false),
@@ -508,7 +508,7 @@ LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::~LteDownlinkPowerCo
 }
 
 void
-LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::ConnectionReconfigurationEnb (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::ConnectionReconfigurationEnb (stdfwd::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
   if (Simulator::Now () > MilliSeconds (100))
     {
@@ -518,7 +518,7 @@ LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::ConnectionReconfigu
 }
 
 void
-LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::ConnectionReconfigurationUe (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+LteDownlinkPowerControlRrcConnectionReconfigurationTestCase::ConnectionReconfigurationUe (stdfwd::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
   if (Simulator::Now () > MilliSeconds (100))
     {

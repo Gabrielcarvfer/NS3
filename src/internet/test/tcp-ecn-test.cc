@@ -59,7 +59,7 @@ public:
    * \param testcase test case number
    * \param desc Description about the ECN capabilities of sender and receiver
    */
-  TcpEcnTest (uint32_t testcase, const std::string &desc);
+  TcpEcnTest (uint32_t testcase, const stdfwd::string &desc);
 
 protected:
   virtual void CWndTrace (uint32_t oldValue, uint32_t newValue);
@@ -389,7 +389,7 @@ TcpSocketCongestedRouter::Fork (void)
 }
 
 
-TcpEcnTest::TcpEcnTest (uint32_t testcase, const std::string &desc)
+TcpEcnTest::TcpEcnTest (uint32_t testcase, const stdfwd::string &desc)
   : TcpGeneralTest (desc),
   m_cwndChangeCount (0),
   m_senderSent (0),

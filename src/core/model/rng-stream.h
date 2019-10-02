@@ -18,8 +18,8 @@
 // Modified for ns-3 by: Rajib Bhattacharjea<raj.b@gatech.edu>
 
 #pragma once
-#include <string>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 /**
  * \file

@@ -281,12 +281,12 @@ public:
    * Set device name
    * \param name the device name
    */
-  virtual void SetName (const std::string name);
+  virtual void SetName (const stdfwd::string name);
   /**
    * Get device name
    * \returns the device name
    */
-  virtual std::string GetName (void) const;
+  virtual stdfwd::string GetName (void) const;
   /**
    * Set interface index
    * \param index the index
@@ -522,7 +522,7 @@ private:
   NetDevice::PromiscReceiveCallback m_promiscRx; ///< promiscious receive fcallback function
 
   uint32_t m_ifIndex; ///< IF index
-  std::string m_name; ///< service name
+  stdfwd::string m_name; ///< service name
   bool m_linkUp; ///< link up?
   Callback<void> m_linkChange; ///< link change callback
   mutable uint16_t m_mtu; ///< MTU

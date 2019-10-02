@@ -38,7 +38,7 @@
 #include "../../internet/model/icmpv6-l4-protocol.h"
 #include "../../network/utils/error-channel.h"
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <limits>
 
 #ifdef __WIN32__

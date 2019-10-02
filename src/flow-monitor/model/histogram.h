@@ -21,7 +21,7 @@
 #pragma once
 
 #include <vector>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <ostream>
 
 namespace ns3 {
@@ -108,7 +108,7 @@ public:
    * \param indent number of spaces to use as base indentation level
    * \param elementName name of the element to serialize.
    */
-  void SerializeToXmlStream (std::ostream &os, uint16_t indent, std::string elementName) const;
+  void SerializeToXmlStream (std::ostream &os, uint16_t indent, stdfwd::string elementName) const;
 
 
 private:

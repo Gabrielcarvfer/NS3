@@ -50,7 +50,7 @@ public:
    * \param path not used in this method
    * \param packet not used in this method
    */
-  void PacketUpdate (std::string path, Ptr<const Packet> packet);
+  void PacketUpdate (stdfwd::string path, Ptr<const Packet> packet);
 
   /**
    * Increments the packet counter by one
@@ -60,7 +60,7 @@ public:
    * \param realto not used in this method
    */
 
-  void FrameUpdate (std::string path, Ptr<const Packet> packet,
+  void FrameUpdate (stdfwd::string path, Ptr<const Packet> packet,
                     Mac48Address realto);
 
 protected:
@@ -95,7 +95,7 @@ public:
    * \param path not used in this method
    * \param packet packet size used to update stats
    */
-  void PacketUpdate (std::string path, Ptr<const Packet> packet);
+  void PacketUpdate (stdfwd::string path, Ptr<const Packet> packet);
   
   /**
    * Increments the packet stats by the size of the packet
@@ -104,7 +104,7 @@ public:
    * \param packet packet size used to update stats
    * \param realto not used in this method
    */  
-  void FrameUpdate (std::string path, Ptr<const Packet> packet,
+  void FrameUpdate (stdfwd::string path, Ptr<const Packet> packet,
                     Mac48Address realto);
 
 protected:

@@ -95,7 +95,7 @@ public:
    *
    * \param fill The string to use as the actual echo data bytes.
    */
-  void SetFill (std::string fill);
+  void SetFill (stdfwd::string fill);
 
   /**
    * Set the data fill of the packet (what is sent as data to the server) to 

@@ -100,12 +100,12 @@ CommandLine::Clear (void)
 }
 
 void
-CommandLine::Usage (const std::string usage)
+CommandLine::Usage (const stdfwd::string usage)
 {
   m_usage = usage;
 }
 
-std::string
+stdfwd::string
 CommandLine::GetName () const
 {
   return m_name;
@@ -117,7 +117,7 @@ CommandLine::Item::~Item ()
 }
 
 void
-CommandLine::Parse (std::vector<std::string> args)
+CommandLine::Parse (std::vector<stdfwd::string> args)
 {
   NS_LOG_FUNCTION (this << args.size () << args);
 
@@ -149,11 +149,11 @@ CommandLine::Parse (std::vector<std::string> args)
 }
 
 bool
-CommandLine::HandleOption (const std::string & param) const
+CommandLine::HandleOption (const stdfwd::string & param) const
 {
   // remove leading "--" or "-"
-  std::string arg = param;
-  std::string::size_type cur = arg.find ("--");
+  stdfwd::string arg = param;
+  stdfwd::string::size_type cur = arg.find ("--");
   if (cur == 0)
     {
       arg = arg.substr (2, arg.size () - 2);
@@ -173,8 +173,8 @@ CommandLine::HandleOption (const std::string & param) const
     }
   // find any value following '='
   cur = arg.find ("=");
-  std::string name, value;
-  if (cur == std::string::npos)
+  stdfwd::string name, value;
+  if (cur == stdfwd::string::npos)
     {
       name = arg;
       value = "";
@@ -190,7 +190,7 @@ CommandLine::HandleOption (const std::string & param) const
 }
 
 bool
-CommandLine::HandleNonOption (const std::string &value)
+CommandLine::HandleNonOption (const stdfwd::string &value)
 {
   NS_LOG_FUNCTION (this << value);
 
@@ -224,7 +224,7 @@ void
 CommandLine::Parse (int argc, char *argv[])
 {
   NS_LOG_FUNCTION (this << argc);
-  std::vector<std::string> args (argv, argv + argc);
+  std::vector<stdfwd::string> args (argv, argv + argc);
   Parse (args);
 }
 
@@ -318,13 +318,13 @@ CommandLine::PrintGlobals (std::ostream &os) const
   os << "Global values:" << std::endl;
 
   // Sort output
-  std::vector<std::string> globals;
+  std::vector<stdfwd::string> globals;
   
   for (GlobalValue::Iterator i = GlobalValue::Begin ();
        i != GlobalValue::End ();
        ++i)
     {
-      std::stringstream ss;
+      stdfwd::stringstream ss;
       ss << "    --" << (*i)->GetName () << "=[";
       Ptr<const AttributeChecker> checker = (*i)->GetChecker ();
       StringValue v;
@@ -334,7 +334,7 @@ CommandLine::PrintGlobals (std::ostream &os) const
       globals.push_back (ss.str ());
     }
   std::sort (globals.begin (), globals.end ());
-  for (std::vector<std::string>::const_iterator it = globals.begin ();
+  for (std::vector<stdfwd::string>::const_iterator it = globals.begin ();
        it < globals.end ();
        ++it)
     {
@@ -343,7 +343,7 @@ CommandLine::PrintGlobals (std::ostream &os) const
 }
 
 void
-CommandLine::PrintAttributes (std::ostream &os, const std::string &type) const
+CommandLine::PrintAttributes (std::ostream &os, const stdfwd::string &type) const
 {
   NS_LOG_FUNCTION (this);
 
@@ -356,11 +356,11 @@ CommandLine::PrintAttributes (std::ostream &os, const std::string &type) const
   os << "Attributes for TypeId " << tid.GetName () << std::endl;
   
   // Sort output
-  std::vector<std::string> attributes;
+  std::vector<stdfwd::string> attributes;
   
   for (uint32_t i = 0; i < tid.GetAttributeN (); ++i)
     {
-      std::stringstream ss;
+      stdfwd::stringstream ss;
       ss << "    --" << tid.GetAttributeFullName (i) << "=[";
       struct TypeId::AttributeInformation info = tid.GetAttribute (i);
       ss << info.initialValue->SerializeToString (info.checker) << "]"
@@ -369,7 +369,7 @@ CommandLine::PrintAttributes (std::ostream &os, const std::string &type) const
       attributes.push_back (ss.str ());
     }
   std::sort (attributes.begin (), attributes.end ());
-  for (std::vector<std::string>::const_iterator it = attributes.begin ();
+  for (std::vector<stdfwd::string>::const_iterator it = attributes.begin ();
        it < attributes.end ();
        ++it)
     {
@@ -379,18 +379,18 @@ CommandLine::PrintAttributes (std::ostream &os, const std::string &type) const
 
 
 void
-CommandLine::PrintGroup (std::ostream &os, const std::string &group) const
+CommandLine::PrintGroup (std::ostream &os, const stdfwd::string &group) const
 {
   NS_LOG_FUNCTION (this);
 
   os << "TypeIds in group " << group << ":" << std::endl;
   
   // Sort output
-  std::vector<std::string> groupTypes;
+  std::vector<stdfwd::string> groupTypes;
   
   for (uint16_t i = 0; i < TypeId::GetRegisteredN (); ++i)
     {
-      std::stringstream ss;
+      stdfwd::stringstream ss;
       TypeId tid = TypeId::GetRegistered (i);
       if (tid.GetGroupName () == group)
         {
@@ -399,7 +399,7 @@ CommandLine::PrintGroup (std::ostream &os, const std::string &group) const
       groupTypes.push_back (ss.str ());
     }
   std::sort (groupTypes.begin (), groupTypes.end ());
-  for (std::vector<std::string>::const_iterator it = groupTypes.begin ();
+  for (std::vector<stdfwd::string>::const_iterator it = groupTypes.begin ();
        it < groupTypes.end ();
        ++it)
     {
@@ -414,17 +414,17 @@ CommandLine::PrintTypeIds (std::ostream &os) const
   os << "Registered TypeIds:" << std::endl;
 
   // Sort output
-  std::vector<std::string> types;
+  std::vector<stdfwd::string> types;
     
   for (uint16_t i = 0; i < TypeId::GetRegisteredN (); ++i)
     {
-      std::stringstream ss;
+      stdfwd::stringstream ss;
       TypeId tid = TypeId::GetRegistered (i);
       ss << "    " << tid.GetName () << std::endl;
       types.push_back (ss.str ());
     }
   std::sort (types.begin (), types.end ());
-  for (std::vector<std::string>::const_iterator it = types.begin ();
+  for (std::vector<stdfwd::string>::const_iterator it = types.begin ();
        it < types.end ();
        ++it)
     {
@@ -437,7 +437,7 @@ CommandLine::PrintGroups (std::ostream &os) const
 {
   NS_LOG_FUNCTION (this);
 
-  std::set<std::string> groups;
+  std::set<stdfwd::string> groups;
   for (uint16_t i = 0; i < TypeId::GetRegisteredN (); ++i)
     {
       TypeId tid = TypeId::GetRegistered (i);
@@ -446,7 +446,7 @@ CommandLine::PrintGroups (std::ostream &os) const
   
   os << "Registered TypeId groups:" << std::endl;
   // Sets are already sorted
-  for (std::set<std::string>::const_iterator k = groups.begin ();
+  for (std::set<stdfwd::string>::const_iterator k = groups.begin ();
        k != groups.end ();
        ++k)
     {
@@ -455,7 +455,7 @@ CommandLine::PrintGroups (std::ostream &os) const
 }
 
 void
-CommandLine::HandleArgument (const std::string &name, const std::string &value) const
+CommandLine::HandleArgument (const stdfwd::string &name, const stdfwd::string &value) const
 {
   NS_LOG_FUNCTION (this << name << value);
 
@@ -529,7 +529,7 @@ CommandLine::HandleArgument (const std::string &name, const std::string &value) 
 }
 
 bool
-CommandLine::CallbackItem::Parse (const std::string value)
+CommandLine::CallbackItem::Parse (const stdfwd::string value)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_DEBUG ("CommandLine::CallbackItem::Parse \"" << value << "\"");
@@ -537,9 +537,9 @@ CommandLine::CallbackItem::Parse (const std::string value)
 }
 
 void
-CommandLine::AddValue (const std::string &name,
-                       const std::string &help,
-                       Callback<bool, std::string> callback)
+CommandLine::AddValue (const stdfwd::string &name,
+                       const stdfwd::string &help,
+                       Callback<bool, stdfwd::string> callback)
 {
   NS_LOG_FUNCTION (this << &name << &help << &callback);
   CallbackItem *item = new CallbackItem ();
@@ -550,13 +550,13 @@ CommandLine::AddValue (const std::string &name,
 }
 
 void
-CommandLine::AddValue (const std::string &name,
-                       const std::string &attributePath)
+CommandLine::AddValue (const stdfwd::string &name,
+                       const stdfwd::string &attributePath)
 {
   NS_LOG_FUNCTION (this << name << attributePath);
   // Attribute name is last token
   std::size_t colon = attributePath.rfind ("::");
-  const std::string typeName = attributePath.substr (0, colon);
+  const stdfwd::string typeName = attributePath.substr (0, colon);
   NS_LOG_DEBUG ("typeName: '" << typeName << "', colon: " << colon);
   
   TypeId tid;
@@ -565,14 +565,14 @@ CommandLine::AddValue (const std::string &name,
       NS_FATAL_ERROR ("Unknown type=" << typeName);
     }
 
-  const std::string attrName = attributePath.substr (colon + 2);
+  const stdfwd::string attrName = attributePath.substr (colon + 2);
   struct TypeId::AttributeInformation info;  
   if (!tid.LookupAttributeByName (attrName, &info))
     {
       NS_FATAL_ERROR ("Attribute not found: " << attributePath);
     }
       
-  std::stringstream ss;
+  stdfwd::stringstream ss;
   ss << info.help
      << " (" << attributePath << ") ["
      << info.initialValue->SerializeToString (info.checker) << "]";
@@ -581,10 +581,10 @@ CommandLine::AddValue (const std::string &name,
             MakeBoundCallback (CommandLine::HandleAttribute, attributePath)) ;
 }
 
-std::string
+stdfwd::string
 CommandLine::GetExtraNonOption (std::size_t i) const
 {
-  std::string value;
+  stdfwd::string value;
   
   if (m_nonOptions.size () >= i + m_NNonOptions)
     {
@@ -613,8 +613,8 @@ CommandLine::GetNExtraNonOptions (void) const
 
 /* static */
 bool
-CommandLine::HandleAttribute (const std::string name,
-                              const std::string value)
+CommandLine::HandleAttribute (const stdfwd::string name,
+                              const stdfwd::string value)
 {
   bool success = true;
   if (!Config::SetGlobalFailSafe (name, StringValue (value))
@@ -632,14 +632,14 @@ CommandLine::Item::HasDefault () const
   return false;
 }
 
-std::string
+stdfwd::string
 CommandLine::Item::GetDefault () const
 {
   return "";
 }
 
 bool
-CommandLine::StringItem::Parse (const std::string value)
+CommandLine::StringItem::Parse (const stdfwd::string value)
 {
   m_value = value;
   return true;
@@ -651,14 +651,14 @@ CommandLine::StringItem::HasDefault (void) const
   return false;
 }
  
-std::string
+stdfwd::string
 CommandLine::StringItem::GetDefault (void) const
 {
   return "";
 }
 
 template <>
-std::string
+stdfwd::string
 CommandLineHelper::GetDefault<bool> (const bool & val)
 {
   std::ostringstream oss;
@@ -668,9 +668,9 @@ CommandLineHelper::GetDefault<bool> (const bool & val)
 
 template <>
 bool
-CommandLineHelper::UserItemParse<bool> (const std::string value, bool & val)
+CommandLineHelper::UserItemParse<bool> (const stdfwd::string value, bool & val)
 {
-  std::string src = value;
+  stdfwd::string src = value;
   std::transform(src.begin(), src.end(), src.begin(),
     [](char c) {return static_cast<char>(std::tolower(c)); });
   if (src.length () == 0)

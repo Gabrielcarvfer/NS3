@@ -55,9 +55,9 @@ private:
   NodeContainer * m_nodes;
 
   /// PCAP file names prefix
-  const std::string m_prefix;
+  const stdfwd::string m_prefix;
   /// Socket factory TID
-  const std::string m_proto;
+  const stdfwd::string m_proto;
   /// Total simulation time
   const Time m_time;
   /// Chain size

@@ -21,8 +21,8 @@
 
 #include "../../network/model/net-device.h"
 #include "../../network/utils/mac48-address.h"
-#include <stdint.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 namespace ns3 {
 

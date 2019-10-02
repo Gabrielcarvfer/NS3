@@ -26,7 +26,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("OutputStreamWrapper");
 
-OutputStreamWrapper::OutputStreamWrapper (std::string filename, std::ios::openmode filemode)
+OutputStreamWrapper::OutputStreamWrapper (stdfwd::string filename, std::ios::openmode filemode)
   : m_destroyable (true)
 {
   NS_LOG_FUNCTION (this << filename << filemode);

@@ -62,7 +62,7 @@ private:
    * \param tbSize
    * \returns name string
    */
-  static std::string BuildNameString (uint16_t nUser, uint16_t dist, uint16_t tbSize);
+  static stdfwd::string BuildNameString (uint16_t nUser, uint16_t dist, uint16_t tbSize);
   uint16_t m_nUser; ///< number of UE nodes
   uint16_t m_dist; ///< distance between nodes
   double m_amcBer; ///< AMC bit error rate

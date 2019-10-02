@@ -22,10 +22,10 @@
  */
 
 #include <unistd.h>
-#include <stdint.h>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include "../../core/model/string.h" // for strerror
 #include <iosfwd>
 #include <iomanip>

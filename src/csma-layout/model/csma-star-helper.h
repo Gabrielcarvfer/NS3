@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../../csma/helper/csma-helper.h"
 #include "../../internet/helper/ipv4-address-helper.h"

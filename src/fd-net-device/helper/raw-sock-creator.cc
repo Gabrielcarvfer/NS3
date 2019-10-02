@@ -17,7 +17,7 @@
  */
 
 #include <unistd.h>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <iosfwd>
 #include <iomanip>
 #include <sstream>

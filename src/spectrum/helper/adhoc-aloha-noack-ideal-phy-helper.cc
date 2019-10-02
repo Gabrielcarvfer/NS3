@@ -57,7 +57,7 @@ AdhocAlohaNoackIdealPhyHelper::SetChannel (Ptr<SpectrumChannel> channel)
 }
 
 void
-AdhocAlohaNoackIdealPhyHelper::SetChannel (std::string channelName)
+AdhocAlohaNoackIdealPhyHelper::SetChannel (stdfwd::string channelName)
 {
   Ptr<SpectrumChannel> channel = Names::Find<SpectrumChannel> (channelName);
   m_channel = channel;
@@ -78,28 +78,28 @@ AdhocAlohaNoackIdealPhyHelper::SetNoisePowerSpectralDensity (Ptr<SpectrumValue> 
 }
 
 void
-AdhocAlohaNoackIdealPhyHelper::SetPhyAttribute (std::string name, const AttributeValue &v)
+AdhocAlohaNoackIdealPhyHelper::SetPhyAttribute (stdfwd::string name, const AttributeValue &v)
 {
   m_phy.Set (name, v);
 }
 
 
 void
-AdhocAlohaNoackIdealPhyHelper::SetDeviceAttribute (std::string name, const AttributeValue &v)
+AdhocAlohaNoackIdealPhyHelper::SetDeviceAttribute (stdfwd::string name, const AttributeValue &v)
 {
   m_device.Set (name, v);
 }
 
 void
-AdhocAlohaNoackIdealPhyHelper::SetAntenna (std::string type,
-                                           std::string n0, const AttributeValue &v0,
-                                           std::string n1, const AttributeValue &v1,
-                                           std::string n2, const AttributeValue &v2,
-                                           std::string n3, const AttributeValue &v3,
-                                           std::string n4, const AttributeValue &v4,
-                                           std::string n5, const AttributeValue &v5,
-                                           std::string n6, const AttributeValue &v6,
-                                           std::string n7, const AttributeValue &v7)
+AdhocAlohaNoackIdealPhyHelper::SetAntenna (stdfwd::string type,
+                                           stdfwd::string n0, const AttributeValue &v0,
+                                           stdfwd::string n1, const AttributeValue &v1,
+                                           stdfwd::string n2, const AttributeValue &v2,
+                                           stdfwd::string n3, const AttributeValue &v3,
+                                           stdfwd::string n4, const AttributeValue &v4,
+                                           stdfwd::string n5, const AttributeValue &v5,
+                                           stdfwd::string n6, const AttributeValue &v6,
+                                           stdfwd::string n7, const AttributeValue &v7)
 {
   ObjectFactory factory;
   factory.SetTypeId (type);
@@ -176,7 +176,7 @@ AdhocAlohaNoackIdealPhyHelper::Install (Ptr<Node> node) const
 }
 
 NetDeviceContainer
-AdhocAlohaNoackIdealPhyHelper::Install (std::string nodeName) const
+AdhocAlohaNoackIdealPhyHelper::Install (stdfwd::string nodeName) const
 {
   Ptr<Node> node = Names::Find<Node> (nodeName);
   return Install (node);

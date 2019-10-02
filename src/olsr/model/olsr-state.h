@@ -91,7 +91,7 @@ public:
    * Prints the MPR selector sets.
    * \return a string with the output data.
    */
-  std::string PrintMprSelectorSet () const;
+  stdfwd::string PrintMprSelectorSet () const;
 
   // Neighbor
 

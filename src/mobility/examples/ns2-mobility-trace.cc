@@ -59,7 +59,7 @@ using namespace ns3;
 
 // Prints actual position and velocity when a course change event occurs
 static void
-CourseChange (std::ostream *os, std::string foo, Ptr<const MobilityModel> mobility)
+CourseChange (std::ostream *os, stdfwd::string foo, Ptr<const MobilityModel> mobility)
 {
   Vector pos = mobility->GetPosition (); // Get position
   Vector vel = mobility->GetVelocity (); // Get velocity
@@ -73,8 +73,8 @@ CourseChange (std::ostream *os, std::string foo, Ptr<const MobilityModel> mobili
 // Example to use ns2 traces file in ns3
 int main (int argc, char *argv[])
 {
-  std::string traceFile;
-  std::string logFile;
+  stdfwd::string traceFile;
+  stdfwd::string logFile;
 
   int    nodeNum;
   double duration;

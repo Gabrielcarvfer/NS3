@@ -30,7 +30,7 @@
 #include "ipv4-l3-click-protocol.h"
 
 #include "ipv4-click-routing.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <map>
 
 #include <cstdlib>
@@ -83,7 +83,7 @@ Ipv4ClickRouting::DoInitialize ()
 
   if (!m_nonDefaultName)
     {
-      std::stringstream name;
+      stdfwd::stringstream name;
       name << "Node" << id;
       m_nodeName = name.str ();
     }
@@ -132,37 +132,37 @@ Ipv4ClickRouting::DoDispose ()
 }
 
 void
-Ipv4ClickRouting::SetClickFile (std::string clickfile)
+Ipv4ClickRouting::SetClickFile (stdfwd::string clickfile)
 {
   m_clickFile = clickfile;
 }
 
 void
-Ipv4ClickRouting::SetDefines (std::map<std::string, std::string> defines)
+Ipv4ClickRouting::SetDefines (std::map<stdfwd::string, stdfwd::string> defines)
 {
   m_defines = defines;
 }
 
-std::map<std::string, std::string>
+std::map<stdfwd::string, stdfwd::string>
 Ipv4ClickRouting::GetDefines (void)
 {
   return m_defines;
 }
 
 void
-Ipv4ClickRouting::SetClickRoutingTableElement (std::string name)
+Ipv4ClickRouting::SetClickRoutingTableElement (stdfwd::string name)
 {
   m_clickRoutingTableElement = name;
 }
 
 void
-Ipv4ClickRouting::SetNodeName (std::string name)
+Ipv4ClickRouting::SetNodeName (stdfwd::string name)
 {
   m_nodeName = name;
   m_nonDefaultName = true;
 }
 
-std::string
+stdfwd::string
 Ipv4ClickRouting::GetNodeName ()
 {
   return m_nodeName;
@@ -238,28 +238,28 @@ Ipv4ClickRouting::IsInterfaceReady (int ifid)
     }
 }
 
-std::string
+stdfwd::string
 Ipv4ClickRouting::GetIpAddressFromInterfaceId (int ifid)
 {
-  std::stringstream addr;
+  stdfwd::stringstream addr;
   m_ipv4->GetAddress (ifid, 0).GetLocal ().Print (addr);
 
   return addr.str ();
 }
 
-std::string
+stdfwd::string
 Ipv4ClickRouting::GetIpPrefixFromInterfaceId (int ifid)
 {
-  std::stringstream addr;
+  stdfwd::stringstream addr;
   m_ipv4->GetAddress (ifid, 0).GetMask ().Print (addr);
 
   return addr.str ();
 }
 
-std::string
+stdfwd::string
 Ipv4ClickRouting::GetMacAddressFromInterfaceId (int ifid)
 {
-  std::stringstream addr;
+  stdfwd::stringstream addr;
 
   Ptr<NetDevice> device = m_ipv4->GetNetDevice (ifid);
   Address devAddr = device->GetAddress ();
@@ -437,11 +437,11 @@ Ipv4ClickRouting::Receive (Ptr<Packet> p, Mac48Address receiverAddr, Mac48Addres
   delete [] buf;
 }
 
-std::string
-Ipv4ClickRouting::ReadHandler (std::string elementName, std::string handlerName)
+stdfwd::string
+Ipv4ClickRouting::ReadHandler (stdfwd::string elementName, stdfwd::string handlerName)
 {
   char *handle = simclick_click_read_handler (m_simNode, elementName.c_str (), handlerName.c_str (), 0, 0);
-  std::string ret (handle);
+  stdfwd::string ret (handle);
 
   // This is required because Click does not free
   // the memory allocated to the return string
@@ -452,7 +452,7 @@ Ipv4ClickRouting::ReadHandler (std::string elementName, std::string handlerName)
 }
 
 int
-Ipv4ClickRouting::WriteHandler (std::string elementName, std::string handlerName, std::string writeString)
+Ipv4ClickRouting::WriteHandler (stdfwd::string elementName, stdfwd::string handlerName, stdfwd::string writeString)
 {
   int r = simclick_click_write_handler (m_simNode, elementName.c_str (), handlerName.c_str (), writeString.c_str ());
 
@@ -478,19 +478,19 @@ Ipv4ClickRouting::RouteOutput (Ptr<Packet> p, const Ipv4Header &header, Ptr<NetD
 {
   Ptr<Ipv4Route> rtentry;
 
-  std::stringstream addr;
+  stdfwd::stringstream addr;
   addr << "lookup ";
   header.GetDestination ().Print (addr);
   // Probe the Click Routing Table for the required IP
   // This returns a string of the form "InterfaceID GatewayAddr"
   NS_LOG_DEBUG ("Probe click routing table for " << addr.str ());
-  std::string s = ReadHandler (m_clickRoutingTableElement, addr.str ());
+  stdfwd::string s = ReadHandler (m_clickRoutingTableElement, addr.str ());
   NS_LOG_DEBUG ("string from click routing table: " << s);
 
   size_t pos = s.find (" ");
   Ipv4Address destination;
   int interfaceId;
-  if (pos == std::string::npos)
+  if (pos == stdfwd::string::npos)
     {
       // Only an interface ID is found
       destination = Ipv4Address ("0.0.0.0");
@@ -586,7 +586,7 @@ Ipv4ClickRouting::NotifyRemoveAddress (uint32_t interface, Ipv4InterfaceAddress 
 
 using ns3::g_log;
 
-static int simstrlcpy (char *buf, int len, const std::string &s)
+static int simstrlcpy (char *buf, int len, const stdfwd::string &s)
 {
   if (len)
     {
@@ -799,8 +799,8 @@ int simclick_sim_command (simclick_node_t *simnode, int cmd, ...)
         // Otherwise return the bytes actually writte into the buffer in size.
 
         // Append key/value pair, separated by \0.
-        std::map<std::string, std::string> defines = clickInstance->GetDefines ();
-        std::map<std::string, std::string>::const_iterator it = defines.begin ();
+        std::map<stdfwd::string, stdfwd::string> defines = clickInstance->GetDefines ();
+        std::map<stdfwd::string, stdfwd::string>::const_iterator it = defines.begin ();
         while (it != defines.end ())
           {
             size_t available = *size - required;

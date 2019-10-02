@@ -139,9 +139,9 @@ public:
 
   /**
    * \param dscp the dscp
-   * \returns std::string of DSCPType
+   * \returns stdfwd::string of DSCPType
    */
-  std::string DscpTypeToString (DscpType dscp) const;
+  stdfwd::string DscpTypeToString (DscpType dscp) const;
 
   /**
    * \enum EcnType
@@ -169,9 +169,9 @@ public:
 
   /**
    * \param ecn the ECNType
-   * \return std::string of ECNType
+   * \return stdfwd::string of ECNType
    */
-  std::string EcnTypeToString (EcnType ecn) const;
+  stdfwd::string EcnTypeToString (EcnType ecn) const;
 
   /**
    * \brief Set the "Flow label" field.

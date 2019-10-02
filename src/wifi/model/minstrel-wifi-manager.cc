@@ -1028,7 +1028,7 @@ void
 MinstrelWifiManager::PrintSampleTable (MinstrelWifiRemoteStation *station)
 {
   uint8_t numSampleRates = station->m_nModes;
-  std::stringstream table;
+  stdfwd::stringstream table;
   for (uint8_t i = 0; i < numSampleRates; i++)
     {
       for (uint8_t j = 0; j < m_sampleCol; j++)

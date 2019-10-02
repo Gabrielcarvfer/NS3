@@ -25,7 +25,7 @@
 #include "lte-stats-calculator.h"
 #include "../../core/model/nstime.h"
 #include "../../core/model/uinteger.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 #include "../model/lte-common.h"
 
@@ -71,26 +71,26 @@ public:
    *
    * \param outputFilename string with the name of the file
    */
-  void SetUlRxOutputFilename (std::string outputFilename);
+  void SetUlRxOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the UL RX PHY statistics will be stored.
    * @return the name of the file where the UL RX PHY statistics will be stored
    */
-  std::string GetUlRxOutputFilename (void);
+  stdfwd::string GetUlRxOutputFilename (void);
 
   /**
    * Set the name of the file where the DL RX PHY statistics will be stored.
    *
    * @param outputFilename string with the name of the file
    */
-  void SetDlRxOutputFilename (std::string outputFilename);
+  void SetDlRxOutputFilename (stdfwd::string outputFilename);
 
   /**
    * Get the name of the file where the DL RX PHY statistics will be stored.
    * @return the name of the file where the DL RX PHY statistics will be stored
    */
-  std::string GetDlRxOutputFilename (void);
+  stdfwd::string GetDlRxOutputFilename (void);
 
   /**
    * Notifies the stats calculator that an downlink reception has occurred.
@@ -112,7 +112,7 @@ public:
    * \param params 
    */
   static void DlPhyReceptionCallback (Ptr<PhyRxStatsCalculator> phyRxStats,
-                               std::string path, PhyReceptionStatParameters params);
+                               stdfwd::string path, PhyReceptionStatParameters params);
 
   /** 
    * trace sink
@@ -122,7 +122,7 @@ public:
    * \param params 
    */
   static void UlPhyReceptionCallback (Ptr<PhyRxStatsCalculator> phyRxStats,
-                               std::string path, PhyReceptionStatParameters params);
+                               stdfwd::string path, PhyReceptionStatParameters params);
 private:
 
   /**

@@ -136,8 +136,8 @@ private:
  
   double m_z;  ///< The `Z` attribute.
 
-  std::string m_channelPath;  ///< The `ChannelPath` attribute.
-  std::string m_outputFile;   ///< The `OutputFile` attribute.
+  stdfwd::string m_channelPath;  ///< The `ChannelPath` attribute.
+  stdfwd::string m_outputFile;   ///< The `OutputFile` attribute.
 
   bool m_stopWhenDone;   ///< The `StopWhenDone` attribute.
   

@@ -93,7 +93,7 @@ SrsTxPowerNofitication (LteUplinkPowerControlTestCase *testcase,
   testcase->SrsTxPowerTrace (cellId, rnti, txPower);
 }
 
-LteUplinkPowerControlTestCase::LteUplinkPowerControlTestCase (std::string name)
+LteUplinkPowerControlTestCase::LteUplinkPowerControlTestCase (stdfwd::string name)
   : TestCase (name)
 {
   NS_LOG_INFO ("Creating LteUplinkPowerControlTestCase");
@@ -179,7 +179,7 @@ LteUplinkPowerControlTestCase::DoRun (void)
 }
 
 
-LteUplinkOpenLoopPowerControlTestCase::LteUplinkOpenLoopPowerControlTestCase (std::string name)
+LteUplinkOpenLoopPowerControlTestCase::LteUplinkOpenLoopPowerControlTestCase (stdfwd::string name)
   : LteUplinkPowerControlTestCase ("Uplink Open Loop Power Control: " + name)
 {
   NS_LOG_INFO ("Creating LteUplinkPowerControlTestCase");
@@ -292,7 +292,7 @@ LteUplinkOpenLoopPowerControlTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteUplinkClosedLoopPowerControlAbsoluteModeTestCase::LteUplinkClosedLoopPowerControlAbsoluteModeTestCase (std::string name)
+LteUplinkClosedLoopPowerControlAbsoluteModeTestCase::LteUplinkClosedLoopPowerControlAbsoluteModeTestCase (stdfwd::string name)
   : LteUplinkPowerControlTestCase ("Uplink Closed Loop Power Control: " + name)
 {
   NS_LOG_INFO ("Creating LteUplinkClosedLoopPowerControlAbsoluteModeTestCase");
@@ -405,7 +405,7 @@ LteUplinkClosedLoopPowerControlAbsoluteModeTestCase::DoRun (void)
   Simulator::Destroy ();
 }
 
-LteUplinkClosedLoopPowerControlAccumulatedModeTestCase::LteUplinkClosedLoopPowerControlAccumulatedModeTestCase (std::string name)
+LteUplinkClosedLoopPowerControlAccumulatedModeTestCase::LteUplinkClosedLoopPowerControlAccumulatedModeTestCase (stdfwd::string name)
   : LteUplinkPowerControlTestCase ("Uplink Closed Loop Power Control: " + name)
 {
   NS_LOG_INFO ("Creating LteUplinkClosedLoopPowerControlAccumulatedModeTestCase");

@@ -33,7 +33,7 @@ RvBatteryModelHelper::~RvBatteryModelHelper ()
 }
 
 void
-RvBatteryModelHelper::Set (std::string name, const AttributeValue &v)
+RvBatteryModelHelper::Set (stdfwd::string name, const AttributeValue &v)
 {
   m_rvBatteryModel.Set (name, v);
 }

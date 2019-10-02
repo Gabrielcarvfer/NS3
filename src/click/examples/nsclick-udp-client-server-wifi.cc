@@ -71,7 +71,7 @@ int
 main (int argc, char *argv[])
 {
 #ifdef NS3_CLICK
-  std::string clickConfigFolder = "src/click/examples";
+  stdfwd::string clickConfigFolder = "src/click/examples";
 
   CommandLine cmd;
   cmd.AddValue ("clickConfigFolder", "Base folder for click configuration files", clickConfigFolder);
@@ -93,7 +93,7 @@ main (int argc, char *argv[])
   //
   // Explicitly create the channels required by the topology (shown above).
   //
-  std::string phyMode ("DsssRate1Mbps");
+  stdfwd::string phyMode ("DsssRate1Mbps");
 
   // disable fragmentation for frames below 2200 bytes
   Config::SetDefault ("ns3::WifiRemoteStationManager::FragmentationThreshold", StringValue ("2200"));

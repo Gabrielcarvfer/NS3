@@ -55,7 +55,7 @@ main (int argc, char *argv[])
   // Default number of nodes in the star.  Overridable by command line argument.
   //
   uint32_t nSpokes = 8;
-  std::string animFile = "star-animation.xml";
+  stdfwd::string animFile = "star-animation.xml";
   uint8_t useIpv6 = 0;
   Ipv6Address ipv6AddressBase = Ipv6Address("2001::");
   Ipv6Prefix ipv6AddressPrefix = Ipv6Prefix(64);

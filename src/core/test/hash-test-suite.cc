@@ -19,7 +19,7 @@
  */
 
 #include <iomanip>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "../model/test.h"
 #include "../model/hash.h"
@@ -55,7 +55,7 @@ public:
    *
    * \param [in] name reference name
    */ 
-  HashTestCase (const std::string name);
+  HashTestCase (const stdfwd::string name);
   /** Destructor. */
   virtual ~HashTestCase ();
 protected:
@@ -64,15 +64,15 @@ protected:
    * \param [in] hashName the name of the hash
    * \param [in] hash the hash value
    */
-  void Check ( const std::string hashName, const uint32_t hash);
+  void Check ( const stdfwd::string hashName, const uint32_t hash);
   /**
    * Check function
    * \param [in] hashName the name of the hash
    * \param [in] hash the hash value
    */
-  void Check ( const std::string hashName, const uint64_t hash);
+  void Check ( const stdfwd::string hashName, const uint64_t hash);
   
-  std::string key;           //!< The reference value to hash.
+  stdfwd::string key;           //!< The reference value to hash.
   uint32_t hash32Reference;  //!< The 32-bit hash of the reference.
   uint64_t hash64Reference;  //!< The 64-bit hash of the reference.
 
@@ -83,12 +83,12 @@ private:
    * \param [in] bits the number of bits
    * \param [in] hash the hash value
    */
-  void Check ( const std::string hashName, const int bits, const uint64_t hash);
+  void Check ( const stdfwd::string hashName, const int bits, const uint64_t hash);
   virtual void DoRun (void);
 
 };  // class HashTestCase
 
-HashTestCase::HashTestCase (const std::string name)
+HashTestCase::HashTestCase (const stdfwd::string name)
   : TestCase (name),
     key ("The quick brown fox jumped over the lazy dogs.")
 {
@@ -99,22 +99,22 @@ HashTestCase::~HashTestCase ()
 }
 
 void
-HashTestCase::Check ( const std::string hashName, const uint32_t hash)
+HashTestCase::Check ( const stdfwd::string hashName, const uint32_t hash)
 {
   Check (hashName, 32, hash);
 }
 
 void
-HashTestCase::Check ( const std::string hashName, const uint64_t hash)
+HashTestCase::Check ( const stdfwd::string hashName, const uint64_t hash)
 {
   Check (hashName, 64, hash);
 }
 
 void
-HashTestCase::Check ( std::string hashName, int bits, uint64_t hash)
+HashTestCase::Check ( stdfwd::string hashName, int bits, uint64_t hash)
 {
   int w;
-  std::string type;
+  stdfwd::string type;
   uint64_t hashRef;
 
   if (bits == 32)
@@ -393,10 +393,10 @@ private:
    * \param name the hash name
    * \param hasher the hash function
    */
-  void DoHash (const std::string name, Hasher hasher);
-  std::string key1;  //!< test string
-  std::string key2;  //!< test string
-  std::string key12; //!< test string
+  void DoHash (const stdfwd::string name, Hasher hasher);
+  stdfwd::string key1;  //!< test string
+  stdfwd::string key2;  //!< test string
+  stdfwd::string key12; //!< test string
 };
 
 IncrementalTestCase::IncrementalTestCase ()
@@ -409,7 +409,7 @@ IncrementalTestCase::~IncrementalTestCase ()
 }
 
 void
-IncrementalTestCase::DoHash (const std::string name, Hasher hasher)
+IncrementalTestCase::DoHash (const stdfwd::string name, Hasher hasher)
 {
   hash32Reference = hasher.clear ().GetHash32 (key12);
   hasher.clear ().GetHash32 (key1);

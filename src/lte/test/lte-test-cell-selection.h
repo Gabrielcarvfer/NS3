@@ -96,7 +96,7 @@ public:
    *                    simulation
    * \param rngRun the number of run to be used by the random number generator
    */
-  LteCellSelectionTestCase (std::string name, bool isEpcMode, bool isIdealRrc,
+  LteCellSelectionTestCase (stdfwd::string name, bool isEpcMode, bool isIdealRrc,
                             double interSiteDistance,
                             std::vector<UeSetup_t> ueSetupList,
                             uint64_t rngRun);
@@ -129,7 +129,7 @@ private:
    * \param oldState the old state
    * \param newState the new state
    */
-  void StateTransitionCallback (std::string context, uint64_t imsi,
+  void StateTransitionCallback (stdfwd::string context, uint64_t imsi,
                                 uint16_t cellId, uint16_t rnti,
                                 LteUeRrc::State oldState, LteUeRrc::State newState);
   /**
@@ -138,7 +138,7 @@ private:
    * \param imsi the IMSI
    * \param cellId the cell ID
    */
-  void InitialCellSelectionEndOkCallback (std::string context, uint64_t imsi,
+  void InitialCellSelectionEndOkCallback (stdfwd::string context, uint64_t imsi,
                                           uint16_t cellId);
   /**
    * \brief Initial cell selection end error callback function
@@ -146,7 +146,7 @@ private:
    * \param imsi the IMSI
    * \param cellId the cell ID
    */
-  void InitialCellSelectionEndErrorCallback (std::string context, uint64_t imsi,
+  void InitialCellSelectionEndErrorCallback (stdfwd::string context, uint64_t imsi,
                                              uint16_t cellId);
   /**
    * \brief Connection established callback function
@@ -155,7 +155,7 @@ private:
    * \param cellId the cell ID
    * \param rnti the RNTI
    */
-  void ConnectionEstablishedCallback (std::string context, uint64_t imsi,
+  void ConnectionEstablishedCallback (stdfwd::string context, uint64_t imsi,
                                       uint16_t cellId, uint16_t rnti);
 
   bool m_isEpcMode; ///< whether the LTE configuration in test is using EPC

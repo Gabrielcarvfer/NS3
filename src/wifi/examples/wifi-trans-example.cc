@@ -53,7 +53,7 @@ SendPacket (Ptr<NetDevice> sourceDevice, Address& destination)
 
 int main (int argc, char** argv)
 {
-  std::string standard = "11a";
+  stdfwd::string standard = "11a";
   int bw = 20;
   double pow = 23; //dBm
   bool verbose = false;
@@ -68,7 +68,7 @@ int main (int argc, char** argv)
 
   WifiHelper wifi;
   Ssid ssid;
-  std::string dataRate;
+  stdfwd::string dataRate;
   int freq;
   Time dataStartTime = MicroSeconds (800); // leaving enough time for beacon and association procedure
   Time dataDuration = MicroSeconds (300); // leaving enough time for data transfer (+ acknowledgment)

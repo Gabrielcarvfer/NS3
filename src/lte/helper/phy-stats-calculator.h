@@ -24,7 +24,7 @@
 #include "../../core/model/nstime.h"
 #include "../../core/model/uinteger.h"
 #include "../../spectrum/model/spectrum-value.h"
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <fstream>
 
 namespace ns3 {
@@ -78,39 +78,39 @@ public:
    *
    * @param filename string with the name of the file
    */
-  void SetCurrentCellRsrpSinrFilename (std::string filename);
+  void SetCurrentCellRsrpSinrFilename (stdfwd::string filename);
 
   /**
    * Get the name of the file where the RSRP/SINR statistics will be stored.
    * @return the name of the file where the RSRP/SINR statistics will be stored
    */
-  std::string GetCurrentCellRsrpSinrFilename  (void);
+  stdfwd::string GetCurrentCellRsrpSinrFilename  (void);
 
   /**
    * Set the name of the file where the UE SINR statistics will be stored.
    *
    * @param filename string with the name of the file
    */
-  void SetUeSinrFilename (std::string filename);
+  void SetUeSinrFilename (stdfwd::string filename);
 
   /**
    * Get the name of the file where the UE SINR statistics will be stored.
    * @return the name of the file where the UE SINR statistics will be stored
    */
-  std::string GetUeSinrFilename (void);
+  stdfwd::string GetUeSinrFilename (void);
 
   /**
    * Set the name of the file where the interference statistics will be stored.
    *
    * @param filename string with the name of the file
    */
-  void SetInterferenceFilename (std::string filename);
+  void SetInterferenceFilename (stdfwd::string filename);
 
   /**
    * Get the name of the file where the interference statistics will be stored.
    * @return the name of the file where the interference statistics will be stored
    */
-  std::string GetInterferenceFilename (void);
+  stdfwd::string GetInterferenceFilename (void);
 
   /**
    * Notifies the stats calculator that an RSRP and SINR report has occurred.
@@ -152,7 +152,7 @@ public:
    * \param componentCarrierId
    */
   static void ReportCurrentCellRsrpSinrCallback (Ptr<PhyStatsCalculator> phyStats,
-                                          std::string path, uint16_t cellId, uint16_t rnti,
+                                          stdfwd::string path, uint16_t cellId, uint16_t rnti,
                                           double rsrp, double sinr, uint8_t componentCarrierId);
   
   /** 
@@ -165,7 +165,7 @@ public:
    * \param sinrLinear
    * \param componentCarrierId
    */
-  static void ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, std::string path,
+  static void ReportUeSinr (Ptr<PhyStatsCalculator> phyStats, stdfwd::string path,
                      uint16_t cellId, uint16_t rnti, double sinrLinear, uint8_t componentCarrierId);
 
   /** 
@@ -176,7 +176,7 @@ public:
    * \param cellId 
    * \param interference 
    */
-  static void ReportInterference (Ptr<PhyStatsCalculator> phyStats, std::string path,
+  static void ReportInterference (Ptr<PhyStatsCalculator> phyStats, stdfwd::string path,
                            uint16_t cellId, Ptr<SpectrumValue> interference);
 
 
@@ -208,17 +208,17 @@ private:
   /**
    * Name of the file where the RSRP/SINR statistics will be saved
    */
-  std::string m_RsrpSinrFilename;
+  stdfwd::string m_RsrpSinrFilename;
 
   /**
    * Name of the file where the UE SINR statistics will be saved
    */
-  std::string m_ueSinrFilename;
+  stdfwd::string m_ueSinrFilename;
 
   /**
    * Name of the file where the interference statistics will be saved
    */
-  std::string m_interferenceFilename;
+  stdfwd::string m_interferenceFilename;
 
 };
 

@@ -39,7 +39,7 @@ public:
 class BuildingsShadowingTestCase : public TestCase
 {
 public:
-  BuildingsShadowingTestCase (uint16_t m1, uint16_t m2, double refValue, double sigmaRef, std::string name);
+  BuildingsShadowingTestCase (uint16_t m1, uint16_t m2, double refValue, double sigmaRef, stdfwd::string name);
   virtual ~BuildingsShadowingTestCase ();
 
 private:

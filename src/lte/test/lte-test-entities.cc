@@ -91,7 +91,7 @@ LteTestRrc::GetLtePdcpSapUser (void)
 }
 
 
-std::string
+stdfwd::string
 LteTestRrc::GetDataReceived (void)
 {
   NS_LOG_FUNCTION (this);
@@ -177,7 +177,7 @@ LteTestRrc::DoReceivePdcpSdu (LtePdcpSapUser::ReceivePdcpSduParameters params)
   m_rxLastTime = Simulator::Now ();
 
   p->CopyData (buf, dataLen);
-  m_receivedData = std::string ((char *)buf, dataLen);
+  m_receivedData = stdfwd::string ((char *)buf, dataLen);
 
 //   NS_LOG_LOGIC (m_receivedData);
 
@@ -235,7 +235,7 @@ LteTestRrc::Stop ()
 }
 
 void
-LteTestRrc::SendData (Time at, std::string dataToSend)
+LteTestRrc::SendData (Time at, stdfwd::string dataToSend)
 {
   NS_LOG_FUNCTION (this << at << dataToSend.length () << dataToSend);
 
@@ -299,7 +299,7 @@ LteTestPdcp::GetLteRlcSapUser (void)
 }
 
 
-std::string
+stdfwd::string
 LteTestPdcp::GetDataReceived (void)
 {
   NS_LOG_FUNCTION (this);
@@ -321,7 +321,7 @@ LteTestPdcp::DoReceivePdcpPdu (Ptr<Packet> p)
   uint32_t dataLen = p->GetSize ();
   uint8_t *buf = new uint8_t[dataLen];
   p->CopyData (buf, dataLen);
-  m_receivedData = std::string ((char *)buf, dataLen);
+  m_receivedData = stdfwd::string ((char *)buf, dataLen);
 
   NS_LOG_LOGIC (m_receivedData);
 
@@ -339,7 +339,7 @@ LteTestPdcp::Start ()
 }
 
 void
-LteTestPdcp::SendData (Time time, std::string dataToSend)
+LteTestPdcp::SendData (Time time, stdfwd::string dataToSend)
 {
   NS_LOG_FUNCTION (this << time << dataToSend.length () << dataToSend);
 
@@ -433,7 +433,7 @@ LteTestMac::SetLteMacLoopback (Ptr<LteTestMac> s)
   m_macLoopback = s;
 }
 
-std::string
+stdfwd::string
 LteTestMac::GetDataReceived (void)
 {
   NS_LOG_FUNCTION (this);
@@ -610,7 +610,7 @@ LteTestMac::DoTransmitPdu (LteMacSapProvider::TransmitPduParameters params)
       uint32_t dataLen = params.pdu->GetSize ();
       uint8_t *buf = new uint8_t[dataLen];
       params.pdu->CopyData (buf, dataLen);
-      m_receivedData = std::string ((char *)buf, dataLen);
+      m_receivedData = stdfwd::string ((char *)buf, dataLen);
 
       NS_LOG_LOGIC ("Data (" << dataLen << ") = " << m_receivedData);
       delete [] buf;

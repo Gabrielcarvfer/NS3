@@ -29,7 +29,7 @@
 
 #include <fstream>
 #include <iosfwd>
-#include <string>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 #include <vector>
 
 using namespace ns3;

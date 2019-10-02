@@ -21,7 +21,7 @@
 #ifndef WIN32_FD_READER_H
 #define WIN32_FD_READER_H
 
-#include <cstdint>
+#include "../../../3rd-party/cpp-std-fwd/stdfwd.h"
 
 #include "callback.h"
 #include "system-thread.h"

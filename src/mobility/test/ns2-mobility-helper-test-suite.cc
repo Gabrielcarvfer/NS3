@@ -89,7 +89,7 @@ public:
   /// Single record in mobility reference
   struct ReferencePoint
   {
-    std::string node;       ///< node ID as string, e.g. "1"
+    stdfwd::string node;       ///< node ID as string, e.g. "1"
     Time time;              ///< timestamp
     Vector pos;             ///< reference position
     Vector vel;             ///< reference velocity
@@ -102,7 +102,7 @@ public:
      * \param p position
      * \param v velocity
      */
-    ReferencePoint (std::string const & id, Time t, Vector const & p, Vector const & v)
+    ReferencePoint (stdfwd::string const & id, Time t, Vector const & p, Vector const & v)
       : node (id),
         time (t),
         pos (p),
@@ -122,7 +122,7 @@ public:
    * \param timeLimit   Test time limit
    * \param nodes       Number of nodes used in the test trace, 1 by default
    */
-  Ns2MobilityHelperTest (std::string const & name, Time timeLimit, uint32_t nodes = 1)
+  Ns2MobilityHelperTest (stdfwd::string const & name, Time timeLimit, uint32_t nodes = 1)
     : TestCase (name),
       m_timeLimit (timeLimit),
       m_nodeCount (nodes),
@@ -134,7 +134,7 @@ public:
   {
   }
   /// Set NS-2 trace to read as single large string (don't forget to add \\n and quote \"'s)
-  void SetTrace (std::string const & trace)
+  void SetTrace (stdfwd::string const & trace)
   {
     m_trace = trace;
   }
@@ -155,13 +155,13 @@ private:
   /// Number of nodes used in the test
   uint32_t m_nodeCount;
   /// Trace as string
-  std::string m_trace;
+  stdfwd::string m_trace;
   /// Reference mobility
   std::vector<ReferencePoint> m_reference;
   /// Next reference point to be checked
   size_t m_nextRefPoint;
   /// TMP trace file name
-  std::string m_traceFile;
+  stdfwd::string m_traceFile;
 
 private:
   /// Dump NS-2 trace to tmp file
@@ -207,12 +207,12 @@ private:
     return IsStatusFailure ();
   }
   /// Listen for course change events
-  void CourseChange (std::string context, Ptr<const MobilityModel> mobility)
+  void CourseChange (stdfwd::string context, Ptr<const MobilityModel> mobility)
   {
     Time time = Simulator::Now ();
     Ptr<Node> node = mobility->GetObject<Node> ();
     NS_ASSERT (node);
-    std::string id = Names::FindName (node);
+    stdfwd::string id = Names::FindName (node);
     NS_ASSERT (!id.empty ());
     Vector pos = mobility->GetPosition ();
     Vector vel = mobility->GetVelocity ();

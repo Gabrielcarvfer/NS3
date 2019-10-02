@@ -58,7 +58,7 @@ EnergyHarvesterContainer::EnergyHarvesterContainer (Ptr<EnergyHarvester> harvest
   m_harvesters.push_back (harvester);
 }
 
-EnergyHarvesterContainer::EnergyHarvesterContainer (std::string harvesterName)
+EnergyHarvesterContainer::EnergyHarvesterContainer (stdfwd::string harvesterName)
 {
   NS_LOG_FUNCTION (this << harvesterName);
   Ptr<EnergyHarvester> harvester = Names::Find<EnergyHarvester> (harvesterName);
@@ -121,7 +121,7 @@ EnergyHarvesterContainer::Add (Ptr<EnergyHarvester> harvester)
 }
 
 void
-EnergyHarvesterContainer::Add (std::string harvesterName)
+EnergyHarvesterContainer::Add (stdfwd::string harvesterName)
 {
   NS_LOG_FUNCTION (this << harvesterName);
   Ptr<EnergyHarvester> harvester = Names::Find<EnergyHarvester> (harvesterName);

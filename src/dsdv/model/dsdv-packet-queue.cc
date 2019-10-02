@@ -182,7 +182,7 @@ PacketQueue::Purge ()
 }
 
 void
-PacketQueue::Drop (QueueEntry en, std::string reason)
+PacketQueue::Drop (QueueEntry en, stdfwd::string reason)
 {
   NS_LOG_LOGIC (reason << en.GetPacket ()->GetUid () << " " << en.GetIpv4Header ().GetDestination ());
   // en.GetErrorCallback () (en.GetPacket (), en.GetIpv4Header (),

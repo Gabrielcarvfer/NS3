@@ -98,7 +98,7 @@ UanTxMode
 Experiment::CreateMode (uint32_t kass,
                         uint32_t fc,
                         bool upperblock,
-                        std::string name)
+                        stdfwd::string name)
 {
 
   std::ostringstream buf;

@@ -107,7 +107,7 @@ private:
 
   int m_linksNumber; //!< Number of links.
   int m_nodesNumber; //!< Number of nodes.
-  std::map<std::string, Ptr<Node> > m_nodeMap; //!< Map of the nodes (name, node).
+  std::map<stdfwd::string, Ptr<Node> > m_nodeMap; //!< Map of the nodes (name, node).
 
 private:
   /**
