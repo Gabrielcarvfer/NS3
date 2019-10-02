@@ -17,7 +17,7 @@
  * Contributions: Eugene Kalishenko <ydginster@gmail.com> (Open Source and Linux Laboratory http://dev.osll.ru/)
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <unistd.h>
 
 #include "ns3/core-module.h"

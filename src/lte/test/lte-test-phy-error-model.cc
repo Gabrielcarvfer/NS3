@@ -27,7 +27,7 @@
 #include "../../core/model/simulator.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/ptr.h"
-#include <iostream>
+#include <iosfwd>
 #include "../helper/radio-bearer-stats-calculator.h"
 #include "../../buildings/model/mobility-building-info.h"
 #include "../../buildings/model/hybrid-buildings-propagation-loss-model.h"

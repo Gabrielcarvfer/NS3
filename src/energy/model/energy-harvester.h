@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
 
 // include from ns-3
 #include "../../core/model/object.h"

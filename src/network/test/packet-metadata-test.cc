@@ -18,7 +18,7 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 #include <cstdarg>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include "../../core/model/test.h"
 #include "../model/header.h"

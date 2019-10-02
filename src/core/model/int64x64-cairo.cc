@@ -22,7 +22,7 @@
 #include "assert.h"
 #include "log.h"
 #include <cmath>
-#include <iostream>
+#include <iosfwd>
 #include "int64x64-cairo.h"
 
 // Include directly to allow optimizations within this compilation unit.

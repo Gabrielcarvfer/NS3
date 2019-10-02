@@ -27,7 +27,7 @@
 #include "../../core/model/ptr.h"
 
 #include <list>
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 namespace ns3 {

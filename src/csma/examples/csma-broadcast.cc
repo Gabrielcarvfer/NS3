@@ -27,7 +27,7 @@
 //   n0 originates UDP broadcast to 255.255.255.255/discard port, which 
 //   is replicated and received on both n1 and n2
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

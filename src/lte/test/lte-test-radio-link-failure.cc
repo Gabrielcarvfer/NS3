@@ -33,10 +33,8 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/config-store-module.h"
-#include "../../config-store/model/config-store.h"
-#include <iostream>
+#include <iosfwd>
 #include <vector>
-#include <stdio.h>
 #include <iomanip>
 
 using namespace ns3;

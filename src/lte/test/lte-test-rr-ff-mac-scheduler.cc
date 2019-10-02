@@ -27,7 +27,7 @@
 #include "../../core/model/simulator.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/ptr.h"
-#include <iostream>
+#include <iosfwd>
 #include "../helper/radio-bearer-stats-calculator.h"
 #include "../../mobility/model/constant-position-mobility-model.h"
 #include "../model/ff-mac-scheduler.h"

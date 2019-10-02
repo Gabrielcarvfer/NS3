@@ -33,7 +33,7 @@
 #include "int64x64-double.h"
 #endif
 
-#include <iostream>
+#include <iosfwd>
 
 /**
  * \file

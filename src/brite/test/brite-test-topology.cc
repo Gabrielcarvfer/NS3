@@ -26,7 +26,7 @@
 #include "../../applications/helper/on-off-helper.h"
 #include "ns3/brite-module.h"
 #include "../../core/model/test.h"
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 using namespace ns3;

@@ -33,7 +33,7 @@
  * congestion window values are also traced.
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 

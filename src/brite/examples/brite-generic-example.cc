@@ -24,7 +24,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/brite-module.h"
 #include "../../nix-vector-routing/helper/ipv4-nix-vector-helper.h"
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 using namespace ns3;

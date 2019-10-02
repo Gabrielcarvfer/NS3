@@ -25,7 +25,7 @@
 #include "../../core/model/simulator.h"
 #include <cmath>
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 
 

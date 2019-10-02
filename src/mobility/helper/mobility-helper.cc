@@ -27,7 +27,7 @@
 #include "../../core/model/simulator.h"
 #include "../../core/model/names.h"
 #include "../../core/model/string.h"
-#include <iostream>
+#include <iosfwd>
 
 namespace ns3 {
 

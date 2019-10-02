@@ -25,6 +25,7 @@
 #include "snr-to-block-error-rate-record.h"
 #include <vector>
 #include "../../core/model/ptr.h"
+#include <iostream>
 
 namespace ns3 {
 

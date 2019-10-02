@@ -2,7 +2,7 @@
 #include "../../core/model/ptr.h"
 #include "../model/packet.h"
 #include "../model/header.h"
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

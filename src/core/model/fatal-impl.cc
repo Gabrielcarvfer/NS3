@@ -20,7 +20,7 @@
 #include "fatal-impl.h"
 #include "log.h"
 
-#include <iostream>
+#include <iosfwd>
 #include <list>
 
 #include <cstdlib>

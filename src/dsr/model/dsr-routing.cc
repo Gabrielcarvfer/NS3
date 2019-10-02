@@ -37,7 +37,7 @@
 #include <map>
 #include <limits>
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 
 #include "../../core/model/config.h"
 #include "../../core/model/enum.h"

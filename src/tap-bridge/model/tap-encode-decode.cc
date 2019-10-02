@@ -17,7 +17,7 @@
  */
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <sstream>
 #include <stdint.h>

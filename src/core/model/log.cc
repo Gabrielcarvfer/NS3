@@ -21,7 +21,7 @@
 
 #include <list>
 #include <utility>
-#include <iostream>
+#include <iosfwd>
 #include "assert.h"
 #include <stdexcept>
 //#include "ns3/core-config.h"

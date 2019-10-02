@@ -26,7 +26,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/assert.h"
 #include "../../core/model/fatal-error.h"
 #include "../../core/model/log.h"

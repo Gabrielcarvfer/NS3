@@ -22,7 +22,7 @@
 #include "../../core/model/log.h"
 #include "address.h"
 #include <cstring>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 
 namespace ns3 {

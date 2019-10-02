@@ -48,7 +48,7 @@
  */
 
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <sstream>
 #include "ns3/core-module.h"

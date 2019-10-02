@@ -66,7 +66,7 @@
 // - Global static routing
 // - Tracing of queues and packet receptions to file "csma-bridge-one-hop.tr"
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

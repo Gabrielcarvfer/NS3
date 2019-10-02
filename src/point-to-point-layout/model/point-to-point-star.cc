@@ -17,7 +17,7 @@
 // Implement an object to create a star topology.
 
 #include <cmath>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 
 // ns3 includes

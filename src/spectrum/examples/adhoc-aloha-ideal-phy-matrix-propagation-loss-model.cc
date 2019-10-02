@@ -20,7 +20,7 @@
 
 
 
-#include <iostream>
+#include <iosfwd>
 
 #include <ns3/core-module.h>
 #include <ns3/network-module.h>

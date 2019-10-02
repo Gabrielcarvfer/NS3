@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/abort.h"
 #include "../../core/model/assert.h"
 #include "../../core/model/log.h"

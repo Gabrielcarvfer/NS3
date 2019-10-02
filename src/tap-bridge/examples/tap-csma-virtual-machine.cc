@@ -58,7 +58,7 @@
 //                   ===============
 //                      CSMA LAN
 //
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

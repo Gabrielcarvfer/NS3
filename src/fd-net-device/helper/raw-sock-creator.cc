@@ -18,7 +18,7 @@
 
 #include <unistd.h>
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <sstream>
 #include <stdlib.h>

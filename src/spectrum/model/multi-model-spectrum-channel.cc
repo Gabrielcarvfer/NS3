@@ -19,7 +19,7 @@
  */
 
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 #include <utility>
 #include "../../core/model/object.h"
 #include "../../core/model/simulator.h"

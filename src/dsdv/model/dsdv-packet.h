@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
 #include "../../network/model/header.h"
 #include "../../network/utils/ipv4-address.h"
 #include "../../core/model/nstime.h"

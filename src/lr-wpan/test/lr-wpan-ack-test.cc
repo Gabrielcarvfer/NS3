@@ -30,7 +30,7 @@
 #include "../../network/model/packet.h"
 #include "../../core/model/rng-seed-manager.h"
 
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

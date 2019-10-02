@@ -96,7 +96,7 @@
 //    ./waf --run "tap-wifi-dumbbell --mode=UseBridge --tapName=mytap2"&
 //    ping 10.1.1.3
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

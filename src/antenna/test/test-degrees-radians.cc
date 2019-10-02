@@ -23,7 +23,7 @@
 #include "../model/antenna-model.h"
 #include <cmath>
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 
 using namespace ns3;

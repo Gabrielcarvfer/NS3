@@ -19,7 +19,7 @@
  */
 
 #include <stdint.h>
-#include <iostream>
+#include <iosfwd>
 #include "tcp-header.h"
 #include "tcp-option.h"
 #include "../../network/model/buffer.h"

@@ -47,7 +47,7 @@
 #include "../../stats/model/gnuplot.h"
 
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <string>
 #include <vector>
 

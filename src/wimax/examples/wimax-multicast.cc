@@ -57,7 +57,7 @@
 #include "ns3/config-store-module.h"
 #include "ns3/wimax-module.h"
 #include "ns3/csma-module.h"
-#include <iostream>
+#include <iosfwd>
 #include "../../internet/model/global-route-manager.h"
 #include "ns3/internet-module.h"
 #include "../../core/model/vector.h"

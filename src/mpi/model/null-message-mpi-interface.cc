@@ -37,7 +37,7 @@
 #include <mpi.h>
 #endif
 
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <list>
 

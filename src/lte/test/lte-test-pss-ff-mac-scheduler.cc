@@ -20,18 +20,14 @@
  *         Dizhi Zhou <dizhi.zhou@gmail.com>
  */
 
-#include <iostream>
-#include <sstream>
+#include <iosfwd>
 #include <string>
 
 #include "../../core/model/object.h"
 #include "../../spectrum/model/spectrum-interference.h"
-#include "../../spectrum/model/spectrum-error-model.h"
 #include "../../core/model/log.h"
 #include "../../core/model/test.h"
 #include "../../core/model/simulator.h"
-#include "../../network/model/packet.h"
-#include "../../core/model/ptr.h"
 #include "../helper/radio-bearer-stats-calculator.h"
 #include "../../mobility/model/constant-position-mobility-model.h"
 #include "../model/ff-mac-scheduler.h"
@@ -43,10 +39,7 @@
 #include "../model/lte-enb-net-device.h"
 #include "../model/lte-ue-rrc.h"
 #include "../helper/lte-helper.h"
-#include "../../core/model/string.h"
 #include "../../core/model/double.h"
-#include "../model/lte-enb-phy.h"
-#include "../model/lte-ue-phy.h"
 #include "../../core/model/boolean.h"
 #include "../../core/model/enum.h"
 

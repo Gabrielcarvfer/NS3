@@ -28,7 +28,7 @@
  * ns3::ShowProgress declaration.
  */
 
-#include <iostream>
+#include <iosfwd>
 
 #include "nstime.h"
 #include "system-wall-clock-ms.h"

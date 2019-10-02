@@ -17,7 +17,7 @@
  *
  */
 
-#include <iostream>
+#include <iosfwd>
 
 #include "../../core/model/test.h"
 #include "ns3/core-module.h"

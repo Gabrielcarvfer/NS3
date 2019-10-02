@@ -75,7 +75,7 @@
 // client host: $ ./waf --run="fd-emu-onoff"
 //
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <vector>
 #include <string>

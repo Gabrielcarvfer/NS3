@@ -25,7 +25,7 @@
 // - DropTail queues 
 // - Tracing of queues and packet receptions to file "csma-one-subnet.tr"
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

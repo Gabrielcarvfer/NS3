@@ -18,7 +18,7 @@
  * Author: Mitch Watrous (watrous@u.washington.edu)
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <sstream>

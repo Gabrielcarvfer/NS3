@@ -17,7 +17,7 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 #include <iomanip>
-#include <iostream>
+#include <iosfwd>
 #include <cstring>
 #include "../../core/model/log.h"
 #include "../../core/model/assert.h"

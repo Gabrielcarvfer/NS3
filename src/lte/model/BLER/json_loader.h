@@ -6,7 +6,7 @@
 #define NS3_JSON_LOADER_H
 
 #include <ns3/picojson.h>
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <sstream>
 

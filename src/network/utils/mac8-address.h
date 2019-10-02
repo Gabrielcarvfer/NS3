@@ -21,7 +21,7 @@
 #pragma once
 
 #include "../model/address.h"
-#include <iostream>
+#include <iosfwd>
 
 namespace ns3 {
 

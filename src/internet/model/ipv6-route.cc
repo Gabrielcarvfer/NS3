@@ -18,7 +18,7 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include <iostream>
+#include <iosfwd>
 
 #include "../../network/model/net-device.h"
 #include "ipv6-route.h"

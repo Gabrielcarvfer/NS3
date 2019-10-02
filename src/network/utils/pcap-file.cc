@@ -18,7 +18,7 @@
  * Author:  Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <cstring>
 #include "../../core/model/assert.h"
 #include "../model/packet.h"

@@ -16,7 +16,7 @@
  * Author:  Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <cstdio>
 #include <cstdlib>
 #include <sstream>

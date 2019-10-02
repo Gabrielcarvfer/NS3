@@ -29,7 +29,7 @@
  * US Department of Defense (DoD), and ITTC at The University of Kansas.
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <cmath>
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"

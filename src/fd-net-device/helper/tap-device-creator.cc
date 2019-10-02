@@ -19,7 +19,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdint.h>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <sstream>
 #include <stdlib.h>

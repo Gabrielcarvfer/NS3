@@ -26,7 +26,7 @@
 // The default traffic rate is to send 1250 bytes/second for 10 kb/s 
 // The data rate can be toggled by command line argument
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

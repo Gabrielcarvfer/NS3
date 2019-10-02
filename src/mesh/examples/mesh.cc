@@ -43,7 +43,7 @@
  *  parameters.
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <fstream>
 #include "ns3/core-module.h"

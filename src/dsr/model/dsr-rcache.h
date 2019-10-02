@@ -36,7 +36,7 @@
 #include <stdint.h>
 #include <cassert>
 #include <sys/types.h>
-#include <iostream>
+#include <iosfwd>
 #include <vector>
 
 #include "../../core/model/simulator.h"

@@ -27,7 +27,7 @@
  */
 #pragma once
 
-#include <iostream>
+#include <iosfwd>
 #include "../../network/model/header.h"
 #include "../../core/model/enum.h"
 #include "../../network/utils/ipv4-address.h"

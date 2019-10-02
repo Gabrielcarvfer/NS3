@@ -20,7 +20,7 @@
  *         Dizhi Zhou <dizhi.zhou@gmail.com>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <string>
 

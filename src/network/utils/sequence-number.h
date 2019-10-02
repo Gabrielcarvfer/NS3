@@ -21,7 +21,7 @@
 #pragma once
 
 #include <limits>
-#include <iostream>
+#include <iosfwd>
 #include <stdint.h>
 
 namespace ns3 {

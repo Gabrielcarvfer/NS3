@@ -20,7 +20,7 @@
  */
 
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 
 #include "../../network/model/packet.h"
 #include "../../core/model/log.h"

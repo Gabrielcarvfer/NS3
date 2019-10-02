@@ -21,7 +21,7 @@
 #pragma once
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/attribute.h"
 #include "../../core/model/attribute-helper.h"
 #include "../../core/model/abort.h"

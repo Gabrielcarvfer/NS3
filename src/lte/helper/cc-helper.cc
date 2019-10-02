@@ -25,7 +25,7 @@
 #include "../../core/model/log.h"
 #include "../../core/model/abort.h"
 #include "../../core/model/pointer.h"
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/uinteger.h"
 #include "../model/lte-spectrum-value-helper.h"
 

@@ -19,7 +19,7 @@
 #include "../model/nstime.h"
 #include "../model/command-line.h"
 #include "../model/random-variable-stream.h"
-#include <iostream>
+#include <iosfwd>
 
 /**
  * \file

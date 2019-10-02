@@ -54,7 +54,7 @@
 //    ./waf --run tap-csma&
 //    ping 10.1.1.2
 //
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

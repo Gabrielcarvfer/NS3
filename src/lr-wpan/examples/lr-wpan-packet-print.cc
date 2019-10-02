@@ -20,7 +20,7 @@
 #include <ns3/core-module.h>
 #include <ns3/lr-wpan-module.h>
 
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

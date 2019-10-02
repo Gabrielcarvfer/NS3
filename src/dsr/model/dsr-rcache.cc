@@ -33,7 +33,7 @@
 #include <map>
 #include <cmath>
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 #include <list>
 #include <vector>
 #include <functional>

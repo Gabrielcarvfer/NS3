@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <string>
 #include "../../core/model/string.h" // for strerror
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <sstream>
 #include <errno.h>

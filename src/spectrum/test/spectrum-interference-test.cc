@@ -26,7 +26,7 @@
 #include "../../core/model/simulator.h"
 #include "../../network/model/packet.h"
 #include "../../core/model/ptr.h"
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

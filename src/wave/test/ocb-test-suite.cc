@@ -18,7 +18,7 @@
  * Author: Junling Bu <linlinjavaer@gmail.com>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/test.h"
 #include "../../core/model/rng-seed-manager.h"
 #include "../../core/model/config.h"

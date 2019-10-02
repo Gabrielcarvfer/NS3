@@ -52,7 +52,7 @@
 
 #ifdef NS3_ASSERT_ENABLE
 
-#include <iostream>
+#include <iosfwd>
 #include "fatal-error.h"
 
 /**

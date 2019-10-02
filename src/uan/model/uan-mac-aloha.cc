@@ -24,7 +24,7 @@
 #include "uan-phy.h"
 #include "uan-header-common.h"
 
-#include <iostream>
+#include <iosfwd>
 
 namespace ns3
 {

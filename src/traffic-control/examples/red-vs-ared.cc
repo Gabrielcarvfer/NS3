@@ -27,7 +27,7 @@
 #include "ns3/point-to-point-layout-module.h"
 #include "ns3/traffic-control-module.h"
 
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <map>
 

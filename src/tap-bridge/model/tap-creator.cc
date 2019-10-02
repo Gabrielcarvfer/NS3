@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <string>
 #include <cstring> // for strerror
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>

@@ -35,7 +35,7 @@
 #include "rng-seed-manager.h"
 #include "unused.h"
 #include <cmath>
-#include <iostream>
+#include <iosfwd>
 
 /**
  * \file

@@ -59,7 +59,7 @@
 #include "phy-tx-stats-calculator.h"
 #include "phy-rx-stats-calculator.h"
 #include "epc-helper.h"
-#include <iostream>
+#include <iosfwd>
 #include "../../buildings/model/buildings-propagation-loss-model.h"
 #include "../model/lte-spectrum-value-helper.h"
 #include "../model/epc-x2.h"

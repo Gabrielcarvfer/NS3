@@ -19,7 +19,7 @@
 
 #include "int64x64.h"
 #include <stdint.h>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>  // showpos
 #include <sstream>
 #include "assert.h"

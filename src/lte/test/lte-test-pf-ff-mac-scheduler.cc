@@ -19,7 +19,7 @@
  *         Nicola Baldo <nbaldo@cttc.es>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <string>
 

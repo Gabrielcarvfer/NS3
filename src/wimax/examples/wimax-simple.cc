@@ -52,7 +52,7 @@
 #include "../../internet/model/global-route-manager.h"
 #include "../model/ipcs-classifier-record.h"
 #include "../model/service-flow.h"
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

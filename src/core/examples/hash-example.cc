@@ -17,7 +17,7 @@
 #include <algorithm>  // find
 #include <climits>    // CHAR_BIT
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <map>
 #include <vector>

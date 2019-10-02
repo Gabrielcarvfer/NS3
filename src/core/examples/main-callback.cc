@@ -20,7 +20,7 @@
 #include "../model/callback.h"
 #include "../model/assert.h"
 #include "../model/command-line.h"
-#include <iostream>
+#include <iosfwd>
 
 /**
  * \file

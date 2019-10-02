@@ -18,7 +18,7 @@
  * Author:  Peter D. Barnes, Jr. <pdbarnes@llnl.gov>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <set>
 #include <string>

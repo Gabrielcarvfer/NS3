@@ -38,7 +38,7 @@
 #include "../../core/model/log.h"
 
 #include <cmath>
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <iomanip>
 

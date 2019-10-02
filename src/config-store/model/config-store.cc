@@ -33,7 +33,7 @@
 
 #include <string>
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <cstdlib>
 
 #ifndef WIN32

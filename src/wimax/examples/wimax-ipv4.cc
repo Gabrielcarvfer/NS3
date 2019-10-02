@@ -58,7 +58,7 @@
 #include "ns3/wimax-module.h"
 #include "ns3/internet-module.h"
 #include "../../internet/model/global-route-manager.h"
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

@@ -29,7 +29,7 @@
 // - DropTail queues 
 // - Tracing of queues and packet receptions to file "csma-bridge.tr"
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

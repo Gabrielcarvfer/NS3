@@ -27,7 +27,7 @@
 #include "../../network/model/packet.h"
 #include "../../core/model/ptr.h"
 #include "../../core/model/string.h"
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/math.h"
 #include "../model/spectrum-model-ism2400MHz-res1MHz.h"
 #include "../model/spectrum-model-300kHz-300GHz-log.h"

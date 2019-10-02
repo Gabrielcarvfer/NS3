@@ -20,7 +20,7 @@
  */
 
 #include <cstring>
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/test.h"
 #include "../../core/model/ptr.h"
 #include "../utils/ipv4-address.h"

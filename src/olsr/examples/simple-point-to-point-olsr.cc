@@ -35,7 +35,7 @@
 // - DropTail queues
 // - Tracing of queues and packet receptions to file "simple-point-to-point-olsr.tr"
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

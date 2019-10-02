@@ -22,7 +22,7 @@
 #include "../../core/model/assert.h"
 #include "../../core/model/log.h"
 #include <iomanip>
-#include <iostream>
+#include <iosfwd>
 #include <cstring>
 
 namespace ns3 {

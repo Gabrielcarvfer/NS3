@@ -21,7 +21,7 @@
 //
 
 #include <cstdlib>
-#include <iostream>
+#include <iosfwd>
 #include "rng-stream.h"
 #include "fatal-error.h"
 #include "log.h"

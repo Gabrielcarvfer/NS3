@@ -28,7 +28,7 @@
 
 
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #ifdef NS3_MPI

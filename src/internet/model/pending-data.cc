@@ -23,7 +23,7 @@
 // Georgia Tech Network Simulator
 // George F. Riley.  Georgia Tech, Spring 2002
 
-#include <iostream>
+#include <iosfwd>
 #include <algorithm>
 
 #include <cstring>

@@ -27,7 +27,7 @@
 //      csma-packet-socket-sink.tr file
 //   ASCII trace output will be sent to the csma-packet-socket.tr file
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

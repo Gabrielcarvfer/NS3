@@ -24,7 +24,7 @@
 #include <limits>     // std:numeric_limits
 #include <string>
 #include <cstdarg>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <ctime>
 

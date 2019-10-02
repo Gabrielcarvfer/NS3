@@ -42,7 +42,7 @@
 // UDP/IP, but tunneling directly IP-over-IP would also be possible;
 // see src/node/ipv4-raw-socket-factory.h.
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

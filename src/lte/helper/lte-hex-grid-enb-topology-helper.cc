@@ -25,7 +25,7 @@
 #include "../../core/model/abort.h"
 #include "../../core/model/pointer.h"
 #include "epc-helper.h"
-#include <iostream>
+#include <iosfwd>
 
 
 namespace ns3 {

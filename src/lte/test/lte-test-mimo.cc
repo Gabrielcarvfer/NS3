@@ -18,7 +18,7 @@
  * Author: Marco Miozzo <marco.miozzo@cttc.es>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <string>
 #include "../../core/model/object.h"

@@ -31,7 +31,7 @@
 
 #include <arpa/inet.h>
 #include <errno.h>
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <limits>
 #include <linux/if_tun.h>

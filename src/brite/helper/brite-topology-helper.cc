@@ -27,7 +27,7 @@
 
 #include "brite-topology-helper.h"
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 namespace ns3 {

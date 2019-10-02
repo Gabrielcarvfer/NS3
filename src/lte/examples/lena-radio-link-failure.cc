@@ -25,7 +25,7 @@
 #include "ns3/lte-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-module.h"
-#include <iostream>
+#include <iosfwd>
 #include <vector>
 #include <stdio.h>
 #include <iomanip>

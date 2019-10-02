@@ -17,7 +17,7 @@
  */
 
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 #include "../../core/model/log.h"
 #include "../../core/model/assert.h"
 #include "candidate-queue.h"

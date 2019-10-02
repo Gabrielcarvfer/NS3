@@ -20,7 +20,7 @@
  * This file is based on pcap-file.cc by Craig Dowell (craigdo@ee.washington.edu)
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <string>
 #include "../../core/model/assert.h"
 #include "../../core/model/fatal-error.h"

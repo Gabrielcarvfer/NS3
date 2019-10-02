@@ -35,7 +35,7 @@
 #include "../../mobility/model/constant-position-mobility-model.h"
 #include "../../network/model/packet.h"
 
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

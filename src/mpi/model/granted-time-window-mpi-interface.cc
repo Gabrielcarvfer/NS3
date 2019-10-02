@@ -20,7 +20,7 @@
 // This object contains static methods that provide an easy interface
 // to the necessary MPI information.
 
-#include <iostream>
+#include <iosfwd>
 #include <iomanip>
 #include <list>
 

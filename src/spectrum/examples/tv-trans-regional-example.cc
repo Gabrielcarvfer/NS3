@@ -18,7 +18,7 @@
  * Author: Benjamin Cizdziel <ben.cizdziel@gmail.com>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <stdlib.h>
 #include <ns3/core-module.h>
 #include <ns3/mobility-module.h>

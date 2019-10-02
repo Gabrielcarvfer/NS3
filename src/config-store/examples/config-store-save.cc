@@ -2,7 +2,7 @@
 #include "ns3/core-module.h"
 #include "ns3/config-store-module.h"
 
-#include <iostream>
+#include <iosfwd>
 
 using namespace ns3;
 

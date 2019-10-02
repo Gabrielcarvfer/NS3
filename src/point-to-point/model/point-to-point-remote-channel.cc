@@ -18,7 +18,7 @@
  * Author: George Riley <riley@ece.gatech.edu>
  */
 
-#include <iostream>
+#include <iosfwd>
 
 #include "point-to-point-remote-channel.h"
 #include "point-to-point-net-device.h"

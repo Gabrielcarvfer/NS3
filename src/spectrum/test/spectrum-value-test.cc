@@ -23,7 +23,7 @@
 #include "../model/spectrum-converter.h"
 #include "../../core/model/log.h"
 #include "../../core/model/test.h"
-#include <iostream>
+#include <iosfwd>
 #include <cmath>
 
 #include "spectrum-test.h"

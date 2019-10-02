@@ -25,7 +25,7 @@
 // Base class allows variations of round trip time estimators to be
 // implemented
 
-#include <iostream>
+#include <iosfwd>
 #include <cmath>
 
 #include "rtt-estimator.h"

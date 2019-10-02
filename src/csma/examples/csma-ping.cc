@@ -23,7 +23,7 @@
 //  node n0,n1,n3 pings to node n2
 //  node n0 generates protocol 2 (IGMP) to node n3
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <cassert>

@@ -29,7 +29,7 @@
 // - Nodes n0, n1, n2, n3, and n4 receive the multicast frame.
 // - Node n4 listens for the data 
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 
 #include "ns3/core-module.h"

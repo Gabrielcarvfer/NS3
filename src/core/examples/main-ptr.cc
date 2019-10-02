@@ -20,7 +20,7 @@
 #include "../model/ptr.h"
 #include "../model/object.h"
 #include "../model/command-line.h"
-#include <iostream>
+#include <iosfwd>
 
 /**
  * \file

@@ -20,7 +20,7 @@
 
 #include <fstream>
 #include <cstdlib>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <pcre2posix.h>
 #include "../../core/model/log.h"

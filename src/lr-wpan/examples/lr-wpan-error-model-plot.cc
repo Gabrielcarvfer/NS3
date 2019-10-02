@@ -28,7 +28,7 @@
 #include "../model/lr-wpan-error-model.h"
 
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <string>
 #include <vector>
 

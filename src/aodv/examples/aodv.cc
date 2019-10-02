@@ -20,7 +20,7 @@
  * Authors: Pavel Boyko <boyko@iitp.ru>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include <cmath>
 #include "ns3/aodv-module.h"
 #include "ns3/core-module.h"

@@ -21,7 +21,7 @@
 #pragma once
 
 #include <string>
-#include <iostream>
+#include <iosfwd>
 #include <stdint.h>
 #include "../../core/model/nstime.h"
 #include "../../core/model/attribute.h"

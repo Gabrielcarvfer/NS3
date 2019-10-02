@@ -18,7 +18,7 @@
  * Authors: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include <iostream>
+#include <iosfwd>
 #include "../model/simulator.h"
 #include "../model/nstime.h"
 #include "../model/command-line.h"

@@ -43,7 +43,7 @@
 #include "../../internet/helper/internet-stack-helper.h"
 #include "../../internet/helper/ipv4-address-helper.h"
 #include "../../internet/helper/ipv4-interface-container.h"
-#include <iostream>
+#include <iosfwd>
 
 #include "../model/ocb-wifi-mac.h"
 #include "../helper/wifi-80211p-helper.h"

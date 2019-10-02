@@ -32,7 +32,7 @@
 #include "dsr-rreq-table.h"
 #include "../../core/model/log.h"
 #include <algorithm>
-#include <iostream>
+#include <iosfwd>
 
 namespace ns3 {
 
