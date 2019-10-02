@@ -27,7 +27,6 @@
 
 #pragma once
 
-#ifndef NS3_LOG_ENABLE
 /*
   Implementation Note:
 
@@ -94,5 +93,4 @@
         NS_LOG_NOOP_INTERNAL (msg)
 
 
-#endif /* !NS3_LOG_ENABLE */
 

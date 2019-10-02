@@ -23,7 +23,6 @@
 #include "../../core/model/abort.h"
 #include "../../core/model/string.h"
 #include "../../core/model/log.h"
-#include "../../core/model/simulator.h"
 #include "../../core/model/attribute-construction-list.h"
 #include "../../core/model/enum.h"
 //#include "ns3/config-store-config.h"
@@ -32,13 +31,8 @@
 #endif
 
 #include <string>
-#include <fstream>
 #include <iosfwd>
-#include <cstdlib>
 
-#ifndef WIN32
-#include <unistd.h>
-#endif
 
 namespace ns3 {
 

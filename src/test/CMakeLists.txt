@@ -26,3 +26,4 @@ add_library(${lib${name}}
         traced/traced-callback-typedef-test-suite.cc
         traced/traced-value-callback-typedef-test-suite.cc
         )
+

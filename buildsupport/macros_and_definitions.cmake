@@ -39,7 +39,8 @@ if (WIN32 AND NOT MSVC)
 endif()
 
 include(buildsupport/vcpkg_hunter.cmake)
-
+#include(buildsupport/cotire.cmake)
+#set_property(DIRECTORY PROPERTY COTIRE_UNITY_LINK_LIBRARIES_INIT "COPY_UNITY")
 
 
 set(LIB_AS_NEEDED_PRE  )
@@ -559,7 +560,6 @@ macro(process_options)
     set(lib-ns3-static-objs)
     set(ns3-python-bindings ns${NS3_VER}-pybindings-${build_type})
     set(ns3-python-bindings-modules )
-
     foreach(libname ${libs_to_build})
         #Create libname of output library of module
         set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
@@ -569,8 +569,8 @@ macro(process_options)
         if( NOT (${libname} STREQUAL "test") )
             list(APPEND lib-ns3-static-objs $<TARGET_OBJECTS:${lib${libname}-obj}>)
         endif()
-
     endforeach()
+
 
     #Create new lib for NS3 static builds
     set(lib-ns3-static ns${NS3_VER}-static-${build_type})
@@ -629,6 +629,11 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 
     #Create object library with sources and headers, that will be used in lib-ns3-static and the shared library
     add_library(${lib${libname}-obj} OBJECT "${source_files}" "${header_files}")
+    
+    if (COMMAND cotire)
+        set_target_properties(${lib${libname}-obj} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${lib${libname}-obj})
+    endif()
 
     #Create shared library with previously created object library (saving compilation time)
     add_library(${lib${libname}} SHARED $<TARGET_OBJECTS:${lib${libname}-obj}>)
@@ -639,6 +644,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     if(MSVC)
         target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
     endif()
+
 
     #Write a module header that includes all headers from that module
     write_module_header("${libname}" "${header_files}")
@@ -664,6 +670,12 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
                 #Link test library to the module library
                 target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
             endif()
+
+            if (COMMAND cotire)
+                set_target_properties(${test${libname}} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+                cotire(${test${libname}})
+            endif()
+
         endif()
     endif()
 
@@ -720,6 +732,11 @@ macro (build_example name source_files header_files libraries_to_link)
     #Link the shared library with the libraries passed
     target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
+    if (COMMAND cotire)
+        set_target_properties(${name} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${name})
+    endif()
+
     set_target_properties( ${name}
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
@@ -732,6 +749,11 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
+
+    if (COMMAND cotire)
+        set_target_properties(${name} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${name})
+    endif()
 
     set_target_properties( ${name}
             PROPERTIES

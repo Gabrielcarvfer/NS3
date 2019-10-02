@@ -10,6 +10,7 @@ if (${NS3_TESTS})
         target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${ns3-libs} ${ns3-libs-tests} ${LIB_AS_NEEDED_POST})
     endif()
 
+
     add_executable(bench-simulator bench-simulator.cc)
     target_link_libraries(bench-simulator ${libcore})
 

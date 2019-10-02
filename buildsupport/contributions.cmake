@@ -25,6 +25,11 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
 
             #Create shared library containing tests of the module
             add_library(${test${name}} SHARED "${test_sources}")
+            
+            if (COMMAND cotire)
+                set_target_properties(${test${name} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+                cotire(${test${name})
+            endif()
 
             #Link test library to the module library
             target_link_libraries(${test${name}} ${lib${contrib}})
@@ -53,6 +58,11 @@ macro (build_contrib_example name contrib source_files header_files libraries_to
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} "${libraries_to_link}")
+
+    if (COMMAND cotire)
+        set_target_properties(${name} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${name})
+    endif()
 
     set_target_properties( ${name}
             PROPERTIES
@@ -97,6 +107,11 @@ macro (build_contrib_lib contrib_name components)
 
     #Link NS3 and/or 3rd-party dependencies
     target_link_libraries(${lib${contrib_name}} PUBLIC ${${contrib_name}_libraries_to_link})
+
+    if (COMMAND cotire)
+        set_target_properties(${lib${contrib_name}} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${lib${contrib_name}})
+    endif()
 
     #Write a module header that includes all headers from that module
     FILE(GLOB_RECURSE header_files ${PROJECT_SOURCE_DIR}/contrib/${contrib_name}/*.h)

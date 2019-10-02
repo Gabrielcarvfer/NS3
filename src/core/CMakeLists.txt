@@ -234,8 +234,6 @@ set (header_files
         model/ptr.h
         model/object.h
         model/log.h
-        model/log-macros-enabled.h
-        model/log-macros-disabled.h
         model/assert.h
         model/breakpoint.h
         model/fatal-error.h
