@@ -39,9 +39,11 @@ if (WIN32 AND NOT MSVC)
 endif()
 
 include(buildsupport/vcpkg_hunter.cmake)
-set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+
+if (CCACHE_FOUND)
+    set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+endif()
 include(buildsupport/cotire_force_pch.cmake)
-#set_property(DIRECTORY PROPERTY COTIRE_UNITY_LINK_LIBRARIES_INIT "COPY_UNITY")
 
 
 set(LIB_AS_NEEDED_PRE  )
