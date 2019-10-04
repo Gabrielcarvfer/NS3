@@ -1,7 +1,7 @@
 
 set(name topology-read)
 
-if(PCRE_FOUND)
+if(PCRE_FOUND OR NOT WIN32)
     set(source_files
             model/rocketfuel-topology-reader.cc
             )

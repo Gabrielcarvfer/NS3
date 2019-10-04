@@ -25,6 +25,8 @@
  *
  */
 
+#pragma once
+
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "../../src/network/model/application.h"

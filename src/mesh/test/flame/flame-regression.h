@@ -17,6 +17,7 @@
  *
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
+#pragma once
 
 #include "../../../core/model/test.h"
 #include "../../../core/model/nstime.h"

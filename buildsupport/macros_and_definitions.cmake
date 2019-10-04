@@ -39,7 +39,8 @@ if (WIN32 AND NOT MSVC)
 endif()
 
 include(buildsupport/vcpkg_hunter.cmake)
-#include(buildsupport/cotire.cmake)
+set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+include(buildsupport/cotire_force_pch.cmake)
 #set_property(DIRECTORY PROPERTY COTIRE_UNITY_LINK_LIBRARIES_INIT "COPY_UNITY")
 
 
@@ -83,14 +84,17 @@ set(3rdPartyLibraries
 #process all options passed in main cmakeLists
 macro(process_options)
     #process debug switch
+    string(TOUPPER ${CMAKE_BUILD_TYPE} build_type_upper)
+
     #Used in build-profile-test-suite
-    if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    if(${build_type_upper} STREQUAL "DEBUG")
         add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
         set(build_type "deb")
-    elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+    elseif(${build_type_upper} STREQUAL "RELWITHDEBINFO")
         add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
         set(build_type "reldeb")
-    else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    else()
+        #${build_type_upper} STREQUAL "RELEASE" OR ${build_type_upper} STREQUAL "MINSIZEREL"
         add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
         set(build_type "rel")
     endif()
@@ -167,7 +171,7 @@ macro(process_options)
     #Libpcre2 for regex
     if (NOT ${AUTOINSTALL_DEPENDENCIES})
         message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
-    else()
+    elseif(WIN32)
         #If we don't find installed, install
         add_package(pcre2)
         get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)

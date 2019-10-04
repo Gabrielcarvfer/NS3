@@ -23,6 +23,7 @@
 #include "../../network/helper/node-container.h"
 
 namespace ns3 {
+  class Socket;
 namespace olsr {
 
 /**

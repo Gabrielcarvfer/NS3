@@ -1,5 +1,5 @@
 """
-Configure gcc with -ftime-report and run "make -j1 1 > compile_targets.txt 2 > time_reports.txt"
+Configure gcc with -ftime-report and run "make -j1 1> compile_targets.txt 2> time_reports.txt"
 Yes, -j1 will take a long time, but you really want these results to analyze your compilation time,
 don't you?
 """
@@ -217,7 +217,7 @@ def parse_compile_target_time(compile_targets_contents=sample_compile_target, ti
             compile_target_group["children"][target_name_components[0]]["children"][target_name_components[1]] = { "children" : {}, "total": 0.0}
 
         if target_name not in compile_target_group["children"][target_name_components[0]]["children"][target_name_components[1]]["children"]:
-            compile_target_group["children"][target_name_components[0]]["children"][target_name_components[1]]["children"][target_name] = compile_targets[target_name]
+            compile_target_group["children"][target_name_components[0]]["children"][target_name_components[1]]["children"][target_name] = {"total": 0.0}
 
         #Skip possible error lines or blank lines until reach a line initiating with T (Time)
         while j < len(time_report_lines) and (len(time_report_lines[j]) < 1 or time_report_lines[j][0] != "T"):
@@ -273,92 +273,101 @@ def parse_compile_target_time(compile_targets_contents=sample_compile_target, ti
     #Return compile time results
     return compile_targets, compile_target_group
 
-def main(test=False):
+def main(test=False, forceReprocessing=False):
     import os
     import json
 
-    compile_target_contents, time_report_contents = None, None
-
-    #Read contents of compile_targets and time_reports files
-    if os.path.exists("compile_targets.txt"):
-        with open("compile_targets.txt", "r") as fd:
-            compile_target_contents = fd.read()
-    if os.path.exists("time_reports.txt"):
-        with open("time_reports.txt", "r") as fd:
-            time_report_contents = fd.read()
-
-    #Parse contents with file contents or with samples provided at the beginning of this file
-    compile_targets, compile_target_group = None, None
-    if test:
-        compile_targets, compile_target_group = parse_compile_target_time()
-    else:
-        compile_targets, compile_target_group = parse_compile_target_time(compile_target_contents, time_report_contents)
-
-
-    #Marge results and compute group timing and gcc_component timing
     compile_target_results = None
-    if compile_targets is not None and compile_target_group is not None:
-        compile_target_results = {"individual":None, "group": None, "gcc_component": None}
+    
+    #Skip processing if output file already exists
+    if not os.path.exists("compile_target_time.json") or forceReprocessing:
 
-		#Remove modules to check side effects
-        modules_to_remove = []#[lte]
-        for module in modules_to_remove:
-            for target in compile_target_group["children"]["src"]["children"][module]["children"]:
-                del compile_targets[target]
-            del compile_target_group["children"]["src"]["children"][module]
+        compile_target_contents, time_report_contents = None, None
 
-        #Compute aggregated times for each group and subgroup of targets
-        total_time = 0.0
-        for group in compile_target_group["children"]:
-            group_time = 0.0
-            for subgroup in compile_target_group["children"][group]["children"]:
-                subgroup_time = 0.0
-                for target in compile_target_group["children"][group]["children"][subgroup]["children"]:
-                    compile_target_group["children"][group]["children"][subgroup]["children"][target] = compile_targets[target]
-                    target_time = sum(compile_targets[target]["components"].values())
-                    compile_target_group["children"][group]["children"][subgroup]["children"][target]["total"] = target_time
-                    compile_targets[target]["total"] = target_time
-                    subgroup_time += target_time
-                compile_target_group["children"][group]["children"][subgroup]["total"] = subgroup_time
-                group_time += subgroup_time
-            compile_target_group["children"][group]["total"] = group_time
-            total_time += group_time
-        compile_target_group["total"] = total_time
+        #Read contents of compile_targets and time_reports files
+        if os.path.exists("compile_targets.txt"):
+            with open("compile_targets.txt", "r") as fd:
+                compile_target_contents = fd.read()
+        if os.path.exists("time_reports.txt"):
+            with open("time_reports.txt", "r") as fd:
+                time_report_contents = fd.read()
 
-        del subgroup_time, group_time
+        #Parse contents with file contents or with samples provided at the beginning of this file
+        compile_targets, compile_target_group = None, None
+        if test:
+            compile_targets, compile_target_group = parse_compile_target_time()
+        else:
+            compile_targets, compile_target_group = parse_compile_target_time(compile_target_contents, time_report_contents)
 
-        # Save all individual target times
-        compile_target_results["individual"] = compile_targets
 
-        #Save all aggregated group times
-        compile_target_results["group"] = compile_target_group
+        #Marge results and compute group timing and gcc_component timing
+        compile_target_results = None
+        if compile_targets is not None and compile_target_group is not None:
+            compile_target_results = {"individual":None, "group": None, "gcc_component": None}
 
-        #Compute aggregated times for gcc steps
-        gcc_component_time = {}
-        for target in compile_targets:
-            for component in compile_targets[target]["components"]:
-                if component not in gcc_component_time:
-                    gcc_component_time[component] = compile_targets[target]["components"][component]
-                else:
-                    gcc_component_time[component] += compile_targets[target]["components"][component]
+            #Remove modules to check side effects
+            modules_to_remove = []#[lte]
+            for module in modules_to_remove:
+                for target in compile_target_group["children"]["src"]["children"][module]["children"]:
+                    del compile_targets[target]
+                del compile_target_group["children"]["src"]["children"][module]
 
-        compile_target_results["gcc_component"] = gcc_component_time
+            #Compute aggregated times for each group and subgroup of targets
+            total_time = 0.0
+            for group in compile_target_group["children"]:
+                group_time = 0.0
+                for subgroup in compile_target_group["children"][group]["children"]:
+                    subgroup_time = 0.0
+                    for target in compile_target_group["children"][group]["children"][subgroup]["children"]:
+                        #compile_target_group["children"][group]["children"][subgroup]["children"][target] = compile_targets[target] #reduce duplication of data
+                        target_time = sum(compile_targets[target]["components"].values())
+                        compile_target_group["children"][group]["children"][subgroup]["children"][target]["total"] = target_time
+                        compile_targets[target]["total"] = target_time
+                        subgroup_time += target_time
+                    compile_target_group["children"][group]["children"][subgroup]["total"] = subgroup_time
+                    group_time += subgroup_time
+                compile_target_group["children"][group]["total"] = group_time
+                total_time += group_time
+            compile_target_group["total"] = total_time
 
-    #Dump computed results to a json file
-    if compile_target_results is not None:
-        with open("compile_target_time.json", "w") as fd:
-            json.dump(compile_target_results, fd)
+            del subgroup_time, group_time
+
+            # Save all individual target times
+            compile_target_results["individual"] = compile_targets
+
+            #Save all aggregated group times
+            compile_target_results["group"] = compile_target_group
+
+            #Compute aggregated times for gcc steps
+            gcc_component_time = {}
+            for target in compile_targets:
+                for component in compile_targets[target]["components"]:
+                    if component not in gcc_component_time:
+                        gcc_component_time[component] = {}
+                        gcc_component_time[component]["total"] = compile_targets[target]["components"][component]
+                        gcc_component_time[component]["targets"] = {target:compile_targets[target]["components"][component]}
+                    else:
+                        gcc_component_time[component]["total"] += compile_targets[target]["components"][component]
+                        gcc_component_time[component]["targets"][target] = compile_targets[target]["components"][component]
+
+            compile_target_results["gcc_component"] = gcc_component_time
+
+        #Dump computed results to a json file
+        if compile_target_results is not None:
+            with open("compile_target_time.json", "w") as fd:
+                json.dump(compile_target_results, fd, indent=3)
 
     #Load json dump before plotting
     if compile_target_results is None and os.path.exists("compile_target_time.json"):
         with open("compile_target_time.json", "r") as fd:
             compile_target_results = json.load(fd)
 
-    #Print top 50 individual compile targets
-    sorted_compile_targets = list(sorted(compile_target_results["individual"].items(), key=lambda kv: kv[1]["total"], reverse=True))
 
     import numpy as np
     import matplotlib.pyplot as plt
+
+    #Print top 50 individual compile targets
+    sorted_compile_targets = list(sorted(compile_target_results["individual"].items(), key=lambda kv: kv[1]["total"], reverse=True))
 
     names = []
     values = []
@@ -377,9 +386,6 @@ def main(test=False):
     # Print rank of module compile times
     sorted_compile_modules = list(sorted(compile_target_results["group"]["children"]["src"]["children"].items(), key=lambda kv: kv[1]["total"], reverse=True))
 
-    import numpy as np
-    import matplotlib.pyplot as plt
-
     names = []
     values = []
     for target in sorted_compile_modules:
@@ -395,21 +401,35 @@ def main(test=False):
     plt.clf()
 
     # Print top 50 individual gcc compile phases
-    sorted_compile_phases = list(sorted(compile_target_results["gcc_component"].items(), key=lambda kv: kv[1], reverse=True))
-
-    import numpy as np
-    import matplotlib.pyplot as plt
+    sorted_compile_phases = list(sorted(compile_target_results["gcc_component"].items(), key=lambda kv: kv[1]["total"], reverse=True))
 
     names = []
     values = []
     for target in sorted_compile_phases[:50]:
-        values += [target[1]]
+        values += [target[1]["total"]]
         names += [target[0]]
     plt.bar(list(range(len(sorted_compile_phases[:50]))), values)
     plt.title("Top 50 gcc compilation phases by time")
     plt.ylabel('Total compilation time (s)')
     plt.xticks(list(range(len(sorted_compile_phases[:50]))), names, rotation="vertical", fontsize=8)
     plt.savefig("top50compilePhases.jpg", dpi=300, bbox_inches = "tight")
+    plt.show()
+
+    plt.clf()
+
+    # Print top 50 individual gcc compile phases
+    sorted_targets_of_topCompilePhase = list(sorted(compile_target_results["gcc_component"][sorted_compile_phases[0][0]]["targets"].items(), key=lambda kv: kv[1], reverse=True))
+
+    names = []
+    values = []
+    for target in sorted_targets_of_topCompilePhase[:50]:
+        values += [target[1]]
+        names += [target[0]]
+    plt.bar(list(range(len(sorted_targets_of_topCompilePhase[:50]))), values)
+    plt.title("Top targets of top gcc compilation phase (%s) by time" % sorted_compile_phases[0][0])
+    plt.ylabel('Total compilation time (s)')
+    plt.xticks(list(range(len(sorted_targets_of_topCompilePhase[:50]))), names, rotation="vertical", fontsize=8)
+    plt.savefig("top50targetsOfTopCompilePhase.jpg", dpi=300, bbox_inches="tight")
     plt.show()
 
     plt.clf()
