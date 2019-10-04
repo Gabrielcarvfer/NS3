@@ -5,7 +5,7 @@ cmake_minimum_required( VERSION 3.11 )
 
 #set(CMAKE_C_COMPILER "clang")
 #set(CMAKE_CXX_COMPILER "clang++")
-
+add_definitions(-ftime-report)
 #find_program(CCACHE_FOUND ccache)
 #if(CCACHE_FOUND)
 #    SET_PROPERTY(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
