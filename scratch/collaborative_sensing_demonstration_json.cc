@@ -27,8 +27,8 @@
 #include <ns3/csma-module.h>
 #include <ns3/uan-module.h>
 
-//#include "../3rd-party/picojson/picojson.h"
-
+#include "../3rd-party/picojson/picojson.h"
+#include "../3rd-party/json-loader/json_loader.h"
 using namespace ns3;
 
 #include <map>

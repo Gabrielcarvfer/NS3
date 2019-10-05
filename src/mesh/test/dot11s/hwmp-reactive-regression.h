@@ -17,6 +17,9 @@
  *
  * Authors: Kirill Andreev <andreev@iitp.ru>
  */
+
+#pragma once
+
 #include "ns3/test.h"
 #include "ns3/node-container.h"
 #include "ns3/nstime.h"

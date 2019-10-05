@@ -20,8 +20,8 @@
  *                               <amine.ismail@UDcast.com>
  */
 
-#ifndef LINK_MANAGER_H
-#define LINK_MANAGER_H
+#ifndef SS_LINK_MANAGER_H
+#define SS_LINK_MANAGER_H
 
 #include <cstdint>
 #include "wimax-net-device.h"
@@ -214,4 +214,4 @@ private:
 
 } // namespace ns3
 
-#endif /* LINK_MANAGER_H */
+#endif /* SS_LINK_MANAGER_H */
