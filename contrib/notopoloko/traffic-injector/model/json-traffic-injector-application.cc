@@ -94,11 +94,19 @@ JsonTrafficInjectorApplication::ScheduleTx ()
     m_currentTime++;
     m_sendEvent = ns3::Simulator::Schedule (tNext, &JsonTrafficInjectorApplication::SendPacket, this);
   }
+
+  //Repeats undefinitely
   if (m_currentTime == m_timeToSend.size())
   {
-    NS_LOG_UNCOND( std::string("End of transmission at: ") << ns3::Simulator::Now ().GetSeconds ());
-    StopApplication();
+      m_currentTime = 0;
   }
+
+  //todo:create a better way to stop
+  //if (m_currentTime == m_timeToSend.size())
+  //{
+  //  NS_LOG_UNCOND( std::string("End of transmission at: ") << ns3::Simulator::Now ().GetSeconds ());
+  //  StopApplication();
+  //}
   
 
 }

@@ -32,7 +32,7 @@ int
 main (int argc, char *argv[])
 {
   uint16_t numberOfNodes = 1;
-  double simTime = 100;
+  double simTime = 1000;
   double radius = 10.0;
   // bool useCa = false;
   bool genTraces = false;
