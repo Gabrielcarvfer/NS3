@@ -26,6 +26,10 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
             #Create shared library containing tests of the module
             add_library(${test${name}} SHARED "${test_sources}")
 
+            if (COMMAND cotire)
+                cotire(${test${name})
+            endif()
+
             #Link test library to the module library
             target_link_libraries(${test${name}} ${lib${contrib}})
         endif()
@@ -50,6 +54,11 @@ endmacro()
 macro (build_contrib_example name contrib source_files header_files libraries_to_link files_to_copy)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
+
+    if (COMMAND cotire)
+        cotire(${name})
+    endif()
+
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} "${libraries_to_link}")
@@ -94,6 +103,12 @@ macro (build_contrib_lib contrib_name components)
     #    generate_export_header(${lib${contrib_name}} EXPORT_FILE_NAME libcontrib-${contrib_name}_export.h)
     #    file(COPY ${CMAKE_CACHEFILE_DIR}/contrib/${contrib_name}/libcontrib-${contrib_name}_export.h DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/)
     #endif()
+
+    if (COMMAND cotire)
+        set_target_properties(${lib${contrib_name}} PROPERTIES COTIRE_UNITY_SOURCE_POST_UNDEFS "DEBUG_TYPE")
+        cotire(${lib${contrib_name}})
+    endif()
+
 
     #Link NS3 and/or 3rd-party dependencies
     target_link_libraries(${lib${contrib_name}} PUBLIC ${${contrib_name}_libraries_to_link})

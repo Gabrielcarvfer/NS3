@@ -18,11 +18,17 @@
  * Author: Hajime Tazaki (tazaki@sfc.wide.ad.jp)
  */
 
+#ifdef __WIN32__
+#include <pcre2posix.h>
+#else
+#include "regex.h"
+#endif
+
+
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <pcre2posix.h>
 #include "ns3/log.h"
 #include "ns3/unused.h"
 #include "ns3/node-container.h"
