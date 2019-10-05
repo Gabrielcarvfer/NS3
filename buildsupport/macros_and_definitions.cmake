@@ -40,6 +40,11 @@ endif()
 
 include(buildsupport/vcpkg_hunter.cmake)
 
+if (CCACHE_FOUND)
+    set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+endif()
+
+include(buildsupport/cotire_force_pch.cmake)
 
 
 set(LIB_AS_NEEDED_PRE  )
@@ -614,6 +619,10 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     #Create object library with sources and headers, that will be used in lib-ns3-static and the shared library
     add_library(${lib${libname}-obj} OBJECT "${source_files}" "${header_files}")
 
+    if (COMMAND cotire)
+        cotire(${lib${libname}-obj})
+    endif()
+
     #Create shared library with previously created object library (saving compilation time)
     add_library(${lib${libname}} SHARED $<TARGET_OBJECTS:${lib${libname}-obj}>)
 
@@ -648,6 +657,11 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
                 #Link test library to the module library
                 target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
             endif()
+
+            if (COMMAND cotire)
+                cotire(${test${libname}})
+            endif()
+
         endif()
     endif()
 
@@ -701,6 +715,10 @@ macro (build_example name source_files header_files libraries_to_link)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
+    if (COMMAND cotire)
+        cotire(${name})
+    endif()
+
     #Link the shared library with the libraries passed
     target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
@@ -713,6 +731,10 @@ endmacro()
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
+
+    if (COMMAND cotire)
+        cotire(${name})
+    endif()
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})

@@ -135,7 +135,6 @@ set(source_files
         model/component-carrier-ue.cc
         model/component-carrier-enb.cc
 
-        model/BLER/json_loader.cc
         )
 
 set(header_files
