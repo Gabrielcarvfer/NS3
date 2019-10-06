@@ -13,12 +13,12 @@ jobs:
       run: |
         sudo apt update
         sudo apt -y install apt-utils
-        sudo apt -y install git gcc g++ cmake python
+        sudo apt -y install git gcc g++ cmake python make ninja
         sudo apt -y install qt4-default 
         sudo apt -y install gdb valgrind
         sudo apt -y install tcpdump 
         sudo apt -y install curl unzip tar  
-        sudo apt -y install ccache
+        sudo apt -y install ccache 
     - name: Configure CMake
       run: |
         mkdir cmake-cache 
