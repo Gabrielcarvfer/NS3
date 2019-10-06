@@ -51,6 +51,7 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
     - name: Install required packages
       run: |
+        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm unzip
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm tar
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-curl
