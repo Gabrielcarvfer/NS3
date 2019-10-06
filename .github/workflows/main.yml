@@ -11,14 +11,15 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install required packages
       run: |
-        sudo apt update
-        sudo apt -y install apt-utils
-        sudo apt -y install git gcc g++ cmake python make ninja
-        sudo apt -y install qt4-default 
-        sudo apt -y install gdb valgrind
-        sudo apt -y install tcpdump 
-        sudo apt -y install curl unzip tar  
-        sudo apt -y install ccache 
+        sudo apt-get update
+        sudo apt-get -y upgrade
+        sudo apt-get -y install apt-utils
+        sudo apt-get -y install git gcc g++ cmake python make ninja-build
+        sudo apt-get -y install qt4-default 
+        sudo apt-get -y install gdb valgrind
+        sudo apt-get -y install tcpdump 
+        sudo apt-get -y install curl unzip tar  
+        sudo apt-get -y install ccache 
     - name: Configure CMake
       run: |
         mkdir cmake-cache 
