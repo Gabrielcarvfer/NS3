@@ -64,18 +64,18 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt5
     - name: Configure CMake
       run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
     - name: Build ns-3
       run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         cd cmake-cache
         ninja
     -  name: Run tests
        run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         python3 ./utils/test-runner-script.py
 
   #Mac_OS_X:   #not working
