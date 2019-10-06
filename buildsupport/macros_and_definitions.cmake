@@ -44,8 +44,9 @@ if (CCACHE_FOUND)
     set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif()
 
+if(NOT MINGW)
 include(buildsupport/cotire_force_pch.cmake)
-
+endif()
 
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
