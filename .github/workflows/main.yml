@@ -55,6 +55,7 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-boost
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-cmake
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-ninja
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gdb
