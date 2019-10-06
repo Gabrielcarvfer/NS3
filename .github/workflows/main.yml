@@ -51,6 +51,9 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
     - name: Install required packages
       run: |
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm unzip
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm tar
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-curl
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-binutils
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-boost
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-cmake
