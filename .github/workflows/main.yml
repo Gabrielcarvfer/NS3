@@ -3,32 +3,133 @@ name: CI
 on: [push]
 
 jobs:
-  build:
 
-    runs-on: ubuntu-latest
-    
+  #Ubuntu:  #working
+  #
+  #  runs-on: ubuntu-latest
+  #
+  #  steps:
+  #  - uses: actions/checkout@v1
+  #  - name: Install required packages
+  #    run: |
+  #      sudo apt-get update
+  #      sudo apt-get -y install apt-utils
+  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
+  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install gdb valgrind
+  #      sudo apt-get -y install tcpdump
+  #      sudo apt-get -y install curl unzip tar
+  #      sudo apt-get -y install ccache
+  #  - name: Configure CMake
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+
+  Windows (MinGW):   #not working
+
+    runs-on: windows-latest
+
     steps:
     - uses: actions/checkout@v1
     - name: Install required packages
       run: |
-        sudo apt-get update
-        sudo apt-get -y install apt-utils
-        sudo apt-get -y install git gcc g++ cmake python make ninja-build
-        sudo apt-get -y install qt4-default 
-        sudo apt-get -y install gdb valgrind
-        sudo apt-get -y install tcpdump 
-        sudo apt-get -y install curl unzip tar  
-        sudo apt-get -y install ccache 
+        git clone https://github.com/msys2/msys2-ci-base ..\\msys2
+        ..\\msys2\\mingw64.exe
+        pacman -Su --noconfirm
+        pacman -S --noconfirm mingw-w64-x86_64-binutils
+        pacman -S --noconfirm mingw-w64-x86_64-boost
+        pacman -S --noconfirm mingw-w64-x86_64-cmake
+        pacman -S --noconfirm mingw-w64-x86_64-gcc
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
+        pacman -S --noconfirm mingw-w64-x86_64-gdb
+        pacman -S --noconfirm mingw-w64-x86_64-gsl
+        pacman -S --noconfirm mingw-w64-x86_64-libxml2
+        pacman -S --noconfirm mingw-w64-x86_64-make
+        pacman -S --noconfirm mingw-w64-x86_64-pcre2
+        pacman -S --noconfirm mingw-w64-x86_64-python2
+        pacman -S --noconfirm mingw-w64-x86_64-python3
+        pacman -S --noconfirm mingw-w64-x86_64-qt4
     - name: Configure CMake
       run: |
-        mkdir cmake-cache 
+        ..\\msys2\\mingw64.exe
+        mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" .. 
-    - name: Build ns-3    
+        cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+    - name: Build ns-3
       run: |
+        ..\\msys2\\mingw64.exe
         cd cmake-cache
         ninja
     -  name: Run tests
        run: |
-         python3 ./utils/test-runner-script.py    
-     
+        ..\\msys2\\mingw64.exe
+        python3 ./utils/test-runner-script.py
+
+  #Mac OS X:   #not working
+  #
+  #  runs-on: macos-latest
+  #
+  #  steps:
+  #  - uses: actions/checkout@v1
+  #  - name: Install required packages
+  #    run: |
+  #      sudo apt-get update
+  #      sudo apt-get -y install apt-utils
+  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
+  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install gdb valgrind
+  #      sudo apt-get -y install tcpdump
+  #      sudo apt-get -y install curl unzip tar
+  #      sudo apt-get -y install ccache
+  #  - name: Configure CMake
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+
+  #Windows (Visual Studio):   #not working
+  #
+  #  runs-on: windows-latest
+  #
+  #  steps:
+  #  - uses: actions/checkout@v1
+  #  - name: Install required packages
+  #    run: |
+  #      sudo apt-get update
+  #      sudo apt-get -y install apt-utils
+  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
+  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install gdb valgrind
+  #      sudo apt-get -y install tcpdump
+  #      sudo apt-get -y install curl unzip tar
+  #      sudo apt-get -y install ccache
+  #  - name: Configure CMake
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+
+
