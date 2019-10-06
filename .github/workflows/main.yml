@@ -39,39 +39,46 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Install msys2/mingw64
+      #steps from https://github.com/msys2/MINGW-packages/blob/master/azure-pipelines.yml
+      run: |
+        git clone https://github.com/msys2/msys2-ci-base.git %CD:~0,2%\msys64
+        %CD:~0,2%\msys64\usr\bin\rm -rf %CD:~0,2%\msys64\.git
+        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
+        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel mingw-w64-x86_64-toolchain
+        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
     - name: Install required packages
       run: |
-        git clone https://github.com/msys2/msys2-ci-base ..\\msys2
-        ..\\msys2\\mingw64.exe
-        pacman -Su --noconfirm
-        pacman -S --noconfirm mingw-w64-x86_64-binutils
-        pacman -S --noconfirm mingw-w64-x86_64-boost
-        pacman -S --noconfirm mingw-w64-x86_64-cmake
-        pacman -S --noconfirm mingw-w64-x86_64-gcc
-        pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
-        pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
-        pacman -S --noconfirm mingw-w64-x86_64-gdb
-        pacman -S --noconfirm mingw-w64-x86_64-gsl
-        pacman -S --noconfirm mingw-w64-x86_64-libxml2
-        pacman -S --noconfirm mingw-w64-x86_64-make
-        pacman -S --noconfirm mingw-w64-x86_64-pcre2
-        pacman -S --noconfirm mingw-w64-x86_64-python2
-        pacman -S --noconfirm mingw-w64-x86_64-python3
-        pacman -S --noconfirm mingw-w64-x86_64-qt4
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-binutils
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-boost
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-cmake
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gdb
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gsl
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libxml2
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-make
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-pcre2
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python2
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python3
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt4
     - name: Configure CMake
       run: |
-        ..\\msys2\\mingw64.exe
+        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
     - name: Build ns-3
       run: |
-        ..\\msys2\\mingw64.exe
+        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         cd cmake-cache
         ninja
     -  name: Run tests
        run: |
-        ..\\msys2\\mingw64.exe
+        set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         python3 ./utils/test-runner-script.py
 
   #Mac_OS_X:   #not working
