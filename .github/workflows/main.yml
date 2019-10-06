@@ -33,7 +33,7 @@ jobs:
   #     run: |
   #       python3 ./utils/test-runner-script.py
 
-  Windows (MinGW):   #not working
+  Windows_MinGW:   #not working
 
     runs-on: windows-latest
 
@@ -74,7 +74,7 @@ jobs:
         ..\\msys2\\mingw64.exe
         python3 ./utils/test-runner-script.py
 
-  #Mac OS X:   #not working
+  #Mac_OS_X:   #not working
   #
   #  runs-on: macos-latest
   #
@@ -103,7 +103,7 @@ jobs:
   #     run: |
   #       python3 ./utils/test-runner-script.py
 
-  #Windows (Visual Studio):   #not working
+  #Windows_Visual_Studio:   #not working
   #
   #  runs-on: windows-latest
   #
