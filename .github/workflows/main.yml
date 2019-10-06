@@ -1,0 +1,34 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install required packages
+      run: |
+        sudo apt update
+        sudo apt -y install apt-utils
+        sudo apt -y install git gcc g++ cmake python
+        sudo apt -y install qt4-default 
+        sudo apt -y install gdb valgrind
+        sudo apt -y install tcpdump 
+        sudo apt -y install curl unzip tar  
+        sudo apt -y install ccache
+    - name: Configure CMake
+      run: |
+        mkdir cmake-cache 
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" .. 
+    - name: Build ns-3    
+      run: |
+        cd cmake-cache
+        ninja
+    -  name: Run tests
+       run: |
+         python3 ./utils/test-runner-script.py    
+     
