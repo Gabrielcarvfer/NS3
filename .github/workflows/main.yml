@@ -15,7 +15,7 @@ jobs:
   #      sudo apt-get update
   #      sudo apt-get -y install apt-utils
   #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install qt5-default
   #      sudo apt-get -y install gdb valgrind
   #      sudo apt-get -y install tcpdump
   #      sudo apt-get -y install curl unzip tar
@@ -47,7 +47,7 @@ jobs:
         set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
         set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel mingw-w64-x86_64-toolchain
+        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
         %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
     - name: Install required packages
       run: |
@@ -58,13 +58,10 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gdb
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gsl
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-libxml2
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-make
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-pcre2
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python2
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python3
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt4
+        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt5
     - name: Configure CMake
       run: |
         set PATH=%CD:~0,2%\msys64\mingw64\bin,%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
@@ -92,7 +89,7 @@ jobs:
   #      sudo apt-get update
   #      sudo apt-get -y install apt-utils
   #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install qt5-default
   #      sudo apt-get -y install gdb valgrind
   #      sudo apt-get -y install tcpdump
   #      sudo apt-get -y install curl unzip tar
@@ -121,7 +118,7 @@ jobs:
   #      sudo apt-get update
   #      sudo apt-get -y install apt-utils
   #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt4-default
+  #      sudo apt-get -y install qt5-default
   #      sudo apt-get -y install gdb valgrind
   #      sudo apt-get -y install tcpdump
   #      sudo apt-get -y install curl unzip tar
