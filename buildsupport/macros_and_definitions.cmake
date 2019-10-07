@@ -1,5 +1,9 @@
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
 
+if (UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
 #Fixed definitions
 #unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
@@ -44,13 +48,12 @@ if (CCACHE_FOUND)
     set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif()
 
-if (NOT APPLE)
-    if(MINGW)
-    	include(buildsupport/cotire.cmake)
-    else()
-    	include(buildsupport/cotire_force_pch.cmake)
-    endif()
+#if(MINGW)
+#	include(buildsupport/cotire.cmake)
+if(LINUX)
+	include(buildsupport/cotire_force_pch.cmake)
 endif()
+
 
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
