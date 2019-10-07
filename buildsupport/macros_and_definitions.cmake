@@ -44,8 +44,10 @@ if (CCACHE_FOUND)
     set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif()
 
-if(NOT MINGW)
-include(buildsupport/cotire_force_pch.cmake)
+if(MINGW OR APPLE)
+	include(buildsupport/cotire.cmake)
+else()
+	include(buildsupport/cotire_force_pch.cmake)
 endif()
 
 set(LIB_AS_NEEDED_PRE  )
@@ -98,7 +100,7 @@ macro(process_options)
 
 
     #Don't build incompatible libraries on Windows
-    if (WIN32)
+    if (WIN32 OR APPLE)
         set(build_lib_brite)
         set(build_lib_openflow)
     else()
@@ -296,8 +298,8 @@ macro(process_options)
 
     #LibRT
     if(${NS3_LIBRT})
-        if(WIN32)
-            message(WARNING "Lib RT is not supported on Windows, building without it")
+        if(WIN32 OR APPLE)
+            message(WARNING "Lib RT is not supported on Windows/Mac OS X, building without it")
         else()
             find_library(LIBRT rt)
             if(NOT ${LIBRT_FOUND})

@@ -1,31 +1,83 @@
 name: CI
 
 on: [push]
-
+  #schedule:
+  #  - cron:  '0 5 * * *'  #daily build at 5AM
 jobs:
 
-  #Ubuntu:  #working
-  #
-  #  runs-on: ubuntu-latest
-  #
-  #  steps:
-  #  - uses: actions/checkout@v1
-  #  - name: Install required packages
+  Ubuntu: 
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install required packages
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install apt-utils
+        sudo apt-get -y install git gcc g++ cmake python make ninja-build
+        sudo apt-get -y install qt5-default
+        sudo apt-get -y install gdb valgrind
+        sudo apt-get -y install tcpdump
+        sudo apt-get -y install curl unzip tar
+        sudo apt-get -y install ccache
+    - name: Configure CMake in debug mode
+      run: |
+        mkdir cmake-cache
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+    - name: Build ns-3 in debug mode
+      run: |
+        cd cmake-cache
+        ninja
+    -  name: Run tests
+       run: |
+         python3 ./utils/test-runner-script.py
+  #  - name: Clean debug artifacts
+  #     run: |
+  #       rm -R ../build
+  #       rm -R ./*
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in minimal size release mode
   #    run: |
-  #      sudo apt-get update
-  #      sudo apt-get -y install apt-utils
-  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt5-default
-  #      sudo apt-get -y install gdb valgrind
-  #      sudo apt-get -y install tcpdump
-  #      sudo apt-get -y install curl unzip tar
-  #      sudo apt-get -y install ccache
-  #  - name: Configure CMake
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=MINSIZEREL -G"Ninja" ..
+  #  - name: Build ns-3 in minimal size release mode
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+  #  - name: Clean minimal size release artifacts
+  #     run: |
+  #       rm -R ../build
+  #       rm -R ./*
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release with debug mode
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
+  #  - name: Build ns-3 in release with debug mode
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+  #  - name: Clean release with debug artifacts
+  #     run: |
+  #       rm -R ../build
+  #       rm -R ./*
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release mode
   #    run: |
   #      mkdir cmake-cache
   #      cd cmake-cache
   #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
-  #  - name: Build ns-3
+  #  - name: Build ns-3 in release  mode
   #    run: |
   #      cd cmake-cache
   #      ninja
@@ -33,10 +85,11 @@ jobs:
   #     run: |
   #       python3 ./utils/test-runner-script.py
 
-  Windows_MinGW:   #not working
 
+  Windows_MinGW:   
+  
     runs-on: windows-latest
-
+  
     steps:
     - uses: actions/checkout@v1
     - name: Install msys2/mingw64
@@ -67,50 +120,108 @@ jobs:
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python2
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python3
         %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt5
-    - name: Configure CMake
+    - name: Configure CMake in debug mode
       run: |
         set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
-    - name: Build ns-3
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+    - name: Build ns-3 in debug mode
       run: |
         set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         cd cmake-cache
         ninja
-    -  name: Run tests
-       run: |
+    - name: Run tests
+      run: |
         set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
         python3 ./utils/test-runner-script.py
-
-  #Mac_OS_X:   #not working
-  #
-  #  runs-on: macos-latest
-  #
-  #  steps:
-  #  - uses: actions/checkout@v1
-  #  - name: Install required packages
+  #  - name: Clean debug artifacts
   #    run: |
-  #      sudo apt-get update
-  #      sudo apt-get -y install apt-utils
-  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt5-default
-  #      sudo apt-get -y install gdb valgrind
-  #      sudo apt-get -y install tcpdump
-  #      sudo apt-get -y install curl unzip tar
-  #      sudo apt-get -y install ccache
-  #  - name: Configure CMake
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -R ../build
+  #      rm -R ./*
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in minimal size release mode
   #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=MINSIZEREL -G"Ninja" ..
+  #  - name: Build ns-3 in minimal size release mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      cd cmake-cache
+  #      ninja
+  #  - name: Run tests
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+  #  - name: Clean minimal size release artifacts
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -R ../build
+  #      rm -R ./*
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release with debug mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
+  #  - name: Build ns-3 in release with debug mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      cd cmake-cache
+  #      ninja
+  #  - name: Run tests
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+  #  - name: Clean release with debug artifacts
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -R ../build
+  #      rm -R ./*
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
   #      mkdir cmake-cache
   #      cd cmake-cache
   #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
-  #  - name: Build ns-3
+  #  - name: Build ns-3 in release  mode
   #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
   #      cd cmake-cache
   #      ninja
   #  -  name: Run tests
-  #     run: |
-  #       python3 ./utils/test-runner-script.py
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+
+  Mac_OS_X:   
+  
+    runs-on: macos-latest
+  
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install required packages
+      run: |
+        brew install ninja cmake qt5
+    - name: Configure CMake
+      run: |
+        export PATH="/usr/local/opt/qt/bin:$PATH"
+        mkdir cmake-cache
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+    - name: Build ns-3
+      run: |
+        export PATH="/usr/local/opt/qt/bin:$PATH"
+        cd cmake-cache
+        ninja
+    -  name: Run tests
+       run: |
+         python3 ./utils/test-runner-script.py
 
   #Windows_Visual_Studio:   #not working
   #
@@ -120,21 +231,16 @@ jobs:
   #  - uses: actions/checkout@v1
   #  - name: Install required packages
   #    run: |
-  #      sudo apt-get update
-  #      sudo apt-get -y install apt-utils
-  #      sudo apt-get -y install git gcc g++ cmake python make ninja-build
-  #      sudo apt-get -y install qt5-default
-  #      sudo apt-get -y install gdb valgrind
-  #      sudo apt-get -y install tcpdump
-  #      sudo apt-get -y install curl unzip tar
-  #      sudo apt-get -y install ccache
+  #      ????
   #  - name: Configure CMake
   #    run: |
+  #      %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
   #      mkdir cmake-cache
   #      cd cmake-cache
   #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
   #  - name: Build ns-3
   #    run: |
+  #      %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
   #      cd cmake-cache
   #      ninja
   #  -  name: Run tests

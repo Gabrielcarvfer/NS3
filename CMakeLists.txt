@@ -112,7 +112,7 @@ set(build_brite)
 set(build_fd-net-device)
 set(build_tap-bridge)
 
-if (WIN32)
+if (WIN32 OR APPLE)
     if(${NS3_BRITE})
         set(NS3_BRITE OFF)
     endif()
