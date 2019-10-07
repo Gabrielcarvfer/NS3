@@ -74,7 +74,7 @@ function(setup_vcpkg)
             if(NOT APPLE) #linux/bsd
                 set(command bootstrap-vcpkg.sh)
             else()
-                set(command bootstrap-vcpkg.sh --allowAppleClang)
+                set(command bootstrap-vcpkg.sh)# --allowAppleClang)
             endif()
         endif()
 
