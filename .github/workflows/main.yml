@@ -105,21 +105,22 @@ jobs:
     - name: Install required packages
       run: |
         set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm unzip
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm tar
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-curl
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-binutils
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-boost
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-cmake
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-ninja
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-gdb
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-make
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python2
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-python3
-        %CD:~0,2%\msys64\usr\bin\pacman -S --noconfirm mingw-w64-x86_64-qt5
+        pacman -S --noconfirm unzip
+        pacman -S --noconfirm tar
+        pacman -S --noconfirm mingw-w64-x86_64-curl
+        pacman -S --noconfirm mingw-w64-x86_64-binutils
+        pacman -S --noconfirm mingw-w64-x86_64-boost
+        pacman -S --noconfirm mingw-w64-x86_64-cmake
+        pacman -S --noconfirm mingw-w64-x86_64-gcc
+        pacman -S --noconfirm mingw-w64-x86_64-ninja
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
+        pacman -S --noconfirm mingw-w64-x86_64-gdb
+        pacman -S --noconfirm mingw-w64-x86_64-make
+        pacman -S --noconfirm mingw-w64-x86_64-python2
+        pacman -S --noconfirm mingw-w64-x86_64-python3
+        pacman -S --noconfirm mingw-w64-x86_64-qt5
+        pacman --noconfirm -Scc
     - name: Configure CMake in debug mode
       run: |
         set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
@@ -211,8 +212,8 @@ jobs:
     - name: Configure CMake
       run: |
         export PATH=/usr/local/bin:/usr/local/opt/qt/bin:$PATH
-        export CC=`whereis gcc`
-        export CXX=`whereis g++`
+        export CC=/usr/local/bin/gcc
+        export CXX=/usr/local/bin/g++
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
