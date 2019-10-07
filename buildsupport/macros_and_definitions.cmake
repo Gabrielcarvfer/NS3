@@ -62,11 +62,8 @@ set(LIB_AS_NEEDED_POST )
 include(ProcessorCount)
 ProcessorCount(NumThreads)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # using Clang
-    set(LIB_AS_NEEDED_PRE -all_load)
-    set(LIB_AS_NEEDED_POST             )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
@@ -81,6 +78,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_MSVC_PARALLEL ${NumThreads})
 endif()
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR APPLE)
+    # using Clang
+    set(LIB_AS_NEEDED_PRE -all_load)
+    set(LIB_AS_NEEDED_POST   )
+endif()
 
 
 
