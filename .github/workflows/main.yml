@@ -211,9 +211,9 @@ jobs:
         brew install ninja cmake qt5 gcc
     - name: Configure CMake
       run: |
-        export PATH=/usr/local/bin:/usr/local/opt/qt/bin:$PATH
-        export CC=/usr/local/bin/gcc
-        export CXX=/usr/local/bin/g++
+        export PATH=/usr/bin:/usr/local/bin:/usr/local/opt/qt/bin:$PATH
+        export CC=/usr/bin/gcc
+        export CXX=/usr/bin/g++
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..

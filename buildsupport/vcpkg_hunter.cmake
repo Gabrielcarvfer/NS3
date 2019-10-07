@@ -77,7 +77,7 @@ function(setup_vcpkg)
                 set(command bootstrap-vcpkg.sh)
             else()
                 set(command bootstrap-vcpkg.sh)# --allowAppleClang)
-                set(COMPILER_ENFORCING "CXX=/usr/local/bin/g++ CC=/usr/local/bin/gcc")
+                set(COMPILER_ENFORCING "CXX=/usr/bin/g++ CC=/usr/bin/gcc")
             endif()
         endif()
 
