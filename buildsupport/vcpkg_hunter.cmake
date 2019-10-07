@@ -68,6 +68,8 @@ function(setup_vcpkg)
         message(STATUS "VcPkg already bootstrapped")
     else()
         #message(WARNING "Bootstrapping VCPKG")
+        set(COMPILER_ENFORCING)
+
         if (WIN32)
             set(command bootstrap-vcpkg.bat)
         else()
@@ -75,10 +77,11 @@ function(setup_vcpkg)
                 set(command bootstrap-vcpkg.sh)
             else()
                 set(command bootstrap-vcpkg.sh)# --allowAppleClang)
+                set(COMPILER_ENFORCING "CXX=`whereis g++` CC=`whereis gcc`")
             endif()
         endif()
 
-        execute_process ( COMMAND ${VCPKG_DIR}/${command}
+        execute_process ( COMMAND ${COMPILER_ENFORCING} ${VCPKG_DIR}/${command}
                 WORKING_DIRECTORY ${VCPKG_DIR} )
         #message(STATUS "VCPKG bootstrapped")
 		include_directories(${VCPKG_DIR})
