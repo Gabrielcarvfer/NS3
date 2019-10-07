@@ -207,7 +207,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install required packages
       run: |
-        brew install ninja cmake qt5
+        brew install ninja cmake qt5 gcc
     - name: Configure CMake
       run: |
         export PATH="/usr/local/opt/qt/bin:$PATH"
