@@ -1,5 +1,9 @@
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
 
+if (UNIX AND NOT APPLE)
+    set(LINUX TRUE)
+endif()
+
 #Fixed definitions
 #unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
@@ -44,7 +48,11 @@ if (CCACHE_FOUND)
     set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif()
 
-include(buildsupport/cotire_force_pch.cmake)
+#if(MINGW)
+#	include(buildsupport/cotire.cmake)
+if(LINUX)
+	include(buildsupport/cotire_force_pch.cmake)
+endif()
 
 
 set(LIB_AS_NEEDED_PRE  )
@@ -54,11 +62,8 @@ set(LIB_AS_NEEDED_POST )
 include(ProcessorCount)
 ProcessorCount(NumThreads)
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # using Clang
-    set(LIB_AS_NEEDED_PRE -all_load)
-    set(LIB_AS_NEEDED_POST             )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
@@ -73,6 +78,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_MSVC_PARALLEL ${NumThreads})
 endif()
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR APPLE)
+    # using Clang
+    set(LIB_AS_NEEDED_PRE -all_load)
+    set(LIB_AS_NEEDED_POST   )
+endif()
 
 
 
@@ -97,7 +107,7 @@ macro(process_options)
 
 
     #Don't build incompatible libraries on Windows
-    if (WIN32)
+    if (WIN32 OR APPLE)
         set(build_lib_brite)
         set(build_lib_openflow)
     else()
@@ -295,8 +305,8 @@ macro(process_options)
 
     #LibRT
     if(${NS3_LIBRT})
-        if(WIN32)
-            message(WARNING "Lib RT is not supported on Windows, building without it")
+        if(WIN32 OR APPLE)
+            message(WARNING "Lib RT is not supported on Windows/Mac OS X, building without it")
         else()
             find_library(LIBRT rt)
             if(NOT ${LIBRT_FOUND})
