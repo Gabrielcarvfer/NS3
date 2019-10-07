@@ -35,8 +35,9 @@ jobs:
          python3 ./utils/test-runner-script.py
   #  - name: Clean debug artifacts
   #     run: |
-  #       rm -R ../build
-  #       rm -R ./*
+  #       rm -Rf ../build
+  #       rm -Rf ./*
+  #       rm -Rf ../3rd-party/vcpkg
   #       rm ../utils/failed-tests.json
   #  - name: Configure CMake in minimal size release mode
   #    run: |
@@ -52,8 +53,9 @@ jobs:
   #       python3 ./utils/test-runner-script.py
   #  - name: Clean minimal size release artifacts
   #     run: |
-  #       rm -R ../build
-  #       rm -R ./*
+   #      rm -Rf ../build
+   #      rm -Rf ./*
+   #      rm -Rf ../3rd-party/vcpkg
   #       rm ../utils/failed-tests.json
   #  - name: Configure CMake in release with debug mode
   #    run: |
@@ -69,8 +71,9 @@ jobs:
   #       python3 ./utils/test-runner-script.py
   #  - name: Clean release with debug artifacts
   #     run: |
-  #       rm -R ../build
-  #       rm -R ./*
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
   #       rm ../utils/failed-tests.json
   #  - name: Configure CMake in release mode
   #    run: |
@@ -139,8 +142,9 @@ jobs:
   #  - name: Clean debug artifacts
   #    run: |
   #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-  #      rm -R ../build
-  #      rm -R ./*
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
   #      rm ../utils/failed-tests.json
   #  - name: Configure CMake in minimal size release mode
   #    run: |
@@ -160,8 +164,9 @@ jobs:
   #  - name: Clean minimal size release artifacts
   #    run: |
   #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-  #      rm -R ../build
-  #      rm -R ./*
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
   #      rm ../utils/failed-tests.json
   #  - name: Configure CMake in release with debug mode
   #    run: |
@@ -181,8 +186,9 @@ jobs:
   #  - name: Clean release with debug artifacts
   #    run: |
   #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-  #      rm -R ../build
-  #      rm -R ./*
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
   #      rm ../utils/failed-tests.json
   #  - name: Configure CMake in release mode
   #    run: |
@@ -208,16 +214,16 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install required packages
       run: |
-        brew install ninja cmake qt5 gcc
-    - name: Configure CMake
+        brew install ninja cmake qt5 gcc@9
+    - name: Configure CMake in debug mode
       run: |
-        export PATH=/usr/bin:/usr/local/bin:/usr/local/opt/qt/bin:$PATH
-        export CC=/usr/bin/gcc
-        export CXX=/usr/bin/g++
+        export PATH=/usr/local/bin:/usr/local/opt/qt/bin:$PATH
+        export CXX=g++-9
+        export CC=gcc-9
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
-    - name: Build ns-3
+    - name: Build ns-3 in debug mode
       run: |
         export PATH="/usr/local/opt/qt/bin:$PATH"
         cd cmake-cache
@@ -225,6 +231,12 @@ jobs:
     -  name: Run tests
        run: |
          python3 ./utils/test-runner-script.py
+    #  - name: Clean release with debug artifacts
+    #    run: |
+    #      rm -Rf ../build
+    #      rm -Rf ./*
+    #      rm -Rf ../3rd-party/vcpkg
+    #      rm ../utils/failed-tests.json
 
   #Windows_Visual_Studio:   #not working
   #

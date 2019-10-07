@@ -73,12 +73,11 @@ function(setup_vcpkg)
         if (WIN32)
             set(command bootstrap-vcpkg.bat)
         else()
-            if(NOT APPLE) #linux/bsd
+            #if(NOT APPLE) #linux/bsd
                 set(command bootstrap-vcpkg.sh)
-            else()
-                set(command bootstrap-vcpkg.sh)# --allowAppleClang)
-                set(COMPILER_ENFORCING "CXX=/usr/bin/g++ CC=/usr/bin/gcc")
-            endif()
+            #else()
+            #    set(command bootstrap-vcpkg.sh)# --allowAppleClang)
+            #endif()
         endif()
 
         execute_process ( COMMAND ${COMPILER_ENFORCING} ${VCPKG_DIR}/${command}
