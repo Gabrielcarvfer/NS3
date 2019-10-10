@@ -1,7 +1,15 @@
 include(buildsupport/vcpkg_hunter.cmake)
 
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
-
+if(WIN32)
+    add_definitions(-D__WIN32__)
+else()
+    if(APPLE)
+        add_definitions(-D__APPLE__)
+    else()
+        add_definitions(-D__LINUX__)
+    endif()
+endif()
 
 if (WIN32 AND NOT MSVC)
     #If using MSYS2
@@ -41,7 +49,12 @@ if (CCACHE_FOUND)
     set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif()
 
-include(buildsupport/cotire_force_pch.cmake)
+#include(buildsupport/cotire_force_pch.cmake)
+
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    link_libraries(OpenMP::OpenMP_CXX)
+endif()
 
 include(ProcessorCount)
 ProcessorCount(NumThreads)

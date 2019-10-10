@@ -380,7 +380,7 @@ LteEnbMac::GetTypeId (void)
                   MakeUintegerChecker<uint8_t> (1,16))//Increment range if you create new fusion algorithms
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
-                  BooleanValue(false),
+                  BooleanValue(true),
                   MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlScheduling",

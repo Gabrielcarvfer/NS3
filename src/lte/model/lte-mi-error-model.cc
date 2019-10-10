@@ -248,13 +248,22 @@ void LteMiErrorModel::LoadErrorData()
 
 }
 
+double min_map_qpsk_axis, min_map_16qam_axis, min_map_64qam_axis, max_qpsk_axis, max_16qam_axis, max_64qam_axis;
 double
 LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs)
 {
   NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
 
   if (!errorDataLoaded)
+  {
       LoadErrorData();
+      min_map_qpsk_axis  = MI_map_qpsk_axis[0];
+      min_map_16qam_axis = MI_map_16qam_axis[0];
+      min_map_64qam_axis = MI_map_64qam_axis[0];
+      max_qpsk_axis  = MI_map_qpsk_axis[MI_map_qpsk.size()-1];
+      max_16qam_axis = MI_map_16qam_axis[MI_map_16qam.size()-1];
+      max_64qam_axis = MI_map_64qam_axis[MI_map_64qam.size()-1];
+  }
 
   double MI;
   double MIsum = 0.0;
@@ -265,25 +274,25 @@ LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, ui
     double sinrLin = *(begin+map.at(i));
     MI = 1;
 
-    if (mcs <= MI_QPSK_MAX_ID   && sinrLin <= MI_map_qpsk_axis[MI_map_qpsk.size()-1]) // QPSK
+    if (mcs <= MI_QPSK_MAX_ID && sinrLin <= max_qpsk_axis) // QPSK
     {
-      double sinrIndexDouble = (sinrLin -  MI_map_qpsk_axis[0]) * scalingCoeffQpsk + 1;
+      double sinrIndexDouble = (sinrLin -  min_map_qpsk_axis) * scalingCoeffQpsk + 1;
       uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
       NS_ASSERT_MSG (sinrIndex < MI_map_qpsk.size(), "MI map out of data");
       MI = MI_map_qpsk[sinrIndex];
     }
 
-    if (mcs > MI_QPSK_MAX_ID && mcs <= MI_16QAM_MAX_ID  && sinrLin <= MI_map_16qam_axis[MI_map_16qam.size()-1]) // 16-QAM
+    if (mcs > MI_QPSK_MAX_ID && mcs <= MI_16QAM_MAX_ID  && sinrLin <= max_16qam_axis) // 16-QAM
     {
-      double sinrIndexDouble = (sinrLin -  MI_map_16qam_axis[0]) * scalingCoeff16qam + 1;
+      double sinrIndexDouble = (sinrLin -  min_map_16qam_axis) * scalingCoeff16qam + 1;
       uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
       NS_ASSERT_MSG (sinrIndex < MI_map_16qam.size(), "MI map out of data");
       MI = MI_map_16qam[sinrIndex];
     }
 
-    if (mcs > MI_16QAM_MAX_ID  && sinrLin <= MI_map_64qam_axis[MI_map_64qam.size()-1]) // 64-QAM
+    if (mcs > MI_16QAM_MAX_ID && sinrLin <= max_64qam_axis) // 64-QAM
     {
-      double sinrIndexDouble = (sinrLin -  MI_map_64qam_axis[0]) * scalingCoeff64qam + 1;
+      double sinrIndexDouble = (sinrLin -  min_map_64qam_axis) * scalingCoeff64qam + 1;
       uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
       NS_ASSERT_MSG (sinrIndex < MI_map_64qam.size(), "MI map out of data");
       MI = MI_map_64qam[sinrIndex];
@@ -321,16 +330,17 @@ LteMiErrorModel::MappingMiBler (double mib, uint8_t ecrId, uint16_t cbSize)
   //quatization errors
   //todo: check errors
   int i = cbIndex;
-  bool bval = b < 0.0;
-  bool cval = c < 0.0;
+  bool bval, cval;
   while (i<9)
   {
-    if(!(bval|cval))
-      break;
-    b = bval ? bEcrTable[i][ecrId] : b;
-    c = cval ? cEcrTable[i][ecrId] : c;
     bval = b < 0.0;
     cval = c < 0.0;
+    if(!(bval|cval))
+        break;
+    if(bval)
+        b = bEcrTable[i][ecrId];
+    if(cval)
+        c = cEcrTable[i][ecrId];
     i++;
   }
 
@@ -598,17 +608,15 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
       NS_LOG_DEBUG ("HARQ ECR " << (uint16_t)ecrId);
     }
 
-  if (C!=1)
+    errorRate = MappingMiBler (MI, ecrId, Kplus);
+
+    if (C!=1)
     {
-      double cbler = MappingMiBler (MI, ecrId, Kplus);
-      errorRate *= pow (1.0 - cbler, Cplus);
+      double cbler = errorRate;//MappingMiBler (MI, ecrId, Kplus);
+      errorRate = pow (1.0 - cbler, Cplus);
       cbler = MappingMiBler (MI, ecrId, Kminus);
       errorRate *= pow (1.0 - cbler, Cminus);
       errorRate = 1.0 - errorRate;
-    }
-  else
-    {
-      errorRate = MappingMiBler (MI, ecrId, Kplus);
     }
 
   NS_LOG_LOGIC (" Error rate " << errorRate);

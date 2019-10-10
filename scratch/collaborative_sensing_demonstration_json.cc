@@ -34,8 +34,59 @@ using namespace ns3;
 #include <map>
 #include <ns3/contrib-haraldott-module.h>
 
+
+#ifdef __WIN32__
+#include <Windows.h>
+int sched_affinity(uint32_t cpu_set)
+{
+    HANDLE process = GetCurrentProcess();
+    DWORD_PTR processAffinityMask = cpu_set;
+
+    BOOL success = SetProcessAffinityMask(process, processAffinityMask);
+    return success? 0:-1;
+}
+#endif
+
+#ifndef __WIN32__
+#include <sched.h>
+#include <unistd.h>
+#endif
+
+#ifdef __APPLE__
+int sched_affinity(uint32_t cpu_set)
+{
+    thread_port_t mach_thread;
+    int core = 0;
+
+    for (core = 0; core < 8; core++)
+    {
+        if (CPU_ISSET(core, &cpu_set))
+            break;
+    }
+
+    thread_affinity_policy_data_t policy = { core };
+    mach_thread = pthread_mach_thread_np(getpid());
+    thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY,(thread_policy_t)&policy, 1);
+    return 0;
+}
+#endif
+
+#ifdef __LINUX__
+int sched_affinity(uint32_t cpu_set)
+{
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    for(int i = 0; i< sizeof(cpu_set_t)*8; i++)
+    {
+        CPU_SET((cpu_set >>i)&0x01, &cpuset);
+    }
+    return sched_setaffinity(getpid(), sizeof(cpu_set_t), &cpuset);
+}
+#endif
+
 //Simple network setup
 int main() {
+    sched_affinity((uint32_t) 0x05);
     std::ios::sync_with_stdio(false);
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(1);
@@ -55,9 +106,8 @@ int main() {
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
 
     Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
-    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));
-    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));
-
+    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
+    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
 
 
     picojson::object inputJson = load_json("simulationParameters.json");

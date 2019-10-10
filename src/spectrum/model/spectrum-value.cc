@@ -22,6 +22,7 @@
 #include <ns3/spectrum-value.h>
 #include <ns3/math.h>
 #include <ns3/log.h>
+#include <algorithm>
 
 namespace ns3 {
 
@@ -106,30 +107,32 @@ SpectrumValue::ConstBandsEnd () const
 void
 SpectrumValue::Add (const SpectrumValue& x)
 {
-  Values::iterator it1 = m_values.begin ();
-  Values::const_iterator it2 = x.m_values.begin ();
-
   NS_ASSERT (m_spectrumModel == x.m_spectrumModel);
 
-  while (it1 != m_values.end ())
-    {
-      NS_ASSERT ( it2 != x.m_values.end ());
-      *it1 += *it2;
-      ++it1;
-      ++it2;
-    }
+  double * it1 = m_values.data();
+  const double * it2 = x.m_values.data();
+  int sizeIt1 = m_values.size();
+  int sizeIt2 = m_values.size();
+  //#pragma omp target data map(tofrom:it1[0:sizeIt1],it2[0:sizeIt1])
+  #pragma omp for simd
+  for (int i = 0; i < sizeIt1; i++)
+  {
+      NS_ASSERT (i < sizeIt2);
+      it1[i] += it2[i];
+  }
 }
 
 
 void
 SpectrumValue::Add (double s)
 {
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 += s;
-      ++it1;
+        it1[i] += s;
     }
 }
 
@@ -138,17 +141,18 @@ SpectrumValue::Add (double s)
 void
 SpectrumValue::Subtract (const SpectrumValue& x)
 {
-  Values::iterator it1 = m_values.begin ();
-  Values::const_iterator it2 = x.m_values.begin ();
-
   NS_ASSERT (m_spectrumModel == x.m_spectrumModel);
 
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    const double * it2 = x.m_values.data();
+    int sizeIt1 = m_values.size();
+    int sizeIt2 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1],it2[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      NS_ASSERT ( it2 != x.m_values.end ());
-      *it1 -= *it2;
-      ++it1;
-      ++it2;
+        NS_ASSERT (i < sizeIt2);
+        it1[i] -= it2[i];
     }
 }
 
@@ -164,17 +168,19 @@ SpectrumValue::Subtract (double s)
 void
 SpectrumValue::Multiply (const SpectrumValue& x)
 {
-  Values::iterator it1 = m_values.begin ();
-  Values::const_iterator it2 = x.m_values.begin ();
 
   NS_ASSERT (m_spectrumModel == x.m_spectrumModel);
 
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    const double * it2 = x.m_values.data();
+    int sizeIt1 = m_values.size();
+    int sizeIt2 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1],it2[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      NS_ASSERT ( it2 != x.m_values.end ());
-      *it1 *= *it2;
-      ++it1;
-      ++it2;
+        NS_ASSERT (i < sizeIt2);
+        it1[i] *= it2[i];
     }
 }
 
@@ -182,12 +188,14 @@ SpectrumValue::Multiply (const SpectrumValue& x)
 void
 SpectrumValue::Multiply (double s)
 {
-  Values::iterator it1 = m_values.begin ();
 
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 *= s;
-      ++it1;
+        it1[i] *= s;
     }
 }
 
@@ -197,18 +205,19 @@ SpectrumValue::Multiply (double s)
 void
 SpectrumValue::Divide (const SpectrumValue& x)
 {
-  Values::iterator it1 = m_values.begin ();
-  Values::const_iterator it2 = x.m_values.begin ();
-
   NS_ASSERT (m_spectrumModel == x.m_spectrumModel);
 
-  while (it1 != m_values.end ())
-    {
-      NS_ASSERT ( it2 != x.m_values.end ());
-      *it1 /= *it2;
-      ++it1;
-      ++it2;
-    }
+  double * it1 = m_values.data();
+  const double * it2 = x.m_values.data();
+  int sizeIt1 = m_values.size();
+  int sizeIt2 = m_values.size();
+  //#pragma omp target data map(tofrom:it1[0:sizeIt1],it2[0:sizeIt1])
+  #pragma omp for simd
+  for (int i = 0; i < sizeIt1; i++)
+  {
+      NS_ASSERT (i < sizeIt2);
+      it1[i] /= it2[i];
+  }
 }
 
 
@@ -216,12 +225,14 @@ void
 SpectrumValue::Divide (double s)
 {
   NS_LOG_FUNCTION (this << s);
-  Values::iterator it1 = m_values.begin ();
 
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 /= s;
-      ++it1;
+        it1[i] /= s;
     }
 }
 
@@ -231,12 +242,13 @@ SpectrumValue::Divide (double s)
 void
 SpectrumValue::ChangeSign ()
 {
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = -(*it1);
-      ++it1;
+        it1[i] = -it1[i];
     }
 }
 
@@ -244,34 +256,18 @@ SpectrumValue::ChangeSign ()
 void
 SpectrumValue::ShiftLeft (int n)
 {
-  int i = 0;
-  while (i < (int) m_values.size () - n)
-    {
-      m_values.at (i) = m_values.at (i + n);
-      i++;
-    }
-  while (i < (int)m_values.size ())
-    {
-      m_values.at (i) = 0;
-      i++;
-    }
+  for (int i = 0; i < n; i++)
+      m_values.at(i) = 0;
+  std::rotate(m_values.begin(), m_values.begin()+n, m_values.end());
 }
 
 
 void
 SpectrumValue::ShiftRight (int n)
 {
-  int i = m_values.size () - 1;
-  while (i - n >= 0)
-    {
-      m_values.at (i) = m_values.at (i - n);
-      i = i - 1;
-    }
-  while (i >= 0)
-    {
-      m_values.at (i) = 0;
-      --i;
-    }
+    std::rotate(m_values.begin(), m_values.begin()+m_values.size()-n, m_values.end());
+    for (int i = 0; i < n; i++)
+        m_values.at(i) = 0;
 }
 
 
@@ -280,12 +276,14 @@ void
 SpectrumValue::Pow (double exp)
 {
   NS_LOG_FUNCTION (this << exp);
-  Values::iterator it1 = m_values.begin ();
 
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = std::pow (*it1, exp);
-      ++it1;
+        it1[i] = std::pow(it1[i], exp);
     }
 }
 
@@ -294,12 +292,13 @@ void
 SpectrumValue::Exp (double base)
 {
   NS_LOG_FUNCTION (this << base);
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = std::pow (base, *it1);
-      ++it1;
+        it1[i] = std::pow(base, it1[i]);
     }
 }
 
@@ -308,12 +307,13 @@ void
 SpectrumValue::Log10 ()
 {
   NS_LOG_FUNCTION (this);
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = std::log10 (*it1);
-      ++it1;
+        it1[i] = std::log10(it1[i]);
     }
 }
 
@@ -321,12 +321,13 @@ void
 SpectrumValue::Log2 ()
 {
   NS_LOG_FUNCTION (this);
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = log2 (*it1);
-      ++it1;
+        it1[i] = std::log2(it1[i]);
     }
 }
 
@@ -335,12 +336,13 @@ void
 SpectrumValue::Log ()
 {
   NS_LOG_FUNCTION (this);
-  Values::iterator it1 = m_values.begin ();
-
-  while (it1 != m_values.end ())
+    double * it1 = m_values.data();
+    int sizeIt1 = m_values.size();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1])
+    #pragma omp for simd
+    for (int i = 0; i < sizeIt1; i++)
     {
-      *it1 = std::log (*it1);
-      ++it1;
+        it1[i] = std::log(it1[i]);
     }
 }
 
@@ -348,12 +350,15 @@ double
 Norm (const SpectrumValue& x)
 {
   double s = 0;
-  Values::const_iterator it1 = x.ConstValuesBegin ();
-  while (it1 != x.ConstValuesEnd ())
-    {
-      s += (*it1) * (*it1);
-      ++it1;
-    }
+
+  double *it1 = (double *) &x.ConstValuesBegin()[0];
+  int sizeIt1 = x.ConstValuesEnd() - x.ConstValuesBegin();
+  //#pragma omp target data map(tofrom:it1[0:sizeIt1], s)
+  #pragma omp simd reduction(+:s)
+  for (int i = 0; i < sizeIt1; i++)
+  {
+      s += it1[i] * it1[i];
+  }
   return std::sqrt (s);
 }
 
@@ -362,12 +367,15 @@ double
 Sum (const SpectrumValue& x)
 {
   double s = 0;
-  Values::const_iterator it1 = x.ConstValuesBegin ();
-  while (it1 != x.ConstValuesEnd ())
-    {
-      s += (*it1);
-      ++it1;
-    }
+  const double * it1 = (const double *)&x.ConstValuesBegin()[0];
+  int sizeIt1 = x.ConstValuesEnd()-x.ConstValuesBegin();
+  //#pragma omp target data map(tofrom:it1[0:sizeIt1], s)
+  #pragma omp simd reduction(+:s)
+  for (int i = 0; i < sizeIt1; i++)
+  {
+      s += it1[i];
+  }
+
   return s;
 }
 
@@ -377,13 +385,16 @@ double
 Prod (const SpectrumValue& x)
 {
   double s = 0;
-  Values::const_iterator it1 = x.ConstValuesBegin ();
-  while (it1 != x.ConstValuesEnd ())
+    const double * it1 = (const double *)&x.ConstValuesBegin()[0];
+    int sizeIt1 = x.ConstValuesEnd()-x.ConstValuesBegin();
+    //#pragma omp target data map(tofrom:it1[0:sizeIt1], s)
+    #pragma omp simd reduction(*:s)
+    for (int i = 0; i < sizeIt1; i++)
     {
-      s *= (*it1);
-      ++it1;
+        s *= it1[i];
     }
-  return s;
+
+    return s;
 }
 
 double

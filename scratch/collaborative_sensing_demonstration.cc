@@ -42,6 +42,7 @@ int main() {
     NodeContainer allNodes;
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper>();
 
+    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
     //0.1 Configure channel bandwidth
     Config::SetDefault("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue(100));
     Config::SetDefault("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue(100));
@@ -55,7 +56,7 @@ int main() {
     Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
     //0.4 Configure fusion algorithm for the collaborative sensing
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_MULTIFRAME_3_OF_N));//MRG_1_OF_N)); // MRG_1_OF_N = OR
+    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(LteEnbMac::MRG_NN));
 
     //60dBm = 1    kW
     //53dBm = 200  kW // Taken from
@@ -80,7 +81,7 @@ int main() {
     //0.8 Select the propagation loss model
     Config::SetDefault("ns3::FriisPropagationLossModel::Frequency", DoubleValue(869e6));
     lteHelper->SetAttribute("PathlossModel", StringValue("ns3::FriisPropagationLossModel"));
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
 
 
     //1 Configure EPC e PGW
@@ -98,7 +99,7 @@ int main() {
     NodeContainer ueNodes;
     NodeContainer enbNodes;
     enbNodes.Create(1);
-    ueNodes.Create(10);
+    ueNodes.Create(100);
     allNodes.Add(enbNodes);
 
     //4 Aloca posições dos dispositivos
@@ -111,17 +112,19 @@ int main() {
 
     //positionAlloc2->Add(Vector( 66000.0, 94000.0, 0.0)); //  1 - UE 0
     //positionAlloc2->Add(Vector(100000.0, 50000.0, 0.0)); //  2 - UE 1
-    positionAlloc2->Add(Vector (50000.0 - 18000.0, 50000.0 -     00.0,  0.0));  // 3 - UE 0
-    positionAlloc2->Add(Vector (50000.0 - 12280.0, 50000.0 -   6600.0,  0.0));  // 4 - UE 1
-    positionAlloc2->Add(Vector (50000.0 -  9440.0, 50000.0 -   9660.0,  0.0));  // 5 - UE 2
-    positionAlloc2->Add(Vector (50000.0 -  9710.0, 50000.0 -  -5050.0,  0.0));  // 6 - UE 3
-    positionAlloc2->Add(Vector (50000.0 -  4360.0, 50000.0 -  -5870.0,  0.0));  // 7 - UE 4
-    positionAlloc2->Add(Vector (50000.0 -  4660.0, 50000.0 -   1770.0,  0.0));  // 8 - UE 5
-    positionAlloc2->Add(Vector (50000.0 -  3000.0, 50000.0 -     00.0,  0.0));  // 9 - UE 6
-    positionAlloc2->Add(Vector (50000.0 +  3000.0, 50000.0 -     00.0,  0.0));  //10 - UE 7
-    positionAlloc2->Add(Vector (50000.0 +  5140.0, 50000.0 +   1090.0,  0.0));  //11 - UE 8
-    positionAlloc2->Add(Vector (50000.0 +  5440.0, 50000.0 +   7690.0,  0.0));  //12 - UE 9
-
+    for(int i = 0; i<ueNodes.GetN()/10; i++)
+    {
+        positionAlloc2->Add(Vector (50000.0 - 18000.0, 50000.0 -     00.0,  0.0));  // 3 - UE 0
+        positionAlloc2->Add(Vector (50000.0 - 12280.0, 50000.0 -   6600.0,  0.0));  // 4 - UE 1
+        positionAlloc2->Add(Vector (50000.0 -  9440.0, 50000.0 -   9660.0,  0.0));  // 5 - UE 2
+        positionAlloc2->Add(Vector (50000.0 -  9710.0, 50000.0 -  -5050.0,  0.0));  // 6 - UE 3
+        positionAlloc2->Add(Vector (50000.0 -  4360.0, 50000.0 -  -5870.0,  0.0));  // 7 - UE 4
+        positionAlloc2->Add(Vector (50000.0 -  4660.0, 50000.0 -   1770.0,  0.0));  // 8 - UE 5
+        positionAlloc2->Add(Vector (50000.0 -  3000.0, 50000.0 -     00.0,  0.0));  // 9 - UE 6
+        positionAlloc2->Add(Vector (50000.0 +  3000.0, 50000.0 -     00.0,  0.0));  //10 - UE 7
+        positionAlloc2->Add(Vector (50000.0 +  5140.0, 50000.0 +   1090.0,  0.0));  //11 - UE 8
+        positionAlloc2->Add(Vector (50000.0 +  5440.0, 50000.0 +   7690.0,  0.0));  //12 - UE 9
+    }
 
 
     //5 Install mobility model to the nodes

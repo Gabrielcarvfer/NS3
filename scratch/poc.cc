@@ -65,7 +65,7 @@ int main()
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
 
     lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
 
 
     Ptr<PointToPointEpcHelper>  epcHelper = CreateObject<PointToPointEpcHelper> ();

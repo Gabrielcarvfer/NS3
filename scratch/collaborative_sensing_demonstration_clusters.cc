@@ -80,7 +80,7 @@ int main() {
     //0.8 Select the propagation loss model
     Config::SetDefault("ns3::FriisPropagationLossModel::Frequency", DoubleValue(8.69e8));
     lteHelper->SetAttribute("PathlossModel", StringValue("ns3::FriisPropagationLossModel"));
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
 
 
     //1 Configure EPC e PGW

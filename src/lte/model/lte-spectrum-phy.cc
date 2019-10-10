@@ -322,7 +322,7 @@ LteSpectrumPhy::GetTypeId (void)
                     MakeBooleanChecker ())
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
-                  BooleanValue(false),
+                  BooleanValue(true),
                   MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlPhyReception",
@@ -773,33 +773,36 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
 
-      Time detectionDelay = Time(MilliSeconds(1));
-
-      std::stringstream ss;
-      int k = 1;
-      int channel = -1;
-
-      //Third attempt to find which subchannel the PU is transmitting
-      int firstIndex = -1;
-      double max = 0.0;
-      for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
+      if(spectrumSensing)
       {
-          //ss << *valIt << " ";
-          if (*valIt != 0.0 && *valIt > max)
+          Time detectionDelay = Time(MilliSeconds(1));
+
+          std::stringstream ss;
+          int k = 1;
+          int channel = -1;
+
+          //Third attempt to find which subchannel the PU is transmitting
+          int firstIndex = -1;
+          double max = 0.0;
+          for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
           {
-              max = *valIt;
-              firstIndex = k;
+              //ss << *valIt << " ";
+              if (*valIt != 0.0 && *valIt > max)
+              {
+                  max = *valIt;
+                  firstIndex = k;
+              }
           }
+
+          channel = (firstIndex + 1) / ((k - 1) / 4);
+
+          //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
+
+          //Schedule event to store PU presence
+          Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
+          Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance,
+                              channel); //Set PU_presence to false after transmission finishes
       }
-
-      channel = (firstIndex+1) / ((k-1)/4);
-
-      //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
-
-      //Schedule event to store PU presence
-      Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
-      Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance, channel); //Set PU_presence to false after transmission finishes
-
     }    
 }
 

@@ -101,7 +101,7 @@ int main()
 
     lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
     //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel")); // Spectrum
-    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGEPropagationLossModel"));
+    //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
 
 
     //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
