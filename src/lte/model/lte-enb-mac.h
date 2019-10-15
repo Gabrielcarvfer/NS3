@@ -524,6 +524,9 @@ public://todo: implement this properly through the SAP
     static int nn_width;
     static int nn_num_slices;
     std::vector<std::vector<float>> nn_encodedDataSlice;
+private:
+    std::ofstream falseNegativeFile;
+public:
 #endif
     std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
     std::map<uint16_t, uint16_t> ue_to_position_map;

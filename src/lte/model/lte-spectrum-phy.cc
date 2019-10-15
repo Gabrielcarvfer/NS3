@@ -156,6 +156,9 @@ LteSpectrumPhy::LteSpectrumPhy ()
   sensingBudget = 0;
   PU_presence_V = std::vector<bool>(4);
   waitingForSensingReportTransmission = false;
+  for (int i =0; i < 4; i++)
+    monteCarloState_flip_monteCarloProbability.push_back({false, false, 0});
+
 }
 
 bool LteSpectrumPhy::PUProbLoaded = false;
@@ -1234,7 +1237,6 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //   return ;
 
     std::stringstream ss;
-    int k = 0;
 
     int numPus = 0;
     for (auto & channel : PUsDistance)
@@ -1251,6 +1253,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     //std::cout << Simulator::Now().GetSeconds() << " #PUs " << numPus << std::endl;
 
     //Calculate the probability of PU detection on given RBs
+    int k = 0;
     for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
         //Skip if the RB is supposed to be occupied by an UE transmission
         //if (occupied_RB_indexes.at(i))
@@ -1276,6 +1279,45 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
         bool answer = checkPUPresence(prob, PU_presence_V[k]);
 
+        //MonteCarlo probability
+        //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
+        if(std::get<1>(monteCarloState_flip_monteCarloProbability[k]))
+        {
+            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+            if (answer != monteCarloState)
+            {
+                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                p += (1 - p) / 2;
+
+                //if p > 90%, flip montecarlo state, unflip flag and reset certainty
+                if (p > 0.9)
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
+                else
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
+            }
+            else
+            {
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, 0);
+            }
+
+        }
+        //if unflipped, accumulate probability if answer == montecarlo state, else flip
+        else
+        {
+            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+            if (answer == monteCarloState)
+            {
+                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                p += (1 - p) / 2;
+
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, p);
+            }
+            else
+            {
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
+            }
+        }
+        answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
         //if (k == 1 || k == 3)
         //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;

@@ -42,6 +42,7 @@
 #include <ns3/lte-harq-phy.h>
 #include <ns3/lte-common.h>
 #include <mutex>
+#include <tuple>
 #include <random>
 
 
@@ -583,7 +584,7 @@ public:
     std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
     std::vector<bool> PU_presence_V;
     static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
-
+    std::vector<std::tuple<bool,bool,double>> monteCarloState_flip_monteCarloProbability;
 
 };
 

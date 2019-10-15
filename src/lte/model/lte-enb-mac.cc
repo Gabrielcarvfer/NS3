@@ -426,6 +426,8 @@ m_ccmMacSapUser (0)
       //Initialize slice
       for (int i = 0; i < nn_num_slices; i++)
           nn_encodedDataSlice.push_back(std::vector<float>(nn_width));
+
+      falseNegativeFile.open("falseNegativeInputs.txt");
 #endif
       //Prepare kalman filter for fusion
       int n = 4; // Number of states
@@ -480,6 +482,7 @@ LteEnbMac::~LteEnbMac ()
 
   if (spectrumSensing)
   {
+      falseNegativeFile.close();
       std::ofstream sensing_list_file;
       sensing_list_file.open("sensing_list.txt");
 
@@ -1642,6 +1645,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
         int k = 0;
         int randomSample = true;
+        std::stringstream ss;
         switch(alg)
         {
 
@@ -1768,7 +1772,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         if(ue_to_cqi_map.find(cqiEntry.m_rnti) == ue_to_cqi_map.end())
                         {
                             ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
-                            ue_to_position_map.insert({ue_to_position_map.size()+1, cqiEntry.m_rnti});
+                            ue_to_position_map.insert({ue_to_position_map.size(), cqiEntry.m_rnti});
                         }
                         else
                             ue_to_cqi_map.at(cqiEntry.m_rnti) = cqisList;
@@ -1807,9 +1811,12 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     std::vector<float> encodedData;
                     std::vector<bool> pu_pres(4);
                     //for (auto &ue : subframeIt->second)
-                    for (auto &ue_position: ue_to_position_map)
+                    //std::stringstream ss;
+                    for (auto &ue_position_to_rnti: ue_to_position_map)
                     {
-                        auto ueRnti = ue_position.second;
+                        auto uePosition = ue_position_to_rnti.first;
+                        auto ueRnti = ue_position_to_rnti.second;
+                        //ss << "(" << uePosition << "," << ueRnti << "), ";
 
                         //If the UE hasn't sent a CQI info, fill its entries
                         //if(subframeIt->second.find(ueRnti) == subframeIt->second.end())
@@ -1837,22 +1844,22 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //    std::cout << " bang " << Simulator::Now().GetSeconds() << std::endl;
                         }
                     }
-
+                    //std::cout << "len: " << encodedData.size() << "; " << ss.str() << std::endl;
                     //Insert padding
                     int padding_length = nn_width - (int) encodedData.size();
                     for (int i = 0; i < padding_length; i++)
                         encodedData.push_back(0.0);
-
+                    std::stringstream ss1;
                     //std::stringstream ss;
-                    //for (auto num : encodedData)
-                    //    ss << num << " ";
-                    //ss << pu_pres << "\n";
-                    //std::cout << ss.str();
-
+                    for (auto num : encodedData)
+                        ss1 << num << " ";
+                    ss1 << pu_pres;
+                    std::cout << Simulator::Now() << " : " << ss1.str() << std::endl;
+                    ss << ss1.str();
                     //Remove older entry and insert the newer one
                     //nn_encodedDataSlice.clear();
-                    //nn_encodedDataSlice.erase(nn_encodedDataSlice.begin());
-                    //nn_encodedDataSlice.push_back(encodedData);
+                    nn_encodedDataSlice.erase(nn_encodedDataSlice.begin());
+                    nn_encodedDataSlice.push_back(encodedData);
                     //std::stringstream ss;
                     //std::vector<float> encodedTensor;
                     //for (auto slice: nn_encodedDataSlice)
@@ -1867,7 +1874,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                     //Rebuild entry tensor
                     torch::Tensor k;
-                    k = torch::from_blob(encodedData.data(),{1, 1, nn_width});
+                    k = torch::from_blob(nn_encodedDataSlice.data(),{1, 10, nn_width});
                     k = k.toType(torch::kFloat);
                     //std::cout << "sizes " << k.sizes() << std::endl;
 
@@ -1887,8 +1894,8 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     float notdetected, detected;
                     for (int i = 0; i<8-1; i+=2)
                     {
-                        notdetected = output[0][0][i].item<float>();
-                        detected = output[0][0][i + 1].item<float>();
+                        notdetected = output[0][9][i].item<float>();
+                        detected = output[0][9][i + 1].item<float>();
                         if (isnan(notdetected) || isnan(detected))
                             vec.push_back(false);
                         else
@@ -2108,6 +2115,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
         }
 
 
+        int falseNegativeCount = 0;
         //Check for false positives and false negatives
         for (auto &ueReg : subframeIt->second)
         {
@@ -2119,13 +2127,27 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                 if(fusedResults[i][0] != ueReg.second.PU_presence_V[i])
                 {
                     if(fusedResults[i][0])
+                    {
+                        //False positive
                         fusedResults[i][1] = true;
+                    }
                     else
+                    {
+                        //False negative
                         fusedResults[i][2] = true;
+                        falseNegativeCount++;
+                    }
                 }
                 i++;
             }
         }
+
+        //Dump nn input that failed to produce the correct output
+        if (falseNegativeCount != 0)
+        {
+            falseNegativeFile << Simulator::Now() << " : " << ss.str() << std::endl;
+        }
+        ss.clear();
 
         break;//out of if
     }
