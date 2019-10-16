@@ -57,7 +57,7 @@ option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
 
 option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
-#set(NS3_PYTORCH ON)
+set(NS3_PYTORCH ON)
 
 option(NS3_GSL "Build with GSL support" OFF)
 set(NS3_GSL ON)

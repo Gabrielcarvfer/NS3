@@ -476,26 +476,25 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
   uint16_t Z = 6144; // max size of a codeblock (including CRC)
   uint32_t B = size * 8;
 //   B = 1234;
-  uint32_t C = 0; // no. of codeblocks
-  uint32_t Cplus = 0; // no. of codeblocks with size K+
+  uint32_t C = 1; // no. of codeblocks
+  uint32_t Cplus = 1; // no. of codeblocks with size K+ // defaults to 1 to prevent later if and else
   uint32_t Kplus = 0; // no. of codeblocks with size K+
   uint32_t Cminus = 0; // no. of codeblocks with size K+
   uint32_t Kminus = 0; // no. of codeblocks with size K+
   uint32_t B1 = 0;
   uint32_t deltaK = 0;
-  if (B <= Z)
-    {
-      // only one codeblock
-      //L = 0;
-      C = 1;
-      B1 = B;
-    }
-  else
-    {
-      uint32_t L = 24;
-      C = ceil ((double)B / ((double)(Z-L)));
-      B1 = B + C * L;
-    }
+
+  // only one codeblock is assumed, only do if otherwise
+  //L = 0;
+  B1 = B;
+  if (B > Z)
+  {
+    uint32_t L = 24;
+    C = ceil ((double)B / ((double)(Z-L)));
+    B1 = B + C * L;
+  }
+
+
   // first segmentation: K+ = minimum K in table such that C * K >= B1
 //   uint i = 0;
 //   while (B1 > cbSizeTable[i] * C)
@@ -506,38 +505,21 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
 //   uint16_t KplusId = i;
 //   Kplus = cbSizeTable[i];
 
-  // implement a modified binary search
+  // implement a binary search
   int min = 0;
   int max = 187;
   int mid = 0;
+  uint32_t B1dividedByC = B1/C;
   do
     {
-      mid = (min+max) / 2;
-      if (B1 > cbSizeTable[mid]*C)
-        {
-          if (B1 < cbSizeTable[mid+1]*C)
-            {
-              break;
-            }
-          else
-            {
-              min = mid + 1;
-            }
-        }
+      mid = (min+max+1) >> 1;
+      if(B1dividedByC > cbSizeTable[mid])
+          min = mid+1;
       else
-        {
-          if (B1 > cbSizeTable[mid-1]*C)
-            {
-              break;
-            }
-          else
-            {
-              max = mid - 1;
-            }
-        }
-  } while ((cbSizeTable[mid]*C != B1) && (min < max));
+          max = mid-1;
+    } while ((cbSizeTable[mid] != B1dividedByC) && (min < max));
   // adjust binary search to the largest integer value of K containing B1
-  if (B1 > cbSizeTable[mid]*C)
+  if (B1dividedByC > cbSizeTable[mid])
     {
       mid ++;
     }
@@ -546,21 +528,16 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
   Kplus = cbSizeTable[mid];
 
 
-  if (C==1)
-    {
-      Cplus = 1;
-      Cminus = 0;
-      Kminus = 0;
-    }
-  else
-    {
-      // second segmentation size: K- = maximum K in table such that K < K+
-      // -fstrict-overflow sensitive, see bug 1868
-      Kminus = cbSizeTable[ KplusId > 1 ? KplusId - 1 : 0];
-      deltaK = Kplus - Kminus;
-      Cminus = floor ((((double) C * Kplus) - (double)B1) / (double)deltaK);
-      Cplus = C - Cminus;
-    }
+  if(C!=1)
+  {
+    // second segmentation size: K- = maximum K in table such that K < K+
+    // -fstrict-overflow sensitive, see bug 1868
+    Cplus = 0;
+    Kminus = cbSizeTable[ KplusId > 1 ? KplusId - 1 : 0];
+    deltaK = Kplus - Kminus;
+    Cminus = floor ((((double) C * Kplus) - (double)B1) / (double)deltaK);
+    Cplus = C - Cminus;
+  }
   NS_LOG_INFO ("--------------------LteMiErrorModel: TB size of " << B << " needs of " << B1 << " bits reparted in " << C << " CBs as "<< Cplus << " block(s) of " << Kplus << " and " << Cminus << " of " << Kminus);
 
   double errorRate = 1.0;
@@ -575,36 +552,30 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
     {
       NS_LOG_DEBUG ("HARQ block no. " << miHistory.size ());
       // harq retx -> get closest ECR to Reff from available ones
+      uint8_t high;
+      uint8_t low;
+      // Modulation order 2
       if (mcs <= MI_QPSK_MAX_ID)
-        {
-          // Modulation order 2
-          uint8_t i = MI_QPSK_MAX_ID;
-          while ((BlerCurvesEcrMap[i]>Reff)&&(i>0))
-            {
-              i--;
-            }
-          ecrId = i;
-        }
-      else if (mcs <= MI_16QAM_MAX_ID)
-        {
-          // Modulation order 4
-          uint8_t i = MI_16QAM_MAX_ID;
-          while ((BlerCurvesEcrMap[i]>Reff)&&(i>MI_QPSK_MAX_ID + 1))
-            {
-              i--;
-            }
-          ecrId = i;
-        }
-      else
-        {
-          // Modulation order 6
-          uint8_t i = MI_64QAM_MAX_ID;
-          while ((BlerCurvesEcrMap[i]>Reff)&&(i>MI_16QAM_MAX_ID + 1))
-            {
-              i--;
-            }
-          ecrId = i;
-        }
+      {
+        high = MI_QPSK_MAX_ID;
+        low = 0;
+      }
+      // Modulation order 4
+      if (mcs > MI_QPSK_MAX_ID && mcs <= MI_16QAM_MAX_ID)
+      {
+        high = MI_16QAM_MAX_ID;
+        low  = MI_QPSK_MAX_ID+1;
+      }
+      // Modulation order 6
+      if (mcs > MI_16QAM_MAX_ID)
+      {
+          high = MI_64QAM_MAX_ID;
+          low = MI_16QAM_MAX_ID + 1;
+      }
+      uint8_t i;
+      for (i=high; i > low; i--)
+          if (BlerCurvesEcrMap[i] > Reff) break;
+      ecrId = i;
       NS_LOG_DEBUG ("HARQ ECR " << (uint16_t)ecrId);
     }
 
