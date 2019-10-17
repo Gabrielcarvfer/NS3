@@ -86,7 +86,7 @@ int sched_affinity(uint32_t cpu_set)
 
 //Simple network setup
 int main() {
-    sched_affinity((uint32_t) 0x05);
+    //sched_affinity((uint32_t) 0x05);
     std::ios::sync_with_stdio(false);
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(1);
@@ -378,7 +378,7 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    lteHelper->EnableTraces();
+    //lteHelper->EnableTraces();
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
@@ -444,32 +444,32 @@ int main() {
 
 
     //20 capture the spectrum transmissions with the spectrum analyzer
-    SpectrumAnalyzerHelper spectrumAnalyzerHelper;
-    spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
-    Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
-    Ptr<LteEnbPhy> enbPhy = enbNetDev->GetPhy();
-    Ptr<LteSpectrumPhy> enbSpectrPhy = enbPhy->GetUlSpectrumPhy();
-    Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
-    Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
-    spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelRANGE);
-    spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
+    //SpectrumAnalyzerHelper spectrumAnalyzerHelper;
+    //spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
+    //Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
+    //Ptr<LteEnbPhy> enbPhy = enbNetDev->GetPhy();
+    //Ptr<LteSpectrumPhy> enbSpectrPhy = enbPhy->GetUlSpectrumPhy();
+    //Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
+    //Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
+    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelRANGE);
+    //spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
 
     //From lte-spectrum-value-helper.cc
-    const double kT_dBm_Hz = -174.0;  // dBm/Hz
-    double kT_W_Hz = std::pow (10.0, (kT_dBm_Hz - 30) / 10.0);
-    double noiseFigureLinear = std::pow (10.0, enbPhy->GetNoiseFigure() / 10.0);
-    double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
+    //const double kT_dBm_Hz = -174.0;  // dBm/Hz
+    //double kT_W_Hz = std::pow (10.0, (kT_dBm_Hz - 30) / 10.0);
+    //double noiseFigureLinear = std::pow (10.0, enbPhy->GetNoiseFigure() / 10.0);
+    //double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
 
-    spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
-    spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
+    //spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
+    //spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
 
-    NetDeviceContainer spectrumDevice;
-    spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
+    //NetDeviceContainer spectrumDevice;
+    //spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
     //21 install the Flow monitor
-    Ptr<FlowMonitor> flowMonitor;
-    FlowMonitorHelper flowHelper;
-    flowMonitor = flowHelper.InstallAll();
+    //Ptr<FlowMonitor> flowMonitor;
+    //FlowMonitorHelper flowHelper;
+    //flowMonitor = flowHelper.InstallAll();
 
     //22 Export the netanim animation for the simulation
     /*
@@ -488,7 +488,7 @@ int main() {
     Simulator::Run();
 
     //24 Dump flowmonitor results
-    flowMonitor->SerializeToXmlFile("flow.xml", true, true);
+    //flowMonitor->SerializeToXmlFile("flow.xml", true, true);
 
     Simulator::Destroy();
 

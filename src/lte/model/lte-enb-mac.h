@@ -493,6 +493,7 @@ public://todo: implement this properly through the SAP
         MRG_3_OF_N_RAND       = 19,
         MRG_4_OF_N_RAND       = 20,
         MRG_MONTECARLOFUSION  = 21,//arxiv.org/pdf/1901.00139.pdf or https://www.groundai.com/project/monte-carlo-fusion/1
+        MRG_AVG               = 22,//also for monte carlo
     };
 
     typedef struct cognitive_reg

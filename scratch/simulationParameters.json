@@ -1,13 +1,13 @@
 {
     "SimulationParameters": {
-        "ts": 4,
+        "ts": 10,
         "fc": 869000000.0,
         "bw": 20000000.0,
-        "fusionAlgorithm": 15,
-        "fusionAlgorithmName": "MRG_NN",
+        "fusionAlgorithm": 6,
+        "fusionAlgorithmName": "MRG_OR",
         "propagationModel": "ns3::FriisPropagationLossModel",
-        "ueTxPeriodSec": 1,
-        "ueTxSizeBytes": 6000000,
+        "ueTxPeriodSec": 0.1,
+        "ueTxSizeBytes": 6000,
         "enableDSA": true,
         "SNRSensing": false
     },

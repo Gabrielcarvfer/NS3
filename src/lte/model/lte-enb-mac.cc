@@ -377,7 +377,7 @@ LteEnbMac::GetTypeId (void)
                   "Fusion algorithm for the collaborative sensing merge function",
                   UintegerValue(3),
                   MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
-                  MakeUintegerChecker<uint8_t> (1,16))//Increment range if you create new fusion algorithms
+                  MakeUintegerChecker<uint8_t> (1,50))//Increment range if you create new fusion algorithms
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
                   BooleanValue(true),
@@ -490,11 +490,11 @@ LteEnbMac::~LteEnbMac ()
       std::map<uint16_t, uint64_t> sensingUesAndEventsMap;
       for (auto&&[frame, subframeMap]: channelOccupation)
       {
-          sensing_list_file << "frame " << frame << " reported \n{";
+          //sensing_list_file << "frame " << frame << " reported \n{";
           for (auto&&[subframe, ueMap]: subframeMap)
           {
               std::vector<uint32_t> subframePresence = {0, 0, 0, 0};
-              sensing_list_file << "\n\tsubframe " << subframe << " reported \n\t[";
+              //sensing_list_file << "\n\tsubframe " << subframe << " reported \n\t[";
               for (auto&&[ue, cognitiveReg]: ueMap)
               {
                   //Prepare bitmap for sensed stuff
@@ -518,8 +518,8 @@ LteEnbMac::~LteEnbMac ()
                       sensedBitmap |= (sensedBitmapChannel << (bandwidth - k));
                   }
                   //Print sensedBitmap
-                  sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(sensedBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe "
-                                    << cognitiveReg.SensedSubframeNo;
+                  //sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(sensedBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe "
+                  //                  << cognitiveReg.SensedSubframeNo;
                   if (sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
                       sensingUesAndEventsMap.emplace(ue, 0);
                   sensingUesAndEventsMap.at(ue) += 1;
@@ -528,17 +528,17 @@ LteEnbMac::~LteEnbMac ()
                       subframePresence[subchannel] |= cognitiveReg.PU_presence_V[subchannel];
               }
 
-              sensing_list_file << "\n\t]";
+              //sensing_list_file << "\n\t]";
               for (int subchannel = 0; subchannel < 4; subchannel++)
                   if (subframePresence[subchannel] != 0)
                       puSubframePresence[subchannel] += 1;
           }
-          sensing_list_file << "\n}";
+          //sensing_list_file << "\n}";
       }
 
       for (auto &&[ue, events]: sensingUesAndEventsMap)
       {
-          sensing_list_file << "\nue " << ue << " reported " << events << " sensing events";
+          //sensing_list_file << "\nue " << ue << " reported " << events << " sensing events";
       }
 
 
@@ -572,7 +572,7 @@ LteEnbMac::~LteEnbMac ()
                   }
                   sensedBitmap |= (sensedBitmapChannel << (bandwidth - k));
               }
-              sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<50>(sensedBitmap);
+              //sensing_list_file << "\nframe\t" << frame << "\tsubframe\t" << subframe << "\treported\t" << std::bitset<50>(sensedBitmap);
 
               for (int subchannel = 0; subchannel < 4; subchannel++)
               {
@@ -1713,8 +1713,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Checking for false positives and negatives is made in the end
                 }
                 break;
-            case MRG_MONTECARLOFUSION:
+            case MRG_MONTECARLOFUSION://todo
                 {
+
                     //Collect montecarlo samples (equivalent to line 2 of Monte Carlo Fusion algorithm)
                     std::vector<std::vector<bool>> monteCarloSamples;
                     for (auto origAddr : subframeIt->second)
@@ -1752,6 +1753,30 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         float y = exp(-C*pow(y-x,2)/(2*T));
                     }
                     //Checking for false positives and negatives is made in the end
+                }
+                break;
+            case MRG_AVG:
+                {
+                    std::vector<float> avgs{0,0,0,0};
+                    for (auto origAddr : subframeIt->second)
+                    {
+                        auto ueRnti = origAddr.first;
+
+                        int i = 0;
+                        for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+                        {
+                            avgs[i] += channelReg[0];
+                            i++;
+                        }
+                    }
+
+                    if (subframeIt->second.size() > 0)
+                        for(int i = 0; i < 4; i++)
+                        {
+                            avgs[i] /= subframeIt->second.size();
+                            fusedResults[i][0] = avgs[i] > 0.05 ? true : false;
+                            std::cout << Simulator::Now() << " i " << i << " avg " << avgs[i] << " fusedResults " << fusedResults[i][0] << std::endl;
+                        }
                 }
                 break;
 #ifdef NS3_PYTORCH

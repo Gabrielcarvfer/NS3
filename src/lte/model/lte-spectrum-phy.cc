@@ -192,6 +192,7 @@ void LteSpectrumPhy::DoDispose ()
   {
       std::lock_guard<std::mutex> protect(mut);
 
+      /*
       if(!plot_pu_file.is_open())
       {
           plot_pu_file.open("plot_pu.txt");
@@ -231,6 +232,7 @@ void LteSpectrumPhy::DoDispose ()
           plot_snr_history_file << "]";
       }
       plot_snr_history_file << "\n";//std::endl;
+       */
   }
   //End sensing
 
@@ -1279,8 +1281,12 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
         bool answer = checkPUPresence(prob, PU_presence_V[k]);
 
+
         //MonteCarlo probability
         //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
+        
+        //std::cout << this << " k " << k << " answer " << answer << std::endl;
+        //std::cout << this << " k " << k << " pre MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
         if(std::get<1>(monteCarloState_flip_monteCarloProbability[k]))
         {
             auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
@@ -1317,7 +1323,10 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                 monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
             }
         }
+        //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+
         answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+
         //if (k == 1 || k == 3)
         //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
