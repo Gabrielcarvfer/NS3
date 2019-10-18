@@ -92,22 +92,23 @@ jobs:
   Windows_MinGW:   
   
     runs-on: windows-latest
-  
+    #Someone is stupid and decided to switch from cmd to powershell
     steps:
     - uses: actions/checkout@v1
     - name: Install msys2/mingw64
       #steps from https://github.com/msys2/MINGW-packages/blob/master/azure-pipelines.yml
       run: |
-        git clone https://github.com/msys2/msys2-ci-base.git %CD:~0,2%\msys64
-        %CD:~0,2%\msys64\usr\bin\rm -rf %CD:~0,2%\msys64\.git
-        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Syyuu
-        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
-        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
-        %CD:~0,2%\msys64\usr\bin\pacman --noconfirm -Scc
+        git clone https://github.com/msys2/msys2-ci-base.git D:\msys64
+        D:\msys64\usr\bin\rm -rf D:\msys64\.git
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        D:\msys64\usr\bin\pacman --noconfirm -Syyuu
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        D:\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
+        D:\msys64\usr\bin\pacman --noconfirm -Scc
+      shell: cmd
     - name: Install required packages
       run: |
-        set PATH=%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         pacman -S --noconfirm unzip
         pacman -S --noconfirm tar
         pacman -S --noconfirm mingw-w64-x86_64-curl
@@ -124,21 +125,25 @@ jobs:
         pacman -S --noconfirm mingw-w64-x86_64-python3
         pacman -S --noconfirm mingw-w64-x86_64-qt5
         pacman --noconfirm -Scc
+      shell: cmd
     - name: Configure CMake in debug mode
       run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         mkdir cmake-cache
         cd cmake-cache
         cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+      shell: cmd
     - name: Build ns-3 in debug mode
       run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         cd cmake-cache
         ninja
+      shell: cmd 
     - name: Run tests
       run: |
-        set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         python3 ./utils/test-runner-script.py
+      shell: cmd
   #  - name: Clean debug artifacts
   #    run: |
   #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem

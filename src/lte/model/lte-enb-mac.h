@@ -47,8 +47,8 @@
 #include <memory>
 
 
-#include <Eigen/Dense>
-#include "kalman.hpp"
+//#include <Eigen/Dense>
+//#include "kalman.hpp"
 
 
 namespace ns3 {
@@ -548,7 +548,7 @@ public:
 
     std::vector <CqiListElement_s> tempCqi;
 
-    KalmanFilter kf;
+    //KalmanFilter kf;
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;

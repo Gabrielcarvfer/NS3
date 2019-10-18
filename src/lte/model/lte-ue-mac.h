@@ -37,7 +37,7 @@
 #include <ns3/spectrum-signal-parameters.h>
 #include <ns3/simulator.h>
 #include <cstdint>
-#include "lte-spectrum-signal-parameters.h"
+#include <ns3/traced-callback.h>
 
 
 namespace ns3 {

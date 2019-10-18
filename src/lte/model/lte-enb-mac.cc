@@ -379,9 +379,9 @@ LteEnbMac::GetTypeId (void)
                   MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
                   MakeUintegerChecker<uint8_t> (1,50))//Increment range if you create new fusion algorithms
     .AddAttribute("SpectrumSensing",
-                  BooleanValue(true),
-                  MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
                   "Set if spectrum sensing should be used or not",
+                  BooleanValue(false),
+                  MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlScheduling",
                      "Information regarding DL scheduling.",
@@ -391,6 +391,11 @@ LteEnbMac::GetTypeId (void)
                      "Information regarding UL scheduling.",
                      MakeTraceSourceAccessor (&LteEnbMac::m_ulScheduling),
                      "ns3::LteEnbMac::UlSchedulingTracedCallback")
+    .AddAttribute ("ComponentCarrierId",
+                   "ComponentCarrier Id, needed to reply on the appropriate sap.",
+                   UintegerValue (0),
+                   MakeUintegerAccessor (&LteEnbMac::m_componentCarrierId),
+                   MakeUintegerChecker<uint8_t> (0,4))
 
   ;
 
@@ -429,6 +434,7 @@ m_ccmMacSapUser (0)
 
       falseNegativeFile.open("falseNegativeInputs.txt");
 #endif
+      /*
       //Prepare kalman filter for fusion
       int n = 4; // Number of states
       int m = 80; // Number of measurements
@@ -471,7 +477,9 @@ m_ccmMacSapUser (0)
       for (int i = 0; i < n; i++)
           x0(i) = 0.0;
       kf.init(0, x0);
+      */
   //}
+
 }
 
 
@@ -482,7 +490,9 @@ LteEnbMac::~LteEnbMac ()
 
   if (spectrumSensing)
   {
+#ifdef NS3_PYTORCH
       falseNegativeFile.close();
+#endif
       std::ofstream sensing_list_file;
       sensing_list_file.open("sensing_list.txt");
 
@@ -2005,6 +2015,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                 }
                 break;
 #endif
+            /*
             case MRG_KALMAN:
                 {
                     //Prepare A30 cqi list
@@ -2091,6 +2102,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                     //Checking for false positives and negatives is made in the end
                 }
                 break;
+            */
             case MRG_1_OF_N: if (k == 0) {k = 1; randomSample = false;}
             case MRG_2_OF_N: if (k == 0) {k = 2; randomSample = false;}
             case MRG_3_OF_N: if (k == 0) {k = 3; randomSample = false;}
@@ -2231,13 +2243,14 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             }
         }
 
+#ifdef NS3_PYTORCH
         //Dump nn input that failed to produce the correct output
         if (falseNegativeCount != 0)
         {
             falseNegativeFile << Simulator::Now() << " : " << ss.str() << std::endl;
         }
+#endif
         ss.clear();
-
         break;//out of if
     }
 

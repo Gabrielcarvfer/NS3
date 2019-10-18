@@ -122,6 +122,8 @@ public:
 private:
   static bool errorDataLoaded; 
   static double scalingCoeffQpsk, scalingCoeff16qam, scalingCoeff64qam;
+  static void LoadErrorData();
+
 
 };
 

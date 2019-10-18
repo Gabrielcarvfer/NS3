@@ -327,7 +327,7 @@ LteSpectrumPhy::GetTypeId (void)
                     MakeBooleanChecker ())
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
-                  BooleanValue(true),
+                  BooleanValue(false),
                   MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlPhyReception",

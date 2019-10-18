@@ -7,7 +7,7 @@ dot_path = "."+ os.sep
 cwd_path = os.getcwd()
 cwd_components = cwd_path.split(os.sep)
 
-cwd_offset_dict = { "NS3"  : len(cwd_components),
+cwd_offset_dict = { "5g_code"  : len(cwd_components),
 					"utils": -1,
 					"build": -1,
 					"bin"  : -2,

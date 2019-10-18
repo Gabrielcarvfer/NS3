@@ -73,24 +73,24 @@ ProcessorCount(NumThreads)
 #Set compiler options and get command to force unused function linkage (useful for libraries)
 set(LIB_AS_NEEDED_PRE  )
 set(LIB_AS_NEEDED_POST )
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" AND NOT APPLE)
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
     set(LIB_AS_NEEDED_POST -Wl,--as-needed   )
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
     set(BUILD_SHARED_LIBS TRUE)
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     # using Intel C++
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
     # using Visual Studio C++
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
     set(BUILD_SHARED_LIBS TRUE)
     set(CMAKE_MSVC_PARALLEL ${NumThreads})
 endif()
 
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR APPLE)
+if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND APPLE)
     # using Clang
-    set(LIB_AS_NEEDED_PRE -all_load)
+    #set(LIB_AS_NEEDED_PRE -all_load)
     set(LIB_AS_NEEDED_POST   )
 endif()
 

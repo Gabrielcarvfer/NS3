@@ -36,15 +36,16 @@ using namespace ns3;
 
 
 #ifdef __WIN32__
-#include <Windows.h>
-int sched_affinity(uint32_t cpu_set)
-{
-    HANDLE process = GetCurrentProcess();
-    DWORD_PTR processAffinityMask = cpu_set;
-
-    BOOL success = SetProcessAffinityMask(process, processAffinityMask);
-    return success? 0:-1;
-}
+//Naming collision with GetObjectA/GetObject
+//#include <Windows.h>
+//int sched_affinity(uint32_t cpu_set)
+//{
+//    HANDLE process = GetCurrentProcess();
+//    DWORD_PTR processAffinityMask = cpu_set;
+//
+//    BOOL success = SetProcessAffinityMask(process, processAffinityMask);
+//    return success? 0:-1;
+//}
 #endif
 
 #ifndef __WIN32__
