@@ -45,6 +45,7 @@
 #include <limits>
 #include <cstdlib>
 #include <unistd.h>
+#include <sstream>
 
 namespace ns3 {
 

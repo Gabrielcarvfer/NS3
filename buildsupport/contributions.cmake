@@ -27,7 +27,7 @@ macro (build_contrib_lib_component name contrib source_files header_files librar
             add_library(${test${name}} SHARED "${test_sources}")
 
             if (COMMAND cotire)
-                cotire(${test${name})
+                cotire(${test${name}})
             endif()
 
             #Link test library to the module library

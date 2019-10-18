@@ -25,7 +25,6 @@
 #include <ns3/log.h>
 #include <cmath>
 #include <ns3/simulator.h>
-#include <ns3/trace-source-accessor.h>
 #include <ns3/antenna-model.h>
 #include "lte-spectrum-phy.h"
 #include "lte-spectrum-signal-parameters.h"
@@ -34,12 +33,20 @@
 #include "lte-chunk-processor.h"
 #include "lte-phy-tag.h"
 #include <ns3/lte-mi-error-model.h>
-#include <ns3/lte-radio-bearer-tag.h>
 #include <ns3/boolean.h>
 #include <ns3/double.h>
 #include <ns3/config.h>
+#include "lte-ue-net-device.h"
+#include "lte-ue-mac.h"
+#include "../../../3rd-party/json-loader/json_loader.h"
+#include <mutex>
+#include <fstream>
+#include <bitset>
+#include <iomanip>
+
 
 namespace ns3 {
+
 
 NS_LOG_COMPONENT_DEFINE ("LteSpectrumPhy");
 
@@ -144,7 +151,26 @@ LteSpectrumPhy::LteSpectrumPhy ()
     {
       m_txModeGain.push_back (1.0);
     }
+
+  sensingEvents = 0;
+  sensingBudget = 0;
+  PU_presence_V = std::vector<bool>(4);
+  waitingForSensingReportTransmission = false;
+  for (int i =0; i < 4; i++)
+    monteCarloState_flip_monteCarloProbability.push_back({false, false, 0});
+
 }
+
+bool LteSpectrumPhy::PUProbLoaded = false;
+std::vector<double> LteSpectrumPhy::SNRdB;
+std::vector<double> LteSpectrumPhy::Pd;
+double LteSpectrumPhy::Pfa;
+std::bernoulli_distribution LteSpectrumPhy::bdPfa;
+std::map<double, std::bernoulli_distribution> LteSpectrumPhy::bdPd;
+std::ofstream LteSpectrumPhy::plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+std::ofstream LteSpectrumPhy::plot_snr_history_file;
+std::mutex LteSpectrumPhy::mut;
+bool LteSpectrumPhy::SNRsensing;
 
 
 LteSpectrumPhy::~LteSpectrumPhy ()
@@ -157,6 +183,59 @@ LteSpectrumPhy::~LteSpectrumPhy ()
 void LteSpectrumPhy::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
+
+  //Sensing
+  m_sensingEvent.Cancel();
+
+
+  if (this->puPresence.size()>0 || this->sinrAvgHistory.size()>0)
+  {
+      std::lock_guard<std::mutex> protect(mut);
+
+      /*
+      if(!plot_pu_file.is_open())
+      {
+          plot_pu_file.open("plot_pu.txt");
+      }
+
+      plot_pu_file << this << ": ";
+      for (auto it = this->puPresence.begin(); it != this->puPresence.end(); it++)
+          plot_pu_file << *it << " ";
+      plot_pu_file << "\n";
+      plot_pu_file << this << ": ";
+      for (auto it = this->sinrAvgHistory.begin(); it != this->sinrAvgHistory.end(); it++)
+          plot_pu_file << *it << " ";
+      plot_pu_file << "\n";//std::endl;
+
+
+
+      if(!plot_snr_history_file.is_open())
+      {
+          plot_snr_history_file.open("plot_pu_group.txt");
+      }
+
+      plot_snr_history_file << this << ": ";
+      for (auto it = this->puPresence_V.begin(); it != this->puPresence_V.end(); it++)
+      {
+          plot_snr_history_file << "[";
+          for (auto it2 = it->begin(); it2 != it->end(); it2++)
+              plot_snr_history_file << *it2 << " ";
+          plot_snr_history_file << "]";
+      }
+      plot_snr_history_file << "\n";
+      plot_snr_history_file << this << ": ";
+      for (auto it = this->sinrGroupHistory.begin(); it != this->sinrGroupHistory.end(); it++)
+      {
+          plot_snr_history_file << "[";
+          for (auto it2 = it->begin(); it2 != it->end(); it2++)
+              plot_snr_history_file << *it2 << " ";
+          plot_snr_history_file << "]";
+      }
+      plot_snr_history_file << "\n";//std::endl;
+       */
+  }
+  //End sensing
+
   m_channel = 0;
   m_mobility = 0;
   m_device = 0;
@@ -172,7 +251,7 @@ void LteSpectrumPhy::DoDispose ()
   m_ltePhyUlHarqFeedbackCallback = MakeNullCallback< void, UlInfoListElement_s > ();
   m_ltePhyRxPssCallback = MakeNullCallback< void, uint16_t, Ptr<SpectrumValue> > ();
   SpectrumPhy::DoDispose ();
-} 
+}
 
 /**
  * Output stream output operator
@@ -246,6 +325,11 @@ LteSpectrumPhy::GetTypeId (void)
                     BooleanValue (true),
                     MakeBooleanAccessor (&LteSpectrumPhy::m_ctrlErrorModelEnabled),
                     MakeBooleanChecker ())
+    .AddAttribute("SpectrumSensing",
+                  "Set if spectrum sensing should be used or not",
+                  BooleanValue(true),
+                  MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
+                  MakeBooleanChecker())
     .AddTraceSource ("DlPhyReception",
                      "DL reception PHY layer statistics.",
                      MakeTraceSourceAccessor (&LteSpectrumPhy::m_dlPhyReception),
@@ -425,6 +509,7 @@ LteSpectrumPhy::SetState (State newState)
 }
 
 
+
 void
 LteSpectrumPhy::ChangeState (State newState)
 {
@@ -438,9 +523,6 @@ LteSpectrumPhy::SetHarqPhyModule (Ptr<LteHarqPhy> harq)
 {
   m_harqPhyModule = harq;
 }
-
-
-
 
 bool
 LteSpectrumPhy::StartTxDataFrame (Ptr<PacketBurst> pb, std::list<Ptr<LteControlMessage> > ctrlMsgList, Time duration)
@@ -601,7 +683,7 @@ LteSpectrumPhy::StartTxUlSrsFrame ()
       txParams->txAntenna = m_antenna;
       txParams->psd = m_txPsd;
       txParams->cellId = m_cellId;
-      m_channel->StartTx (txParams);
+      m_channel->StartTx (txParams);//Transmit multiple times for a single package and mark to discard contents
       m_endTxEvent = Simulator::Schedule (UL_SRS_DURATION, &LteSpectrumPhy::EndTxUlSrs, this);
     }
     return false;
@@ -658,15 +740,23 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 {
   NS_LOG_FUNCTION (this << spectrumRxParams);
   NS_LOG_LOGIC (this << " state: " << m_state);
-  
+
   Ptr <const SpectrumValue> rxPsd = spectrumRxParams->psd;
   Time duration = spectrumRxParams->duration;
-  
+
+  //Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+  //if (dev != 0)
+  //{
+  //    dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
+  //    resetSensingStatus();
+  //}
+
   // the device might start RX only if the signal is of a type
   // understood by this device - in this case, an LTE signal.
   Ptr<LteSpectrumSignalParametersDataFrame> lteDataRxParams = DynamicCast<LteSpectrumSignalParametersDataFrame> (spectrumRxParams);
   Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams = DynamicCast<LteSpectrumSignalParametersDlCtrlFrame> (spectrumRxParams);
   Ptr<LteSpectrumSignalParametersUlSrsFrame> lteUlSrsRxParams = DynamicCast<LteSpectrumSignalParametersUlSrsFrame> (spectrumRxParams);
+
   if (lteDataRxParams != 0)
     {
       m_interferenceData->AddSignal (rxPsd, duration);
@@ -687,6 +777,37 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       // other type of signal (could be 3G, GSM, whatever) -> interference
       m_interferenceData->AddSignal (rxPsd, duration);
       m_interferenceCtrl->AddSignal (rxPsd, duration);
+
+      if(spectrumSensing)
+      {
+          Time detectionDelay = Time(MilliSeconds(1));
+
+          std::stringstream ss;
+          int k = 1;
+          int channel = -1;
+
+          //Third attempt to find which subchannel the PU is transmitting
+          int firstIndex = -1;
+          double max = 0.0;
+          for (auto valIt = spectrumRxParams->psd->ConstValuesBegin(); valIt != spectrumRxParams->psd->ConstValuesEnd(); valIt++, k++)
+          {
+              //ss << *valIt << " ";
+              if (*valIt != 0.0 && *valIt > max)
+              {
+                  max = *valIt;
+                  firstIndex = k;
+              }
+          }
+
+          channel = (firstIndex + 1) / ((k - 1) / 4);
+
+          //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
+
+          //Schedule event to store PU presence
+          Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
+          Simulator::Schedule(duration, &LteSpectrumPhy::reset_PU_presence, this, false, spectrumRxParams->distance,
+                              channel); //Set PU_presence to false after transmission finishes
+      }
     }    
 }
 
@@ -766,7 +887,528 @@ LteSpectrumPhy::StartRxData (Ptr<LteSpectrumSignalParametersDataFrame> params)
    NS_LOG_LOGIC (this << " state: " << m_state);
 }
 
+void LteSpectrumPhy::reset_PU_presence(bool state, double distance, int channel)
+{
+    //if true, including a new PU entry
+    if (state)
+    {
+        //if there is no channel entry, create one
+        if (PUsDistance.find(channel) == PUsDistance.end())
+        {
+            std::map<double, int> pu_entry;
+            PUsDistance.emplace(channel, pu_entry);
+        }
 
+        //if there is no distance entry, create one
+        if (PUsDistance.at(channel).find(distance) == PUsDistance.at(channel).end())
+        {
+            PUsDistance.at(channel).emplace(distance, 0);
+        }
+
+        //increment the channel+distance counter for the number of present PUs
+        PUsDistance.at(channel).at(distance)++;
+    }
+    //if false, removing a PU entry
+    else
+    {
+        //if there still is a channel entry to remove
+        if(PUsDistance.find(channel) != PUsDistance.end())
+        {
+            //and there is still a distance entry to remove
+            if (PUsDistance.at(channel).find(distance) != PUsDistance.at(channel).end())
+            {
+                //decrement the PU counter
+                PUsDistance.at(channel).at(distance)--;
+
+                //if the counter reaches 0, remove the distance entry
+                if (PUsDistance.at(channel).at(distance) == 0)
+                    PUsDistance.at(channel).erase(distance);
+
+                //if there are no distance entries for a given channel, remove the channel entry
+                if (PUsDistance.at(channel).size() == 0)
+                    PUsDistance.erase(channel);
+            }
+        }
+
+
+    }
+}
+
+
+double LteSpectrumPhy::interpolateProbabilitySNR(double sinrVal)
+{
+    //Find the first sinr value bigger than the current one
+    int32_t index = -1;
+    for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    {
+        if (*it > sinrVal)
+        {
+            index = it - SNRdB.begin();
+            //if (PU_presence)
+            //std::cout << "Sinr:" << sinrVal << "\tIndex:"<< index << std::endl;
+            break;
+        }
+    }
+
+    double prob = 0.0;
+    //If SINR is in the table, interpolate
+    if (index > 0)
+    {
+        double x_0, y_0, x_1, y_1;
+        x_0 = y_0 = x_1 = y_1 = 0.0;
+
+        x_0 = SNRdB.at(index - 1);
+        x_1 = SNRdB.at(index);
+        y_0 = Pd.at(index - 1);
+        y_1 = Pd.at(index);
+
+        prob = (y_0 * (x_1 - sinrVal) + y_1 * (sinrVal - x_0)) / (x_1 - x_0);
+    }
+        //If the first point for the interpolation extrapolates the table, assume probability of detection is 0
+    else if (index == 0)
+    {
+        prob = 0.0;
+    }
+        //If the second point for the interpolation extrapolates the table, assume probability of detection is 1
+    else
+    {
+        prob = 1.0;
+    }
+    return prob;
+}
+
+double LteSpectrumPhy::interpolateProbabilityDistance(double distance)
+{
+    //Find the first sinr value bigger than the current one
+    int32_t index = -1;
+    for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
+    {
+        if (*it > distance)
+        {
+            index = it - SNRdB.begin();
+            //if (PU_presence)
+            //std::cout << "Sinr:" << sinrVal << "\tIndex:"<< index << std::endl;
+            break;
+        }
+    }
+
+    double prob = 0.0;
+    //If SINR is in the table, interpolate
+    if (index > 0)
+    {
+        double x_0, y_0, x_1, y_1;
+        x_0 = y_0 = x_1 = y_1 = 0.0;
+
+        x_0 = SNRdB.at(index - 1);
+        x_1 = SNRdB.at(index);
+        y_0 = Pd.at(index - 1);
+        y_1 = Pd.at(index);
+
+        prob = (y_0 * (x_1 - distance) + y_1 * (distance - x_0)) / (x_1 - x_0);
+    }
+        //If the first point for the interpolation extrapolates the table, assume probability of detection is 1
+    else if (index == 0)
+    {
+        prob = 1.0;
+    }
+        //If the second point for the interpolation extrapolates the table, assume probability of detection is 0
+    else
+    {
+        prob = 0.0;
+    }
+    return prob;
+}
+
+std::minstd_rand0 gen;
+std::mutex mutex;
+
+bool LteSpectrumPhy::checkPUPresence(double prob, bool PU_presence)
+{
+    bool answer = false;
+    if (PU_presence)
+    {
+        //Check if the PU is detected based on the previous probability
+        auto findProb = bdPd.find(prob);
+        if (findProb == bdPd.end()) {
+            bdPd.emplace(prob, std::bernoulli_distribution(prob));
+        }
+        answer = bdPd.at(prob)(gen);
+    }
+    else
+    {
+        //False alarm probability
+        answer = bdPfa(gen);
+    }
+    return answer;
+}
+int LteSpectrumPhy::verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize)
+{
+    int dci_count = 0;
+
+    for (auto it = dci.begin(); it != dci.end(); it++)
+    {
+        auto p1 = *it;
+        switch(p1->GetMessageType())
+        {
+            case LteControlMessage::DL_DCI:
+                {
+                    //Cast to the proper type
+                    Ptr<DlDciLteControlMessage> p2 = DynamicCast<DlDciLteControlMessage>(*it);
+
+                    //Access the DCI info inside the message
+                    auto p3 = p2->GetDci();
+
+                    //Check bits to verify if RB is free or occupied
+                    uint64_t mask = 0x01;
+                    for (int j = 0; j < 64-rbgSize; j+= rbgSize)
+                    {
+                        if ((p3.m_rbBitmap & mask) != 0)
+                        {
+                            for (int k = 0; k < rbgSize; k++)
+                                occupied_RB_indexes->at(j+k) = true;
+                        }
+                        mask = (mask << 1);
+                    }
+                    dci_count++;
+                }
+                break;
+            case LteControlMessage::UL_DCI:
+            {
+                //Cast to the proper type
+                Ptr<UlDciLteControlMessage> p2 = DynamicCast<UlDciLteControlMessage>(*it);
+
+                //Access the DCI info inside the message
+                auto p3 = p2->GetDci();
+
+                //Mark allocated RBs as occupied
+                for (int i = p3.m_rbStart; i < p3.m_rbStart+p3.m_rbLen; i++)
+                {
+                    occupied_RB_indexes->at(i) = true;
+                }
+
+            }
+            break;
+            case LteControlMessage::RAR:
+            {
+                //Cast to the proper type
+                Ptr<RarLteControlMessage> p2 = DynamicCast<RarLteControlMessage>(*it);
+                for(auto p3 = p2->RarListBegin(); p3 != p2->RarListEnd(); p3++)
+                {
+                    for (int i = p3->rarPayload.m_grant.m_rbStart; i < p3->rarPayload.m_grant.m_rbStart+p3->rarPayload.m_grant.m_rbLen; i++)
+                    {
+                        occupied_RB_indexes->at(i) = true;
+                    }
+                }
+            }
+            break;
+
+            //Skip control messages that are not DL_DCI or UL_DCI
+            default:
+                continue;
+        }
+        dci_count++;
+    }
+    return dci_count;
+}
+
+void LteSpectrumPhy::calculateAvgSinr(Ptr<SpectrumValue> sinr, int groupingSize, double * avgChannelSinr, std::vector<double> *historicalGroupSinr)
+{
+    int i = 1;
+    int k = 0;
+    double avgChannelSnr = 0.0;
+    double avgGroupSnr   = 0.0;
+    double sinrVal = 0.0;
+
+    for (auto it = sinr->ConstValuesBegin (); it < sinr->ConstValuesEnd (); it++, i++)
+    {
+        //Calculate SINR for the RB from SpectrumValue
+        if (*it != 0)
+            sinrVal = 10*log10(*it);
+
+        //Add to group (RBG/subchannel) avg SNR
+        avgGroupSnr+=sinrVal;
+
+        //Add to whole channel avg SNR
+        avgChannelSnr += sinrVal;
+
+        if (i/groupingSize != k)
+        {
+            avgGroupSnr /= groupingSize;
+            historicalGroupSinr->emplace_back(avgGroupSnr);
+
+            avgGroupSnr = 0.0;
+            k++;
+        }
+    }
+
+    avgChannelSnr /= sinr->ConstValuesEnd()-sinr->ConstValuesBegin(); //Num RBs
+    *avgChannelSinr = avgChannelSnr;
+}
+
+void LteSpectrumPhy::loadDetectionCurves(bool SNRsensing)
+{
+    {
+        std::lock_guard<std::mutex> lock(mutex);
+        if (!PUProbLoaded)
+        {
+            //Json loader to parse the file
+            picojson::object origin = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/oulu_pu_probability.json");
+            picojson::object o;
+            if (SNRsensing)
+            {
+                //Select SNR vs Pb tables
+                picojson::object snr_tables = origin["SNR_vs_Pb_tables"].get<picojson::object>();
+
+                //Select which table to load
+                o = snr_tables["fig30wiba384i"].get<picojson::object>();
+
+                //Load PU detection values from json file
+                {
+                    auto temp = o["SNR_dB"].get<picojson::array>();
+                    for (auto it = temp.begin(); it != temp.end(); it++)
+                        SNRdB.push_back(it->get<double>());
+                }
+            }
+            else
+            {
+                //Select distance vs Pb tables
+                picojson::object snr_tables = origin["distance_vs_Pb_tables"].get<picojson::object>();
+
+                //Select which table to load
+                o = snr_tables["fortaleza_scenario"].get<picojson::object>();
+
+                //Load PU detection values from json file
+                {
+                    auto temp = o["d_m"].get<picojson::array>();//loading distance into SNRdB, interpolation is the same
+                    for (auto it = temp.begin(); it != temp.end(); it++)
+                        SNRdB.push_back(it->get<double>());
+                }
+            }
+            {
+                auto temp = o["Pd"].get<picojson::array>();
+
+                bdPd.emplace(0.0, std::bernoulli_distribution(0.0));
+                bdPd.emplace(1.0, std::bernoulli_distribution(1.0));
+
+                for (auto it = temp.begin(); it != temp.end(); it++)
+                {
+                    double prob = it->get<double>();
+                    Pd.push_back(prob);
+                    bdPd.emplace(prob, std::bernoulli_distribution(prob));
+                }
+
+            }
+            {
+                auto temp = o["Pfa"].get<double>();
+                Pfa = temp;
+                bdPfa = std::bernoulli_distribution(Pfa);
+            }
+            PUProbLoaded = true;
+        }
+    }
+}
+
+void LteSpectrumPhy::resetSensingStatus()
+{
+    int num_channels = 4;//sinrGroupHistory.back().size()/groupingSize;
+    UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
+    for (auto &unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
+        unexpectedAccessRegistry = std::vector<bool>(3);
+
+    PU_presence_V = std::vector<bool>(num_channels);
+    waitingForSensingReportTransmission = false;
+}
+
+void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing)
+{
+    //Make sure detection probability curves have been loaded
+    loadDetectionCurves(SNRsensing);
+
+    //Initialize variable
+    std::vector<bool> PU_detected_V(PU_presence_V.size());
+
+    //Look for empty RBs SINR on the DCI
+    std::vector<bool> occupied_RB_indexes(64);
+
+    int dci_count = 0;
+
+    //dci_count = verifyControlMessageBlocks(&occupied_RB_indexes, dci, rbgSize);
+
+    //No DCI received, then skip
+    //if (dci_count == 0)
+    //   return ;
+
+    std::stringstream ss;
+
+    int numPus = 0;
+    for (auto & channel : PUsDistance)
+    {
+        for (auto & distance : channel.second)
+        {
+            numPus+=distance.second;
+            //if(distance.second <= 0)
+            //{
+            //    std::cout << "pew pew pew" << std::endl;
+            //}
+        }
+    }
+    //std::cout << Simulator::Now().GetSeconds() << " #PUs " << numPus << std::endl;
+
+    //Calculate the probability of PU detection on given RBs
+    int k = 0;
+    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
+        //Skip if the RB is supposed to be occupied by an UE transmission
+        //if (occupied_RB_indexes.at(i))
+        //    continue;
+
+        double distance = 10.0e10;
+        if (PUsDistance.find(k) != PUsDistance.end())
+        {
+            double minDist = distance;
+            for (auto &dist : PUsDistance.at(k))
+                if (dist.first < minDist)
+                    minDist = dist.first;
+            distance = minDist;
+        }
+
+        //std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
+        //Mark PU_presence with the current channel PU presence
+        PU_presence_V[k] = distance != 10e10;
+
+
+        double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
+
+        //Check PU presence function relies on PU_presence marking if the current channel has a PU transmitting or not
+        bool answer = checkPUPresence(prob, PU_presence_V[k]);
+
+
+        //MonteCarlo probability
+        //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
+        
+        //std::cout << this << " k " << k << " answer " << answer << std::endl;
+        //std::cout << this << " k " << k << " pre MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+        if(std::get<1>(monteCarloState_flip_monteCarloProbability[k]))
+        {
+            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+            if (answer != monteCarloState)
+            {
+                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                p += (1 - p) / 2;
+
+                //if p > 90%, flip montecarlo state, unflip flag and reset certainty
+                if (p > 0.9)
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
+                else
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
+            }
+            else
+            {
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, 0);
+            }
+
+        }
+        //if unflipped, accumulate probability if answer == montecarlo state, else flip
+        else
+        {
+            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+            if (answer == monteCarloState)
+            {
+                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                p += (1 - p) / 2;
+
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, p);
+            }
+            else
+            {
+                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
+            }
+        }
+        //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+
+        answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+
+        //if (k == 1 || k == 3)
+        //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
+        //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
+
+        if (answer)
+        {
+            //Detection
+            UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][0] = true;
+            PU_detected_V[k] = true;
+
+            //False alarm
+            if(!PU_presence_V[k])
+                UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][1] = true;
+        }
+        else
+        {
+            //False negative
+            if(PU_presence_V[k])
+                UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][2] = true;
+        }
+        k++;
+    }
+
+    puPresence_V.emplace_back(PU_detected_V);
+}
+
+
+void LteSpectrumPhy::Sense()
+{
+  //Collect interference data
+  if (m_sinrPerceived.GetSpectrumModel() != nullptr)
+  {
+      sinrHistory.push_back(m_sinrPerceived.Copy());
+  }
+
+  if (!sinrHistory.empty())
+  {
+    if (this->waitingForSensingReportTransmission)
+    {
+        Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+        if (dev != 0)
+        {
+            dev->GetMac()->GetObject<LteUeMac>()->SendCognitiveMessage(UnexpectedAccess_FalseAlarm_FalseNegBitmap, PU_presence_V);
+            resetSensingStatus();
+        }
+    }
+    sinrHistory.push_back(m_sinrPerceived.Copy());
+    double avgSinr = 0;
+    std::vector<double> historicalSNR;
+    bool senseRBs = false;
+    int rbgSize = 2;
+    int groupingSize;
+
+    if (senseRBs)
+        groupingSize = 2; //subdivide 100RBs into 25RBGs
+    else
+        groupingSize = 25; //subdivide 100RBs into 4 subchannels of 25RBs each
+
+    //Precalculate SNR for RBGs and channel-wise SNR
+    calculateAvgSinr(sinrHistory.back(), groupingSize, &avgSinr, &historicalSNR);
+    sinrAvgHistory.push_back(avgSinr);
+    sinrGroupHistory.push_back(historicalSNR);
+
+    //Execute sensing procedure
+    sensingProcedure(m_rxControlMessageListCopy, rbgSize, groupingSize, SNRsensing);
+
+    this->waitingForSensingReportTransmission = true;
+
+    //std::cout << "Pu detected: " << puPresence.back() << std::endl;
+    //Count the sensing event and reschedule the next one
+    //this->sensingBudget--;
+    this->sensingEvents++;
+
+    //this->m_sensingEvent.Cancel();
+    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    //if (this->sensingBudget > 0)
+    //{
+    //    //this->m_sensingEvent = Simulator::Schedule(MilliSeconds(1), &LteSpectrumPhy::Sense, this);
+    //    this->sensingBudget = 0;
+    //}
+  }
+}
 
 void
 LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDlCtrlRxParams)
@@ -824,9 +1466,29 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               
               // store the DCIs
               m_rxControlMessageList = lteDlCtrlRxParams->ctrlMsgList;
+
+              // prepare to schedule sensing events
+              this->sensingBudget=10;
+              this->m_sensingEvent.Cancel();
+              this->m_rxControlMessageListCopy.clear();
+
+              //copy for sensing purposes
+              for (auto it = m_rxControlMessageList.begin(); it != m_rxControlMessageList.end(); it++)
+              {
+                this->m_rxControlMessageListCopy.push_back(*it);
+              }
+
+              // schedule sensing events
+              //if (this->m_sensingEvent.IsExpired())
+              if (spectrumSensing)
+                this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
+
+
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);
               ChangeState (RX_DL_CTRL);
-              m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);            
+              m_interferenceCtrl->StartRx (lteDlCtrlRxParams->psd);
+
+
             }
           else
             {
@@ -991,7 +1653,6 @@ LteSpectrumPhy::EndRxData ()
   NS_LOG_DEBUG (this << " txMode " << (uint16_t)m_transmissionMode << " gain " << m_txModeGain.at (m_transmissionMode));
   NS_ASSERT (m_transmissionMode < m_txModeGain.size ());
   m_sinrPerceived *= m_txModeGain.at (m_transmissionMode);
-  
   while (itTb!=m_expectedTbs.end ())
     {
       if ((m_dataErrorModelEnabled)&&(m_rxPacketBurstList.size ()>0)) // avoid to check for errors when there is no actual data transmitted

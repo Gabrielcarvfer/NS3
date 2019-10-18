@@ -1,11 +1,11 @@
+#Export compile time variable setting the directory to the NS3 root folder
 add_definitions(-DPROJECT_SOURCE_PATH="${PROJECT_SOURCE_DIR}")
 
+#Set Linux flag if on Linux
 if (UNIX AND NOT APPLE)
     set(LINUX TRUE)
 endif()
 
-#Fixed definitions
-#unset(CMAKE_LINK_LIBRARY_SUFFIX)
 
 #Output folders
 set(CMAKE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
@@ -21,10 +21,8 @@ link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #fPIC and fPIE
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE -fPIC")
-
-
-if (WIN32 AND NOT MSVC)
+#When using MinGW, you usually don't want to add your MinGW folder to the path to prevent collisions with other programs
+if (WIN AND NOT MSVC)
     #If using MSYS2
     set(MSYS2_PATH "E:\\tools\\msys64\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
@@ -42,27 +40,39 @@ if (WIN32 AND NOT MSVC)
     #set(ENV{PATH} "$ENV{PATH}${CMAKE_RUNTIME_OUTPUT_DIRECTORY};")
 endif()
 
+#Include the cmake file that provides a Hunter-like interface to VcPkg
 include(buildsupport/vcpkg_hunter.cmake)
 
-if (CCACHE_FOUND)
-    set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
-endif()
 
-#if(MINGW)
-#	include(buildsupport/cotire.cmake)
+
+#If on Linux, add cotire for PCH builds. Others were having issues, so I disabled them
 if(LINUX)
-	include(buildsupport/cotire_force_pch.cmake)
+    include(buildsupport/cotire.cmake)
+	#include(buildsupport/cotire_force_pch.cmake)
 endif()
 
 
-set(LIB_AS_NEEDED_PRE  )
-set(LIB_AS_NEEDED_POST )
+if (COMMAND cotire)
+    #If cotire is active and ccache is found, set its flags to prevent issue with pch and unity builds
+    if (CCACHE_FOUND)
+        set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+    endif()
+else()
+    #If cotire is disabled, check if OpenMp is available
+    find_package(OpenMP)
+    if(OpenMP_CXX_FOUND)
+        link_libraries(OpenMP::OpenMP_CXX)
+    endif()
+endif()
 
-
+#Check the number of threads
 include(ProcessorCount)
 ProcessorCount(NumThreads)
 
 
+#Set compiler options and get command to force unused function linkage (useful for libraries)
+set(LIB_AS_NEEDED_PRE  )
+set(LIB_AS_NEEDED_POST )
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # using GCC
     set(LIB_AS_NEEDED_PRE  -Wl,--no-as-needed)
@@ -118,6 +128,8 @@ macro(process_options)
     #3rd party libraries with sources shipped in 3rd-party folder
     set(3rdPartyLibraries
             netanim
+            kalman
+            json-loader
             ${build_lib_brite}
             ${build_lib_openflow}
             )
@@ -203,7 +215,7 @@ macro(process_options)
                 )
         include_directories(3rd-party/openflow/include)
         #if (WIN32)
-            set(OPENFLOW_LIBRARIES openflow)
+        set(OPENFLOW_LIBRARIES openflow)
         #else()
         #    set(OPENFLOW_LIBRARIES libopenflow.a)
         #endif()
@@ -505,6 +517,9 @@ macro(process_options)
     #    endif()
     #endif()
 
+    add_package(eigen3)
+    get_property(eigen3_dir GLOBAL PROPERTY DIR_eigen3)
+    include_directories(${eigen3_dir}/include)
 
 
 
@@ -614,7 +629,7 @@ macro (write_module_header name header_files)
         list(APPEND contents
                 "
     #include <ns3/${head}>")
-    ##include \"ns3/${head}\"")
+        ##include \"ns3/${head}\"")
     endforeach()
 
     #Common module footer

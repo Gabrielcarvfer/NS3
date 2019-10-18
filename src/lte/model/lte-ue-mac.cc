@@ -34,7 +34,8 @@
 #include <ns3/lte-control-messages.h>
 #include <ns3/simulator.h>
 #include <ns3/lte-common.h>
-
+#include <ns3/lte-mac-sap.h>
+#include <cstdint>
 
 
 namespace ns3 {
@@ -631,6 +632,7 @@ LteUeMac::DoReceivePhyPdu (Ptr<Packet> p)
 {
   LteRadioBearerTag tag;
   p->RemovePacketTag (tag);
+
   if (tag.GetRnti () == m_rnti)
     {
       // packet is for the current user
@@ -920,6 +922,25 @@ LteUeMac::AssignStreams (int64_t stream)
   NS_LOG_FUNCTION (this << stream);
   m_raPreambleUniformVariable->SetStream (stream);
   return 1;
+}
+
+void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V)
+{
+    //Send report through the control channel
+    LteEnbMac::CognitiveReg senseReport;
+    senseReport.OriginAddress = m_rnti;
+    senseReport.SimCurrTime = Simulator::Now();
+    senseReport.SensedFrameNo = m_frameNo;
+    senseReport.SensedSubframeNo = m_subframeNo;
+    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap = UnexpectedAccess_FalseAlarm_FalseNegBitmap;
+    senseReport.PU_presence_V = PU_presence_V;
+
+    Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
+    msg->SetMessage(senseReport);
+    m_uePhySapProvider->SendLteControlMessage(msg);
+
+    lastFrameNo = m_frameNo;
+    lastSubframeNo = m_subframeNo;
 }
 
 } // namespace ns3

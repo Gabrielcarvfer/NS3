@@ -138,11 +138,15 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
   m_schedSapProvider = new MemberSchedSapProvider<CqaFfMacScheduler> (this);
   m_ffrSapProvider = 0;
   m_ffrSapUser = new MemberLteFfrSapUser<CqaFfMacScheduler> (this);
+  schedulerInputFile.open("schedulerInput.txt");
+  schedulerOutputFile.open("schedulerOutput.txt");
 }
 
 CqaFfMacScheduler::~CqaFfMacScheduler ()
 {
   NS_LOG_FUNCTION (this);
+  schedulerInputFile.close();
+  schedulerOutputFile.close();
 }
 
 void
@@ -499,6 +503,10 @@ CqaFfMacScheduler::DoSchedDlMacBufferReq (const struct FfMacSchedSapProvider::Sc
 int
 CqaFfMacScheduler::GetRbgSize (int dlbandwidth)
 {
+  //Todo: fix this properly
+  if (dlbandwidth == 100)
+      return 2;
+
   for (int i = 0; i < 4; i++)
     {
       if (dlbandwidth < CqaType0AllocationRbg[i])
@@ -669,6 +677,22 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   rbgMap.resize (m_cschedCellConfig.m_dlBandwidth / rbgSize, false);
 
   rbgMap = m_ffrSapProvider->GetAvailableDlRbg ();
+
+  //Take cognitive info into account before scheduling
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : rbgMap.at(i);
+  }
+
+  //SchedulerInput
+  schedulerInputFile << Simulator::Now() << ": ";
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      schedulerInputFile << (rbgMap.at(i) ? 1 : 0);
+  }
+  schedulerInputFile << "\n";
+
+
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
       if ((*it) == true )
@@ -903,15 +927,15 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint32_t mask = 0x1;
+          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
-          for (int j = 0; j < 32; j++)
+          for (int j = 0; j < 64; j++)
             {
               if (((dci.m_rbBitmap & mask) >> j) == 1)
-                {
-                  dciRbg.push_back (j);
-                  NS_LOG_INFO ("\t" << j);
-                }
+              {
+                dciRbg.push_back (j);
+                NS_LOG_INFO ("\t" << j);
+              }
               mask = (mask << 1);
             }
           bool free = true;
@@ -956,10 +980,10 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint32_t rbgMask = 0;
+                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + (0x1 << dciRbg.at (k));
+                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
                       rbgAllocatedNum++;
                     }
                   dci.m_rbBitmap = rbgMask;
@@ -1462,6 +1486,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
             {
               // erase current RBG from the list of available RBG
               availableRBGs.erase (currentRB);
+              rbgMap.at(currentRB) = true;
               continue;
             }
 
@@ -1484,8 +1509,10 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
           // erase current RBG from the list of available RBG
           availableRBGs.erase (currentRB);
+          rbgMap.at(currentRB) = true;
 
-          if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
+
+            if (UeToAmountOfDataToTransfer.find (userWithMaximumMetric)->second <= UeToAmountOfAssignedResources.find (userWithMaximumMetric)->second*tolerance)
           //||(UeHasReachedGBR.find(userWithMaximumMetric)->second == true))
             {
               itCurrentGroup->second.erase (userWithMaximumMetric);
@@ -1515,7 +1542,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       newEl.m_rnti = (*itMap).first;
       NS_LOG_INFO ("Scheduled RNTI:"<<newEl.m_rnti);
       // create the DlDciListElement_s
-      DlDciListElement_s newDci;
+      DlDciListElement_s newDci = DlDciListElement_s();//Initialize variable
       std::vector <struct RlcPduListElement_s> newRlcPduLe;
       newDci.m_rnti = (*itMap).first;
       newDci.m_harqProcess = UpdateHarqProcessId ((*itMap).first);
@@ -1547,11 +1574,13 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       newDci.m_tbsSize.push_back (tbSize);
       newDci.m_resAlloc = 0;            // only allocation type 0 at this stage
       newDci.m_rbBitmap = 0;    // TBD (32 bit bitmap see 7.1.6 of 36.213)
-      uint32_t rbgMask = 0;
+      uint64_t rbgMask = 0;
       std::multimap <uint8_t, qos_rb_and_CQI_assigned_to_lc> ::iterator itRBGsPerRNTI;
       for ( itRBGsPerRNTI = (*itMap).second.begin (); itRBGsPerRNTI != (*itMap).second.end (); itRBGsPerRNTI++)
         {
-          rbgMask = rbgMask + (0x1 << itRBGsPerRNTI->second.resource_block_index);
+
+          //Leave the cast alone or replace 0x01 with 0x0000000000000001
+          rbgMask += ((uint64_t)0x01 << itRBGsPerRNTI->second.resource_block_index);
         }
       newDci.m_rbBitmap = rbgMask;   // (32 bit bitmap see 7.1.6 of 36.213)
       // NOTE: In this first version of CqaFfMacScheduler, it is assumed one flow per user.
@@ -1665,6 +1694,15 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       count_allocated_resource_blocks+=itMap->second.size ();
     }
   NS_LOG_INFO (this << " Allocated RBs:" << count_allocated_resource_blocks);
+
+  //SchedulerOutput
+  schedulerOutputFile << Simulator::Now() << ": ";
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      schedulerOutputFile << (rbgMap.at(i) ? 1 : 0);
+  }
+  schedulerOutputFile << "\n";
+
 
   return;
 }

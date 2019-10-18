@@ -119,9 +119,9 @@ public:
   static double GetPcfichPdcchError (const SpectrumValue& sinr);
 
 
-//private:
-
-
+private:
+  static bool errorDataLoaded; 
+  static double scalingCoeffQpsk, scalingCoeff16qam, scalingCoeff64qam;
 
 };
 

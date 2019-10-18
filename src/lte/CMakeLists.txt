@@ -1,6 +1,16 @@
 
 set(name lte)
 
+
+set(nn_libraries
+        )
+
+if(${TORCH_FOUND})
+    set(nn_libraries
+            "${TORCH_LIBRARIES}"
+            )
+endif()
+
 if(${NS3_EMU})
         set(source_files helper/emu-epc-helper.cc)
         set(header_files helper/emu-epc-helper.cc)
@@ -278,6 +288,9 @@ set(libraries_to_link
         ${libapplications}
         ${libinternet}
         ${libcsma}
+        "${nn_libraries}"
+        kalman
+        json-loader
         )
 
 set(test_sources
@@ -342,5 +355,4 @@ set(test_sources
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
-
 

@@ -41,6 +41,10 @@
 #include <ns3/ff-mac-common.h>
 #include <ns3/lte-harq-phy.h>
 #include <ns3/lte-common.h>
+#include <mutex>
+#include <tuple>
+#include <random>
+
 
 namespace ns3 {
 
@@ -507,10 +511,10 @@ private:
   LtePhyRxCtrlEndOkCallback     m_ltePhyRxCtrlEndOkCallback; ///< the LTE phy receive control end ok callback
   LtePhyRxCtrlEndErrorCallback  m_ltePhyRxCtrlEndErrorCallback; ///< the LTE phy receive control end error callback
   LtePhyRxPssCallback  m_ltePhyRxPssCallback; ///< the LTE phy receive PSS callback
-
+public:
   Ptr<LteInterference> m_interferenceData; ///< the data interference
   Ptr<LteInterference> m_interferenceCtrl; ///< the control interference
-
+private:
   uint16_t m_cellId; ///< the cell ID
   
   uint8_t m_componentCarrierId; ///< the component carrier ID
@@ -548,9 +552,53 @@ private:
   EventId m_endRxDataEvent; ///< end receive data event
   EventId m_endRxDlCtrlEvent; ///< end receive DL control event
   EventId m_endRxUlSrsEvent; ///< end receive UL SRS event
-  
+
+
+  EventId m_sensingEvent; ///< holds the scheduled sensing event
+  uint64_t sensingEvents; ///< count sensing events
+  uint64_t sensingBudget; ///< count remaining sensing samples to collect in a slot
+  std::vector< Ptr<SpectrumValue> > sinrHistory; ///< holds the history of measured sinr
+  std::vector< double > sinrAvgHistory; ///< holds the history of measured sinr
+  std::vector<std::vector<double>> sinrGroupHistory; ///< holds the sinr history for arbitrarily sized RB groups
+  std::vector<bool>   puPresence; ///< holds the history of PU detection
+  std::vector<std::vector<bool>>   puPresence_V; ///< holds the history of PU detection
+
+  //Create structures to hold probabilities
+  static std::vector<double> SNRdB; // Sinr (x-axis of PU detection probability table)
+  static std::vector<double> Pd; // Probability of detection (y-axis of PU detection probability table)
+  static double Pfa; //probability of false alarm
+  static std::bernoulli_distribution bdPfa;
+  static std::map<double, std::bernoulli_distribution> bdPd;
+  static bool PUProbLoaded;
+  void resetSensingStatus();
+  void calculateAvgSinr(Ptr<SpectrumValue> sinr, int groupingSize, double * avgChannelSinr, std::vector<double> *historicalGroupSinr);
+  static void loadDetectionCurves(bool SNRsensing);
+  void sensingProcedure(std::list< Ptr<LteControlMessage> > dci, int rbgSize, int groupingSize, bool SNRsensing);
+  double interpolateProbabilitySNR(double sinrVal);
+  double interpolateProbabilityDistance(double distance);
+  int verifyControlMessageBlocks(std::vector<bool> * occupied_RB_indexes, std::list< Ptr<LteControlMessage> > dci, int rbgSize);
+  bool checkPUPresence(double prob, bool PU_presence);
+  void Sense();
+  std::list<Ptr<LteControlMessage> > m_rxControlMessageListCopy; ///< the copy of receive control message list
+
+  EventId PU_event;
+  std::map<int, std::map<double, int>> PUsDistance; // Addressed by channel, distance, counter
+  void reset_PU_presence(bool state, double distance, int channel);
+
+  static std::ofstream plot_pu_file; //plot_pu_file.open("plot_pu.txt"); //run NS3/plot_pu.py to display results
+  static std::ofstream plot_snr_history_file;
+  static std::mutex mut;
+  bool waitingForSensingReportTransmission;
+public:
+    bool spectrumSensing;
+
+    std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap;
+    std::vector<bool> PU_presence_V;
+    static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
+    std::vector<std::tuple<bool,bool,double>> monteCarloState_flip_monteCarloProbability;
 
 };
+
 
 
 

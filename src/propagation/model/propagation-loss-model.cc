@@ -29,6 +29,7 @@
 #include "ns3/string.h"
 #include "ns3/pointer.h"
 #include <cmath>
+#include <random>
 
 namespace ns3 {
 
@@ -55,6 +56,7 @@ PropagationLossModel::PropagationLossModel ()
 
 PropagationLossModel::~PropagationLossModel ()
 {
+
 }
 
 void
@@ -268,6 +270,7 @@ FriisPropagationLossModel::DoCalcRxPower (double txPowerDbm,
   double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
   double lossDb = -10 * log10 (numerator / denominator);
   NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
+  //std::cout << this << ": " << txPowerDbm << " " << txPowerDbm - std::max (lossDb, m_minLoss) << std::endl;
   return txPowerDbm - std::max (lossDb, m_minLoss);
 }
 
@@ -687,7 +690,7 @@ NakagamiPropagationLossModel::GetTypeId (void)
                    "Access to the underlying GammaRandomVariable",
                    StringValue ("ns3::GammaRandomVariable"),
                    MakePointerAccessor (&NakagamiPropagationLossModel::m_gammaRandomVariable),
-                   MakePointerChecker<GammaRandomVariable> ());
+                   MakePointerChecker<GammaRandomVariable> ())
   ;
   return tid;
 
@@ -891,17 +894,17 @@ NS_OBJECT_ENSURE_REGISTERED (RangePropagationLossModel);
 TypeId
 RangePropagationLossModel::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::RangePropagationLossModel")
-    .SetParent<PropagationLossModel> ()
-    .SetGroupName ("Propagation")
-    .AddConstructor<RangePropagationLossModel> ()
-    .AddAttribute ("MaxRange",
-                   "Maximum Transmission Range (meters)",
-                   DoubleValue (250),
-                   MakeDoubleAccessor (&RangePropagationLossModel::m_range),
-                   MakeDoubleChecker<double> ())
-  ;
-  return tid;
+    static TypeId tid = TypeId ("ns3::RangePropagationLossModel")
+            .SetParent<PropagationLossModel> ()
+            .SetGroupName ("Propagation")
+            .AddConstructor<RangePropagationLossModel> ()
+            .AddAttribute ("MaxRange",
+                           "Maximum Transmission Range (meters)",
+                           DoubleValue (250),
+                           MakeDoubleAccessor (&RangePropagationLossModel::m_range),
+                           MakeDoubleChecker<double> ())
+    ;
+    return tid;
 }
 
 RangePropagationLossModel::RangePropagationLossModel ()
@@ -913,23 +916,194 @@ RangePropagationLossModel::DoCalcRxPower (double txPowerDbm,
                                           Ptr<MobilityModel> a,
                                           Ptr<MobilityModel> b) const
 {
-  double distance = a->GetDistanceFrom (b);
-  if (distance <= m_range)
+    double distance = a->GetDistanceFrom (b);
+    if (distance <= m_range)
     {
-      return txPowerDbm;
+        return txPowerDbm;
     }
-  else
+    else
     {
-      return -1000;
+        return -1000;
     }
 }
 
 int64_t
 RangePropagationLossModel::DoAssignStreams (int64_t stream)
 {
-  return 0;
+    return 0;
+}
+
+
+// ------------------------------------------------------------------------- //
+NS_OBJECT_ENSURE_REGISTERED (RANGE5GPropagationLossModel);
+//As defined in 5G-RANGE D3.1
+// http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
+//
+TypeId
+RANGE5GPropagationLossModel::GetTypeId (void)
+{
+    static TypeId tid = TypeId ("ns3::RANGE5GPropagationLossModel")
+            .SetParent<PropagationLossModel> ()
+            .SetGroupName ("Propagation")
+            .AddConstructor<RANGE5GPropagationLossModel> ()
+            .AddAttribute ("Frequency",
+                           "The carrier frequency (in Hz) at which propagation occurs  (default is band 5: 850 MHz). ",
+                           DoubleValue (850e6),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::SetFrequency,
+                                               &RANGE5GPropagationLossModel::GetFrequency),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute ("SystemLoss", "The system loss",
+                           DoubleValue (1.0),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::m_systemLoss),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute ("MinLoss",
+                           "The minimum value (dB) of the total loss, used at short ranges. Note: ",
+                           DoubleValue (0.0),
+                           MakeDoubleAccessor (&RANGE5GPropagationLossModel::SetMinLoss,
+                                               &RANGE5GPropagationLossModel::GetMinLoss),
+                           MakeDoubleChecker<double> ())
+            .AddAttribute("K-value",
+                           "K constant added to pathloss in 5G-RANGE networks",
+                           DoubleValue(29.38),
+                           MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_kValue),
+                           MakeDoubleChecker<double>())
+            .AddAttribute("ShadowingMu",
+                          "Mu for normal shadowing pathloss in 5G-RANGE networks",
+                          DoubleValue(0.0),
+                          MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_shadowMu),
+                          MakeDoubleChecker<double>())
+            .AddAttribute("ShadowingSigma",
+                          "Sigma for normal shadowing pathloss in 5G-RANGE networks",
+                          DoubleValue(4.47),
+                          MakeDoubleAccessor(&RANGE5GPropagationLossModel::m_shadowSigma),
+                          MakeDoubleChecker<double>())
+    ;
+    return tid;
+}
+
+RANGE5GPropagationLossModel::RANGE5GPropagationLossModel ()
+{
+    m_normalGen = CreateObject<NormalRandomVariable> ();
+}
+
+void
+RANGE5GPropagationLossModel::SetSystemLoss (double systemLoss)
+{
+    m_systemLoss = systemLoss;
+}
+double
+RANGE5GPropagationLossModel::GetSystemLoss (void) const
+{
+    return m_systemLoss;
+}
+void
+RANGE5GPropagationLossModel::SetMinLoss (double minLoss)
+{
+    m_minLoss = minLoss;
+}
+double
+RANGE5GPropagationLossModel::GetMinLoss (void) const
+{
+    return m_minLoss;
+}
+
+void
+RANGE5GPropagationLossModel::SetFrequency (double frequency)
+{
+    m_frequency = frequency;
+    static const double C = 299792458.0; // speed of light in vacuum
+    m_lambda = C / frequency;
+}
+
+double
+RANGE5GPropagationLossModel::GetFrequency (void) const
+{
+    return m_frequency;
+}
+
+double
+RANGE5GPropagationLossModel::DbmToW (double dbm) const
+{
+    double mw = std::pow (10.0,dbm/10.0);
+    return mw / 1000.0;
+}
+
+double
+RANGE5GPropagationLossModel::DbmFromW (double w) const
+{
+    double dbm = std::log10 (w * 1000.0) * 10.0;
+    return dbm;
+}
+
+double
+RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
+                                          Ptr<MobilityModel> a,
+                                          Ptr<MobilityModel> b) const
+{
+    /*
+     * RANGE path loss equation:
+     * where Pt, Gr, Gr and P are in Watt units
+     * L is in meter units.
+     *
+     *    P     Gt * Gr * (lambda^2)
+     *   --- = ---------------------
+     *    Pt     (4 * pi * d)^2 * L
+     *
+     * Gt: tx gain (unit-less)
+     * Gr: rx gain (unit-less)
+     * Pt: tx power (W)
+     * d: distance (m)
+     * L: system loss
+     * lambda: wavelength (m)
+     *
+     * Here, we ignore tx and rx gain and the input and output values
+     * are in dB or dBm:
+     *
+     *                           lambda^2
+     * rx = tx +  10 log10 (-------------------) + K
+     *                       (4 * pi * d)^2 * L
+     *
+     * rx: rx power (dB)
+     * tx: tx power (dB)
+     * d: distance (m)
+     * L: system loss (unit-less)
+     * lambda: wavelength (m)
+     * K: 5G-RANGE pathloss constant
+     */
+    double distance = a->GetDistanceFrom (b);
+    if (distance < 3*m_lambda)
+    {
+        NS_LOG_WARN ("distance not within the far field region => inaccurate propagation loss value");
+    }
+    if (distance <= 0)
+    {
+        return txPowerDbm - m_minLoss;
+    }
+
+    if (m_normalGen->GetMean() != m_shadowMu || m_normalGen->GetVariance() != m_shadowSigma*m_shadowSigma)
+    {
+        m_normalGen->SetAttribute("Mean", DoubleValue(m_shadowMu));
+        m_normalGen->SetAttribute("Variance", DoubleValue(m_shadowSigma*m_shadowSigma));
+    }
+
+    double numerator = m_lambda * m_lambda;
+    double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
+    double shadow = m_normalGen->GetValue();
+    double lossDb = -10 * log10 (numerator / denominator);
+    double lossDb1 = lossDb;
+    lossDb += (m_kValue + shadow);
+    NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
+    //Print RANGE pathloss and shadowing
+    //std::cout << this << ": " << lossDb1 << " " << lossDb << " " << shadow << "\n";
+    //std::cout << this << ": " << txPowerDbm << " " << txPowerDbm - std::max (lossDb, m_minLoss) << std::endl;
+    return txPowerDbm - std::max (lossDb, m_minLoss);
+}
+
+int64_t
+RANGE5GPropagationLossModel::DoAssignStreams (int64_t stream)
+{
+    return 0;
 }
 
 // ------------------------------------------------------------------------- //
-
 } // namespace ns3

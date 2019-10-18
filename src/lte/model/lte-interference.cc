@@ -248,6 +248,12 @@ LteInterference::AddInterferenceChunkProcessor (Ptr<LteChunkProcessor> p)
   m_interfChunkProcessorList.push_back (p);
 }
 
+//custom
+Ptr<SpectrumValue>
+LteInterference::GetAllSignals()
+{
+    return (Ptr<SpectrumValue>) m_allSignals;
+}
 
 
 

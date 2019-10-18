@@ -1049,8 +1049,8 @@ LteUePhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgLi
           std::vector <int> dlRb;
 
           // translate the DCI to Spectrum framework
-          uint32_t mask = 0x1;
-          for (int i = 0; i < 32; i++)
+          uint64_t mask = 0x01;
+          for (int i = 0; i < 64; i++)
             {
               if (((dci.m_rbBitmap & mask) >> i) == 1)
                 {
@@ -1447,14 +1447,19 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
         63,     // RGB size 3
         110     // RGB size 4
       };  // see table 7.1.6.1-1 of 36.213
-      for (int i = 0; i < 4; i++)
-        {
-          if (dlBandwidth < Type0AllocationRbg[i])
+
+      //Todo: fix this properly
+      if (dlBandwidth == 100)
+          m_rbgSize = 2;
+      else
+          for (int i = 0; i < 4; i++)
             {
-              m_rbgSize = i + 1;
-              break;
+              if (dlBandwidth < Type0AllocationRbg[i])
+                {
+                  m_rbgSize = i + 1;
+                  break;
+                }
             }
-        }
 
       m_noisePsd = LteSpectrumValueHelper::CreateNoisePowerSpectralDensity (m_dlEarfcn, m_dlBandwidth, m_noiseFigure);
       m_downlinkSpectrumPhy->SetNoisePowerSpectralDensity (m_noisePsd);

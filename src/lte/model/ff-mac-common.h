@@ -93,7 +93,7 @@ enum NormalExtended_e
 struct DlDciListElement_s
 {
   uint16_t  m_rnti; ///< RNTI
-  uint32_t  m_rbBitmap; ///< RB bitmap
+  uint64_t  m_rbBitmap; ///< rb bitmap
   uint8_t   m_rbShift; ///< RB shift
   uint8_t   m_resAlloc; ///< The type of resource allocation
   std::vector <uint16_t>  m_tbsSize; ///< The TBs size

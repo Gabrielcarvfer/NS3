@@ -25,6 +25,10 @@
 #ifndef LTE_ENB_MAC_H
 #define LTE_ENB_MAC_H
 
+#if NS3_PYTORCH
+#include <torch/script.h>
+#undef CHECK
+#endif
 
 #include <map>
 #include <vector>
@@ -40,11 +44,19 @@
 #include <ns3/packet-burst.h>
 #include <ns3/lte-ccm-mac-sap.h>
 
+#include <memory>
+
+
+#include <Eigen/Dense>
+#include "kalman.hpp"
+
+
 namespace ns3 {
 
 class DlCqiLteControlMessage;
 class UlCqiLteControlMessage;
 class PdcchMapLteControlMessage;
+class CognitiveLteControlMessage;
 
 /// DlHarqProcessesBuffer_t typedef
 typedef std::vector <std::vector < Ptr<PacketBurst> > > DlHarqProcessesBuffer_t;
@@ -466,7 +478,81 @@ private:
 
   /// component carrier Id used to address sap
   uint8_t m_componentCarrierId;
- 
+
+public://todo: implement this properly through the SAP
+    //Custom
+    bool spectrumSensing;
+
+    enum mergeAlgorithmEnum{
+        MRG_MULTIFRAME_OR     =  1,
+        MRG_MULTIFRAME_2_OF_N =  2,
+        MRG_MULTIFRAME_3_OF_N =  3,
+        MRG_MULTIFRAME_4_OF_N =  4,
+        MRG_MULTIFRAME_K_OF_N =  5,//Don't use this one
+        MRG_OR                =  6,
+        MRG_AND               =  7,
+        MRG_XOR               =  8,
+        MRG_XNOR              =  9,
+        MRG_1_OF_N            = 10,
+        MRG_2_OF_N            = 11,
+        MRG_3_OF_N            = 12,
+        MRG_4_OF_N            = 13,
+        MRG_K_OF_N            = 14, //Don't use this one
+        MRG_NN                = 15,
+        MRG_KALMAN            = 16,
+        MRG_1_OF_N_RAND       = 17,
+        MRG_2_OF_N_RAND       = 18,
+        MRG_3_OF_N_RAND       = 19,
+        MRG_4_OF_N_RAND       = 20,
+        MRG_MONTECARLOFUSION  = 21,//arxiv.org/pdf/1901.00139.pdf or https://www.groundai.com/project/monte-carlo-fusion/1
+        MRG_AVG               = 22,//also for monte carlo
+    };
+
+    typedef struct cognitive_reg
+    {
+        uint16_t OriginAddress;
+        Time SimCurrTime;
+        Time Delay;
+        //Time TransmissionTime;
+        uint64_t SensedFrameNo;
+        uint64_t SensedSubframeNo;
+        uint64_t ReceivedFrameNo;
+        uint64_t ReceivedSubframeNo;
+        std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap; // Use only the first element of each subvector. Others are for measurements only, and using them means you are cheating
+        std::vector<bool> PU_presence_V;
+    } CognitiveReg;
+    std::map <uint64_t, std::map <uint64_t, std::map<uint16_t, CognitiveReg> > > channelOccupation;
+    std::map <uint64_t, std::map<uint64_t, std::vector<std::vector<bool>> > > unexpectedChannelAccessBitmap;
+    std::map <uint16_t, bool> UeRntiMap;
+    //void RecvCognitiveMessage(Ptr<Packet> p);
+    void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
+    uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);
+    uint16_t bandwidth;
+
+    static std::vector<int> nonDSAChannels;
+
+    //static std::shared_ptr<torch::jit::script::Module> nn_module; //deprecated in LibTorch 1.2 https://github.com/pytorch/pytorch/releases/tag/v1.2.0
+#ifdef NS3_PYTORCH
+    static torch::jit::script::Module nn_module;
+    static int nn_width;
+    static int nn_num_slices;
+    std::vector<std::vector<float>> nn_encodedDataSlice;
+private:
+    std::ofstream falseNegativeFile;
+public:
+#endif
+    std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+    std::map<uint16_t, uint16_t> ue_to_position_map;
+
+
+
+    std::vector <CqiListElement_s> tempCqi;
+
+    KalmanFilter kf;
+
+private:
+    enum mergeAlgorithmEnum FusionAlgorithm;
+
 };
 
 } // end namespace ns3

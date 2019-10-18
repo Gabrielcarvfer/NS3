@@ -76,7 +76,7 @@ void
 GtpuHeader::Serialize (Buffer::Iterator start) const
 {
   Buffer::Iterator i = start;
-  uint8_t firstByte = m_version << 5 | m_protocolType << 4 | 0x1 << 3;
+  uint8_t firstByte = m_version << 5 | m_protocolType << 4 | 0x01 << 3;
   firstByte |=  m_extensionHeaderFlag << 2 |  m_sequenceNumberFlag << 1 | m_nPduNumberFlag;
   i.WriteU8 (firstByte);
   i.WriteU8 (m_messageType);
@@ -93,10 +93,10 @@ GtpuHeader::Deserialize (Buffer::Iterator start)
   Buffer::Iterator i = start;
   uint8_t firstByte = i.ReadU8 ();
   m_version = firstByte >> 5 & 0x7;
-  m_protocolType = firstByte >> 4 & 0x1;
-  m_extensionHeaderFlag = firstByte >> 2 & 0x1;
-  m_sequenceNumberFlag  = firstByte >> 1 & 0x1;
-  m_nPduNumberFlag = firstByte & 0x1;
+  m_protocolType = firstByte >> 4 & 0x01;
+  m_extensionHeaderFlag = firstByte >> 2 & 0x01;
+  m_sequenceNumberFlag  = firstByte >> 1 & 0x01;
+  m_nPduNumberFlag = firstByte & 0x01;
   m_messageType = i.ReadU8 ();
   m_length = i.ReadNtohU16 ();
   m_teid = i.ReadNtohU32 ();

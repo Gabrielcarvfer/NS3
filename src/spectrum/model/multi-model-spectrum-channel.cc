@@ -38,6 +38,7 @@
 #include <ns3/antenna-model.h>
 #include <ns3/angles.h>
 #include "multi-model-spectrum-channel.h"
+#include <cmath>
 
 namespace ns3 {
 
@@ -253,19 +254,27 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
           NS_LOG_LOGIC ("converting txPowerSpectrum SpectrumModelUids" << txSpectrumModelUid << " --> " << rxSpectrumModelUid);
           SpectrumConverterMap_t::const_iterator rxConverterIterator = txInfoIteratorerator->second.m_spectrumConverterMap.find (rxSpectrumModelUid);
           if (rxConverterIterator == txInfoIteratorerator->second.m_spectrumConverterMap.end ())
-            {
+          {
               // No converter means TX SpectrumModel is orthogonal to RX SpectrumModel
               continue;
-            }
-          convertedTxPowerSpectrum = rxConverterIterator->second.Convert (txParams->psd);
+
+              //force conversion to receive other transmissions
+              //convertedTxPowerSpectrum = txParams->psd;
+          }
+          else
+          {
+              convertedTxPowerSpectrum = rxConverterIterator->second.Convert(txParams->psd);
+          }
         }
 
       for (auto rxPhyIterator = rxInfoIterator->second.m_rxPhys.begin ();
            rxPhyIterator != rxInfoIterator->second.m_rxPhys.end ();
            ++rxPhyIterator)
         {
+
           NS_ASSERT_MSG ((*rxPhyIterator)->GetRxSpectrumModel ()->GetUid () == rxSpectrumModelUid,
                          "SpectrumModel change was not notified to MultiModelSpectrumChannel (i.e., AddRx should be called again after model is changed)");
+
 
           if ((*rxPhyIterator) != txParams->txPhy)
             {
@@ -325,6 +334,16 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                     {
                       delay = m_propagationDelay->GetDelay (txMobility, receiverMobility);
                     }
+
+                  {
+                      auto txPos = txMobility->GetPosition();
+                      auto rxPos = receiverMobility->GetPosition();
+                      double diffx = txPos.x-rxPos.x;
+                      double diffy = txPos.y-rxPos.y;
+                      //double diffz = txPos.z-rxPos.z;
+                      rxParams->distance = sqrt(pow(diffx,2)+pow(diffy,2));//+pow(diffz,2));
+                      //std::cout << "[" << txPos.x << ","<<txPos.y<<"] & ["<<rxPos.x<<","<<rxPos.y<<"] distance=" << rxParams->distance << "m diffx " << diffx << " diffy " << diffy << std::endl;
+                  }
                 }
 
               Ptr<NetDevice> netDev = (*rxPhyIterator)->GetDevice ();
@@ -345,7 +364,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
         }
 
     }
-
+    return;
 }
 
 void

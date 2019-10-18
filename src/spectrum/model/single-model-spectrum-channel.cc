@@ -183,6 +183,7 @@ SingleModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
               Simulator::Schedule (delay, &SingleModelSpectrumChannel::StartRx, this,
                                    rxParams, *rxPhyIterator);
             }
+            //MARKED: Update channel state to occupied
         }
     }
 }
@@ -192,6 +193,7 @@ SingleModelSpectrumChannel::StartRx (Ptr<SpectrumSignalParameters> params, Ptr<S
 {
   NS_LOG_FUNCTION (this << params);
   receiver->StartRx (params);
+  //MARKED: Update channel state to free
 }
 
 std::size_t

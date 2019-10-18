@@ -27,6 +27,8 @@
 #include <ns3/ff-mac-common.h>
 #include <ns3/lte-rrc-sap.h>
 #include <list>
+#include "lte-enb-mac.h"
+
 
 namespace ns3 {
 
@@ -61,6 +63,7 @@ public:
     RAR, // Random Access Response
     MIB, // Master Information Block
     SIB1, // System Information Block Type 1
+    COG, // Cognitive
   };
 
   LteControlMessage (void);
@@ -402,6 +405,17 @@ private:
 
 }; // end of class Sib1LteControlMessage
 
+// -----------------------------------------------------------------------------
+
+class CognitiveLteControlMessage : public LteControlMessage {
+public:
+    CognitiveLteControlMessage (void);
+    void SetMessage(LteEnbMac::CognitiveReg msg);
+    LteEnbMac::CognitiveReg GetMessage() const;
+
+private:
+    LteEnbMac::CognitiveReg m_cogReg; ///< SIB1
+}; // end of class CognitiveLteControlMessage
 
 } // namespace ns3
 

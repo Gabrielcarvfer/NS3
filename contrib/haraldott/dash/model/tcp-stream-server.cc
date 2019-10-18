@@ -218,10 +218,10 @@ int64_t
 TcpStreamServer::GetCommand (Ptr<Packet> packet)
 {
   int64_t packetSizeToReturn;
-  uint8_t *buffer = new uint8_t [packet->GetSize ()];
-  packet->CopyData (buffer, packet->GetSize ());
+  std::vector<uint8_t> buffer = std::vector<uint8_t>(packet->GetSize ());
+  packet->CopyData (buffer.data(), packet->GetSize ());
   std::stringstream ss;
-  ss << buffer;
+  ss << buffer.data();
   std::string str;
   ss >> str;
   std::stringstream convert (str);

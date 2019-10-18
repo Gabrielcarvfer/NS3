@@ -170,6 +170,8 @@ private:
       a new interference chunk is calculated */
   std::list<Ptr<LteChunkProcessor> > m_interfChunkProcessorList;
 
+public:
+    Ptr<SpectrumValue> GetAllSignals();
 
 };
 

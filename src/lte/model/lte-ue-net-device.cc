@@ -279,6 +279,7 @@ LteUeNetDevice::DoInitialize (void)
     {
       it->second->GetPhy ()->Initialize ();
       it->second->GetMac ()->Initialize ();
+      it->second->GetMac()->ueSpectrumPhy = it->second->GetPhy()->GetDlSpectrumPhy(); //todo: implement this properly through the SAP
     }
   m_rrc->Initialize ();
 }

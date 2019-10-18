@@ -34,12 +34,18 @@
 #include <vector>
 #include <ns3/packet.h>
 #include <ns3/packet-burst.h>
-#include <ns3/traced-callback.h>
+#include <ns3/spectrum-signal-parameters.h>
+#include <ns3/simulator.h>
+#include <cstdint>
+#include "lte-spectrum-signal-parameters.h"
 
 
 namespace ns3 {
 
 class UniformRandomVariable;
+class    LteSpectrumPhy;//todo: implement this properly through the SAP
+class    LteUePhy;//todo: implement this properly through the SAP
+
 
 class LteUeMac :   public Object
 {
@@ -294,6 +300,13 @@ private:
    * and the max limit of preamble transmission.
    */
   TracedCallback<uint64_t, bool, uint8_t, uint8_t> m_raResponseTimeoutTrace;
+
+public:
+  uint32_t lastFrameNo;
+  uint32_t lastSubframeNo;
+  void SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V); //todo: implement this properly through the SAP
+  Ptr<LteSpectrumPhy> ueSpectrumPhy; //todo: implement this properly through the SAP
+
 };
 
 } // namespace ns3
