@@ -111,6 +111,7 @@ double LteMiErrorModel::scalingCoeffQpsk;
 double LteMiErrorModel::scalingCoeff16qam;
 double LteMiErrorModel::scalingCoeff64qam;
 
+double min_map_qpsk_axis, min_map_16qam_axis, min_map_64qam_axis, max_qpsk_axis, max_16qam_axis, max_64qam_axis;
 
 void LteMiErrorModel::LoadErrorData()
 {
@@ -244,26 +245,26 @@ void LteMiErrorModel::LoadErrorData()
             TbsIndex.push_back((int)it->get<double>());
     }
 #endif
+
+
+    min_map_qpsk_axis  = MI_map_qpsk_axis[0];
+    min_map_16qam_axis = MI_map_16qam_axis[0];
+    min_map_64qam_axis = MI_map_64qam_axis[0];
+    max_qpsk_axis  = MI_map_qpsk_axis[MI_map_qpsk.size()-1];
+    max_16qam_axis = MI_map_16qam_axis[MI_map_16qam.size()-1];
+    max_64qam_axis = MI_map_64qam_axis[MI_map_64qam.size()-1];
     errorDataLoaded = true;
 
 }
 
-double min_map_qpsk_axis, min_map_16qam_axis, min_map_64qam_axis, max_qpsk_axis, max_16qam_axis, max_64qam_axis;
 double
 LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs)
 {
   NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
 
   if (!errorDataLoaded)
-  {
       LoadErrorData();
-      min_map_qpsk_axis  = MI_map_qpsk_axis[0];
-      min_map_16qam_axis = MI_map_16qam_axis[0];
-      min_map_64qam_axis = MI_map_64qam_axis[0];
-      max_qpsk_axis  = MI_map_qpsk_axis[MI_map_qpsk.size()-1];
-      max_16qam_axis = MI_map_16qam_axis[MI_map_16qam.size()-1];
-      max_64qam_axis = MI_map_64qam_axis[MI_map_64qam.size()-1];
-  }
+
 
   double MI;
   double MIsum = 0.0;
@@ -471,6 +472,7 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
     Reff = miHistory.at (0).m_infoBits / (double)codeBitsSum; // information bits are the size of the first TB
     MI = miSum / (double)codeBitsSum;
   }
+
   NS_LOG_DEBUG (" MI " << MI << " Reff " << Reff << " HARQ " << miHistory.size ());
   // estimate CB size (according to sec 5.1.2 of TS 36.212)
   uint16_t Z = 6144; // max size of a codeblock (including CRC)
@@ -523,6 +525,9 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
     {
       mid ++;
     }
+  if(cbSizeTable.size() % 2 == 0)
+      mid--;
+
 
   uint16_t KplusId = mid;
   Kplus = cbSizeTable[mid];
@@ -538,6 +543,7 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
     Cminus = floor ((((double) C * Kplus) - (double)B1) / (double)deltaK);
     Cplus = C - Cminus;
   }
+
   NS_LOG_INFO ("--------------------LteMiErrorModel: TB size of " << B << " needs of " << B1 << " bits reparted in " << C << " CBs as "<< Cplus << " block(s) of " << Kplus << " and " << Cminus << " of " << Kminus);
 
   double errorRate = 1.0;
@@ -574,8 +580,9 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
       }
       uint8_t i;
       for (i=high; i > low; i--)
-          if (BlerCurvesEcrMap[i] > Reff) break;
+          if (BlerCurvesEcrMap[i] <= Reff) break;
       ecrId = i;
+
       NS_LOG_DEBUG ("HARQ ECR " << (uint16_t)ecrId);
     }
 
