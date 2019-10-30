@@ -1,0 +1,50 @@
+
+set(name tcp-large-transfer)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-nsc-lfn)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-nsc-zoo)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libcsma} ${libinternet} ${libapplications})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-star-server)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name star)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libnetanim} ${libpoint-to-point} ${libpoint-to-point-layout} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-bulk-send)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-pcap-nanosec-example)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libapplications} ${libinternet})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-nsc-comparison)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libinternet} ${libapplications} ${libflow-monitor})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-variants-comparison)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libinternet} ${libapplications} ${libflow-monitor})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
+set(name tcp-pacing)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libinternet} ${libapplications} ${libflow-monitor})
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")

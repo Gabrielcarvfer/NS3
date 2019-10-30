@@ -27,6 +27,7 @@
 
 #include "ns3/application.h"
 #include "ns3/ipv4-address.h"
+#include "ns3/inet-socket-address.h"
 #include "dhcp-header.h"
 #include <map>
 

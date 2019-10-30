@@ -1,0 +1,172 @@
+// MAH: start
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <inttypes.h>
+#include "freelist.h"
+
+static const byte_t bitMasks[8] = {0x01, 0x02, 0x04, 0x08,
+                                   0x10, 0x20, 0x40, 0x80};
+
+// PROTOTYPES
+byte_t *get_byte(freeListPtr list, size_t index);
+bool bit_set(freeListPtr list, uint32_t index);
+void set_bit(freeListPtr list, uint32_t index);
+void clear_bit(freeListPtr list, uint32_t index);
+uint32_t block_count(freeListPtr list);
+void allocate_block(freeListPtr list);
+void update_next_free(freeListPtr list);
+
+
+// PUBLIC FUNCTIONS
+// returns true if there are any free entries in the freelist
+bool free_entries(freeListPtr list)
+{
+	return (list->firstFree < list->size);
+}
+
+uint32_t alloc_entry(freeListPtr list)
+{
+	// first available entry is firstFree
+	uint32_t ret = list->firstFree;
+
+	// set entry's bit to 0 to indicate it is in use
+	clear_bit(list, ret);
+
+	// find the next available entry
+	update_next_free(list);
+
+	return ret;
+}
+
+void free_entry(freeListPtr list, uint32_t entry)
+{
+	// set the bit in the bitmap to indicate it's free
+	set_bit(list, entry);
+
+	if (entry < list->firstFree) {
+		list->firstFree = entry;
+	}
+}
+
+freeListPtr create_freelist(uint32_t size)
+{
+	freeListPtr ret;
+	uint32_t num_arrays;
+
+	// allocate freelist
+	ret = (freeListPtr)malloc(sizeof(freeList));
+	if (!ret) {
+		return NULL;
+	}
+
+	// set the number of entries in the free list to size
+	ret->size = size;
+
+	// start allocating entries from 0
+	ret->firstFree = 0;
+
+	// allocate pointers for size/BLOCK_SIZE blocks
+	num_arrays = (size+BLOCK_SIZE-1)/BLOCK_SIZE;
+	ret->byteArray = malloc(num_arrays*sizeof(byte_t*));
+
+	// allocate the first block
+	ret->byteCnt = 0;
+	allocate_block(ret);
+
+
+	return ret;
+}
+
+void destroy_freelist(freeListPtr list)
+{
+	uint32_t i, blocks = block_count(list);
+
+	for (i = 0; i < blocks; i++) {
+		free(list->byteArray[blocks]);
+	}
+	free(list->byteArray);
+	free(list);
+}
+
+
+
+// HELPER FUNCTIONS
+byte_t *get_byte(freeListPtr list, uint32_t index)
+{
+	uint32_t byte_index, block_index, block_byte_index;
+	if (index > list->size) return NULL;
+
+	byte_index = index >> 3;
+	block_index = byte_index / BLOCK_SIZE;
+	block_byte_index = byte_index % BLOCK_SIZE;
+
+	return &list->byteArray[block_index][block_byte_index];
+}
+
+bool bit_set(freeListPtr list, uint32_t index)
+{
+	byte_t *byte;
+	if (index > list->size) return false; // unavailable
+
+	byte = get_byte(list, index);
+	return (*byte & bitMasks[index&0x7]); // note: index&0x7 = index%8
+}
+
+void set_bit(freeListPtr list, uint32_t index)
+{
+	byte_t *byte;
+	if (index > list->size) return;
+
+	byte = get_byte(list, index);
+	*byte |= bitMasks[index&0x7];
+}
+
+void clear_bit(freeListPtr list, uint32_t index)
+{
+	byte_t *byte;
+	if (index > list->size) return;
+
+	byte = get_byte(list, index);
+	*byte &= ~bitMasks[index&0x7];
+}
+
+uint32_t block_count(freeListPtr list) {
+	// returns the number of BLOCK_SIZE chunks currently used by the bitmap
+	return (list->byteCnt + BLOCK_SIZE - 1)/BLOCK_SIZE;
+}
+
+void allocate_block(freeListPtr list) {
+
+	// number of blocks in use
+	uint32_t blocks = block_count(list);
+
+	// allocate a new block
+	list->byteArray[blocks] = (byte_t*)malloc(BLOCK_SIZE);
+
+	// initialize all values to 1 to indicate they are free
+	memset(list->byteArray[blocks], 0xFF, BLOCK_SIZE);
+
+	list->byteCnt += BLOCK_SIZE;
+
+
+}
+
+void update_next_free(freeListPtr list) {
+	uint32_t bits;
+
+	// find next free entry
+	for (bits = list->firstFree; bits < list->size; bits++) {
+		if (bits >= list->byteCnt*8) {
+			allocate_block(list);
+		}
+		if (bit_set(list, bits)) {
+			list->firstFree = bits;
+			return;
+		}
+	}
+	list->firstFree = list->size;
+	return;
+}
+
+// MAH: end

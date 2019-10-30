@@ -37,3 +37,13 @@ build-dir/
 build/
 /.cproject
 /.project
+
+cmake-build-debug/
+
+.idea/
+
+3rd-party/vcpkg/
+
+3rd-party/libtorch.zip
+
+3rd-party/libtorch/
