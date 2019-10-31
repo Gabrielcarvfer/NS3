@@ -83,7 +83,8 @@ function(setup_vcpkg)
         execute_process ( COMMAND ${COMPILER_ENFORCING} ${VCPKG_DIR}/${command}
                 WORKING_DIRECTORY ${VCPKG_DIR} )
         #message(STATUS "VCPKG bootstrapped")
-		include_directories(${VCPKG_DIR})
+		#include_directories(${VCPKG_DIR})
+        set(ENV{VCPKG_ROOT} ${VCPKG_DIR})
     endif()
 endfunction()
 
