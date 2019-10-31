@@ -38,3 +38,13 @@ build/
 /.project
 
 version.cache
+
+cmake-build-debug/
+
+.idea/
+
+3rd-party/vcpkg/
+
+3rd-party/libtorch.zip
+
+3rd-party/libtorch/
