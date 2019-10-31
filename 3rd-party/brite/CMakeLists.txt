@@ -1,3 +1,7 @@
+cmake_minimum_required( VERSION 3.1 )
+
+project(Brite CXX)
+
 set(source_files
         Brite.cc
         BriteNode.cc
