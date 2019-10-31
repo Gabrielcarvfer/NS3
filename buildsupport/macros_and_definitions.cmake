@@ -132,9 +132,10 @@ macro(process_options)
     #link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
     #link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-    #Add hunter-like interface to Vcpkg
+    #Add a hunter-like interface to Vcpkg
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
+        include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
     endif()
 
     #Copy all header files to outputfolder/include/
@@ -159,7 +160,7 @@ macro(process_options)
 
     #Process Openflow 3rd-party submodule and dependencies
     #LibXml2
-    if(${NS3_LIBXML2})
+    if(${NS3_LIBXML2} OR ${NS3_OPENFLOW})
         find_package(LibXml2)
         if(NOT ${LIBXML2_FOUND})
             if (NOT ${AUTOINSTALL_DEPENDENCIES})
@@ -168,22 +169,12 @@ macro(process_options)
                 #If we don't find installed, install
                 add_package (libxml2)
                 get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
-                link_directories(${libxml2_dir}/lib)
-                include_directories(${libxml2_dir}/include)
-                #set(LIBXML2_DEFINITIONS)
-
-                if(WIN32)
-                    set(LIBXML2_LIBRARIES libxml2)
-                else()
-                    set(LIBXML2_LIBRARIES libxml2.a)
-                endif()
-                set(LIBXML2_FOUND TRUE)
+                find_package(LibXml2)
             endif()
-        else()
-            link_directories(${LIBXML2_LIBRARY_DIRS})
-            include_directories( ${LIBXML2_INCLUDE_DIR})
-            #add_definitions(${LIBXML2_DEFINITIONS})
         endif()
+        link_directories(${LIBXML2_LIBRARY_DIRS})
+        include_directories(${LIBXML2_INCLUDE_DIR})
+        #add_definitions(${LIBXML2_DEFINITIONS})
     endif()
 
     if(${NS3_OPENFLOW})
@@ -294,21 +285,16 @@ macro(process_options)
     set(NOT_FOUND_MSG  "is required and couldn't be found")
 
     #Libpcre2 for regex
+    include(${PROJECT_SOURCE_DIR}/buildsupport/custom_modules/FindPCRE.cmake)
+    find_package(PCRE)
     if (NOT ${AUTOINSTALL_DEPENDENCIES})
         message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
     else()
         #If we don't find installed, install
         add_package(pcre2)
-        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-        link_directories(${pcre2_dir}/lib)
-        include_directories(${pcre2_dir}/include)
-        #stopped working for whatever reason, hardwired topology-read cmake file
-        if(WIN32)
-            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
-        else()
-            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
-        endif()
-        set(PCRE_FOUND True)
+        find_package(PCRE)
+        set(PCRE_LIBRARIES ${PCRE2_LIBRARIES})
+        include_directories(${PCRE2_INCLUDE_DIRS})
     endif()
 
 
@@ -413,18 +399,19 @@ macro(process_options)
         find_package(Qt5 COMPONENTS Core Widgets PrintSupport Gui )
 
         if((NOT ${Qt4_FOUND}) AND (NOT ${Qt5_FOUND}))
-            message(ERROR You need Qt installed to build NetAnim)
-        endif()
-
-        if(MSVC)
-            set(${NS3_NETANIM} OFF)
-            message(WARNING "Not building netanim with MSVC")
+            message(ERROR You need Qt installed to build NetAnim. Continuing without it.)
+            set(NS3_NETANIM OFF)
         else()
-            fetch_git_submodule("3rd-party/netanim")
-            ExternalProject_Add(Netanim
-                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/netanim")
+            if(MSVC)
+                set(${NS3_NETANIM} OFF)
+                message(WARNING "Not building netanim with MSVC")
+            else()
+                fetch_git_submodule("3rd-party/netanim")
+                ExternalProject_Add(Netanim
+                        SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/netanim")
+                        #DEPENDS libns${NS3_VER}-core-${build_type}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            endif()
         endif()
-
     endif()
 
     if(${NS3_PYTORCH})
