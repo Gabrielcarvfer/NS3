@@ -127,6 +127,10 @@ macro(process_options)
         set(build_type "rel")
     endif()
 
+    if(${NS3_TESTS})
+        enable_testing()
+    endif()
+
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
     #link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
@@ -288,7 +292,7 @@ macro(process_options)
     include(${PROJECT_SOURCE_DIR}/buildsupport/custom_modules/FindPCRE.cmake)
     find_package(PCRE)
     if (NOT ${AUTOINSTALL_DEPENDENCIES})
-        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+        message(WARNING "PCRE2 ${NOT_FOUND_MSG}. Rocketfuel topology reader wont be built")
     else()
         #If we don't find installed, install
         add_package(pcre2)
@@ -548,33 +552,31 @@ macro(process_options)
     endif()
 
 
-
-
-    #Remove from libs_to_build all incompatible libraries or the ones that depenendencies couldn't be installed
+    #Remove from libs_to_build all incompatible libraries or the ones that dependencies couldn't be installed
     if(MSVC)
         set(NS3_NETANIM OFF)
-        list(REMOVE_ITEM lib_to_build netanim)
+        list(REMOVE_ITEM libs_to_build netanim)
     endif()
 
     if(NOT ${NS3_OPENFLOW})
-        list(REMOVE_ITEM lib_to_build openflow)
+        list(REMOVE_ITEM libs_to_build openflow)
     endif()
 
     if(NOT ${NS3_PYTHON})
-        list(REMOVE_ITEM lib_to_build visualizer)
+        list(REMOVE_ITEM libs_to_build visualizer)
     endif()
 
-    set(build_brite)
-    set(build_fd-net-device)
-    set(build_tap-bridge)
+    if(NOT ${NS3_BRITE})
+        list(REMOVE_ITEM libs_to_build brite)
+    endif()
 
     if (WIN32 OR APPLE)
         if(${NS3_BRITE})
             set(NS3_BRITE OFF)
-            list(REMOVE_ITEM lib_to_build brite)
+            list(REMOVE_ITEM libs_to_build brite)
         endif()
-        list(REMOVE_ITEM lib_to_build fd-net-device)
-        list(REMOVE_ITEM lib_to_build tap-bridge)
+        list(REMOVE_ITEM libs_to_build fd-net-device)
+        list(REMOVE_ITEM libs_to_build tap-bridge)
     endif()
 
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
@@ -754,6 +756,10 @@ macro (build_example name source_files header_files libraries_to_link)
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
             )
+    add_test(NAME ctest-${name}
+             COMMAND ${name}
+             WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
+            )
 endmacro()
 
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
@@ -773,6 +779,9 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
             )
 
     file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname})
+    add_test(NAME ctest-${name}
+             COMMAND ${name}
+             WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
 endmacro()
 
 #Add contributions macros
