@@ -1,0 +1,9 @@
+[submodule "3rd-party/netanim"]
+	path = 3rd-party/netanim
+	url = https://gitlab.com/Gabrielcarvfer/netanim.git
+[submodule "3rd-party/openflow"]
+	path = 3rd-party/openflow
+	url = https://gitlab.com/Gabrielcarvfer/openflow.git
+[submodule "3rd-party/brite"]
+	path = 3rd-party/brite
+	url = https://gitlab.com/Gabrielcarvfer/brite.git
