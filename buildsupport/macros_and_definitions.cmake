@@ -103,6 +103,14 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND APPLE)
 endif()
 
 
+macro(fetch_git_submodule submodule_path)
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init ${submodule_path}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodule ${submodule_path}")
+    endif()
+endmacro()
 
 #process all options passed in main cmakeLists
 macro(process_options)
@@ -119,180 +127,37 @@ macro(process_options)
         set(build_type "rel")
     endif()
 
-    #Copy all header files to outputfolder/include/
-    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
-    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-
-
-    #Don't build incompatible libraries on Windows
-    if (WIN32 OR APPLE)
-        set(build_lib_brite)
-        set(build_lib_openflow)
-    else()
-        set(build_lib_brite brite)
-        set(build_lib_openflow openflow)
-    endif()
-
-    #3rd party libraries with sources shipped in 3rd-party folder
-    set(3rdPartyLibraries
-            netanim
-            ${build_lib_brite}
-            ${build_lib_openflow}
-            )
-
-    #Add 3rd-party library headers to include directories
-    foreach(3rdPartyLibrary ${3rdPartyLibraries})
-        #file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/3rd-party/${3rdPartyLibrary}/*.h) #just copying every single header from 3rd party libraries into ns3 include folder
-        #file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
-        include_directories(3rd-party/${3rdPartyLibrary})
-        include_directories(3rd-party/${3rdPartyLibrary}/include)
-    endforeach()
-
-    #BRITE
-    set(BRITE_LIBRARIES brite)
-
     #Set common include folder
     include_directories(${CMAKE_OUTPUT_DIRECTORY})
     #link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
     #link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-    #process debug switch
+    #Add hunter-like interface to Vcpkg
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
     endif()
 
-    #PyTorch still need some fixes on Windows
-    if(WIN32 AND ${NS3_PYTORCH})
-        message(WARNING "Libtorch linkage on Windows still requires some fixes. The build will continue without it.")
-        set(NS3_PYTORCH OFF)
-    endif()
+    #Copy all header files to outputfolder/include/
+    file(GLOB_RECURSE include_files ${PROJECT_SOURCE_DIR}/src/*.h) #just copying every single header into ns3 include folder
+    file(COPY ${include_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY})
 
-    #Set C++ standard
-    if(${NS3_PYTORCH})
-        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
-        set(CMAKE_CXX_STANDARD_REQUIRED OFF) #ABI requirements for PyTorch affect this
-        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS -DNS3_PYTORCH)
-    else()
-        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
-        set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    endif()
+    #Load GIT to fetch required submodules
+    find_package(Git QUIET)
+    include(ExternalProject)
 
-    if(${NS3_SANITIZE})
-        #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,leak,thread,undefined,memory -g")
-    endif()
-
-
-    #find required dependencies
-    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
-
-
-    set(NOT_FOUND_MSG  "is required and couldn't be found")
-
-    #Libpcre2 for regex
-    if (NOT ${AUTOINSTALL_DEPENDENCIES})
-        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
-    else()
-        #If we don't find installed, install
-        add_package(pcre2)
-        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
-        link_directories(${pcre2_dir}/lib)
-        include_directories(${pcre2_dir}/include)
-        #stopped working for whatever reason, hardwired topology-read cmake file
-        if(WIN32)
-            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+    #Process Brite 3rd-party submodule and dependencies
+    if(${NS3_BRITE})
+        if(WIN32 OR APPLE)
+            set(${NS3_BRITE} OFF)
+            message(WARNING "Not building brite on Windows/Mac")
         else()
-            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
-        endif()
-        set(PCRE_FOUND True)
-    endif()
-
-
-
-    set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
-
-    if(${NS3_OPENFLOW})
-
-        set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
-                system
-                signals
-                filesystem
-                static-assert
-                config
-                )
-        include_directories(3rd-party/openflow/include)
-        #if (WIN32)
-        set(OPENFLOW_LIBRARIES openflow)
-        #else()
-        #    set(OPENFLOW_LIBRARIES libopenflow.a)
-        #endif()
-        set(OPENFLOW_FOUND TRUE)
-
-    endif()
-
-
-    if(${NS3_BOOST})
-        #find_package(Boost)
-        #if(NOT ${BOOST_FOUND})
-            if (NOT ${AUTOINSTALL_DEPENDENCIES})
-                message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
-            else()
-                #add_package(boost) #this will install all the boost libraries and was a bad idea
-
-                set(requiredBoostLibraries
-                        ${OPENFLOW_REQUIRED_BOOST_LIBRARIES}
-                        )
-
-                #Holds libraries to link later
-                set(BOOST_LIBRARIES
-                        )
-                set(BOOST_INCLUDES
-                        )
-
-                #For each of the required boost libraries
-                foreach(requiredBoostLibrary ${requiredBoostLibraries})
-                    set(boostLib boost-${requiredBoostLibrary})
-                    add_package(${boostLib})
-                    get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
-                    #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
-                    list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
-
-                    #Some boost libraries (e.g. static-assert) don't have an associated library
-                    if (EXISTS ${${boostLib}_dir}/lib)
-                        link_directories(${${boostLib}_dir}/lib)
-
-                        if (WIN32)
-                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
-                        else()
-                            list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
-                        endif()
-                    endif()
-                endforeach()
-
-
-                set(BOOST_FOUND TRUE)
-            endif()
-        #else()
-        #    link_directories(${BOOST_LIBRARY_DIRS})
-        #    include_directories( ${BOOST_INCLUDE_DIR})
-        #endif()
-    endif()
-
-    #GTK2
-    if(${NS3_GTK2})
-        find_package(GTK2)
-        if(NOT ${GTK2_FOUND})
-            if (NOT ${AUTOINSTALL_DEPENDENCIES})
-                message(FATAL_ERROR "LibGTK2 ${NOT_FOUND_MSG}")
-            else()
-                #todo
-            endif()
-        else()
-            link_directories(${GTK2_LIBRARY_DIRS})
-            include_directories( ${GTK2_INCLUDE_DIRS})
-            add_definitions(${GTK2_CFLAGS_OTHER})
+            fetch_git_submodule("3rd-party/brite")
+            ExternalProject_Add(Brite
+                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/brite")
         endif()
     endif()
 
+    #Process Openflow 3rd-party submodule and dependencies
     #LibXml2
     if(${NS3_LIBXML2})
         find_package(LibXml2)
@@ -320,6 +185,153 @@ macro(process_options)
             #add_definitions(${LIBXML2_DEFINITIONS})
         endif()
     endif()
+
+    if(${NS3_OPENFLOW})
+        if(WIN32)
+            set(${NS3_OPENFLOW} OFF)
+            message(WARNING "Not building brite on Windows")
+        else()
+            fetch_git_submodule("3rd-party/openflow")
+            ExternalProject_Add(Openflow
+                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/openflow")
+        endif()
+    endif()
+
+    #Process ns3 Openflow module and dependencies
+    set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
+
+    if(${NS3_OPENFLOW})
+        set(OPENFLOW_REQUIRED_BOOST_LIBRARIES
+                system
+                signals
+                filesystem
+                static-assert
+                config
+                )
+        include_directories(${PROJECT_SOURCE_DIR}/3rd-party/openflow/include)
+        #if (WIN32)
+        set(OPENFLOW_LIBRARIES openflow)
+        #else()
+        #    set(OPENFLOW_LIBRARIES libopenflow.a)
+        #endif()
+        set(OPENFLOW_FOUND TRUE)
+    endif()
+
+
+    if(${NS3_BOOST})
+        #find_package(Boost)
+        #if(NOT ${BOOST_FOUND})
+        if (NOT ${AUTOINSTALL_DEPENDENCIES})
+            message(FATAL_ERROR "BoostC++ ${NOT_FOUND_MSG}")
+        else()
+            #add_package(boost) #this will install all the boost libraries and was a bad idea
+
+            set(requiredBoostLibraries
+                    ${OPENFLOW_REQUIRED_BOOST_LIBRARIES}
+                    )
+
+            #Holds libraries to link later
+            set(BOOST_LIBRARIES
+                    )
+            set(BOOST_INCLUDES
+                    )
+
+            #For each of the required boost libraries
+            foreach(requiredBoostLibrary ${requiredBoostLibraries})
+                set(boostLib boost-${requiredBoostLibrary})
+                add_package(${boostLib})
+                get_property(${boostLib}_dir GLOBAL PROPERTY DIR_${boostLib})
+                #include_directories(${boostLib}/include) #damned Boost-assert undefines assert, causing all sorts of problems with Brite
+                list(APPEND BOOST_INCLUDES ${${boostLib}_dir}/include) #add BOOST_INCLUDES per target to avoid collisions
+
+                #Some boost libraries (e.g. static-assert) don't have an associated library
+                if (EXISTS ${${boostLib}_dir}/lib)
+                    link_directories(${${boostLib}_dir}/lib)
+
+                    if (WIN32)
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary})
+                    else()
+                        list(APPEND BOOST_LIBRARIES libboost_${requiredBoostLibrary}.a)
+                    endif()
+                endif()
+            endforeach()
+
+
+            set(BOOST_FOUND TRUE)
+        endif()
+        #else()
+        #    link_directories(${BOOST_LIBRARY_DIRS})
+        #    include_directories( ${BOOST_INCLUDE_DIR})
+        #endif()
+    endif()
+
+
+
+    #PyTorch still need some fixes on Windows
+    if(WIN32 AND ${NS3_PYTORCH})
+        message(WARNING "Libtorch linkage on Windows still requires some fixes. The build will continue without it.")
+        set(NS3_PYTORCH OFF)
+    endif()
+
+    #Set C++ standard
+    if(${NS3_PYTORCH})
+        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
+        set(CMAKE_CXX_STANDARD_REQUIRED OFF) #ABI requirements for PyTorch affect this
+        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS -DNS3_PYTORCH)
+    else()
+        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
+        set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    endif()
+
+    if(${NS3_SANITIZE})
+        #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,leak,thread,undefined,memory -g")
+    endif()
+
+
+    #find required dependencies
+    list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/buildsupport/custom_modules")
+
+    set(NOT_FOUND_MSG  "is required and couldn't be found")
+
+    #Libpcre2 for regex
+    if (NOT ${AUTOINSTALL_DEPENDENCIES})
+        message(FATAL_ERROR "PCRE2 ${NOT_FOUND_MSG}")
+    else()
+        #If we don't find installed, install
+        add_package(pcre2)
+        get_property(pcre2_dir GLOBAL PROPERTY DIR_pcre2)
+        link_directories(${pcre2_dir}/lib)
+        include_directories(${pcre2_dir}/include)
+        #stopped working for whatever reason, hardwired topology-read cmake file
+        if(WIN32)
+            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+        else()
+            set(PCRE_LIBRARIES pcre2-posix pcre2-8)
+        endif()
+        set(PCRE_FOUND True)
+    endif()
+
+
+
+
+
+    #GTK2
+    if(${NS3_GTK2})
+        find_package(GTK2)
+        if(NOT ${GTK2_FOUND})
+            if (NOT ${AUTOINSTALL_DEPENDENCIES})
+                message(FATAL_ERROR "LibGTK2 ${NOT_FOUND_MSG}")
+            else()
+                #todo
+            endif()
+        else()
+            link_directories(${GTK2_LIBRARY_DIRS})
+            include_directories( ${GTK2_INCLUDE_DIRS})
+            add_definitions(${GTK2_CFLAGS_OTHER})
+        endif()
+    endif()
+
+
 
     #LibRT
     if(${NS3_LIBRT})
@@ -397,64 +409,20 @@ macro(process_options)
     endif()
 
     if (${NS3_NETANIM})
-
-        if (${USE_QT} STREQUAL "4")
-            find_package(Qt4 COMPONENTS QtGui REQUIRED)
-        elseif(${USE_QT} STREQUAL "5")
-            find_package(Qt5 COMPONENTS Core Widgets PrintSupport Gui REQUIRED)
-        endif()
+        find_package(Qt4 COMPONENTS QtGui )
+        find_package(Qt5 COMPONENTS Core Widgets PrintSupport Gui )
 
         if((NOT ${Qt4_FOUND}) AND (NOT ${Qt5_FOUND}))
             message(ERROR You need Qt installed to build NetAnim)
         endif()
 
-        #Used by Netanim (qt stuff)
-        #the following commands were moved to netanim CMakeLists to reduce _autogen targets
-        #set(CMAKE_AUTOMOC ON)
-        #set(CMAKE_AUTORCC ON)
-        #set(CMAKE_AUTOUIC ON)
-        set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-        if (${Qt4_FOUND})
-            include(${QT_USE_FILE})
-            add_definitions(${QT_DEFINITIONS})
-            include_directories(${QT_INCLUDES})
-        endif()
-
-        if(${Qt5_FOUND})
-            #Hard way
-            # Spent 4h trying to discover what caused a shared library not to be found.
-            # Ended up being a WSL bug https://github.com/Microsoft/WSL/issues/3023 https://superuser.com/a/1348051/691447
-                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
-
-                #include_directories(${Qt5Core_INCLUDE_DIRS}
-                #        ${Qt5Widgets_INCLUDE_DIRS}
-                #        ${Qt5PrintSupport_INCLUDE_DIRS}
-                #        )
-
-                #Fetch the library path to Qt core lib
-                #get_target_property(Qt5Core_location Qt5::Core LOCATION)
-
-                ##Get the directory with the Qt core library
-                #get_filename_component(QT_PATH ${Qt5Core_location} DIRECTORY)
-
-                #set(QT_VERSION ${Qt5Widgets_VERSION})
-
-                #set(QT_LIBRARIES_N
-                #        libQt5Widgets.so.${QT_VERSION}
-                #        libQt5PrintSupport.so.${QT_VERSION}
-                #        libQt5Gui.so.${QT_VERSION}
-                #        libQt5Core.so.${QT_VERSION}
-                #        )
-
-                #set(QT_LIBRARIES )
-                #foreach(qt_lib ${QT_LIBRARIES_N})
-                #    list(APPEND QT_LIBRARIES ${QT_PATH}/${qt_lib})
-                #endforeach()
-
-                #add_definitions(-DQT_CORE_LIB -DQT_GUI_LIB -DQT_PRINTSUPPORT_LIB -DQT_WIDGETS_LIB)
-                #link_directories(${QT_PATH})
-                #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${QT_PATH}")
+        if(MSVC)
+            set(${NS3_NETANIM} OFF)
+            message(WARNING "Not building netanim with MSVC")
+        else()
+            fetch_git_submodule("3rd-party/netanim")
+            ExternalProject_Add(Netanim
+                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/netanim")
         endif()
 
     endif()
@@ -592,6 +560,35 @@ macro(process_options)
         add_definitions(-DNS3_LOG_ENABLE)
     endif()
 
+
+
+
+    #Remove from libs_to_build all incompatible libraries or the ones that depenendencies couldn't be installed
+    if(MSVC)
+        set(NS3_NETANIM OFF)
+        list(REMOVE_ITEM lib_to_build netanim)
+    endif()
+
+    if(NOT ${NS3_OPENFLOW})
+        list(REMOVE_ITEM lib_to_build openflow)
+    endif()
+
+    if(NOT ${NS3_PYTHON})
+        list(REMOVE_ITEM lib_to_build visualizer)
+    endif()
+
+    set(build_brite)
+    set(build_fd-net-device)
+    set(build_tap-bridge)
+
+    if (WIN32 OR APPLE)
+        if(${NS3_BRITE})
+            set(NS3_BRITE OFF)
+            list(REMOVE_ITEM lib_to_build brite)
+        endif()
+        list(REMOVE_ITEM lib_to_build fd-net-device)
+        list(REMOVE_ITEM lib_to_build tap-bridge)
+    endif()
 
     #Create library names to solve dependency problems with macros that will be called at each lib subdirectory
     set(ns3-libs )
