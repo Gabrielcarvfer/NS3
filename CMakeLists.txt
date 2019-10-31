@@ -30,65 +30,46 @@ option(NS3_EXAMPLES "Enable examples to be built" OFF)
 set(NS3_EXAMPLES ON)
 
 option(NS3_SANITIZE "Run Google sanitizers" OFF)
-#set(NS3_SANITIZE ON)
 
 option(NS3_PYTHON "Build NS3-lib pybindings" OFF)
-#set(NS3_PYTHON ON)
 
 option(NS3_BOOST "Build with Boost support" OFF)
-#set(NS3_BOOST ON)
 
 option(NS3_OPENFLOW "Build with Openflow support" OFF)
-set(NS3_OPENFLOW ON)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
-set(NS3_GTK2 OFF)
 
 option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
-set(NS3_LIBXML2 ON)
 
 option(NS3_LIBRT "Build with RT support" OFF)
-set(NS3_LIBRT ON) #not working on Windows
 
 option(NS3_MPI "Build with MPI support" OFF)
-set(NS3_MPI OFF)
 
 option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
-set(NS3_PYTORCH ON)
 
 option(NS3_GSL "Build with GSL support" OFF)
-set(NS3_GSL ON)
 
 option(NS3_PLANETLAB "Build with Planetlab support" OFF)
-set(NS3_PLANETLAB OFF)
 
 option(NS3_TAP "Build with Tap support" OFF)
-set(NS3_TAP OFF)
 
 option(NS3_EMU "Build with emu support" OFF)
-set(NS3_EMU OFF)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
-set(NS3_GNUPLOT OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
-set(NS3_BRITE ON)
 
 option(NS3_NSC "Build with NSC" OFF)
 #TODO: download, build and link sources
 
 option(NS3_NETANIM "Build netanim support" OFF)
-set(NS3_NETANIM ON)
-
-set(USE_QT 5)# Choose between Qt 4 or 5
 
 option(NS3_PTHREAD "Build with pthread support" ON)
-set(NS3_PTHREAD ON)
 
 option(NS3_STATIC "Build static library" OFF)
 
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
-set(AUTOINSTALL_DEPENDENCIES ON)
+#set(AUTOINSTALL_DEPENDENCIES ON)
 
 #Select libs to be built
 # libs marked with # on the right are compiling on windows
@@ -142,7 +123,6 @@ set(libs_to_build
 
 #Build contribution libraries
 set(contribution_libraries_to_build
-        haraldott # https://github.com/haraldott/dash/commit/f886b5757de277db9c88e442458f20960a70b57a
         )
 
 #######################################

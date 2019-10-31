@@ -8,10 +8,16 @@ cwd_path = os.getcwd()
 cwd_components = cwd_path.split(os.sep)
 
 cwd_offset_dict = { "ns-3-dev"  : len(cwd_components),
-					"utils": -1,
-					"build": -1,
-					"bin"  : -2,
-					"src"  : -1,				
+					"NS3"       : len(cwd_components),
+					"utils"                     : -1,
+					"build"                     : -1,
+					"bin"                       : -2,
+					"src"                       : -1,	
+					"cmake-cache"               : -1,
+					"cmake-build-debug"         : -1,
+					"cmake-build-release"       : -1,
+					"cmake-build-minsizerel"    : -1,
+					"cmake-build-relwithdebinfo": -1,			
 					}
 
 cwd_offset = cwd_offset_dict[cwd_components[-1]]
