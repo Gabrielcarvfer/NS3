@@ -379,13 +379,22 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
         rbgMap.push_back (rbId++);
         if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
          {
-            uint8_t mcs = 0;
             TbStats_t tbStats;
+            std::vector<TbStats_t> tbStatsVector;
+            tbStatsVector.reserve(30);
+            #pragma omp parallel for
+            for (uint8_t mcs = 0; mcs <= 29; mcs++)
+            {
+                HarqProcessInfoList_t harqInfoList;
+                tbStatsVector[mcs] = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+            }
+
+            uint8_t mcs = 0;
             while (mcs <= 28)
               {
-                HarqProcessInfoList_t harqInfoList;
-                tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
-                if (tbStats.tbler > 0.1)
+                //HarqProcessInfoList_t harqInfoList;
+                //tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+                if (tbStatsVector[mcs].tbler > 0.1)
                   {
                     break;
                   }
