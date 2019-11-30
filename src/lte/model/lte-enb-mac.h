@@ -43,7 +43,7 @@
 #include <ns3/packet.h>
 #include <ns3/packet-burst.h>
 #include <ns3/lte-ccm-mac-sap.h>
-
+#include <tuple>
 #include <memory>
 
 
@@ -542,6 +542,8 @@ private:
 public:
 #endif
     std::map<uint16_t, std::vector<unsigned char>> ue_to_cqi_map;
+    std::map<uint16_t, std::vector<unsigned char>> prev_ue_to_cqi_map;
+
     std::map<uint16_t, uint16_t> ue_to_position_map;
 
 
@@ -552,6 +554,10 @@ public:
 
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;
+    std::map<uint16_t, std::vector<uint64_t>> ackNackMapPerUe;
+    std::map<uint16_t, bool> fraudulentCqiUEs;
+    std::map<uint16_t, std::vector<std::vector<uint8_t> > > lastReportedResultAndCqiByUePerSubchannel;
+
 
 };
 

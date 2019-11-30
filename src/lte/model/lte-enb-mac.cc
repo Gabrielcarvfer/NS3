@@ -375,12 +375,12 @@ LteEnbMac::GetTypeId (void)
                    MakeUintegerChecker<uint8_t> (1, 4))
     .AddAttribute("FusionAlgorithm",
                   "Fusion algorithm for the collaborative sensing merge function",
-                  UintegerValue(3),
+                  UintegerValue(MRG_OR),
                   MakeUintegerAccessor(&LteEnbMac::FusionAlgorithm),
                   MakeUintegerChecker<uint8_t> (1,50))//Increment range if you create new fusion algorithms
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
-                  BooleanValue(false),
+                  BooleanValue(true),
                   MakeBooleanAccessor(&LteEnbMac::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlScheduling",
@@ -724,16 +724,103 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   // --- DOWNLINK ---
   // Send Dl-CQI info to the scheduler
   if (m_dlCqiReceived.size () > 0)
-    {
-      FfMacSchedSapProvider::SchedDlCqiInfoReqParameters dlcqiInfoReq;
-      dlcqiInfoReq.m_sfnSf = ((0x3FF & frameNo) << 4) | (0xF & subframeNo);
-      dlcqiInfoReq.m_cqiList.insert (dlcqiInfoReq.m_cqiList.begin (), m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
-      tempCqi.clear();
-      tempCqi.insert(tempCqi.begin(), m_dlCqiReceived.begin(), m_dlCqiReceived.end());
-      m_dlCqiReceived.erase (m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
-      m_schedSapProvider->SchedDlCqiInfoReq (dlcqiInfoReq);
-    }
+  {
+    FfMacSchedSapProvider::SchedDlCqiInfoReqParameters dlcqiInfoReq;
+    dlcqiInfoReq.m_sfnSf = ((0x3FF & frameNo) << 4) | (0xF & subframeNo);
+    dlcqiInfoReq.m_cqiList.insert (dlcqiInfoReq.m_cqiList.begin (), m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
+    tempCqi.clear();
+    tempCqi.insert(tempCqi.begin(), m_dlCqiReceived.begin(), m_dlCqiReceived.end());
+    m_dlCqiReceived.erase (m_dlCqiReceived.begin (), m_dlCqiReceived.end ());
+    m_schedSapProvider->SchedDlCqiInfoReq (dlcqiInfoReq);
+  }
 
+  //Process DL-CQI entries to reset ACK/NACK counters
+  //Backup ue_to_cqi_map
+  if (!tempCqi.empty())
+  {
+      //Update pre-existing registries with previous report
+      for (auto & ueReg: ue_to_cqi_map)
+      {
+          if (prev_ue_to_cqi_map.find(ueReg.first) != prev_ue_to_cqi_map.end())
+              prev_ue_to_cqi_map.at(ueReg.first) = ueReg.second;
+          else
+              prev_ue_to_cqi_map.emplace(ueReg.first, ueReg.second);
+      }
+
+      //Update current registries with new info
+      for (auto & cqiEntry : tempCqi)
+      {
+          if(cqiEntry.m_cqiType != ns3::CqiListElement_s::A30)
+              continue;
+          //A30 CQIs at this point
+          std::vector<uint8_t> cqisList;
+          for (auto &rbEntry: cqiEntry.m_sbMeasResult.m_higherLayerSelected)
+          {
+              cqisList.push_back(rbEntry.m_sbCqi.at(0));
+          }
+          if(ue_to_cqi_map.find(cqiEntry.m_rnti) == ue_to_cqi_map.end())
+          {
+              ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
+              ue_to_position_map.insert({ue_to_position_map.size(), cqiEntry.m_rnti});
+          }
+          else
+              ue_to_cqi_map.at(cqiEntry.m_rnti) = cqisList;
+      }
+  }
+
+  if(!prev_ue_to_cqi_map.empty() && !ue_to_cqi_map.empty())
+  {
+      //For each UE/rnti, check if CQI increased/maintained and if the current level of NACKs > 10% of NACKs+ACKs
+      for (auto &ueCQI : ue_to_cqi_map)
+      {
+          //Skip UEs with empty stats
+          if(ackNackMapPerUe.find(ueCQI.first) == ackNackMapPerUe.end())
+              continue;
+
+          auto acks = ackNackMapPerUe.at(ueCQI.first)[1];
+          auto nacks = ackNackMapPerUe.at(ueCQI.first)[2];
+
+          if(prev_ue_to_cqi_map.find(ueCQI.first) == prev_ue_to_cqi_map.end())
+              continue;
+
+          //For each resource block
+          int i = 0;
+          for(auto it = ueCQI.second.begin(); it <= ueCQI.second.end(); it++)
+          {
+              //If transport block error levels is higher than 10% check how the CQI behaves
+              if (nacks*10 >= acks+nacks)
+              {
+                  //If it was kept or increased, mark UE CQI reporting as fraudulent
+                  if (ueCQI.second[i] >= prev_ue_to_cqi_map.at(ueCQI.first)[i])
+                  {
+                      fraudulentCqiUEs.insert({ueCQI.first, true});
+                  }
+                  //If the CQI was decreased, the number of acks will eventually grow bigger than nacks
+                  it = ueCQI.second.end(); // skip to next UE
+                  continue;
+              }
+              else
+              {
+                  //When transport block error levels fall to lower than 10%, remove CQI from fraudulent list
+                  if(fraudulentCqiUEs.find(ueCQI.first) != fraudulentCqiUEs.end())
+                      fraudulentCqiUEs.erase(ueCQI.first);
+
+                  //When transport block error levels fall to lower than 10%, reset ack/nack count if the CQI changed
+                  if (ueCQI.second[i] != prev_ue_to_cqi_map.at(ueCQI.first)[i])
+                  {
+                      auto &ackNackReg = ackNackMapPerUe.at(ueCQI.first);
+                      ackNackReg[1] = 0;
+                      ackNackReg[2] = 0;
+                  }
+              }
+              i++;
+          }
+      }
+
+  }
+
+
+  //Proceed to default procedure
   if (!m_receivedRachPreambleCount.empty ())
     {
       // process received RACH preambles and notify the scheduler
@@ -1557,6 +1644,15 @@ void
 LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
 {
   NS_LOG_FUNCTION (this);
+
+  //Count acks and nacks per ue/rnti
+  auto ackNackReg = ackNackMapPerUe.find(params.m_rnti);
+  if (ackNackReg == ackNackMapPerUe.end())
+  {
+      std::vector<uint64_t> tmp({0,0});
+      ackNackMapPerUe.emplace(params.m_rnti, tmp);
+  }
+
   // Update HARQ buffer
   std::map <uint16_t, DlHarqProcessesBuffer_t>::iterator it =  m_miDlHarqProcessesPackets.find (params.m_rnti);
   NS_ASSERT (it != m_miDlHarqProcessesPackets.end ());
@@ -1568,10 +1664,12 @@ LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
           Ptr<PacketBurst> emptyBuf = CreateObject <PacketBurst> ();
           (*it).second.at (layer).at (params.m_harqProcessId) = emptyBuf;
           NS_LOG_DEBUG (this << " HARQ-ACK UE " << params.m_rnti << " harqId " << (uint16_t)params.m_harqProcessId << " layer " << (uint16_t)layer);
+          ackNackMapPerUe.at(params.m_rnti)[1]++;
         }
       else if (params.m_harqStatus.at (layer) == DlInfoListElement_s::NACK)
         {
           NS_LOG_DEBUG (this << " HARQ-NACK UE " << params.m_rnti << " harqId " << (uint16_t)params.m_harqProcessId << " layer " << (uint16_t)layer);
+          ackNackMapPerUe.at(params.m_rnti)[0]++;
         }
       else
         {
@@ -1690,9 +1788,8 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
 //Implements the fusion algorithm for collaborative sensing reports
 uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 {
+    //Proceed to spectrum sensing fusion
     std::vector<std::vector<bool>> fusedResults;
-
-
     while (channelOccupation.size() > 0)//just an if with break
     {
         auto frameIt = channelOccupation.rbegin();
@@ -1728,12 +1825,37 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                     for (auto origAddr : subframeIt->second)
                     {
+                        //1st check against Byzantine attacks
+                        //Skip reports from UEs that report fraudulent CQIs
+                        auto fraudulentUE = fraudulentCqiUEs.find(origAddr.first);
+                        if (fraudulentUE != fraudulentCqiUEs.end())
+                            continue;
+
+                        //Skip reports from UEs that didn't reported their CQI at least twice
+                        if(prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(origAddr.first) == ue_to_cqi_map.end())
+                            continue;
+
+                        //Check if there is an entry for Cqi per subchannel for the current UE
+                        auto prevCqi   = prev_ue_to_cqi_map.at(origAddr.first);
+                        auto latestCqi = ue_to_cqi_map.at(origAddr.first);
+
+                        //Iterate through UE channel sensing information and fuse
                         int i = 0;
+                        int j = 0;
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            //Or between sensing results
-                            fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
+                            //2nd check against Byzantine attacks
+                            //Skip reports from UEs that report sane CQIs but didn't changed when a PU was detected, which indicates the sensing is incorrect
+                            if (prevCqi[j] >= latestCqi[j])
+                            {
+                                //Or between sensing results
+                                fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
+                            }
+
                             i++;
+                            j+= 13;
+                            if (j > 49)
+                                j = 49;
                         }
                     }
                 }

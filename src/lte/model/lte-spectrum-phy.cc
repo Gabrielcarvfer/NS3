@@ -322,12 +322,12 @@ LteSpectrumPhy::GetTypeId (void)
                     MakeBooleanChecker ())
     .AddAttribute ("CtrlErrorModelEnabled",
                     "Activate/Deactivate the error model of control (PCFICH-PDCCH decodification) [by default is active].",
-                    BooleanValue (true),
+                    BooleanValue (false),
                     MakeBooleanAccessor (&LteSpectrumPhy::m_ctrlErrorModelEnabled),
                     MakeBooleanChecker ())
     .AddAttribute("SpectrumSensing",
                   "Set if spectrum sensing should be used or not",
-                  BooleanValue(false),
+                  BooleanValue(true),
                   MakeBooleanAccessor(&LteSpectrumPhy::spectrumSensing),
                   MakeBooleanChecker())
     .AddTraceSource ("DlPhyReception",
