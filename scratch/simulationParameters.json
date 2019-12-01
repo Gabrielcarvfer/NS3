@@ -1,6 +1,6 @@
 {
     "SimulationParameters": {
-        "ts": 10,
+        "ts": 20,
         "fc": 869000000.0,
         "bw": 20000000.0,
         "fusionAlgorithm": 6,

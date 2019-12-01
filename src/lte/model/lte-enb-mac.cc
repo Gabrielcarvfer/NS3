@@ -777,23 +777,30 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
           if(ackNackMapPerUe.find(ueCQI.first) == ackNackMapPerUe.end())
               continue;
 
-          auto acks = ackNackMapPerUe.at(ueCQI.first)[1];
-          auto nacks = ackNackMapPerUe.at(ueCQI.first)[2];
+          auto acks = ackNackMapPerUe.at(ueCQI.first)[0];
+          auto nacks = ackNackMapPerUe.at(ueCQI.first)[1];
 
           if(prev_ue_to_cqi_map.find(ueCQI.first) == prev_ue_to_cqi_map.end())
               continue;
 
           //For each resource block
           int i = 0;
-          for(auto it = ueCQI.second.begin(); it <= ueCQI.second.end(); it++)
+          for(auto it = ueCQI.second.begin(); it != ueCQI.second.end();)
           {
               //If transport block error levels is higher than 10% check how the CQI behaves
-              if (nacks*10 >= acks+nacks)
+              if (nacks*10 > acks+nacks)
               {
                   //If it was kept or increased, mark UE CQI reporting as fraudulent
-                  if (ueCQI.second[i] >= prev_ue_to_cqi_map.at(ueCQI.first)[i])
+                  if (ueCQI.second[i] > prev_ue_to_cqi_map.at(ueCQI.first)[i])
                   {
-                      fraudulentCqiUEs.insert({ueCQI.first, true});
+                      if (fraudulentCqiUEs.find(ueCQI.first) == fraudulentCqiUEs.end())
+                      {
+                          std::vector<bool> temp{false, false, false, false};
+                          temp[i/(bandwidth/4)] = true;
+                          fraudulentCqiUEs.insert({ueCQI.first, temp});
+                      }
+                      else
+                        fraudulentCqiUEs.at(ueCQI.first)[i/(bandwidth/4)] = true;
                   }
                   //If the CQI was decreased, the number of acks will eventually grow bigger than nacks
                   it = ueCQI.second.end(); // skip to next UE
@@ -803,17 +810,28 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
               {
                   //When transport block error levels fall to lower than 10%, remove CQI from fraudulent list
                   if(fraudulentCqiUEs.find(ueCQI.first) != fraudulentCqiUEs.end())
-                      fraudulentCqiUEs.erase(ueCQI.first);
+                  {
+                      fraudulentCqiUEs.at(ueCQI.first)[i/(bandwidth/4)] = false;
+
+                      bool empty = true;
+                      for (auto val : fraudulentCqiUEs.at(ueCQI.first))
+                          if (val) empty = false;
+                      if (empty)
+                        fraudulentCqiUEs.erase(ueCQI.first);
+                  }
 
                   //When transport block error levels fall to lower than 10%, reset ack/nack count if the CQI changed
                   if (ueCQI.second[i] != prev_ue_to_cqi_map.at(ueCQI.first)[i])
                   {
                       auto &ackNackReg = ackNackMapPerUe.at(ueCQI.first);
+                      ackNackReg[0] = 0;
                       ackNackReg[1] = 0;
-                      ackNackReg[2] = 0;
                   }
               }
-              i++;
+              i+= 13;
+              if (i > 49)
+                  i = 49;
+              it++;
           }
       }
 
@@ -1664,12 +1682,12 @@ LteEnbMac::DoDlInfoListElementHarqFeeback (DlInfoListElement_s params)
           Ptr<PacketBurst> emptyBuf = CreateObject <PacketBurst> ();
           (*it).second.at (layer).at (params.m_harqProcessId) = emptyBuf;
           NS_LOG_DEBUG (this << " HARQ-ACK UE " << params.m_rnti << " harqId " << (uint16_t)params.m_harqProcessId << " layer " << (uint16_t)layer);
-          ackNackMapPerUe.at(params.m_rnti)[1]++;
+          ackNackMapPerUe.at(params.m_rnti)[0]++;
         }
       else if (params.m_harqStatus.at (layer) == DlInfoListElement_s::NACK)
         {
           NS_LOG_DEBUG (this << " HARQ-NACK UE " << params.m_rnti << " harqId " << (uint16_t)params.m_harqProcessId << " layer " << (uint16_t)layer);
-          ackNackMapPerUe.at(params.m_rnti)[0]++;
+          ackNackMapPerUe.at(params.m_rnti)[1]++;
         }
       else
         {
@@ -1828,8 +1846,8 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         //1st check against Byzantine attacks
                         //Skip reports from UEs that report fraudulent CQIs
                         auto fraudulentUE = fraudulentCqiUEs.find(origAddr.first);
-                        if (fraudulentUE != fraudulentCqiUEs.end())
-                            continue;
+                        //if (fraudulentUE != fraudulentCqiUEs.end()) //Only makes sense if not subdivided by subchannel
+                        //    continue;
 
                         //Skip reports from UEs that didn't reported their CQI at least twice
                         if(prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(origAddr.first) == ue_to_cqi_map.end())
@@ -1846,7 +1864,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         {
                             //2nd check against Byzantine attacks
                             //Skip reports from UEs that report sane CQIs but didn't changed when a PU was detected, which indicates the sensing is incorrect
-                            if (prevCqi[j] >= latestCqi[j])
+                            if ((fraudulentUE == fraudulentCqiUEs.end() || !fraudulentUE->second[i/(bandwidth/4)]) && (prevCqi[j] >= latestCqi[j]))
                             {
                                 //Or between sensing results
                                 fusedResults[i][0] = fusedResults[i][0] || channelReg[0];

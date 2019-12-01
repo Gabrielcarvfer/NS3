@@ -24,10 +24,10 @@ set(NS3_VER 3.30.1)
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
-set(NS3_TESTS ON)
+#set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES ON)
+#set(NS3_EXAMPLES ON)
 
 option(NS3_SANITIZE "Run Google sanitizers" OFF)
 #set(NS3_SANITIZE ON)

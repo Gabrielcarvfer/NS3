@@ -555,7 +555,7 @@ public:
 private:
     enum mergeAlgorithmEnum FusionAlgorithm;
     std::map<uint16_t, std::vector<uint64_t>> ackNackMapPerUe;
-    std::map<uint16_t, bool> fraudulentCqiUEs;
+    std::map<uint16_t, std::vector<bool>> fraudulentCqiUEs;
     std::map<uint16_t, std::vector<std::vector<uint8_t> > > lastReportedResultAndCqiByUePerSubchannel;
 
 
