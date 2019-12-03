@@ -1213,7 +1213,7 @@ void LteSpectrumPhy::resetSensingStatus()
     int num_channels = 4;//sinrGroupHistory.back().size()/groupingSize;
     UnexpectedAccess_FalseAlarm_FalseNegBitmap = std::vector<std::vector<bool>>(num_channels);
     for (auto &unexpectedAccessRegistry: UnexpectedAccess_FalseAlarm_FalseNegBitmap)
-        unexpectedAccessRegistry = std::vector<bool>(3);
+        unexpectedAccessRegistry = std::vector<bool>(4);//1st field = spectrum sensing report, 2nd field = instrumentation for false alarm, 3rd field = instrumentation for false negative, 4th field = instrumentation for fake report
 
     PU_presence_V = std::vector<bool>(num_channels);
     waitingForSensingReportTransmission = false;

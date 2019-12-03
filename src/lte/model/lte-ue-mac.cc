@@ -937,7 +937,13 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
 
     //Force fake reporting of PU_presence
     if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap.size()>0)
-        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = std::rand()%1;
+    {
+        bool fakeReport = (std::rand() % 255) > 127;
+
+        //std::cout << "Fake " << fakeReport << std::endl;
+        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = fakeReport;
+        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = fakeReport;
+    }
 
 
     Ptr<CognitiveLteControlMessage> msg = Create<CognitiveLteControlMessage> ();
