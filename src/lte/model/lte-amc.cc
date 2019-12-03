@@ -374,14 +374,19 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       NS_ASSERT_MSG (rbgSize > 0, " LteAmc-Vienna: RBG size must be greater than 0");
       std::vector <int> rbgMap;
       int rbId = 0;
+      //Make sure things are initialized before trying to run parallel stuff
+      {
+        HarqProcessInfoList_t harqInfoList;
+        LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList);
+      }
       for (it = sinr.ConstValuesBegin (); it != sinr.ConstValuesEnd (); it++)
       {
         rbgMap.push_back (rbId++);
         if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
          {
             TbStats_t tbStats;
-            std::vector<TbStats_t> tbStatsVector;
-            tbStatsVector.reserve(30);
+            TbStats_t tbStatsVector[30];
+
             #pragma omp parallel for
             for (uint8_t mcs = 0; mcs <= 29; mcs++)
             {
@@ -396,6 +401,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
                 //tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
                 if (tbStatsVector[mcs].tbler > 0.1)
                   {
+                    tbStats = tbStatsVector[mcs];
                     break;
                   }
                 mcs++;

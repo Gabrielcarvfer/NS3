@@ -765,6 +765,18 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
           else
               ue_to_cqi_map.at(cqiEntry.m_rnti) = cqisList;
       }
+
+      std::vector<double> tempHarmonicCqi{0.0, 0.0, 0.0, 0.0};
+      for (int k = 0; k < 4; k++)
+      {
+          double harmonicCqi = 0.0;
+          for (auto &ueCQI : ue_to_cqi_map)
+          {
+              harmonicCqi += 1/(double) ueCQI.second[(k * 13) % 50];
+          }
+          tempHarmonicCqi[k] = ue_to_cqi_map.size()/harmonicCqi;
+      }
+      harmonicCqiHistory.push_back(tempHarmonicCqi);
   }
 
   if(!prev_ue_to_cqi_map.empty() && !ue_to_cqi_map.empty())
@@ -784,7 +796,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
 
           //For each resource block
           int i = 0;
-          for(auto it = ueCQI.second.begin(); it != ueCQI.second.end();)
+          for(int k = 0; k < 4; k++)
           {
               //If transport block error levels is higher than 10% check how the CQI behaves
               if (nacks*10 > acks+nacks)
@@ -802,8 +814,8 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
                         fraudulentCqiUEs.at(ueCQI.first)[i/(bandwidth/4)] = true;
                   }
                   //If the CQI was decreased, the number of acks will eventually grow bigger than nacks
-                  it = ueCQI.second.end(); // skip to next UE
-                  continue;
+                  //it = ueCQI.second.end(); // skip to next UE
+                  //continue;
               }
               else
               {
@@ -830,7 +842,6 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
               i+= 13;
               if (i > 49)
                   i = 49;
-              it++;
           }
       }
 
@@ -1864,7 +1875,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                             //2nd check against Byzantine attacks
                             //Skip reports from UEs that report sane CQIs but didn't changed when a PU was detected, which indicates the sensing is incorrect
-
                             bool prevSensingExists = prevSensing.find(origAddr.first) != prevSensing.end();
 
                             //Reset fraudulentSensingUEs if sensing info or CQI changed
@@ -1878,7 +1888,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 if (empty)
                                     fraudulentSensingUEs.erase(origAddr.first);
                             }
-
+                            //if((*harmonicCqiHistory.rbegin()++)[i] != (*harmonicCqiHistory.rbegin())[i] )
+                            if(latestCqi[j] != 15)
+                                std::cout << "j " << j << " PrevCqi " << (int) prevCqi[j] << " latestCqi " << (int) latestCqi[j] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic" << (*harmonicCqiHistory.rbegin())[i] << std::endl;
                             std::stringstream ss;
                             if(  (  channelReg[0] && prevCqi[j] < latestCqi[j] ) //If CQI improved but reporting a PU presence indicates fraudulent result
                                  || (  prevSensingExists && (  prevSensing.at(origAddr.first)[i] != channelReg[0]  ) && (  prevCqi[j] <= latestCqi[j]  )  )
@@ -1893,38 +1905,46 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 else
                                     fraudulentSensingUEs.at(origAddr.first)[i] = true;
                                 fraudulentUE = fraudulentSensingUEs.find(origAddr.first);
-                                ss << "Blip";
+
+                                if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
+                                    ss << " Blip prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << latestCqi[j];
+                                else
+                                    ss << " Blip prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[j] << ", currCqi=" << (int) latestCqi[j];
+
                             }
 
                             if (channelReg[3])
                             {
                                 if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
-                                    ss << " Blop prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << latestCqi[j];
+                                    ss << " Blop";
                                 else
-                                    ss << " Blop prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[j] << ", currCqi=" << (int) latestCqi[j];
+                                    ss << " Blop";
                             }
 
                             //if(i==0 &&  ss.str().size() > 1)
                             //    std::cout << ss.str() << std::endl;
 
-                            bool fraudulent = ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[j] )
-                                    || ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i] );
+                            bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[j] )
+                                                //|| ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])
+                                                || ( (prevCqi[j] > latestCqi[j]) && prevSensingExists && prevSensing.at(origAddr.first)[i] && !channelReg[0])
+                                                || ( (prevCqi[j] < latestCqi[j]) && prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0])
+                                              );
 
-                            if ( !fraudulent && !( (prevCqi[j] >= latestCqi[j]) && prevSensingExists && !prevSensing.at(origAddr.first)[i]) )
+                            if ( !fraudulent )
                             {
                                 //Or between sensing results
                                 fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
-                            }
 
-                            if (prevSensing.find(origAddr.first) != prevSensing.end())
-                            {
-                                prevSensing.at(origAddr.first)[i] = channelReg[0];
-                            }
-                            else
-                            {
-                                std::vector<bool> temp{false, false, false, false};
-                                temp[i] = true;
-                                prevSensing.insert({origAddr.first, temp});
+                                if (prevSensing.find(origAddr.first) != prevSensing.end())
+                                {
+                                    prevSensing.at(origAddr.first)[i] = channelReg[0];
+                                }
+                                else
+                                {
+                                    std::vector<bool> temp{false, false, false, false};
+                                    temp[i] = true;
+                                    prevSensing.insert({origAddr.first, temp});
+                                }
                             }
 
                             i++;
