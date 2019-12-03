@@ -62,7 +62,6 @@ std::vector<int> LteEnbMac::nonDSAChannels;
 #endif
 
 
-
 // //////////////////////////////////////
 // member SAP forwarders
 // //////////////////////////////////////
@@ -772,7 +771,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
           double harmonicCqi = 0.0;
           for (auto &ueCQI : ue_to_cqi_map)
           {
-              harmonicCqi += 1/(double) ueCQI.second[(k * 13) % 50];
+              harmonicCqi += 1/(double) ueCQI.second[centralRbgIndexPerSubchannel[k]];
           }
           tempHarmonicCqi[k] = ue_to_cqi_map.size()/harmonicCqi;
       }
@@ -795,23 +794,22 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
               continue;
 
           //For each resource block
-          int i = 0;
-          for(int k = 0; k < 4; k++)
+          for(int i = 0; i < 4; i++)
           {
               //If transport block error levels is higher than 10% check how the CQI behaves
               if (nacks*10 > acks+nacks)
               {
                   //If it was kept or increased, mark UE CQI reporting as fraudulent
-                  if (ueCQI.second[i] > prev_ue_to_cqi_map.at(ueCQI.first)[i])
+                  if (ueCQI.second[centralRbgIndexPerSubchannel[i]] > prev_ue_to_cqi_map.at(ueCQI.first)[centralRbgIndexPerSubchannel[i]])
                   {
                       if (fraudulentCqiUEs.find(ueCQI.first) == fraudulentCqiUEs.end())
                       {
                           std::vector<bool> temp{false, false, false, false};
-                          temp[i/(bandwidth/4)] = true;
+                          temp[i] = true;
                           fraudulentCqiUEs.insert({ueCQI.first, temp});
                       }
                       else
-                        fraudulentCqiUEs.at(ueCQI.first)[i/(bandwidth/4)] = true;
+                        fraudulentCqiUEs.at(ueCQI.first)[i] = true;
                   }
                   //If the CQI was decreased, the number of acks will eventually grow bigger than nacks
                   //it = ueCQI.second.end(); // skip to next UE
@@ -822,7 +820,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
                   //When transport block error levels fall to lower than 10%, remove CQI from fraudulent list
                   if(fraudulentCqiUEs.find(ueCQI.first) != fraudulentCqiUEs.end())
                   {
-                      fraudulentCqiUEs.at(ueCQI.first)[i/(bandwidth/4)] = false;
+                      fraudulentCqiUEs.at(ueCQI.first)[i] = false;
 
                       bool empty = true;
                       for (auto val : fraudulentCqiUEs.at(ueCQI.first))
@@ -832,16 +830,14 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
                   }
 
                   //When transport block error levels fall to lower than 10%, reset ack/nack count if the CQI changed
-                  if (ueCQI.second[i] != prev_ue_to_cqi_map.at(ueCQI.first)[i])
+                  if (ueCQI.second[centralRbgIndexPerSubchannel[i]] != prev_ue_to_cqi_map.at(ueCQI.first)[centralRbgIndexPerSubchannel[i]])
                   {
                       auto &ackNackReg = ackNackMapPerUe.at(ueCQI.first);
                       ackNackReg[0] = 0;
                       ackNackReg[1] = 0;
                   }
               }
-              i+= 13;
-              if (i > 49)
-                  i = 49;
+              i++;
           }
       }
 
@@ -1879,7 +1875,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                             //Reset fraudulentSensingUEs if sensing info or CQI changed
                             if ( ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i] )
-                                 && ( ( prevSensingExists && (prevSensing.at(origAddr.first)[i] != channelReg[0]) ) && (prevCqi[j] != latestCqi[j]) )  )
+                                 && ( ( prevSensingExists && (prevSensing.at(origAddr.first)[i] != channelReg[0]) ) && (prevCqi[centralRbgIndexPerSubchannel[i]] != latestCqi[centralRbgIndexPerSubchannel[i]]) )  )
                             {
                                 fraudulentSensingUEs.at(origAddr.first)[i] = false;
                                 bool empty = true;
@@ -1889,11 +1885,16 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                     fraudulentSensingUEs.erase(origAddr.first);
                             }
                             //if((*harmonicCqiHistory.rbegin()++)[i] != (*harmonicCqiHistory.rbegin())[i] )
-                            if(latestCqi[j] != 15)
-                                std::cout << "j " << j << " PrevCqi " << (int) prevCqi[j] << " latestCqi " << (int) latestCqi[j] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic" << (*harmonicCqiHistory.rbegin())[i] << std::endl;
+                            //if(latestCqi[j] != 15)
+                            //    std::cout << "j " << j << " PrevCqi " << (int) prevCqi[j] << " latestCqi " << (int) latestCqi[j] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic" << (*harmonicCqiHistory.rbegin())[i] << std::endl;
+                            if ((*harmonicCqiHistory.rbegin()++)[i] < (*harmonicCqiHistory.rbegin())[i])
+                                std::cout << "moar" << std::endl;
+                            if ((*harmonicCqiHistory.rbegin()++)[i] > (*harmonicCqiHistory.rbegin())[i])
+                                std::cout << "less" << std::endl;
+
                             std::stringstream ss;
-                            if(  (  channelReg[0] && prevCqi[j] < latestCqi[j] ) //If CQI improved but reporting a PU presence indicates fraudulent result
-                                 || (  prevSensingExists && (  prevSensing.at(origAddr.first)[i] != channelReg[0]  ) && (  prevCqi[j] <= latestCqi[j]  )  )
+                            if(  (  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but reporting a PU presence indicates fraudulent result
+                                 || (  prevSensingExists && (  prevSensing.at(origAddr.first)[i] != channelReg[0]  ) && (  prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )  )
                                  || (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i]) ) //If CQI is constant, there shouldn't be a difference in PU reporting
                             {
                                 if (fraudulentSensingUEs.find(origAddr.first) == fraudulentSensingUEs.end())
@@ -1907,7 +1908,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 fraudulentUE = fraudulentSensingUEs.find(origAddr.first);
 
                                 if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
-                                    ss << " Blip prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << latestCqi[j];
+                                    ss << " Blip prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << latestCqi[centralRbgIndexPerSubchannel[i]];
                                 else
                                     ss << " Blip prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[j] << ", currCqi=" << (int) latestCqi[j];
 
@@ -1924,10 +1925,10 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //if(i==0 &&  ss.str().size() > 1)
                             //    std::cout << ss.str() << std::endl;
 
-                            bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[j] )
+                            bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[centralRbgIndexPerSubchannel[i]] )
                                                 //|| ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])
-                                                || ( (prevCqi[j] > latestCqi[j]) && prevSensingExists && prevSensing.at(origAddr.first)[i] && !channelReg[0])
-                                                || ( (prevCqi[j] < latestCqi[j]) && prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0])
+                                                || ( (prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]]) && prevSensingExists && prevSensing.at(origAddr.first)[i] && !channelReg[0])
+                                                || ( (prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]]) && prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0])
                                               );
 
                             if ( !fraudulent )
@@ -1948,9 +1949,6 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             }
 
                             i++;
-                            j+= 13;
-                            if (j > 49)
-                                j = 49;
                         }
                     }
                 }
