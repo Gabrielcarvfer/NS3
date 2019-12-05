@@ -733,18 +733,8 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   }
 
   //Process DL-CQI entries to reset ACK/NACK counters
-  //Backup ue_to_cqi_map
   if (!tempCqi.empty())
   {
-      //Update pre-existing registries with previous report
-      for (auto & ueReg: ue_to_cqi_map)
-      {
-          if (prev_ue_to_cqi_map.find(ueReg.first) != prev_ue_to_cqi_map.end())
-              prev_ue_to_cqi_map.at(ueReg.first) = ueReg.second;
-          else
-              prev_ue_to_cqi_map.emplace(ueReg.first, ueReg.second);
-      }
-
       //Update current registries with new info
       for (auto & cqiEntry : tempCqi)
       {
@@ -756,16 +746,27 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
           {
               cqisList.push_back(rbEntry.m_sbCqi.at(0));
           }
+
+          //Create new entry for ue_to_cqi_map
           if(ue_to_cqi_map.find(cqiEntry.m_rnti) == ue_to_cqi_map.end())
           {
               ue_to_cqi_map.insert({cqiEntry.m_rnti, cqisList});
               ue_to_position_map.insert({ue_to_position_map.size(), cqiEntry.m_rnti});
           }
           else
+          {
+              //Backup previous ue_to_cqi_map
+              if (prev_ue_to_cqi_map.find(cqiEntry.m_rnti) == prev_ue_to_cqi_map.end())
+                  prev_ue_to_cqi_map.emplace(cqiEntry.m_rnti, ue_to_cqi_map.at(cqiEntry.m_rnti));
+              else
+                prev_ue_to_cqi_map.at(cqiEntry.m_rnti) = ue_to_cqi_map.at(cqiEntry.m_rnti);
+
+              //Assign new values to ue_to_cqi_map
               ue_to_cqi_map.at(cqiEntry.m_rnti) = cqisList;
+          }
       }
 
-      std::vector<double> tempHarmonicCqi{0.0, 0.0, 0.0, 0.0};
+      std::vector<int> tempHarmonicCqi{0, 0, 0, 0};
       for (int k = 0; k < 4; k++)
       {
           double harmonicCqi = 0.0;
@@ -773,7 +774,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
           {
               harmonicCqi += 1/(double) ueCQI.second[centralRbgIndexPerSubchannel[k]];
           }
-          tempHarmonicCqi[k] = ue_to_cqi_map.size()/harmonicCqi;
+          tempHarmonicCqi[k] = (int) (ue_to_cqi_map.size()/harmonicCqi);
       }
       harmonicCqiHistory.push_back(tempHarmonicCqi);
   }
@@ -829,8 +830,8 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
                           fraudulentCqiUEs.erase(ueCQI.first);
                   }
 
-                  //When transport block error levels fall to lower than 10%, reset ack/nack count if the CQI changed
-                  if (ueCQI.second[centralRbgIndexPerSubchannel[i]] != prev_ue_to_cqi_map.at(ueCQI.first)[centralRbgIndexPerSubchannel[i]])
+                  //When transport block error levels fall to lower than 10% and CQI increases, reset ack/nack count
+                  if (ueCQI.second[centralRbgIndexPerSubchannel[i]] > prev_ue_to_cqi_map.at(ueCQI.first)[centralRbgIndexPerSubchannel[i]])
                   {
                       auto &ackNackReg = ackNackMapPerUe.at(ueCQI.first);
                       ackNackReg[0] = 0;
@@ -1885,17 +1886,21 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                     fraudulentSensingUEs.erase(origAddr.first);
                             }
                             //if((*harmonicCqiHistory.rbegin()++)[i] != (*harmonicCqiHistory.rbegin())[i] )
-                            //if(latestCqi[j] != 15)
-                            //    std::cout << "j " << j << " PrevCqi " << (int) prevCqi[j] << " latestCqi " << (int) latestCqi[j] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic" << (*harmonicCqiHistory.rbegin())[i] << std::endl;
-                            if ((*harmonicCqiHistory.rbegin()++)[i] < (*harmonicCqiHistory.rbegin())[i])
-                                std::cout << "moar" << std::endl;
-                            if ((*harmonicCqiHistory.rbegin()++)[i] > (*harmonicCqiHistory.rbegin())[i])
-                                std::cout << "less" << std::endl;
+                            //if(latestCqi[centralRbgIndexPerSubchannel[i]] != 15)
+                            //if (channelReg[0] && channelReg[3])
+                            //std::cout << origAddr.first << " j " << (int) centralRbgIndexPerSubchannel[i] << " PrevCqi " << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << " latestCqi " << (int) latestCqi[centralRbgIndexPerSubchannel[i]] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic " << (*harmonicCqiHistory.rbegin())[i] << std::endl;
+                            //if (harmonicCqiHistory[harmonicCqiHistory.size()-2][i] < harmonicCqiHistory[harmonicCqiHistory.size()-1][i])
+                            //    std::cout << "i" << i << " moar" << std::endl;
+                            //if (harmonicCqiHistory[harmonicCqiHistory.size()-2][i] > harmonicCqiHistory[harmonicCqiHistory.size()-1][i])
+                            //    std::cout << "i" << i << " less" << std::endl;
 
                             std::stringstream ss;
-                            if(  (  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but reporting a PU presence indicates fraudulent result
-                                 || (  prevSensingExists && (  prevSensing.at(origAddr.first)[i] != channelReg[0]  ) && (  prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )  )
-                                 || (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i]) ) //If CQI is constant, there shouldn't be a difference in PU reporting
+                            if ( channelReg[0] && latestCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-1][i]
+                                  || (  prevSensingExists && (  prevCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-2][i]  )  )
+                                //|| (  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but still reporting a PU presence indicates fraudulent result
+                                  || (  prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]]  )
+                                //|| (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])  //If CQI is constant, there shouldn't be a difference in PU reporting
+                               )
                             {
                                 if (fraudulentSensingUEs.find(origAddr.first) == fraudulentSensingUEs.end())
                                 {
@@ -1907,23 +1912,24 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                     fraudulentSensingUEs.at(origAddr.first)[i] = true;
                                 fraudulentUE = fraudulentSensingUEs.find(origAddr.first);
 
-                                if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
-                                    ss << " Blip prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << latestCqi[centralRbgIndexPerSubchannel[i]];
-                                else
-                                    ss << " Blip prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[j] << ", currCqi=" << (int) latestCqi[j];
+
+                                ss << " Blip";
 
                             }
 
                             if (channelReg[3])
                             {
-                                if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
-                                    ss << " Blop";
-                                else
-                                    ss << " Blop";
+                                ss << " Blop";
                             }
-
-                            //if(i==0 &&  ss.str().size() > 1)
-                            //    std::cout << ss.str() << std::endl;
+                            if(i==0 &&  ss.str().size() > 1)
+                            {
+                                if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
+                                    ss << " prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
+                                else
+                                    ss << " prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
+                                ss << " prevHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-2][i] << " lastHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-1][i];
+                                std::cout << ss.str() << std::endl;
+                            }
 
                             bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[centralRbgIndexPerSubchannel[i]] )
                                                 //|| ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])

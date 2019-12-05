@@ -941,8 +941,19 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
         bool fakeReport = (std::rand() % 255) > 127;
 
         //std::cout << "Fake " << fakeReport << std::endl;
-        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = fakeReport;
-        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = fakeReport;
+
+        if(fakeReport)
+        {
+            senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = fakeReport;
+
+            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = false;
+
+            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
+
+            senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0];
+        }
     }
 
 
