@@ -95,8 +95,8 @@ int main() {
     double simTime = 10;
     double enbTxPower              =  53.0; //dBm
     double enbGain                 =   9.0; //dBi
-    double ueTxPower               =  10.0; //dBm
-    double ueGain                  =   0.0; //dBi
+    double ueTxPower               =  23.0; //dBm
+    double ueGain                  =   9.0; //dBi
     double carrierFrequency        = 869e6; //Hz
     double channelBandwidth        =  20e6; //Hz
     double ueTxPeriodSec           =   0.1; //sec     | 48Mbps throughput at the LTE uplink
@@ -226,7 +226,7 @@ int main() {
 
     //0.3 Configure error model (disable error model for control channel, assuming it works on a different channel without interference)
     Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
-    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
+    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(true));
 
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));

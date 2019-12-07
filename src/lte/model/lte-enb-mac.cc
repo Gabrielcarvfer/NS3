@@ -1876,7 +1876,11 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                             //Reset fraudulentSensingUEs if sensing info or CQI changed
                             if ( ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i] )
-                                 && ( ( prevSensingExists && (prevSensing.at(origAddr.first)[i] != channelReg[0]) ) && (prevCqi[centralRbgIndexPerSubchannel[i]] != latestCqi[centralRbgIndexPerSubchannel[i]]) )  )
+                                 && (     ( prevSensingExists && !prevSensing.at(origAddr.first)[i] &&  channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] >  latestCqi[centralRbgIndexPerSubchannel[i]]) )
+                                       || ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] &&  channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]) )
+                                       //|| ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] && !channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] <  latestCqi[centralRbgIndexPerSubchannel[i]]) )
+                                    )
+                               )
                             {
                                 fraudulentSensingUEs.at(origAddr.first)[i] = false;
                                 bool empty = true;
@@ -1896,9 +1900,10 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                             std::stringstream ss;
                             if ( channelReg[0] && latestCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-1][i]
-                                  || (  prevSensingExists && (  prevCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-2][i]  )  )
-                                //|| (  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but still reporting a PU presence indicates fraudulent result
-                                  || (  prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]]  )
+                                  || (  channelReg[0] && (  prevCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-2][i]  )  )
+                                  || (  prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but still reporting a PU presence indicates fraudulent result
+                                  || (  prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]] )
+                                  || (  prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] == latestCqi[centralRbgIndexPerSubchannel[i]] && harmonicCqiHistory[harmonicCqiHistory.size()-2][i] < harmonicCqiHistory[harmonicCqiHistory.size()-1][i] )
                                 //|| (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])  //If CQI is constant, there shouldn't be a difference in PU reporting
                                )
                             {
@@ -1928,7 +1933,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 else
                                     ss << " prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
                                 ss << " prevHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-2][i] << " lastHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-1][i];
-                                std::cout << ss.str() << std::endl;
+                                //std::cout << ss.str() << std::endl;
                             }
 
                             bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[centralRbgIndexPerSubchannel[i]] )

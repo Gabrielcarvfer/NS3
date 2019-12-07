@@ -246,6 +246,7 @@ LteUeMac::GetTypeId (void)
   return tid;
 }
 
+std::map<uint16_t, bool> LteUeMac::fakeReportingUes;
 
 LteUeMac::LteUeMac ()
   :  m_bsrPeriodicity (MilliSeconds (1)), // ideal behavior
@@ -938,21 +939,35 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
     //Force fake reporting of PU_presence
     if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap.size()>0)
     {
-        bool fakeReport = (std::rand() % 255) > 127;
+        //Give a certain percentage of doctored sensing reports
+        //bool fakeReport = (std::rand() % 256) > 252;//127 for 50%/50%, 192 for 25%/75%, 224 for 12.5%/87.5%, 240 for 6.25%/93.75%, 248 for 3.125%/96.875%, 252 for 1.5625%/98.4375%
 
-        //std::cout << "Fake " << fakeReport << std::endl;
+
+        //Doctor sensing reports from a few UEs
+        if (fakeReportingUes.size() < 3 && fakeReportingUes.find(m_rnti) == fakeReportingUes.end())
+            fakeReportingUes.insert({m_rnti, true});
+        bool fakeReport = fakeReportingUes.find(m_rnti) != fakeReportingUes.end();
+
 
         if(fakeReport)
         {
-            senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = fakeReport;
 
-            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = false;
+            //If already was false alarm, skip it
+            //if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
+            //    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = false;
 
-            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
+            //If was false negative, skip it
+            //if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
+            //    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
 
-            senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0];
+            //If not false alarm nor false negative and reporting PU as not present, change it
+            if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] && !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] && !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0])
+            {
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = true;
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
+
+            }
         }
     }
 

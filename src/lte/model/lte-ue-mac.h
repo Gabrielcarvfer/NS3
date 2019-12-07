@@ -301,6 +301,7 @@ private:
    */
   TracedCallback<uint64_t, bool, uint8_t, uint8_t> m_raResponseTimeoutTrace;
 
+  static std::map<uint16_t, bool> fakeReportingUes;
 public:
   uint32_t lastFrameNo;
   uint32_t lastSubframeNo;
