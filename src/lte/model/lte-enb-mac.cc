@@ -1928,13 +1928,16 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             }
                             ss << this;
                             //If result doesnt make sense, decrease trustworthiness
-                            if (  prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]] )
+                            if (  (    prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]] )
+                                  || ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < harmonicCqiHistory.at(harmonicCqiHistory.size()-2)[i] && latestCqi[centralRbgIndexPerSubchannel[i]] > harmonicCqiHistory.at(harmonicCqiHistory.size()-1)[i] )
+                               )
                             {
                                 markovTrustworthiness.at(origAddr.first)[i] *= 0.5;
                                 ss << " Blip 1";
                             }
-                            else if(    !channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <  latestCqi[centralRbgIndexPerSubchannel[i]]
-                                     || prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )
+                            else if(     !channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] >= latestCqi[centralRbgIndexPerSubchannel[i]]
+                                      || ( prevSensingExists && !prevSensing.at(origAddr.first)[i] &&  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )
+                            )
                             {
                                 markovTrustworthiness.at(origAddr.first)[i] += 0.01;
                                 markovTrustworthiness.at(origAddr.first)[i] = markovTrustworthiness.at(origAddr.first)[i] > 1.0 ? 1.0 : markovTrustworthiness.at(origAddr.first)[i];
@@ -1987,7 +1990,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 else
                                     ss << " prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
                                 ss << " prevHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-2][i] << " lastHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-1][i];
-                                std::cout << ss.str() << std::endl;
+                                //std::cout << ss.str() << std::endl;
                             }
 
                             //bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[centralRbgIndexPerSubchannel[i]] )
