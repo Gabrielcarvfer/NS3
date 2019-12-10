@@ -944,7 +944,8 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
 
 
         //Doctor sensing reports from a few UEs
-        if (fakeReportingUes.size() < 3 && fakeReportingUes.find(m_rnti) == fakeReportingUes.end())
+        int numFakeReportingUEs = 0; // 0 for no attackers, suggested 2 to 5 //TODO: find a better way to do that and prevent recompiling
+        if (fakeReportingUes.size() < numFakeReportingUEs && fakeReportingUes.find(m_rnti) == fakeReportingUes.end())
             fakeReportingUes.insert({m_rnti, true});
         bool fakeReport = fakeReportingUes.find(m_rnti) != fakeReportingUes.end();
 

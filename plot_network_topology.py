@@ -1,14 +1,15 @@
 import json
 import numpy
 import matplotlib
-matplotlib.use('Qt5Agg')
+import os
+#matplotlib.use('Qt5Agg')
 
 
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.lines as mlines
 
-plt.rcParams.update({'font.size': 12,'lines.markersize': 8})
+plt.rcParams.update({'font.size': 12, 'lines.markersize': 8})
 
 def getImage(path,zoom=0.1):
     return OffsetImage(plt.imread(path),zoom=zoom)
@@ -16,13 +17,13 @@ def getImage(path,zoom=0.1):
 def plot_network_topology(baseDir):
     simulationModel = {}
 
-    with open(baseDir+"\\simulationParameters.json", "r", encoding="utf-8") as file:
+    with open(baseDir+os.sep+"simulationParameters.json", "r", encoding="utf-8") as file:
         simulationModel = json.load(file)
 
 
     fig, ax = plt.subplots(nrows=1,figsize=(10,10))
 
-    annotationPosition=(1.2,2.2)
+    annotationPosition=(1.2, 2.2)
     plt.xlim([0, 100])
     plt.ylim([0, 100])
 

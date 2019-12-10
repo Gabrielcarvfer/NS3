@@ -1999,6 +1999,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //                    || ( (prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]]) && prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0])
                             //                  );
 
+                            //Ignore fakeReportDetection
+                            //fraudulent = false; //TODO: find a better way to do that and prevent recompiling
+
                             if ( !fraudulent )
                             {
                                 //Or between sensing results
