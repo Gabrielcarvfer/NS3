@@ -951,22 +951,29 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
 
         if(fakeReport)
         {
-
-            //If already was false alarm, skip it
-            //if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
-            //    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = false;
-
-            //If was false negative, skip it
-            //if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
-            //    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
-
-            //If not false alarm nor false negative and reporting PU as not present, change it
-            if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] && !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] && !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0])
+            //If already is false alarm, skip
+            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
             {
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = true;
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
+                //skip
+            }
 
+            if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] & !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
+            {
+                if(!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0])
+                {
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = true;
+                }
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
+            }
+
+            //If false negative, correctly detect but mark as fake report
+            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
+            {
+
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
+                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
             }
         }
     }
