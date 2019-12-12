@@ -4,20 +4,28 @@ from decimal import Decimal
 import os
 
 fusionAlgorithms = {
-         1: "MRG_MULTIFRAME_OR",
-         2: "MRG_MULTIFRAME_2_OF_N",
-         3: "MRG_MULTIFRAME_3_OF_N",
-         4: "MRG_MULTIFRAME_4_OF_N",
-         5: "MRG_MULTIFRAME_K_OF_N", #Don't use this one
-         6: "MRG_OR"    ,
-         7: "MRG_AND"   ,
-         8: "MRG_XOR"   ,
-         9: "MRG_XNOR"  ,
-        10: "MRG_1_OF_N",
-        11: "MRG_2_OF_N",
-        12: "MRG_3_OF_N",
-        13: "MRG_4_OF_N",
-        14: "MRG_K_OF_N" #//Don't use this one
+         1 : "MRG_MULTIFRAME_OR"    ,
+         2 : "MRG_MULTIFRAME_2_OF_N",
+         3 : "MRG_MULTIFRAME_3_OF_N",
+         4 : "MRG_MULTIFRAME_4_OF_N",
+         5 : "MRG_MULTIFRAME_K_OF_N",#Don't use this one
+         6 : "MRG_OR"               ,
+         7 : "MRG_AND"              ,
+         8 : "MRG_XOR"              ,
+         9 : "MRG_XNOR"             ,
+        10 : "MRG_1_OF_N"           ,
+        11 : "MRG_2_OF_N"           ,
+        12 : "MRG_3_OF_N"           ,
+        13 : "MRG_4_OF_N"           ,
+        14 : "MRG_K_OF_N"           , #Don't use this one
+        15 : "MRG_NN"               ,
+        16 : "MRG_KALMAN"           ,
+        17 : "MRG_1_OF_N_RAND"      ,
+        18 : "MRG_2_OF_N_RAND"      ,
+        19 : "MRG_3_OF_N_RAND"      ,
+        20 : "MRG_4_OF_N_RAND"      ,
+        21 : "MRG_MONTECARLOFUSION" ,#arxiv.org/pdf/1901.00139.pdf or https://www.groundai.com/project/monte-carlo-fusion/1
+        22 : "MRG_AVG"              ,#also for monte carlo
 }
 
 class SimulationParameters():
@@ -157,21 +165,20 @@ def generatePosition(xRange, yRange, zRange):
     z = round(random.uniform(zRange[0][0], zRange[0][1]), 2)
     return (x,y,z)
 
-def generateScenario(baseFolder):
+def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6):
     xRange = (10e3, 90e3),  # m
     yRange = (10e3, 90e3),  # m
-    zRange = (0,   0.1),  # m
+    zRange = (   0,  0.1),  # m
 
-    generateRandomPUs(numPUs=4, central_frequency=869e6, bandwidth=20e6, txPowerRange=(30, 40), txPeriodRange=(1, 5), xRange=xRange, yRange=yRange, zRange=zRange)
+    generateRandomPUs(numPUs=4, central_frequency=centralFreq, bandwidth=bandwidth, txPowerRange=(30, 40), txPeriodRange=(1, 5), xRange=xRange, yRange=yRange, zRange=zRange)
 
-    numUEs = 100
     numENBs = 1
 
     ueTxPower      = 25 #dBm
     ueAntennaGain  = 9  #dBi
     eNBTxPower     = 53 #dBm
     eNBAntennaGain = 9  #dBi
-    propagationModel = "ns3::FriisPropagationLossModel"#"ns3::RANGE5GPropagationLossModel"
+    propagationModel = "ns3::RANGE5GPropagationLossModel"#"ns3::FriisPropagationLossModel"#
 
     for ue in range(numUEs):
         UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
@@ -179,9 +186,9 @@ def generateScenario(baseFolder):
     #for enb in range(numENBs):
     eNB_Model((50e3, 50e3, 0), eNBTxPower, eNBAntennaGain)
 
-    sim = SimulationParameters(10, 869e6, 20e6, 1, propagationModel, PU_Model.PUs, UE_Model.UEs, eNB_Model.eNBs)
+    sim = SimulationParameters(10, centralFreq, bandwidth, 1, propagationModel, PU_Model.PUs, UE_Model.UEs, eNB_Model.eNBs)
 
-    for fusionAlgorithm in [1, 10, 11, 12, 13]:
+    for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
         sim.dictio["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
         sim.dictio["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
 
@@ -213,7 +220,11 @@ def generateScenarios(baseFolder):
         os.mkdir(baseFolder)
 
     #Create json file for simulation
-    generateScenario(baseFolder)
+    for numUEs in [1, 10, 20, 50, 100]:
+        numUesFolder = baseFolder+"ues_"+str(numUEs) + os.sep
+        if not os.path.exists(numUesFolder):
+            os.mkdir(numUesFolder)
+        generateScenario(numUesFolder, numUEs=numUEs)
 
 def runScenario(baseFolder):
     #Move python to the target folder
@@ -224,10 +235,11 @@ def runScenario(baseFolder):
 
     #Run simulation
     if not os.path.exists("./sensing.png"):
-        response = subprocess.run("bash -c /mnt/f/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
+        response = subprocess.run("bash -c /mnt/e/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
 
-        #Generate the results plot figure and save to the simulation output folder
-        response = subprocess.run("python C:\\tools\\source\\NS3\\plot_main.py")
+        #Generate the results plot figure and save to the simulation output folder (doesnt work for random numbers of UEs)
+        #response = subprocess.run("python E:\\tools\\source\\NS3\\plot_main.py")
+
 
 if __name__ == "__main__":
     import multiprocessing
@@ -235,14 +247,17 @@ if __name__ == "__main__":
     #Select if you want to generate new simulation scenarios or run manually created ones
     createAndRunScenarios = True
 
-    baseDir = "C:\\tools\\source\\sims\\"
-    with multiprocessing.Pool(processes=13) as pool:
+    baseDir = "E:\\tools\\source\\sims\\"
+    resultsDict = {"scenario":{}}
+    if createAndRunScenarios:
+        #Prepare and run n simulations
+        with multiprocessing.Pool(processes=10) as pool:
 
-        if createAndRunScenarios:
-            #Prepare and run n simulations
             for i in range(6):
+                resultsDict["scenario"][i] = {"fusion":{}}
+
                 # Prepare the simulationParameter json files for all simulations
-                generateScenarios(baseDir+str(i)+"\\")
+                #generateScenarios(baseDir+str(i)+"\\")
 
                 #Run simulation if the scenario exists
                 if (os.path.exists(baseDir+str(i))):
@@ -250,49 +265,97 @@ if __name__ == "__main__":
                     argList = []
 
                     # Run simulation with a few fusion algorithms
-                    for fusionAlgorithm in [1, 6, 10, 11, 12, 13]:
-                        argList += [[baseDir+str(i)+"\\"+fusionAlgorithms[fusionAlgorithm]+"\\"]]
+                    for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
+                        for numUes in [1, 10, 20, 50, 100]:
+                            argList += [[baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep]]
 
                     # Run simulations in parallel
                     #pool.starmap(runScenario, argList)
-        else:
-            simulationScenarios = os.listdir(baseDir)
-            #print (simulationScenarios)
 
-            for scenario in simulationScenarios:
-                scenarioDict = {}
-                argList = []
 
-                #Load base scenario
-                with open(baseDir+scenario+"\\simulationParameters.json","r") as file:
-                    scenarioDict = json.load(file)
 
-                #Save a new copy for each fusion
-                for fusionAlgorithm in [1, 6, 10, 11, 12, 13]:
-                    scenarioDict["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
-                    scenarioDict["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
+                #Extract results
+                import re
+                regexRaw = "From (.*) fusions, (.*) were false positive and (.*) were false negative"
+                regexRawC = re.compile(regexRaw)
+                regexFalse = ".* of (.*) subframes"
+                regexFalseC = re.compile(regexFalse)
 
-                    simFolder = baseDir + scenario + "\\" + fusionAlgorithms[fusionAlgorithm] + "\\"
-                    argList += [[simFolder]]
+                for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
+                     resultsDict["scenario"][i]["fusion"][fusionAlgorithm] = {"numUes":{}}
+                     for numUes in [1, 10, 20, 50, 100]:
+                         resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes] = {"channel":{}}
 
-                    if os.path.exists(simFolder) and not os.path.exists(simFolder + "sensing.png"):
-                        import shutil
+                         sensingListFile = baseDir+str(i) + os.sep+"ues_"+str(numUes) + os.sep+fusionAlgorithms[fusionAlgorithm] + os.sep + "sensing_list.txt"
 
-                        shutil.rmtree(simFolder, ignore_errors=True)
+                         with open(sensingListFile, "r") as f:
+                             lines = f.readlines()
+                             lines = lines[2:] #Skip first two lines
 
-                    if not os.path.exists(simFolder):
-                        os.mkdir(simFolder)
+                             prevLine = 0
+                             for channel in range(4):
+                                 channelLines = lines[:4]
+                                 lines = lines[4:]
 
-                    simFile = simFolder + "simulationParameters.json"
+                                 #Extract numbers from e.g. From 9976 fusions, 89 were false positive and 1360 were false negative.
+                                 ans = regexRawC.search(channelLines[1]).groups()
+                                 fusions, falsePositives, falseNegatives = int(ans[0]), int(ans[1]), int(ans[2])
+                                 framesThatCouldBeFalsePositives = int(regexFalseC.search(channelLines[2]).groups()[0])
+                                 framesThatCouldBeFalseNegatives = int(regexFalseC.search(channelLines[3]).groups()[0])
 
-                    if not os.path.exists(simFile):
-                        with open(simFile, "w") as file:
-                            file.write(json.dumps(scenarioDict, indent=4))
+                                 result = {
+                                     "totalFusions"       : fusions,
+                                     "totalFalsePositives": falsePositives,
+                                     "totalFalseNegatives": falseNegatives,
+                                     "framesPuWasInactive": framesThatCouldBeFalsePositives,
+                                     "framesPuWasActive"  : framesThatCouldBeFalseNegatives
+                                 }
+                                 resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes]["channel"][channel] = result
+                                 lines = lines[1:] #Skip empty line between channels
 
-                #Run simulation
+            with open("results.json", "w") as f:
+                import json
+                json.dump(resultsDict, f, indent=2)
+                pass
+    else:
+        simulationScenarios = os.listdir(baseDir)
+        #print (simulationScenarios)
+
+        for scenario in simulationScenarios:
+            scenarioDict = {}
+            argList = []
+
+            #Load base scenario
+            with open(baseDir+scenario+"\\simulationParameters.json", "r") as file:
+                scenarioDict = json.load(file)
+
+            #Save a new copy for each fusion
+            for fusionAlgorithm in [1, 6, 10, 11, 12, 13]:
+                scenarioDict["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
+                scenarioDict["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
+
+                simFolder = baseDir + scenario + "\\" + fusionAlgorithms[fusionAlgorithm] + "\\"
+                argList += [[simFolder]]
+
+                if os.path.exists(simFolder) and not os.path.exists(simFolder + "sensing.png"):
+                    import shutil
+
+                    shutil.rmtree(simFolder, ignore_errors=True)
+
+                if not os.path.exists(simFolder):
+                    os.mkdir(simFolder)
+
+                simFile = simFolder + "simulationParameters.json"
+
+                if not os.path.exists(simFile):
+                    with open(simFile, "w") as file:
+                        file.write(json.dumps(scenarioDict, indent=4))
+
+            #Run simulation
+            with multiprocessing.Pool(processes=4) as pool:
                 pool.starmap(runScenario, argList)
 
-            #Replicate a single base scenario (simulationParameters.json) with all fusion
+        #Replicate a single base scenario (simulationParameters.json) with all fusion
 
 
     pass
