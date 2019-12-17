@@ -251,7 +251,7 @@ if __name__ == "__main__":
     resultsDict = {"scenario":{}}
     if createAndRunScenarios:
         #Prepare and run n simulations
-        with multiprocessing.Pool(processes=10) as pool:
+        with multiprocessing.Pool(processes=8) as pool:
 
             for i in range(6):
                 resultsDict["scenario"][i] = {"fusion":{}}
@@ -270,12 +270,14 @@ if __name__ == "__main__":
                             argList += [[baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep]]
 
                     # Run simulations in parallel
-                    #pool.starmap(runScenario, argList)
+                    pool.starmap(runScenario, argList)
 
 
 
                 #Extract results
                 import re
+                regexBitsPerUe = "of (.*?) bits"
+                regexBitsPerUeC = re.compile(regexBitsPerUe)
                 regexRaw = "From (.*) fusions, (.*) were false positive and (.*) were false negative"
                 regexRawC = re.compile(regexRaw)
                 regexFalse = ".* of (.*) subframes"
@@ -298,12 +300,15 @@ if __name__ == "__main__":
                                  lines = lines[4:]
 
                                  #Extract numbers from e.g. From 9976 fusions, 89 were false positive and 1360 were false negative.
+                                 ans = regexBitsPerUeC.search(channelLines[0]).groups()
+                                 avgBitsPerUe = float(ans[0])
                                  ans = regexRawC.search(channelLines[1]).groups()
                                  fusions, falsePositives, falseNegatives = int(ans[0]), int(ans[1]), int(ans[2])
                                  framesThatCouldBeFalsePositives = int(regexFalseC.search(channelLines[2]).groups()[0])
                                  framesThatCouldBeFalseNegatives = int(regexFalseC.search(channelLines[3]).groups()[0])
 
                                  result = {
+                                     "avgBitsPerUe"       : avgBitsPerUe,
                                      "totalFusions"       : fusions,
                                      "totalFalsePositives": falsePositives,
                                      "totalFalseNegatives": falseNegatives,
