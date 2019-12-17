@@ -60,8 +60,8 @@ def plot_network_topology(baseDir):
     ax.add_patch(c)
     #plt.legend()
     #plt.show()
-    ax.set_xlabel("Distance (km)")
-    ax.set_ylabel("Distance (km)")
+    ax.set_xlabel("Distância (km)")
+    ax.set_ylabel("Distância (km)")
     plt.tight_layout()
     fig.savefig(baseDir + "topology.png")
 

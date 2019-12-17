@@ -560,7 +560,9 @@ private:
     std::map<uint16_t, std::vector<bool>> fraudulentSensingUEs;
     std::map<uint16_t, std::vector<bool>> prevSensing;
     std::map<uint16_t, std::vector<std::vector<uint8_t> > > lastReportedResultAndCqiByUePerSubchannel;
-//TODO: find an elegant way to fix that
+    std::map<uint16_t, std::vector<uint64_t>> countRequiredBits;
+
+        //TODO: find an elegant way to fix that
     std::vector<uint8_t> centralRbgIndexPerSubchannel = {16/2,40/2,60/2,86/2};
         std::map< uint16_t,std::vector<double> > markovTrustworthiness;
 };

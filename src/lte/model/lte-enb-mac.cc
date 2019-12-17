@@ -510,6 +510,7 @@ LteEnbMac::~LteEnbMac ()
                   int numRbsPerChannel = (bandwidth / cognitiveReg.UnexpectedAccess_FalseAlarm_FalseNegBitmap.size()) + 1;
                   int i = 0;
                   uint64_t sensedBitmap = 0;
+
                   for (int k = bandwidth; k > 0; k -= numRbsPerChannel, i++)
                   {
                       if (k < numRbsPerChannel)
@@ -524,6 +525,7 @@ LteEnbMac::~LteEnbMac ()
                           sensedBitmapChannel |= ((uint64_t) 0x01) << j;
                       }
                       sensedBitmap |= (sensedBitmapChannel << (bandwidth - k));
+
                   }
                   //Print sensedBitmap
                   //sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(sensedBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe "
@@ -591,9 +593,20 @@ LteEnbMac::~LteEnbMac ()
           }
       }
 
+      std::vector<double> averageReportedBits{0.0,0.0,0.0,0.0};
+
+      for (auto &ue : countRequiredBits)
+      {
+          for(int channel=0; channel < 4; channel ++)
+              averageReportedBits[channel] += ue.second[channel];
+      }
+
+      for(int channel=0; channel < 4; channel ++)
+          averageReportedBits[channel] /= countRequiredBits.size();
+
       for (int subchannel = 0; subchannel < 4; subchannel++)
       {
-          sensing_list_file << "\n\nFor subchannel " << subchannel << ":";
+          sensing_list_file << "\n\nFor subchannel " << subchannel << " average of " << averageReportedBits[subchannel] << " bits per UE transmitted :";
           sensing_list_file << "\nFrom " << totalFusions[subchannel] << " fusions,";
           sensing_list_file << " " << falseAlarmBitmapReports[subchannel] << " were false positive and";
           sensing_list_file << " " << falseNegativeFusions[subchannel] << " were false negative.";
@@ -2000,7 +2013,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             //                  );
 
                             //Ignore fakeReportDetection
-                            //fraudulent = false; //TODO: find a better way to do that and prevent recompiling
+                            fraudulent = false; //TODO: find a better way to do that and prevent recompiling
 
                             if ( !fraudulent )
                             {
@@ -2008,19 +2021,24 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                                 fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
                             }
 
-
-
-
-                            if (prevSensing.find(origAddr.first) != prevSensing.end())
-                            {
-                                prevSensing.at(origAddr.first)[i] = channelReg[0];
-                            }
-                            else
+                            if (prevSensing.find(origAddr.first) == prevSensing.end())
                             {
                                 std::vector<bool> temp{false, false, false, false};
-                                temp[i] = true;
                                 prevSensing.insert({origAddr.first, temp});
                             }
+
+                            //Count if prevSensing != currSensing
+                            if (countRequiredBits.find(origAddr.first) == countRequiredBits.end())
+                            {
+                                std::vector<uint64_t> temp{0,0,0,0};
+                                countRequiredBits.emplace(origAddr.first, temp);
+                            }
+
+                            if (channelReg[0] != prevSensing.at(origAddr.first)[i])
+                                countRequiredBits.at(origAddr.first)[i]++;
+
+                            //Update prevSensing
+                            prevSensing.at(origAddr.first)[i] = channelReg[0];
 
                             i++;
                         }
@@ -2042,6 +2060,26 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         {
                             //If every UE reported the presence, keep marked as present, else mark as not present
                             fusedResults[i][0] = fusedResults[i][0] && channelReg[0];
+
+                            if (prevSensing.find(origAddr.first) == prevSensing.end())
+                            {
+                                std::vector<bool> temp{false, false, false, false};
+                                prevSensing.insert({origAddr.first, temp});
+                            }
+
+                            if (countRequiredBits.find(origAddr.first) == countRequiredBits.end())
+                            {
+                                std::vector<uint64_t> temp{0,0,0,0};
+                                countRequiredBits.emplace(origAddr.first, temp);
+                            }
+
+                            //Count if prevSensing != currSensing
+                            if (channelReg[0] != prevSensing.at(origAddr.first)[i])
+                                countRequiredBits.at(origAddr.first)[i]++;
+
+                            //Update prevSensing
+                            prevSensing.at(origAddr.first)[i] = channelReg[0];
+
                             i++;
                         }
                     }
@@ -2442,6 +2480,27 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                             for(auto channelReg: subframeIt->second.at(ueRnti->first).UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                             {
                                 kConfirmed[i] += channelReg[0] ? 1 : 0;
+
+
+                                if (prevSensing.find(ueRnti->first) == prevSensing.end())
+                                {
+                                    std::vector<bool> temp{false, false, false, false};
+                                    prevSensing.insert({ueRnti->first, temp});
+                                }
+
+                                if (countRequiredBits.find(ueRnti->first) == countRequiredBits.end())
+                                {
+                                    std::vector<uint64_t> temp{0,0,0,0};
+                                    countRequiredBits.emplace(ueRnti->first, temp);
+                                }
+
+                                //Count if prevSensing != currSensing
+                                if (channelReg[0] != prevSensing.at(ueRnti->first)[i])
+                                    countRequiredBits.at(ueRnti->first)[i]++;
+
+                                //Update prevSensing
+                                prevSensing.at(ueRnti->first)[i] = channelReg[0];
+
                                 i++;
                             }
                         }
@@ -2513,6 +2572,8 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
             int i = 0;
             for(auto channelReg: ueReg.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
             {
+
+
                 //Or between sensing results
                 if(fusedResults[i][0] != ueReg.second.PU_presence_V[i])
                 {
