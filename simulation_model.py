@@ -160,12 +160,19 @@ def generateRandomPUs(
         PU_Model(generatePosition(xRange, yRange, zRange), txPower, bandwidth, carrier_frequency, dutyCycle, txPeriod)
 
 def generatePosition(xRange, yRange, zRange):
-    x = round(random.uniform(xRange[0][0], xRange[0][1]), 2)
-    y = round(random.uniform(yRange[0][0], yRange[0][1]), 2)
-    z = round(random.uniform(zRange[0][0], zRange[0][1]), 2)
-    return (x,y,z)
+    if len(xRange) == 1:
+        xRange = xRange[0]
+    if len(yRange) == 1:
+        yRange = yRange[0]
+    if len(zRange) == 1:
+        zRange = zRange[0]
 
-def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6):
+    x = round(random.uniform(xRange[0], xRange[1]), 2)
+    y = round(random.uniform(yRange[0], yRange[1]), 2)
+    z = round(random.uniform(zRange[0], zRange[1]), 2)
+    return (x, y, z)
+
+def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6, clusters=False):
     xRange = (10e3, 90e3),  # m
     yRange = (10e3, 90e3),  # m
     zRange = (   0,  0.1),  # m
@@ -180,9 +187,22 @@ def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6):
     eNBAntennaGain = 9  #dBi
     propagationModel = "ns3::RANGE5GPropagationLossModel"#"ns3::FriisPropagationLossModel"#
 
-    for ue in range(numUEs):
-        UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
+    if not clusters:
+        for ue in range(numUEs):
+            UE_Model(generatePosition(xRange, yRange, zRange), ueTxPower, ueAntennaGain)
+    else:
+        totalUEs = 0
 
+        while totalUEs < numUEs:
+            ues = random.randint(0, int(numUEs+1/2))
+            clusterPosition = generatePosition(xRange, yRange, zRange)
+            clusterxRange = (clusterPosition[0]-5e3, clusterPosition[0]+5e3)
+            clusteryRange = (clusterPosition[1]-5e3, clusterPosition[1]+5e3)
+            for ue in range(ues):
+                UE_Model(generatePosition(clusterxRange, clusteryRange, zRange), ueTxPower, ueAntennaGain)
+                totalUEs += 1
+                if totalUEs == numUEs:
+                    break
     #for enb in range(numENBs):
     eNB_Model((50e3, 50e3, 0), eNBTxPower, eNBAntennaGain)
 
@@ -215,7 +235,7 @@ def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6):
     UE_Model.UEs = {}
     UE_Model.num_UE = 0
 
-def generateScenarios(baseFolder):
+def generateScenarios(baseFolder, clusters=False):
     if not os.path.exists(baseFolder):
         os.mkdir(baseFolder)
 
@@ -224,7 +244,7 @@ def generateScenarios(baseFolder):
         numUesFolder = baseFolder+"ues_"+str(numUEs) + os.sep
         if not os.path.exists(numUesFolder):
             os.mkdir(numUesFolder)
-        generateScenario(numUesFolder, numUEs=numUEs)
+        generateScenario(numUesFolder, numUEs=numUEs, clusters=clusters)
 
 def runScenario(baseFolder):
     #Move python to the target folder
@@ -251,13 +271,13 @@ if __name__ == "__main__":
     resultsDict = {"scenario":{}}
     if createAndRunScenarios:
         #Prepare and run n simulations
-        with multiprocessing.Pool(processes=8) as pool:
+        with multiprocessing.Pool(processes=14) as pool:
 
             for i in range(6):
                 resultsDict["scenario"][i] = {"fusion":{}}
 
                 # Prepare the simulationParameter json files for all simulations
-                #generateScenarios(baseDir+str(i)+"\\")
+                #generateScenarios(baseDir+str(i)+"\\", clusters=True)
 
                 #Run simulation if the scenario exists
                 if (os.path.exists(baseDir+str(i))):
