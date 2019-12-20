@@ -194,7 +194,8 @@ def generateScenario(baseFolder, numUEs=100, bandwidth=20e6, centralFreq=869e6, 
         totalUEs = 0
 
         while totalUEs < numUEs:
-            ues = random.randint(0, int(numUEs+1/2))
+            div = 5 if (numUEs - totalUEs) > 10 else 2
+            ues = random.randint(0, int((numUEs+1)/div))
             clusterPosition = generatePosition(xRange, yRange, zRange)
             clusterxRange = (clusterPosition[0]-5e3, clusterPosition[0]+5e3)
             clusteryRange = (clusterPosition[1]-5e3, clusterPosition[1]+5e3)
@@ -263,7 +264,7 @@ def runScenario(baseFolder):
 
 if __name__ == "__main__":
     import multiprocessing
-
+    import subprocess
     #Select if you want to generate new simulation scenarios or run manually created ones
     createAndRunScenarios = True
 
@@ -271,7 +272,7 @@ if __name__ == "__main__":
     resultsDict = {"scenario":{}}
     if createAndRunScenarios:
         #Prepare and run n simulations
-        with multiprocessing.Pool(processes=14) as pool:
+        with multiprocessing.Pool(processes=12) as pool:
 
             for i in range(6):
                 resultsDict["scenario"][i] = {"fusion":{}}
@@ -287,10 +288,15 @@ if __name__ == "__main__":
                     # Run simulation with a few fusion algorithms
                     for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
                         for numUes in [1, 10, 20, 50, 100]:
-                            argList += [[baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep]]
+                            path = baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep
+                            argList += [[path]]
+
+                    for numUes in [1, 10, 20, 50, 100]:
+                        path = baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[6]+os.sep
+                        subprocess.run("python plot_network_topology.py %s" % path)
 
                     # Run simulations in parallel
-                    pool.starmap(runScenario, argList)
+                    #pool.starmap(runScenario, argList)
 
 
 

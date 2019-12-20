@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+#on: [push]
   #schedule:
   #  - cron:  '0 5 * * *'  #daily build at 5AM
 jobs:
