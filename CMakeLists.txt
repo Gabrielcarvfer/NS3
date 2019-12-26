@@ -24,10 +24,8 @@ set(NS3_VER 3.30.1)
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
-set(NS3_TESTS ON)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
-set(NS3_EXAMPLES ON)
 
 option(NS3_SANITIZE "Run Google sanitizers" OFF)
 
@@ -69,61 +67,17 @@ option(NS3_PTHREAD "Build with pthread support" ON)
 option(NS3_STATIC "Build static library" OFF)
 
 option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
-#set(AUTOINSTALL_DEPENDENCIES ON)
 
-#Select libs to be built
-# libs marked with # on the right are compiling on windows
-# libs marked with * on the right, are not compiling correctly yet when using CMake
-set(libs_to_build
-        antenna               #
-        aodv                  #
-        applications          #
-        bridge                #
-        brite
-        buildings             #
-        click                 #
-        config-store          #
-        core                  #
-        csma                  #
-        csma-layout           #
-        dsdv                  #
-        dsr                   #
-        energy                #
-        fd-net-device         #requires socket implementation
-        flow-monitor          #
-        internet              #
-        internet-apps         #
-        lr-wpan               #
-        lte                   #
-        mesh                  #
-        mobility              #
-        mpi                   #
-        netanim               # Not working with Clang on Windows
-        network               #
-        nix-vector-routing
-        olsr
-        openflow              # Only builds openflow if NS3_OPENFLOW is set
-        point-to-point        #
-        point-to-point-layout
-        propagation           #
-        sixlowpan
-        spectrum              #
-        stats                 #
-        tap-bridge            #
-        topology-read         # fixed on Windows with LibPCRE2-posix
-        traffic-control       #
-        uan                   #
-        virtual-net-device    #
-        visualizer
-        wave                  #
-        wifi                  #
-        wimax                 #
-        test                  # beware of naming colisions between macro CHECK in traced-value-callback-typedef-test-suite.cc and torch/script.h (PyTorch)
-        )
+#Check if optional configuration file (configFile.cmake) exists. It will overlap command line arguments.
+if(EXISTS ${CMAKE_SOURCE_DIR}/configFile.cmake)
+    include(${CMAKE_SOURCE_DIR}/configFile.cmake)
+endif()
 
-#Build contribution libraries
-set(contribution_libraries_to_build
-        )
+#Scan module libraries
+SUBDIRLIST(libs_to_build ${CMAKE_SOURCE_DIR}/src)
+
+#Scan contribution libraries
+SUBDIRLIST(contribution_libraries_to_build ${CMAKE_SOURCE_DIR}/contrib)
 
 #######################################
 # Process options                     #
