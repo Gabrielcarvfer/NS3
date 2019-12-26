@@ -112,6 +112,17 @@ macro(fetch_git_submodule submodule_path)
     endif()
 endmacro()
 
+macro(SUBDIRLIST result curdir)
+    file(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    set(dirlist "")
+    foreach(child ${children})
+        if(IS_DIRECTORY ${curdir}/${child})
+            LIST(APPEND dirlist ${child})
+        endif()
+    endforeach()
+    set(${result} ${dirlist})
+endmacro()
+
 #process all options passed in main cmakeLists
 macro(process_options)
     #process debug switch
