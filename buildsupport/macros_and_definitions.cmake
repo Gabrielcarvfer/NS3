@@ -168,7 +168,7 @@ macro(process_options)
             message(WARNING "Not building brite on Windows/Mac")
         else()
             fetch_git_submodule("3rd-party/brite")
-            ExternalProject_Add(Brite
+            ExternalProject_Add(BriteLib
                     SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/brite")
         endif()
     endif()
@@ -183,13 +183,27 @@ macro(process_options)
             else()
                 #If we don't find installed, install
                 add_package (libxml2)
-                get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
                 find_package(LibXml2)
             endif()
         endif()
         link_directories(${LIBXML2_LIBRARY_DIRS})
         include_directories(${LIBXML2_INCLUDE_DIR})
         #add_definitions(${LIBXML2_DEFINITIONS})
+    endif()
+
+    if(${NS3_CLICK})
+        if(WIN32 OR APPLE)
+            set(${NS3_CLICK} OFF)
+            message(WARNING "Not building click on Windows/Mac")
+        else()
+            #fetch_git_submodule("3rd-party/click")
+            ExternalProject_Add(ClickLib
+                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/click"
+                    PREFIX ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+                    CONFIGURE_COMMAND configure
+                    BUILD_COMMAND make
+                    )
+        endif()
     endif()
 
     if(${NS3_OPENFLOW})
