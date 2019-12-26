@@ -57,6 +57,8 @@ option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 
 option(NS3_BRITE "Build with Brite support" OFF)
 
+option (NS3_CLICK "Build with Click support" OFF)
+
 option(NS3_NSC "Build with NSC" OFF)
 #TODO: download, build and link sources
 
