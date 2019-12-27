@@ -95,7 +95,7 @@ build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "
 
 list(LENGTH fd-net-device_creators num_creators)
 if(${num_creators} GREATER 0)
-    add_dependencies(${libfd-net-device} "${fd-net-device_creators}")
+    add_dependencies(${libfd-net-device} ${fd-net-device_creators})
 endif()
 
 

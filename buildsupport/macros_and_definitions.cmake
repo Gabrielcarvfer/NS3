@@ -55,7 +55,7 @@ include(buildsupport/vcpkg_hunter.cmake)
 
 #If on Linux, add cotire for PCH builds. Others were having issues, so I disabled them
 if(LINUX)
-    include(buildsupport/cotire.cmake)
+    #include(buildsupport/cotire.cmake)
 	#include(buildsupport/cotire_force_pch.cmake)
 endif()
 
@@ -104,11 +104,13 @@ endif()
 
 
 macro(fetch_git_submodule submodule_path)
-    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init ${submodule_path}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            RESULT_VARIABLE GIT_SUBMOD_RESULT)
-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-        message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodule ${submodule_path}")
+    if(NOT EXISTS "${PROJECT_SOURCE_DIR}/${submodule_path}/.git")
+        execute_process(COMMAND ${GIT_EXECUTABLE} submodule --init ${PROJECT_SOURCE_DIR}/${submodule_path}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+            message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodule ${submodule_path}")
+        endif()
     endif()
 endmacro()
 
@@ -159,7 +161,6 @@ macro(process_options)
 
     #Load GIT to fetch required submodules
     find_package(Git QUIET)
-    include(ExternalProject)
 
     #Process Brite 3rd-party submodule and dependencies
     if(${NS3_BRITE})
@@ -168,8 +169,7 @@ macro(process_options)
             message(WARNING "Not building brite on Windows/Mac")
         else()
             fetch_git_submodule("3rd-party/brite")
-            ExternalProject_Add(BriteLib
-                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/brite")
+            list(APPEND 3rd_party_libraries_to_build brite)
         endif()
     endif()
 
@@ -179,12 +179,8 @@ macro(process_options)
             message(WARNING "Not building click on Windows/Mac")
         else()
             fetch_git_submodule("3rd-party/click")
-            ExternalProject_Add(ClickLib
-                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/click"
-                    PREFIX ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-                    CONFIGURE_COMMAND configure
-                    BUILD_COMMAND make
-                    )
+            configure_file(${PROJECT_SOURCE_DIR}/3rd-party/ClickCMakeLists.txt ${PROJECT_SOURCE_DIR}/3rd-party/click/CMakeLists.txt COPYONLY)
+            list(APPEND 3rd_party_libraries_to_build click)
         endif()
     endif()
 
@@ -212,8 +208,7 @@ macro(process_options)
             message(WARNING "Not building brite on Windows")
         else()
             fetch_git_submodule("3rd-party/openflow")
-            ExternalProject_Add(Openflow
-                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/openflow")
+            list(APPEND 3rd_party_libraries_to_build openflow)
         endif()
     endif()
 
@@ -331,6 +326,7 @@ macro(process_options)
 
 
     #GTK2
+    # Don't search for it if you don't have it installed, as it take an insane amount of time
     if(${NS3_GTK2})
         find_package(GTK2)
         if(NOT ${GTK2_FOUND})
@@ -436,9 +432,7 @@ macro(process_options)
                 message(WARNING "Not building netanim with MSVC")
             else()
                 fetch_git_submodule("3rd-party/netanim")
-                ExternalProject_Add(Netanim
-                        SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/netanim")
-                        #DEPENDS libns${NS3_VER}-core-${build_type}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                list(APPEND 3rd_party_libraries_to_build netanim)
             endif()
         endif()
     endif()
@@ -616,7 +610,7 @@ macro(process_options)
         #Create libname of output library of module
         set(lib${libname} ns${NS3_VER}-${libname}-${build_type})
         set(lib${libname}-obj ns${NS3_VER}-${libname}-${build_type}-obj)
-        list(APPEND ns3-libs ${lib${libname}})
+        #list(APPEND ns3-libs ${lib${libname}})
 
         if( NOT (${libname} STREQUAL "test") )
             list(APPEND lib-ns3-static-objs $<TARGET_OBJECTS:${lib${libname}-obj}>)
@@ -673,6 +667,9 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
 
     #Create object library with sources and headers, that will be used in lib-ns3-static and the shared library
     add_library(${lib${libname}-obj} OBJECT "${source_files}" "${header_files}")
+
+    GET_PROPERTY(local-ns3-libs GLOBAL PROPERTY ns3-libs)
+    set_property(GLOBAL PROPERTY ns3-libs "${local-ns3-libs};${lib${libname}}")
 
     if (COMMAND cotire)
         cotire(${lib${libname}-obj})

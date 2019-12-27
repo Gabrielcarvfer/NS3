@@ -1,4 +1,6 @@
 if (NS3_BRITE)
+    include_directories(${PROJECT_SOURCE_DIR}/3rd-party/brite)
+
     set(name brite)
 
     set(source_files
@@ -10,7 +12,7 @@ if (NS3_BRITE)
             )
 
     #link to dependencies
-    set(libraries_to_link ${libnetwork} ${libcore} ${libinternet} ${libpoint-to-point} ${BRITE_LIBRARIES})
+    set(libraries_to_link ${libnetwork} ${libcore} ${libinternet} ${libpoint-to-point} brite)
 
     set(test_sources
             test/brite-test-topology.cc

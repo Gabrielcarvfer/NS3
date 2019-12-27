@@ -7,3 +7,5 @@
 [submodule "3rd-party/brite"]
 	path = 3rd-party/brite
 	url = https://gitlab.com/Gabrielcarvfer/brite.git
+[submodule "3rd-party/click"]
+	url = https://github.com/kohler/click.git

@@ -272,7 +272,6 @@ set(libraries_to_link
         ${libnetwork}
         ${libcore}
         ${libbridge}
-        ${libmpi}
         ${libtraffic-control}
         )
 

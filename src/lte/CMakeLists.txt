@@ -2,21 +2,24 @@
 set(name lte)
 
 
-set(nn_libraries
-        )
-
+set(nn_libraries)
 if(${TORCH_FOUND})
     set(nn_libraries
-            "${TORCH_LIBRARIES}"
+            ${TORCH_LIBRARIES}
             )
 endif()
 
+set(emu_sources)
+set(emu_headers)
+set(emu_libraries)
 if(${NS3_EMU})
-        set(source_files helper/emu-epc-helper.cc)
-        set(header_files helper/emu-epc-helper.cc)
+    set(emu_sources   helper/emu-epc-helper.cc)
+    set(emu_headers   helper/emu-epc-helper.h)
+    set(emu_libraries ${libfd-net-device})
 endif()
 
 set(source_files
+        ${emu_sources}
         model/lte-common.cc
         model/lte-spectrum-phy.cc
         model/lte-spectrum-signal-parameters.cc
@@ -147,6 +150,7 @@ set(source_files
         )
 
 set(header_files
+        ${emu_headers}
         model/lte-common.h
         model/lte-spectrum-phy.h
         model/lte-spectrum-signal-parameters.h
@@ -287,7 +291,8 @@ set(libraries_to_link
         ${libapplications}
         ${libinternet}
         ${libcsma}
-        "${nn_libraries}"
+        ${nn_libraries}
+        ${emu_libraries}
         )
 
 set(test_sources

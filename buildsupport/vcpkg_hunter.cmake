@@ -86,6 +86,10 @@ function(setup_vcpkg)
 		#include_directories(${VCPKG_DIR})
         set(ENV{VCPKG_ROOT} ${VCPKG_DIR})
     endif()
+
+    if(NOT WIN32)
+        execute_process(COMMAND chmod +x ${VCPKG_DIR}/${VCPKG_EXEC})
+    endif()
 endfunction()
 
 function(add_package package_name)

@@ -1,6 +1,8 @@
 if (${NS3_TESTS})
+    GET_PROPERTY(local-ns3-libs GLOBAL PROPERTY ns3-libs)
+
     if(WIN32)
-        set(libraries_to_link ${ns3-libs})
+        set(libraries_to_link ${local-ns3-libs})
         list(REMOVE_ITEM libraries_to_link ${libtest})
 
         add_executable(test-runner test-runner.cc ${ns3-libs-tests} $<TARGET_OBJECTS:${libtest}>)
@@ -20,7 +22,7 @@ if (${NS3_TESTS})
 
     if (${libcsma}) # weird test, but whatever
         add_executable(print-introspected-doxygen print-introspected-doxygen.cc)
-        target_link_libraries(print-introspected-doxygen ${ns3-libs})
+        target_link_libraries(print-introspected-doxygen ${local-ns3-libs})
     endif()
 
     add_test(test_core test-runner --test-name=libns3-core-test-debug)

@@ -1,5 +1,5 @@
 
-if(${NS3_MPI})
+#if(${NS3_MPI})
     set(name mpi)
 
     set(source_files
@@ -24,5 +24,5 @@ if(${NS3_MPI})
     set(test_sources)
 
     build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
-endif()
+#endif()
 
