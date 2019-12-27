@@ -39,8 +39,6 @@ option(NS3_GTK2 "Build with GTK2 support" OFF)
 
 option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
 
-option(NS3_LIBRT "Build with RT support" OFF)
-
 option(NS3_MPI "Build with MPI support" OFF)
 
 option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
@@ -51,7 +49,7 @@ option(NS3_PLANETLAB "Build with Planetlab support" OFF)
 
 option(NS3_TAP "Build with Tap support" OFF)
 
-option(NS3_EMU "Build with emu support" OFF)
+option(NS3_EMU "Build with emulation support" OFF)
 
 option(NS3_GNUPLOT "Build with Gnuplot support" OFF)
 
@@ -65,6 +63,8 @@ option(NS3_NSC "Build with NSC" OFF)
 option(NS3_NETANIM "Build netanim support" OFF)
 
 option(NS3_PTHREAD "Build with pthread support" ON)
+
+option(NS3_REALTIME "Build with realtime support" OFF)
 
 option(NS3_STATIC "Build static library" OFF)
 

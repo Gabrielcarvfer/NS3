@@ -1,0 +1,282 @@
+name: CI
+
+on: [push]
+  #schedule:
+  #  - cron:  '0 5 * * *'  #daily build at 5AM
+jobs:
+
+  Ubuntu: 
+  
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install required packages
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install apt-utils
+        sudo apt-get -y install git gcc g++ cmake python make ninja-build
+        sudo apt-get -y install qt5-default
+        sudo apt-get -y install gdb valgrind
+        sudo apt-get -y install tcpdump
+        sudo apt-get -y install curl unzip tar
+        sudo apt-get -y install ccache
+    - name: Configure CMake in debug mode
+      run: |
+        mkdir cmake-cache
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja"  ..
+    - name: Build ns-3 in debug mode
+      run: |
+        cd cmake-cache
+        ninja 
+    -  name: Run tests
+       run: python3 ./utils/test-runner-script.py
+    -  name: Run examples 
+       run : |
+        cd cmake-cache
+        ctest
+  #  - name: Clean debug artifacts
+  #     run: |
+  #       rm -Rf ../build
+  #       rm -Rf ./*
+  #       rm -Rf ../3rd-party/vcpkg
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in minimal size release mode
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=MINSIZEREL -G"Ninja" ..
+  #  - name: Build ns-3 in minimal size release mode
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+  #  - name: Clean minimal size release artifacts
+  #     run: |
+   #      rm -Rf ../build
+   #      rm -Rf ./*
+   #      rm -Rf ../3rd-party/vcpkg
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release with debug mode
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
+  #  - name: Build ns-3 in release with debug mode
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+  #  - name: Clean release with debug artifacts
+  #     run: |
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
+  #       rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release mode
+  #    run: |
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3 in release  mode
+  #    run: |
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+
+
+  Windows_MinGW:   
+  
+    runs-on: windows-latest
+    #Someone is stupid and decided to switch from cmd to powershell
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install msys2/mingw64
+      #steps from https://github.com/msys2/MINGW-packages/blob/master/azure-pipelines.yml
+      run: |
+        git clone https://github.com/msys2/msys2-ci-base.git D:\msys64
+        D:\msys64\usr\bin\rm -rf D:\msys64\.git
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        D:\msys64\usr\bin\pacman --noconfirm -Syyuu
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        D:\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
+        D:\msys64\usr\bin\pacman --noconfirm -Scc
+      shell: cmd
+    - name: Install required packages
+      run: |
+        set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        pacman -S --noconfirm unzip
+        pacman -S --noconfirm tar
+        pacman -S --noconfirm mingw-w64-x86_64-curl
+        pacman -S --noconfirm mingw-w64-x86_64-binutils
+        pacman -S --noconfirm mingw-w64-x86_64-boost
+        pacman -S --noconfirm mingw-w64-x86_64-cmake
+        pacman -S --noconfirm mingw-w64-x86_64-gcc
+        pacman -S --noconfirm mingw-w64-x86_64-ninja
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-libs
+        pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
+        pacman -S --noconfirm mingw-w64-x86_64-gdb
+        pacman -S --noconfirm mingw-w64-x86_64-make
+        pacman -S --noconfirm mingw-w64-x86_64-python2
+        pacman -S --noconfirm mingw-w64-x86_64-python3
+        pacman -S --noconfirm mingw-w64-x86_64-qt5
+        pacman --noconfirm -Scc
+      shell: cmd
+    - name: Configure CMake in debug mode
+      run: |
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        mkdir cmake-cache
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" ..
+      shell: cmd
+    - name: Build ns-3 in debug mode
+      run: |
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        cd cmake-cache
+        ninja
+      shell: cmd 
+    - name: Run tests
+      run: |
+        set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+        python3 ./utils/test-runner-script.py
+      shell: cmd
+    -  name: Run examples 
+       run : |
+        cd cmake-cache
+        ctest
+       shell: cmd 
+  #  - name: Clean debug artifacts
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in minimal size release mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=MINSIZEREL -G"Ninja" ..
+  #  - name: Build ns-3 in minimal size release mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      cd cmake-cache
+  #      ninja
+  #  - name: Run tests
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+  #  - name: Clean minimal size release artifacts
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release with debug mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
+  #  - name: Build ns-3 in release with debug mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      cd cmake-cache
+  #      ninja
+  #  - name: Run tests
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+  #  - name: Clean release with debug artifacts
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      rm -Rf ../build
+  #      rm -Rf ./*
+  #      rm -Rf ../3rd-party/vcpkg
+  #      rm ../utils/failed-tests.json
+  #  - name: Configure CMake in release mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3 in release  mode
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #    run: |
+  #      set PATH=%CD:~0,2%\msys64\mingw64\bin;%CD:~0,2%\msys64\usr\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem
+  #      python3 ./utils/test-runner-script.py
+
+  Mac_OS_X:   
+  
+    runs-on: macos-latest
+  
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install required packages
+      run: |
+        brew install ninja cmake qt5 gcc@9
+    - name: Configure CMake in debug mode
+      run: |
+        export PATH=/usr/local/bin:/usr/local/opt/qt/bin:$PATH
+        export CXX=g++-9
+        export CC=gcc-9
+        mkdir cmake-cache
+        cd cmake-cache
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" ..
+    - name: Build ns-3 in debug mode
+      run: |
+        export PATH="/usr/local/opt/qt/bin:$PATH"
+        cd cmake-cache
+        ninja
+    -  name: Run tests
+       run: |
+         python3 ./utils/test-runner-script.py
+    -  name: Run examples 
+       run : |
+        cd cmake-cache
+        ctest
+    #  - name: Clean release with debug artifacts
+    #    run: |
+    #      rm -Rf ../build
+    #      rm -Rf ./*
+    #      rm -Rf ../3rd-party/vcpkg
+    #      rm ../utils/failed-tests.json
+
+  #Windows_Visual_Studio:   #not working
+  #
+  #  runs-on: windows-latest
+  #
+  #  steps:
+  #  - uses: actions/checkout@v1
+  #  - name: Install required packages
+  #    run: |
+  #      ????
+  #  - name: Configure CMake
+  #    run: |
+  #      %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
+  #      mkdir cmake-cache
+  #      cd cmake-cache
+  #      cmake -DCMAKE_BUILD_TYPE=RELEASE -G"Ninja" ..
+  #  - name: Build ns-3
+  #    run: |
+  #      %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat"
+  #      cd cmake-cache
+  #      ninja
+  #  -  name: Run tests
+  #     run: |
+  #       python3 ./utils/test-runner-script.py
+
+

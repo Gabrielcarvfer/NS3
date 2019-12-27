@@ -1,6 +1,7 @@
 
 set(name test)
 
+set(nsc_sources )
 if (${NS3_NSC})
     set(nsc_sources
             ns3tcp/nsctcp-loss-test-suite.cc
@@ -11,10 +12,10 @@ endif()
 
 add_library(${lib${name}}
         OBJECT
+        ${nsc_sources}
         csma-system-test-suite.cc
         ns3tc/fq-codel-queue-disc-test-suite.cc
         ns3tc/pfifo-fast-queue-disc-test-suite.cc
-        ${nsc_sources}
         ns3tcp/ns3tcp-loss-test-suite.cc
         ns3tcp/ns3tcp-no-delay-test-suite.cc
         ns3tcp/ns3tcp-socket-test-suite.cc
