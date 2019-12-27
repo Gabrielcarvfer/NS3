@@ -173,7 +173,21 @@ macro(process_options)
         endif()
     endif()
 
-    #Process Openflow 3rd-party submodule and dependencies
+    if(${NS3_CLICK})
+        if(WIN32 OR APPLE)
+            set(${NS3_CLICK} OFF)
+            message(WARNING "Not building click on Windows/Mac")
+        else()
+            fetch_git_submodule("3rd-party/click")
+            ExternalProject_Add(ClickLib
+                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/click"
+                    PREFIX ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+                    CONFIGURE_COMMAND configure
+                    BUILD_COMMAND make
+                    )
+        endif()
+    endif()
+
     #LibXml2
     if(${NS3_LIBXML2} OR ${NS3_OPENFLOW})
         find_package(LibXml2)
@@ -190,22 +204,8 @@ macro(process_options)
         include_directories(${LIBXML2_INCLUDE_DIR})
         #add_definitions(${LIBXML2_DEFINITIONS})
     endif()
-
-    if(${NS3_CLICK})
-        if(WIN32 OR APPLE)
-            set(${NS3_CLICK} OFF)
-            message(WARNING "Not building click on Windows/Mac")
-        else()
-            #fetch_git_submodule("3rd-party/click")
-            ExternalProject_Add(ClickLib
-                    SOURCE_DIR "${PROJECT_SOURCE_DIR}/3rd-party/click"
-                    PREFIX ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-                    CONFIGURE_COMMAND configure
-                    BUILD_COMMAND make
-                    )
-        endif()
-    endif()
-
+    
+    #Process Openflow 3rd-party submodule and dependencies
     if(${NS3_OPENFLOW})
         if(WIN32)
             set(${NS3_OPENFLOW} OFF)
@@ -349,7 +349,7 @@ macro(process_options)
 
 
     #LibRT
-    if(${NS3_LIBRT})
+    if(${NS3_REALTIME})
         if(WIN32 OR APPLE)
             message(WARNING "Lib RT is not supported on Windows/Mac OS X, building without it")
         else()
