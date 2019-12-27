@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
 {
 
   std::string format ("Inet");
-  std::string input ("src/topology-read/examples/Inet_small_toposample.txt");
+  std::string input ("Inet_small_toposample.txt");
 
   // Set up command line parameters used to control the experiment.
   CommandLine cmd (__FILE__);

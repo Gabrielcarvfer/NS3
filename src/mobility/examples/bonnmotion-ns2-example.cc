@@ -65,7 +65,7 @@ int main (int argc, char *argv[])
   std::cout.setf (std::ios::fixed);
 
   double deltaTime = 100;
-  std::string traceFile = "src/mobility/examples/bonnmotion.ns_movements";
+  std::string traceFile = "bonnmotion.ns_movements";
 
   CommandLine cmd (__FILE__);
   cmd.AddValue ("traceFile", "Ns2 movement trace file", traceFile);
