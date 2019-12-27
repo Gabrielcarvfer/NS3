@@ -19,7 +19,7 @@ endif()
 
 #Check for dependencies and add sources accordingly
 set(rt_sources)
-if (${NS3_LIBRT} AND NOT WIN32)
+if (${NS3_REALTIME})
     set(rt_sources
             model/realtime-simulator-impl.cc
             model/wall-clock-synchronizer.cc

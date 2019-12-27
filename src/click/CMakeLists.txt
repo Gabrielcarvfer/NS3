@@ -24,8 +24,8 @@ if(${NS3_CLICK})
             )
 
     build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
-else()
-    list(REMOVE_ITEM libs_to_build click PARENT_SCOPE)
+#else()
+#    list(REMOVE_ITEM libs_to_build click PARENT_SCOPE)
 endif()
 
 
