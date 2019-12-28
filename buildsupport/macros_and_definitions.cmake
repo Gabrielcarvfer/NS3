@@ -22,7 +22,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/bin)
 set(CMAKE_HEADER_OUTPUT_DIRECTORY  ${CMAKE_OUTPUT_DIRECTORY}/ns3)
 set(THIRD_PARTY_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party)
-add_definitions(-DNS_TEST_SOURCEDIR="${CMAKE_OUTPUT_DIRECTORY}/test")
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
@@ -54,8 +53,11 @@ include(buildsupport/vcpkg_hunter.cmake)
 
 #If on Linux, add cotire for PCH builds. Others were having issues, so I disabled them
 if(LINUX)
-    #include(buildsupport/cotire.cmake)
+    include(buildsupport/cotire.cmake)
 	#include(buildsupport/cotire_force_pch.cmake)
+    if (CCACHE_FOUND)
+        set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+    endif()
 endif()
 
 
@@ -696,13 +698,14 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
             #Create libname of output library test of module
             set(test${libname} ns${NS3_VER}-${libname}-test-${build_type} CACHE INTERNAL "" FORCE)
 
+            GET_PROPERTY(local-ns3-libs-tests GLOBAL PROPERTY ns3-libs-tests)
             if (WIN32)
-                set(ns3-libs-tests ${ns3-libs-tests} $<TARGET_OBJECTS:${test${libname}}> CACHE INTERNAL "" FORCE)
+                set_property(GLOBAL PROPERTY ns3-libs-tests "${local-ns3-libs-tests};$<TARGET_OBJECTS:${test${libname}}>")
 
                 #Create shared library containing tests of the module
                 add_library(${test${libname}} OBJECT "${test_sources}")
             else()
-                set(ns3-libs-tests ${ns3-libs-tests} ${test${libname}} CACHE INTERNAL "" FORCE)
+                set_property(GLOBAL PROPERTY ns3-libs-tests "${local-ns3-libs-tests};${test${libname}}")
 
                 #Create shared library containing tests of the module
                 add_library(${test${libname}} SHARED "${test_sources}")
@@ -710,6 +713,8 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
                 #Link test library to the module library
                 target_link_libraries(${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
             endif()
+
+            target_compile_definitions(${test${libname}} PRIVATE NS_TEST_SOURCEDIR="src/${libname}/test")
 
             if (COMMAND cotire)
                 cotire(${test${libname}})
@@ -777,17 +782,19 @@ macro (build_example name source_files header_files libraries_to_link)
 
     set_target_properties( ${name}
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}
             )
     if(WIN32)
         #Windows require this workaround to make sure the DLL files are located
         add_test(NAME ctest-${name}
                 COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
+                )
     else()
         add_test(NAME ctest-${name}
                 COMMAND ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
+                )
     endif()
 endmacro()
 
@@ -804,20 +811,20 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
 
     set_target_properties( ${name}
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}
             )
 
-    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname})
+    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
 
     if(WIN32)
         #Windows require this workaround to make sure the DLL files are located
         add_test(NAME ctest-${name}
                 COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
     else()
         add_test(NAME ctest-${name}
                 COMMAND ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
     endif()
 endmacro()
 
