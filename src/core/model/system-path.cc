@@ -43,7 +43,7 @@
 #if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
     /** Do we have a \c makedir function? */
     #define HAVE_MKDIR_H
-        #if __WIN32__
+    #if __WIN32__
         #define WIN32_LEAN_AND_MEAN
         #include <windows.h>
     #endif
@@ -72,7 +72,7 @@
  * \def SYSTEM_PATH_SEP
  * System-specific path separator used between directory names.
  */
-#if defined (__win32__)
+#if defined (__WIN32__)
 #define SYSTEM_PATH_SEP "\\"
 #else
 #define SYSTEM_PATH_SEP "/"
@@ -320,6 +320,16 @@ std::list<std::string> ReadFiles (std::string path)
     {
       NS_FATAL_ERROR ("Could not open directory=" << path);
     }
+  struct dirent *de = readdir (dp);
+  while (de != 0)
+    {
+      files.push_back (de->d_name);
+      de = readdir (dp);
+    }
+  closedir (dp);
+#else
+#error "No support for reading a directory on this platform"
+#endif
   return files;
 }
 
