@@ -18,15 +18,34 @@
  * Author: Hajime Tazaki (tazaki@sfc.wide.ad.jp)
  */
 
+#ifdef __WIN32__
+    #include <pcre2posix.h>
+#else
+    #include "regex.h"
+#endif
+
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
-#include <regex.h>
 #include "ns3/log.h"
 #include "ns3/unused.h"
 #include "ns3/node-container.h"
 #include "rocketfuel-topology-reader.h"
+#include <sys/types.h>
+
+#ifndef HAVE_STRSEP
+char * strsep(char **sp, char *sep)
+{
+    char *p, *s;
+    if (sp == NULL || *sp == NULL || **sp == '\0') return(NULL);
+    s = *sp;
+    p = s + strcspn(s, sep);
+    if (*p != '\0') *p++ = '\0';
+    *sp = p;
+    return(s);
+}
+#endif
 
 /**
  * \file
@@ -149,9 +168,10 @@ RocketfuelTopologyReader::GenerateFromMapsFile (int argc, char *argv[])
   /* neighbors */
   if (argv[6])
     {
+      char sep[] = " \t";
       char *nbr;
       char *stringp = argv[6];
-      while ((nbr = strsep (&stringp, " \t")) != NULL)
+      while ((nbr = strsep (&stringp, &sep[0])) != NULL)
         {
           nbr[strlen (nbr) - 1] = '\0';
           neigh_list.push_back (nbr + 1);

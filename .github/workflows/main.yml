@@ -134,7 +134,7 @@ jobs:
         set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=DEBUG -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" ..
+        cmake -DCMAKE_BUILD_TYPE=DEBUG -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" -DAUTOINSTALL_DEPENDENCIES=ON ..
       shell: cmd
     - name: Build ns-3 in debug mode
       run: |

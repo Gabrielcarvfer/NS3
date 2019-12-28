@@ -32,6 +32,11 @@
 #include "ns3/ipv6-address.h"
 #include "ipv6-interface-address.h"
 
+#ifdef __WIN32__
+    //MSYS2 defines "interface" as a struct in mingw/include/rpc.h
+    #undef interface
+#endif
+
 namespace ns3 {
 
 class Node;

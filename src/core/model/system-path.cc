@@ -35,13 +35,26 @@
 #include <sys/types.h>
 #include <dirent.h>
 #endif
-#if defined (HAVE_SYS_STAT_H) && defined (HAVE_SYS_TYPES_H)
-/** Do we have a \c makedir function? */
-#define HAVE_MKDIR_H
-#include <sys/types.h>
-#include <sys/stat.h>
+
+#ifdef HAVE_OPENDIR
+    #include <sys/types.h>
 #endif
+
+#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
+    /** Do we have a \c makedir function? */
+    #define HAVE_MKDIR_H
+        #if __WIN32__
+        #define WIN32_LEAN_AND_MEAN
+        #include <windows.h>
+    #endif
+    #include <sys/types.h>
+    #include <sys/stat.h>
+#endif
+
 #include <sstream>
+#include <ctime>
+
+
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif /* __APPLE__ */
@@ -185,14 +198,14 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__win32__)
+#elif defined (__WIN32__)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *
      */
     DWORD size = 1024;
     LPTSTR lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-    DWORD status = GetModuleFilename (0, lpFilename, size);
+    DWORD status = GetModuleFileName (0, lpFilename, size);
     while (status == size)
       {
         size = size * 2;
@@ -379,7 +392,12 @@ MakeDirectories (std::string path)
       bool makeDirErr = false;
 
 #if defined(HAVE_MKDIR_H)
-      makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #ifdef __WIN32__
+          //makeDirErr = (CreateDirectory(tmp.c_str(),NULL) == 0);
+          makeDirErr = mkdir (tmp.c_str ());
+    #else
+          makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #endif
 #endif
 
       if (makeDirErr)
