@@ -30,7 +30,7 @@ link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 #When using MinGW, you usually don't want to add your MinGW folder to the path to prevent collisions with other programs
-if (WIN AND NOT MSVC)
+if (WIN32 AND NOT MSVC)
     #If using MSYS2
     set(MSYS2_PATH "E:\\tools\\msys64\\mingw64")
     set(GTK2_GDKCONFIG_INCLUDE_DIR "${MSYS2_PATH}\\include\\gtk-2.0")
@@ -40,9 +40,8 @@ if (WIN AND NOT MSVC)
     set(QT_UIC_EXECUTABLE   "${MSYS2_PATH}\\bin\\uic.exe")
     set(QT_MOC_EXECUTABLE   "${MSYS2_PATH}\\bin\\moc.exe")
     set(QT_MKSPECS_DIR      "${MSYS2_PATH}\\share\\qt4\\mkspecs")
-    set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\bin;")          #contains std libraries
-    set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\..\\usr\\bin;") #contains unzip required for Vcpkg
-
+    set(ENV{PATH} "$ENV{PATH};${MSYS2_PATH}\\bin;")          #contains std libraries
+    set(ENV{PATH} "$ENV{PATH};${MSYS2_PATH}\\..\\usr\\bin;") #contains unzip required for Vcpkg
     #set(ENV{PATH} "$ENV{PATH}${MSYS2_PATH}\\lib;")
     #set(ENV{PATH} "$ENV{PATH}${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
     #set(ENV{PATH} "$ENV{PATH}${CMAKE_RUNTIME_OUTPUT_DIRECTORY};")
@@ -129,15 +128,18 @@ endmacro()
 macro(process_options)
     #process debug switch
     #Used in build-profile-test-suite
-    if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    string(TOUPPER ${CMAKE_BUILD_TYPE} cmakeBuildType)
+    if(${cmakeBuildType} STREQUAL "DEBUG")
         add_definitions(-DNS3_BUILD_PROFILE_DEBUG)
         set(build_type "deb")
-    elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+    elseif(${cmakeBuildType} STREQUAL "RELWITHDEBINFO")
         add_definitions(-DNS3_BUILD_PROFILE_RELEASE)
         set(build_type "reldeb")
-    else(${CMAKE_BUILD_TYPE} STREQUAL "Release")
+    elseif(${cmakeBuildType} STREQUAL "RELEASE")
         add_definitions(-DNS3_BUILD_PROFILE_OPTIMIZED)
         set(build_type "rel")
+    else()
+        set(build_type "minsizerel")
     endif()
 
     if(${NS3_TESTS})
@@ -317,8 +319,7 @@ macro(process_options)
         #If we don't find installed, install
         add_package(pcre2)
         find_package(PCRE)
-        set(PCRE_LIBRARIES ${PCRE2_LIBRARIES})
-        include_directories(${PCRE2_INCLUDE_DIRS})
+        include_directories(${PCRE_INCLUDE_DIRS})
     endif()
 
 
@@ -778,10 +779,16 @@ macro (build_example name source_files header_files libraries_to_link)
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
             )
-    add_test(NAME ctest-${name}
-             COMMAND ${name}
-             WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${examplename}
-            )
+    if(WIN32)
+        #Windows require this workaround to make sure the DLL files are located
+        add_test(NAME ctest-${name}
+                COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+    else()
+        add_test(NAME ctest-${name}
+                COMMAND ${name}
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+    endif()
 endmacro()
 
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
@@ -801,9 +808,17 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
             )
 
     file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname})
-    add_test(NAME ctest-${name}
-             COMMAND ${name}
-             WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+
+    if(WIN32)
+        #Windows require this workaround to make sure the DLL files are located
+        add_test(NAME ctest-${name}
+                COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+    else()
+        add_test(NAME ctest-${name}
+                COMMAND ${name}
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${libname}/)
+    endif()
 endmacro()
 
 #Add contributions macros

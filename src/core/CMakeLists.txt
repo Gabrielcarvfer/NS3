@@ -85,6 +85,24 @@ set(thread_headers)
 
 if (${THREADS_FOUND})
     if(WIN32)
+		set(thread_sources
+				model/win32-fd-reader.cc
+				)
+		set(thread_headers
+				model/win32-fd-reader.h
+				)
+		set(winsock_libraries)
+		if (NOT MSVC) # using pragma for MSVC
+			set(winsock_libraries
+					wsock32
+					ws2_32
+					)
+		endif()
+		set(libraries_to_link
+				${libraries_to_link}
+				${winsock_libraries}
+				)
+
     else()
         set(thread_sources
                 model/unix-fd-reader.cc
@@ -92,27 +110,26 @@ if (${THREADS_FOUND})
         set(thread_headers
                 model/unix-fd-reader.h
                 )
-    
-
-	    set(thread_sources
-	            ${thread_sources}
-	            model/system-thread.cc
-	            model/unix-system-mutex.cc
-	            model/unix-system-condition.cc
-	            )
-
-	    set(thread_headers
-	            ${thread_headers}
-	            model/system-mutex.h
-	            model/system-thread.h
-	            model/system-condition.h
-	            )
-
-	    set(libraries_to_link
-	        ${libraries_to_link}
-	        ${CMAKE_THREAD_LIBS_INIT}
-	        )
     endif()
+	set(thread_sources
+	        ${thread_sources}
+	        model/system-thread.cc
+	        model/unix-system-mutex.cc
+	        model/unix-system-condition.cc
+	        )
+
+	set(thread_headers
+	        ${thread_headers}
+	        model/system-mutex.h
+	        model/system-thread.h
+	        model/system-condition.h
+	        )
+
+	set(libraries_to_link
+	    ${libraries_to_link}
+	    ${CMAKE_THREAD_LIBS_INIT}
+	    )
+
 endif()
 
 #Define core lib sources
