@@ -97,6 +97,8 @@ set(source_files
         model/vht-configuration.cc
         model/obss-pd-algorithm.cc
         model/constant-obss-pd-algorithm.cc
+        model/wifi-ack-policy-selector.cc
+        model/constant-wifi-ack-policy-selector.cc
         helper/wifi-radio-energy-model-helper.cc
         helper/athstats-helper.cc
         helper/wifi-helper.cc
@@ -208,6 +210,8 @@ set(header_files
         model/vht-configuration.h
         model/obss-pd-algorithm.h
         model/constant-obss-pd-algorithm.h
+        model/wifi-ack-policy-selector.h
+        model/constant-wifi-ack-policy-selector.h
         helper/wifi-radio-energy-model-helper.h
         helper/athstats-helper.h
         helper/wifi-helper.h
