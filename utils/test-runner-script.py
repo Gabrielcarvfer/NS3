@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import subprocess, os, json, sys
 
-runner_name = "test-runner" if os.name is not "nt" else "test-runner.exe"
+runner_name = "test-runner" if os.name != "nt" else "test-runner.exe"
 dot_path = "."+ os.sep 
 
 cwd_path = os.getcwd()
