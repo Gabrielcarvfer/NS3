@@ -1887,7 +1887,7 @@ bool LteEnbMac::harmonicMeanFraudDetector(uint16_t ueRnti, std::vector<unsigned 
     //Ignore fakeReportDetection (a.k.a. harmonic mean)
     BooleanValue num;
     GlobalValue::GetValueByName("HARMONIC_DETECTION", num);
-    if(num)
+    if(!num)
         fraudulent = false; //TODO: find a better way to do that and prevent recompiling
     return fraudulent;
 }
