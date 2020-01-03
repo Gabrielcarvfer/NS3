@@ -26,7 +26,7 @@
 #include <ns3/packet.h>
 #include <ns3/packet-burst.h>
 #include <ns3/random-variable-stream.h>
-
+#include <ns3/global-value.h>
 #include "lte-ue-mac.h"
 #include "lte-ue-net-device.h"
 #include "lte-radio-bearer-tag.h"
@@ -246,7 +246,9 @@ LteUeMac::GetTypeId (void)
   return tid;
 }
 
-std::map<uint16_t, bool> LteUeMac::fakeReportingUes;
+std::vector<std::map<uint16_t, bool>> LteUeMac::fakeReportingUesPerChannel{std::map<uint16_t, bool>(),std::map<uint16_t, bool>(),std::map<uint16_t, bool>(),std::map<uint16_t, bool>()};
+uint32_t LteUeMac::ueCount = 0;
+
 
 LteUeMac::LteUeMac ()
   :  m_bsrPeriodicity (MilliSeconds (1)), // ideal behavior
@@ -273,6 +275,7 @@ LteUeMac::LteUeMac ()
   m_uePhySapUser = new UeMemberLteUePhySapUser (this);
   m_raPreambleUniformVariable = CreateObject<UniformRandomVariable> ();
   m_componentCarrierId = 0;
+  LteUeMac::ueCount++;
 }
 
 
@@ -290,6 +293,7 @@ LteUeMac::DoDispose ()
   delete m_cmacSapProvider;
   delete m_uePhySapUser;
   Object::DoDispose ();
+  LteUeMac::ueCount--;
 }
 
 
@@ -942,39 +946,46 @@ void LteUeMac::SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAcc
         //Give a certain percentage of doctored sensing reports
         //bool fakeReport = (std::rand() % 256) > 252;//127 for 50%/50%, 192 for 25%/75%, 224 for 12.5%/87.5%, 240 for 6.25%/93.75%, 248 for 3.125%/96.875%, 252 for 1.5625%/98.4375%
 
-
+        IntegerValue num;
+        GlobalValue::GetValueByName("ATTACKERS_PER_CHANNEL", num);
         //Doctor sensing reports from a few UEs
-        int numFakeReportingUEs = 0; // 0 for no attackers, suggested 2 to 5 //TODO: find a better way to do that and prevent recompiling
-        if (fakeReportingUes.size() < numFakeReportingUEs && fakeReportingUes.find(m_rnti) == fakeReportingUes.end())
-            fakeReportingUes.insert({m_rnti, true});
-        bool fakeReport = fakeReportingUes.find(m_rnti) != fakeReportingUes.end();
-
-
-        if(fakeReport)
+        int numFakeReportingUEs = num.Get(); // 0 for no attackers, suggested 2 to 5 //TODO: find a better way to do that and prevent recompiling
+        //std::cout << numFakeReportingUEs << std::endl;
+        for (int i = 0; i < 4; i++)
         {
-            //If already is false alarm, skip
-            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1])
-            {
-                //skip
-            }
+            if (fakeReportingUesPerChannel[i].size() < numFakeReportingUEs &&
+                fakeReportingUesPerChannel[i].find(m_rnti) == fakeReportingUesPerChannel[i].end())
+                fakeReportingUesPerChannel[i].insert({m_rnti, true});
+            bool fakeReport = fakeReportingUesPerChannel[i].find(m_rnti) != fakeReportingUesPerChannel[i].end();
 
-            if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] & !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
+
+            if (fakeReport)
             {
-                if(!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0])
+                //If already is false alarm, skip
+                if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][1])
                 {
-                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
-                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][1] = true;
+                    //skip
                 }
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
-            }
 
-            //If false negative, correctly detect but mark as fake report
-            if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2])
-            {
+                if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][1] &
+                    !senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][2])
+                {
+                    if (!senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][0])
+                    {
+                        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][0] = true;
+                        senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][1] = true;
+                    }
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][3] = true;
+                }
 
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][0] = true;
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][2] = false;
-                senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[0][3] = true;
+                //If false negative, correctly detect but mark as fake report
+                if (senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][2])
+                {
+
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][0] = true;
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][2] = false;
+                    senseReport.UnexpectedAccess_FalseAlarm_FalseNegBitmap[i][3] = true;
+                }
             }
         }
     }

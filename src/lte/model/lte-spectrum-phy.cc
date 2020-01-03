@@ -43,6 +43,7 @@
 #include <fstream>
 #include <bitset>
 #include <iomanip>
+#include <ns3/global-value.h>
 
 
 namespace ns3 {
@@ -1325,8 +1326,10 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         }
         //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
 
-        //answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]); //TODO: find a better way to disable the markovChain process (and rename MonteCarlo to MarkovChain)
-
+        BooleanValue num;
+        GlobalValue::GetValueByName("MARKOV_DETECTION", num);
+        if(num)
+            answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]); //TODO: find a better way to disable the markovChain process (and rename MonteCarlo to MarkovChain)
         //if (k == 1 || k == 3)
         //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;

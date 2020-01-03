@@ -241,13 +241,13 @@ def generateScenarios(baseFolder, clusters=False):
         os.mkdir(baseFolder)
 
     #Create json file for simulation
-    for numUEs in [1, 10, 20, 50, 100]:
+    for numUEs in [10, 20, 50, 100]:
         numUesFolder = baseFolder+"ues_"+str(numUEs) + os.sep
         if not os.path.exists(numUesFolder):
             os.mkdir(numUesFolder)
         generateScenario(numUesFolder, numUEs=numUEs, clusters=clusters)
 
-def runScenario(baseFolder):
+def runScenario(baseFolder, harmonicOption, markovOption, fusionAlgorithm, numUes, attackersOption):
     #Move python to the target folder
     os.chdir(baseFolder)
 
@@ -255,16 +255,21 @@ def runScenario(baseFolder):
     import subprocess
 
     #Run simulation
-    if not os.path.exists("./sensing.png"):
-        response = subprocess.run("bash -c /mnt/e/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
+    if not os.path.exists("./sensing_list.txt"):
+        executablePath = "/mnt/e/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json_%sMarkov_%sHarmonic_%sAttackers" % ("__" if harmonicOption else "no", "__" if markovOption else "no", attackersOption)
+        #response = subprocess.run("bash -c /mnt/e/tools/source/NS3/build/bin/collaborative_sensing_demonstration_json")
+        response = subprocess.run("bash -c " + executablePath)
 
         #Generate the results plot figure and save to the simulation output folder (doesnt work for random numbers of UEs)
         #response = subprocess.run("python E:\\tools\\source\\NS3\\plot_main.py")
+        pass
+    pass
 
 
 if __name__ == "__main__":
     import multiprocessing
     import subprocess
+    import shutil
     #Select if you want to generate new simulation scenarios or run manually created ones
     createAndRunScenarios = True
 
@@ -274,29 +279,41 @@ if __name__ == "__main__":
         #Prepare and run n simulations
         with multiprocessing.Pool(processes=12) as pool:
 
-            for i in range(6):
-                resultsDict["scenario"][i] = {"fusion":{}}
+            for i in range(10):
+                resultsDict["scenario"][i] = {"fusion": {}}
 
                 # Prepare the simulationParameter json files for all simulations
-                #generateScenarios(baseDir+str(i)+"\\", clusters=True)
+                generateScenarios(baseDir+str(i)+os.sep, clusters=False)
 
                 #Run simulation if the scenario exists
                 if (os.path.exists(baseDir+str(i))):
 
                     argList = []
-
+                    scenPath = baseDir+str(i)+os.sep
                     # Run simulation with a few fusion algorithms
-                    for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
-                        for numUes in [1, 10, 20, 50, 100]:
-                            path = baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep
-                            argList += [[path]]
+                    for harmonicOption in [False, True]:
+                        for markovOption in [False, True]:
+                            harmonicMarkovOptionPath = scenPath+"%sHarmonic_%sMarkov" % ("" if harmonicOption else "no", "" if markovOption else "no")+os.sep
+                            if (not os.path.exists(harmonicMarkovOptionPath)):
+                                os.mkdir(harmonicMarkovOptionPath)
+                            for fusionAlgorithm in [6, 7, 11, 12]:
+                                for numUes in [10, 20, 50, 100]:
+                                    for attackersOption in ["no", "01", "02", "05", "10"]:
+                                        path = harmonicMarkovOptionPath+"ues_"+str(numUes)+"_"+attackersOption+"Attackers"+os.sep
+                                        if (not os.path.exists(path)):
+                                            os.mkdir(path)
+                                        fusionPath = path+fusionAlgorithms[fusionAlgorithm]
+                                        if (not os.path.exists(fusionPath)):
+                                            os.mkdir(fusionPath)
+                                        shutil.copy(scenPath+"ues_"+str(numUes)+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep+"simulationParameters.json", fusionPath)
+                                        argList += [[fusionPath, harmonicOption, markovOption, fusionAlgorithm, numUes, attackersOption]]
 
-                    for numUes in [1, 10, 20, 50, 100]:
-                        path = baseDir+str(i)+os.sep+"ues_"+str(numUes)+os.sep+fusionAlgorithms[6]+os.sep
+                    for numUes in [10, 20, 50, 100]:
+                        path = scenPath+"ues_"+str(numUes)+os.sep+fusionAlgorithms[6]
                         subprocess.run("python plot_network_topology.py %s" % path)
 
                     # Run simulations in parallel
-                    #pool.starmap(runScenario, argList)
+                    pool.starmap(runScenario, argList)
 
 
 
@@ -309,45 +326,51 @@ if __name__ == "__main__":
                 regexFalse = ".* of (.*) subframes"
                 regexFalseC = re.compile(regexFalse)
 
-                for fusionAlgorithm in [6, 7, 10, 11, 12, 13]:
-                     resultsDict["scenario"][i]["fusion"][fusionAlgorithm] = {"numUes":{}}
-                     for numUes in [1, 10, 20, 50, 100]:
-                         resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes] = {"channel":{}}
+                scenPath = baseDir+str(i)+os.sep
+                # Run simulation with a few fusion algorithms
+                for harmonicOption in [False, True]:
+                    for markovOption in [False, True]:
+                        harmonicMarkovOptionPath = scenPath+"%sHarmonic_%sMarkov" % ("" if harmonicOption else "no", "" if markovOption else "no")+os.sep
+                        for attackersOption in ["no", "01", "02", "05", "10"]:
+                            for fusionAlgorithm in [6, 7, 11, 12]:
+                                 resultsDict["scenario"][i]["fusion"][fusionAlgorithm] = {"numUes":{}}
+                                 for numUes in [10, 20, 50, 100]:
+                                     resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes] = {"channel":{}}
 
-                         sensingListFile = baseDir+str(i) + os.sep+"ues_"+str(numUes) + os.sep+fusionAlgorithms[fusionAlgorithm] + os.sep + "sensing_list.txt"
+                                     sensingListFile = harmonicMarkovOptionPath+"ues_"+str(numUes)+"_"+attackersOption+"Attackers"+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep+"sensing_list.txt"
 
-                         with open(sensingListFile, "r") as f:
-                             lines = f.readlines()
-                             lines = lines[2:] #Skip first two lines
+                                     with open(sensingListFile, "r") as f:
+                                         lines = f.readlines()
+                                         lines = lines[2:] #Skip first two lines
 
-                             prevLine = 0
-                             for channel in range(4):
-                                 channelLines = lines[:4]
-                                 lines = lines[4:]
+                                         prevLine = 0
+                                         for channel in range(4):
+                                             channelLines = lines[:4]
+                                             lines = lines[4:]
 
-                                 #Extract numbers from e.g. From 9976 fusions, 89 were false positive and 1360 were false negative.
-                                 ans = regexBitsPerUeC.search(channelLines[0]).groups()
-                                 avgBitsPerUe = float(ans[0])
-                                 ans = regexRawC.search(channelLines[1]).groups()
-                                 fusions, falsePositives, falseNegatives = int(ans[0]), int(ans[1]), int(ans[2])
-                                 framesThatCouldBeFalsePositives = int(regexFalseC.search(channelLines[2]).groups()[0])
-                                 framesThatCouldBeFalseNegatives = int(regexFalseC.search(channelLines[3]).groups()[0])
+                                             #Extract numbers from e.g. From 9976 fusions, 89 were false positive and 1360 were false negative.
+                                             ans = regexBitsPerUeC.search(channelLines[0]).groups()
+                                             avgBitsPerUe = float(ans[0])
+                                             ans = regexRawC.search(channelLines[1]).groups()
+                                             fusions, falsePositives, falseNegatives = int(ans[0]), int(ans[1]), int(ans[2])
+                                             framesThatCouldBeFalsePositives = int(regexFalseC.search(channelLines[2]).groups()[0])
+                                             framesThatCouldBeFalseNegatives = int(regexFalseC.search(channelLines[3]).groups()[0])
 
-                                 result = {
-                                     "avgBitsPerUe"       : avgBitsPerUe,
-                                     "totalFusions"       : fusions,
-                                     "totalFalsePositives": falsePositives,
-                                     "totalFalseNegatives": falseNegatives,
-                                     "framesPuWasInactive": framesThatCouldBeFalsePositives,
-                                     "framesPuWasActive"  : framesThatCouldBeFalseNegatives
-                                 }
-                                 resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes]["channel"][channel] = result
-                                 lines = lines[1:] #Skip empty line between channels
+                                             result = {
+                                                 "avgBitsPerUe"       : avgBitsPerUe,
+                                                 "totalFusions"       : fusions,
+                                                 "totalFalsePositives": falsePositives,
+                                                 "totalFalseNegatives": falseNegatives,
+                                                 "framesPuWasInactive": framesThatCouldBeFalsePositives,
+                                                 "framesPuWasActive"  : framesThatCouldBeFalseNegatives
+                                             }
+                                             resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes]["channel"][channel] = result
+                                             lines = lines[1:] #Skip empty line between channels
 
-            with open("results.json", "w") as f:
-                import json
-                json.dump(resultsDict, f, indent=2)
-                pass
+                            with open(harmonicMarkovOptionPath+"results.json", "w") as f:
+                                import json
+                                json.dump(resultsDict, f, indent=2)
+                                pass
     else:
         simulationScenarios = os.listdir(baseDir)
         #print (simulationScenarios)

@@ -301,13 +301,13 @@ private:
    */
   TracedCallback<uint64_t, bool, uint8_t, uint8_t> m_raResponseTimeoutTrace;
 
-  static std::map<uint16_t, bool> fakeReportingUes;
+  static std::vector<std::map<uint16_t, bool>> fakeReportingUesPerChannel;
 public:
   uint32_t lastFrameNo;
   uint32_t lastSubframeNo;
   void SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V); //todo: implement this properly through the SAP
   Ptr<LteSpectrumPhy> ueSpectrumPhy; //todo: implement this properly through the SAP
-
+  static uint32_t ueCount;
 };
 
 } // namespace ns3

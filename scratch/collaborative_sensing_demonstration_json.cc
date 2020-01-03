@@ -85,6 +85,18 @@ int sched_affinity(uint32_t cpu_set)
 }
 #endif
 
+#ifndef ATTACKERS_PER_CHANNEL
+#define ATTACKERS_PER_CHANNEL 0
+#endif
+#ifndef MARKOV_DETECTION
+#define MARKOV_DETECTION 0
+#endif
+#ifndef HARMONIC_DETECTION
+#define HARMONIC_DETECTION 0
+#endif
+
+
+
 //Simple network setup
 int main() {
     //sched_affinity((uint32_t) 0x05);
@@ -110,6 +122,21 @@ int main() {
     Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
     Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
 
+
+    static GlobalValue g_attackers_per_channel =
+            GlobalValue ("ATTACKERS_PER_CHANNEL", "Number of attackers per channel",
+                         IntegerValue (ATTACKERS_PER_CHANNEL),
+                         MakeIntegerChecker<int64_t>());
+
+    static GlobalValue g_markov_detection =
+            GlobalValue ("MARKOV_DETECTION", "Use Markov-chain to improve individual sensing report",
+                         BooleanValue (MARKOV_DETECTION),
+                         MakeBooleanChecker());
+
+    static GlobalValue g_harmonic_detection =
+            GlobalValue ("HARMONIC_DETECTION", "Use harmonic detection to prevent Byzantine attackers",
+                         BooleanValue (HARMONIC_DETECTION),
+                         MakeBooleanChecker());
 
     picojson::object inputJson = load_json("simulationParameters.json");
 

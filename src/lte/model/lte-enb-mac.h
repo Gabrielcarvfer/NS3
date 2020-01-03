@@ -562,9 +562,10 @@ private:
     std::map<uint16_t, std::vector<std::vector<uint8_t> > > lastReportedResultAndCqiByUePerSubchannel;
     std::map<uint16_t, std::vector<uint64_t>> countRequiredBits;
 
-        //TODO: find an elegant way to fix that
+    //TODO: find an elegant way to fix that
     std::vector<uint8_t> centralRbgIndexPerSubchannel = {16/2,40/2,60/2,86/2};
-        std::map< uint16_t,std::vector<double> > markovTrustworthiness;
+    std::map< uint16_t,std::vector<double> > markovTrustworthiness;
+    bool harmonicMeanFraudDetector(uint16_t, std::vector<unsigned char>, std::vector<unsigned char>, std::vector<bool>, int);
 };
 
 } // end namespace ns3

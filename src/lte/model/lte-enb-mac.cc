@@ -32,7 +32,7 @@
 #include "lte-control-messages.h"
 #include "lte-enb-net-device.h"
 #include "lte-ue-net-device.h"
-
+#include <ns3/global-value.h>
 #include <ns3/lte-enb-mac.h>
 #include <ns3/lte-radio-bearer-tag.h>
 #include <ns3/lte-ue-phy.h>
@@ -1823,6 +1823,76 @@ void LteEnbMac::RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p)
     return;
 }
 
+bool LteEnbMac::harmonicMeanFraudDetector(uint16_t ueRnti, std::vector<unsigned char> prevCqi, std::vector<unsigned char> latestCqi, std::vector<bool> channelReg, int i)
+{
+    //2nd check against Byzantine attacks
+    //Skip reports from UEs that report sane CQIs but didn't changed when a PU was detected, which indicates the sensing is incorrect
+    bool prevSensingExists = prevSensing.find(ueRnti) != prevSensing.end();
+
+    //Create entry if one doesn't exist
+    if(markovTrustworthiness.find(ueRnti) == markovTrustworthiness.end())
+    {
+        std::vector<double> temp{1.0, 1.0, 1.0, 1.0};
+        markovTrustworthiness.insert({ueRnti, temp});
+    }
+
+    //If result doesnt make sense, decrease trustworthiness
+    if (  (    prevSensingExists && !prevSensing.at(ueRnti)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]] )
+          || ( prevSensingExists &&  prevSensing.at(ueRnti)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < harmonicCqiHistory.at(harmonicCqiHistory.size()-2)[i] && latestCqi[centralRbgIndexPerSubchannel[i]] > harmonicCqiHistory.at(harmonicCqiHistory.size()-1)[i] )
+            )
+    {
+        markovTrustworthiness.at(ueRnti)[i] *= 0.5;
+    }
+    else if(     !channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] >= latestCqi[centralRbgIndexPerSubchannel[i]]
+                 || ( prevSensingExists && !prevSensing.at(ueRnti)[i] &&  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )
+            )
+    {
+        markovTrustworthiness.at(ueRnti)[i] += 0.01;
+        markovTrustworthiness.at(ueRnti)[i] = markovTrustworthiness.at(ueRnti)[i] > 1.0 ? 1.0 : markovTrustworthiness.at(ueRnti)[i];
+    }
+    else
+    {
+
+    }
+
+    bool fraudulent = false;
+    if (markovTrustworthiness.at(ueRnti)[i] <= 0.1)
+    {
+        if (fraudulentSensingUEs.find(ueRnti) == fraudulentSensingUEs.end())
+        {
+            std::vector<bool> temp{false, false, false, false};
+            temp[i] = true;
+            fraudulentSensingUEs.insert({ueRnti, temp});
+
+        }
+        else
+            fraudulentSensingUEs.find(ueRnti)->second[i] = true;
+        fraudulent = true;
+    }
+    else
+    {
+        if (fraudulentSensingUEs.find(ueRnti) != fraudulentSensingUEs.end())
+        {
+            auto tempUE = fraudulentSensingUEs.find(ueRnti);
+            tempUE->second[i] = false;
+            bool empty = true;
+            for (auto subchannel: tempUE->second)
+                if (subchannel)
+                    empty = false;
+            if (empty)
+                fraudulentSensingUEs.erase(ueRnti);
+        }
+    }
+
+    //Ignore fakeReportDetection (a.k.a. harmonic mean)
+    BooleanValue num;
+    GlobalValue::GetValueByName("HARMONIC_DETECTION", num);
+    if(num)
+        fraudulent = false; //TODO: find a better way to do that and prevent recompiling
+    return fraudulent;
+}
+
+
 //Implements the fusion algorithm for collaborative sensing reports
 uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 {
@@ -1884,136 +1954,7 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
 
-                            //2nd check against Byzantine attacks
-                            //Skip reports from UEs that report sane CQIs but didn't changed when a PU was detected, which indicates the sensing is incorrect
-                            bool prevSensingExists = prevSensing.find(origAddr.first) != prevSensing.end();
-
-                            //Reset fraudulentSensingUEs if sensing info or CQI changed
-                            //if ( ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i] )
-                            //     && (     ( prevSensingExists && !prevSensing.at(origAddr.first)[i] &&  channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] >  latestCqi[centralRbgIndexPerSubchannel[i]]) )
-                            //           || ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] &&  channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]) )
-                            //           //|| ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] && !channelReg[0] && (prevCqi[centralRbgIndexPerSubchannel[i]] <  latestCqi[centralRbgIndexPerSubchannel[i]]) )
-                            //        )
-                            //   )
-                            //{
-                            //    fraudulentSensingUEs.at(origAddr.first)[i] = false;
-                            //    bool empty = true;
-                            //    for (auto val : fraudulentSensingUEs.at(origAddr.first))
-                            //        empty &= !val;
-                            //    if (empty)
-                            //        fraudulentSensingUEs.erase(origAddr.first);
-                            //}
-                            //if((*harmonicCqiHistory.rbegin()++)[i] != (*harmonicCqiHistory.rbegin())[i] )
-                            //if(latestCqi[centralRbgIndexPerSubchannel[i]] != 15)
-                            //if (channelReg[0] && channelReg[3])
-                            //std::cout << origAddr.first << " j " << (int) centralRbgIndexPerSubchannel[i] << " PrevCqi " << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << " latestCqi " << (int) latestCqi[centralRbgIndexPerSubchannel[i]] << " PrevCqiHarmonic " << (*harmonicCqiHistory.rbegin()++)[i] << " CurrCqiHarmonic " << (*harmonicCqiHistory.rbegin())[i] << std::endl;
-                            //if (harmonicCqiHistory[harmonicCqiHistory.size()-2][i] < harmonicCqiHistory[harmonicCqiHistory.size()-1][i])
-                            //    std::cout << "i" << i << " moar" << std::endl;
-                            //if (harmonicCqiHistory[harmonicCqiHistory.size()-2][i] > harmonicCqiHistory[harmonicCqiHistory.size()-1][i])
-                            //    std::cout << "i" << i << " less" << std::endl;
-
-                            std::stringstream ss;
-                            //if ( channelReg[0] && latestCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-1][i]
-                            //      || (  channelReg[0] && (  prevCqi[centralRbgIndexPerSubchannel[i]] >= harmonicCqiHistory[harmonicCqiHistory.size()-2][i]  )  )
-                            //      || (  prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]] ) //If CQI improved but still reporting a PU presence indicates fraudulent result
-                            //      || (  prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]] )
-                            //      || (  prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] == latestCqi[centralRbgIndexPerSubchannel[i]] && harmonicCqiHistory[harmonicCqiHistory.size()-2][i] < harmonicCqiHistory[harmonicCqiHistory.size()-1][i] )
-                            //    //|| (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])  //If CQI is constant, there shouldn't be a difference in PU reporting
-                            //   )
-                            //{
-                            //    if (fraudulentSensingUEs.find(origAddr.first) == fraudulentSensingUEs.end())
-                            //    {
-                            //        std::vector<bool> temp{false, false, false, false};
-                            //        temp[i] = true;
-                            //        fraudulentSensingUEs.insert({origAddr.first, temp});
-                            //    }
-                            //    else
-                            //        fraudulentSensingUEs.at(origAddr.first)[i] = true;
-                            //    fraudulentUE = fraudulentSensingUEs.find(origAddr.first);
-                            //    ss << " Blip";
-                            //}
-
-                            //Create entry if one doesn't exist
-                            if(markovTrustworthiness.find(origAddr.first) == markovTrustworthiness.end())
-                            {
-                                std::vector<double> temp{1.0, 1.0, 1.0, 1.0};
-                                markovTrustworthiness.insert({origAddr.first, temp});
-                            }
-                            ss << this;
-                            //If result doesnt make sense, decrease trustworthiness
-                            if (  (    prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]] )
-                                  || ( prevSensingExists &&  prevSensing.at(origAddr.first)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < harmonicCqiHistory.at(harmonicCqiHistory.size()-2)[i] && latestCqi[centralRbgIndexPerSubchannel[i]] > harmonicCqiHistory.at(harmonicCqiHistory.size()-1)[i] )
-                               )
-                            {
-                                markovTrustworthiness.at(origAddr.first)[i] *= 0.5;
-                                ss << " Blip 1";
-                            }
-                            else if(     !channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] >= latestCqi[centralRbgIndexPerSubchannel[i]]
-                                      || ( prevSensingExists && !prevSensing.at(origAddr.first)[i] &&  channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] <= latestCqi[centralRbgIndexPerSubchannel[i]]  )
-                            )
-                            {
-                                markovTrustworthiness.at(origAddr.first)[i] += 0.01;
-                                markovTrustworthiness.at(origAddr.first)[i] = markovTrustworthiness.at(origAddr.first)[i] > 1.0 ? 1.0 : markovTrustworthiness.at(origAddr.first)[i];
-                                ss << " Blip 2 ";
-                            }
-                            else
-                            {
-
-                            }
-
-                            bool fraudulent = false;
-                            if (markovTrustworthiness.at(origAddr.first)[i] <= 0.1)
-                            {
-                                if (fraudulentSensingUEs.find(origAddr.first) == fraudulentSensingUEs.end())
-                                {
-                                    std::vector<bool> temp{false, false, false, false};
-                                    temp[i] = true;
-                                    fraudulentSensingUEs.insert({origAddr.first, temp});
-
-                                }
-                                else
-                                    fraudulentSensingUEs.find(origAddr.first)->second[i] = true;
-                                ss << " Blip 3 ";
-                                fraudulent = true;
-                            }
-                            else
-                            {
-                                if (fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end())
-                                {
-                                    auto tempUE = fraudulentSensingUEs.find(origAddr.first);
-                                    tempUE->second[i] = false;
-                                    bool empty = true;
-                                    for (auto subchannel: tempUE->second)
-                                        if (subchannel)
-                                            empty = false;
-                                    if (empty)
-                                        fraudulentSensingUEs.erase(origAddr.first);
-                                    ss << " Blip 4 ";
-                                }
-                            }
-
-
-                            if (channelReg[3] && i==0)//fraudulentUE != fraudulentSensingUEs.end() && fraudulentUE->second[i])
-                            {
-
-                                //ss << " trustworthiness " << markovTrustworthiness.at(origAddr.first)[i] << " ";
-                                ss << " Blop " << markovTrustworthiness.at(origAddr.first)[i] << " ";
-                                if (prevSensing.find(origAddr.first) == prevSensing.end() || prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() )
-                                    ss << " prevSensing=None" << ", currSensing=" << channelReg[0] << ", prevCqi=None" << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
-                                else
-                                    ss << " prevSensing=" << prevSensing.at(origAddr.first)[i] << ", currSensing=" << channelReg[0] << ", prevCqi=" << (int) prevCqi[centralRbgIndexPerSubchannel[i]] << ", currCqi=" << (int) latestCqi[centralRbgIndexPerSubchannel[i]];
-                                ss << " prevHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-2][i] << " lastHarmonicCqi " << harmonicCqiHistory[harmonicCqiHistory.size()-1][i];
-                                //std::cout << ss.str() << std::endl;
-                            }
-
-                            //bool fraudulent = ( ( fraudulentUE != fraudulentCqiUEs.end() && fraudulentUE->second[centralRbgIndexPerSubchannel[i]] )
-                            //                    //|| ( fraudulentSensingUEs.find(origAddr.first) != fraudulentSensingUEs.end() && fraudulentSensingUEs.at(origAddr.first)[i])
-                            //                    || ( (prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]]) && prevSensingExists && prevSensing.at(origAddr.first)[i] && !channelReg[0])
-                            //                    || ( (prevCqi[centralRbgIndexPerSubchannel[i]] < latestCqi[centralRbgIndexPerSubchannel[i]]) && prevSensingExists && !prevSensing.at(origAddr.first)[i] && channelReg[0])
-                            //                  );
-
-                            //Ignore fakeReportDetection
-                            fraudulent = false; //TODO: find a better way to do that and prevent recompiling
+                            bool fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
 
                             if ( !fraudulent )
                             {
@@ -2055,11 +1996,28 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
                     for (auto origAddr : subframeIt->second)
                     {
+                        auto fraudulentUE = fraudulentCqiUEs.find(origAddr.first);
+                        //if (fraudulentUE != fraudulentCqiUEs.end()) //Only makes sense if not subdivided by subchannel
+                        //    continue;
+
+                        //Skip reports from UEs that didn't reported their CQI at least twice
+                        if(prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(origAddr.first) == ue_to_cqi_map.end())
+                            continue;
+
+                        //Check if there is an entry for Cqi per subchannel for the current UE
+                        auto prevCqi   = prev_ue_to_cqi_map.at(origAddr.first);
+                        auto latestCqi = ue_to_cqi_map.at(origAddr.first);
+
                         int i = 0;
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            //If every UE reported the presence, keep marked as present, else mark as not present
-                            fusedResults[i][0] = fusedResults[i][0] && channelReg[0];
+                            bool fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
+
+                            if ( !fraudulent )
+                            {
+                                //If every UE reported the presence, keep marked as present, else mark as not present
+                                fusedResults[i][0] = fusedResults[i][0] && channelReg[0];
+                            }
 
                             if (prevSensing.find(origAddr.first) == prevSensing.end())
                             {
@@ -2476,10 +2434,28 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         if (subframeIt->second.find(ueRnti->first) != subframeIt->second.end())
                         {
 
+                            auto fraudulentUE = fraudulentCqiUEs.find(ueRnti->first);
+                            //if (fraudulentUE != fraudulentCqiUEs.end()) //Only makes sense if not subdivided by subchannel
+                            //    continue;
+
+                            //Skip reports from UEs that didn't reported their CQI at least twice
+                            if(prev_ue_to_cqi_map.find(ueRnti->first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(ueRnti->first) == ue_to_cqi_map.end())
+                                continue;
+
+                            //Check if there is an entry for Cqi per subchannel for the current UE
+                            auto prevCqi   = prev_ue_to_cqi_map.at(ueRnti->first);
+                            auto latestCqi = ue_to_cqi_map.at(ueRnti->first);
+
                             int i = 0;
                             for(auto channelReg: subframeIt->second.at(ueRnti->first).UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                             {
-                                kConfirmed[i] += channelReg[0] ? 1 : 0;
+                                bool fraudulent = harmonicMeanFraudDetector(ueRnti->first, prevCqi, latestCqi, channelReg, i);
+
+                                if ( !fraudulent )
+                                {
+                                    //If every UE reported the presence, keep marked as present, else mark as not present
+                                    kConfirmed[i] += channelReg[0] ? 1 : 0;
+                                }
 
 
                                 if (prevSensing.find(ueRnti->first) == prevSensing.end())
