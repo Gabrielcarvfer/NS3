@@ -277,13 +277,11 @@ if __name__ == "__main__":
     resultsDict = {"scenario":{}}
     if createAndRunScenarios:
         #Prepare and run n simulations
-        with multiprocessing.Pool(processes=12) as pool:
+        with multiprocessing.Pool(processes=14) as pool:
 
-            for i in range(10):
-                resultsDict["scenario"][i] = {"fusion": {}}
-
+            for i in range(0, 10):
                 # Prepare the simulationParameter json files for all simulations
-                generateScenarios(baseDir+str(i)+os.sep, clusters=False)
+                #generateScenarios(baseDir+str(i)+os.sep, clusters=True)
 
                 #Run simulation if the scenario exists
                 if (os.path.exists(baseDir+str(i))):
@@ -313,7 +311,7 @@ if __name__ == "__main__":
                         subprocess.run("python plot_network_topology.py %s" % path)
 
                     # Run simulations in parallel
-                    pool.starmap(runScenario, argList)
+                    #pool.starmap(runScenario, argList)
 
 
 
@@ -328,14 +326,18 @@ if __name__ == "__main__":
 
                 scenPath = baseDir+str(i)+os.sep
                 # Run simulation with a few fusion algorithms
+                resultsDict["scenario"][i] = {"harmonic":{}}
                 for harmonicOption in [False, True]:
+                    resultsDict["scenario"][i]["harmonic"][harmonicOption] = {"markov":{}}
                     for markovOption in [False, True]:
+                        resultsDict["scenario"][i]["harmonic"][harmonicOption]["markov"][markovOption] = {"attackers":{}}
                         harmonicMarkovOptionPath = scenPath+"%sHarmonic_%sMarkov" % ("" if harmonicOption else "no", "" if markovOption else "no")+os.sep
                         for attackersOption in ["no", "01", "02", "05", "10"]:
+                            resultsDict["scenario"][i]["harmonic"][harmonicOption]["markov"][markovOption]["attackers"][attackersOption] = {"fusion":{}}
                             for fusionAlgorithm in [6, 7, 11, 12]:
-                                 resultsDict["scenario"][i]["fusion"][fusionAlgorithm] = {"numUes":{}}
+                                 resultsDict["scenario"][i]["harmonic"][harmonicOption]["markov"][markovOption]["attackers"][attackersOption]["fusion"][fusionAlgorithm] = {"numUes":{}}
                                  for numUes in [10, 20, 50, 100]:
-                                     resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes] = {"channel":{}}
+                                     resultsDict["scenario"][i]["harmonic"][harmonicOption]["markov"][markovOption]["attackers"][attackersOption]["fusion"][fusionAlgorithm]["numUes"][numUes] = {"channel":{}}
 
                                      sensingListFile = harmonicMarkovOptionPath+"ues_"+str(numUes)+"_"+attackersOption+"Attackers"+os.sep+fusionAlgorithms[fusionAlgorithm]+os.sep+"sensing_list.txt"
 
@@ -364,13 +366,13 @@ if __name__ == "__main__":
                                                  "framesPuWasInactive": framesThatCouldBeFalsePositives,
                                                  "framesPuWasActive"  : framesThatCouldBeFalseNegatives
                                              }
-                                             resultsDict["scenario"][i]["fusion"][fusionAlgorithm]["numUes"][numUes]["channel"][channel] = result
+                                             resultsDict["scenario"][i]["harmonic"][harmonicOption]["markov"][markovOption]["attackers"][attackersOption]["fusion"][fusionAlgorithm]["numUes"][numUes]["channel"][channel] = result
                                              lines = lines[1:] #Skip empty line between channels
 
-                            with open(harmonicMarkovOptionPath+"results.json", "w") as f:
-                                import json
-                                json.dump(resultsDict, f, indent=2)
-                                pass
+        with open(baseDir+"results.json", "w") as f:
+            import json
+            json.dump(resultsDict, f, indent=2)
+            pass
     else:
         simulationScenarios = os.listdir(baseDir)
         #print (simulationScenarios)
