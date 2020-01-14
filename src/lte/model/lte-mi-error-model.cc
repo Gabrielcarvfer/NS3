@@ -44,6 +44,7 @@ namespace ns3 {
 
     NS_LOG_COMPONENT_DEFINE ("LteMiErrorModel");
 
+    std::map<std::tuple<double, uint8_t, uint16_t>, double> LteMiErrorModel::mapMiBlerCache;
 
     /// global table of the effective code rates (ECR)s that have BLER performance curves
     static std::vector<double> BlerCurvesEcrMap;
@@ -315,6 +316,10 @@ namespace ns3 {
     double
     LteMiErrorModel::MappingMiBler (double mib, uint8_t ecrId, uint16_t cbSize)
     {
+        std::tuple<double, uint8_t, uint16_t> key(mib, ecrId, cbSize);
+        if (mapMiBlerCache.find(key) != mapMiBlerCache.end())
+            return mapMiBlerCache.at(key);
+
         NS_LOG_FUNCTION (mib << (uint32_t) ecrId << (uint32_t) cbSize);
         double b = 0;
         double c = 0;
@@ -353,6 +358,7 @@ namespace ns3 {
         // see IEEE802.16m EMD formula 55 of section 4.3.2.1
         double bler = 0.5*( 1 - erf((mib-b)/(sqrt(2)*c)) );
         NS_LOG_LOGIC ("MIB: " << mib << " BLER:" << bler << " b:" << b << " c:" << c);
+        mapMiBlerCache.emplace(key, bler);
         return bler;
     }
 

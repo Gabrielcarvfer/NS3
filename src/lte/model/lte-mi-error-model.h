@@ -39,6 +39,7 @@
 #include <stdint.h>
 #include <ns3/spectrum-value.h>
 #include <ns3/lte-harq-phy.h>
+#include <map>
 
 
 
@@ -71,6 +72,7 @@ struct TbStats_t
 {
   double tbler; ///< Transport block BLER
   double mi; ///< Mutual information
+  double mcs;
 };
   
 
@@ -123,6 +125,7 @@ private:
   static bool errorDataLoaded; 
   static double scalingCoeffQpsk, scalingCoeff16qam, scalingCoeff64qam;
   static void LoadErrorData();
+  static std::map<std::tuple<double, uint8_t, uint16_t>, double> mapMiBlerCache;
 
 
 };

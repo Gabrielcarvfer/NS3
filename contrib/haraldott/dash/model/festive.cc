@@ -117,8 +117,8 @@ FestiveAlgorithm::GetNextRep (const int64_t segmentCounter, int64_t clientId)
     }
 
   // decide if we need to increase
-  assert (m_smooth.at (0) > 0);
-  assert (m_smooth.at (1) == 1);
+  NS_ASSERT (m_smooth.at (0) > 0);
+  NS_ASSERT (m_smooth.at (1) == 1);
   if (currentRepIndex < m_highestRepIndex && !decisionMade)
     {
       int count = 0;

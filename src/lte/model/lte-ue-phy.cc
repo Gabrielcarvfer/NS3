@@ -1441,6 +1441,7 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
     {
       m_dlBandwidth = dlBandwidth;
 
+
       static const int Type0AllocationRbg[4] = {
         10,     // RGB size 1
         26,     // RGB size 2
@@ -1460,6 +1461,12 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
                   break;
                 }
             }
+
+      //todo: temporarily testing effect of changes to rbg grouping size
+      if (dlBandwidth == 100)
+      {
+        m_rbgSize = 2;
+      }
 
       m_noisePsd = LteSpectrumValueHelper::CreateNoisePowerSpectralDensity (m_dlEarfcn, m_dlBandwidth, m_noiseFigure);
       m_downlinkSpectrumPhy->SetNoisePowerSpectralDensity (m_noisePsd);

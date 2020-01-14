@@ -163,16 +163,20 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
         }
     }
 
-  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFile << (uint32_t) cellId << "\t";
-  outFile << imsi << "\t";
-  outFile << frameNo << "\t";
-  outFile << subframeNo << "\t";
-  outFile << rnti << "\t";
-  outFile << (uint32_t) mcsTb << "\t";
-  outFile << size << "\t";
-  outFile << (uint32_t) componentCarrierId << std::endl;
+  std::stringstream ss;
+  ss << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  ss << (uint32_t) cellId << "\t";
+  ss << imsi << "\t";
+  ss << frameNo << "\t";
+  ss << subframeNo << "\t";
+  ss << rnti << "\t";
+  ss << (uint32_t) mcsTb << "\t";
+  ss << size << "\t";
+  ss << (uint32_t) componentCarrierId << std::endl;
+  outFile << ss.str();
   outFile.close ();
+
+
 }
 
 void

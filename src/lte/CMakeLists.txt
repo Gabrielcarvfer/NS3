@@ -1,21 +1,30 @@
 
 set(name lte)
 
-
+set(nn_sources
+        )
+set(nn_headers
+        )
 set(nn_libraries
         )
 
 if(${TORCH_FOUND})
+    set(nn_sources
+            model/nn-ff-mac-scheduler.cc
+            )
+    set(nn_headers
+            model/nn-ff-mac-scheduler.h
+            )
     set(nn_libraries
             "${TORCH_LIBRARIES}"
             )
+    #message(WARNING ${TORCH_LIBRARIES})
 endif()
 
 if(${NS3_EMU})
         set(source_files helper/emu-epc-helper.cc)
         set(header_files helper/emu-epc-helper.cc)
 endif()
-
 set(source_files
         model/lte-common.cc
         model/lte-spectrum-phy.cc
@@ -144,7 +153,7 @@ set(source_files
         helper/cc-helper.cc
         model/component-carrier-ue.cc
         model/component-carrier-enb.cc
-
+        ${nn_sources}
         )
 
 set(header_files
@@ -275,6 +284,7 @@ set(header_files
         model/component-carrier.h
         model/component-carrier-ue.h
         model/component-carrier-enb.h
+        ${nn_headers}
         )
 
 set(libraries_to_link

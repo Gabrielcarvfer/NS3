@@ -38,6 +38,9 @@
 #include <stdexcept>
 #include <ns3/integer.h>
 #include <ns3/string.h>
+#include <string>
+#include <iomanip> //for fixed point print and setprecision
+#include <chrono>
 
 namespace ns3 {
 
@@ -138,15 +141,50 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
   m_schedSapProvider = new MemberSchedSapProvider<CqaFfMacScheduler> (this);
   m_ffrSapProvider = 0;
   m_ffrSapUser = new MemberLteFfrSapUser<CqaFfMacScheduler> (this);
-  schedulerInputFile.open("schedulerInput.txt");
-  schedulerOutputFile.open("schedulerOutput.txt");
+
+    outputfiles = {"dump_p10.json",
+                   "dump_a30.json",
+                   "dump_lcidqci.json",
+                   "dump_activeharqs.json",
+                   "dump_rlcsched.json",
+                   "dump_holgroups_gbr.json",
+                   "dump_holgroups_ngbr.json",
+                   "dump_ue_data_to_transfer.json",
+                   "dump_ue_assigned_resources.json",
+                   "dump_dci_buffer.json",
+                   "dump_allocation_map.json",
+                   "dump_availablerbgs_postharq.json",
+                   "dump_rargrants.json",
+                   "dump_datagrants.json"};
+
+    for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
+    {
+        std::vector<std::string> outputfile;
+        //outputfile->open(*it2);
+        auto hashval = hash(*it2);
+        outputfileMap.emplace(hashval, outputfile);
+
+        std::stringstream ss;
+        if (*it2 == "dump_activeharqs.json")
+        {
+            ss << "Time(%)" << "\t" << "RNTI" << "\t" << "LCID" << "\t" << "Harq" << "\n";
+        }
+        else if (*it2 == "dump_rlcsched.json")
+        {
+            ss << "Time(%)" << "\t" << "RNTI" << "\t" << "Flow" << "\t" << "Size" << "\n";
+        }
+        else
+        {
+            ss << "{";
+        }
+        outputfileMap.at(hash(*it2)).push_back(ss.str());
+    }
 }
 
 CqaFfMacScheduler::~CqaFfMacScheduler ()
 {
   NS_LOG_FUNCTION (this);
-  schedulerInputFile.close();
-  schedulerOutputFile.close();
+
 }
 
 void
@@ -163,6 +201,88 @@ CqaFfMacScheduler::DoDispose ()
   delete m_cschedSapProvider;
   delete m_schedSapProvider;
   delete m_ffrSapUser;
+
+    std::ofstream schedulerInput(std::string("schedulerInput.txt"));
+    std::ofstream schedulerOutput(std::string("schedulerOutput.txt"));
+    for (auto it : schedulerInputFile)
+        schedulerInput << it;
+    for (auto it : schedulerOutputFile)
+        schedulerOutput << it;
+    schedulerInput.close();
+    schedulerOutput.close();
+
+
+
+
+    for (auto it = outputfileMap.begin(); it != outputfileMap.end(); it++)
+    {
+
+        if (it->first == hash("dump_activeharqs.json") )
+            continue;
+        else if (it->first == hash("dump_rlcsched.json") )
+            continue;
+        else if (it->first == hash("dump_lcidqci.json"))
+        {
+            std::stringstream ss;
+            ss << "\"lcid_qci\":{";
+            for (auto lcidPtr = m_lcidQci.begin(); lcidPtr != m_lcidQci.end(); lcidPtr++)
+            {
+                ss << "\"" << (int) lcidPtr->first << "\": {";
+                ss << "\"qci\":" << (int) lcidPtr->second.qci << ",";
+                ss << "\"ues\":{";
+                for (auto rntiPtr = lcidPtr->second.rntis.begin(); rntiPtr != lcidPtr->second.rntis.end(); rntiPtr++)
+                {
+                    ss << "\""<< *rntiPtr << "\":0";
+                    if(std::next(rntiPtr,1) != lcidPtr->second.rntis.end())
+                        ss << ",";
+                }
+                ss << "}}";
+                if(std::next(lcidPtr,1) != m_lcidQci.end())
+                    ss << ",";
+
+            }
+            ss << "}}";
+            it->second.push_back(ss.str());
+        }
+        else
+        {
+            std::stringstream ss;
+            ss << "\n" << "}" << "\n";
+            it->second.push_back(ss.str());
+
+        }
+
+        //it->second->close();
+
+    }
+
+    outputfiles = {"dump_p10.json",
+                   "dump_a30.json",
+                   "dump_lcidqci.json",
+                   "dump_activeharqs.json",
+                   "dump_rlcsched.json",
+                   "dump_holgroups_gbr.json",
+                   "dump_holgroups_ngbr.json",
+                   "dump_ue_data_to_transfer.json",
+                   "dump_ue_assigned_resources.json",
+                   "dump_dci_buffer.json",
+                   "dump_allocation_map.json",
+                   "dump_availablerbgs_postharq.json",
+                   "dump_rargrants.json",
+                   "dump_datagrants.json"};
+
+    for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
+    {
+        std::ofstream outfile;
+        outfile.open(*it2);
+
+        auto it3 = outputfileMap.find(hash(*it2));
+        for (auto it : it3->second)
+            outfile << it;
+        outfile.close();
+    }
+
+
 }
 
 TypeId
@@ -297,7 +417,7 @@ CqaFfMacScheduler::DoCschedLcConfigReq (const struct FfMacCschedSapProvider::Csc
   if (params.m_reconfigureFlag)
     {
       std::vector <struct LogicalChannelConfigListElement_s>::const_iterator lcit;
-
+      int i = 0;
       for(lcit = params.m_logicalChannelConfigList.begin (); lcit!= params.m_logicalChannelConfigList.end (); lcit++)
         {
           LteFlowId_t flowid = LteFlowId_t (params.m_rnti,lcit->m_logicalChannelIdentity);
@@ -685,13 +805,15 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   }
 
   //SchedulerInput
-  schedulerInputFile << Simulator::Now() << ": ";
-  for (int i = 0; i < rbgMap.size(); i++)
   {
-      schedulerInputFile << (rbgMap.at(i) ? 1 : 0);
+      std::stringstream ss;
+      ss << Simulator::Now() << ": ";
+      for (int i = 0; i < rbgMap.size(); i++) {
+          ss << (rbgMap.at(i) ? 1 : 0);
+      }
+      ss << "\n";
+      schedulerInputFile.push_back(ss.str());
   }
-  schedulerInputFile << "\n";
-
 
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
@@ -1100,20 +1222,125 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   m_dlInfoListBuffered.clear ();
   m_dlInfoListBuffered = dlInfoListUntxed;
 
+
+  /******************************************************************************************************************/
+  //Dump available rbgs to dump_availablerbgs_postharq.json
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_availablerbgs_postharq.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"availablerbgs_postharq\":[";
+      for (auto it = rbgMap.begin(); it != rbgMap.end(); it++)
+      {
+          ss << (bool) *it << "";
+          if(std::next(it,1) != rbgMap.end())
+              ss << ",";
+      }
+      ss << "]";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_rargrants.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      for (auto it = ret.m_buildRarList.begin(); it != ret.m_buildRarList.end(); it++)
+      {
+          ss << "\"rargrants\" : {";
+          ss << "\"rnti\"       :" << (int) it->m_grant.m_rnti       << ",";
+          ss << "\"rbStart\"    :" << (int) it->m_grant.m_rbStart    << ",";
+          ss << "\"rbLen\"      :" << (int) it->m_grant.m_rbLen      << ",";
+          ss << "\"tbSize\"     :" << (int) it->m_grant.m_tbSize     << ",";
+          ss << "\"mcs\"        :" << (int) it->m_grant.m_mcs        << ",";
+          ss << "\"hopping\"    :" << (int) it->m_grant.m_hopping    << ",";
+          ss << "\"tpc\"        :" << (int) it->m_grant.m_tpc        << ",";
+          ss << "\"cqiRequest\" :" << (int) it->m_grant.m_cqiRequest << ",";
+          ss << "\"ulDelay\"    :" << (int) it->m_grant.m_ulDelay    << "";
+          ss << "}";
+          if(std::next(it,1) != ret.m_buildRarList.end())
+              ss << ",";
+      }
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_datagrants.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"datagrants\" : [";
+      for ( auto it = ret.m_buildDataList.begin(); it != ret.m_buildDataList.end(); it++)
+      {
+          ss << "{\"rnti\"       :" << (int) it->m_dci.m_rnti       << ",";
+          ss << "\"rbBitmap\"   :" << (int) it->m_dci.m_rbBitmap   << ",";
+          ss << "\"rbShift\"    :" << (int) it->m_dci.m_rbShift    << ",";
+          ss << "\"resAlloc\"   :" << (int) it->m_dci.m_resAlloc   << "";//",";
+          //ss << "\"mcs\"        :" << (int) it->m_dci.m_mcs        << ",";
+          //ss << "\"hopping\"    :" << (int) it->m_dci.m_hopping    << ",";
+          //ss << "\"tpc\"        :" << (int) it->m_dci.m_tpc        << ",";
+          //ss << "\"cqiRequest\" :" << (int) it->m_dci.m_cqiRequest << ",";
+          //ss << "\"ulDelay\"    :" << (int) it->m_dci.m_ulDelay    << "";
+          ss << "}";
+          if(std::next(it,1) != ret.m_buildDataList.end())
+              ss << ",";
+      }
+      ss << "]}";
+      filePtr->push_back(ss.str());
+  }
+
+  /******************************************************************************************************************/
+
   if (rbgAllocatedNum == numberOfRBGs)
-    {
-      // all the RBGs are already allocated -> exit
-      if ((ret.m_buildDataList.size () > 0) || (ret.m_buildRarList.size () > 0))
-        {
-          m_schedSapUser->SchedDlConfigInd (ret);
-        }
-      return;
-    }
+  {
+    // all the RBGs are already allocated -> exit
+    if ((ret.m_buildDataList.size () > 0) || (ret.m_buildRarList.size () > 0))
+      {
+        m_schedSapUser->SchedDlConfigInd (ret);
+      }
+    return;
+  }
 
   std::map <LteFlowId_t,struct LogicalChannelConfigListElement_s>::iterator itLogicalChannels;
 	
   for (itLogicalChannels = m_ueLogicalChannelsConfigList.begin (); itLogicalChannels != m_ueLogicalChannelsConfigList.end (); itLogicalChannels++)
     {
+        /**/
+      auto lcid_id = itLogicalChannels->second.m_logicalChannelIdentity;
+      auto lcid_qci = itLogicalChannels->second.m_qci;
+      auto lcid_rnti = itLogicalChannels->first.m_rnti;
+      auto lcid_ptr = m_lcidQci.find(lcid_id);
+      if (lcid_ptr != m_lcidQci.end())
+      {
+          lcid_ptr->second.qci = itLogicalChannels->second.m_qci;
+
+          auto rnti_ptr = lcid_ptr->second.rntis.begin();
+          for (; rnti_ptr != lcid_ptr->second.rntis.end(); rnti_ptr++)
+          {
+            if (*rnti_ptr == lcid_rnti)
+              break;
+          }
+
+          if (rnti_ptr == lcid_ptr->second.rntis.end())
+          {
+            lcid_ptr->second.rntis.push_back(lcid_rnti);
+          }
+      }
+      else
+      {
+          m_lcidQci.insert(std::pair<uint16_t, LcidQciReg>(lcid_id, LcidQciReg{lcid_qci,std::vector<uint16_t>(itLogicalChannels->first.m_rnti)}));
+      }
+      /**/
+
       std::set <uint16_t>::iterator itRnti = rntiAllocated.find (itLogicalChannels->first.m_rnti);
       if ((itRnti != rntiAllocated.end ())||(!HarqProcessAvailability (itLogicalChannels->first.m_rnti)))
         {
@@ -1302,6 +1529,149 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   t_it_HOLgroupToUEs itGBRgroups = map_GBRHOLgroupToUE.begin ();
   t_it_HOLgroupToUEs itnonGBRgroups = map_nonGBRHOLgroupToUE.begin ();
 
+  /******************************************************************************************************************/
+  //Dump available rbgs to dump_availablerbgs_postharq.json
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_availablerbgs_postharq.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"availablerbgs_postharq\":[";
+      for (auto it = rbgMap.begin(); it != rbgMap.end(); it++)
+      {
+          ss << !(bool) *it << "";
+          if(std::next(it,1) != rbgMap.end())
+              ss << ",";
+      }
+      ss << "]";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  //Dump pCQI (channel-wise) to dump_p10.json
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_p10.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"p10cqiPerUe\":{";
+      for (auto it = m_p10CqiRxed.begin(); it != m_p10CqiRxed.end(); it++)
+      {
+          ss << "\"" << (int) it->first << "\":" << (int) it->second;
+          if(std::next(it,1) != m_p10CqiRxed.end())
+              ss << ",";
+      }
+      ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  //Dump aCQI (rb-wise) to "dump_a30.json"
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_a30.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"a30cqiPerUe\":{";
+      for (auto it = m_a30CqiRxed.begin(); it != m_a30CqiRxed.end(); it++)
+      {
+          ss << "\"" << (int) it->first << "\":[";
+          for (auto it2 = it->second.m_higherLayerSelected.begin(); it2 != it->second.m_higherLayerSelected.end(); it2++)
+          {
+              ss << (int) it2->m_sbCqi.at(0);
+              if (std::next(it2,1) != it->second.m_higherLayerSelected.end())
+                  ss << ",";
+          }
+          ss << "]";
+          if(std::next(it,1) != m_a30CqiRxed.end())
+              ss << ",";
+      }
+      ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  //Dump HOL to "dump_holgroups_gbr.json"
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_holgroups_gbr.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"holgroups_gbr\":{";
+      for (auto it = map_GBRHOLgroupToUE.begin(); it != map_GBRHOLgroupToUE.end(); it++) {
+          ss << "\"" << it->first << "\":[";
+          for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++) {
+              ss << "{\"rnti\":" << (int) it2->m_rnti << ", \"lcid\":" << (int) it2->m_lcId << "}";
+              if (std::next(it2, 1) != it->second.end())
+                  ss << ",";
+          }
+          ss << "]";
+          if (std::next(it, 1) != map_GBRHOLgroupToUE.end())
+              ss << ",";
+      }
+      ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  //Dump non-HOL to "dump_holgroups_ngbr.json"
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_holgroups_ngbr.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"holgroups_ngbr\":{";
+      for (auto it = map_nonGBRHOLgroupToUE.begin(); it != map_nonGBRHOLgroupToUE.end(); it++)
+      {
+          ss << "\"" << it->first << "\":[";
+          for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++)
+          {
+              ss << "{\"rnti\":" << (int) it2->m_rnti << ", \"lcid\":" << (int) it2->m_lcId << "}";
+              if (std::next(it2, 1) != it->second.end())
+                  ss << ",";
+          }
+          ss << "]";
+          if (std::next(it, 1) != map_nonGBRHOLgroupToUE.end())
+              ss << ",";
+      }
+      ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  //Dump bits to transfer per UE & its flows
+  //UeToAmountOfDataToTransfer.insert (std::pair<LteFlowId_t,int>(flowId,amountOfDataToTransfer));
+  //todo: fix to allow multiple lcids per UE (current might have collisions because of UE)
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_ue_data_to_transfer.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"bitsToTransmitPerUePerLcid\":{";
+      for (auto it = UeToAmountOfDataToTransfer.begin(); it != UeToAmountOfDataToTransfer.end(); it++)
+      {
+          ss << "\"" << (int) it->first.m_rnti << "\":{\"" << (int) it->first.m_lcId << "\":" << (int) it->second <<"}";
+          if (std::next(it, 1) != UeToAmountOfDataToTransfer.end())
+              ss << ",";
+      }
+      ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  /******************************************************************************************************************/
 
 
   // while there are more resources available, loop through the users that are grouped by HOL value
@@ -1343,7 +1713,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
           UeToCQIValue.clear ();
           UeToCoitaMetric.clear ();
 
-          // Iterate through the users and calculate which user will use the best of the current resource bloc.end()k and assign to that user.
+          // Iterate through the users and calculate which user will use the best of the current resource block.end() and assign to that user.
           for (std::set<LteFlowId_t>::iterator it=itCurrentGroup->second.begin (); it!=itCurrentGroup->second.end (); it++)
             {
               LteFlowId_t flowId = *it;
@@ -1498,6 +1868,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
 
           if (itMap == allocationMapPerRntiPerLCId.end ())
             {
+              //If the rnti is not on the allocationMapPerRentiPerLCId yet
               std::multimap <uint8_t, qos_rb_and_CQI_assigned_to_lc> tempMap;
               tempMap.insert (std::pair<uint8_t, qos_rb_and_CQI_assigned_to_lc> (userWithMaximumMetric.m_lcId,s));
               allocationMapPerRntiPerLCId.insert (std::pair <uint16_t, std::multimap <uint8_t,qos_rb_and_CQI_assigned_to_lc> > (userWithMaximumMetric.m_rnti, tempMap));
@@ -1521,6 +1892,30 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
         }                 // while there are more users in current group
     }             // while there are more groups of users
 
+    /******************************************************************************************************************/
+
+    //Dump amount of assigned resources per UE & its flow
+    //UeToAmountOfAssignedResources.insert (std::pair<LteFlowId_t,int>(flowId,0));
+    {
+        std::stringstream ss;
+        auto filePtr = &outputfileMap.at(hash("dump_ue_assigned_resources.json"));
+        if (filePtr->size() > 1)
+            ss << ",";
+        ss << "\n";
+        ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+        ss << "\"ueToAmountOfAssignedResources\":{";
+        for (auto it = UeToAmountOfAssignedResources.begin(); it != UeToAmountOfAssignedResources.end(); it++)
+        {
+            ss << "\"" << it->first.m_rnti << "\":{\"lcid\":" << (int) it->first.m_lcId << ", \"assignedResources\":" << (int) it->second <<"}";
+            if (std::next(it, 1) != UeToAmountOfAssignedResources.end())
+                ss << ",";
+        }
+        ss << "}";
+        ss << "}";
+        filePtr->push_back(ss.str());
+    }
+
+    /******************************************************************************************************************/
 
   // reset TTI stats of users
   std::map <uint16_t, CqasFlowPerf_t>::iterator itStats;
@@ -1534,6 +1929,8 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   itMap = allocationMapPerRntiPerLCId.begin ();
   int counter = 0;
   std::map<uint16_t, double> m_rnti_per_ratio;
+
+  std::chrono::high_resolution_clock::time_point t_begin = std::chrono::high_resolution_clock::now();
 
   while (itMap != allocationMapPerRntiPerLCId.end ())
     {
@@ -1669,6 +2066,65 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
     } // end while allocation
   ret.m_nrOfPdcchOfdmSymbols = 1;   // TODO: check correct value according the DCIs txed
 
+  std::chrono::high_resolution_clock::time_point t_end = std::chrono::high_resolution_clock::now();
+
+  //std::cout << "CQA scheduling took " << std::chrono::duration_cast<std::chrono::microseconds>( t_end - t_begin ).count() << " us" << std::endl;
+  /******************************************************************************************************************/
+
+  //Dump dcis
+  //  m_dlHarqProcessesDciBuffer
+  //{
+  //    std::stringstream ss;
+  //    auto filePtr = &outputfileMap.at(hash("dump_dci_buffer.json"));
+  //    if (filePtr->tellp() > 3)
+  //        ss << ",";
+  //    ss << "\n";
+  //ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+  //    ss << "\"rbg_size\":" << rbgSize << ",";
+  //    ss << "\"dlHarqProcessesDciBuffer\":{";
+  //    for (auto it = m_dlHarqProcessesDciBuffer.begin(); it != m_dlHarqProcessesDciBuffer.end(); it++)
+  //    {
+  //        ss << it->first << ":{\"lcid\":" << (int) it->first.m_lcId << ", \"assignedResources\":" << (int) it->second <<"}";
+  //        if (std::next(it, 1) != m_dlHarqProcessesDciBuffer.end())
+  //            ss << ",";
+  //    }
+  //    ss << "}],";
+  //    *filePtr << ss.str();
+  //}
+
+  //Dump allocation map
+  //  allocationMapPerRntiPerLCId
+  {
+      std::stringstream ss;
+      auto filePtr = &outputfileMap.at(hash("dump_allocation_map.json"));
+      if (filePtr->size() > 1)
+          ss << ",";
+      ss << "\n";
+      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
+      ss << "\"rbg_size\":" << rbgSize << ",";
+          ss << "\"resource_blocks\":" << numberOfRBGs << ",";
+          ss << "\"allocationMapPerRntiPerLCId\":{";
+              for (auto it = allocationMapPerRntiPerLCId.begin (); it!=allocationMapPerRntiPerLCId.end (); it++)
+              {
+                  ss << "\"" << (int) it->first << "\"" <<":["; // ue
+                  for (auto it2 = it->second.begin(); it2 != it->second.end(); it2++)
+                  {
+                      //lcid rb_index and lc cqi
+                      ss << "{\"lcid\":" << (int) it2->first << ", \"rb_index\":" << (int) it2->second.resource_block_index << ", \"cqi_value_for_lc\":" << (int) it2->second.cqi_value_for_lc << "}";
+                      if (std::next(it2, 1) != it->second.end())
+                          ss << ",";
+                  }
+                  ss << "]";
+                  if (std::next(it, 1) != allocationMapPerRntiPerLCId.end())
+                      ss << ",";
+              }
+          ss << "}";
+      ss << "}";
+      filePtr->push_back(ss.str());
+  }
+
+  /******************************************************************************************************************/
+
   // update UEs stats
   NS_LOG_INFO (this << " Update UEs statistics");
   for (itStats = m_flowStatsDl.begin (); itStats != m_flowStatsDl.end (); itStats++)
@@ -1696,13 +2152,15 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   NS_LOG_INFO (this << " Allocated RBs:" << count_allocated_resource_blocks);
 
   //SchedulerOutput
-  schedulerOutputFile << Simulator::Now() << ": ";
-  for (int i = 0; i < rbgMap.size(); i++)
   {
-      schedulerOutputFile << (rbgMap.at(i) ? 1 : 0);
+      std::stringstream ss;
+      ss << Simulator::Now() << ": ";
+      for (int i = 0; i < rbgMap.size(); i++) {
+          ss << (rbgMap.at(i) ? 1 : 0);
+      }
+      ss << "\n";
+      schedulerOutputFile.push_back(ss.str());
   }
-  schedulerOutputFile << "\n";
-
 
   return;
 }

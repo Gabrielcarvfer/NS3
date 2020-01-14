@@ -75,11 +75,13 @@ int main()
 
     //LogComponentEnableAll(LOG_LEVEL_DEBUG);
 
-    double simTime = 5;
+    double simTime = 2;
+    double distance = 60.0;
+    double interPacketInterval = 25;
 
     NodeContainer allNodes;
-    Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (100));
-    Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (100));
+    //Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (100));
+    //Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (100));
 
     Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (true));
     Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
@@ -98,6 +100,9 @@ int main()
     //1 Configura EPC e PGW
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
+    //lteHelper->SetAttribute("UseCa", BooleanValue(true)); // Carrier aggregation
+    //lteHelper->SetAttribute("NumberOfComponentCarriers", UintegerValue(4)); // Carrier aggregation
 
     lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisPropagationLossModel"));         // Default
     //lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::FriisSpectrumPropagationLossModel")); // Spectrum
@@ -122,7 +127,7 @@ int main()
     NodeContainer ueNodes;
     NodeContainer enbNodes;
     enbNodes.Create(1); // Macro cell
-    ueNodes.Create(10); // Femtocell
+    ueNodes.Create(6); // Femtocell
     allNodes.Add(enbNodes);
     //allNodes.Add(ueNodes);
 
@@ -335,7 +340,7 @@ int main()
     clientApps.Add(echoClient.Install(ueNodes));
 
     //DASH APP
-
+    /*
     uint64_t segmentDuration = 1;
     std::string adaptationAlgo = "festive"; // festive | panda | tobasco
     std::string segmentSizeFilePath = "../../contrib/haraldott/dash/examples/segmentsizes.txt";
@@ -360,6 +365,7 @@ int main()
     }
 
     clientApps.Add(clientHelper.Install(clients));
+    */
 
     clientApps.Start (Seconds (0.2));
 

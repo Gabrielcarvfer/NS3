@@ -342,10 +342,10 @@ int
 TcpStreamClient::ReadInBitrateValues (std::string segmentSizeFile)
 {
   NS_LOG_FUNCTION (this);
-  std::ifstream myfile;
-  myfile.open (segmentSizeFile.c_str ());
-  if (!myfile)
+  std::ifstream myfile = std::ifstream(segmentSizeFile.c_str ());
+  if (!myfile.good())
     {
+      std::cout<<"TcpStreamClient segment sizes does not exist"<<std::endl;
       return -1;
     }
   std::string temp;

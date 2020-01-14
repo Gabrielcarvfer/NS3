@@ -332,6 +332,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
   NS_LOG_FUNCTION (this);
 
   std::vector<int> cqi;
+  cqi.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
   Values::const_iterator it;
   
   if (m_amcModel == PiroEW2010)
@@ -373,6 +374,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       NS_LOG_DEBUG (this << " AMC-VIENNA RBG size " << (uint16_t)rbgSize);
       NS_ASSERT_MSG (rbgSize > 0, " LteAmc-Vienna: RBG size must be greater than 0");
       std::vector <int> rbgMap;
+      rbgMap.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
       int rbId = 0;
       //Make sure things are initialized before trying to run parallel stuff
       {

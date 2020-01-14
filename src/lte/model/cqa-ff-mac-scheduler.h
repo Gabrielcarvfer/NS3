@@ -36,6 +36,10 @@
 #include <ns3/lte-ffr-sap.h>
 #include <fstream>
 
+
+#include <fstream>
+
+
 // value for SINR outside the range defined by FF-API, used to indicate that there
 // is no CQI for this element
 
@@ -409,10 +413,26 @@ private:
   std::string m_CqaMetric; ///< CQA metric name
 
 
-  std::ofstream schedulerInputFile;
-  std::ofstream schedulerOutputFile;
+  std::vector<std::string> schedulerInputFile;
+  std::vector<std::string> schedulerOutputFile;
+
+  typedef struct lcidQciReg{
+      uint8_t qci;
+      std::vector<uint16_t> rntis;
+  }LcidQciReg;
+  std::map<uint16_t, LcidQciReg> m_lcidQci;
+
+  std::vector<std::string> outputfiles;
+  std::hash<std::string> hash;
+  std::map<size_t, std::vector<std::string>> outputfileMap;
+
+
 
 };
+
+
+bool CQIValueDescComparator (uint8_t key1, uint8_t key2);
+bool CqaGroupDescComparator (int key1, int key2);
 
 } // namespace ns3
 

@@ -258,6 +258,9 @@ int main() {
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
 
+    lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
+
     //60dBm = 1    kW
     //53dBm = 200  kW // Taken from
     //49dBm =  80   W // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
