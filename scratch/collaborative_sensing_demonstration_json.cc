@@ -119,7 +119,7 @@ int main() {
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
 
     Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
-    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
+    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
     Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
 
 
