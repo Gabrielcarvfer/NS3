@@ -736,6 +736,60 @@ NnFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
   rbgMap.resize (m_cschedCellConfig.m_dlBandwidth / rbgSize, false);
 
   rbgMap = m_ffrSapProvider->GetAvailableDlRbg ();
+
+    //Take cognitive info into account before scheduling
+    for (int i = 0; i < rbgMap.size(); i++)
+    {
+        rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : rbgMap.at(i);
+    }
+
+    //SchedulerInput
+    //{
+    //    std::stringstream ss;
+    //    ss << Simulator::Now() << ": ";
+    //    for (int i = 0; i < rbgMap.size(); i++) {
+    //        ss << (rbgMap.at(i) ? 1 : 0);
+    //    }
+    //    ss << "\n";
+    //    schedulerInputFile.push_back(ss.str());
+    //}
+    //
+    ///*******************************************************************************/
+    ////Flush the memory periodically
+    //if (Simulator::Now().GetSeconds() > (prevTimestamp+1.0))
+    //{
+    //    prevTimestamp = Simulator::Now().GetSeconds();
+    //
+    //    outputfiles = {"dump_p10.json",
+    //                   "dump_a30.json",
+    //                   "dump_lcidqci.json",
+    //                   "dump_activeharqs.json",
+    //                   "dump_rlcsched.json",
+    //                   "dump_holgroups_gbr.json",
+    //                   "dump_holgroups_ngbr.json",
+    //                   "dump_ue_data_to_transfer.json",
+    //                   "dump_ue_assigned_resources.json",
+    //                   "dump_dci_buffer.json",
+    //                   "dump_allocation_map.json",
+    //                   "dump_availablerbgs_postharq.json",
+    //                   "dump_rargrants.json",
+    //                   "dump_datagrants.json"};
+    //
+    //    for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
+    //    {
+    //        std::ofstream outfile;
+    //        outfile.open(*it2, std::ofstream::out | std::ofstream::app);
+    //        auto it3 = outputfileMap.find(hash(*it2));
+    //        for (auto it : it3->second)
+    //            outfile << it;
+    //        outfile.close();
+    //        outputfileMap[it3->first] = std::vector<std::string>();
+    //    }
+    //}
+
+
+    /********************************************************************************/
+
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
       if ((*it) == true )

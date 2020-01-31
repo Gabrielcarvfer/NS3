@@ -426,7 +426,8 @@ private:
   std::hash<std::string> hash;
   std::map<size_t, std::vector<std::string>> outputfileMap;
 
-
+  double prevTimestamp;
+  bool firstTime;
 
 };
 

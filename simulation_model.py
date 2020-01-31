@@ -311,7 +311,7 @@ if __name__ == "__main__":
                         subprocess.run("python plot_network_topology.py %s" % path)
 
                     # Run simulations in parallel
-                    #pool.starmap(runScenario, argList)
+                    pool.starmap(runScenario, argList)
 
 
 

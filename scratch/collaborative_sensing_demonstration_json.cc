@@ -118,9 +118,9 @@ int main() {
     int    fusionAlgorithm         = LteEnbMac::MRG_1_OF_N;
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
 
-    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
+    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(20)); //160 for >80 UES
     Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
-    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));//for whatever reason, refuses to work
+    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
 
 
     static GlobalValue g_attackers_per_channel =
@@ -220,6 +220,7 @@ int main() {
         {
             //Copy UE number
             int ueId = std::stoi(i->first);
+            //std::cout << ueId << std::endl;
 
             //Copy contents
             picojson::object ueContents = i->second.get<picojson::object>();
@@ -253,7 +254,7 @@ int main() {
 
     //0.3 Configure error model (disable error model for control channel, assuming it works on a different channel without interference)
     Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
-    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(true));
+    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
 
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
@@ -279,7 +280,6 @@ int main() {
     lteHelper->SetUeAntennaModelAttribute( "Gain", DoubleValue(ueGain)); // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
 
     //0.7 Select the eNB MAC Scheduler
-    lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
 
     //0.8 Select the propagation loss model
     std::stringstream ss;
@@ -409,8 +409,8 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    //lteHelper->EnableTraces();
-    //p2ph.EnablePcapAll("natalandia_p2p", true);
+    lteHelper->EnableTraces();
+    p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)
@@ -498,12 +498,12 @@ int main() {
     //spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
 
     //21 install the Flow monitor
-    //Ptr<FlowMonitor> flowMonitor;
-    //FlowMonitorHelper flowHelper;
-    //flowMonitor = flowHelper.InstallAll();
+    Ptr<FlowMonitor> flowMonitor;
+    FlowMonitorHelper flowHelper;
+    flowMonitor = flowHelper.InstallAll();
 
     //22 Export the netanim animation for the simulation
-    /*
+
     BaseStationNetDevice b;
     SubscriberStationNetDevice s;
     CsmaNetDevice c;
@@ -512,14 +512,14 @@ int main() {
     AnimationInterface anim("anim.xml");
     anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(true);
-     */
+
 
     //23 Run simulation
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 
     //24 Dump flowmonitor results
-    //flowMonitor->SerializeToXmlFile("flow.xml", true, true);
+    flowMonitor->SerializeToXmlFile("flow.xml", true, true);
 
     Simulator::Destroy();
 

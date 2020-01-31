@@ -136,11 +136,11 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
     m_timeWindow (99.0),
     m_nextRntiUl (0)
 {
-  m_amc = CreateObject <LteAmc> ();
-  m_cschedSapProvider = new MemberCschedSapProvider<CqaFfMacScheduler> (this);
-  m_schedSapProvider = new MemberSchedSapProvider<CqaFfMacScheduler> (this);
-  m_ffrSapProvider = 0;
-  m_ffrSapUser = new MemberLteFfrSapUser<CqaFfMacScheduler> (this);
+    m_amc = CreateObject <LteAmc> ();
+    m_cschedSapProvider = new MemberCschedSapProvider<CqaFfMacScheduler> (this);
+    m_schedSapProvider = new MemberSchedSapProvider<CqaFfMacScheduler> (this);
+    m_ffrSapProvider = 0;
+    m_ffrSapUser = new MemberLteFfrSapUser<CqaFfMacScheduler> (this);
 
     outputfiles = {"dump_p10.json",
                    "dump_a30.json",
@@ -159,8 +159,12 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
 
     for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
     {
+        //Create clean files
+        std::ofstream ff;
+        ff.open(*it2);
+        ff.close();
+
         std::vector<std::string> outputfile;
-        //outputfile->open(*it2);
         auto hashval = hash(*it2);
         outputfileMap.emplace(hashval, outputfile);
 
@@ -179,6 +183,8 @@ CqaFfMacScheduler::CqaFfMacScheduler ()
         }
         outputfileMap.at(hash(*it2)).push_back(ss.str());
     }
+    prevTimestamp = 0.0;
+    this->firstTime = true;
 }
 
 CqaFfMacScheduler::~CqaFfMacScheduler ()
@@ -274,15 +280,13 @@ CqaFfMacScheduler::DoDispose ()
     for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
     {
         std::ofstream outfile;
-        outfile.open(*it2);
+        outfile.open(*it2, std::ofstream::out | std::ofstream::app);
 
         auto it3 = outputfileMap.find(hash(*it2));
         for (auto it : it3->second)
             outfile << it;
         outfile.close();
     }
-
-
 }
 
 TypeId
@@ -815,6 +819,43 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       schedulerInputFile.push_back(ss.str());
   }
 
+  /*******************************************************************************/
+  //Flush the memory periodically
+  if (Simulator::Now().GetSeconds() > (prevTimestamp+1.0))
+  {
+      prevTimestamp = Simulator::Now().GetSeconds();
+
+      outputfiles = {"dump_p10.json",
+                     "dump_a30.json",
+                     "dump_lcidqci.json",
+                     "dump_activeharqs.json",
+                     "dump_rlcsched.json",
+                     "dump_holgroups_gbr.json",
+                     "dump_holgroups_ngbr.json",
+                     "dump_ue_data_to_transfer.json",
+                     "dump_ue_assigned_resources.json",
+                     "dump_dci_buffer.json",
+                     "dump_allocation_map.json",
+                     "dump_availablerbgs_postharq.json",
+                     "dump_rargrants.json",
+                     "dump_datagrants.json"};
+
+      for (auto it2 = outputfiles.begin(); it2 != outputfiles.end(); it2++)
+      {
+          std::ofstream outfile;
+          outfile.open(*it2, std::ofstream::out | std::ofstream::app);
+
+          auto it3 = outputfileMap.find(hash(*it2));
+          for (auto it : it3->second)
+              outfile << it;
+          outfile.close();
+          outputfileMap[it3->first] = std::vector<std::string>();
+      }
+  }
+
+
+  /********************************************************************************/
+
   for (std::vector<bool>::iterator it = rbgMap.begin (); it != rbgMap.end (); it++)
     {
       if ((*it) == true )
@@ -1228,7 +1269,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_availablerbgs_postharq.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1247,7 +1288,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_rargrants.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1274,15 +1315,15 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_datagrants.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
       ss << "\"datagrants\" : [";
       for ( auto it = ret.m_buildDataList.begin(); it != ret.m_buildDataList.end(); it++)
       {
-          ss << "{\"rnti\"       :" << (int) it->m_dci.m_rnti       << ",";
-          ss << "\"rbBitmap\"   :" << (int) it->m_dci.m_rbBitmap   << ",";
+          ss << "{\"rnti\"      :" << (int) it->m_dci.m_rnti       << ",";
+          ss << "\"rbBitmap\"   :" << (unsigned) it->m_dci.m_rbBitmap   << ",";
           ss << "\"rbShift\"    :" << (int) it->m_dci.m_rbShift    << ",";
           ss << "\"resAlloc\"   :" << (int) it->m_dci.m_resAlloc   << "";//",";
           //ss << "\"mcs\"        :" << (int) it->m_dci.m_mcs        << ",";
@@ -1309,6 +1350,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       }
     return;
   }
+
 
   std::map <LteFlowId_t,struct LogicalChannelConfigListElement_s>::iterator itLogicalChannels;
 	
@@ -1530,31 +1572,11 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   t_it_HOLgroupToUEs itnonGBRgroups = map_nonGBRHOLgroupToUE.begin ();
 
   /******************************************************************************************************************/
-  //Dump available rbgs to dump_availablerbgs_postharq.json
-  {
-      std::stringstream ss;
-      auto filePtr = &outputfileMap.at(hash("dump_availablerbgs_postharq.json"));
-      if (filePtr->size() > 1)
-          ss << ",";
-      ss << "\n";
-      ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
-      ss << "\"availablerbgs_postharq\":[";
-      for (auto it = rbgMap.begin(); it != rbgMap.end(); it++)
-      {
-          ss << !(bool) *it << "";
-          if(std::next(it,1) != rbgMap.end())
-              ss << ",";
-      }
-      ss << "]";
-      ss << "}";
-      filePtr->push_back(ss.str());
-  }
-
   //Dump pCQI (channel-wise) to dump_p10.json
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_p10.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1574,7 +1596,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_a30.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1601,7 +1623,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_holgroups_gbr.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1626,7 +1648,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_holgroups_ngbr.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1655,7 +1677,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_ue_data_to_transfer.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -1899,7 +1921,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
     {
         std::stringstream ss;
         auto filePtr = &outputfileMap.at(hash("dump_ue_assigned_resources.json"));
-        if (filePtr->size() > 1)
+        if (!this->firstTime)
             ss << ",";
         ss << "\n";
         ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -2097,7 +2119,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   {
       std::stringstream ss;
       auto filePtr = &outputfileMap.at(hash("dump_allocation_map.json"));
-      if (filePtr->size() > 1)
+      if (!this->firstTime)
           ss << ",";
       ss << "\n";
       ss << "\"" << Simulator::Now().GetMicroSeconds() << "\" : {";
@@ -2122,7 +2144,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       ss << "}";
       filePtr->push_back(ss.str());
   }
-
+  this->firstTime = false;
   /******************************************************************************************************************/
 
   // update UEs stats

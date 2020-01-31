@@ -1838,7 +1838,7 @@ bool LteEnbMac::harmonicMeanFraudDetector(uint16_t ueRnti, std::vector<unsigned 
 
     //If result doesnt make sense, decrease trustworthiness
     if (  (    prevSensingExists && !prevSensing.at(ueRnti)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] > latestCqi[centralRbgIndexPerSubchannel[i]] )
-          || ( prevSensingExists &&  prevSensing.at(ueRnti)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < harmonicCqiHistory.at(harmonicCqiHistory.size()-2)[i] && latestCqi[centralRbgIndexPerSubchannel[i]] > harmonicCqiHistory.at(harmonicCqiHistory.size()-1)[i] )
+          || ( prevSensingExists &&  prevSensing.at(ueRnti)[i] && channelReg[0] && prevCqi[centralRbgIndexPerSubchannel[i]] < harmonicCqiHistory.at(harmonicCqiHistory.size()-2)[i] && latestCqi[centralRbgIndexPerSubchannel[i]] > harmonicCqiHistory.at(harmonicCqiHistory.size()-1)[i]+1 )
             )
     {
         markovTrustworthiness.at(ueRnti)[i] *= 0.5;

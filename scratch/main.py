@@ -69,7 +69,9 @@ class SimResults:
                     #if data["ueToAmountOfDataToTransfer"][ue]["bitsToTransmit"] > 0:
                         ueData = self.compiledNnInput[dataKey]["ues"][ue] = {}
                         ueData["a30cqi"] = data["a30cqiPerUe"][ue]
-                        ueData["dataToTransfer"] = data["bitsToTransmitPerUePerLcid"][ue]
+                        ueData["dataToTransfer"] = {}
+                        if ue in data["bitsToTransmitPerUePerLcid"]:
+                            ueData["dataToTransfer"] = data["bitsToTransmitPerUePerLcid"][ue]
                         ueData["holgroups"] = {"gbr":{}, "ngbr":{}}
                         i += 1
                         pass
@@ -266,7 +268,7 @@ def main():
 
     import json
     with open("output_data.json", "w") as file:
-        json.dump({"input": simResults.compiledNnInput, "output": simResults.compiledNnOutput, "lcid_qci": simResults.lcidqci}, file)
+        json.dump({"input": simResults.compiledNnInput, "output": simResults.compiledNnOutput, "lcid_qci": simResults.lcidqci}, file, indent=4)
     return
 
 

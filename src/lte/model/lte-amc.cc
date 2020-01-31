@@ -400,6 +400,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
               {
                 //HarqProcessInfoList_t harqInfoList;
                 //tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+                //if (tbStats.tbler > 0.1)
                 if (tbStatsVector[mcs].tbler > 0.1)
                   {
                     tbStats = tbStatsVector[mcs];

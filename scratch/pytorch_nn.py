@@ -12,6 +12,7 @@ import time
 debug = True
 verbose = True
 N_EPOCHS = 15
+learning_rate=0.05
 
 import matplotlib.pyplot as plt
 
@@ -27,7 +28,9 @@ yAccValid  = []
 plt.ion()
 plt.show()
 
-xs = list(range(0,N_EPOCHS))
+xs = list(range(0, N_EPOCHS))
+
+
 def animate():
 
     global lossTrainAxis, fig, accTrainAxis, lossTestAxis, accTestAxis, lossValidAxis, accValidAxis, yLossTrain, yAccTrain, yLossTest, yAccTest, yLossValid, yAccValid
@@ -59,13 +62,19 @@ class Net(torch.nn.Module): #ScriptModule):
 
     def __init__(self):
         super(Net, self).__init__()
-        self.numSlots = 12  # number of available slots to schedule
-        self.numReqs  = 10  # number of simultaneous requests being input
+        self.numSlots = 50  # number of available slots to schedule
+        self.numReqs  = 100  # number of simultaneous requests being input
         self.inputsPerReq = (self.numSlots + 4)
         self.filler_input = [0] * (self.inputsPerReq)
         self.inputs = (self.inputsPerReq) * self.numReqs  # +1 is for the QCI + 1 budget, increase if need more inputs
         self.outputs = self.numSlots * self.numReqs
-        self.fc1 = nn.Linear(self.inputs, self.outputs, 10)
+        self.fc1 = nn.Linear(self.inputs, self.inputs//2, 2)
+        self.fc2 = nn.Linear(self.inputs//2, self.inputs//4, 2)
+        self.fc3 = nn.Linear(self.inputs//4, self.inputs//8, 2)
+        self.fc4 = nn.Linear(self.inputs//8, self.inputs//16, 2)
+        self.fc5 = nn.Linear(self.inputs//16, self.inputs//32, 2)
+        self.fc6 = nn.Linear(self.inputs//32, self.outputs, 2)
+
         self.saved_log_probs = []
         self.rewards = []
 
@@ -73,6 +82,11 @@ class Net(torch.nn.Module): #ScriptModule):
     def forward(self, x):
         y = x
         y = torch.sigmoid(self.fc1(y))
+        y = torch.sigmoid(self.fc2(y))
+        y = torch.sigmoid(self.fc3(y))
+        y = torch.sigmoid(self.fc4(y))
+        y = torch.sigmoid(self.fc5(y))
+        y = torch.sigmoid(self.fc6(y))
         return y
 
 folder              = "./checkpoints9/"
@@ -84,8 +98,8 @@ testLoaderFile      = "testLoaderData.pickle"
 
 # Global variable declaration
 device = torch.device("cpu")
-model = Net()#.to(device)
-optimizer = None#optim.Adam(model.parameters(), lr=1e-5)
+model = Net().to(device)
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 lossf = nn.MSELoss()
 torch.set_num_threads(15)
 eps = numpy.finfo(numpy.float32).eps.item()
@@ -118,7 +132,6 @@ def test(epoch, test_loader, args):
     torch.manual_seed(args["seed"])
     test_epoch(epoch, test_loader)
 
-
 def train_epoch(epoch, args, data_loader):
     global best_score, log_acc_loss, yLossTrain, yAccTrain
     model.train()
@@ -126,10 +139,15 @@ def train_epoch(epoch, args, data_loader):
 
     correct  = []
     losses = []
+    unique = {}
     for batch_idx, (data, target) in enumerate(data_loader):
+
         if batch_idx <= args["start_batch"]:
             continue
-
+        if (tuple(data),tuple(target)) not in unique:
+            unique[(tuple(data),tuple(target))] = 0
+        else:
+            continue
         optimizer.zero_grad()
 
         input = torch.Tensor([data])
@@ -251,7 +269,7 @@ def main():
     global log_acc_loss, lossTrainAxis, accTrainAxis, lossTestAxis, accTestAxis, lossValidAxis, accValidAxis, yLossTrain, yAccTrain, yLossTest, yAccTest, yLossValid, yAccValid, model
     args = {}
     args["batch_size"]   = 10
-    args["lr"]           = 0.05
+    args["lr"]           = learning_rate
     args["momentum"]     = 0.025
     args["epochs"]       = N_EPOCHS
     args["log_interval"] = 250
@@ -315,11 +333,11 @@ def main():
 
         #Zip input and output
         zipped = {}
-        for key in simData["input"]:
+        for key in simData["output"]:
             zipped[key] = {"data": simData["input"][key], "target": simData["output"][key]}
 
         #Sort keys
-        zippedKeys = sorted([int(x) for x in list(simData["input"].keys())])
+        zippedKeys = sorted([int(x) for x in list(simData["output"].keys())])
 
         from itertools import permutations, islice
 
@@ -408,10 +426,12 @@ def main():
 
             dataLog  = []
             dataLog2 = []
-            perms = list(permutations(range(len(datat)), len(datat)))
+            #perms = list(permutations(range(len(datat)), len(datat)))
+            permutationIterator = permutations(range(len(datat)), len(datat))
+            perms = [next(permutationIterator) for _ in range(10000)]
 
-            permsList = random.sample(perms, 5000)
-            permsList2 = random.sample(perms, 500)
+            permsList = random.sample(perms, 500)
+            permsList2 = random.sample(perms, 50)
             translationData[str(key)]["perms"] = permsList
             translationData[str(key)]["perms2"] = permsList2
 
@@ -466,7 +486,7 @@ def main():
     train(train_loader, test_loader, args)
 
     #Dump nn
-    model.save("model.pt")
+    model.save("fusion_model.pt")
     pass
 
 
