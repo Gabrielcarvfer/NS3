@@ -44,7 +44,7 @@ LtePhy::LtePhy ()
 LtePhy::LtePhy (Ptr<LteSpectrumPhy> dlPhy, Ptr<LteSpectrumPhy> ulPhy)
   : m_downlinkSpectrumPhy (dlPhy),
     m_uplinkSpectrumPhy (ulPhy),
-    m_tti (0.001),
+    m_tti (SUBFRAME_DURATION/1000),
     m_ulBandwidth (0),
     m_dlBandwidth (0),
     m_rbgSize (0),

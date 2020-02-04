@@ -942,9 +942,9 @@ TtaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
                               // no info on this subband -> worst MCS
                               sbMcs = 0;
                             }
-                          achievableSbRate += ((m_amc->GetDlTbSizeFromMcs (sbMcs, rbgSize) / 8) / 0.001);   // = TB size / TTI
+                          achievableSbRate += ((m_amc->GetDlTbSizeFromMcs (sbMcs, rbgSize) / 8) / (SUBFRAME_DURATION/1000));   // = TB size / TTI
                           wbMcs = m_amc->GetMcsFromCqi (wbCqi);
-                          achievableWbRate += ((m_amc->GetDlTbSizeFromMcs (wbMcs, rbgSize) / 8) / 0.001);   // = TB size / TTI
+                          achievableWbRate += ((m_amc->GetDlTbSizeFromMcs (wbMcs, rbgSize) / 8) / (SUBFRAME_DURATION/1000));   // = TB size / TTI
                         }
 
                       double metric = achievableSbRate / achievableWbRate;

@@ -85,6 +85,9 @@ RrcAsn1Header::BandwidthToEnum (uint8_t bandwidth) const
       case 50: n = 3; break;
       case 75: n = 4; break;
       case 100: n = 5; break;
+      case 33: n = 6; break;
+      case 44: n = 7; break;
+      case 132: n = 8; break;
       default:
         NS_FATAL_ERROR ("Wrong bandwidth: " << (uint16_t) bandwidth);
     }
@@ -103,6 +106,9 @@ RrcAsn1Header::EnumToBandwidth (int n) const
       case 3: bw = 50; break;
       case 4: bw = 75; break;
       case 5: bw = 100; break;
+      case 6: bw = 33; break;
+      case 7: bw = 44; break;
+      case 8: bw = 132; break;
       default:
         NS_FATAL_ERROR ("Wrong enum value for bandwidth: " << n);
     }

@@ -290,7 +290,7 @@ LenaFdTbfqFfMacSchedulerTestCase1::DoRun (void)
   PointToPointHelper p2ph;
   p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
   p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
-  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.001)));
+  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds ((SUBFRAME_DURATION/1000))));
   NetDeviceContainer internetDevices = p2ph.Install (pgw, remoteHost);
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
@@ -413,7 +413,7 @@ LenaFdTbfqFfMacSchedulerTestCase1::DoRun (void)
       clientApps.Add (ulClient.Install (ueNodes.Get (u)));
     }
 
-  serverApps.Start (Seconds (0.001));
+  serverApps.Start (Seconds ((SUBFRAME_DURATION/1000)));
   clientApps.Start (Seconds (0.04));
 
   double statsStartTime = 0.04; // need to allow for RRC connection establishment + SRS
@@ -539,7 +539,7 @@ LenaFdTbfqFfMacSchedulerTestCase2::DoRun (void)
   PointToPointHelper p2ph;
   p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
   p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
-  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.001)));
+  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds ((SUBFRAME_DURATION/1000))));
   NetDeviceContainer internetDevices = p2ph.Install (pgw, remoteHost);
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
@@ -663,8 +663,8 @@ LenaFdTbfqFfMacSchedulerTestCase2::DoRun (void)
       clientApps.Add (ulClient.Install (ueNodes.Get (u)));
    }
 
-  serverApps.Start (Seconds (0.001));
-  clientApps.Start (Seconds (0.001));
+  serverApps.Start (Seconds ((SUBFRAME_DURATION/1000)));
+  clientApps.Start (Seconds ((SUBFRAME_DURATION/1000)));
 
   double statsStartTime = 0.001; // need to allow for RRC connection establishment + SRS
   double statsDuration = 1.0;

@@ -248,7 +248,7 @@ UeManager::DoInitialize ()
     m_srb1->m_srbIdentity = 1;
     m_srb1->m_logicalChannelConfig.priority = 1;
     m_srb1->m_logicalChannelConfig.prioritizedBitRateKbps = 100;
-    m_srb1->m_logicalChannelConfig.bucketSizeDurationMs = 100;
+    m_srb1->m_logicalChannelConfig.bucketSizeDurationMs = 100*SUBFRAME_DURATION;
     m_srb1->m_logicalChannelConfig.logicalChannelGroup = 0;
 
     LteEnbCmacSapProvider::LcInfo lcinfo;
@@ -1713,7 +1713,7 @@ LteEnbRrc::GetTypeId (void)
     // SRS related attributes
     .AddAttribute ("SrsPeriodicity",
                    "The SRS periodicity in milliseconds",
-                   UintegerValue (40),
+                   UintegerValue (160),//todo: Workaround, should be 40*SUBFRAME_DURATION
                    MakeUintegerAccessor (&LteEnbRrc::SetSrsPeriodicity, 
                                          &LteEnbRrc::GetSrsPeriodicity),
                    MakeUintegerChecker<uint32_t> ())
@@ -1725,22 +1725,22 @@ LteEnbRrc::GetTypeId (void)
                    "Must account for reception of RAR and transmission of "
                    "RRC CONNECTION REQUEST over UL GRANT. The value of this"
                    "timer should not be greater than T300 timer at UE RRC",
-                   TimeValue (MilliSeconds (15)),
+                   TimeValue (MilliSeconds (15*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_connectionRequestTimeoutDuration),
-                   MakeTimeChecker (MilliSeconds (1), MilliSeconds (15)))
+                   MakeTimeChecker (MilliSeconds (1*SUBFRAME_DURATION), MilliSeconds (15*SUBFRAME_DURATION)))
     .AddAttribute ("ConnectionSetupTimeoutDuration",
                    "After accepting connection request, if no RRC CONNECTION "
                    "SETUP COMPLETE is received before this time, the UE "
                    "context is destroyed. Must account for the UE's reception "
                    "of RRC CONNECTION SETUP and transmission of RRC CONNECTION "
                    "SETUP COMPLETE.",
-                   TimeValue (MilliSeconds (150)),
+                   TimeValue (MilliSeconds (150*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_connectionSetupTimeoutDuration),
                    MakeTimeChecker ())
     .AddAttribute ("ConnectionRejectedTimeoutDuration",
                    "Time to wait between sending a RRC CONNECTION REJECT and "
                    "destroying the UE context",
-                   TimeValue (MilliSeconds (30)),
+                   TimeValue (MilliSeconds (30*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_connectionRejectedTimeoutDuration),
                    MakeTimeChecker ())
     .AddAttribute ("HandoverJoiningTimeoutDuration",
@@ -1750,14 +1750,14 @@ LteEnbRrc::GetTypeId (void)
                    "X2 HO REQ ACK by source eNB, transmission of the Handover "
                    "Command, non-contention-based random access and reception "
                    "of the RRC CONNECTION RECONFIGURATION COMPLETE message.",
-                   TimeValue (MilliSeconds (200)),
+                   TimeValue (MilliSeconds (200*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_handoverJoiningTimeoutDuration),
                    MakeTimeChecker ())
     .AddAttribute ("HandoverLeavingTimeoutDuration",
                    "After issuing a Handover Command, if neither RRC "
                    "CONNECTION RE-ESTABLISHMENT nor X2 UE Context Release has "
                    "been previously received, the UE context is destroyed.",
-                   TimeValue (MilliSeconds (500)),
+                   TimeValue (MilliSeconds (500*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_handoverLeavingTimeoutDuration),
                    MakeTimeChecker ())
 

@@ -294,7 +294,7 @@ LenaCqaFfMacSchedulerTestCase1::DoRun (void)
   PointToPointHelper p2ph;
   p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
   p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
-  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.001)));
+  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds ((SUBFRAME_DURATION/1000))));
   NetDeviceContainer internetDevices = p2ph.Install (pgw, remoteHost);
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");
@@ -539,7 +539,7 @@ LenaCqaFfMacSchedulerTestCase2::DoRun (void)
   PointToPointHelper p2ph;
   p2ph.SetDeviceAttribute ("DataRate", DataRateValue (DataRate ("100Gb/s")));
   p2ph.SetDeviceAttribute ("Mtu", UintegerValue (1500));
-  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds (0.001)));
+  p2ph.SetChannelAttribute ("Delay", TimeValue (Seconds ((SUBFRAME_DURATION/1000))));
   NetDeviceContainer internetDevices = p2ph.Install (pgw, remoteHost);
   Ipv4AddressHelper ipv4h;
   ipv4h.SetBase ("1.0.0.0", "255.0.0.0");

@@ -92,7 +92,9 @@ static const struct EutraChannelNumbers
   { 37,   1910, 37550, 37550, 37749,   1910, 37550, 37550, 37749},
   { 38,   2570, 37750, 37750, 38249,   2570, 37750, 37750, 38249},
   { 39,   1880, 38250, 38250, 38649,   1880, 38250, 38250, 38649},
-  { 40,   2300, 38650, 38650, 39649,   2300, 38650, 38650, 39649}
+  { 40,   2300, 38650, 38650, 39649,   2300, 38650, 38650, 39649},
+  { 100, 182, 50000, 50000, 50900, 297, 60000, 60000, 60900},
+  { 101, 462, 50901, 50901, 51901, 587, 60901, 60901, 61901}
 }; ///< eutra channel numbers
 
 /// number of EUTRA bands
@@ -102,7 +104,7 @@ double
 LteSpectrumValueHelper::GetCarrierFrequency (uint32_t earfcn)
 {
   NS_LOG_FUNCTION (earfcn);
-  if (earfcn < 7000)
+  if (earfcn < 7000 || (earfcn >= 50000 && earfcn <60000))
     {
       // FDD downlink
       return GetDownlinkCarrierFrequency (earfcn);
@@ -184,12 +186,21 @@ LteSpectrumValueHelper::GetChannelBandwidth (uint8_t transmissionBandwidth)
       return 3.0e6;
     case 25:
       return 5.0e6;
+    //5G RANGE
+    case 33:
+        return 6.0e6;
+    //5G RANGE
+    case 44:
+        return 8.0e6;
     case 50:
       return 10.0e6;
     case 75:
       return 15.0e6;
     case 100:
       return 20.0e6;
+    //5G RANGE
+    case 132:
+      return 24.0e6;
     default:
       NS_FATAL_ERROR ("invalid bandwidth value " << (uint16_t) transmissionBandwidth);
     }

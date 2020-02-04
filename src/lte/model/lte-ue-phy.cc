@@ -58,13 +58,13 @@ NS_LOG_COMPONENT_DEFINE ("LteUePhy");
  * events. The duration of one symbol is TTI/14 (rounded). In other words,
  * duration of data portion of UL subframe = 1 ms * (13/14) - 1 ns.
  */
-static const Time UL_DATA_DURATION = NanoSeconds (1e6 - 71429 - 1); 
+static const Time UL_DATA_DURATION = NanoSeconds ((SUBFRAME_DURATION - SRS_DURATION)*1e6 - 71429 - 1);
 
 /**
  * Delay from subframe start to transmission of SRS.
  * Equals to "TTI length - 1 symbol for SRS".
  */
-static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = NanoSeconds (1e6 - 71429); 
+static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = NanoSeconds ((SUBFRAME_DURATION - SRS_DURATION)*1e6);
 
 
 
@@ -298,7 +298,7 @@ LteUePhy::GetTypeId (void)
     .AddAttribute ("DownlinkCqiPeriodicity",
                    "Periodicity in milliseconds for reporting the"
                    "wideband and subband downlink CQIs to the eNB",
-                   TimeValue (MilliSeconds (1)),
+                   TimeValue (MilliSeconds (SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteUePhy::SetDownlinkCqiPeriodicity),
                    MakeTimeChecker ())
     .AddTraceSource ("ReportUeMeasurements",

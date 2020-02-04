@@ -18,6 +18,7 @@
  * Author: Manuel Requena <manuel.requena@cttc.es>
  */
 
+#include <ns3/lte-common.h>
 #include "ns3/simulator.h"
 #include "ns3/log.h"
 #include "ns3/node.h"
@@ -377,7 +378,7 @@ LteTestMac::LteTestMac ()
   m_pdcpHeaderPresent = false;
   m_rlcHeaderType = UM_RLC_HEADER;
   m_txOpportunityMode = MANUAL_MODE;
-  m_txOppTime = Seconds (0.001);
+  m_txOppTime = Seconds ((SUBFRAME_DURATION/1000));
   m_txOppSize = 0;
 
   m_txPdus = 0;

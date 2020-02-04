@@ -287,7 +287,7 @@ public:
     // HANDOVER DELAY TEST CASES WITH IDEAL RRC (THRESHOLD = 0.005 sec)
 
     for (Time handoverTime = Seconds (0.100); handoverTime < Seconds (0.110);
-        handoverTime += Seconds (0.001))
+        handoverTime += Seconds ((SUBFRAME_DURATION/1000)))
       {
         // arguments: useIdealRrc, handoverTime, delayThreshold, simulationDuration
         AddTestCase (
@@ -298,7 +298,7 @@ public:
     // HANDOVER DELAY TEST CASES WITH REAL RRC (THRESHOLD = 0.020 sec)
 
     for (Time handoverTime = Seconds (0.100); handoverTime < Seconds (0.110);
-        handoverTime += Seconds (0.001))
+        handoverTime += Seconds ((SUBFRAME_DURATION/1000)))
       {
         // arguments: useIdealRrc, handoverTime, delayThreshold, simulationDuration
         AddTestCase (

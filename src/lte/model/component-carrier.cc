@@ -121,9 +121,12 @@ ComponentCarrier::SetUlBandwidth (uint8_t bw)
     case 6:
     case 15:
     case 25:
+    case 33:
+    case 44:
     case 50:
     case 75:
     case 100:
+    case 132:
       m_ulBandwidth = bw;
       break;
 
@@ -148,9 +151,12 @@ ComponentCarrier::SetDlBandwidth (uint8_t bw)
     case 6:
     case 15:
     case 25:
+    case 33:
+    case 44:
     case 50:
     case 75:
     case 100:
+    case 132:
       m_dlBandwidth = bw;
       break;
 

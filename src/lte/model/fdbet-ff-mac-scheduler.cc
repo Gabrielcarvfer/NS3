@@ -993,7 +993,7 @@ FdBetFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sc
                   int tbSize = (m_amc->GetDlTbSizeFromMcs (mcs.at (0), (*itRbgPerRntiLog).second * rbgSize) / 8); // (size of TB in bytes according to table 7.1.7.2.1-1 of 36.213)
                   bytesTxed += tbSize;
                 }
-              double expectedAveThr = ((1.0 - (1.0 / m_timeWindow)) * (*itPastAveThr).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)(bytesTxed / 0.001));
+              double expectedAveThr = ((1.0 - (1.0 / m_timeWindow)) * (*itPastAveThr).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)(bytesTxed / (SUBFRAME_DURATION/1000)));
 
               int rbgPerRnti = (*itRbgPerRntiLog).second;
               rbgPerRnti++;
@@ -1181,7 +1181,7 @@ FdBetFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sc
     {
       (*itStats).second.totalBytesTransmitted += (*itStats).second.lastTtiBytesTrasmitted;
       // update average throughput (see eq. 12.3 of Sec 12.3.1.2 of LTE – The UMTS Long Term Evolution, Ed Wiley)
-      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTrasmitted / 0.001));
+      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTrasmitted / (SUBFRAME_DURATION/1000)));
       NS_LOG_INFO (this << " UE total bytes " << (*itStats).second.totalBytesTransmitted);
       NS_LOG_INFO (this << " UE average throughput " << (*itStats).second.lastAveragedThroughput);
       (*itStats).second.lastTtiBytesTrasmitted = 0;
@@ -1668,7 +1668,7 @@ FdBetFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sc
     {
       (*itStats).second.totalBytesTransmitted += (*itStats).second.lastTtiBytesTrasmitted;
       // update average throughput (see eq. 12.3 of Sec 12.3.1.2 of LTE – The UMTS Long Term Evolution, Ed Wiley)
-      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTrasmitted / 0.001));
+      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTrasmitted / (SUBFRAME_DURATION/1000)));
       NS_LOG_INFO (this << " UE total bytes " << (*itStats).second.totalBytesTransmitted);
       NS_LOG_INFO (this << " UE average throughput " << (*itStats).second.lastAveragedThroughput);
       (*itStats).second.lastTtiBytesTrasmitted = 0;

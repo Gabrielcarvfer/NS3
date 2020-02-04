@@ -362,6 +362,7 @@ set(test_sources
         test/lte-test-ipv6-routing.cc
         test/lte-test-carrier-aggregation-configuration.cc
         test/lte-test-radio-link-failure.cc
+        test/lte-test-5grange-frame-duration.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

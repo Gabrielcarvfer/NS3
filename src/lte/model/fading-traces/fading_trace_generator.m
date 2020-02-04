@@ -49,7 +49,7 @@ c = rayleighchan(ts, fd, delays_pedestrianEPA, power_pedestrianEPA);
 c.ResetBeforeFiltering = 0;
 c.NormalizePathGains = 1;
 
-TTI = 0.001;
+TTI = 0.0046;
 
 % number of samples of one channel realization
 numSamples = TTI / ts;

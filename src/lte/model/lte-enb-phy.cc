@@ -57,14 +57,14 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbPhy);
  * Data portion is fixed to 11 symbols out of the available 14 symbols.
  * 1 nanosecond margin is added to avoid overlapping simulator events.
  */
-static const Time DL_DATA_DURATION = NanoSeconds (785714 -1);
+static const Time DL_DATA_DURATION = NanoSeconds (3614285 -1);
 
 /**
  * Delay from the start of a DL subframe to transmission of the data portion.
  * Equals to "TTI length * (3/14)".
  * Control portion is fixed to 3 symbols out of the available 14 symbols.
  */
-static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = NanoSeconds (214286);
+static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = NanoSeconds (985715);
 
 ////////////////////////////////////////
 // member SAP forwarders

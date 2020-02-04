@@ -78,11 +78,11 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   // after the patch enforcing min 3 PRBs per UE:
   // 12 users -> 3 PRB at Itbs 26 -> 277 bytes * 8/12 UE/TTI -> 184670 bytes/sec
   // 15 users -> 3 PRB at Itbs 26 -> 277 bytes * 8/15 UE/TTI -> 147730 bytes/sec
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (1,0,2196000,2292000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (3,0,732000,749000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (6,0,366000,373000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,0,183000,184670,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,0,146400,147730,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 1,0,2196000/SUBFRAME_DURATION,2292000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 3,0, 732000/SUBFRAME_DURATION, 749000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 6,0, 366000/SUBFRAME_DURATION, 373000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,0, 183000/SUBFRAME_DURATION, 184670/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,0, 146400/SUBFRAME_DURATION, 147730/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
   
  
   // DOWNLINK - DISTANCE 4800 -> MCS 22 -> Itbs 20 (from table 7.1.7.2.1-1 of 36.213)
@@ -98,11 +98,11 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   // after the patch enforcing min 3 PRBs per UE:
   // 12 users -> 3 PRB at Itbs 13 -> 93  bytes * 8/12 UE/TTI  -> 62000 bytes/sec
   // 15 users -> 3 PRB at Itbs 13 -> 93  bytes * 8/15 UE/TTI  -> 49600 bytes/sec
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (1,4800,1383000,807000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (3,4800,461000,253000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (6,4800,230500,125000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,4800,115250,62000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,4800,92200,49600,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 1,4800,1383000/SUBFRAME_DURATION,807000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 3,4800, 461000/SUBFRAME_DURATION,253000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 6,4800, 230500/SUBFRAME_DURATION,125000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,4800, 115250/SUBFRAME_DURATION, 62000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,4800,  92200/SUBFRAME_DURATION, 49600/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
   
   // DOWNLINK - DISTANCE 6000 -> MCS 20 -> Itbs 18 (from table 7.1.7.2.1-1 of 36.213)
   // 1 user -> 24 PRB at Itbs 20 -> 1191 -> 1191000 bytes/sec
@@ -117,11 +117,11 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   // after the patch enforcing min 3 PRBs per UE:
   // 12 users -> 3 PRB at Itbs 11 -> 73 bytes * 8/12 UE/TTI -> 48667 bytes/sec
   // 15 users -> 3 PRB at Itbs 11 -> 73 bytes * 8/15 UE/TTI -> 38993 bytes/sec
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (1,6000,1191000,621000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (3,6000,397000,201000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (6,6000,198500,97000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,6000,99250,48667,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,6000,79400,38993,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 1,6000,1191000/SUBFRAME_DURATION,621000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 3,6000, 397000/SUBFRAME_DURATION,201000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 6,6000, 198500/SUBFRAME_DURATION, 97000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,6000,  99250/SUBFRAME_DURATION, 48667/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,6000,  79400/SUBFRAME_DURATION, 38993/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
 
   // DOWNLINK - DISTANCE 10000 -> MCS 14 -> Itbs 13 (from table 7.1.7.2.1-1 of 36.213)
   // 1 user -> 24 PRB at Itbs 13 -> 871 -> 775000 bytes/sec
@@ -136,11 +136,11 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   // after the patch enforcing min 3 PRBs per UE:
   // 12 users -> 3 PRB at Itbs 8 -> 49 bytes * 8/12 UE/TTI -> 32667 bytes/sec
   // 15 users -> 3 PRB at Itbs 8 -> 49 bytes * 8/15 UE/TTI -> 26133 bytes/sec
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (1,10000,775000,437000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (3,10000,258333,137000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (6,10000,129167,67000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,10000,64583,32667,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,10000,51667,26133,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 1,10000,775000/SUBFRAME_DURATION,437000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 3,10000,258333/SUBFRAME_DURATION,137000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 6,10000,129167/SUBFRAME_DURATION, 67000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,10000, 64583/SUBFRAME_DURATION, 32667/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,10000, 51667/SUBFRAME_DURATION, 26133/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
  
   // DONWLINK - DISTANCE 20000 -> MCS 8 -> Itbs 8 (from table 7.1.7.2.1-1 of 36.213)
   // 1 user -> 24 PRB at Itbs 8 -> 421 -> 421000 bytes/sec
@@ -155,11 +155,11 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   // after the patch enforcing min 3 PRBs per UE:
   // 12 users -> 3 PRB at Itbs 2 -> 26 bytes * 8/12 UE/TTI -> 12000 bytes/sec
   // 15 users -> 3 PRB at Itbs 2 -> 26 bytes * 8/15 UE/TTI -> 9600 bytes/sec
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (1,20000,421000,137000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (3,20000,140333,41000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (6,20000,70167,22000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,20000,35083,12000,errorModel), TestCase::EXTENSIVE);
-  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,20000,28067,9600,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 1,20000,421000/SUBFRAME_DURATION,137000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 3,20000,140333/SUBFRAME_DURATION, 41000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 ( 6,20000, 70167/SUBFRAME_DURATION, 22000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (12,20000, 35083/SUBFRAME_DURATION, 12000/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
+  AddTestCase (new LenaPfFfMacSchedulerTestCase1 (15,20000, 28067/SUBFRAME_DURATION,  9600/SUBFRAME_DURATION,errorModel), TestCase::EXTENSIVE);
 
   // DOWNLINK - DISTANCE 100000 -> CQI == 0 -> out of range -> 0 bytes/sec
   // UPLINK - DISTANCE 100000 -> CQI == 0 -> out of range -> 0 bytes/sec
@@ -175,17 +175,17 @@ LenaTestPfFfMacSchedulerSuite::LenaTestPfFfMacSchedulerSuite ()
   dist.push_back (10000);    // User 3 distance --> MCS 8
   dist.push_back (20000);    // User 4 distance --> MCS 8
   std::vector<uint32_t> estThrPfDl;
-  estThrPfDl.push_back (90000); // User 0 estimated TTI throughput from PF
-  estThrPfDl.push_back (37000); // User 1 estimated TTI throughput from PF
-  estThrPfDl.push_back (37000); // User 2 estimated TTI throughput from PF
-  estThrPfDl.push_back (17400); // User 3 estimated TTI throughput from PF
-  estThrPfDl.push_back (17400); // User 4 estimated TTI throughput from PF
+  estThrPfDl.push_back (90000/SUBFRAME_DURATION); // User 0 estimated TTI throughput from PF
+  estThrPfDl.push_back (37000/SUBFRAME_DURATION); // User 1 estimated TTI throughput from PF
+  estThrPfDl.push_back (37000/SUBFRAME_DURATION); // User 2 estimated TTI throughput from PF
+  estThrPfDl.push_back (17400/SUBFRAME_DURATION); // User 3 estimated TTI throughput from PF
+  estThrPfDl.push_back (17400/SUBFRAME_DURATION); // User 4 estimated TTI throughput from PF
   std::vector<uint32_t> estThrPfUl;
-  estThrPfUl.push_back (469000); // User 0 estimated TTI throughput from PF
-  estThrPfUl.push_back (157000); // User 1 estimated TTI throughput from PF
-  estThrPfUl.push_back (125000); // User 2 estimated TTI throughput from PF
-  estThrPfUl.push_back (85000); // User 3 estimated TTI throughput from PF
-  estThrPfUl.push_back (26000); // User 4 estimated TTI throughput from PF
+  estThrPfUl.push_back (469000/SUBFRAME_DURATION); // User 0 estimated TTI throughput from PF
+  estThrPfUl.push_back (157000/SUBFRAME_DURATION); // User 1 estimated TTI throughput from PF
+  estThrPfUl.push_back (125000/SUBFRAME_DURATION); // User 2 estimated TTI throughput from PF
+  estThrPfUl.push_back ( 85000/SUBFRAME_DURATION); // User 3 estimated TTI throughput from PF
+  estThrPfUl.push_back ( 26000/SUBFRAME_DURATION); // User 4 estimated TTI throughput from PF
   AddTestCase (new LenaPfFfMacSchedulerTestCase2 (dist, estThrPfDl, estThrPfUl,errorModel), TestCase::QUICK);
 
 
@@ -286,7 +286,7 @@ LenaPfFfMacSchedulerTestCase1::DoRun (void)
     }
 
 
-  double statsStartTime = 0.300; // need to allow for RRC connection establishment + SRS
+  double statsStartTime = 0.300*SUBFRAME_DURATION; // need to allow for RRC connection establishment + SRS
   double statsDuration = 0.6;
   double tolerance = 0.1;
   Simulator::Stop (Seconds (statsStartTime + statsDuration - 0.000001));
@@ -449,7 +449,7 @@ LenaPfFfMacSchedulerTestCase2::DoRun (void)
       uePhy->SetAttribute ("NoiseFigure", DoubleValue (9.0));
     }
 
-  double statsStartTime = 0.300; // need to allow for RRC connection establishment + SRS
+  double statsStartTime = 0.300*SUBFRAME_DURATION; // need to allow for RRC connection establishment + SRS
   double statsDuration = 0.4;
   double tolerance = 0.1;
   Simulator::Stop (Seconds (statsStartTime + statsDuration - 0.000001));

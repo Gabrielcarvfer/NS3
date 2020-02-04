@@ -503,7 +503,7 @@ void
 LteFrAreaTestCase::DlDataRxStart (Ptr<const SpectrumValue> spectrumValue)
 {
   //need time to report new UE measurements, and wait because of filtering
-  if ( (Simulator::Now () - m_teleportTime ) < MilliSeconds (400))
+  if ( (Simulator::Now () - m_teleportTime ) < MilliSeconds (400*SUBFRAME_DURATION))
     {
       return;
     }
@@ -535,7 +535,7 @@ void
 LteFrAreaTestCase::UlDataRxStart (Ptr<const SpectrumValue> spectrumValue)
 {
   //need time to report new UE measurements, and wait because of filtering
-  if ( (Simulator::Now () - m_teleportTime ) < MilliSeconds (400))
+  if ( (Simulator::Now () - m_teleportTime ) < MilliSeconds (400*SUBFRAME_DURATION))
     {
       return;
     }
@@ -796,22 +796,22 @@ LteStrictFrAreaTestCase::DoRun (void)
       expectedUlRbEdgeArea[i] = true;
     }
 
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0, 1, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 800, 0, 2, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.199526, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0, 1, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Stop (Seconds (1.500));
+  Simulator::Stop (Seconds (1.500*SUBFRAME_DURATION));
   Simulator::Run ();
 
   NS_TEST_ASSERT_MSG_EQ (m_usedWrongDlRbg, false,
@@ -985,22 +985,22 @@ LteSoftFrAreaTestCase::DoRun (void)
       expectedUlRbEdgeArea[i] = true;
     }
 
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0, 1, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 800, 0, 2, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.199526, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0, 1, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Stop (Seconds (1.500));
+  Simulator::Stop (Seconds (1.500*SUBFRAME_DURATION));
   Simulator::Run ();
 
 #if 0
@@ -1195,37 +1195,37 @@ LteSoftFfrAreaTestCase::DoRun (void)
       expectedUlRbEdgeArea[i] = true;
     }
 
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 600, 0,
                        expectedDlPowerMiddleArea, expectedDlRbMiddleArea );
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.135489, expectedUlRbMiddleArea );
 
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 800, 0,
                        expectedDlPowerEdgeArea, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.199526, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 600, 0,
                        expectedDlPowerMiddleArea, expectedDlRbMiddleArea );
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.135489, expectedUlRbMiddleArea );
 
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 200, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0150543, expectedUlRbCenterArea );
 
-  Simulator::Stop (Seconds (2.500));
+  Simulator::Stop (Seconds (2.500*SUBFRAME_DURATION));
   Simulator::Run ();
 
   NS_TEST_ASSERT_MSG_EQ (m_usedWrongDlRbg, false,
@@ -1430,37 +1430,37 @@ LteEnhancedFfrAreaTestCase::DoRun (void)
       expectedUlRbEdgeArea[i] = true;
     }
 
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteEnhancedFfrAreaTestCase::TeleportUe, this, 100, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.00250905, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteEnhancedFfrAreaTestCase::TeleportUe, this, 300, 0,
                        expectedDlPowerMiddleArea, expectedDlRbMiddleArea );
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0225815, expectedUlRbMiddleArea );
 
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteEnhancedFfrAreaTestCase::TeleportUe, this, 600, 0,
                        expectedDlPowerEdgeArea, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0903259, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteEnhancedFfrAreaTestCase::TeleportUe, this, 100, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.00250905, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteEnhancedFfrAreaTestCase::TeleportUe, this, 300, 0,
                        expectedDlPowerMiddleArea, expectedDlRbMiddleArea );
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0225815, expectedUlRbCenterArea );
 
-  Simulator::Stop (Seconds (2.500));
+  Simulator::Stop (Seconds (2.500*SUBFRAME_DURATION));
   Simulator::Run ();
 
   NS_TEST_ASSERT_MSG_EQ (m_usedWrongDlRbg, false,
@@ -1756,37 +1756,37 @@ LteDistributedFfrAreaTestCase::DoRun (void)
     }
 
 
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 800, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (1),
+  Simulator::Schedule (MilliSeconds (1*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0225815, expectedUlRbCenterArea );
 
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 400, 0,
                        expectedDlPowerEdgeArea, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (501),
+  Simulator::Schedule (MilliSeconds (501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.135489, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe2, this, ueNodes1.Get (0), 600, 0,
                        expectedDlPowerEdgeArea, expectedDlRbEdgeArea2 );
-  Simulator::Schedule (MilliSeconds (1001),
+  Simulator::Schedule (MilliSeconds (1001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.135489, expectedUlRbEdgeArea2 );
 
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe2, this, ueNodes1.Get (0), 200, 0,
                        expectedDlPowerEdgeArea, expectedDlRbEdgeArea );
-  Simulator::Schedule (MilliSeconds (1501),
+  Simulator::Schedule (MilliSeconds (1501*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.135489, expectedUlRbEdgeArea );
 
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::TeleportUe, this, 800, 0,
                        expectedDlPowerCenterArea, expectedDlRbCenterArea );
-  Simulator::Schedule (MilliSeconds (2001),
+  Simulator::Schedule (MilliSeconds (2001*SUBFRAME_DURATION),
                        &LteFrAreaTestCase::SetUlExpectedValues, this, 0.0225815, expectedUlRbCenterArea );
 
-  Simulator::Stop (Seconds (2.500));
+  Simulator::Stop (Seconds (2.500*SUBFRAME_DURATION));
   Simulator::Run ();
 
 #if 0

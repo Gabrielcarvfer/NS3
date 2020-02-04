@@ -24,6 +24,11 @@
 #include "ns3/uinteger.h"
 #include <cmath>
 
+//5G-RANGE, milliseconds
+#define SUBFRAME_DURATION 4.6
+#define SRS_DURATION 0.328571428 //SUBFRAME_DURATION / 14
+//#define SRS_RATIO 0.071428571
+
 // see 36.213 section 8
 #define UL_PUSCH_TTIS_DELAY 4
 

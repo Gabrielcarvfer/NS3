@@ -904,7 +904,7 @@ TdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
                 {
                   uint8_t mcs = 0; 
                   mcs = m_amc->GetMcsFromCqi (wbCqi);
-                  achievableRate += ((m_amc->GetDlTbSizeFromMcs (mcs, rbgSize) / 8) / 0.001); // = TB size / TTI
+                  achievableRate += ((m_amc->GetDlTbSizeFromMcs (mcs, rbgSize) / 8) / (SUBFRAME_DURATION/1000)); // = TB size / TTI
 
                   NS_LOG_DEBUG (this << " RNTI " << (*it) << " MCS " << (uint32_t)mcs << " achievableRate " << achievableRate );
                 }

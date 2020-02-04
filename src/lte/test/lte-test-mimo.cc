@@ -68,9 +68,9 @@ LenaTestMimoSuite::LenaTestMimoSuite ()
   // interval 3 : [0.5, 0.6) sec TxMode 2: MCS 18 -> TB size  967 bytes (x2 layers)
   // --> 
   std::vector<uint32_t> estThrDl;
-  estThrDl.push_back (119100); // interval 1 : estimated throughput for TxMode 1
-  estThrDl.push_back (183600); // interval 2 : estimated throughput for TxMode 2
-  estThrDl.push_back (193400); // interval 3 : estimated throughput for TxMode 3
+  estThrDl.push_back (119100/SUBFRAME_DURATION); // interval 1 : estimated throughput for TxMode 1
+  estThrDl.push_back (183600/SUBFRAME_DURATION); // interval 2 : estimated throughput for TxMode 2
+  estThrDl.push_back (193400/SUBFRAME_DURATION); // interval 3 : estimated throughput for TxMode 3
   AddTestCase (new LenaMimoTestCase(300, estThrDl, "ns3::RrFfMacScheduler", true), TestCase::QUICK);
   AddTestCase (new LenaMimoTestCase(300, estThrDl, "ns3::PfFfMacScheduler", true), TestCase::QUICK);
   AddTestCase (new LenaMimoTestCase(300, estThrDl, "ns3::RrFfMacScheduler", false), TestCase::QUICK);
@@ -188,7 +188,7 @@ LenaMimoTestCase::DoRun (void)
   // need to allow for RRC connection establishment + SRS before enabling traces
   lteHelper->EnableRlcTraces ();
   lteHelper->EnableMacTraces ();
-  double simulationTime = 0.6; 
+  double simulationTime = 1;
   double tolerance = 0.1;
   
   uint8_t rnti = 1;
@@ -205,8 +205,8 @@ LenaMimoTestCase::DoRun (void)
         {
           NS_FATAL_ERROR ("No RR Scheduler available");
         }
-      Simulator::Schedule (Seconds (0.2), &RrFfMacScheduler::TransmissionModeConfigurationUpdate, rrsched, rnti, 1);
-      Simulator::Schedule (Seconds (0.4), &RrFfMacScheduler::TransmissionModeConfigurationUpdate, rrsched, rnti, 2);
+      Simulator::Schedule (Seconds (0.6), &RrFfMacScheduler::TransmissionModeConfigurationUpdate, rrsched, rnti, 1);
+      Simulator::Schedule (Seconds (0.8), &RrFfMacScheduler::TransmissionModeConfigurationUpdate, rrsched, rnti, 2);
     }
   else if (m_schedulerType.compare ("ns3::PfFfMacScheduler") == 0)
     {
@@ -216,8 +216,8 @@ LenaMimoTestCase::DoRun (void)
           NS_FATAL_ERROR ("No Pf Scheduler available");
         }
       
-      Simulator::Schedule (Seconds (0.2), &PfFfMacScheduler::TransmissionModeConfigurationUpdate, pfsched, rnti, 1);
-      Simulator::Schedule (Seconds (0.4), &PfFfMacScheduler::TransmissionModeConfigurationUpdate, pfsched, rnti, 2);
+      Simulator::Schedule (Seconds (0.6), &PfFfMacScheduler::TransmissionModeConfigurationUpdate, pfsched, rnti, 1);
+      Simulator::Schedule (Seconds (0.8), &PfFfMacScheduler::TransmissionModeConfigurationUpdate, pfsched, rnti, 2);
     }
   else
     {
@@ -229,7 +229,7 @@ LenaMimoTestCase::DoRun (void)
   rlcStats->SetAttribute ("EpochDuration", TimeValue (Seconds (0.1)));
 
   NS_LOG_INFO (m_schedulerType << " MIMO test:");
-  double sampleTime = 0.199999; // at 0.2 RlcStats are reset
+  double sampleTime = 0.599999; // at 0.2 RlcStats are reset
   for (uint8_t j = 0; j < m_estThrDl.size (); j ++)
     {
       NS_LOG_INFO ("\t test with user at distance " << m_dist << " time " << sampleTime);

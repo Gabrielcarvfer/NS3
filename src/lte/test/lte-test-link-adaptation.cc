@@ -214,7 +214,7 @@ LteLinkAdaptationTestCase::DoRun (void)
   Config::Connect ("/NodeList/0/DeviceList/0/ComponentCarrierMap/*/LteEnbMac/DlScheduling",
                    MakeBoundCallback (&LteTestDlSchedulingCallback, this));
 
-  Simulator::Stop (Seconds (0.040));
+  Simulator::Stop (Seconds (0.040*SUBFRAME_DURATION));
   Simulator::Run ();
 
   double calculatedSinrDb = 10.0 * std::log10 (sinrCatcher.GetValue ()->operator[] (0));
@@ -240,7 +240,7 @@ LteLinkAdaptationTestCase::DlScheduling (DlSchedulingCallbackInfo dlInfo)
    * RRC connection has been completed and
    * CQI feedback is available at the eNB.
    */
-  if (Simulator::Now ().GetSeconds () > 0.030)
+  if (Simulator::Now ().GetSeconds () > 0.030*SUBFRAME_DURATION)
     {
       NS_LOG_INFO (m_snrDb << "\t" << m_mcsIndex << "\t" << (uint16_t)dlInfo.mcsTb1);
 

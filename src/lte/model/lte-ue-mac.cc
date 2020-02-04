@@ -251,7 +251,7 @@ uint32_t LteUeMac::ueCount = 0;
 
 
 LteUeMac::LteUeMac ()
-  :  m_bsrPeriodicity (MilliSeconds (1)), // ideal behavior
+  :  m_bsrPeriodicity (MilliSeconds (1*SUBFRAME_DURATION)), // ideal behavior
      m_bsrLast (MilliSeconds (0)),
      m_freshUlBsr (false),
      m_harqProcessId (0),
@@ -447,8 +447,8 @@ LteUeMac::SendRaPreamble (bool contention)
   m_uePhySapProvider->SendRachPreamble (m_raPreambleId, m_raRnti);
   NS_LOG_INFO (this << " sent preamble id " << (uint32_t) m_raPreambleId << ", RA-RNTI " << (uint32_t) m_raRnti);
   // 3GPP 36.321 5.1.4 
-  Time raWindowBegin = MilliSeconds (3); 
-  Time raWindowEnd = MilliSeconds (3 + m_rachConfig.raResponseWindowSize);
+  Time raWindowBegin = MilliSeconds (3*SUBFRAME_DURATION);
+  Time raWindowEnd = MilliSeconds (3+ m_rachConfig.raResponseWindowSize)*SUBFRAME_DURATION;
   Simulator::Schedule (raWindowBegin, &LteUeMac::StartWaitingForRaResponse, this);
   m_noRaResponseReceivedEvent = Simulator::Schedule (raWindowEnd, &LteUeMac::RaResponseTimeout, this, contention);
 }

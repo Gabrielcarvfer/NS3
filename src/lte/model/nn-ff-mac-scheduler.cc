@@ -1977,7 +1977,7 @@ NnFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
               int tbSize = m_amc->GetDlTbSizeFromMcs (mcsForThisUser, (numberOfRBGAllocatedForThisUser+1) * rbgSize)/8;                           // similar to calculation of TB size (size of TB in bytes according to table 7.1.7.2.1-1 of 36.213)
 
 
-              double achievableRate = (( m_amc->GetDlTbSizeFromMcs (mcsForThisUser, rbgSize)/ 8) / 0.001);
+              double achievableRate = (( m_amc->GetDlTbSizeFromMcs (mcsForThisUser, rbgSize)/ 8) / (SUBFRAME_DURATION/1000));
               double pf_weight = achievableRate / (*itStats).second.secondLastAveragedThroughput;
 
               UeToAmountOfAssignedResources.find (flowId)->second = 8*tbSize;
@@ -2303,12 +2303,12 @@ NnFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
     {
       if (allocationMapPerRntiPerLCId.find (itStats->first)!= allocationMapPerRntiPerLCId.end ())
         {
-          (*itStats).second.secondLastAveragedThroughput = ((1.0 - (1 / m_timeWindow)) * (*itStats).second.secondLastAveragedThroughput) + ((1 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / 0.001));
+          (*itStats).second.secondLastAveragedThroughput = ((1.0 - (1 / m_timeWindow)) * (*itStats).second.secondLastAveragedThroughput) + ((1 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / (SUBFRAME_DURATION/1000)));
         }
 
       (*itStats).second.totalBytesTransmitted += (*itStats).second.lastTtiBytesTransmitted;
       // update average throughput (see eq. 12.3 of Sec 12.3.1.2 of LTE – The UMTS Long Term Evolution, Ed Wiley)
-      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / 0.001));
+      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / (SUBFRAME_DURATION/1000)));
       NS_LOG_INFO (this << " UE total bytes " << (*itStats).second.totalBytesTransmitted);
       NS_LOG_INFO (this << " UE average throughput " << (*itStats).second.lastAveragedThroughput);
       (*itStats).second.lastTtiBytesTransmitted = 0;
@@ -2828,7 +2828,7 @@ NnFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
     {
       (*itStats).second.totalBytesTransmitted += (*itStats).second.lastTtiBytesTransmitted;
       // update average throughput (see eq. 12.3 of Sec 12.3.1.2 of LTE – The UMTS Long Term Evolution, Ed Wiley)
-      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / 0.001));
+      (*itStats).second.lastAveragedThroughput = ((1.0 - (1.0 / m_timeWindow)) * (*itStats).second.lastAveragedThroughput) + ((1.0 / m_timeWindow) * (double)((*itStats).second.lastTtiBytesTransmitted / (SUBFRAME_DURATION/1000)));
       NS_LOG_INFO (this << " UE total bytes " << (*itStats).second.totalBytesTransmitted);
       NS_LOG_INFO (this << " UE average throughput " << (*itStats).second.lastAveragedThroughput);
       (*itStats).second.lastTtiBytesTransmitted = 0;
