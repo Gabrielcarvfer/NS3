@@ -58,13 +58,13 @@ NS_LOG_COMPONENT_DEFINE ("LteUePhy");
  * events. The duration of one symbol is TTI/14 (rounded). In other words,
  * duration of data portion of UL subframe = 1 ms * (13/14) - 1 ns.
  */
-static const Time UL_DATA_DURATION = NanoSeconds ((SUBFRAME_DURATION - SRS_DURATION)*1e6 - 71429 - 1);
+static const Time UL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION - SRS_DURATION) - NanoSeconds(1);
 
 /**
  * Delay from subframe start to transmission of SRS.
  * Equals to "TTI length - 1 symbol for SRS".
  */
-static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = NanoSeconds ((SUBFRAME_DURATION - SRS_DURATION)*1e6);
+static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = MilliSeconds(SUBFRAME_DURATION - SRS_DURATION);
 
 
 
@@ -208,7 +208,7 @@ LteUePhy::GetTypeId (void)
     .AddConstructor<LteUePhy> ()
     .AddAttribute ("TxPower",
                    "Transmission power in dBm",
-                   DoubleValue (10.0),
+                   DoubleValue (23.0),//10.0 OG
                    MakeDoubleAccessor (&LteUePhy::SetTxPower, 
                                        &LteUePhy::GetTxPower),
                    MakeDoubleChecker<double> ())
@@ -298,7 +298,7 @@ LteUePhy::GetTypeId (void)
     .AddAttribute ("DownlinkCqiPeriodicity",
                    "Periodicity in milliseconds for reporting the"
                    "wideband and subband downlink CQIs to the eNB",
-                   TimeValue (MilliSeconds (SUBFRAME_DURATION)),
+                   TimeValue (MilliSeconds (1)),
                    MakeTimeAccessor (&LteUePhy::SetDownlinkCqiPeriodicity),
                    MakeTimeChecker ())
     .AddTraceSource ("ReportUeMeasurements",
@@ -577,7 +577,7 @@ LteUePhy::GenerateCqiRsrpRsrq (const SpectrumValue& sinr)
   if (m_dlConfigured && m_ulConfigured && (m_rnti > 0))
     {
       // check periodic wideband CQI
-      if (Simulator::Now () > m_p10CqiLast + m_p10CqiPeriodicity)
+      if (Simulator::Now () > m_p10CqiLast + m_p10CqiPeriodicity*SUBFRAME_DURATION)
         {
           NS_LOG_DEBUG("Reporting P10 CQI at : " << Simulator::Now().GetMilliSeconds()
                        << " ms. Last reported at : " << m_p10CqiLast.GetMilliSeconds() << " ms");
@@ -590,7 +590,7 @@ LteUePhy::GenerateCqiRsrpRsrq (const SpectrumValue& sinr)
           m_p10CqiLast = Simulator::Now ();
         }
       // check aperiodic high-layer configured subband CQI
-      if  (Simulator::Now () > m_a30CqiLast + m_a30CqiPeriodicity)
+      if  (Simulator::Now () > m_a30CqiLast + m_a30CqiPeriodicity*SUBFRAME_DURATION)
         {
           NS_LOG_DEBUG("Reporting A30 CQI at : " << Simulator::Now().GetMilliSeconds()
                        << " ms. Last reported at : " << m_a30CqiLast.GetMilliSeconds() << " ms");
@@ -1102,7 +1102,7 @@ LteUePhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgLi
           PhyTransmissionStatParameters params;
           params.m_cellId = m_cellId;
           params.m_imsi = 0; // it will be set by DlPhyTransmissionCallback in LteHelper
-          params.m_timestamp = Simulator::Now ().GetMilliSeconds () + UL_PUSCH_TTIS_DELAY;
+          params.m_timestamp = Simulator::Now ().GetMilliSeconds () + MilliSeconds(UL_PUSCH_TTIS_DELAY*SUBFRAME_DURATION).GetMilliSeconds();
           params.m_rnti = m_rnti;
           params.m_txMode = 0; // always SISO for UE
           params.m_layer = 0;
@@ -1240,7 +1240,7 @@ LteUePhy::SubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   NS_LOG_FUNCTION (this << frameNo << subframeNo);
 
   NS_ASSERT_MSG (frameNo > 0, "the SRS index check code assumes that frameNo starts at 1");
-
+  std::cout << "UE subframe ts=" << Simulator::Now() << std::endl;
   // refresh internal variables
   m_rsReceivedPowerUpdated = false;
   m_rsInterferencePowerUpdated = false;

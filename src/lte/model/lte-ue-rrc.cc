@@ -226,16 +226,16 @@ LteUeRrc::GetTypeId (void)
                    "Timer for the RRC Connection Establishment procedure "
                    "(i.e., the procedure is deemed as failed if it takes longer than this). "
                    "Standard values: 100ms, 200ms, 300ms, 400ms, 600ms, 1000ms, 1500ms, 2000ms",
-                   TimeValue (MilliSeconds (100)), //see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
+                   TimeValue (MilliSeconds (100*SUBFRAME_DURATION)), //see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
                    MakeTimeAccessor (&LteUeRrc::m_t300),
-                   MakeTimeChecker (MilliSeconds (100), MilliSeconds (2000)))
+                   MakeTimeChecker (MilliSeconds (100*SUBFRAME_DURATION), MilliSeconds (2000*SUBFRAME_DURATION)))
     .AddAttribute ("T310",
                    "Timer for detecting the Radio link failure "
                    "(i.e., the radio link is deemed as failed if this timer expires). "
                    "Standard values: 0ms 50ms, 100ms, 200ms, 500ms, 1000ms, 2000ms",
-                   TimeValue (MilliSeconds (1000)), //see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
+                   TimeValue (MilliSeconds (1000*SUBFRAME_DURATION)), //see 3GPP 36.331 UE-TimersAndConstants & RLF-TimersAndConstants
                    MakeTimeAccessor (&LteUeRrc::m_t310),
-                   MakeTimeChecker (MilliSeconds (0), MilliSeconds (2000)))
+                   MakeTimeChecker (MilliSeconds (0*SUBFRAME_DURATION), MilliSeconds (2000*SUBFRAME_DURATION)))
     .AddAttribute ("N310",
                    "This specifies the maximum number of out-of-sync indications. "
                    "Standard values: 1, 2, 3, 4, 6, 8, 10, 20",

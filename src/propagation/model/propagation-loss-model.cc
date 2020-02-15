@@ -948,7 +948,7 @@ RANGE5GPropagationLossModel::GetTypeId (void)
             .AddConstructor<RANGE5GPropagationLossModel> ()
             .AddAttribute ("Frequency",
                            "The carrier frequency (in Hz) at which propagation occurs  (default is band 5: 850 MHz). ",
-                           DoubleValue (850e6),
+                           DoubleValue (700e6),//850
                            MakeDoubleAccessor (&RANGE5GPropagationLossModel::SetFrequency,
                                                &RANGE5GPropagationLossModel::GetFrequency),
                            MakeDoubleChecker<double> ())
@@ -1024,7 +1024,7 @@ RANGE5GPropagationLossModel::GetFrequency (void) const
 double
 RANGE5GPropagationLossModel::DbmToW (double dbm) const
 {
-    double mw = std::pow (10.0,dbm/10.0);
+    double mw = std::pow (10.0,dbm / 10.0);
     return mw / 1000.0;
 }
 
@@ -1060,7 +1060,7 @@ RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
      * are in dB or dBm:
      *
      *                           lambda^2
-     * rx = tx +  10 log10 (-------------------) + K
+     * rx = tx -  10 log10 (-------------------) + K
      *                       (4 * pi * d)^2 * L
      *
      * rx: rx power (dB)
@@ -1088,10 +1088,9 @@ RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
 
     double numerator = m_lambda * m_lambda;
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
-    double shadow = m_normalGen->GetValue();
     double lossDb = -10 * log10 (numerator / denominator);
-    double lossDb1 = lossDb;
-    lossDb += (m_kValue + shadow);
+    double shadow = m_normalGen->GetValue();
+    lossDb += m_kValue + shadow;
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
     //Print RANGE pathloss and shadowing
     //std::cout << this << ": " << lossDb1 << " " << lossDb << " " << shadow << "\n";

@@ -2593,6 +2593,7 @@ CqaFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sche
                               std::pow (10, minSinr / 10 )  /
                               ( (-std::log (5.0 * 0.00005 )) / 1.5) ));
           cqi = m_amc->GetCqiFromSpectralEfficiency (s);
+          std::cout << "cqi=" << cqi << ", s=" << s << std::endl;
           if (cqi == 0)
             {
               it++;

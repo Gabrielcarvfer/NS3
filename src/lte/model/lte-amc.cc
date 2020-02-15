@@ -47,9 +47,9 @@ NS_OBJECT_ENSURE_REGISTERED (LteAmc);
  */
 static const double SpectralEfficiencyForCqi[16] = {
   0.0, // out of range
-  0.15, 0.23, 0.38, 0.6, 0.88, 1.18,
-  1.48, 1.91, 2.41,
-  2.73, 3.32, 3.9, 4.52, 5.12, 5.55
+  0.083, 0.250, 0.417, 0.750, 1.000,
+  1.500, 2.167, 3.000, 3.500, 4.500,
+  5.250, 6.000, 6.667, 7.000, 7.667
 };
 
 #if 0 // currently unused
@@ -80,12 +80,12 @@ static const int ModulationSchemeForMcs[32] = {
  * to the convention in TS 36.213 (i.e., the MCS index reported in R1-081483
  * minus one)
  */
-static const double SpectralEfficiencyForMcs[32] = {
-  0.15, 0.19, 0.23, 0.31, 0.38, 0.49, 0.6, 0.74, 0.88, 1.03, 1.18,
-  1.33, 1.48, 1.7, 1.91, 2.16, 2.41, 2.57,
-  2.73, 3.03, 3.32, 3.61, 3.9, 4.21, 4.52, 4.82, 5.12, 5.33, 5.55,
-  0, 0, 0
-};
+static const double SpectralEfficiencyForMcs[28] = {
+            0.0,
+            0.083, 0.167, 0.250, 0.333, 0.417, 0.583, 0.750, 0.833, 1.000,
+            1.166, 1.500, 1.833, 2.167, 2.500, 3.000, 3.333, 3.500, 4.000,
+            4.500, 4.750, 5.250, 5.500, 6.000, 6.667, 7.000, 7.333, 7.667
+    };
 
 /**
  * Table of MCS index (IMCS) and its TBS index (ITBS). Taken from 3GPP TS

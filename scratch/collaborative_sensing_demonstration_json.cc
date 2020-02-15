@@ -212,6 +212,8 @@ int main() {
             double txPower          = enbContents["tx_power"].get<double>();
             double antennaGain      = enbContents["gain"].get<double>();
             enbParameters.emplace(enbId, std::vector<double>{coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, antennaGain});
+            enbTxPower = txPower;
+            enbGain    = antennaGain;
         }
 
         //Load UE data
@@ -235,6 +237,8 @@ int main() {
             double txPower          = ueContents["tx_power"].get<double>();
             double antennaGain      = ueContents["gain"].get<double>();
             ueParameters.emplace(ueId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, antennaGain});
+            ueTxPower = txPower;
+            ueGain    = antennaGain;
         }
     }
 
@@ -259,6 +263,7 @@ int main() {
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
 
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
 
@@ -271,9 +276,13 @@ int main() {
     //10dBm =  10  mW
     // 0dBm =   1  mW
 
+
     //0.5 Configure Tx power for UEs and eNB
     Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(enbTxPower));
     Config::SetDefault("ns3::LteUePhy::TxPower",  DoubleValue(ueTxPower));
+
+    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(29.38*8/8));
+
 
     //0.6 Configure antenna gains for UEs and eNB
     lteHelper->SetEnbAntennaModelAttribute("Gain", DoubleValue(enbGain)); // Taken from
@@ -314,6 +323,7 @@ int main() {
     for (auto & enbData: enbParameters)
     {
         positionAlloc->Add(Vector(enbData.second[0], enbData.second[1], enbData.second[2]));  // 2 - eNB
+
     }
 
     Ptr<ListPositionAllocator> positionAlloc2 = CreateObject<ListPositionAllocator>();
@@ -409,8 +419,8 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    lteHelper->EnableTraces();
-    p2ph.EnablePcapAll("natalandia_p2p", true);
+    //lteHelper->EnableTraces();
+    //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)

@@ -491,7 +491,7 @@ UeManager::SetupDataRadioBearer (EpsBearer bearer, uint8_t bearerId, uint32_t gt
     {
       drbInfo->m_logicalChannelConfig.prioritizedBitRateKbps = 0;
     }
-  drbInfo->m_logicalChannelConfig.bucketSizeDurationMs = 1000;
+  drbInfo->m_logicalChannelConfig.bucketSizeDurationMs = 1000*SUBFRAME_DURATION;
 
   ScheduleRrcConnectionReconfiguration ();
 }
@@ -1706,7 +1706,7 @@ LteEnbRrc::GetTypeId (void)
                                     PER_BASED,     "PacketErrorRateBased"))
     .AddAttribute ("SystemInformationPeriodicity",
                    "The interval for sending system information (Time value)",
-                   TimeValue (MilliSeconds (80)),
+                   TimeValue (MilliSeconds (80*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteEnbRrc::m_systemInformationPeriodicity),
                    MakeTimeChecker ())
 
@@ -2251,7 +2251,7 @@ LteEnbRrc::ConfigureCell (std::map<uint8_t, Ptr<ComponentCarrierBaseStation>> cc
    * regularly transmitted every 80 ms by default (set the
    * SystemInformationPeriodicity attribute to configure this).
    */
-  Simulator::Schedule (MilliSeconds (16), &LteEnbRrc::SendSystemInformation, this);
+  Simulator::Schedule (MilliSeconds (16*SUBFRAME_DURATION), &LteEnbRrc::SendSystemInformation, this);
 
   m_configured = true;
 

@@ -57,14 +57,14 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbPhy);
  * Data portion is fixed to 11 symbols out of the available 14 symbols.
  * 1 nanosecond margin is added to avoid overlapping simulator events.
  */
-static const Time DL_DATA_DURATION = NanoSeconds (3614285 -1);
+static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION) - NanoSeconds (-1);
 
 /**
  * Delay from the start of a DL subframe to transmission of the data portion.
  * Equals to "TTI length * (3/14)".
  * Control portion is fixed to 3 symbols out of the available 14 symbols.
  */
-static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = NanoSeconds (985715);
+static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = MilliSeconds((SUBFRAME_DURATION*3)/14);
 
 ////////////////////////////////////////
 // member SAP forwarders
@@ -179,7 +179,7 @@ LteEnbPhy::GetTypeId (void)
     .AddConstructor<LteEnbPhy> ()
     .AddAttribute ("TxPower",
                    "Transmission power in dBm",
-                   DoubleValue (30.0),
+                   DoubleValue (53.0),//30.0 OG
                    MakeDoubleAccessor (&LteEnbPhy::SetTxPower, 
                                        &LteEnbPhy::GetTxPower),
                    MakeDoubleChecker<double> ())
@@ -618,6 +618,7 @@ void
 LteEnbPhy::StartSubFrame (void)
 {
   NS_LOG_FUNCTION (this);
+  std::cout << "enb subframe start ts=" << Simulator::Now() << std::endl;
 
   ++m_nrSubFrames;
 
@@ -1150,7 +1151,7 @@ LteEnbPhy::DoSetSrsConfigurationIndex (uint16_t  rnti, uint16_t srcCi)
       // to UEs, otherwise we might be wrong in determining the UE who
       // actually sent the SRS (if the UE was using a stale SRS config)
       // if we use a static SRS configuration index, we can have a 0ms guard time
-      m_srsStartTime = Simulator::Now () + MilliSeconds (m_macChTtiDelay) + MilliSeconds (0);
+      m_srsStartTime = Simulator::Now () + MilliSeconds (m_macChTtiDelay*SUBFRAME_DURATION) + MilliSeconds (0);
     }
 
   NS_LOG_DEBUG (this << " ENB SRS P " << m_srsPeriodicity << " RNTI " << rnti << " offset " << GetSrsSubframeOffset (srcCi) << " CI " << srcCi);
