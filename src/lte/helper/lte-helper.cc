@@ -194,6 +194,16 @@ TypeId LteHelper::GetTypeId (void)
                    UintegerValue (1),
                    MakeUintegerAccessor (&LteHelper::m_noOfCcs),
                    MakeUintegerChecker<uint16_t> (MIN_NO_CC, MAX_NO_CC))
+    .AddAttribute ("Numerology",
+                   "5GRANGE Numerology",
+                   UintegerValue (0),
+                   MakeUintegerAccessor (&LteHelper::m_numerology),
+                   MakeUintegerChecker<uint16_t> ())
+    .AddAttribute ("ChannelModel",
+                   "5GRANGE Channel Model",
+                   StringValue("CDL_A"),
+                   MakeStringAccessor (&LteHelper::m_channelModel),
+                   MakeStringChecker ());
   ;
   return tid;
 }
@@ -673,6 +683,9 @@ LteHelper::InstallSingleEnbDevice (Ptr<Node> n)
       DynamicCast<ComponentCarrierEnb> (it->second)->GetMac ()->SetLteCcmMacSapUser (ccmEnbManager->GetLteCcmMacSapUser ());
       ccmEnbManager->SetCcmMacSapProviders (it->first, DynamicCast<ComponentCarrierEnb> (it->second)->GetMac ()->GetLteCcmMacSapProvider ());
 
+      DynamicCast<ComponentCarrierEnb> (it->second)->GetPhy ()->SetNumerology(m_numerology);
+      DynamicCast<ComponentCarrierEnb> (it->second)->GetPhy ()->SetChannelModel(m_channelModel);
+
       // insert the pointer to the LteMacSapProvider interface of the MAC layer of the specific component carrier
       ccmTest = ccmEnbManager->SetMacSapProvider (it->first, DynamicCast<ComponentCarrierEnb> (it->second)->GetMac ()->GetLteMacSapProvider());
 
@@ -905,6 +918,9 @@ LteHelper::InstallSingleUeDevice (Ptr<Node> n)
       it->second->GetPhy ()->SetComponentCarrierId (it->first);
       it->second->GetPhy ()->SetLteUePhySapUser (it->second->GetMac ()->GetLteUePhySapUser ());
       it->second->GetMac ()->SetLteUePhySapProvider (it->second->GetPhy ()->GetLteUePhySapProvider ());
+
+      it->second->GetPhy ()->SetNumerology(m_numerology);
+      it->second->GetPhy ()->SetChannelModel(m_channelModel);
 
       bool ccmTest = ccmUe->SetComponentCarrierMacSapProviders (it->first, it->second->GetMac ()->GetLteMacSapProvider());
 

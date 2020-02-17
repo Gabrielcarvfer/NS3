@@ -21,6 +21,7 @@
 
 #include <ns3/object-factory.h>
 #include <ns3/log.h>
+#include <ns3/string.h>
 #include <cfloat>
 #include <cmath>
 #include <ns3/simulator.h>
@@ -241,6 +242,7 @@ LteEnbPhy::GetTypeId (void)
                    PointerValue (),
                    MakePointerAccessor (&LteEnbPhy::GetUlSpectrumPhy),
                    MakePointerChecker <LteSpectrumPhy> ())
+
   ;
   return tid;
 }
@@ -1198,6 +1200,28 @@ LteEnbPhy::ReceiveLteUlHarqFeedback (UlInfoListElement_s mes)
   NS_LOG_FUNCTION (this);
   // forward to scheduler
   m_enbPhySapUser->UlInfoListElementHarqFeeback (mes);
+}
+
+uint16_t LteEnbPhy::GetNumerology () const
+{
+    return m_numerology;
+}
+
+void LteEnbPhy::SetChannelModel (std::string chan)
+{
+    m_downlinkSpectrumPhy->SetChannelModel (chan);
+    m_uplinkSpectrumPhy->SetChannelModel (chan);
+    m_channelModel = chan;
+}
+std::string LteEnbPhy::GetChannelModel () const
+{
+    return m_channelModel;
+}
+void LteEnbPhy::SetNumerology (uint16_t num)
+{
+    m_downlinkSpectrumPhy->SetNumerology (num);
+    m_uplinkSpectrumPhy->SetNumerology (num);
+    m_numerology = num;
 }
 
 };

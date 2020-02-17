@@ -264,8 +264,8 @@ int main() {
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
 
-    lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
-    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
+    lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
 
     //60dBm = 1    kW
@@ -422,7 +422,7 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    lteHelper->EnableTraces();
+    //lteHelper->EnableTraces();
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 

@@ -44,6 +44,8 @@
 #include <bitset>
 #include <iomanip>
 #include <ns3/global-value.h>
+#include <ns3/string.h>
+#include <ns3/lte-module.h>
 
 
 namespace ns3 {
@@ -339,6 +341,16 @@ LteSpectrumPhy::GetTypeId (void)
                      "DL reception PHY layer statistics.",
                      MakeTraceSourceAccessor (&LteSpectrumPhy::m_ulPhyReception),
                      "ns3::PhyReceptionStatParameters::TracedCallback")
+    .AddAttribute ("Numerology",
+                   "5GRANGE Numerology",
+                   UintegerValue (0),
+                   MakeUintegerAccessor (&LteSpectrumPhy::m_numerology),
+                   MakeUintegerChecker<uint16_t> ())
+    .AddAttribute ("ChannelModel",
+                   "5GRANGE Channel Model",
+                   StringValue("CDL_A"),
+                   MakeStringAccessor (&LteSpectrumPhy::m_channelModel),
+                   MakeStringChecker ())
   ;
   return tid;
 }
@@ -1675,7 +1687,8 @@ LteSpectrumPhy::EndRxData ()
                   harqInfoList = m_harqPhyModule->GetHarqProcessInfoUl ((*itTb).first.m_rnti, ulHarqId);
                 }
             }
-          TbStats_t tbStats = LteMiErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, (*itTb).second.size, (*itTb).second.mcs, harqInfoList);
+          //TbStats_t tbStats = LteMiErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, (*itTb).second.size, (*itTb).second.mcs, harqInfoList);
+          TbStats_t tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel);
           (*itTb).second.mi = tbStats.mi;
           (*itTb).second.corrupt = m_random->GetValue () > tbStats.tbler ? false : true;
           NS_LOG_DEBUG (this << "RNTI " << (*itTb).first.m_rnti << " size " << (*itTb).second.size << " mcs " << (uint32_t)(*itTb).second.mcs << " bitmap " << (*itTb).second.rbBitmap.size () << " layer " << (uint16_t)(*itTb).first.m_layer << " TBLER " << tbStats.tbler << " corrupted " << (*itTb).second.corrupt);
@@ -1984,6 +1997,21 @@ LteSpectrumPhy::AssignStreams (int64_t stream)
   return 1;
 }
 
-
+uint16_t LteSpectrumPhy::GetNumerology () const
+{
+    return m_numerology;
+}
+void LteSpectrumPhy::SetChannelModel (std::string chan)
+{
+    m_channelModel = chan;
+}
+std::string LteSpectrumPhy::GetChannelModel () const
+{
+    return m_channelModel;
+}
+void LteSpectrumPhy::SetNumerology (uint16_t num)
+{
+    m_numerology = num;
+}
 
 } // namespace ns3

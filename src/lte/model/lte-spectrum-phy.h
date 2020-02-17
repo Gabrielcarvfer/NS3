@@ -451,6 +451,26 @@ public:
   */
   int64_t AssignStreams (int64_t stream);
 
+    /**
+* \param num the 5GRANGE numerology
+*/
+    void SetNumerology (uint16_t num);
+
+    /**
+     * \return the 5GRANGE numerology
+     */
+    uint16_t  GetNumerology () const;
+
+
+    /**
+   * \param chan the 5GRANGE channel model
+   */
+    void SetChannelModel (std::string chan);
+
+    /**
+     * \return the 5GRANGE channel model
+     */
+    std::string  GetChannelModel () const;
 private:
   /** 
   * \brief Change state function
@@ -553,6 +573,19 @@ private:
   EventId m_endRxDlCtrlEvent; ///< end receive DL control event
   EventId m_endRxUlSrsEvent; ///< end receive UL SRS event
 
+  /**
+   * The `Numerology` attribute.
+   *
+   * 5GRANGE numerology
+   */
+  uint16_t m_numerology;
+
+  /**
+   * The `ChannelModel` attribute.
+   *
+   * 5GRANGE Channel Model
+   */
+  std::string m_channelModel;
 
   EventId m_sensingEvent; ///< holds the scheduled sensing event
   uint64_t sensingEvents; ///< count sensing events

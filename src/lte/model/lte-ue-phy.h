@@ -337,6 +337,28 @@ public:
     (uint16_t rnti, uint16_t cellId, double rsrp, double rsrq,
      bool isServingCell, uint8_t componentCarrierId);
 
+
+    /**
+  * \param num the 5GRANGE numerology
+  */
+    void SetNumerology (uint16_t num);
+
+    /**
+     * \return the 5GRANGE numerology
+     */
+    uint16_t GetNumerology () const;
+
+
+    /**
+     *\param chan the 5GRANGE channel model
+     */
+    void SetChannelModel (std::string chan);
+
+    /**
+     * \return the 5GRANGE channel model
+     */
+    std::string  GetChannelModel () const;
+
 private:
 
   /**
@@ -810,6 +832,20 @@ private:
   uint64_t m_imsi; ///< the IMSI of the UE
   bool m_enableRlfDetection; ///< Flag to enable/disable RLF detection
 
+
+  /**
+   * The `Numerology` attribute.
+   *
+   * 5GRANGE numerology
+   */
+  uint16_t m_numerology;
+
+  /**
+   * The `ChannelModel` attribute.
+   *
+   * 5GRANGE Channel Model
+   */
+   std::string m_channelModel;
 }; // end of `class LteUePhy`
 
 

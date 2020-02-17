@@ -227,6 +227,7 @@ public:
   */
   uint8_t GetComponentCarrierId ();
 
+
 protected:
   /// Pointer to the NetDevice where this PHY layer is attached.
   Ptr<LteNetDevice> m_netDevice;
@@ -309,6 +310,8 @@ protected:
 
   /// component carrier Id used to address sap
   uint8_t m_componentCarrierId;
+
+
 
 }; // end of `class LtePhy`
 

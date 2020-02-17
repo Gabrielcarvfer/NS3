@@ -847,6 +847,20 @@ private:
    */
   uint16_t m_noOfCcs;
 
+   /**
+  * The `Numerology` attribute.
+  *
+  * 5GRANGE numerology
+  */
+  uint16_t m_numerology;
+
+   /**
+  * The `ChannelModel` attribute.
+  *
+  * 5GRANGE Channel Model
+  */
+  std::string m_channelModel;
+
 };   // end of `class LteHelper`
 
 

@@ -64,7 +64,11 @@ public:
       /**
        * An AMC model based on 10% of BER according to LteMiErrorModel.
        */
-      MiErrorModel
+      MiErrorModel,
+      /**
+       * RANGE model
+       */
+      MiesmErrorModel
     };
   
   /**
@@ -116,9 +120,31 @@ public:
    * \return the CQI value
    */
   int GetCqiFromSpectralEfficiency (double s);
-  
+
+    /**
+* \param num the 5GRANGE numerology
+*/
+    void SetNumerology (uint16_t num);
+
+  /**
+   * \return the 5GRANGE numerology
+   */
+  uint16_t  GetNumerology () const;
+
+  /**
+   * \param chan the 5GRANGE channel model
+   */
+  void SetChannelModel (std::string chan);
+
+  /**
+   * \return the 5GRANGE channel model
+   */
+  std::string  GetChannelModel () const;
+  static void LoadPrbData();
+
 private:
-  
+    static bool prbDataLoaded;
+
   /**
    * The `Ber` attribute.
    *
@@ -132,6 +158,21 @@ private:
    * AMC model used to assign CQI.
    */
   AmcModel m_amcModel;
+
+
+  /**
+   * The `Numerology` attribute.
+   *
+   * 5GRANGE numerology
+   */
+  uint16_t m_numerology;
+
+   /**
+  * The `ChannelModel` attribute.
+  *
+  * 5GRANGE Channel Model
+  */
+   std::string m_channelModel;
 
 }; // end of `class LteAmc`
 

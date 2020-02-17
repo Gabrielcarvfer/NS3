@@ -26,6 +26,7 @@
 #include <ns3/object-factory.h>
 #include <ns3/log.h>
 #include <ns3/node.h>
+#include <ns3/string.h>
 #include <cfloat>
 #include <cmath>
 #include <ns3/simulator.h>
@@ -1780,5 +1781,27 @@ LteUePhy::SwitchToState (State newState)
   m_stateTransitionTrace (m_cellId, m_rnti, oldState, newState);
 }
 
+
+uint16_t LteUePhy::GetNumerology () const
+{
+    return m_numerology;
+}
+
+void LteUePhy::SetChannelModel (std::string chan)
+{
+    m_downlinkSpectrumPhy->SetChannelModel (chan);
+    m_uplinkSpectrumPhy->SetChannelModel (chan);
+    m_channelModel = chan;
+}
+std::string LteUePhy::GetChannelModel () const
+{
+    return m_channelModel;
+}
+void LteUePhy::SetNumerology (uint16_t num)
+{
+    m_downlinkSpectrumPhy->SetNumerology (num);
+    m_uplinkSpectrumPhy->SetNumerology (num);
+    m_numerology = num;
+}
 
 } // namespace ns3

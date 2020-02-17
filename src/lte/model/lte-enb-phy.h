@@ -319,6 +319,27 @@ public:
   typedef void (* ReportInterferenceTracedCallback)
     (uint16_t cellId, Ptr<SpectrumValue> spectrumValue);
 
+    /**
+  * \param num the 5GRANGE numerology
+  */
+    void SetNumerology (uint16_t num);
+
+    /**
+     * \return the 5GRANGE numerology
+     */
+    uint16_t GetNumerology () const;
+
+
+    /**
+     *\param chan the 5GRANGE channel model
+     */
+    void SetChannelModel (std::string chan);
+
+    /**
+     * \return the 5GRANGE channel model
+     */
+    std::string  GetChannelModel () const;
+
 private:
 
   // LteEnbCphySapProvider forwarded methods
@@ -517,6 +538,19 @@ private:
    */
   TracedCallback<PhyTransmissionStatParameters> m_dlPhyTransmission;
 
+  /**
+   * The `Numerology` attribute.
+   *
+   * 5GRANGE numerology
+   */
+  uint16_t m_numerology;
+
+  /**
+   * The `ChannelModel` attribute.
+   *
+   * 5GRANGE Channel Model
+   */
+  std::string m_channelModel;
 }; // end of `class LteEnbPhy`
 
 

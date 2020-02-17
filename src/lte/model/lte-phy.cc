@@ -24,6 +24,7 @@
 #include <ns3/log.h>
 #include <cmath>
 #include <ns3/simulator.h>
+#include <ns3/string.h>
 #include "ns3/spectrum-error-model.h"
 #include "lte-phy.h"
 #include "lte-net-device.h"
@@ -265,5 +266,7 @@ LtePhy::GetComponentCarrierId ()
 {
   return m_componentCarrierId;
 }
+
+
 
 } // namespace ns3
