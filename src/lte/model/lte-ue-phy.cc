@@ -208,7 +208,7 @@ LteUePhy::GetTypeId (void)
     .AddConstructor<LteUePhy> ()
     .AddAttribute ("TxPower",
                    "Transmission power in dBm",
-                   DoubleValue (23.0),//10.0 OG
+                   DoubleValue (10.0),
                    MakeDoubleAccessor (&LteUePhy::SetTxPower, 
                                        &LteUePhy::GetTxPower),
                    MakeDoubleChecker<double> ())
@@ -1240,7 +1240,7 @@ LteUePhy::SubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   NS_LOG_FUNCTION (this << frameNo << subframeNo);
 
   NS_ASSERT_MSG (frameNo > 0, "the SRS index check code assumes that frameNo starts at 1");
-  std::cout << "UE subframe ts=" << Simulator::Now() << std::endl;
+  //std::cout << "UE subframe ts=" << Simulator::Now() << std::endl;
   // refresh internal variables
   m_rsReceivedPowerUpdated = false;
   m_rsInterferencePowerUpdated = false;

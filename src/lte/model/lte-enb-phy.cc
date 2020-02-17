@@ -57,14 +57,14 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbPhy);
  * Data portion is fixed to 11 symbols out of the available 14 symbols.
  * 1 nanosecond margin is added to avoid overlapping simulator events.
  */
-static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION) - NanoSeconds (-1);
+static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION*11)/14 - NanoSeconds (-1);
 
 /**
  * Delay from the start of a DL subframe to transmission of the data portion.
  * Equals to "TTI length * (3/14)".
  * Control portion is fixed to 3 symbols out of the available 14 symbols.
  */
-static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = MilliSeconds((SUBFRAME_DURATION*3)/14);
+static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = MilliSeconds(SUBFRAME_DURATION*3)/14;
 
 ////////////////////////////////////////
 // member SAP forwarders
@@ -179,7 +179,7 @@ LteEnbPhy::GetTypeId (void)
     .AddConstructor<LteEnbPhy> ()
     .AddAttribute ("TxPower",
                    "Transmission power in dBm",
-                   DoubleValue (53.0),//30.0 OG
+                   DoubleValue (30.0),
                    MakeDoubleAccessor (&LteEnbPhy::SetTxPower, 
                                        &LteEnbPhy::GetTxPower),
                    MakeDoubleChecker<double> ())
@@ -618,7 +618,7 @@ void
 LteEnbPhy::StartSubFrame (void)
 {
   NS_LOG_FUNCTION (this);
-  std::cout << "enb subframe start ts=" << Simulator::Now() << std::endl;
+  //std::cout << "enb subframe start ts=" << Simulator::Now() << std::endl;
 
   ++m_nrSubFrames;
 

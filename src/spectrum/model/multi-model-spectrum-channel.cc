@@ -313,7 +313,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       pathLossDb -= propagationGainDb;
                     }                    
                   NS_LOG_LOGIC ("total pathLoss = " << pathLossDb << " dB");
-                  std::cout << "spectrumChannel ts=" << Simulator::Now() << ", txpower=" <<  log10(*(rxParams->psd->ConstValuesBegin())*180000)*10+30 << ", pathloss=" << pathLossDb << std::endl;
+                  //std::cout << "spectrumChannel ts=" << Simulator::Now() << ", txpower=" <<  log10(*(rxParams->psd->ConstValuesBegin())*180000)*10+30 << ", pathloss=" << pathLossDb << std::endl;
                   // Gain trace
                   m_gainTrace (txMobility, receiverMobility, txAntennaGain, rxAntennaGain, propagationGainDb, pathLossDb);
                   // Pathloss trace

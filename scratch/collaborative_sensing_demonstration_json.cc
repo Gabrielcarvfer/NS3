@@ -6,6 +6,7 @@
  *
  * In this scenario, we have two UEs and an eNB
  *
+ * USE NS_LOG=LteEnbPhy:LteEnbMac:CqaFfMacScheduler:LteUePhy:LteUeMac to debug timing issues
  */
 
 #include <ns3/core-module.h>
@@ -263,8 +264,8 @@ int main() {
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
 
-    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
-    lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
+    lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
 
     //60dBm = 1    kW
@@ -280,6 +281,8 @@ int main() {
     //0.5 Configure Tx power for UEs and eNB
     Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(enbTxPower));
     Config::SetDefault("ns3::LteUePhy::TxPower",  DoubleValue(ueTxPower));
+    Config::SetDefault("ns3::LteUePhy::EnableUplinkPowerControl",  BooleanValue(false));
+
 
     Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(29.38*8/8));
 
@@ -419,7 +422,7 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    //lteHelper->EnableTraces();
+    lteHelper->EnableTraces();
     //p2ph.EnablePcapAll("natalandia_p2p", true);
 
 
@@ -514,14 +517,14 @@ int main() {
 
     //22 Export the netanim animation for the simulation
 
-    BaseStationNetDevice b;
-    SubscriberStationNetDevice s;
-    CsmaNetDevice c;
-    UanNetDevice u;
+    //BaseStationNetDevice b;
+    //SubscriberStationNetDevice s;
+    //CsmaNetDevice c;
+    //UanNetDevice u;
 
-    AnimationInterface anim("anim.xml");
-    anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
-    anim.EnablePacketMetadata(true);
+    //AnimationInterface anim("anim.xml");
+    //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+    //anim.EnablePacketMetadata(true);
 
 
     //23 Run simulation
