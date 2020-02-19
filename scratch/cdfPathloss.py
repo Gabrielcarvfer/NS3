@@ -33,3 +33,5 @@ ax.set_xlabel('Combined loss (dB)')
 ax.set_ylabel('CDF')
 
 plt.show()
+
+fig.savefig("../build/bin/cdfPathloss.png")

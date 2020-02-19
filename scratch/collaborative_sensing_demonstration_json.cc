@@ -403,20 +403,34 @@ int main() {
     ApplicationContainer serverApps;
     ApplicationContainer serverApp;
 
+#define UE_SRV
+#ifndef UE_SRV
     serverApp = echoServer.Install(remoteHost);
+#else
+    serverApp = echoServer.Install(ueNodes.Get(0));
+#endif
     serverApp.Start(Seconds(0.1));
     serverApps.Add(serverApp);
 
 
     //ECHO APP
+#ifndef UE_SRV
     Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
+#else
+    Ipv4Address serverAddress = ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+    UdpEchoClientHelper echoClient(serverAddress, serverPort);
+#endif
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
     echoClient.SetAttribute("Interval", TimeValue(Seconds(ueTxPeriodSec)));
     echoClient.SetAttribute("PacketSize", UintegerValue(ueTxSizeBytes));
 
     ApplicationContainer clientApps;
+#ifndef UE_SRV
     clientApps.Add(echoClient.Install(ueNodes));
+#else
+    clientApps.Add(echoClient.Install(remoteHost));
+#endif
     clientApps.Start(Seconds(0.2));
 
 

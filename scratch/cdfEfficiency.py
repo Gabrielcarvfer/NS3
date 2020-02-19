@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 
 np.random.seed(19680801)
 
+#import json
+#with open("../src/lte/model/BLER/bler_5g.json", 'r') as f:
+#    contents = json.load(f)
+#with open("../src/lte/model/BLER/bler_5g.json", 'w') as f:
+#    json.dump(contents,f,indent=3)
+
 pathloss_trace = []
 with open("../build/bin/efficiency.txt","r") as f:
     pathloss_trace = f.readlines()
@@ -32,3 +38,5 @@ ax.set_xlabel('Spectral efficiency (Bits/s/Hz)')
 ax.set_ylabel('CDF')
 
 plt.show()
+
+fig.savefig("../build/bin/cdfEfficiency.png")

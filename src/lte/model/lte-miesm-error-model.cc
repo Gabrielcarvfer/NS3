@@ -45,7 +45,7 @@ namespace ns3 {
     static std::vector<uint8_t> numerologyTable5g;
     static std::vector<double> snrValueTable5g;
     static std::vector<uint16_t> speedTable5g;
-    static std::unordered_map<std::string, std::vector<std::vector<double>>> blerTable5g;
+    static std::map<std::string, std::vector<std::vector<double>>> blerTable5g;
     static std::unordered_map<double, uint16_t> snrIndex5g;
     static double beta5g = 1;
     bool LteMiesmErrorModel::errorDataLoaded = false;
@@ -57,7 +57,9 @@ namespace ns3 {
         {
             auto temp = o["Channel Models"].get<picojson::array>();
             for (auto it = temp.begin(); it != temp.end(); it++)
-                channelModelTable5g.push_back(it->get<std::string>());
+            {
+                channelModelTable5g.push_back(it->to_str());
+            }
         }
 
         {
@@ -103,7 +105,11 @@ namespace ns3 {
                             }
                             tempMcs.push_back (bler_snr);
                         }
-                        blerTable5g[channel->first + num->first + cb->first] = tempMcs;
+                        std::stringstream ss;
+                        ss << channel->first << "_" << num->first << "_" << cb->first;
+                        std::string scen = ss.str();
+                        //std::cout << scen << std::endl;
+                        blerTable5g[scen] = tempMcs;
                     }
                 }
             }
@@ -178,7 +184,13 @@ namespace ns3 {
 
 
         NS_LOG_DEBUG ("BLER of channel " << chanIndex << " numerology " << numIndex << " code block " << cbSizeIndex << " mcs " << (size_t)mcs << " snr " << snrIndex);
-        return blerTable5g[chan + std::to_string (num) + std::to_string (cbSize)][mcs][snrIndex];
+        std::stringstream ss;
+        ss << chan << "_" << (int) num << "_" << (int) cbSize;
+        std::string scen = ss.str();
+        //std::cout << "pinging " << scen << std::endl;
+        if (mcs>26)//todo: checar com luís
+            mcs=26;
+        return blerTable5g[scen][mcs][snrIndex];
         //return blerTable5g[chanIndex][numIndex][cbSizeIndex][mcs][snrIndex];
     }
 
@@ -190,7 +202,7 @@ namespace ns3 {
         double snrEff = Mib(sinr, map, mcs);
 
         double Reff = 0.0;
-        NS_ASSERT (mcs < 29);
+        NS_ASSERT (mcs < 16);
 
         // estimate CB size (according to sec 5.1.2 of TS 36.212)
         uint16_t Z = 8192; // max size of a codeblock (including CRC), utilizar apenas os valores de 8192

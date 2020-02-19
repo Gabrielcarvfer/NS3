@@ -96,20 +96,20 @@ static const double SpectralEfficiencyForMcs[28] = {
  * 36.213 v8.8.0 Table 7.1.7.1-1: _Modulation and TBS index table for PDSCH_.
  * The index of the vector (range 0-28) identifies the MCS index.
  */
-static const int McsToItbsDl[29] = {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23, 24, 25, 26, 27
-};
+static const int McsToItbsDl[48] = {
+        0, 2, 1, 3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13, 15, 17, 16, 18, 20, 19, 21, 23, 22, 24, 26, 27, 25, 29, 28, 30, 32, 31, 33, 35, 34, 36, 38, 39, 37, 41, 40, 42, 44, 43, 45, 47, 46
+    };
 
 /**
  * Table of MCS index (IMCS) and its TBS index (ITBS). Taken from 3GPP TS
  * 36.213 v8.8.0 Table 8.6.1-1: _Modulation, TBS index and redundancy version table for PUSCH_.
  * The index of the vector (range 0-28) identifies the MCS index.
  */
-static const int McsToItbsUl[29] = {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-            19, 20, 21, 22, 23, 24, 25, 26, 27
-};
+static const int McsToItbsUl[48] = {
+        0, 2, 1, 3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13, 15, 17, 16, 18, 20, 19, 21, 23, 22, 24, 26, 27, 25, 29, 28, 30, 32, 31, 33, 35, 34, 36, 38, 39, 37, 41, 40, 42, 44, 43, 45, 47, 46
+    };
+
+static const uint8_t numerology_cluster[6] = {0,1,1,1,1,2};
 
 /**
  * Table of number of physical resource blocks (NPRB), TBS index (ITBS), and
@@ -119,23 +119,44 @@ static const int McsToItbsUl[29] = {
  *       consistent with the other values, therefore we use 88 obtained by
  *       following the sequence of NPRB = 1 values.
  */
-static std::vector<std::vector<uint32_t>> prb5gSize;
+//                         ITBS       MCS   NUMEROLOGY  #RBS      TBS
+static std::map<std::tuple<uint8_t, uint8_t, uint8_t, uint8_t>, uint32_t> prb5gSize;
 bool LteAmc::prbDataLoaded = false;
 
 
 void LteAmc::LoadPrbData()
 {
-    picojson::object o = load_json("../../src/lte/model/BLER/prb_size.json");
+    picojson::object o = load_json("../../src/lte/model/BLER/TBS_MCS.json");
 
-    for (auto numerology = o.begin(); numerology != o.end(); numerology++)
+    auto itbs_o = o["TBS"].get<picojson::object>();
+
+    for (auto itbs = itbs_o.begin(); itbs != itbs_o.end(); itbs++)
     {
-        prb5gSize.push_back(std::vector<uint32_t>());
+        auto itbs_i = std::stoi(itbs->first);
+        //std::cout << itbs_i << std::endl;
 
-        auto prbs = numerology->second.get<picojson::array> ();
-        uint32_t num = std::stoi(numerology->first);
-        for (auto mcs = prbs.begin (); mcs != prbs.end (); mcs++)
+        auto mcs_o = itbs->second.get<picojson::object>()["MCS"].get<picojson::object>();
+        for (auto mcs = mcs_o.begin(); mcs != mcs_o.end(); mcs++)
         {
-            prb5gSize[num].push_back ((uint32_t)mcs->get<double> ());
+            auto mcs_i = std::stoi(mcs->first);
+            //std::cout << mcs_i << std::endl;
+
+            auto numerology_o = mcs->second.get<picojson::object>()["numerology"].get<picojson::object>();
+            for (auto numerology = numerology_o.begin (); numerology != numerology_o.end (); numerology++)
+            {
+                auto numerology_i = std::stoi(numerology->first);
+                //std::cout << numerology_i << std::endl;
+
+                auto numrbs_o = numerology->second.get<picojson::object>()["#RBs"].get<picojson::object>();
+                for (auto numrbs = numrbs_o.begin (); numrbs != numrbs_o.end (); numrbs++)
+                {
+                    uint32_t num = std::stoi(numrbs->first);
+                    //std::cout << num << std::endl;
+
+                    double tbs = std::stod(numrbs->second.to_str());
+                    prb5gSize.insert({{itbs_i, mcs_i, numerology_i, num}, tbs});
+                }
+            }
         }
     }
     prbDataLoaded = true;
@@ -217,14 +238,15 @@ LteAmc::GetDlTbSizeFromMcs (int mcs, int nprb)
 {
   NS_LOG_FUNCTION (mcs);
 
-  NS_ASSERT_MSG (mcs < 29, "MCS=" << mcs);
+  NS_ASSERT_MSG (mcs < 16, "MCS=" << mcs);
   NS_ASSERT_MSG (nprb < 133, "NPRB=" << nprb);
 
   if (!prbDataLoaded)
       LoadPrbData ();
 
-  /*See file BLER/prb_size.py for details*/
-  return prb5gSize[m_numerology][mcs]*nprb;
+  uint8_t itbs = McsToItbsUl[mcs*3+numerology_cluster[m_numerology]];
+  std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> key{itbs, mcs, m_numerology, nprb};
+  return prb5gSize[key];
 }
 
 int
@@ -232,14 +254,15 @@ LteAmc::GetUlTbSizeFromMcs (int mcs, int nprb)
 {
   NS_LOG_FUNCTION (mcs);
 
-  NS_ASSERT_MSG (mcs < 29, "MCS=" << mcs);
+  NS_ASSERT_MSG (mcs < 16, "MCS=" << mcs);
   NS_ASSERT_MSG (nprb < 133, "NPRB=" << nprb);
 
   if (!prbDataLoaded)
       LoadPrbData ();
 
-  /*See file BLER/prb_size.py for details*/
-    return prb5gSize[m_numerology][mcs]*nprb;
+  uint8_t itbs = McsToItbsUl[mcs*3+numerology_cluster[m_numerology]];
+  std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> key{itbs, mcs, m_numerology, nprb};
+  return prb5gSize[key];
 }
 
 
