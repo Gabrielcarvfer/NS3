@@ -120,8 +120,8 @@ int main() {
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
 
     Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(20)); //160 for >80 UES
-    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(true));
-    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(true));
+    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
+    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
 
 
     static GlobalValue g_attackers_per_channel =
@@ -403,17 +403,16 @@ int main() {
     ApplicationContainer serverApps;
     ApplicationContainer serverApp;
 
-#define UE_SRV
+//#define UE_SRV
 #ifndef UE_SRV
     serverApp = echoServer.Install(remoteHost);
 #else
     serverApp = echoServer.Install(ueNodes.Get(0));
 #endif
-    serverApp.Start(Seconds(0.1));
     serverApps.Add(serverApp);
+    serverApp.Start(Seconds(0.1));
 
-
-    //ECHO APP
+//ECHO APP
 #ifndef UE_SRV
     Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
@@ -437,7 +436,7 @@ int main() {
 
     //16 Colect LTE and P2P traces
     //lteHelper->EnableTraces();
-    //p2ph.EnablePcapAll("natalandia_p2p", true);
+    p2ph.EnablePcapAll("natalandia_p2p", false);
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)

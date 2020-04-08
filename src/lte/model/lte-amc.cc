@@ -128,33 +128,37 @@ void LteAmc::LoadPrbData()
 {
     picojson::object o = load_json("../../src/lte/model/BLER/TBS_MCS.json");
 
-    auto numerology_o = o["numerology"].get<picojson::object>();
-    for (auto numerology = numerology_o.begin (); numerology != numerology_o.end (); numerology++)
-    {
-        auto numerology_i = std::stoi(numerology->first);
-        //std::cout << numerology_i << std::endl;
+    auto itbs_o = o["TBS"].get<picojson::object>();
 
-        auto mcs_o = numerology->second.get<picojson::object>()["MCS"].get<picojson::object>();
+    for (auto itbs = itbs_o.begin(); itbs != itbs_o.end(); itbs++)
+    {
+        auto itbs_i = std::stoi(itbs->first);
+        //std::cout << itbs_i << std::endl;
+
+        auto mcs_o = itbs->second.get<picojson::object>()["MCS"].get<picojson::object>();
         for (auto mcs = mcs_o.begin(); mcs != mcs_o.end(); mcs++)
         {
             auto mcs_i = std::stoi(mcs->first);
             //std::cout << mcs_i << std::endl;
 
-            auto itbs_i = (int) mcs->second.get<picojson::object>()["TBS"].get<double>();
-            //std::cout << itbs_i << std::endl;
-
-            auto numrbs_o = mcs->second.get<picojson::object>()["#RBs"].get<picojson::object>();
-            for (auto numrbs = numrbs_o.begin (); numrbs != numrbs_o.end (); numrbs++)
+            auto numerology_o = mcs->second.get<picojson::object>()["numerology"].get<picojson::object>();
+            for (auto numerology = numerology_o.begin (); numerology != numerology_o.end (); numerology++)
             {
-                uint32_t num = std::stoi(numrbs->first);
-                //std::cout << num << std::endl;
+                auto numerology_i = std::stoi(numerology->first);
+                //std::cout << numerology_i << std::endl;
 
-                double tbs = std::stod(numrbs->second.to_str());
-                prb5gSize.insert({{itbs_i, mcs_i, numerology_i, num}, tbs});
+                auto numrbs_o = numerology->second.get<picojson::object>()["#RBs"].get<picojson::object>();
+                for (auto numrbs = numrbs_o.begin (); numrbs != numrbs_o.end (); numrbs++)
+                {
+                    uint32_t num = std::stoi(numrbs->first);
+                    //std::cout << num << std::endl;
+
+                    double tbs = std::stod(numrbs->second.to_str());
+                    prb5gSize.insert({{itbs_i, mcs_i, numerology_i, num}, tbs});
+                }
             }
         }
     }
-
     prbDataLoaded = true;
 }
 

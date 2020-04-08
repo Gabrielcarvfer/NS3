@@ -47,7 +47,7 @@ namespace ns3 {
     static std::vector<uint16_t> speedTable5g;
     static std::map<std::string, std::vector<std::vector<double>>> blerTable5g;
     static std::unordered_map<double, uint16_t> snrIndex5g;
-    static std::map<std::tuple<uint8_t,uint8_t>, double> beta5g;
+    static double beta5g = 1;
     bool LteMiesmErrorModel::errorDataLoaded = false;
     void LteMiesmErrorModel::LoadErrorData()
     {
@@ -63,7 +63,7 @@ namespace ns3 {
         }
 
         {
-            auto temp = o["Code Block Sizes"].get<picojson::array>();
+            auto temp = o["Block Sizes"].get<picojson::array>();
             for (auto it = temp.begin(); it != temp.end(); it++)
                 cbSizeTable5g.push_back((uint16_t)it->get<double>());
         }
@@ -115,48 +115,24 @@ namespace ns3 {
             }
         }
 
-        o = load_json("../../src/lte/model/BLER/TBS_MCS.json");
-        {
-            auto numerology_o = o["numerology"].get<picojson::object>();
-            for (auto numerology = numerology_o.begin (); numerology != numerology_o.end (); numerology++)
-            {
-                auto numerology_i = std::stoi(numerology->first);
-                //std::cout << "num" << numerology_i << std::endl;
-
-                auto mcs_o = numerology->second.get<picojson::object>()["MCS"].get<picojson::object>();
-                for (auto mcs = mcs_o.begin(); mcs != mcs_o.end(); mcs++)
-                {
-                    auto mcs_i = std::stoi(mcs->first);
-                    //std::cout << "mcs" << mcs_i << std::endl;
-
-                    auto beta = mcs->second.get<picojson::object>()["beta"].get<double>();
-                    //std::cout << "beta" << beta << std::endl;
-
-                    beta5g.insert({{numerology_i, mcs_i}, beta});
-                }
-            }
-        }
         errorDataLoaded = true;
     }
 
     double
-    LteMiesmErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs, uint8_t num)
+    LteMiesmErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs)
     {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
 
         if (!errorDataLoaded)
             LoadErrorData();
 
-        if (mcs >= 16)//todo: remove after receiving the updated TBS/MCS/error tables
-            mcs = 15;
         uint32_t n = map.size();
         double ex = 0;
-        double beta = beta5g.at({num, mcs});
         for (uint32_t i = 0; i < n; ++i)
         {
-            ex+=exp( (-1) * (sinr[map.at(i)]/beta) );
+            ex+=exp( (-1) * (sinr[map.at(i)]/beta5g) );
         }
-        double snr_eff = (-1) * beta * log(ex/n);
+        double snr_eff = (-1) * beta5g * log(ex/n);
         return snr_eff;
     }
 
@@ -223,7 +199,7 @@ namespace ns3 {
     {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
-        double snrEff = Mib(sinr, map, mcs, num);
+        double snrEff = Mib(sinr, map, mcs);
 
         double Reff = 0.0;
         NS_ASSERT (mcs < 16);

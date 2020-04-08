@@ -53,7 +53,7 @@ namespace ns3 {
          * \param mcs the MCS of the TB
          * \return the mmib
          */
-        static double Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs, uint8_t num);
+        static double Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs);
         /**
          * \brief map the mmib (mean mutual information per bit) for different MCS
          * \param mib mean mutual information per bit of a code-block
