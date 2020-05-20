@@ -435,7 +435,7 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    //lteHelper->EnableTraces();
+    lteHelper->EnableTraces();
     p2ph.EnablePcapAll("natalandia_p2p", false);
 
 
