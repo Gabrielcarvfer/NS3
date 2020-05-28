@@ -128,9 +128,9 @@ namespace ns3 {
 
         uint32_t n = map.size();
         double ex = 0;
-        for (uint32_t i = 0; i < n; ++i)
+        for (auto mapVal : map)
         {
-            ex+=exp( (-1) * (sinr[map.at(i)]/beta5g) );
+            ex+=exp( (-1) * (sinr[mapVal]/beta5g) );
         }
         double snr_eff = (-1) * beta5g * log(ex/n);
         return snr_eff;
@@ -188,10 +188,9 @@ namespace ns3 {
         ss << chan << "_" << (int) num << "_" << (int) cbSize;
         std::string scen = ss.str();
         //std::cout << "pinging " << scen << std::endl;
-        if (mcs>26)//todo: checar com luís
+        if (mcs>26)
             mcs=26;
         return blerTable5g[scen][mcs][snrIndex];
-        //return blerTable5g[chanIndex][numIndex][cbSizeIndex][mcs][snrIndex];
     }
 
     TbStats_t
@@ -200,9 +199,11 @@ namespace ns3 {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
         double snrEff = Mib(sinr, map, mcs);
+        if (map.size() == 0)
+            return TbStats_t{};
 
         double Reff = 0.0;
-        NS_ASSERT (mcs < 16);
+        NS_ASSERT (mcs < 27);
 
         // estimate CB size (according to sec 5.1.2 of TS 36.212)
         uint16_t Z = 8192; // max size of a codeblock (including CRC), utilizar apenas os valores de 8192

@@ -40,6 +40,7 @@
 
 #include <fstream>
 #include <limits>
+#include <model/lte-common.h>
 
 namespace ns3 {
 
@@ -211,7 +212,7 @@ RadioEnvironmentMapHelper::Install ()
       startDelay = 0.5001;
     }
 
-  Simulator::Schedule (Seconds (startDelay),
+  Simulator::Schedule (Seconds (startDelay*SUBFRAME_DURATION),
                        &RadioEnvironmentMapHelper::DelayedInstall,
                        this);
 }
@@ -264,7 +265,7 @@ RadioEnvironmentMapHelper::DelayedInstall ()
           if ((numPointsCurrentIteration == m_maxPointsPerIteration)
               || ((x > m_xMax - 0.5*m_xStep) && (y > m_yMax - 0.5*m_yStep)) )
             {
-              Simulator::Schedule (Seconds (remIterationStartTime), 
+              Simulator::Schedule (Seconds (remIterationStartTime*SUBFRAME_DURATION),
                                    &RadioEnvironmentMapHelper::RunOneIteration,
                                    this, xMinNext, x, yMinNext, y);
               remIterationStartTime += 0.001;
@@ -274,7 +275,7 @@ RadioEnvironmentMapHelper::DelayedInstall ()
         }      
     }
 
-  Simulator::Schedule (Seconds (remIterationStartTime), 
+  Simulator::Schedule (Seconds (remIterationStartTime*SUBFRAME_DURATION),
                        &RadioEnvironmentMapHelper::Finalize,
                        this);
 }
@@ -311,7 +312,7 @@ RadioEnvironmentMapHelper::RunOneIteration (double xMin, double xMax, double yMi
         }
     }
 
-  Simulator::Schedule (Seconds (0.0005), &RadioEnvironmentMapHelper::PrintAndReset, this);  
+  Simulator::Schedule (Seconds (0.0005*SUBFRAME_DURATION), &RadioEnvironmentMapHelper::PrintAndReset, this);
 }
 
 void 

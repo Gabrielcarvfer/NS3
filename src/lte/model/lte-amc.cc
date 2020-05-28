@@ -91,25 +91,6 @@ static const double SpectralEfficiencyForMcs[28] = {
             4.500, 4.750, 5.250, 5.500, 6.000, 6.667, 7.000, 7.333, 7.667
     };
 
-/**
- * Table of MCS index (IMCS) and its TBS index (ITBS). Taken from 3GPP TS
- * 36.213 v8.8.0 Table 7.1.7.1-1: _Modulation and TBS index table for PDSCH_.
- * The index of the vector (range 0-28) identifies the MCS index.
- */
-static const int McsToItbsDl[48] = {
-        0, 2, 1, 3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13, 15, 17, 16, 18, 20, 19, 21, 23, 22, 24, 26, 27, 25, 29, 28, 30, 32, 31, 33, 35, 34, 36, 38, 39, 37, 41, 40, 42, 44, 43, 45, 47, 46
-    };
-
-/**
- * Table of MCS index (IMCS) and its TBS index (ITBS). Taken from 3GPP TS
- * 36.213 v8.8.0 Table 8.6.1-1: _Modulation, TBS index and redundancy version table for PUSCH_.
- * The index of the vector (range 0-28) identifies the MCS index.
- */
-static const int McsToItbsUl[48] = {
-        0, 2, 1, 3, 5, 4, 6, 8, 7, 9, 11, 10, 12, 14, 13, 15, 17, 16, 18, 20, 19, 21, 23, 22, 24, 26, 27, 25, 29, 28, 30, 32, 31, 33, 35, 34, 36, 38, 39, 37, 41, 40, 42, 44, 43, 45, 47, 46
-    };
-
-static const uint8_t numerology_cluster[6] = {0,1,1,1,1,2};
 
 /**
  * Table of number of physical resource blocks (NPRB), TBS index (ITBS), and
@@ -119,8 +100,8 @@ static const uint8_t numerology_cluster[6] = {0,1,1,1,1,2};
  *       consistent with the other values, therefore we use 88 obtained by
  *       following the sequence of NPRB = 1 values.
  */
-//                         ITBS       MCS   NUMEROLOGY  #RBS      TBS
-static std::map<std::tuple<uint8_t, uint8_t, uint8_t, uint8_t>, uint32_t> prb5gSize;
+//                            MCS   NUMEROLOGY   TBS
+static std::map<std::tuple<uint8_t, uint8_t>, uint32_t> prb5gSize;
 bool LteAmc::prbDataLoaded = false;
 
 
@@ -130,34 +111,32 @@ void LteAmc::LoadPrbData()
 
     auto itbs_o = o["TBS"].get<picojson::object>();
 
-    for (auto itbs = itbs_o.begin(); itbs != itbs_o.end(); itbs++)
+    auto mcs_o = itbs_o["MCS"].get<picojson::object>();
+    for (auto mcs = mcs_o.begin(); mcs != mcs_o.end(); mcs++)
     {
-        auto itbs_i = std::stoi(itbs->first);
-        //std::cout << itbs_i << std::endl;
+        auto mcs_i = std::stoi(mcs->first);
+        //std::cout << mcs_i << std::endl;
 
-        auto mcs_o = itbs->second.get<picojson::object>()["MCS"].get<picojson::object>();
-        for (auto mcs = mcs_o.begin(); mcs != mcs_o.end(); mcs++)
+        auto numrbs_o = mcs->second.get<picojson::object>()["#RBs"].get<picojson::object>();
+        for (auto numrbs = numrbs_o.begin (); numrbs != numrbs_o.end (); numrbs++)
         {
-            auto mcs_i = std::stoi(mcs->first);
-            //std::cout << mcs_i << std::endl;
+            uint32_t num = std::stoi(numrbs->first);
+            //std::cout << num << std::endl;
 
-            auto numerology_o = mcs->second.get<picojson::object>()["numerology"].get<picojson::object>();
+            auto numerology_o = numrbs->second.get<picojson::object>()["NUMEROLOGY"].get<picojson::object>();
             for (auto numerology = numerology_o.begin (); numerology != numerology_o.end (); numerology++)
             {
                 auto numerology_i = std::stoi(numerology->first);
                 //std::cout << numerology_i << std::endl;
 
-                auto numrbs_o = numerology->second.get<picojson::object>()["#RBs"].get<picojson::object>();
-                for (auto numrbs = numrbs_o.begin (); numrbs != numrbs_o.end (); numrbs++)
-                {
-                    uint32_t num = std::stoi(numrbs->first);
-                    //std::cout << num << std::endl;
+                //uint32_t num = std::stoi(numrbs->first);
+                //std::cout << num << std::endl;
 
-                    double tbs = std::stod(numrbs->second.to_str());
-                    prb5gSize.insert({{itbs_i, mcs_i, numerology_i, num}, tbs});
-                }
+                double tbs = std::stod(numerology->second.to_str());
+                prb5gSize.insert({{(uint8_t)mcs_i, (uint8_t)numerology_i}, tbs});
             }
         }
+
     }
     prbDataLoaded = true;
 }
@@ -225,7 +204,7 @@ LteAmc::GetMcsFromCqi (int cqi)
   NS_ASSERT_MSG (cqi >= 0 && cqi <= 15, "CQI must be in [0..15] = " << cqi);
   double spectralEfficiency = SpectralEfficiencyForCqi[cqi];
   int mcs = 0;
-  while ((mcs < 28) && (SpectralEfficiencyForMcs[mcs + 1] <= spectralEfficiency))
+  while ((mcs < 27) && (SpectralEfficiencyForMcs[mcs + 1] <= spectralEfficiency))
     {
       ++mcs;
     }
@@ -238,15 +217,13 @@ LteAmc::GetDlTbSizeFromMcs (int mcs, int nprb)
 {
   NS_LOG_FUNCTION (mcs);
 
-  NS_ASSERT_MSG (mcs < 16, "MCS=" << mcs);
+  NS_ASSERT_MSG (mcs < 27, "MCS=" << mcs);
   NS_ASSERT_MSG (nprb < 133, "NPRB=" << nprb);
 
   if (!prbDataLoaded)
       LoadPrbData ();
-
-  uint8_t itbs = McsToItbsUl[mcs*3+numerology_cluster[m_numerology]];
-  std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> key{itbs, mcs, m_numerology, nprb};
-  return prb5gSize[key];
+  std::tuple<uint8_t, uint8_t> key{(uint8_t)mcs, (uint8_t)m_numerology};
+  return prb5gSize[key]*nprb;
 }
 
 int
@@ -254,15 +231,13 @@ LteAmc::GetUlTbSizeFromMcs (int mcs, int nprb)
 {
   NS_LOG_FUNCTION (mcs);
 
-  NS_ASSERT_MSG (mcs < 16, "MCS=" << mcs);
+  NS_ASSERT_MSG (mcs < 27, "MCS=" << mcs);
   NS_ASSERT_MSG (nprb < 133, "NPRB=" << nprb);
 
   if (!prbDataLoaded)
       LoadPrbData ();
-
-  uint8_t itbs = McsToItbsUl[mcs*3+numerology_cluster[m_numerology]];
-  std::tuple<uint8_t, uint8_t, uint8_t, uint8_t> key{itbs, mcs, m_numerology, nprb};
-  return prb5gSize[key];
+  std::tuple<uint8_t, uint8_t> key{(uint8_t)mcs, (uint8_t)m_numerology};
+  return prb5gSize[key]*nprb;
 }
 
 
@@ -329,10 +304,18 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       //Make sure things are initialized before trying to run parallel stuff
       {
         HarqProcessInfoList_t harqInfoList;
-         if (m_amcModel == MiErrorModel)
-             LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList);
-         else
-             LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList, m_numerology, m_channelModel);
+        switch(m_amcModel)
+        {
+            case MiErrorModel:
+                LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList);
+                break;
+            case MiesmErrorModel:
+                if (!LteMiesmErrorModel::errorDataLoaded)
+                    LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList, m_numerology, m_channelModel);
+                break;
+            default:
+                break;
+        }
       }
       for (it = sinr.ConstValuesBegin (); it != sinr.ConstValuesEnd (); it++)
       {
@@ -342,7 +325,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
             TbStats_t tbStats;
             TbStats_t tbStatsVector[30];
 
-            for (uint8_t mcs = 0; mcs <= 29; mcs++)
+            for (uint8_t mcs = 0; mcs < 27; mcs++)
             {
                 HarqProcessInfoList_t harqInfoList;
                 if (m_amcModel == MiErrorModel)
@@ -352,7 +335,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
             }
 
             uint8_t mcs = 0;
-            while (mcs <= 28)
+            while (mcs < 27)
               {
                 //HarqProcessInfoList_t harqInfoList;
                 //tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
@@ -376,7 +359,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
               {
                 rbgCqi = 0; // any MCS can guarantee the 10 % of BER
               }
-            else if (mcs == 28)
+            else if (mcs == 26)
               {
                 rbgCqi = 15; // all MCSs can guarantee the 10 % of BER
               }

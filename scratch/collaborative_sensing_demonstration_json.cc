@@ -119,7 +119,7 @@ int main() {
     int    fusionAlgorithm         = LteEnbMac::MRG_1_OF_N;
     std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
 
-    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(20)); //160 for >80 UES
+    Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
     Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
     Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
 
@@ -284,7 +284,7 @@ int main() {
     Config::SetDefault("ns3::LteUePhy::EnableUplinkPowerControl",  BooleanValue(false));
 
 
-    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(29.38*8/8));
+    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(29.38));
 
 
     //0.6 Configure antenna gains for UEs and eNB
@@ -435,8 +435,8 @@ int main() {
 
 
     //16 Colect LTE and P2P traces
-    lteHelper->EnableTraces();
-    p2ph.EnablePcapAll("natalandia_p2p", false);
+    //lteHelper->EnableTraces();
+    p2ph.EnablePcapAll("p2p", false);
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)

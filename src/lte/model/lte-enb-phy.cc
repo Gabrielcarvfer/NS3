@@ -61,7 +61,7 @@ NS_OBJECT_ENSURE_REGISTERED (LteEnbPhy);
 //static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION*11)/14 - NanoSeconds (-1);
 
 //5G-RANGE uses the entire frame for data. Separate dedicated channel for control
-static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION) - NanoSeconds (-1);
+static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION) - MicroSeconds(1) - NanoSeconds (-1);
 
 /**
  * Delay from the start of a DL subframe to transmission of the data portion.
@@ -71,7 +71,7 @@ static const Time DL_DATA_DURATION = MilliSeconds(SUBFRAME_DURATION) - NanoSecon
 //static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = MilliSeconds(SUBFRAME_DURATION*3)/14;
 
 //5G-RANGE uses the entire frame for data. Separate dedicated channel for control
-static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = NanoSeconds(1);
+static const Time DL_CTRL_DELAY_FROM_SUBFRAME_START = MicroSeconds(1) - NanoSeconds(1);
 
 ////////////////////////////////////////
 // member SAP forwarders
@@ -789,7 +789,7 @@ LteEnbPhy::StartSubFrame (void)
   // trigger the MAC
   m_enbPhySapUser->SubframeIndication (m_nrFrames, m_nrSubFrames);
 
-  Simulator::Schedule (Seconds (GetTti ()),
+  Simulator::Schedule (MilliSeconds (GetTti ()),
                        &LteEnbPhy::EndSubFrame,
                        this);
 

@@ -23,6 +23,7 @@
 #include "ns3/log.h"
 
 #include "ns3/lte-rlc-tm.h"
+#include "lte-common.h"
 
 namespace ns3 {
 
@@ -150,7 +151,7 @@ LteRlcTm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
   if (! m_txBuffer.empty ())
     {
       m_rbsTimer.Cancel ();
-      m_rbsTimer = Simulator::Schedule (MilliSeconds (10), &LteRlcTm::ExpireRbsTimer, this);
+      m_rbsTimer = Simulator::Schedule (MilliSeconds (10*SUBFRAME_DURATION), &LteRlcTm::ExpireRbsTimer, this);
     }
 }
 
@@ -210,7 +211,7 @@ LteRlcTm::ExpireRbsTimer (void)
   if (! m_txBuffer.empty ())
     {
       DoReportBufferStatus ();
-      m_rbsTimer = Simulator::Schedule (MilliSeconds (10), &LteRlcTm::ExpireRbsTimer, this);
+      m_rbsTimer = Simulator::Schedule (MilliSeconds (10*SUBFRAME_DURATION), &LteRlcTm::ExpireRbsTimer, this);
     }
 }
 

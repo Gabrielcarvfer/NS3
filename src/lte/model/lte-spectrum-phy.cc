@@ -56,14 +56,14 @@ NS_LOG_COMPONENT_DEFINE ("LteSpectrumPhy");
 
 /// duration of SRS portion of UL subframe  
 /// = 1 symbol for SRS -1ns as margin to avoid overlapping simulator events
-static const Time UL_SRS_DURATION = MilliSeconds(SUBFRAME_DURATION/14) - NanoSeconds(1);
+static const Time UL_SRS_DURATION = MilliSeconds(SRS_DURATION) - NanoSeconds(1);
 
 /// duration of the control portion of a subframe
 /// = 0.001 / 14 * 3 (ctrl fixed to 3 symbols) -1ns as margin to avoid overlapping simulator events
 //static const Time DL_CTRL_DURATION = MilliSeconds(SUBFRAME_DURATION*3)/14 - NanoSeconds(1);
 
 //5G-RANGE uses the entire frame for data. Separate dedicated channel for control
-static const Time DL_CTRL_DURATION = NanoSeconds(0);
+static const Time DL_CTRL_DURATION = MicroSeconds(1) - NanoSeconds(1);
 
 /// Effective coding rate
 static const double EffectiveCodingRate[29] = {
@@ -1499,7 +1499,7 @@ LteSpectrumPhy::StartRxDlCtrl (Ptr<LteSpectrumSignalParametersDlCtrlFrame> lteDl
               // schedule sensing events
               //if (this->m_sensingEvent.IsExpired())
               if (spectrumSensing)
-                this->m_sensingEvent = Simulator::Schedule(lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
+                this->m_sensingEvent = Simulator::Schedule (lteDlCtrlRxParams->duration+MicroSeconds(100), &LteSpectrumPhy::Sense, this);
 
 
               m_endRxDlCtrlEvent = Simulator::Schedule (lteDlCtrlRxParams->duration, &LteSpectrumPhy::EndRxDlCtrl, this);

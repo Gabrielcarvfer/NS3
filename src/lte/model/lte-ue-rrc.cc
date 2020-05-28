@@ -2568,7 +2568,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
           PendingTrigger_t t;
           t.measId = measId;
           t.concernedCells = concernedCellsEntry;
-          t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.timeToTrigger),
+          t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.timeToTrigger),//*SUBFRAME_DURATION),
                                          &LteUeRrc::VarMeasReportListAdd, this,
                                          measId, concernedCellsEntry);
           std::map<uint8_t, std::list<PendingTrigger_t> >::iterator
@@ -2593,7 +2593,7 @@ LteUeRrc::MeasurementReportTriggering (uint8_t measId)
           PendingTrigger_t t;
           t.measId = measId;
           t.concernedCells = concernedCellsLeaving;
-          t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.timeToTrigger),
+          t.timer = Simulator::Schedule (MilliSeconds (reportConfigEutra.timeToTrigger),//*SUBFRAME_DURATION),
                                          &LteUeRrc::VarMeasReportListErase, this,
                                          measId, concernedCellsLeaving, reportOnLeave);
           std::map<uint8_t, std::list<PendingTrigger_t> >::iterator

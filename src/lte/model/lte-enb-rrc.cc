@@ -248,7 +248,7 @@ UeManager::DoInitialize ()
     m_srb1->m_srbIdentity = 1;
     m_srb1->m_logicalChannelConfig.priority = 1;
     m_srb1->m_logicalChannelConfig.prioritizedBitRateKbps = 100;
-    m_srb1->m_logicalChannelConfig.bucketSizeDurationMs = 100*SUBFRAME_DURATION;
+    m_srb1->m_logicalChannelConfig.bucketSizeDurationMs = 100;
     m_srb1->m_logicalChannelConfig.logicalChannelGroup = 0;
 
     LteEnbCmacSapProvider::LcInfo lcinfo;
@@ -491,7 +491,7 @@ UeManager::SetupDataRadioBearer (EpsBearer bearer, uint8_t bearerId, uint32_t gt
     {
       drbInfo->m_logicalChannelConfig.prioritizedBitRateKbps = 0;
     }
-  drbInfo->m_logicalChannelConfig.bucketSizeDurationMs = 1000*SUBFRAME_DURATION;
+  drbInfo->m_logicalChannelConfig.bucketSizeDurationMs = 1000;
 
   ScheduleRrcConnectionReconfiguration ();
 }
@@ -717,7 +717,7 @@ UeManager::RecvHandoverRequestAck (EpcX2SapUser::HandoverRequestAckParams params
     }
   m_rrc->m_rrcSapUser->SendRrcConnectionReconfiguration (m_rnti, handoverCommand);
   SwitchToState (HANDOVER_LEAVING);
-  m_handoverLeavingTimeout = Simulator::Schedule (m_rrc->m_handoverLeavingTimeoutDuration, 
+  m_handoverLeavingTimeout = Simulator::Schedule (m_rrc->m_handoverLeavingTimeoutDuration,
                                                   &LteEnbRrc::HandoverLeavingTimeout, 
                                                   m_rrc, m_rnti);
   NS_ASSERT (handoverCommand.haveMobilityControlInfo);
@@ -2251,7 +2251,7 @@ LteEnbRrc::ConfigureCell (std::map<uint8_t, Ptr<ComponentCarrierBaseStation>> cc
    * regularly transmitted every 80 ms by default (set the
    * SystemInformationPeriodicity attribute to configure this).
    */
-  Simulator::Schedule (MilliSeconds (16*SUBFRAME_DURATION), &LteEnbRrc::SendSystemInformation, this);
+  Simulator::Schedule (MilliSeconds (16), &LteEnbRrc::SendSystemInformation, this);
 
   m_configured = true;
 

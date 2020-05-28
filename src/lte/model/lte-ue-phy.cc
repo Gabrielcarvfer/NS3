@@ -178,7 +178,7 @@ LteUePhy::LteUePhy (Ptr<LteSpectrumPhy> dlPhy, Ptr<LteSpectrumPhy> ulPhy)
 
   NS_ASSERT_MSG (Simulator::Now ().GetNanoSeconds () == 0,
                  "Cannot create UE devices after simulation started");
-  Simulator::Schedule (m_ueMeasurementsFilterPeriod, &LteUePhy::ReportUeMeasurements, this);
+  Simulator::Schedule (m_ueMeasurementsFilterPeriod*SUBFRAME_DURATION, &LteUePhy::ReportUeMeasurements, this);
 
   DoReset ();
 }
@@ -293,13 +293,13 @@ LteUePhy::GetTypeId (void)
     .AddAttribute ("UeMeasurementsFilterPeriod",
                    "Time period for reporting UE measurements, i.e., the"
                    "length of layer-1 filtering.",
-                   TimeValue (MilliSeconds (200)),
+                   TimeValue (MilliSeconds (200*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteUePhy::m_ueMeasurementsFilterPeriod),
                    MakeTimeChecker ())
     .AddAttribute ("DownlinkCqiPeriodicity",
                    "Periodicity in milliseconds for reporting the"
                    "wideband and subband downlink CQIs to the eNB",
-                   TimeValue (MilliSeconds (1)),
+                   TimeValue (MilliSeconds (1*SUBFRAME_DURATION)),
                    MakeTimeAccessor (&LteUePhy::SetDownlinkCqiPeriodicity),
                    MakeTimeChecker ())
     .AddTraceSource ("ReportUeMeasurements",
@@ -578,7 +578,7 @@ LteUePhy::GenerateCqiRsrpRsrq (const SpectrumValue& sinr)
   if (m_dlConfigured && m_ulConfigured && (m_rnti > 0))
     {
       // check periodic wideband CQI
-      if (Simulator::Now () > m_p10CqiLast + m_p10CqiPeriodicity*SUBFRAME_DURATION)
+      if (Simulator::Now () > m_p10CqiLast + m_p10CqiPeriodicity)
         {
           NS_LOG_DEBUG("Reporting P10 CQI at : " << Simulator::Now().GetMilliSeconds()
                        << " ms. Last reported at : " << m_p10CqiLast.GetMilliSeconds() << " ms");
@@ -591,7 +591,7 @@ LteUePhy::GenerateCqiRsrpRsrq (const SpectrumValue& sinr)
           m_p10CqiLast = Simulator::Now ();
         }
       // check aperiodic high-layer configured subband CQI
-      if  (Simulator::Now () > m_a30CqiLast + m_a30CqiPeriodicity*SUBFRAME_DURATION)
+      if  (Simulator::Now () > m_a30CqiLast + m_a30CqiPeriodicity)
         {
           NS_LOG_DEBUG("Reporting A30 CQI at : " << Simulator::Now().GetMilliSeconds()
                        << " ms. Last reported at : " << m_a30CqiLast.GetMilliSeconds() << " ms");
@@ -970,7 +970,7 @@ LteUePhy::ReportUeMeasurements ()
   m_ueCphySapUser->ReportUeMeasurements (ret);
 
   m_ueMeasurementsMap.clear ();
-  Simulator::Schedule (m_ueMeasurementsFilterPeriod, &LteUePhy::ReportUeMeasurements, this);
+  Simulator::Schedule (m_ueMeasurementsFilterPeriod*SUBFRAME_DURATION, &LteUePhy::ReportUeMeasurements, this);
 }
 
 void
@@ -1103,7 +1103,7 @@ LteUePhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgLi
           PhyTransmissionStatParameters params;
           params.m_cellId = m_cellId;
           params.m_imsi = 0; // it will be set by DlPhyTransmissionCallback in LteHelper
-          params.m_timestamp = Simulator::Now ().GetMilliSeconds () + MilliSeconds(UL_PUSCH_TTIS_DELAY*SUBFRAME_DURATION).GetMilliSeconds();
+          params.m_timestamp = Simulator::Now ().GetMilliSeconds () + MilliSeconds(UL_PUSCH_TTIS_DELAY).GetMilliSeconds();
           params.m_rnti = m_rnti;
           params.m_txMode = 0; // always SISO for UE
           params.m_layer = 0;
@@ -1322,7 +1322,7 @@ LteUePhy::SubframeIndication (uint32_t frameNo, uint32_t subframeNo)
     }
 
   // schedule next subframe indication
-  Simulator::Schedule (Seconds (GetTti ()), &LteUePhy::SubframeIndication, this, frameNo, subframeNo);
+  Simulator::Schedule (MilliSeconds (GetTti ()), &LteUePhy::SubframeIndication, this, frameNo, subframeNo);
 }
 
 

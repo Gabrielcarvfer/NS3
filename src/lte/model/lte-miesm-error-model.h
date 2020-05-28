@@ -37,7 +37,7 @@
 namespace ns3 {
 
 /// MAX_MCS
-    const uint16_t MIESM_MAX_MCS = 26;
+    const uint16_t MIESM_MAX_MCS = 27;
 
 /**
  * This class provides the BLER estimation based on mutual information metrics
@@ -80,7 +80,6 @@ namespace ns3 {
         */
         static void LoadErrorData();
 
-    private:
         static bool errorDataLoaded;
 
 

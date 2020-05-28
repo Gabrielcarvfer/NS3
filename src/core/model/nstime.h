@@ -1068,33 +1068,33 @@ inline Time Seconds (int64x64_t value)
 {
   return Time::From (value, Time::S);
 }
-inline Time MilliSeconds (uint64_t value)
+inline Time MilliSeconds (double value)
 {
-  return Time::FromInteger (value, Time::MS);
+  return Time::FromDouble (value, Time::MS);
 }
 inline Time MilliSeconds (int64x64_t value)
 {
   return Time::From (value, Time::MS);
 }
-inline Time MicroSeconds (uint64_t value)
+inline Time MicroSeconds (double value)
 {
-  return Time::FromInteger (value, Time::US);
+  return Time::FromDouble (value, Time::US);
 }
 inline Time MicroSeconds (int64x64_t value)
 {
   return Time::From (value, Time::US);
 }
-inline Time NanoSeconds (uint64_t value)
+inline Time NanoSeconds (double value)
 {
-  return Time::FromInteger (value, Time::NS);
+  return Time::FromDouble (value, Time::NS);
 }
 inline Time NanoSeconds (int64x64_t value)
 {
   return Time::From (value, Time::NS);
 }
-inline Time PicoSeconds (uint64_t value)
+inline Time PicoSeconds (double value)
 {
-  return Time::FromInteger (value, Time::PS);
+  return Time::FromDouble (value, Time::PS);
 }
 inline Time PicoSeconds (int64x64_t value)
 {

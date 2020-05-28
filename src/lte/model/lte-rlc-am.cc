@@ -26,6 +26,7 @@
 #include "ns3/lte-rlc-am.h"
 #include "ns3/lte-rlc-sdu-status-tag.h"
 #include "ns3/lte-rlc-tag.h"
+#include "lte-common.h"
 
 
 namespace ns3 {
@@ -172,7 +173,7 @@ LteRlcAm::DoTransmitPdcpPdu (Ptr<Packet> p)
   /** Report Buffer Status */
   DoReportBufferStatus ();
   m_rbsTimer.Cancel ();
-  m_rbsTimer = Simulator::Schedule (m_rbsTimerValue, &LteRlcAm::ExpireRbsTimer, this);
+  m_rbsTimer = Simulator::Schedule (m_rbsTimerValue*SUBFRAME_DURATION, &LteRlcAm::ExpireRbsTimer, this);
 }
 
 
@@ -269,7 +270,7 @@ LteRlcAm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
 
       m_statusPduRequested = false;
       m_statusPduBufferSize = 0;
-      m_statusProhibitTimer = Simulator::Schedule (m_statusProhibitTimerValue,
+      m_statusProhibitTimer = Simulator::Schedule (m_statusProhibitTimerValue*SUBFRAME_DURATION,
                                                    &LteRlcAm::ExpireStatusProhibitTimer, this);
       return;
     }
@@ -319,7 +320,7 @@ LteRlcAm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
                         {
                           NS_LOG_LOGIC ("Start PollRetransmit timer");
 
-                          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue,
+                          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue*SUBFRAME_DURATION,
                                                                        &LteRlcAm::ExpirePollRetransmitTimer, this);
                         }
                       else
@@ -327,7 +328,7 @@ LteRlcAm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
                           NS_LOG_LOGIC ("Restart PollRetransmit timer");
 
                           m_pollRetransmitTimer.Cancel ();
-                          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue,
+                          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue*SUBFRAME_DURATION,
                                                                        &LteRlcAm::ExpirePollRetransmitTimer, this);
                         }
                     }
@@ -700,7 +701,7 @@ LteRlcAm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
         {
           NS_LOG_LOGIC ("Start PollRetransmit timer");
 
-          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue,
+          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue*SUBFRAME_DURATION,
                                                        &LteRlcAm::ExpirePollRetransmitTimer, this);
         }
       else
@@ -708,7 +709,7 @@ LteRlcAm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
           NS_LOG_LOGIC ("Restart PollRetransmit timer");
 
           m_pollRetransmitTimer.Cancel ();
-          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue,
+          m_pollRetransmitTimer = Simulator::Schedule (m_pollRetransmitTimerValue*SUBFRAME_DURATION,
                                                        &LteRlcAm::ExpirePollRetransmitTimer, this);
         }
     }
@@ -1005,7 +1006,7 @@ LteRlcAm::DoReceivePdu (LteMacSapUser::ReceivePduParameters rxPduParams)
           if ( m_vrH > m_vrR )
             {
               NS_LOG_LOGIC ("Start reordering timer");
-              m_reorderingTimer = Simulator::Schedule (m_reorderingTimerValue,
+              m_reorderingTimer = Simulator::Schedule (m_reorderingTimerValue*SUBFRAME_DURATION,
                                                        &LteRlcAm::ExpireReorderingTimer ,this);
               m_vrX = m_vrH;
               NS_LOG_LOGIC ("New VR(X) = " << m_vrX);
@@ -1671,7 +1672,7 @@ LteRlcAm::ExpireReorderingTimer (void)
   if ( m_vrH > m_vrMs )
     {
       NS_LOG_LOGIC ("Start reordering timer");
-      m_reorderingTimer = Simulator::Schedule (m_reorderingTimerValue,
+      m_reorderingTimer = Simulator::Schedule (m_reorderingTimerValue*SUBFRAME_DURATION,
                                               &LteRlcAm::ExpireReorderingTimer ,this);
       m_vrX = m_vrH;
       NS_LOG_LOGIC ("New VR(MS) = " << m_vrMs);
@@ -1742,7 +1743,7 @@ LteRlcAm::ExpireRbsTimer (void)
   if (m_txonBufferSize + m_txedBufferSize + m_retxBufferSize > 0)
     {
       DoReportBufferStatus ();
-      m_rbsTimer = Simulator::Schedule (m_rbsTimerValue, &LteRlcAm::ExpireRbsTimer, this);
+      m_rbsTimer = Simulator::Schedule (m_rbsTimerValue*SUBFRAME_DURATION, &LteRlcAm::ExpireRbsTimer, this);
     }
 }
 

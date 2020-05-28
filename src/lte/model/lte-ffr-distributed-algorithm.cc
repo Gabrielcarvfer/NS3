@@ -20,6 +20,7 @@
  */
 
 #include "lte-ffr-distributed-algorithm.h"
+#include "lte-common.h"
 #include <ns3/log.h>
 
 namespace ns3 {
@@ -479,7 +480,7 @@ void
 LteFfrDistributedAlgorithm::Calculate ()
 {
   NS_LOG_FUNCTION (this);
-  m_calculationEvent = Simulator::Schedule (m_calculationInterval, &LteFfrDistributedAlgorithm::Calculate, this);
+  m_calculationEvent = Simulator::Schedule (m_calculationInterval*SUBFRAME_DURATION, &LteFfrDistributedAlgorithm::Calculate, this);
 
   int rbgSize = GetRbgSize (m_dlBandwidth);
   uint16_t rbgNum = m_dlBandwidth / rbgSize;
