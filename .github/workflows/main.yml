@@ -1,6 +1,6 @@
 name: CI
 
-#on: [push]
+on: [push]
   #schedule:
   #  - cron:  '0 5 * * *'  #daily build at 5AM
 jobs:
@@ -25,7 +25,7 @@ jobs:
       run: |
         mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+        cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
     - name: Build ns-3 in debug mode
       run: |
         cd cmake-cache
@@ -131,7 +131,7 @@ jobs:
         set PATH=D:\msys64\mingw64\bin;D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
         mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+        cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
       shell: cmd
     - name: Build ns-3 in debug mode
       run: |
@@ -227,7 +227,7 @@ jobs:
         export CC=gcc-9
         mkdir cmake-cache
         cd cmake-cache
-        cmake -DCMAKE_BUILD_TYPE=DEBUG -G"Ninja" ..
+        cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -G"Ninja" ..
     - name: Build ns-3 in debug mode
       run: |
         export PATH="/usr/local/opt/qt/bin:$PATH"

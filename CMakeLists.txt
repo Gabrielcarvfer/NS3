@@ -56,7 +56,7 @@ option(NS3_MPI "Build with MPI support" OFF)
 set(NS3_MPI OFF)
 
 option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
-set(NS3_PYTORCH ON)
+set(NS3_PYTORCH OFF)
 
 option(NS3_GSL "Build with GSL support" OFF)
 set(NS3_GSL ON)
@@ -188,6 +188,7 @@ set(libs_to_build
 set(contribution_libraries_to_build
         haraldott # https://github.com/haraldott/dash/commit/f886b5757de277db9c88e442458f20960a70b57a
         notopoloko
+        sauloDaMata
         )
 
 #######################################

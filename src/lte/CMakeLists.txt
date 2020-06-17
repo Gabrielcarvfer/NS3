@@ -301,7 +301,7 @@ set(libraries_to_link
         ${libinternet}
         ${libcsma}
         "${nn_libraries}"
-        kalman
+        #kalman
         json-loader
         )
 

@@ -128,11 +128,11 @@ macro(process_options)
     #3rd party libraries with sources shipped in 3rd-party folder
     set(3rdPartyLibraries
             netanim
-            kalman
             json-loader
             ${build_lib_brite}
             ${build_lib_openflow}
             )
+            #kalman
 
     #Add 3rd-party library headers to include directories
     foreach(3rdPartyLibrary ${3rdPartyLibraries})

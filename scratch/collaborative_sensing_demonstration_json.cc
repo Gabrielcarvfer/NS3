@@ -54,24 +54,25 @@ using namespace ns3;
 #include <unistd.h>
 #endif
 
-#ifdef __APPLE__
-int sched_affinity(uint32_t cpu_set)
-{
-    thread_port_t mach_thread;
-    int core = 0;
-
-    for (core = 0; core < 8; core++)
-    {
-        if (CPU_ISSET(core, &cpu_set))
-            break;
-    }
-
-    thread_affinity_policy_data_t policy = { core };
-    mach_thread = pthread_mach_thread_np(getpid());
-    thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY,(thread_policy_t)&policy, 1);
-    return 0;
-}
-#endif
+//Deprecated in Xcode 11.5
+//#ifdef __APPLE__
+//int sched_affinity(uint32_t cpu_set)
+//{
+//    thread_port_t mach_thread;
+//    int core = 0;
+//
+//    for (core = 0; core < 8; core++)
+//    {
+//        if (CPU_ISSET(core, &cpu_set))
+//            break;
+//    }
+//
+//    thread_affinity_policy_data_t policy = { core };
+//    mach_thread = pthread_mach_thread_np(getpid());
+//    thread_policy_set(mach_thread, THREAD_AFFINITY_POLICY,(thread_policy_t)&policy, 1);
+//    return 0;
+//}
+//#endif
 
 #ifdef __LINUX__
 int sched_affinity(uint32_t cpu_set)
