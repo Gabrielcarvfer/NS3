@@ -132,6 +132,20 @@ if (${THREADS_FOUND})
 
 endif()
 
+if (UNIX)
+	if(NS3_ENABLE_EXAMPLES)
+	set(examples_as_tests_sources
+			model/example-as-test.cc
+			)
+	set(examples_as_tests_headers
+			model/example-as-test.h
+			)
+	set(examples_as_tests_test_sources
+			test/examples-as-tests-test-suite.cc
+			)
+	endif()
+endif()
+
 #Define core lib sources
 set(source_files
         ${rt_sources}
@@ -139,13 +153,15 @@ set(source_files
         ${int64x64_sources}
         ${thread_sources}
 		${valgrind_sources}
-        model/time.cc
+		${example_as_tests_sources}
+		model/time.cc
         model/event-id.cc
         model/scheduler.cc
         model/list-scheduler.cc
         model/map-scheduler.cc
         model/heap-scheduler.cc
         model/calendar-scheduler.cc
+		model/priority-queue-scheduler.cc
         model/event-impl.cc
         model/simulator.cc
         model/simulator-impl.cc
@@ -193,10 +209,11 @@ set(source_files
         model/hash-fnv.cc
         model/hash.cc
         model/des-metrics.cc
+		model/ascii-file.cc
         model/node-printer.cc
         model/show-progress.cc
         model/time-printer.cc
-
+		model/system-wall-clock-timestamp.cc
         )
 
 #Define core lib headers
@@ -205,7 +222,7 @@ set (header_files
         ${int64x64_headers}
         ${thread_headers}
 		${valgrind_headers}
-
+		${example_as_tests_headers}
         model/nstime.h
         model/event-id.h
         model/event-impl.h
@@ -217,6 +234,7 @@ set (header_files
         model/map-scheduler.h
         model/heap-scheduler.h
         model/calendar-scheduler.h
+		model/priority-queue-scheduler.h
         model/simulation-singleton.h
         model/singleton.h
         model/timer.h
@@ -225,6 +243,7 @@ set (header_files
         model/synchronizer.h
         model/make-event.h
         model/system-wall-clock-ms.h
+		model/system-wall-clock-timestamp.h
         model/empty.h
         model/callback.h
         model/object-base.h
@@ -287,9 +306,12 @@ set (header_files
         model/non-copyable.h
         model/build-profile.h
         model/des-metrics.h
+		model/ascii-file.h
+		model/ascii-test.h
         model/node-printer.h
         model/show-progress.h
         model/time-printer.h
+		model/example-as-test.h
         )
 
 set(test_sources
@@ -315,6 +337,7 @@ set(test_sources
         test/traced-callback-test-suite.cc
         test/type-id-test-suite.cc
         test/watchdog-test-suite.cc
+		${examples_as_tests_test_sources}
         ${gsl_test_sources}
         )
 

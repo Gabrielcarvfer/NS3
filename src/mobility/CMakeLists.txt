@@ -55,6 +55,7 @@ set(test_sources
         test/waypoint-mobility-model-test.cc
         test/geo-to-cartesian-test.cc
         test/rand-cart-around-geo-test.cc
+        test/box-line-intersection-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

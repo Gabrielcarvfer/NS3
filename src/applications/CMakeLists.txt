@@ -9,6 +9,8 @@ set(source_files
         model/udp-client.cc
         model/udp-server.cc
         model/seq-ts-header.cc
+        model/seq-ts-size-header.cc
+        model/seq-ts-echo-header.cc
         model/udp-trace-client.cc
         model/packet-loss-counter.cc
         model/udp-echo-client.cc
@@ -33,6 +35,8 @@ set(header_files
         model/udp-client.h
         model/udp-server.h
         model/seq-ts-header.h
+        model/seq-ts-size-header.h
+        model/seq-ts-echo-header.h
         model/udp-trace-client.h
         model/packet-loss-counter.h
         model/udp-echo-client.h
@@ -63,4 +67,3 @@ set(test_sources
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
-

@@ -333,7 +333,6 @@ set(test_sources
         test/test-asn1-encoding.cc
         test/lte-test-ue-measurements.cc
         test/lte-test-cell-selection.cc
-        test/lte-test-secondary-cell-selection.cc
         test/test-lte-handover-delay.cc
         test/test-lte-handover-target.cc
         test/lte-test-deactivate-bearer.cc

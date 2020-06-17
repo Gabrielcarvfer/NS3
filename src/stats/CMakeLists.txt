@@ -3,6 +3,10 @@ set(name stats)
 set(lib${name} ns${NS3_VER}-${name}-${build_type})
 
 if (${SQLITE_ENABLED})
+    #todo
+    #+ have_sem = conf.check_nonfatal(header_name='semaphore.h', define_name='HAVE_SEMAPHORE_H')
+    #+ conf.env['SEMAPHORE_ENABLED'] = have_sem
+    #+ conf.write_config_header('ns3/stats-config.h', top=True)
     set(SQLITE_SOURCES
             model/sqlite-data-output.cc
             )
@@ -10,7 +14,7 @@ if (${SQLITE_ENABLED})
             model/sqlite-data-output.h
             )
 else()
-    set(SQLITE_SOURCEs )
+    set(SQLITE_SOURCES )
 endif()
 
 set(source_files

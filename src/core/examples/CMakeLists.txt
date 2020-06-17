@@ -93,3 +93,11 @@ if(${NS3_REALTIME})
     set(libraries_to_link ${libnetwork})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 endif()
+
+set(name empirical-random-variable-example)
+add_executable(${name} ${name}.cc)
+target_link_libraries(${name} ${libcore} ${libflow-monitor})
+
+set(name system-path-examples)
+add_executable(${name} ${name}.cc)
+target_link_libraries(${name} ${libcore})

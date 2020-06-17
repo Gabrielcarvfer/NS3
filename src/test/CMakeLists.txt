@@ -21,9 +21,9 @@ add_library(${lib${name}}
         ns3tcp/ns3tcp-socket-test-suite.cc
         ns3tcp/ns3tcp-state-test-suite.cc
         ns3tcp/ns3tcp-socket-writer.cc
-        ns3wifi/wifi-interference-test-suite.cc
         ns3wifi/wifi-msdu-aggregator-test-suite.cc
         ns3wifi/wifi-ac-mapping-test-suite.cc
+        ns3wifi/wifi-issue-211-test-suite.cc
         traced/traced-callback-typedef-test-suite.cc
         traced/traced-value-callback-typedef-test-suite.cc
         )

@@ -1,6 +1,23 @@
 
 set(name point-to-point)
 
+
+set(mpi_sources)
+set(mpi_headers)
+set(mpi_libraries)
+
+if (${NS3_MPI})
+    set(mpi_sources
+            model/point-to-point-remote-channel.cc
+            )
+    set(mpi_headers
+            model/point-to-point-remote-channel.h
+            )
+    set(mpi_libraries
+            ${libmpi}
+            )
+endif()
+
 set(source_files
         model/point-to-point-remote-channel.cc
         model/point-to-point-net-device.cc

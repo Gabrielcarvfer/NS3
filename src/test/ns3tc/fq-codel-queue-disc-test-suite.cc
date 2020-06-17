@@ -537,7 +537,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt, u_int32_t nPktEnqueued, u_int32_t nQueueFlows);
+  void AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt, uint32_t nPktEnqueued, uint32_t nQueueFlows);
   void Dequeue (Ptr<FqCoDelQueueDisc> queue, uint32_t nPkt);
   void DequeueWithDelay (Ptr<FqCoDelQueueDisc> queue, double delay, uint32_t nPkt);
 };
@@ -552,7 +552,7 @@ FqCoDelQueueDiscECNMarking::~FqCoDelQueueDiscECNMarking ()
 }
 
 void
-FqCoDelQueueDiscECNMarking::AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt, u_int32_t nPktEnqueued, u_int32_t nQueueFlows)
+FqCoDelQueueDiscECNMarking::AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt, uint32_t nPktEnqueued, uint32_t nQueueFlows)
 {
   Address dest;
   Ptr<Packet> p = Create<Packet> (100);

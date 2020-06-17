@@ -28,6 +28,9 @@ set(source_files
         model/microwave-oven-spectrum-value-helper.cc
         model/tv-spectrum-transmitter.cc
         model/trace-fading-loss-model.cc
+        model/three-gpp-spectrum-propagation-loss-model.cc
+        model/three-gpp-channel-model.cc
+        model/matrix-based-channel-model.cc
         helper/spectrum-helper.cc
         helper/adhoc-aloha-noack-ideal-phy-helper.cc
         helper/waveform-generator-helper.cc
@@ -62,6 +65,9 @@ set(header_files
         model/microwave-oven-spectrum-value-helper.h
         model/tv-spectrum-transmitter.h
         model/trace-fading-loss-model.h
+        model/three-gpp-spectrum-propagation-loss-model.h
+        model/three-gpp-channel-model.h
+        model/matrix-based-channel-model.h
         helper/spectrum-helper.h
         helper/adhoc-aloha-noack-ideal-phy-helper.h
         helper/waveform-generator-helper.h
@@ -78,6 +84,7 @@ set(test_sources
         test/spectrum-waveform-generator-test.cc
         test/tv-helper-distribution-test.cc
         test/tv-spectrum-transmitter-test.cc
+        test/three-gpp-channel-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

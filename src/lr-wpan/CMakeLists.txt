@@ -7,6 +7,8 @@ set(source_files
         model/lr-wpan-phy.cc
         model/lr-wpan-mac.cc
         model/lr-wpan-mac-header.cc
+        model/lr-wpan-mac-pl-headers.cc
+        model/lr-wpan-fields.cc
         model/lr-wpan-mac-trailer.cc
         model/lr-wpan-csmaca.cc
         model/lr-wpan-net-device.cc
@@ -22,6 +24,8 @@ set(header_files
         model/lr-wpan-phy.h
         model/lr-wpan-mac.h
         model/lr-wpan-mac-header.h
+        model/lr-wpan-mac-pl-headers.h
+        model/lr-wpan-fields.h
         model/lr-wpan-mac-trailer.h
         model/lr-wpan-csmaca.h
         model/lr-wpan-net-device.h
@@ -42,6 +46,8 @@ set(test_sources
         test/lr-wpan-packet-test.cc
         test/lr-wpan-pd-plme-sap-test.cc
         test/lr-wpan-spectrum-value-helper-test.cc
+        test/lr-wpan-ifs-test.cc
+        test/lr-wpan-slotted-csmaca-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

@@ -23,7 +23,6 @@ set(source_files
         model/tag-buffer.cc
         model/trailer.cc
         utils/address-utils.cc
-        utils/ascii-file.cc
         utils/crc32.cc
         utils/data-rate.cc
         utils/drop-tail-queue.cc
@@ -94,8 +93,6 @@ set(header_files
         model/tag-buffer.h
         model/trailer.h
         utils/address-utils.h
-        utils/ascii-file.h
-        utils/ascii-test.h
         utils/crc32.h
         utils/data-rate.h
         utils/drop-tail-queue.h
