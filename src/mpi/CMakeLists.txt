@@ -1,4 +1,3 @@
-
 if(${NS3_MPI})
     set(name mpi)
 

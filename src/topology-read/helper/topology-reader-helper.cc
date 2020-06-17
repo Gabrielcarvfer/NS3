@@ -23,7 +23,7 @@
 #include "ns3/topology-reader-helper.h"
 #include "ns3/inet-topology-reader.h"
 #include "ns3/orbis-topology-reader.h"
-#include "ns3/rocketfuel-topology-reader.h"
+//#include "ns3/rocketfuel-topology-reader.h"
 #include "ns3/log.h"
 
 /**
@@ -72,11 +72,11 @@ TopologyReaderHelper::GetTopologyReader ()
           NS_LOG_INFO ("Creating Inet formatted data input.");
           m_inputModel = CreateObject<InetTopologyReader> ();
         }
-      else if (m_fileType == "Rocketfuel")
-        {
-          NS_LOG_INFO ("Creating Rocketfuel formatted data input.");
-          m_inputModel = CreateObject<RocketfuelTopologyReader> ();
-        }
+      //else if (m_fileType == "Rocketfuel")
+      //  {
+      //    NS_LOG_INFO ("Creating Rocketfuel formatted data input.");
+      //    m_inputModel = CreateObject<RocketfuelTopologyReader> ();
+      //  }
       else
         {
           NS_ASSERT_MSG (false, "Wrong (unknown) File Type");

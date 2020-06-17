@@ -1,6 +1,10 @@
 
 set(name topology-read)
 
+set(source_files)
+set(header_files)
+set(test_sources)
+
 if(PCRE_FOUND)
     set(source_files
             model/rocketfuel-topology-reader.cc

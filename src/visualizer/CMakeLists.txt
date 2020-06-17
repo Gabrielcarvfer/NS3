@@ -9,7 +9,18 @@ set(header_files
         model/pyviz.h
         )
 
-set(libraries_to_link ${Python2_LIBRARIES} ${libcore} ${libinternet} ${libwifi} ${libpoint-to-point} )
+set(libraries_to_link
+        ${Python2_LIBRARIES}
+        ${libcore}
+        ${libinternet}
+        ${libwifi}
+        ${libpoint-to-point}
+        ${libcsma}
+        ${libbridge}
+        ${libwimax}
+        ${liblte}
+        ${libmesh}
+        )
 
 set(test_sources)
 

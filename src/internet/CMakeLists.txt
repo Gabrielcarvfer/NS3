@@ -74,6 +74,7 @@ set(source_files
         model/tcp-illinois.cc
         model/tcp-htcp.cc
         model/tcp-lp.cc
+        model/tcp-dctcp.cc
         model/tcp-rx-buffer.cc
         model/tcp-tx-buffer.cc
         model/tcp-tx-item.cc
@@ -247,6 +248,7 @@ set(header_files
         model/tcp-illinois.h
         model/tcp-htcp.h
         model/tcp-lp.h
+        model/tcp-dctcp.h
         model/tcp-ledbat.h
         model/tcp-socket-base.h
         model/tcp-socket-state.h
@@ -294,6 +296,7 @@ set(test_sources
         test/ipv6-packet-info-tag-test-suite.cc
         test/ipv6-test.cc
         test/ipv6-raw-test.cc
+        test/ipv6-address-duplication-test.cc
         test/tcp-test.cc
         test/tcp-timestamp-test.cc
         test/tcp-sack-permitted-test.cc
@@ -325,6 +328,7 @@ set(test_sources
         test/tcp-advertised-window-test.cc
         test/tcp-classic-recovery-test.cc
         test/tcp-prr-recovery-test.cc
+        test/tcp-loss-test.cc
         test/udp-test.cc
         test/ipv6-address-generator-test-suite.cc
         test/ipv6-dual-stack-test-suite.cc
@@ -342,6 +346,8 @@ set(test_sources
         test/tcp-close-test.cc
         test/icmp-test.cc
         test/ipv4-deduplication-test.cc
+        test/tcp-dctcp-test.cc
+        test/tcp-syn-connection-failed-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

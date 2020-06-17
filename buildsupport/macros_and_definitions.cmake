@@ -579,6 +579,11 @@ macro(process_options)
         add_definitions(-DNS3_LOG_ENABLE)
     endif()
 
+    #Enable examples as tests (enabled by default in mainstream ns-3-dev, but replaced here with CTests)
+    #if(${NS3_EXAMPLES})
+    #    set(NS3_ENABLE_EXAMPLES "1")
+    #    add_definitions(-DNS3_ENABLE_EXAMPLES)
+    #endif()
 
     #Remove from libs_to_build all incompatible libraries or the ones that dependencies couldn't be installed
     if(MSVC)

@@ -208,10 +208,10 @@ std::string FindSelfDirectory (void)
     DWORD status = GetModuleFileName (0, lpFilename, size);
     while (status == size)
       {
-        size = size * 2;
-        free (lpFilename);
-        lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-        status = GetModuleFilename (0, lpFilename, size);
+	size = size * 2;
+	free (lpFilename);
+	lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
+	status = GetModuleFileName (0, lpFilename, size);
       }
     NS_ASSERT (status != 0);
     filename = lpFilename;
@@ -313,10 +313,10 @@ std::string Join (std::list<std::string>::const_iterator begin,
 std::list<std::string> ReadFiles (std::string path)
 {
   NS_LOG_FUNCTION (path);
-  bool err;
-  std::list<std::string> files;
-  std::tie (files, err) = ReadFilesNoThrow (path);
-  if (err)
+#if defined HAVE_OPENDIR
+    std::list<std::string> files;
+  DIR *dp = opendir (path.c_str ());
+  if (dp == NULL)
     {
       NS_FATAL_ERROR ("Could not open directory=" << path);
     }

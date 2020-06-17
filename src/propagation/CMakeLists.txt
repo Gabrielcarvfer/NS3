@@ -11,6 +11,8 @@ set(source_files
         model/itu-r-1411-los-propagation-loss-model.cc
         model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.cc
         model/kun-2600-mhz-propagation-loss-model.cc
+        model/channel-condition-model.cc
+        model/three-gpp-propagation-loss-model.cc
         )
 
 set(header_files
@@ -25,6 +27,8 @@ set(header_files
         model/itu-r-1411-los-propagation-loss-model.h
         model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.h
         model/kun-2600-mhz-propagation-loss-model.h
+        model/channel-condition-model.h
+        model/three-gpp-propagation-loss-model.h
         )
 
 set(libraries_to_link ${libnetwork} ${libmobility} )
@@ -35,6 +39,8 @@ set(test_sources
         test/itu-r-1411-los-test-suite.cc
         test/kun-2600-mhz-test-suite.cc
         test/itu-r-1411-nlos-over-rooftop-test-suite.cc
+        test/channel-condition-model-test-suite.cc
+        test/three-gpp-propagation-loss-model-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

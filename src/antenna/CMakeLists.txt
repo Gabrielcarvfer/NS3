@@ -7,6 +7,7 @@ set(source_files
         model/isotropic-antenna-model.cc
         model/cosine-antenna-model.cc
         model/parabolic-antenna-model.cc
+        model/three-gpp-antenna-array-model.cc
         )
 
 set(header_files
@@ -15,6 +16,7 @@ set(header_files
         model/isotropic-antenna-model.h
         model/cosine-antenna-model.h
         model/parabolic-antenna-model.h
+        model/three-gpp-antenna-array-model.h
         )
 
 #link to dependencies
@@ -29,7 +31,4 @@ set(test_sources
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" ${test_sources})
-
-
-
 

@@ -16,8 +16,6 @@ set(source_files
         model/yans-wifi-phy.cc
         model/yans-wifi-channel.cc
         model/spectrum-wifi-phy.cc
-        model/wifi-phy-tag.cc
-        model/tx-vector-tag.cc
         model/wifi-spectrum-phy-interface.cc
         model/wifi-spectrum-signal-parameters.cc
         model/wifi-phy-header.cc
@@ -93,6 +91,7 @@ set(source_files
         model/cf-parameter-set.cc
         model/wifi-mac-queue-item.cc
         model/wifi-psdu.cc
+        model/wifi-ppdu.cc
         model/ht-configuration.cc
         model/vht-configuration.cc
         model/obss-pd-algorithm.cc
@@ -118,8 +117,6 @@ set(header_files
         model/wifi-phy-standard.h
         model/yans-wifi-phy.h
         model/spectrum-wifi-phy.h
-        model/wifi-phy-tag.h
-        model/tx-vector-tag.h
         model/yans-wifi-channel.h
         model/wifi-phy.h
         model/wifi-spectrum-phy-interface.h
@@ -202,6 +199,7 @@ set(header_files
         model/cf-parameter-set.h
         model/wifi-mac-queue-item.h
         model/wifi-psdu.h
+        model/wifi-ppdu.h
         model/wifi-phy-state.h
         model/wifi-phy-listener.h
         model/block-ack-type.h
