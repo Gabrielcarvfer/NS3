@@ -790,17 +790,38 @@ macro (build_example name source_files header_files libraries_to_link)
 
     set_target_properties( ${name}
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
             )
-    if(WIN32)
-        #Windows require this workaround to make sure the DLL files are located
-        add_test(NAME ctest-${name}
-                COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+    #message(WARNING "${examples}")
+    if(NOT examples)
+        if(WIN32)
+            #Windows require this workaround to make sure the DLL files are located
+            add_test(NAME ctest-${name}
+                    COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
+                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+        else()
+            add_test(NAME ctest-${name}
+                    COMMAND ${name}
+                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+        endif()
     else()
-        add_test(NAME ctest-${name}
-                COMMAND ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+        set(num_examples 0)
+        foreach(example ${examples})
+            #Turn string into list of parameters and remove program name to replace with absolute path
+            string(REPLACE " " ";" example ${example})
+            list(REMOVE_AT example 0)
+            if(WIN32)
+                #Windows require this workaround to make sure the DLL files are located
+                add_test(NAME ctest-${name}-${num_examples}
+                        COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name} ${example}
+                        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+            else()
+                add_test(NAME ctest-${name}-${num_examples}
+                        COMMAND ${name} ${example}
+                        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+            endif()
+            MATH(EXPR num_examples "${num_examples}+1")
+        endforeach()
     endif()
 endmacro()
 
@@ -817,21 +838,69 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
 
     set_target_properties( ${name}
             PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}
+            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/
             )
 
-    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
+    file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
 
     if(WIN32)
         #Windows require this workaround to make sure the DLL files are located
         add_test(NAME ctest-${name}
                 COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
     else()
         add_test(NAME ctest-${name}
                 COMMAND ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name})
+                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
     endif()
+endmacro()
+
+macro(exemples_to_run_extract_arguments return_value)
+    set(example_list)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples-to-run.py")
+        file(STRINGS examples-to-run.py file_contents REGEX "(.*[\\n|\\f|\\n\\f])")
+
+        set(cpp_examples_block -1)
+        set(end_cpp_block -1)
+        foreach(line ${file_contents})
+            string(FIND "${line}" "(\"" cpp_examples)
+
+            if(${cpp_examples} GREATER -1)
+                set(cpp_examples_block 1)
+            endif()
+
+            if(${cpp_examples_block})
+                set(end_cpp_block -1)
+                string(FIND "${line}" "python_examples" end_cpp_block)
+                if(${end_cpp_block} GREATER -1)
+                    break()
+                endif()
+
+                string(FIND "${line}" "(\"" entry)
+                if(${entry} GREATER -1)
+                    #Extract example arguments
+                    #\("([^"]*)" # regex pattern
+                    string(REGEX MATCH "\\\(\"([^\"]*)" trash ${line})
+                    set(example_arguments ${CMAKE_MATCH_1})
+                    list(APPEND example_list "${example_arguments}")
+                endif()
+            endif()
+        endforeach()
+    endif()
+    set(${return_value} ${example_list})
+endmacro()
+
+macro (examples_to_run_find_examples example_name examples_to_run_list matching_examples)
+    set(examples)
+    foreach(example ${examples_to_run_list})
+        string(FIND "${example}" "${example_name}" found)
+        #message(WARNING ${found} ${example} ${example_name})
+        if (found GREATER -1)
+            list(APPEND examples "${example}")
+        endif()
+    endforeach()
+
+    set(${matching_examples} "${examples}")
 endmacro()
 
 #Add contributions macros
