@@ -793,35 +793,40 @@ macro (build_example name source_files header_files libraries_to_link)
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
             )
     #message(WARNING "${examples}")
-    if(NOT examples)
-        if(WIN32)
-            #Windows require this workaround to make sure the DLL files are located
-            add_test(NAME ctest-${name}
-                    COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
-        else()
-            add_test(NAME ctest-${name}
-                    COMMAND ${name}
-                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
-        endif()
+    if(ignore_example)
     else()
-        set(num_examples 0)
-        foreach(example ${examples})
-            #Turn string into list of parameters and remove program name to replace with absolute path
-            string(REPLACE " " ";" example ${example})
-            list(REMOVE_AT example 0)
+        if(NOT examples)
+            #If no parameters are specified for this example, create it without parameters
             if(WIN32)
                 #Windows require this workaround to make sure the DLL files are located
-                add_test(NAME ctest-${name}-${num_examples}
-                        COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name} ${example}
+                add_test(NAME ctest-${name}
+                        COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
                         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
             else()
-                add_test(NAME ctest-${name}-${num_examples}
-                        COMMAND ${name} ${example}
+                add_test(NAME ctest-${name}
+                        COMMAND ${name}
                         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
             endif()
-            MATH(EXPR num_examples "${num_examples}+1")
-        endforeach()
+        else()
+            #If parameter for the examples were defined, create a case for each set of parameters
+            set(num_examples 0)
+            foreach(example ${examples})
+                #Turn string into list of parameters and remove program name to replace with absolute path
+                string(REPLACE " " ";" example ${example})
+                list(REMOVE_AT example 0)
+                if(WIN32)
+                    #Windows require this workaround to make sure the DLL files are located
+                    add_test(NAME ctest-${name}-${num_examples}
+                            COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name} ${example}
+                            WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+                else()
+                    add_test(NAME ctest-${name}-${num_examples}
+                            COMMAND ${name} ${example}
+                            WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/)
+                endif()
+                MATH(EXPR num_examples "${num_examples}+1")
+            endforeach()
+        endif()
     endif()
 endmacro()
 
@@ -843,15 +848,18 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
 
     file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
 
-    if(WIN32)
-        #Windows require this workaround to make sure the DLL files are located
-        add_test(NAME ctest-${name}
-                COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
+    if(ignore_example)
     else()
-        add_test(NAME ctest-${name}
-                COMMAND ${name}
-                WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
+        if(WIN32)
+            #Windows require this workaround to make sure the DLL files are located
+            add_test(NAME ctest-${name}
+                    COMMAND ${CMAKE_COMMAND} -E env "PATH=$ENV{PATH};${CMAKE_RUNTIME_OUTPUT_DIRECTORY};${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" ${name}
+                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
+        else()
+            add_test(NAME ctest-${name}
+                    COMMAND ${name}
+                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
+        endif()
     endif()
 endmacro()
 

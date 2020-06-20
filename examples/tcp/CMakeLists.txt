@@ -53,4 +53,5 @@ build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_lin
 set(name dctcp-example)
 set(source_files ${name}.cc)
 set(libraries_to_link ${libcore} ${libnetwork} ${libinternet} ${libpoint-to-point} ${libapplications} ${libtraffic-control})
+set(ignore_example 1)
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
