@@ -160,7 +160,7 @@ namespace ns3 {
         if (!errorDataLoaded)
             LoadErrorData();
 
-        NS_ASSERT_MSG (mcs <= MIESM_MAX_MCS, "mcs " << mcs << " is out of range");
+        NS_ASSERT_MSG (mcs < MIESM_MAX_MCS, "mcs " << mcs << " is out of range");
         size_t cbSizeIndex = findIndex(cbSizeTable5g, cbSize);
         NS_ASSERT_MSG (cbSizeIndex < cbSizeTable5g.size(), "cbSize " << cbSize << " not found");
 
@@ -181,15 +181,11 @@ namespace ns3 {
                 break;
             }
         }
-
-
+        
         NS_LOG_DEBUG ("BLER of channel " << chanIndex << " numerology " << numIndex << " code block " << cbSizeIndex << " mcs " << (size_t)mcs << " snr " << snrIndex);
         std::stringstream ss;
         ss << chan << "_" << (int) num << "_" << (int) cbSize;
         std::string scen = ss.str();
-        //std::cout << "pinging " << scen << std::endl;
-        if (mcs>26)
-            mcs=26;
         return blerTable5g[scen][mcs][snrIndex];
     }
 
@@ -199,6 +195,7 @@ namespace ns3 {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
         double snrEff = Mib(sinr, map, mcs);
+
         if (map.size() == 0)
             return TbStats_t{};
 

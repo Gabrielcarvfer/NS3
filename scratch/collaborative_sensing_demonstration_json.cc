@@ -265,8 +265,8 @@ int main() {
     //0.4 Configure fusion algorithm for the collaborative sensing
     Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
 
-    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
-    lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
+    lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
+    //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
 
     //60dBm = 1    kW
@@ -285,7 +285,7 @@ int main() {
     Config::SetDefault("ns3::LteUePhy::EnableUplinkPowerControl",  BooleanValue(false));
 
 
-    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(29.38));
+    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(4));
 
 
     //0.6 Configure antenna gains for UEs and eNB

@@ -84,8 +84,7 @@ static const int ModulationSchemeForMcs[32] = {
  * to the convention in TS 36.213 (i.e., the MCS index reported in R1-081483
  * minus one)
  */
-static const double SpectralEfficiencyForMcs[28] = {
-            0.0,
+static const double SpectralEfficiencyForMcs[27] = {
             0.083, 0.167, 0.250, 0.333, 0.417, 0.583, 0.750, 0.833, 1.000,
             1.166, 1.500, 1.833, 2.167, 2.500, 3.000, 3.333, 3.500, 4.000,
             4.500, 4.750, 5.250, 5.500, 6.000, 6.667, 7.000, 7.333, 7.667
@@ -204,7 +203,7 @@ LteAmc::GetMcsFromCqi (int cqi)
   NS_ASSERT_MSG (cqi >= 0 && cqi <= 15, "CQI must be in [0..15] = " << cqi);
   double spectralEfficiency = SpectralEfficiencyForCqi[cqi];
   int mcs = 0;
-  while ((mcs < 27) && (SpectralEfficiencyForMcs[mcs + 1] <= spectralEfficiency))
+  while ((mcs < 26) && (SpectralEfficiencyForMcs[mcs + 1] <= spectralEfficiency))
     {
       ++mcs;
     }
@@ -323,9 +322,9 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
         if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
          {
             TbStats_t tbStats;
-            TbStats_t tbStatsVector[30];
+            TbStats_t tbStatsVector[27];
 
-            for (uint8_t mcs = 0; mcs < 27; mcs++)
+            for (uint8_t mcs = 0; mcs <= 26; mcs++)
             {
                 HarqProcessInfoList_t harqInfoList;
                 if (m_amcModel == MiErrorModel)
@@ -335,24 +334,16 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
             }
 
             uint8_t mcs = 0;
-            while (mcs < 27)
-              {
-                //HarqProcessInfoList_t harqInfoList;
-                //tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
-                //if (tbStats.tbler > 0.1)
-                if (tbStatsVector[mcs].tbler > 0.1)
-                  {
-                    tbStats = tbStatsVector[mcs];
-                    break;
-                  }
-                mcs++;
-                
-              }
+            while (mcs <= 26)
+            {
+              if (tbStatsVector[mcs].tbler > 0.1) break;
+              mcs++;
+            }
             if (mcs > 0)
-              {
+            {
                 mcs--;
-              }
-            //std::cout << this << "\t RBG " << rbId << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler << std::endl;
+            }
+            tbStats = tbStatsVector[mcs];
             NS_LOG_DEBUG (this << "\t RBG " << rbId << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
             int rbgCqi = 0;
             if ((tbStats.tbler > 0.1)&&(mcs==0))

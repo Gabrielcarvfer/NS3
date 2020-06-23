@@ -165,7 +165,7 @@ LteUePhy::LteUePhy (Ptr<LteSpectrumPhy> dlPhy, Ptr<LteSpectrumPhy> ulPhy)
     m_rsInterferencePowerUpdated (false),
     m_dataInterferencePowerUpdated (false),
     m_pssReceived (false),
-    m_ueMeasurementsFilterPeriod (MilliSeconds (200)),
+    m_ueMeasurementsFilterPeriod (MilliSeconds (200*SUBFRAME_DURATION)),
     m_ueMeasurementsFilterLast (MilliSeconds (0)),
     m_rsrpSinrSampleCounter (0),
     m_imsi (0)
@@ -178,7 +178,7 @@ LteUePhy::LteUePhy (Ptr<LteSpectrumPhy> dlPhy, Ptr<LteSpectrumPhy> ulPhy)
 
   NS_ASSERT_MSG (Simulator::Now ().GetNanoSeconds () == 0,
                  "Cannot create UE devices after simulation started");
-  Simulator::Schedule (m_ueMeasurementsFilterPeriod*SUBFRAME_DURATION, &LteUePhy::ReportUeMeasurements, this);
+  Simulator::Schedule (m_ueMeasurementsFilterPeriod, &LteUePhy::ReportUeMeasurements, this);
 
   DoReset ();
 }
@@ -970,7 +970,7 @@ LteUePhy::ReportUeMeasurements ()
   m_ueCphySapUser->ReportUeMeasurements (ret);
 
   m_ueMeasurementsMap.clear ();
-  Simulator::Schedule (m_ueMeasurementsFilterPeriod*SUBFRAME_DURATION, &LteUePhy::ReportUeMeasurements, this);
+  Simulator::Schedule (m_ueMeasurementsFilterPeriod, &LteUePhy::ReportUeMeasurements, this);
 }
 
 void
