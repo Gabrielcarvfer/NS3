@@ -53,7 +53,13 @@ namespace ns3 {
          * \param mcs the MCS of the TB
          * \return the mmib
          */
-        static double Mib (const SpectrumValue& sinr, const std::vector<int>& map, uint8_t mcs);
+        static double Mib (const SpectrumValue& sinr,
+                           const std::vector<int>& map,
+                           uint8_t mcs,
+                           std::string chan,
+                           int num,
+                           int size,
+                           double speed);
         /**
          * \brief map the mmib (mean mutual information per bit) for different MCS
          * \param mib mean mutual information per bit of a code-block
@@ -72,7 +78,7 @@ namespace ns3 {
          * \param miHistory  MI of past transmissions (in case of retx)
          * \return the TB error rate and MI
          */
-        static TbStats_t GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan);
+        static TbStats_t GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed);
         /**
         * \brief load error-model data from the input json file
         *

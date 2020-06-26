@@ -300,6 +300,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       std::vector <int> rbgMap;
       rbgMap.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
       int rbId = 0;
+      double speed = 0; //todo: calculate speed
       //Make sure things are initialized before trying to run parallel stuff
       {
         HarqProcessInfoList_t harqInfoList;
@@ -310,7 +311,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
                 break;
             case MiesmErrorModel:
                 if (!LteMiesmErrorModel::errorDataLoaded)
-                    LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList, m_numerology, m_channelModel);
+                    LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList, m_numerology, m_channelModel, speed);
                 break;
             default:
                 break;
@@ -330,7 +331,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
                 if (m_amcModel == MiErrorModel)
                     tbStatsVector[mcs] = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
                 else
-                    tbStatsVector[mcs] = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel);
+                    tbStatsVector[mcs] = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
             }
 
             uint8_t mcs = 0;
