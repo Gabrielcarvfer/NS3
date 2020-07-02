@@ -301,50 +301,27 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       rbgMap.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
       int rbId = 0;
       double speed = 0; //todo: calculate speed
-      //Make sure things are initialized before trying to run parallel stuff
-      {
-        HarqProcessInfoList_t harqInfoList;
-        switch(m_amcModel)
-        {
-            case MiErrorModel:
-                LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList);
-                break;
-            case MiesmErrorModel:
-                if (!LteMiesmErrorModel::errorDataLoaded)
-                    LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (0, rbgSize) / 8, 0, harqInfoList, m_numerology, m_channelModel, speed);
-                break;
-            default:
-                break;
-        }
-      }
       for (it = sinr.ConstValuesBegin (); it != sinr.ConstValuesEnd (); it++)
       {
         rbgMap.push_back (rbId++);
         if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
          {
             TbStats_t tbStats;
-            TbStats_t tbStatsVector[27];
-
-            for (uint8_t mcs = 0; mcs <= 26; mcs++)
-            {
-                HarqProcessInfoList_t harqInfoList;
-                if (m_amcModel == MiErrorModel)
-                    tbStatsVector[mcs] = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
-                else
-                    tbStatsVector[mcs] = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-            }
-
             uint8_t mcs = 0;
             while (mcs <= 26)
             {
-              if (tbStatsVector[mcs].tbler > 0.1) break;
-              mcs++;
+                HarqProcessInfoList_t harqInfoList;
+                if (m_amcModel == MiErrorModel)
+                    tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+                else
+                    tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+                if (tbStats.tbler > 0.1) break;
+                mcs++;
             }
             if (mcs > 0)
             {
                 mcs--;
             }
-            tbStats = tbStatsVector[mcs];
             NS_LOG_DEBUG (this << "\t RBG " << rbId << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
             int rbgCqi = 0;
             if ((tbStats.tbler > 0.1)&&(mcs==0))
