@@ -187,6 +187,7 @@ namespace ns3 {
             size = i;
             break;
         }
+        size = size > 8192 ? 8192 : size;
         std::stringstream ss;
         ss << chan << "_" << int(num) << "_" << size;
         std::string betaKey = ss.str();
@@ -205,12 +206,16 @@ namespace ns3 {
         double ex = 0;
         for (auto mapVal : map)
         {
-            ex += exp(-(sinr[mapVal]/beta5g));
+            double temp = exp(-(log(sinr[mapVal])/beta5g));
+            ex += temp;
+            //std::cout << "mapval " << mapVal << " sinr " << sinr[mapVal] << " beta " << beta5g << " tempArg " << -(sinr[mapVal]/beta5g) << " temp " << temp << " ex " << ex << std::endl;
+
         }
-        double snr_eff = (-1) * beta5g * log(ex/n);
+        double snr_eff =  exp(-beta5g * log(ex/n));
 
         //std::cout << betaKey << " mcs " << (int)mcs << " beta " << beta5g <<  " snreff " << snr_eff << std::endl;
-
+        if (snr_eff < sinr[0])
+            std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5g << std::endl;
         return snr_eff;
     }
 
