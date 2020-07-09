@@ -179,43 +179,158 @@ namespace ns3 {
             return 0;
         }
 
-        //Round size to nearest larger power of two
+        /**
+         * Size variable refers to the transport block size (TBS), but
+         * but transmission is made using code blocks (CBs).
+         * Code block sizes (CBSs) are defined by the MCS and numerology.
+         *
+         * We have a few cases:
+         *  1 - TBS fits into a single CB, where the CB used will be the smaller CB in which the payload can fit
+         *  2 - TBS requires multiple CBs, which can be of equal or different sizes
+         *          e.g. 9000 bits requires a CB with 8192 bits (bigsize) and a CB with 1024 bits (smallsize)
+         *          e.g. 10kb requires a CB with 8192 bits + CB with 2048 bits
+         *          e.g. 18kb requires two CBs with 8192 bits + CB with 4096 bits
+         *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
+         */
+        int bigsize = size;
+        int smallsize = -1;
+        // Round size to nearest larger power of two
         for (int i = 256; i <= 8192; i*=2)
         {
-            if (size > i)
+            if (bigsize > i)
                 continue;
-            size = i;
+            bigsize = i;
             break;
         }
-        size = size > 8192 ? 8192 : size;
-        std::stringstream ss;
-        ss << chan << "_" << int(num) << "_" << size;
-        std::string betaKey = ss.str();
-        //todo: interpolate beta with speed
-        double beta5g = 1;
+        bigsize = bigsize > 8192 ? 8192 : bigsize;
+        int numBigSize = size/bigsize;
 
-        if (betaTable5g.find(betaKey) != betaTable5g.end())
-            if (betaTable5g[betaKey][mcs].find(speed) != betaTable5g[betaKey][mcs].end())
-                beta5g = betaTable5g[betaKey][mcs][speed];
+        smallsize = size % bigsize;
+        int numSmallSize = 0;
+        if (smallsize != 0)
+        {
+            for (int i = 256; i <= 8192; i *= 2)
+            {
+                if (smallsize > i)
+                    continue;
+                smallsize = i;
+                break;
+            }
+            numSmallSize = ceil((size-bigsize*numBigSize)/ (double) smallsize);
+        }
+        else
+        {
+            numSmallSize = 1;
+        }
+
+        // Retrieve beta keys for big and small CBs
+        std::stringstream ss;
+        ss << chan << "_" << int(num) << "_" << bigsize;
+        std::string betaKeyBig = ss.str();
+        std::stringstream ss1;
+        ss1 << chan << "_" << int(num) << "_" << smallsize;
+        std::string betaKeySmall = ss1.str();
+
+        // Load beta values from the lookup table
+        // todo: interpolate beta with speed
+        double beta5gBig = 1;
+        double beta5gSmall = 1;
+
+        if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
+            if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
+                beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
             else
                 std::cout << "speed not listed : " << speed << std::endl;
         else
-            std::cout << betaKey << " is missing from the beta registry" << std::endl;
+            std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
 
+        if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
+            if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
+                beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
+            else
+                std::cout << "speed not listed : " << speed << std::endl;
+        else
+            std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
+
+        /**
+         * Originally, the effective SNR of the TBS was calculated as the SNR of the PRBs
+         *
+         * uint32_t n = map.size();
+         * double ex = 0;
+         * for (auto mapVal : map)
+         * {
+         *     ex += -(sinr[mapVal])/beta5gBig;
+         * }
+         * double snr_eff =  -beta5gBig * ex/n;
+         *
+         * However, the 5G-RANGE beta values are per CB.
+         * We use the MCS to find the bit capacity of the PRBs
+         * Then compute a weighted mean SNR of the PRBs inside of each CB
+         *
+         *
+         *  TBS
+         *
+         * +----------------------------------------+
+         * |   CB0                      CB1         |
+         * | +------------------------------------+ |
+         * | | RB0  1  2  3  4  5  6 |7  8  9 10  | |
+         * | | +--+--+--+--+--+--+--+--+--+--+--+ | |
+         * | | |  |  |  |  |  |  |  |: |  |  |  | | |
+         * | | |  |  |  |  |  |  |  |: |  |  |  | | |
+         * | | +--+--+--+--+--+--+--+-++--+--+--+ | |
+         * | |                       |            | |
+         * | +-----------------------+------------+ |
+         * |                                        |
+         * +----------------------------------------+
+         *
+         * SNR_EFF(CB0) = (1*RB0 + 1*RB1 + ... + 0.x*RB7)/7.x
+         * SNR_EFF(CB1) = ((1-0.x)*RB7 + 1*RB8 + ... + 1*RB10)/(4-0.x)
+         *
+         */
+        // Calculate the effective SNR of the CBs
         uint32_t n = map.size();
+        double CBsize = size*8/n;
+
+        //double ex = 0;
+        //for (auto mapVal : map)
+        //{
+        //    ex += exp(-(log(sinr[mapVal])/beta5gBig));
+        //}
+        //double snr_eff =  exp(-beta5gBig * log(ex/n));
+        //
+        //if (snr_eff < sinr[0])
+        //    std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5gBig << std::endl;
+        //return snr_eff;
+
+        // Calculate the effective SNR of the CBs
+        double snr_eff = 0;
         double ex = 0;
-        for (auto mapVal : map)
+        auto it = map.begin();
+        int i = 0;
+        int endBigCBs = numBigSize*bigsize/CBsize;
+        for (; it < map.end(); it++)
         {
-            double temp = exp(-(log(sinr[mapVal])/beta5g));
-            ex += temp;
-            //std::cout << "mapval " << mapVal << " sinr " << sinr[mapVal] << " beta " << beta5g << " tempArg " << -(sinr[mapVal]/beta5g) << " temp " << temp << " ex " << ex << std::endl;
-
+            if (i >= endBigCBs)
+                break;
+            i++;
+            ex += exp(-(log(sinr[*it])/beta5gBig));
         }
-        double snr_eff =  exp(-beta5g * log(ex/n));
+        if (numBigSize > 0)
+            snr_eff +=  exp(-beta5gBig * log(ex/endBigCBs));
+        ex = 0.0;
+        int endSmallCBs = numSmallSize*smallsize/CBsize;
+        for (; it < map.end(); it++)
+        {
+            if (i >= endBigCBs+endSmallCBs)
+                break;
+            i++;
+            ex += exp(-(log(sinr[*it])/beta5gSmall));
+        }
+        if (numSmallSize > 0)
+            snr_eff +=  exp(-beta5gSmall * log(ex/endSmallCBs));
 
-        //std::cout << betaKey << " mcs " << (int)mcs << " beta " << beta5g <<  " snreff " << snr_eff << std::endl;
-        if (snr_eff < sinr[0])
-            std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5g << std::endl;
+        //if (snr_eff < sinr[0])
+        //    std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5gBig << std::endl;
         return snr_eff;
     }
 
