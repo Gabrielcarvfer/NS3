@@ -192,6 +192,7 @@ namespace ns3 {
          *          e.g. 18kb requires two CBs with 8192 bits + CB with 4096 bits
          *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
          */
+        size *= 8; // to bits
         int bigsize = size;
         int smallsize = -1;
         // Round size to nearest larger power of two
@@ -269,19 +270,46 @@ namespace ns3 {
          *
          *
          *  TBS
+         * +-------------------------------------+
+         * |   CB0                      CB1      |
+         * | +-----------------------+---------+ |
+         * | | RB0  1  2  3  4  5  6 :7  8  9  | |
+         * | | +--+--+--+--+--+--+--+--+--+--+ | |
+         * | | |  |  |  |  |  |  |  |: |  |  | | |
+         * | | |  |  |  |  |  |  |  |: |  |  | | |
+         * | | +--+--+--+--+--+--+--+--+--+--+ | |
+         * | |                       :         | |
+         * | +-----------------------+---------+ |
+         * |                                     |
+         * +-------------------------------------+
          *
-         * +----------------------------------------+
-         * |   CB0                      CB1         |
-         * | +------------------------------------+ |
-         * | | RB0  1  2  3  4  5  6 |7  8  9 10  | |
-         * | | +--+--+--+--+--+--+--+--+--+--+--+ | |
-         * | | |  |  |  |  |  |  |  |: |  |  |  | | |
-         * | | |  |  |  |  |  |  |  |: |  |  |  | | |
-         * | | +--+--+--+--+--+--+--+-++--+--+--+ | |
-         * | |                       |            | |
-         * | +-----------------------+------------+ |
-         * |                                        |
-         * +----------------------------------------+
+         *   TBS
+         * +-------------------------------------+
+         * |   CB0                               |
+         * | +---------------------------------+ |
+         * | | RB0  1  2  3  4  5  6  7  8  9  | |
+         * | | +--+--+--+--+--+--+--+--+--+--+ | |
+         * | | |  |  |  |  |  |  |  |  |  |  | | |
+         * | | |  |  |  |  |  |  |  |  |  |  | | |
+         * | | +--+--+--+--+--+--+--+-++--+--+ | |
+         * | |                                 | |
+         * | +---------------------------------+ |
+         * |                                     |
+         * +-------------------------------------+
+         *
+         *   TBS
+         * +-------------------------------------+
+         * |   CB0               CB1             |
+         * | +----------------+----------------+ |
+         * | | RB0  1  2  3  4: 5  6  7  8  9  | |
+         * | | +--+--+--+--+--+--+--+--+--+--+ | |
+         * | | |  |  |  |  |  :  |  |  |  |  | | |
+         * | | |  |  |  |  |  :  |  |  |  |  | | |
+         * | | +--+--+--+--+--+--+--+-++--+--+ | |
+         * | |                :                | |
+         * | +----------------+----------------+ |
+         * |                                     |
+         * +-------------------------------------+
          *
          * SNR_EFF(CB0) = (1*RB0 + 1*RB1 + ... + 0.x*RB7)/7.x
          * SNR_EFF(CB1) = ((1-0.x)*RB7 + 1*RB8 + ... + 1*RB10)/(4-0.x)
@@ -289,7 +317,7 @@ namespace ns3 {
          */
         // Calculate the effective SNR of the CBs
         uint32_t n = map.size();
-        double CBsize = size*8/n;
+        double prbSize = size*8/n;
 
         //double ex = 0;
         //for (auto mapVal : map)
@@ -306,31 +334,65 @@ namespace ns3 {
         double snr_eff = 0;
         double ex = 0;
         auto it = map.begin();
-        int i = 0;
-        int endBigCBs = numBigSize*bigsize/CBsize;
-        for (; it < map.end(); it++)
+        int numPrbsPerCB = 0;
+        int endBigCBs = numBigSize*bigsize/prbSize;
+        int tempSize = size*8;
+        double CBavgSinr = 0.0;
+        double currCBsize = bigsize;
+        int remainingBitsPrb = 0;
+        std::vector<std::tuple<double, double>> snr_eff_components;
+        while (tempSize > 0)
         {
-            if (i >= endBigCBs)
+            if (it == map.end())
                 break;
-            i++;
-            ex += exp(-(log(sinr[*it])/beta5gBig));
-        }
-        if (numBigSize > 0)
-            snr_eff +=  exp(-beta5gBig * log(ex/endBigCBs));
-        ex = 0.0;
-        int endSmallCBs = numSmallSize*smallsize/CBsize;
-        for (; it < map.end(); it++)
-        {
-            if (i >= endBigCBs+endSmallCBs)
-                break;
-            i++;
-            ex += exp(-(log(sinr[*it])/beta5gSmall));
-        }
-        if (numSmallSize > 0)
-            snr_eff +=  exp(-beta5gSmall * log(ex/endSmallCBs));
 
-        //if (snr_eff < sinr[0])
-        //    std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5gBig << std::endl;
+            if (currCBsize > prbSize)
+            {
+                CBavgSinr += sinr[*it];
+                numPrbsPerCB += 1;
+                currCBsize -= prbSize;
+                continue;
+            }
+
+            // if (currCBsize <= prbSize)
+            if (currCBsize < prbSize)
+            {
+                //calculate how much of the RB will contribute the the CB SINR weighting the number of bits
+            }
+            else
+            {
+                //if the current CB and the PRB have the same size
+                CBavgSinr += sinr[*it];
+                numPrbsPerCB += 1;
+                currCBsize -= prbSize;
+            }
+
+            //After the end of each CB, we need to calculate the avgSinr of the CB
+            CBavgSinr /= numPrbsPerCB;
+
+            //Then use the beta to calculate the portion of the effective SNR
+            if (numBigSize > 0)
+            {
+                if (numBigSize == 1)
+                    snr_eff_components.push_back(std::tuple<double, double>(CBavgSinr, beta5gBig));
+                numBigSize--;
+            }
+            else if (numSmallSize > 0)
+            {
+                if (numSmallSize == 1)
+                    snr_eff_components.push_back(std::tuple<double, double>(CBavgSinr, beta5gSmall));
+                numSmallSize--;
+            }
+            else
+            {
+                break;
+            }
+            //Reset counters
+            CBavgSinr = 0;
+            numPrbsPerCB = 0;
+            currCBsize = numBigSize > 0 ? bigsize : smallsize;
+            //end of if (currCBsize <= prbSize)
+        }
         return snr_eff;
     }
 
