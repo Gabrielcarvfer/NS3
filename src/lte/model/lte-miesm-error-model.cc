@@ -162,19 +162,74 @@ namespace ns3 {
         errorDataLoaded = true;
     }
 
-    double
-    LteMiesmErrorModel::Mib (const SpectrumValue& sinr,
-                             const std::vector<int>& map,
-                             uint8_t mcs,
-                             std::string chan,
-                             int num,
-                             int size,
-                             double speed) {
-        NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
 
-        if (!errorDataLoaded) {
+    template <class T>
+    size_t
+    findIndex(std::vector<T> vec, T val)
+    {
+        size_t i = 0;
+        for (auto it : vec)
+        {
+            if (val == it) {
+                return i;
+            }
+            i++;
+        }
+
+        return vec.size();
+    }
+
+    double
+    LteMiesmErrorModel::MappingMiBler (double snreff, uint8_t mcs, uint16_t cbSize, uint8_t num, std::string chan)
+    {
+
+        if (!errorDataLoaded)
             LoadErrorData();
-            return 0;
+
+        NS_ASSERT_MSG (mcs < MIESM_MAX_MCS, "mcs " << mcs << " is out of range");
+        size_t cbSizeIndex = findIndex(cbSizeTable5g, cbSize);
+        NS_ASSERT_MSG (cbSizeIndex < cbSizeTable5g.size(), "cbSize " << cbSize << " not found");
+
+        size_t numIndex = findIndex(numerologyTable5g, num);
+        NS_ASSERT_MSG (numIndex < numerologyTable5g.size(), "num " << num << " not found");
+
+        size_t chanIndex = findIndex(channelModelTable5g, chan);
+        NS_ASSERT_MSG (chanIndex < channelModelTable5g.size(), "chan " << chan << " not found");
+
+        size_t snrIndex = snrValueTable5g.size() - 1;
+
+        //get nearest larger snr
+        for (size_t i = 0; i < snrValueTable5g.size();i++)
+        {
+            if (snrValueTable5g[i] >= snreff)
+            {
+                snrIndex = i;
+                break;
+            }
+        }
+        
+        //NS_LOG_DEBUG ("BLER of channel " << chanIndex << " numerology " << numIndex << " code block " << cbSizeIndex << " mcs " << (size_t)mcs << " snr " << snrIndex);
+        std::stringstream ss;
+        ss << chan << "_" << (int) num << "_" << (int) cbSize;
+        std::string scen = ss.str();
+
+        double bler = 1.0;
+        if (blerTable5g.find(scen) != blerTable5g.end())
+            bler = blerTable5g[scen][mcs][snrIndex];
+        return bler;
+    }
+
+    TbStats_t
+    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed)
+    {
+        NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
+
+        if (map.size() == 0)
+            return TbStats_t{};
+
+        if (!errorDataLoaded)
+        {
+            LoadErrorData();
         }
 
         /**
@@ -190,8 +245,9 @@ namespace ns3 {
          *          e.g. 18kb requires two CBs with 8192 bits + CB with 4096 bits
          *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
          */
-        size *= 8; // to bits
-        int big_cb_size = size;
+        int tbs_bits = size*8;
+        double prb_size = tbs_bits / map.size();
+        int big_cb_size = tbs_bits;
         int small_cb_size = -1;
         // Round size to nearest larger power of two
         for (int i = 256; i <= 8192; i *= 2) {
@@ -200,10 +256,23 @@ namespace ns3 {
             big_cb_size = i;
             break;
         }
+        // if big cb size still larger than the maximum supported by the hardware,
+        //  assume largest supported power of two
         big_cb_size = big_cb_size > 8192 ? 8192 : big_cb_size;
-        int big_cb_num = size / big_cb_size;
 
-        small_cb_size = size % big_cb_size;
+        // if the cb is larger than the big_cb_size, it will require splitting of the TB into multiple CBs
+        //   we then need to account for additional 24 bits of CRC for each CB
+        {
+            int tempSize = tbs_bits;
+            while (tempSize > 0)
+            {
+                tempSize -= big_cb_size;
+                tbs_bits += 24;
+            }
+        }
+        int big_cb_num = tbs_bits / big_cb_size;
+
+        small_cb_size = tbs_bits % big_cb_size;
         int small_cb_num = 0;
         if (small_cb_size != 0) {
             for (int i = 256; i <= 8192; i *= 2) {
@@ -212,7 +281,7 @@ namespace ns3 {
                 small_cb_size = i;
                 break;
             }
-            small_cb_num = ceil((size - big_cb_size * big_cb_num) / (double) small_cb_size);
+            small_cb_num = ceil((tbs_bits - big_cb_size * big_cb_num) / (double) small_cb_size);
         } else {
             small_cb_num = 1;
         }
@@ -314,21 +383,22 @@ namespace ns3 {
          */
 
         std::vector<std::tuple<int, double, double>> cb_snr_components;
-
+        int smallBeta = big_cb_num;
         {
             uint32_t n = map.size();
-            double prb_size = size * 8 / n;
             // Calculate the SINR components of the CBS
             auto it = map.begin();
             double curr_prb_sinr = sinr[*it];
-            int tbs_size = size * 8;
+            int tbs_size = tbs_bits;
             double curr_cb_size = big_cb_num > 0 ? big_cb_size : (small_cb_num > 0 ? small_cb_size : 0);
             int curr_cb_index, used_budget, prb_budget, new_cb_budget, new_cb_size;
             curr_cb_index = used_budget = prb_budget = new_cb_budget = new_cb_size = 0;
             double prb_fraction = 0.0;
-            while (tbs_size > 0) {
-                if (it == map.end())
-                    break;
+            while (tbs_size > 0)
+            {
+                if ( it == map.end() )
+                    break; // codeblock doesnt fit into transport block
+
                 // fetch remaining bits of current PRB
                 prb_budget = prb_size - used_budget;
 
@@ -351,15 +421,20 @@ namespace ns3 {
                 used_budget = prb_size - prb_budget;
 
                 // if current CB has been fulfilled
-                if (curr_cb_size == 0) {
+                if (curr_cb_size == 0)
+                {
                     // subtract fulfilled CB and discount size from TBS
-                    if (big_cb_num > 0) {
+                    if (big_cb_num > 0)
+                    {
                         big_cb_num--;
                         tbs_size -= big_cb_size;
-                    } else if (small_cb_num > 0) {
+                    }
+                    else if (small_cb_num > 0)
+                    {
                         small_cb_num--;
                         tbs_size -= small_cb_size;
-                    } else
+                    }
+                    else
                         break;
 
                     // break loop if all code blocks have been processed
@@ -370,9 +445,11 @@ namespace ns3 {
                 }
 
                 // if current PRB has been exhausted
-                if (used_budget == prb_size) {
+                if (used_budget == prb_size)
+                {
                     it++;
-                    if (it != map.end()) {
+                    if (it != map.end())
+                    {
                         curr_prb_sinr = sinr[*it];
                         used_budget = 0;
                     }
@@ -381,219 +458,50 @@ namespace ns3 {
         }
 
         std::vector<double> tbs_snr_components;
-        bool diff_ending_size = false;
-
+        double errorRate = 1.0;
         {
-            int n = 0;
+            double n = 0;
             int curr_cb = 0;
             double avg_cb_sinr = 0;
-            int max = 0;
+            double snrEff = 0;
+            double cbler = 0;
 
             // compute mean SINR of CBs based on PRBs SINR and fraction used
             for (auto entry: cb_snr_components)
             {
+                // fetch precalculated values of SINR of a PRB and fraction used by a certain indexed CB
                 int cb_index = std::get<0>(entry);
                 double prb_sinr = std::get<1>(entry);
                 double prb_fraction = std::get<2>(entry);
 
-                if (cb_index != curr_cb) 
+                // when a different CB is reached
+                if (cb_index != curr_cb)
                 {
-                    tbs_snr_components.push_back(avg_cb_sinr / n);
+                    // calculate the effective SNR and corresponding BLER
+                    snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+                    cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
+
+                    // then aggregate the error rate of the TB
+                    errorRate *= pow(1.0 - cbler, 1);
+
+                    // and finally reset the variables that will get reused by the next CB
                     n = 0;
                     avg_cb_sinr = 0;
                 }
-                avg_cb_sinr += prb_sinr * prb_fraction;
-                n++;
-                if (n > max)
-                    max = n;
+                // calculate SNR fraction of the current PRB of a given RB
+                avg_cb_sinr += (prb_sinr * prb_fraction)/(curr_cb < smallBeta ? beta5gBig : beta5gSmall);
+                n += prb_fraction;
             }
-            tbs_snr_components.push_back(avg_cb_sinr / n);
+            // calculate the effective SNR and corresponding BLER of the last CB
+            snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+            cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
-            // check if last CB is of a different size (small_cb_size)
-            if (n != max)
-                diff_ending_size = true;
+            // then aggregate the error rate of the TB
+            errorRate *= pow(1.0 - cbler, 1);
         }
 
-        double ex = 0;
-        for (auto mapVal : map)
-        {
-            ex += exp(-(log(sinr[mapVal])/beta5gBig));
-        }
-        double snr_eff =  exp(-beta5gBig * log(ex/n));
-        return snr_eff;
-    }
-
-
-    template <class T>
-    size_t
-    findIndex(std::vector<T> vec, T val)
-    {
-        size_t i = 0;
-        for (auto it : vec)
-        {
-            if (val == it) {
-                return i;
-            }
-            i++;
-        }
-
-        return vec.size();
-    }
-
-    double
-    LteMiesmErrorModel::MappingMiBler (double snreff, uint8_t mcs, uint16_t cbSize, uint8_t num, std::string chan)
-    {
-
-        if (!errorDataLoaded)
-            LoadErrorData();
-
-        NS_ASSERT_MSG (mcs < MIESM_MAX_MCS, "mcs " << mcs << " is out of range");
-        size_t cbSizeIndex = findIndex(cbSizeTable5g, cbSize);
-        NS_ASSERT_MSG (cbSizeIndex < cbSizeTable5g.size(), "cbSize " << cbSize << " not found");
-
-        size_t numIndex = findIndex(numerologyTable5g, num);
-        NS_ASSERT_MSG (numIndex < numerologyTable5g.size(), "num " << num << " not found");
-
-        size_t chanIndex = findIndex(channelModelTable5g, chan);
-        NS_ASSERT_MSG (chanIndex < channelModelTable5g.size(), "chan " << chan << " not found");
-
-        size_t snrIndex = snrValueTable5g.size() - 1;
-
-        //get nearest larger snr
-        for (size_t i = 0; i < snrValueTable5g.size();i++)
-        {
-            if (snrValueTable5g[i] >= snreff)
-            {
-                snrIndex = i;
-                break;
-            }
-        }
-        
-        NS_LOG_DEBUG ("BLER of channel " << chanIndex << " numerology " << numIndex << " code block " << cbSizeIndex << " mcs " << (size_t)mcs << " snr " << snrIndex);
-        std::stringstream ss;
-        ss << chan << "_" << (int) num << "_" << (int) cbSize;
-        std::string scen = ss.str();
-
-        double bler = 1.0;
-        if (blerTable5g.find(scen) != blerTable5g.end())
-            bler = blerTable5g[scen][mcs][snrIndex];
-        return bler;
-    }
-
-    TbStats_t
-    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed)
-    {
-        NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
-
-        double snrEff = Mib(sinr, map, mcs, chan, num, size, speed);
-
-        if (map.size() == 0)
-            return TbStats_t{};
-
-        double Reff = 0.0;
-        NS_ASSERT (mcs < 27);
-
-        // estimate CB size (according to sec 5.1.2 of TS 36.212)
-        uint16_t Z = 8192; // max size of a codeblock (including CRC), utilizar apenas os valores de 8192
-        uint32_t B = size * 8;
-        uint32_t C = 0; // no. of codeblocks
-        uint32_t Cplus = 0; // no. of codeblocks with size K+
-        uint32_t Kplus = 0; // no. of codeblocks with size K+
-        uint32_t Cminus = 0; // no. of codeblocks with size K+
-        uint32_t Kminus = 0; // no. of codeblocks with size K+
-        uint32_t B1 = 0;
-        uint32_t deltaK = 0;
-        if (B <= Z)
-        {
-            // only one codeblock
-            //L = 0;
-            C = 1;
-            B1 = B;
-        }
-        else
-        {
-            uint32_t L = 24;
-            C = ceil ((double)B / ((double)(Z-L)));
-            B1 = B + C * L;
-        }
-
-        // implement a modified binary search
-        int min = 0;
-
-        int max = cbSizeTable5g.size() - 1;
-        int mid = 0;
-
-        //todo: aproveitar essa parte, escolhe a melhor configuração de codeblocks
-        do
-        {
-            mid = (min+max) / 2;
-            if (B1 > cbSizeTable5g[mid]*C)
-            {
-                if (B1 < cbSizeTable5g[mid+1]*C)
-                {
-                    break;
-                }
-                else
-                {
-                    min = mid + 1;
-                }
-            }
-            else
-            {
-                if (B1 > cbSizeTable5g[mid-1]*C)
-                {
-                    break;
-                }
-                else
-                {
-                    max = mid - 1;
-                }
-            }
-        } while ((cbSizeTable5g[mid]*C != B1) && (min < max));
-
-
-        // adjust binary search to the largest integer value of K containing B1
-        if (B1 > cbSizeTable5g[mid]*C)
-        {
-            mid ++;
-        }
-
-        uint16_t KplusId = mid;
-        Kplus = cbSizeTable5g[mid];
-
-
-        if (C==1)
-        {
-            Cplus = 1;
-            Cminus = 0;
-            Kminus = 0;
-        }
-        else
-        {
-            // second segmentation size: K- = maximum K in table such that K < K+
-            // -fstrict-overflow sensitive, see bug 1868
-            Kminus = cbSizeTable5g[ KplusId > 1 ? KplusId - 1 : 0];
-            deltaK = Kplus - Kminus;
-            Cminus = floor ((((double) C * Kplus) - (double)B1) / (double)deltaK);
-            Cplus = C - Cminus;
-        }
-
-        NS_LOG_INFO ("--------------------LteMiesmErrorModel: TB size of " << B << " needs of " << B1 << " bits reparted in " << C << " CBs as "<< Cplus << " block(s) of " << Kplus << " and " << Cminus << " of " << Kminus);
-        //fim da busca binaria, c+ CODEBLOCKS DE TAMANHO K+ e C- codeblocks de tamanho k-
-
-        double errorRate = 1.0;
-        if (C!=1)
-        {
-            double cbler = MappingMiBler (snrEff, mcs, Kplus, num, chan);
-            errorRate *= pow (1.0 - cbler, Cplus);
-            cbler = MappingMiBler (snrEff, mcs, Kminus, num, chan);
-            errorRate *= pow (1.0 - cbler, Cminus);
-            errorRate = 1.0 - errorRate;
-        }
-        else
-        {
-            errorRate = MappingMiBler (snrEff, mcs, Kplus, num, chan);
-        }
+        // compute final TB error rate
+        errorRate = 1.0 - errorRate;
 
         NS_LOG_LOGIC (" Error rate " << errorRate);
         TbStats_t ret{};
