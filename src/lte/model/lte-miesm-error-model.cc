@@ -169,12 +169,10 @@ namespace ns3 {
                              std::string chan,
                              int num,
                              int size,
-                             double speed)
-    {
+                             double speed) {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) mcs);
 
-        if (!errorDataLoaded)
-        {
+        if (!errorDataLoaded) {
             LoadErrorData();
             return 0;
         }
@@ -193,65 +191,64 @@ namespace ns3 {
          *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
          */
         size *= 8; // to bits
-        int bigsize = size;
-        int smallsize = -1;
+        int big_cb_size = size;
+        int small_cb_size = -1;
         // Round size to nearest larger power of two
-        for (int i = 256; i <= 8192; i*=2)
-        {
-            if (bigsize > i)
+        for (int i = 256; i <= 8192; i *= 2) {
+            if (big_cb_size > i)
                 continue;
-            bigsize = i;
+            big_cb_size = i;
             break;
         }
-        bigsize = bigsize > 8192 ? 8192 : bigsize;
-        int numBigSize = size/bigsize;
+        big_cb_size = big_cb_size > 8192 ? 8192 : big_cb_size;
+        int big_cb_num = size / big_cb_size;
 
-        smallsize = size % bigsize;
-        int numSmallSize = 0;
-        if (smallsize != 0)
-        {
-            for (int i = 256; i <= 8192; i *= 2)
-            {
-                if (smallsize > i)
+        small_cb_size = size % big_cb_size;
+        int small_cb_num = 0;
+        if (small_cb_size != 0) {
+            for (int i = 256; i <= 8192; i *= 2) {
+                if (small_cb_size > i)
                     continue;
-                smallsize = i;
+                small_cb_size = i;
                 break;
             }
-            numSmallSize = ceil((size-bigsize*numBigSize)/ (double) smallsize);
-        }
-        else
-        {
-            numSmallSize = 1;
+            small_cb_num = ceil((size - big_cb_size * big_cb_num) / (double) small_cb_size);
+        } else {
+            small_cb_num = 1;
         }
 
-        // Retrieve beta keys for big and small CBs
-        std::stringstream ss;
-        ss << chan << "_" << int(num) << "_" << bigsize;
-        std::string betaKeyBig = ss.str();
-        std::stringstream ss1;
-        ss1 << chan << "_" << int(num) << "_" << smallsize;
-        std::string betaKeySmall = ss1.str();
+
 
         // Load beta values from the lookup table
         // todo: interpolate beta with speed
         double beta5gBig = 1;
         double beta5gSmall = 1;
 
-        if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
-            if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
-                beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
-            else
-                std::cout << "speed not listed : " << speed << std::endl;
-        else
-            std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
+        {
+            // Retrieve beta keys for big and small CBs
+            std::stringstream ss;
+            ss << chan << "_" << int(num) << "_" << big_cb_size;
+            std::string betaKeyBig = ss.str();
+            std::stringstream ss1;
+            ss1 << chan << "_" << int(num) << "_" << small_cb_size;
+            std::string betaKeySmall = ss1.str();
 
-        if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
-            if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
-                beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
+            if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
+                if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
+                    beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
+                else
+                    std::cout << "speed not listed : " << speed << std::endl;
             else
-                std::cout << "speed not listed : " << speed << std::endl;
-        else
-            std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
+                std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
+
+            if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
+                if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
+                    beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
+                else
+                    std::cout << "speed not listed : " << speed << std::endl;
+            else
+                std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
+        }
 
         /**
          * Originally, the effective SNR of the TBS was calculated as the SNR of the PRBs
@@ -315,84 +312,114 @@ namespace ns3 {
          * SNR_EFF(CB1) = ((1-0.x)*RB7 + 1*RB8 + ... + 1*RB10)/(4-0.x)
          *
          */
-        // Calculate the effective SNR of the CBs
-        uint32_t n = map.size();
-        double prbSize = size*8/n;
 
-        //double ex = 0;
-        //for (auto mapVal : map)
-        //{
-        //    ex += exp(-(log(sinr[mapVal])/beta5gBig));
-        //}
-        //double snr_eff =  exp(-beta5gBig * log(ex/n));
-        //
-        //if (snr_eff < sinr[0])
-        //    std::cout << "snr_eff " << snr_eff << " sinr[0] " << sinr[0] << " beta " << beta5gBig << std::endl;
-        //return snr_eff;
+        std::vector<std::tuple<int, double, double>> cb_snr_components;
 
-        // Calculate the effective SNR of the CBs
-        double snr_eff = 0;
-        double ex = 0;
-        auto it = map.begin();
-        int numPrbsPerCB = 0;
-        int endBigCBs = numBigSize*bigsize/prbSize;
-        int tempSize = size*8;
-        double CBavgSinr = 0.0;
-        double currCBsize = bigsize;
-        int remainingBitsPrb = 0;
-        std::vector<std::tuple<double, double>> snr_eff_components;
-        while (tempSize > 0)
         {
-            if (it == map.end())
-                break;
+            uint32_t n = map.size();
+            double prb_size = size * 8 / n;
+            // Calculate the SINR components of the CBS
+            auto it = map.begin();
+            double curr_prb_sinr = sinr[*it];
+            int tbs_size = size * 8;
+            double curr_cb_size = big_cb_num > 0 ? big_cb_size : (small_cb_num > 0 ? small_cb_size : 0);
+            int curr_cb_index, used_budget, prb_budget, new_cb_budget, new_cb_size;
+            curr_cb_index = used_budget = prb_budget = new_cb_budget = new_cb_size = 0;
+            double prb_fraction = 0.0;
+            while (tbs_size > 0) {
+                if (it == map.end())
+                    break;
+                // fetch remaining bits of current PRB
+                prb_budget = prb_size - used_budget;
 
-            if (currCBsize > prbSize)
-            {
-                CBavgSinr += sinr[*it];
-                numPrbsPerCB += 1;
-                currCBsize -= prbSize;
-                continue;
-            }
+                // calculate remaining bits of current CB
+                new_cb_size = curr_cb_size > prb_budget ? curr_cb_size - prb_budget : 0;
 
-            // if (currCBsize <= prbSize)
-            if (currCBsize < prbSize)
-            {
-                //calculate how much of the RB will contribute the the CB SINR weighting the number of bits
-            }
-            else
-            {
-                //if the current CB and the PRB have the same size
-                CBavgSinr += sinr[*it];
-                numPrbsPerCB += 1;
-                currCBsize -= prbSize;
-            }
+                //calculate remaining bits of current PRB after subtracting those used for the CB
+                prb_budget = new_cb_size > 0 ? 0 : prb_budget - curr_cb_size;
 
-            //After the end of each CB, we need to calculate the avgSinr of the CB
-            CBavgSinr /= numPrbsPerCB;
+                // calculate fraction of PRB used by the CB
+                prb_fraction = (curr_cb_size - new_cb_size) / prb_size;
 
-            //Then use the beta to calculate the portion of the effective SNR
-            if (numBigSize > 0)
-            {
-                if (numBigSize == 1)
-                    snr_eff_components.push_back(std::tuple<double, double>(CBavgSinr, beta5gBig));
-                numBigSize--;
+                // store SINR and fraction of CB used for effective SNR calculation
+                cb_snr_components.emplace_back(curr_cb_index, curr_prb_sinr, prb_fraction);
+
+                // update remaining bits of CB
+                curr_cb_size = new_cb_size;
+
+                // update remaining bits of PRB
+                used_budget = prb_size - prb_budget;
+
+                // if current CB has been fulfilled
+                if (curr_cb_size == 0) {
+                    // subtract fulfilled CB and discount size from TBS
+                    if (big_cb_num > 0) {
+                        big_cb_num--;
+                        tbs_size -= big_cb_size;
+                    } else if (small_cb_num > 0) {
+                        small_cb_num--;
+                        tbs_size -= small_cb_size;
+                    } else
+                        break;
+
+                    // break loop if all code blocks have been processed
+                    if ((big_cb_num + small_cb_num) == 0)
+                        break;
+                    curr_cb_size = big_cb_num > 0 ? big_cb_size : (small_cb_num > 0 ? small_cb_size : curr_cb_size);
+                    curr_cb_index++;
+                }
+
+                // if current PRB has been exhausted
+                if (used_budget == prb_size) {
+                    it++;
+                    if (it != map.end()) {
+                        curr_prb_sinr = sinr[*it];
+                        used_budget = 0;
+                    }
+                }
             }
-            else if (numSmallSize > 0)
-            {
-                if (numSmallSize == 1)
-                    snr_eff_components.push_back(std::tuple<double, double>(CBavgSinr, beta5gSmall));
-                numSmallSize--;
-            }
-            else
-            {
-                break;
-            }
-            //Reset counters
-            CBavgSinr = 0;
-            numPrbsPerCB = 0;
-            currCBsize = numBigSize > 0 ? bigsize : smallsize;
-            //end of if (currCBsize <= prbSize)
         }
+
+        std::vector<double> tbs_snr_components;
+        bool diff_ending_size = false;
+
+        {
+            int n = 0;
+            int curr_cb = 0;
+            double avg_cb_sinr = 0;
+            int max = 0;
+
+            // compute mean SINR of CBs based on PRBs SINR and fraction used
+            for (auto entry: cb_snr_components)
+            {
+                int cb_index = std::get<0>(entry);
+                double prb_sinr = std::get<1>(entry);
+                double prb_fraction = std::get<2>(entry);
+
+                if (cb_index != curr_cb) 
+                {
+                    tbs_snr_components.push_back(avg_cb_sinr / n);
+                    n = 0;
+                    avg_cb_sinr = 0;
+                }
+                avg_cb_sinr += prb_sinr * prb_fraction;
+                n++;
+                if (n > max)
+                    max = n;
+            }
+            tbs_snr_components.push_back(avg_cb_sinr / n);
+
+            // check if last CB is of a different size (small_cb_size)
+            if (n != max)
+                diff_ending_size = true;
+        }
+
+        double ex = 0;
+        for (auto mapVal : map)
+        {
+            ex += exp(-(log(sinr[mapVal])/beta5gBig));
+        }
+        double snr_eff =  exp(-beta5gBig * log(ex/n));
         return snr_eff;
     }
 
