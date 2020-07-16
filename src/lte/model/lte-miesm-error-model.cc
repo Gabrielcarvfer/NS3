@@ -220,15 +220,13 @@ namespace ns3 {
     }
 
     TbStats_t
-    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed)
-    {
+    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed) {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
         if (map.size() == 0)
             return TbStats_t{};
 
-        if (!errorDataLoaded)
-        {
+        if (!errorDataLoaded) {
             LoadErrorData();
         }
 
@@ -245,48 +243,92 @@ namespace ns3 {
          *          e.g. 18kb requires two CBs with 8192 bits + CB with 4096 bits
          *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
          */
-        int tbs_bits = size*8;
+        int tbs_bits = size * 8;
         double prb_size = tbs_bits / map.size();
-        int big_cb_size = tbs_bits;
-        int small_cb_size = -1;
-        // Round size to nearest larger power of two
-        for (int i = 256; i <= 8192; i *= 2) {
-            if (big_cb_size > i)
-                continue;
-            big_cb_size = i;
-            break;
-        }
-        // if big cb size still larger than the maximum supported by the hardware,
-        //  assume largest supported power of two
-        big_cb_size = big_cb_size > 8192 ? 8192 : big_cb_size;
+        int big_cb_size, small_cb_size, big_cb_num, small_cb_num;
+        big_cb_size = small_cb_size = big_cb_num = small_cb_num = 0;
 
-        // if the cb is larger than the big_cb_size, it will require splitting of the TB into multiple CBs
-        //   we then need to account for additional 24 bits of CRC for each CB
         {
-            int tempSize = tbs_bits;
-            while (tempSize > 0)
+            // estimate CB size (according to sec 5.1.2 of TS 36.212)
+            uint16_t Z = 8192; // max size of a codeblock (including CRC)
+            uint32_t B = tbs_bits;
+            uint32_t C = 0; // no. of codeblocks
+            uint32_t B1 = 0; // tbs + codeblock CRCs overhead
+            uint32_t deltaK = 0;
+            if (B <= Z)
             {
-                tempSize -= big_cb_size;
-                tbs_bits += 24;
+                // only one codeblock
+                //L = 0;
+                C = 1;
+                B1 = B;
+            }
+            else
+            {
+                uint32_t L = 24;
+                C = ceil((double) B / ((double) (Z - L)));
+                B1 = B + C * L;
+            }
+
+            // implement a modified binary search
+            int min = 0;
+
+            int max = cbSizeTable5g.size() - 1;
+            int mid = 0;
+
+            //todo: aproveitar essa parte, escolhe a melhor configuração de codeblocks
+            do
+            {
+                mid = (min + max) / 2;
+                if (B1 > cbSizeTable5g[mid] * C)
+                {
+                    if (B1 < cbSizeTable5g[mid + 1] * C)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        min = mid + 1;
+                    }
+                }
+                else
+                {
+                    if (B1 > cbSizeTable5g[mid - 1] * C)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        max = mid - 1;
+                    }
+                }
+            } while ((cbSizeTable5g[mid] * C != B1) && (min < max));
+
+            // adjust binary search to the largest integer value of K containing B1
+            if (B1 > cbSizeTable5g[mid] * C)
+            {
+                mid++;
+            }
+
+            uint16_t KplusId = mid;
+            big_cb_size = cbSizeTable5g[mid];
+
+            if (C == 1)
+            {
+                small_cb_num = 1;
+                small_cb_size = big_cb_size;
+                big_cb_num = 0;
+                big_cb_size = 0;
+            }
+            else
+            {
+                // second segmentation size: K- = maximum K in table such that K < K+
+                // -fstrict-overflow sensitive, see bug 1868
+                small_cb_size = cbSizeTable5g[KplusId > 1 ? KplusId - 1 : 0];
+                deltaK = big_cb_size - small_cb_size;
+                small_cb_num = floor((((double) C * big_cb_size) - (double) B1) / (double) deltaK);
+                big_cb_num = C - small_cb_num;
             }
         }
-        int big_cb_num = tbs_bits / big_cb_size;
-
-        small_cb_size = tbs_bits % big_cb_size;
-        int small_cb_num = 0;
-        if (small_cb_size != 0) {
-            for (int i = 256; i <= 8192; i *= 2) {
-                if (small_cb_size > i)
-                    continue;
-                small_cb_size = i;
-                break;
-            }
-            small_cb_num = ceil((tbs_bits - big_cb_size * big_cb_num) / (double) small_cb_size);
-        } else {
-            small_cb_num = 1;
-        }
-
-
 
         // Load beta values from the lookup table
         // todo: interpolate beta with speed
