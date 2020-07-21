@@ -226,6 +226,16 @@ LteAmc::GetDlTbSizeFromMcs (int mcs, int nprb)
 }
 
 int
+LteAmc::GetPrbSizeFromMcsAndNumerology(int mcs, int num)
+{
+    if (!prbDataLoaded)
+        LoadPrbData ();
+    std::tuple<uint8_t, uint8_t> key{(uint8_t)mcs, (uint8_t)num};
+    return prb5gSize[key];
+}
+
+
+int
 LteAmc::GetUlTbSizeFromMcs (int mcs, int nprb)
 {
   NS_LOG_FUNCTION (mcs);
@@ -297,63 +307,54 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
     {
       NS_LOG_DEBUG (this << " AMC-VIENNA RBG size " << (uint16_t)rbgSize);
       NS_ASSERT_MSG (rbgSize > 0, " LteAmc-Vienna: RBG size must be greater than 0");
-      std::vector <int> rbgMap;
-      rbgMap.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
-      int rbId = 0;
+      std::vector <int> rbgMap(sinr.ConstValuesEnd()-sinr.ConstValuesBegin(), 0);
+      std::iota(rbgMap.begin(), rbgMap.end(), 0);
       double speed = 0; //todo: calculate speed
-      for (it = sinr.ConstValuesBegin (); it != sinr.ConstValuesEnd (); it++)
+
+      TbStats_t tbStats;
+      uint8_t mcs = 0;
+      while (mcs <= 26)
       {
-        rbgMap.push_back (rbId++);
-        if ((rbId % rbgSize == 0)||((it+1)==sinr.ConstValuesEnd ()))
-         {
-            TbStats_t tbStats;
-            uint8_t mcs = 0;
-            while (mcs <= 26)
-            {
-                HarqProcessInfoList_t harqInfoList;
-                if (m_amcModel == MiErrorModel)
-                    tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
-                else
-                    tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-                if (tbStats.tbler > 0.1) break;
-                mcs++;
-            }
-            if (mcs > 0)
-            {
-                mcs--;
-            }
-            NS_LOG_DEBUG (this << "\t RBG " << rbId << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
-            int rbgCqi = 0;
-            if ((tbStats.tbler > 0.1)&&(mcs==0))
-              {
-                rbgCqi = 0; // any MCS can guarantee the 10 % of BER
-              }
-            else if (mcs == 26)
-              {
-                rbgCqi = 15; // all MCSs can guarantee the 10 % of BER
-              }
-            else
-              {
-                double s = SpectralEfficiencyForMcs[mcs];
-                rbgCqi = 0;
-                while ((rbgCqi < 15) && (SpectralEfficiencyForCqi[rbgCqi + 1] < s))
-                {
-                  ++rbgCqi;
-                }
-              }
-            //std::cout << this << "\t rbId " << rbId << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi << std::endl;// std::cout > CQI_trace.txt
-            NS_LOG_DEBUG (this << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi);
-            // fill the cqi vector (per RB basis)
-            for (uint8_t j = 0; j < rbgSize; j++)
-              {
-                cqi.push_back (rbgCqi);
-              }
-            rbgMap.clear ();
-         }
-        
+          HarqProcessInfoList_t harqInfoList;
+          if (m_amcModel == MiErrorModel)
+              tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+          else
+              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) GetDlTbSizeFromMcs (mcs, 1), (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+          if (tbStats.tbler > 0.1) break;
+          mcs++;
       }
-      
-    }
+      if (mcs > 0)
+      {
+          mcs--;
+      }
+      NS_LOG_DEBUG (this << "\t RBG " << rbgMap.size() << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
+      int rbgCqi = 0;
+      if ((tbStats.tbler > 0.1)&&(mcs==0))
+        {
+          rbgCqi = 0; // any MCS can guarantee the 10 % of BER
+        }
+      else if (mcs == 26)
+        {
+          rbgCqi = 15; // all MCSs can guarantee the 10 % of BER
+        }
+      else
+        {
+          double s = SpectralEfficiencyForMcs[mcs];
+          rbgCqi = 0;
+          while ((rbgCqi < 15) && (SpectralEfficiencyForCqi[rbgCqi + 1] < s))
+          {
+            ++rbgCqi;
+          }
+        }
+      //std::cout << this << "\t rbId " << rbId << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi << std::endl;// std::cout > CQI_trace.txt
+      NS_LOG_DEBUG (this << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi);
+      // fill the cqi vector (per RB basis)
+      for (uint8_t j = 0; j < rbgSize; j++)
+        {
+          cqi.push_back (rbgCqi);
+        }
+      rbgMap.clear ();
+   }
 
   return cqi;
 }

@@ -87,6 +87,8 @@ public:
   */
   int GetDlTbSizeFromMcs (int mcs, int nprb);
 
+  static int GetPrbSizeFromMcsAndNumerology(int mcs, int num);
+
   /**
    * \brief Get the Transport Block Size for a selected MCS and number of PRB (table 8.6.1-1 of 36.213)
    * \param mcs the MCS index

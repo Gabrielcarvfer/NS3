@@ -220,7 +220,15 @@ namespace ns3 {
     }
 
     TbStats_t
-    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std::vector<int>& map, uint16_t size, uint8_t mcs, HarqProcessInfoList_t miHistory, uint8_t num, std::string chan, double speed) {
+    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr,
+                                                  const std::vector<int>& map,
+                                                  uint16_t prb_size,
+                                                  uint16_t size,
+                                                  uint8_t mcs,
+                                                  HarqProcessInfoList_t miHistory,
+                                                  uint8_t num,
+                                                  std::string chan,
+                                                  double speed) {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
         if (map.size() == 0)
@@ -244,7 +252,6 @@ namespace ns3 {
          *                  (last part would fit in 2048 bits, but there is additional fragmenting overhead)
          */
         int tbs_bits = size * 8;
-        double prb_size = tbs_bits / map.size();
         int big_cb_size, small_cb_size, big_cb_num, small_cb_num;
         big_cb_size = small_cb_size = big_cb_num = small_cb_num = 0;
 
@@ -344,21 +351,22 @@ namespace ns3 {
             ss1 << chan << "_" << int(num) << "_" << small_cb_size;
             std::string betaKeySmall = ss1.str();
 
-            if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
-                if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
-                    beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
+            if (big_cb_num > 0)
+                if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
+                    if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
+                        beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
+                    else
+                        std::cout << "speed not listed : " << speed << std::endl;
                 else
-                    std::cout << "speed not listed : " << speed << std::endl;
-            else
-                std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
-
-            if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
-                if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
-                    beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
+                    std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
+            if (small_cb_num > 0)
+                if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
+                    if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
+                        beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
+                    else
+                        std::cout << "speed not listed : " << speed << std::endl;
                 else
-                    std::cout << "speed not listed : " << speed << std::endl;
-            else
-                std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
+                    std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
         }
 
         /**
@@ -482,6 +490,7 @@ namespace ns3 {
                     // break loop if all code blocks have been processed
                     if ((big_cb_num + small_cb_num) == 0)
                         break;
+
                     curr_cb_size = big_cb_num > 0 ? big_cb_size : (small_cb_num > 0 ? small_cb_size : curr_cb_size);
                     curr_cb_index++;
                 }
@@ -524,11 +533,12 @@ namespace ns3 {
                     cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
                     // then aggregate the error rate of the TB
-                    errorRate *= pow(1.0 - cbler, 1);
+                    errorRate *= (1.0 - cbler);
 
                     // and finally reset the variables that will get reused by the next CB
                     n = 0;
                     avg_cb_sinr = 0;
+                    curr_cb = cb_index;
                 }
                 // calculate SNR fraction of the current PRB of a given RB
                 avg_cb_sinr += (prb_sinr * prb_fraction)/(curr_cb < smallBeta ? beta5gBig : beta5gSmall);
@@ -539,7 +549,7 @@ namespace ns3 {
             cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
             // then aggregate the error rate of the TB
-            errorRate *= pow(1.0 - cbler, 1);
+            errorRate *= (1.0 - cbler);
         }
 
         // compute final TB error rate
