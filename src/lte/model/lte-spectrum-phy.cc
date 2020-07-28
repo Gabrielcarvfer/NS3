@@ -1875,7 +1875,7 @@ LteSpectrumPhy::EndRxDlCtrl ()
   bool error = false;
   if (m_ctrlErrorModelEnabled)
     {
-      double  errorRate = LteMiErrorModel::GetPcfichPdcchError (m_sinrPerceived);
+      double  errorRate = 0.1; // workaround for separate control channel LteMiErrorModel::GetPcfichPdcchError (m_sinrPerceived);
       error = m_random->GetValue () > errorRate ? false : true;
       NS_LOG_DEBUG (this << " PCFICH-PDCCH Decodification, errorRate " << errorRate << " error " << error);
     }
