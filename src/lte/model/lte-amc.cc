@@ -137,6 +137,14 @@ void LteAmc::LoadPrbData()
         }
 
     }
+    //for (uint8_t numerology = 0; numerology < 6; numerology++)
+    //{
+    //    for (uint8_t mcs = 0; mcs < 27; mcs++)
+    //    {
+    //        std::tuple<uint8_t, uint8_t> prb5gSizeKey (mcs, numerology);
+    //        std::cout << "num " << (int) numerology << " mcs " << (int) mcs << " tbs " << prb5gSize[prb5gSizeKey]  <<  " tbs*100rbs/8 " << prb5gSize[prb5gSizeKey]*100/8 << std::endl;
+    //    }
+    //}
     prbDataLoaded = true;
 }
 
@@ -316,13 +324,18 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       while (mcs <= 26)
       {
           HarqProcessInfoList_t harqInfoList;
+          uint32_t prbSize = GetDlTbSizeFromMcs (mcs, 1);
+          uint32_t tbsBytes = (prbSize*rbgSize) / 8;
           if (m_amcModel == MiErrorModel)
-              tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList);
+              tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, tbsBytes, mcs, harqInfoList);
           else
-              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) GetDlTbSizeFromMcs (mcs, 1), (uint16_t)GetDlTbSizeFromMcs (mcs, rbgSize) / 8, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-          if (tbStats.tbler > 0.1) break;
+              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize,tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+          //std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << "\n";
+          if (tbStats.tbler > 0.1)
+              break;
           mcs++;
       }
+      //std::cout << "\n\n\n" << std::endl;
       if (mcs > 0)
       {
           mcs--;

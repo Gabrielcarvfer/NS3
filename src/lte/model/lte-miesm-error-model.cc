@@ -223,7 +223,7 @@ namespace ns3 {
     LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr,
                                                   const std::vector<int>& map,
                                                   uint16_t prb_size,
-                                                  uint16_t size,
+                                                  uint32_t size,
                                                   uint8_t mcs,
                                                   HarqProcessInfoList_t miHistory,
                                                   uint8_t num,
@@ -234,7 +234,8 @@ namespace ns3 {
         if (map.size() == 0)
             return TbStats_t{};
 
-        if (!errorDataLoaded) {
+        if (!errorDataLoaded)
+        {
             LoadErrorData();
         }
 
@@ -535,6 +536,8 @@ namespace ns3 {
                     // then aggregate the error rate of the TB
                     errorRate *= (1.0 - cbler);
 
+                    //std::cout << "sinr " << snrEff << " cbs " << big_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << "\n";
+
                     // and finally reset the variables that will get reused by the next CB
                     n = 0;
                     avg_cb_sinr = 0;
@@ -550,6 +553,7 @@ namespace ns3 {
 
             // then aggregate the error rate of the TB
             errorRate *= (1.0 - cbler);
+            //std::cout << "sinr " << snrEff << " cbs " << small_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << "\n";
         }
 
         // compute final TB error rate
