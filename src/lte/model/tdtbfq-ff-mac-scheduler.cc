@@ -617,7 +617,7 @@ TdTbfqFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::S
       newRar.m_grant.m_rnti = newRar.m_rnti;
       newRar.m_grant.m_mcs = m_ulGrantMcs;
       uint16_t rbLen = 1;
-      uint16_t tbSizeBits = 0;
+      uint32_t tbSizeBits = 0;
       // find lowest TB size that fits UL grant estimated size
       while ((tbSizeBits < (*itRach).m_estimatedSize) && (rbStart + rbLen < (ffrRbStartOffset + maxContinuousUlBandwidth)))
         {

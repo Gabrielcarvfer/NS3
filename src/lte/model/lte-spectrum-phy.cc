@@ -1612,7 +1612,7 @@ LteSpectrumPhy::UpdateSinrPerceived (const SpectrumValue& sinr)
 
 
 void
-LteSpectrumPhy::AddExpectedTb (uint16_t  rnti, uint8_t ndi, uint16_t size, uint8_t mcs, std::vector<int> map, uint8_t layer, uint8_t harqId,uint8_t rv,  bool downlink)
+LteSpectrumPhy::AddExpectedTb (uint16_t  rnti, uint8_t ndi, uint32_t size, uint8_t mcs, std::vector<int> map, uint8_t layer, uint8_t harqId,uint8_t rv,  bool downlink)
 {
   NS_LOG_FUNCTION (this << " rnti: " << rnti << " NDI " << (uint16_t)ndi << " size " << size << " mcs " << (uint16_t)mcs << " layer " << (uint16_t)layer << " rv " << (uint16_t)rv);
   TbId_t tbId;

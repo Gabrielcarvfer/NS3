@@ -96,7 +96,7 @@ struct DlDciListElement_s
   uint64_t  m_rbBitmap; ///< rb bitmap
   uint8_t   m_rbShift; ///< RB shift
   uint8_t   m_resAlloc; ///< The type of resource allocation
-  std::vector <uint16_t>  m_tbsSize; ///< The TBs size
+  std::vector <uint32_t>  m_tbsSize; ///< The TBs size
   std::vector <uint8_t>   m_mcs; ///< MCS
   std::vector <uint8_t>   m_ndi; ///< New data indicator
   std::vector <uint8_t>   m_rv; ///< Redundancy version
@@ -141,7 +141,7 @@ struct UlDciListElement_s
   uint16_t  m_rnti; ///< RNTI
   uint8_t   m_rbStart; ///< start
   uint8_t   m_rbLen; ///< length
-  uint16_t  m_tbSize; ///< size
+  uint32_t  m_tbSize; ///< size
   uint8_t   m_mcs; ///< MCS
   uint8_t   m_ndi; ///< NDI
   uint8_t   m_cceIndex; ///< Control Channel Element index

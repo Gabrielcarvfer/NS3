@@ -73,7 +73,7 @@ struct TbId_t
 struct tbInfo_t
 {
   uint8_t ndi; ///< New data indicator
-  uint16_t size; ///< Transport block size
+  uint32_t size; ///< Transport block size
   uint8_t mcs; ///< MCS
   std::vector<int> rbBitmap; ///< Resource block bitmap
   uint8_t harqProcessId; ///< HARQ process id
@@ -403,7 +403,7 @@ public:
   * \param rv the redundancy version
   * \param downlink true when the TB is for DL
   */
-  void AddExpectedTb (uint16_t  rnti, uint8_t ndi, uint16_t size, uint8_t mcs, std::vector<int> map, uint8_t layer, uint8_t harqId, uint8_t rv, bool downlink);
+  void AddExpectedTb (uint16_t  rnti, uint8_t ndi, uint32_t size, uint8_t mcs, std::vector<int> map, uint8_t layer, uint8_t harqId, uint8_t rv, bool downlink);
   /**
    * \brief Remove expected transport block.
    *

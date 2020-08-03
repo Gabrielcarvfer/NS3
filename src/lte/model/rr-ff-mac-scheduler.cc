@@ -322,6 +322,8 @@ RrFfMacScheduler::DoSchedDlMacBufferReq (const struct FfMacSchedSapProvider::Sch
 int
 RrFfMacScheduler::GetRbgSize (int dlbandwidth)
 {
+    if (dlbandwidth == 132)
+        return 2;
   for (int i = 0; i < 4; i++)
     {
       if (dlbandwidth < Type0AllocationRbg[i])
@@ -487,7 +489,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       newRar.m_grant.m_rnti = newRar.m_rnti;
       newRar.m_grant.m_mcs = m_ulGrantMcs;
       uint16_t rbLen = 1;
-      uint16_t tbSizeBits = 0;
+      uint32_t tbSizeBits = 0;
       // find lowest TB size that fits UL grant estimated size
       while ((tbSizeBits < (*itRach).m_estimatedSize) && (rbStart + rbLen < m_cschedCellConfig.m_ulBandwidth))
         {
