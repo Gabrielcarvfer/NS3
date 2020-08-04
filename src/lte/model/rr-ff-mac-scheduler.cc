@@ -31,6 +31,7 @@
 #include <ns3/lte-common.h>
 #include <ns3/lte-vendor-specific-parameters.h>
 #include <ns3/boolean.h>
+#include <ns3/spectrum-test.h>
 
 namespace ns3 {
 
@@ -1418,7 +1419,10 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
                 }
               continue; // CQI == 0 means "out of range" (see table 7.2.3-1 of 36.213)
             }
+          std::vector<double> sinrVec = (*itCqi).second;
+          cqi = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
           uldci.m_mcs = m_amc->GetMcsFromCqi (cqi);
+          //std::cout << "cqi " << (int) cqi << " mcs " << (int) uldci.m_mcs << std::endl;
         }
       uldci.m_tbSize = (m_amc->GetUlTbSizeFromMcs (uldci.m_mcs, rbPerFlow) / 8); // MCS 0 -> UL-AMC TBD
 

@@ -114,6 +114,8 @@ public:
   std::vector<int> CreateCqiFeedbacks (const SpectrumValue& sinr,
                                                   uint8_t rbgSize = 0);
 
+  int GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles,
+                                                  uint8_t rbgSize = 0);
   /**
    * \brief Get a proper CQI for the spectral efficiency value.
    * In order to assure a lower block error rate, the AMC chooses the lower CQI value

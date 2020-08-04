@@ -272,7 +272,6 @@ std::vector<int>
 LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
 {
   NS_LOG_FUNCTION (this);
-
   std::vector<int> cqi;
   cqi.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
   Values::const_iterator it;
@@ -325,12 +324,12 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       {
           HarqProcessInfoList_t harqInfoList;
           uint32_t prbSize = GetDlTbSizeFromMcs (mcs, 1);
-          uint32_t tbsBytes = (prbSize*rbgSize) / 8;
+          uint32_t tbsBytes = (prbSize*rbgSize) / 8; // rbgMap.size()?
           if (m_amcModel == MiErrorModel)
               tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, tbsBytes, mcs, harqInfoList);
           else
-              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize,tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-          //std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << "\n";
+              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+          std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
           if (tbStats.tbler > 0.1)
               break;
           mcs++;
@@ -340,6 +339,8 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
       {
           mcs--;
       }
+      //std::cout << Simulator::Now().GetSeconds() << "  generateCqiFeedback " << log10(sinr[0]*180000)*10+50 << " tbler " << tbStats.tbler << std::endl;
+
       NS_LOG_DEBUG (this << "\t RBG " << rbgMap.size() << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
       int rbgCqi = 0;
       if ((tbStats.tbler > 0.1)&&(mcs==0))
@@ -370,6 +371,76 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
    }
 
   return cqi;
+}
+
+int LteAmc::GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles, uint8_t rbgSize)
+{
+    std::vector<int> cqiVector;
+
+    NS_LOG_DEBUG (this << " AMC-VIENNA RBG size " << (uint16_t)rbgSize);
+    NS_ASSERT_MSG (rbgSize > 0, " LteAmc-Vienna: RBG size must be greater than 0");
+    std::vector <int> rbgMap(sinrAsDoubles.size(), 0);
+    std::iota(rbgMap.begin(), rbgMap.end(), 0);
+    double speed = 0; //todo: calculate speed
+
+    TbStats_t tbStats;
+    uint8_t mcs = 0;
+    while (mcs <= 26)
+    {
+        HarqProcessInfoList_t harqInfoList;
+        uint32_t prbSize = GetDlTbSizeFromMcs (mcs, 1);
+        uint32_t tbsBytes = (prbSize*rbgSize) / 8; // rbgMap.size()?
+        if (m_amcModel == MiesmErrorModel)
+            tbStats = LteMiesmErrorModel::GetTbDecodificationStatsDoubles (sinrAsDoubles, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+        std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
+        if (tbStats.tbler > 0.1)
+            break;
+        mcs++;
+    }
+    //std::cout << "\n\n\n" << std::endl;
+    if (mcs > 0)
+    {
+        mcs--;
+    }
+    //std::cout << Simulator::Now().GetSeconds() << "  generateCqiFeedback " << log10(sinr[0]*180000)*10+50 << " tbler " << tbStats.tbler << std::endl;
+
+    NS_LOG_DEBUG (this << "\t RBG " << rbgMap.size() << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
+    int rbgCqi = 0;
+    if ((tbStats.tbler > 0.1)&&(mcs==0))
+    {
+        rbgCqi = 0; // any MCS can guarantee the 10 % of BER
+    }
+    else if (mcs == 26)
+    {
+        rbgCqi = 15; // all MCSs can guarantee the 10 % of BER
+    }
+    else
+    {
+        double s = SpectralEfficiencyForMcs[mcs];
+        rbgCqi = 0;
+        while ((rbgCqi < 15) && (SpectralEfficiencyForCqi[rbgCqi + 1] < s))
+        {
+            ++rbgCqi;
+        }
+    }
+    //std::cout << this << "\t rbId " << rbId << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi << std::endl;// std::cout > CQI_trace.txt
+    NS_LOG_DEBUG (this << "\t MCS " << (uint16_t)mcs << "-> CQI " << rbgCqi);
+    // fill the cqi vector (per RB basis)
+    for (uint8_t j = 0; j < rbgSize; j++)
+    {
+        cqiVector.push_back (rbgCqi);
+    }
+    rbgMap.clear ();
+
+
+    // Find smallest value
+    int cqi = 15;
+
+    for (auto tempCqi: cqiVector)
+    {
+        cqi = tempCqi < cqi ? tempCqi : cqi;
+    }
+    return cqi;
 }
 
 uint16_t LteAmc::GetNumerology () const
