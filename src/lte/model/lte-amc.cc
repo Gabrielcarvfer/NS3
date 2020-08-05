@@ -392,7 +392,7 @@ int LteAmc::GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles, uint8
         uint32_t tbsBytes = (prbSize*rbgSize) / 8; // rbgMap.size()?
         if (m_amcModel == MiesmErrorModel)
             tbStats = LteMiesmErrorModel::GetTbDecodificationStatsDoubles (sinrAsDoubles, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-        std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
+        //std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
         if (tbStats.tbler > 0.1)
             break;
         mcs++;
