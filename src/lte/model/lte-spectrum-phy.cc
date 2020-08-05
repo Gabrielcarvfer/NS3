@@ -583,6 +583,7 @@ LteSpectrumPhy::StartTxDataFrame (Ptr<PacketBurst> pb, std::list<Ptr<LteControlM
       txParams->txPhy = GetObject<SpectrumPhy> ();
       txParams->txAntenna = m_antenna;
       txParams->psd = m_txPsd;
+      //std::cout << "SpecPhy::TxData txPsd " << m_txPsd->ValuesAt(0) << std::endl;
       txParams->packetBurst = pb;
       txParams->ctrlMsgList = ctrlMsgList;
       txParams->cellId = m_cellId;
@@ -634,6 +635,7 @@ LteSpectrumPhy::StartTxDlCtrlFrame (std::list<Ptr<LteControlMessage> > ctrlMsgLi
       // LteSpectrumSignalParametersDlCtrlFrame
       ChangeState (TX_DL_CTRL);
       NS_ASSERT (m_channel);
+      //std::cout << "SpecPhy::TxCtrl txPsd " << m_txPsd->ValuesAt(0) << std::endl;
 
       Ptr<LteSpectrumSignalParametersDlCtrlFrame> txParams = Create<LteSpectrumSignalParametersDlCtrlFrame> ();
       txParams->duration = DL_CTRL_DURATION;
@@ -686,7 +688,7 @@ LteSpectrumPhy::StartTxUlSrsFrame ()
       */
       NS_ASSERT (m_txPsd);
       NS_LOG_LOGIC (this << " m_txPsd: " << *m_txPsd);
-      
+      //std::cout << "SpecPhy::TxSrs txPsd " << m_txPsd->ValuesAt(0) << std::endl;
       // we need to convey some PHY meta information to the receiver
       // to be used for simulation purposes (e.g., the CellId). This
       // is done by setting the cellId parameter of 
@@ -775,16 +777,19 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
 
   if (lteDataRxParams != 0)
     {
+      //std::cout << "SpecPhy::RxData currPsd " << m_interferenceData->GetAllSignals()->ValuesAt(0) << " rxPsd " << rxPsd->ValuesAt(0) << std::endl;
       m_interferenceData->AddSignal (rxPsd, duration);
       StartRxData (lteDataRxParams);
     }
   else if (lteDlCtrlRxParams!=0)
     {
+      //std::cout << "SpecPhy::RxData currPsd " << m_interferenceCtrl->GetAllSignals()->ValuesAt(0) << " rxPsd " << rxPsd->ValuesAt(0) << std::endl;
       m_interferenceCtrl->AddSignal (rxPsd, duration);
       StartRxDlCtrl (lteDlCtrlRxParams);
     }
   else if (lteUlSrsRxParams!=0)
     {
+      //std::cout << "SpecPhy::RxSrs currPsd " << m_interferenceCtrl->GetAllSignals()->ValuesAt(0) << " rxPsd " << rxPsd->ValuesAt(0) << std::endl;
       m_interferenceCtrl->AddSignal (rxPsd, duration);
       StartRxUlSrs (lteUlSrsRxParams);
     }
@@ -1608,6 +1613,7 @@ LteSpectrumPhy::UpdateSinrPerceived (const SpectrumValue& sinr)
 {
   NS_LOG_FUNCTION (this << sinr);
   m_sinrPerceived = sinr;
+  //std::cout << "SpecPhy::UpdateSinr " <<  sinr.ValuesAt(0) << " rxPower " << sinr.ValuesAt(0)*3.16228e-20 << std::endl;
 }
 
 
@@ -1694,6 +1700,7 @@ LteSpectrumPhy::EndRxData ()
           double speed = 0.0;//todo: fix speed calculation
           TbStats_t tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
           (*itTb).second.mi = tbStats.mi;
+          //std::cout << Simulator::Now().GetSeconds() << "  endRxData " << m_sinrPerceived[0] << " tbler " << tbStats.tbler << std::endl;//log10(sinrval*180000)*10+50
           (*itTb).second.corrupt = m_random->GetValue () > tbStats.tbler ? false : true;
           NS_LOG_DEBUG (this << "RNTI " << (*itTb).first.m_rnti << " size " << (*itTb).second.size << " mcs " << (uint32_t)(*itTb).second.mcs << " bitmap " << (*itTb).second.rbBitmap.size () << " layer " << (uint16_t)(*itTb).first.m_layer << " TBLER " << tbStats.tbler << " corrupted " << (*itTb).second.corrupt);
           // fire traces on DL/UL reception PHY stats

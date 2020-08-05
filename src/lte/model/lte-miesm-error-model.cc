@@ -555,7 +555,7 @@ namespace ns3 {
                     // then aggregate the error rate of the TB
                     errorRate *= (1.0 - cbler);
 
-                    std::cout << "sinr " << snrEff << " cbs " << big_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << std::endl;
+                    //std::cout << "sinr " << snrEff << " cbs " << big_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << std::endl;
 
                     // and finally reset the variables that will get reused by the next CB
                     n = 0;
@@ -572,11 +572,16 @@ namespace ns3 {
 
             // then aggregate the error rate of the TB
             errorRate *= (1.0 - cbler);
-            std::cout << "sinr " << snrEff << " cbs " << small_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << std::endl;
+            //std::cout << "sinr " << snrEff << " cbs " << small_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << std::endl;
         }
 
         // compute final TB error rate
         errorRate = 1.0 - errorRate;
+
+        //if (tbs_bits > 64000)
+        //{
+        //    std::cout << "-----------------------\ntbler "<< errorRate << " tbs " << size << "\n\n\n" << std::endl ;
+        //}
 
         NS_LOG_LOGIC (" Error rate " << errorRate);
         TbStats_t ret{};

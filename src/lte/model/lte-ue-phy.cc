@@ -764,7 +764,7 @@ LteUePhy::GenerateMixedCqiReport (const SpectrumValue& sinr)
       mixedSinr /= (*m_noisePsd);
       NS_LOG_LOGIC ("no data interf measurement available, SINR = " << mixedSinr);
     }
-
+  //std::cout << "UePhy::mixedCqi rsRxPower " << m_rsReceivedPower.ValuesAt(0)  << " noisePower " << m_noisePsd->ValuesAt(0) << " dataInterfUpdated " << m_dataInterferencePowerUpdated << " dataInterferencePower " << (m_dataInterferencePower.GetValuesN() > 0 ? m_dataInterferencePower.ValuesAt(0) : 0)<< std::endl;
   /*
    * some RBs are not used in PDSCH and their SINR is very high
    * for example with bandwidth 25, last RB is not used

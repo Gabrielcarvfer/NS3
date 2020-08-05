@@ -297,6 +297,7 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       txAntennaGain = rxParams->txAntenna->GetGainDb (txAngles);
                       NS_LOG_LOGIC ("txAntennaGain = " << txAntennaGain << " dB");
                       pathLossDb -= txAntennaGain;
+                      //std::cout << Simulator::Now().GetSeconds() << " txAntenaGain " << txAntennaGain << " totalPathloss " << pathLossDb << std::endl;
                     }
                   Ptr<AntennaModel> rxAntenna = (*rxPhyIterator)->GetRxAntenna ();
                   if (rxAntenna != 0)
@@ -305,12 +306,14 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       rxAntennaGain = rxAntenna->GetGainDb (rxAngles);
                       NS_LOG_LOGIC ("rxAntennaGain = " << rxAntennaGain << " dB");
                       pathLossDb -= rxAntennaGain;
+                      //std::cout << Simulator::Now().GetSeconds() << " rxAntenaGain " << rxAntennaGain << " totalPathloss " << pathLossDb << std::endl;
                     }
                   if (m_propagationLoss)
                     {
                       propagationGainDb = m_propagationLoss->CalcRxPower (0, txMobility, receiverMobility);
                       NS_LOG_LOGIC ("propagationGainDb = " << propagationGainDb << " dB");
                       pathLossDb -= propagationGainDb;
+                      //std::cout << Simulator::Now().GetSeconds() << " propLoss " << propagationGainDb << " totalPathloss " << pathLossDb << std::endl;
                     }                    
                   NS_LOG_LOGIC ("total pathLoss = " << pathLossDb << " dB");
                   //std::cout << "spectrumChannel ts=" << Simulator::Now() << ", txpower=" <<  log10(*(rxParams->psd->ConstValuesBegin())*180000)*10+30 << ", pathloss=" << pathLossDb << std::endl;
@@ -326,7 +329,9 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       continue;
                     }
                   double pathGainLinear = std::pow (10.0, (-pathLossDb) / 10.0);
-                  *(rxParams->psd) *= pathGainLinear;              
+                  //std::cout << Simulator::Now().GetSeconds() << "  StartTx sinr " << log10(rxParams->psd->ValuesAt(0)*180000)*10+50 << " pathloss " << pathLossDb;
+                  *(rxParams->psd) *= pathGainLinear;
+                  //std::cout << "SpecCh txPsd " << txParams->psd->ValuesAt(0) << " rxPsd " << rxParams->psd->ValuesAt(0) << std::endl;
 
                   if (m_spectrumPropagationLoss)
                     {

@@ -329,7 +329,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
               tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, tbsBytes, mcs, harqInfoList);
           else
               tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
-          std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
+          //std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
           if (tbStats.tbler > 0.1)
               break;
           mcs++;
