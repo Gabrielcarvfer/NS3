@@ -199,7 +199,7 @@ struct PhyTransmissionStatParameters
   uint8_t  m_txMode;  ///< the transmission Mode
   uint8_t  m_layer;   ///< the layer (cw) of the transmission
   uint8_t  m_mcs;     ///< MCS for transport block
-  uint16_t m_size;    ///< Size of transport block
+  uint32_t m_size;    ///< Size of transport block
   uint8_t  m_rv;      ///< the redundancy version (HARQ)
   uint8_t  m_ndi;     ///< new data indicator flag
   uint8_t  m_ccId;    ///< component carrier id
@@ -225,7 +225,7 @@ struct PhyReceptionStatParameters
   uint8_t  m_txMode;       ///< the transmission Mode
   uint8_t  m_layer;        ///< the layer (cw) of the transmission
   uint8_t  m_mcs;          ///< MCS for transport block
-  uint16_t m_size;         ///< Size of transport block
+  uint32_t m_size;         ///< Size of transport block
   uint8_t  m_rv;           ///< the redundancy version (HARQ)
   uint8_t  m_ndi;          ///< new data indicator flag
   uint8_t  m_correctness;  ///< correctness of the TB received
@@ -249,9 +249,9 @@ struct DlSchedulingCallbackInfo
   uint32_t subframeNo; ///< subframe number
   uint16_t rnti; ///< RNTI
   uint8_t  mcsTb1; ///< MCS TB1
-  uint16_t sizeTb1; ///< size TB1
+  uint32_t sizeTb1; ///< size TB1
   uint8_t  mcsTb2; ///< MCS TB2
-  uint16_t sizeTb2; ///< size TB2
+  uint32_t sizeTb2; ///< size TB2
   uint8_t  componentCarrierId; ///< component carrier ID
 }; 
 

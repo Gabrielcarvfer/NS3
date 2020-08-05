@@ -120,7 +120,7 @@ public:
    * @param componentCarrierId component carrier ID
    */
   void UlScheduling (uint16_t cellId, uint64_t imsi,uint32_t frameNo, uint32_t subframeNo,
-                     uint16_t rnti, uint8_t mcsTb, uint16_t sizeTb, uint8_t componentCarrierId);
+                     uint16_t rnti, uint8_t mcsTb, uint32_t sizeTb, uint8_t componentCarrierId);
 
   
   /** 
@@ -146,7 +146,7 @@ public:
    */
   static void UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                             uint8_t mcs, uint16_t size, uint8_t componentCarrierId);
+                             uint8_t mcs, uint32_t size, uint8_t componentCarrierId);
 
 
 private:

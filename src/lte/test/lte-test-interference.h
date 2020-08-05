@@ -82,7 +82,7 @@ public:
    * \param sizeTb
    */
   void UlScheduling (uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                     uint8_t mcs, uint16_t sizeTb);
+                     uint8_t mcs, uint32_t sizeTb);
 
 private:
   virtual void DoRun (void);

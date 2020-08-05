@@ -490,7 +490,7 @@ TracedCallbackTypedefTestCase::DoRun (void)
   */
 
   CHECK (LteEnbMac::UlSchedulingTracedCallback,
-         uint32_t, uint32_t, uint16_t, uint8_t, uint16_t);
+         uint32_t, uint32_t, uint16_t, uint8_t, uint32_t);
 
   CHECK (LteEnbPhy::ReportUeSinrTracedCallback,
          uint16_t, uint16_t, double, uint8_t,

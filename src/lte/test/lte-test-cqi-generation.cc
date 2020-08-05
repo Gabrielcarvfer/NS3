@@ -52,7 +52,7 @@ LteTestDlSchedulingCallback (LteCqiGenerationTestCase *testcase, std::string pat
 void
 LteTestUlSchedulingCallback (LteCqiGenerationTestCase *testcase, std::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                             uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
+                             uint8_t mcs, uint32_t sizeTb, uint8_t ccId)
 {
   testcase->UlScheduling (frameNo, subframeNo, rnti, mcs, sizeTb);
 }
@@ -67,7 +67,7 @@ LteTestDlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, 
 void
 LteTestUlSchedulingCallback2 (LteCqiGenerationDlPowerControlTestCase *testcase, std::string path,
                               uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                              uint8_t mcs, uint16_t sizeTb, uint8_t componentCarrierId)
+                              uint8_t mcs, uint32_t sizeTb, uint8_t componentCarrierId)
 {
   testcase->UlScheduling (frameNo, subframeNo, rnti, mcs, sizeTb);
 }
@@ -133,7 +133,7 @@ LteCqiGenerationTestCase::DlScheduling (DlSchedulingCallbackInfo dlInfo)
 
 void
 LteCqiGenerationTestCase::UlScheduling (uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                                        uint8_t mcs, uint16_t sizeTb)
+                                        uint8_t mcs, uint32_t sizeTb)
 {
   // need to allow for RRC connection establishment + SRS transmission
   if (Simulator::Now () > MilliSeconds (50))
@@ -266,7 +266,7 @@ LteCqiGenerationDlPowerControlTestCase::DlScheduling (DlSchedulingCallbackInfo d
 
 void
 LteCqiGenerationDlPowerControlTestCase::UlScheduling (uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                                                      uint8_t mcs, uint16_t sizeTb)
+                                                      uint8_t mcs, uint32_t sizeTb)
 {
   // need to allow for RRC connection establishment + SRS transmission
   if (Simulator::Now () > MilliSeconds (500))

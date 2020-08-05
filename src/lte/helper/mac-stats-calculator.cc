@@ -135,7 +135,7 @@ MacStatsCalculator::DlScheduling (uint16_t cellId, uint64_t imsi, DlSchedulingCa
 
 void
 MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frameNo,
-                                  uint32_t subframeNo, uint16_t rnti,uint8_t mcsTb, uint16_t size, uint8_t componentCarrierId)
+                                  uint32_t subframeNo, uint16_t rnti, uint8_t mcsTb, uint32_t size, uint8_t componentCarrierId)
 {
   NS_LOG_FUNCTION (this << cellId << imsi << frameNo << subframeNo << rnti << (uint32_t) mcsTb << size);
   NS_LOG_INFO ("Write UL Mac Stats in " << GetUlOutputFilename ().c_str ());
@@ -213,7 +213,7 @@ MacStatsCalculator::DlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std:
 void
 MacStatsCalculator::UlSchedulingCallback (Ptr<MacStatsCalculator> macStats, std::string path,
                       uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                      uint8_t mcs, uint16_t size, uint8_t componentCarrierId)
+                      uint8_t mcs, uint32_t size, uint8_t componentCarrierId)
 {
   NS_LOG_FUNCTION (macStats << path);
 

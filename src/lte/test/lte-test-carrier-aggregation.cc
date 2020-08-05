@@ -68,7 +68,7 @@ LteTestDlSchedulingCallback (CarrierAggregationTestCase *testcase, std::string p
 void
 LteTestUlSchedulingCallback (CarrierAggregationTestCase *testcase, std::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                             uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
+                             uint8_t mcs, uint32_t sizeTb, uint8_t ccId)
 {
   testcase->UlScheduling (frameNo, subframeNo, rnti, mcs, sizeTb, ccId);
 }
@@ -435,7 +435,7 @@ CarrierAggregationTestCase::DlScheduling (DlSchedulingCallbackInfo dlInfo)
 
 void
 CarrierAggregationTestCase::UlScheduling (uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                                       uint8_t mcs, uint16_t sizeTb, uint8_t componentCarrierId)
+                                       uint8_t mcs, uint32_t sizeTb, uint8_t componentCarrierId)
 {
   //NS_LOG_FUNCTION (frameNo << subframeNo << rnti << (uint32_t) mcs << sizeTb);
   // need to allow for RRC connection establishment + SRS transmission

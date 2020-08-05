@@ -261,7 +261,7 @@ struct UlGrant_s
   uint16_t m_rnti; ///< RNTI
   uint8_t m_rbStart; ///< start
   uint8_t m_rbLen; ///< length
-  uint16_t m_tbSize; ///< size
+  uint32_t m_tbSize; ///< size
   uint8_t m_mcs; ///< MCS
   bool m_hopping; ///< hopping?
   int8_t m_tpc; ///< Tx power control command

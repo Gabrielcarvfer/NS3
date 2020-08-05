@@ -54,7 +54,7 @@ LteTestDlSchedulingCallback (LteInterferenceTestCase *testcase, std::string path
 void
 LteTestUlSchedulingCallback (LteInterferenceTestCase *testcase, std::string path,
                              uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                             uint8_t mcs, uint16_t sizeTb, uint8_t ccId)
+                             uint8_t mcs, uint32_t sizeTb, uint8_t ccId)
 {
   testcase->UlScheduling (frameNo, subframeNo, rnti, mcs, sizeTb);
 }
@@ -254,7 +254,7 @@ LteInterferenceTestCase::DlScheduling (DlSchedulingCallbackInfo dlInfo)
 
 void
 LteInterferenceTestCase::UlScheduling (uint32_t frameNo, uint32_t subframeNo, uint16_t rnti,
-                                       uint8_t mcs, uint16_t sizeTb)
+                                       uint8_t mcs, uint32_t sizeTb)
 {
   NS_LOG_FUNCTION (frameNo << subframeNo << rnti << (uint32_t) mcs << sizeTb);
   // need to allow for RRC connection establishment + SRS transmission
