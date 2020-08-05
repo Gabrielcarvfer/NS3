@@ -952,6 +952,8 @@ LteEnbPhy::DoSetEarfcn (uint32_t ulEarfcn, uint32_t dlEarfcn)
   NS_LOG_FUNCTION (this << ulEarfcn << dlEarfcn);
   m_ulEarfcn = ulEarfcn;
   m_dlEarfcn = dlEarfcn;
+  m_uplinkSpectrumPhy->GetUla()->SetSystemFreq(LteSpectrumValueHelper::GetCarrierFrequency(ulEarfcn));
+  m_downlinkSpectrumPhy->GetUla()->SetSystemFreq(LteSpectrumValueHelper::GetCarrierFrequency(dlEarfcn));
 }
 
 

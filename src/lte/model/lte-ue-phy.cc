@@ -1399,6 +1399,7 @@ LteUePhy::DoStartCellSearch (uint32_t dlEarfcn)
 {
   NS_LOG_FUNCTION (this << dlEarfcn);
   m_dlEarfcn = dlEarfcn;
+  m_downlinkSpectrumPhy->GetUla()->SetSystemFreq(LteSpectrumValueHelper::GetCarrierFrequency(dlEarfcn));
   DoSetDlBandwidth (6); // configure DL for receiving PSS
   SwitchToState (CELL_SEARCH);
 }
@@ -1407,6 +1408,7 @@ void
 LteUePhy::DoSynchronizeWithEnb (uint16_t cellId, uint32_t dlEarfcn)
 {
   NS_LOG_FUNCTION (this << cellId << dlEarfcn);
+  m_downlinkSpectrumPhy->GetUla()->SetSystemFreq(LteSpectrumValueHelper::GetCarrierFrequency(dlEarfcn));
   m_dlEarfcn = dlEarfcn;
   DoSynchronizeWithEnb (cellId);
 }
@@ -1462,6 +1464,11 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
                   break;
                 }
             }
+      //5G RANGE
+      if (dlBandwidth == 33 || dlBandwidth == 44 || dlBandwidth == 132)
+        {
+          m_rbgSize = 2;
+        }
 
       //todo: temporarily testing effect of changes to rbg grouping size
       if (dlBandwidth == 100)
@@ -1480,6 +1487,7 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
 void 
 LteUePhy::DoConfigureUplink (uint32_t ulEarfcn, uint8_t ulBandwidth)
 {
+  m_uplinkSpectrumPhy->GetUla()->SetSystemFreq(LteSpectrumValueHelper::GetCarrierFrequency(ulEarfcn));
   m_ulEarfcn = ulEarfcn;
   m_ulBandwidth = ulBandwidth;
   m_ulConfigured = true;

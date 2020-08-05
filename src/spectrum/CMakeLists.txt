@@ -35,6 +35,8 @@ set(source_files
         helper/waveform-generator-helper.cc
         helper/spectrum-analyzer-helper.cc
         helper/tv-spectrum-transmitter-helper.cc
+        model/cdl-common.cc
+        model/cdl-spectrum-propagation-loss.cc
         )
 
 set(header_files
@@ -71,9 +73,18 @@ set(header_files
         helper/waveform-generator-helper.h
         helper/spectrum-analyzer-helper.h
         helper/tv-spectrum-transmitter-helper.h
+        model/cdl-common.h
+        model/cdl-spectrum-propagation-loss.h
+        model/5grange-transformation-units.h
+        model/5grange-cdl-params-3gpp.h
         )
 
-set(libraries_to_link ${libpropagation} ${libantenna} )
+set(libraries_to_link
+        ${libpropagation}
+        ${libantenna}
+        ${ARMADILLO_LIBRARIES}
+        OpenBLAS::OpenBLAS
+        )
 
 set(test_sources
         test/spectrum-interference-test.cc

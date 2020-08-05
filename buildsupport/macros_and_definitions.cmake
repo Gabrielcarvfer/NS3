@@ -153,6 +153,7 @@ macro(process_options)
     #process debug switch
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
+        include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
     endif()
 
     #PyTorch still need some fixes on Windows
@@ -200,7 +201,15 @@ macro(process_options)
         set(PCRE_FOUND True)
     endif()
 
-
+    #RANGE-5G uses Armadillo
+    add_package(Armadillo)
+    find_package(Armadillo REQUIRED)
+    if (NOT ${ARMADILLO_FOUND})
+        message(FATAL_ERROR "Armadillo not found")
+    else()
+        include_directories(${ARMADILLO_INCLUDE_DIRS})
+        find_package(OpenBLAS CONFIG REQUIRED)
+    endif()
 
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)
 
@@ -296,7 +305,7 @@ macro(process_options)
             else()
                 #If we don't find installed, install
                 add_package (libxml2)
-                get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
+                #get_property(libxml2_dir GLOBAL PROPERTY DIR_libxml2)
                 link_directories(${libxml2_dir}/lib)
                 include_directories(${libxml2_dir}/include)
                 #set(LIBXML2_DEFINITIONS)

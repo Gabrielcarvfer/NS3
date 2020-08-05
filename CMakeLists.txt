@@ -41,13 +41,13 @@ option(NS3_BOOST "Build with Boost support" OFF)
 #set(NS3_BOOST ON)
 
 option(NS3_OPENFLOW "Build with Openflow support" OFF)
-#set(NS3_OPENFLOW ON)
+set(NS3_OPENFLOW OFF)
 
 option(NS3_GTK2 "Build with GTK2 support" OFF)
 set(NS3_GTK2 OFF)
 
 option(NS3_LIBXML2 "Build with LIBXML2 support" OFF)
-set(NS3_LIBXML2 ON)
+set(NS3_LIBXML2 OFF)
 
 option(NS3_LIBRT "Build with RT support" OFF)
 set(NS3_LIBRT ON) #not working on Windows

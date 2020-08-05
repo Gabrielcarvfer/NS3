@@ -153,10 +153,12 @@ LteSpectrumPhy::LteSpectrumPhy ()
   m_interferenceData = CreateObject<LteInterference> ();
   m_interferenceCtrl = CreateObject<LteInterference> ();
 
+  m_ula = CreateObject<Ula5gRange> ();
+
   for (uint8_t i = 0; i < 7; i++)
-    {
-      m_txModeGain.push_back (1.0);
-    }
+  {
+    m_txModeGain.push_back (1.0);
+  }
 
   sensingEvents = 0;
   sensingBudget = 0;
@@ -193,6 +195,8 @@ void LteSpectrumPhy::DoDispose ()
   //Sensing
   m_sensingEvent.Cancel();
 
+  m_ula->Dispose ();
+  m_ula = 0;
 
   if (this->puPresence.size()>0 || this->sinrAvgHistory.size()>0)
   {
@@ -2025,4 +2029,8 @@ void LteSpectrumPhy::SetNumerology (uint16_t num)
     m_numerology = num;
 }
 
+Ptr<Ula5gRange> LteSpectrumPhy::GetUla () const
+{
+    return m_ula;
+}
 } // namespace ns3

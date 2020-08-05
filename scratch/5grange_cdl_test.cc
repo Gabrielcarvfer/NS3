@@ -241,6 +241,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::RrFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
   if(useCdlPathLoss)
     {
+      Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
       lteHelper->SetPathlossModelType (TypeId::LookupByName ("ns3::CdlSpectrumPropagationLossModel"));
       //lteHelper->SetPathlossModelAttribute ("CdlType", EnumValue (CdlSpectrumPropagationLossModel::CDL_A));
     }

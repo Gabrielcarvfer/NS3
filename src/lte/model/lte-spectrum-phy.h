@@ -44,6 +44,8 @@
 #include <mutex>
 #include <tuple>
 #include <random>
+#include <ns3/ula-5grange.h>
+
 
 
 namespace ns3 {
@@ -586,6 +588,11 @@ private:
    * 5GRANGE Channel Model
    */
   std::string m_channelModel;
+
+  Ptr<Ula5gRange> m_ula;
+public:
+    Ptr<Ula5gRange> GetUla () const;
+private:
 
   EventId m_sensingEvent; ///< holds the scheduled sensing event
   uint64_t sensingEvents; ///< count sensing events

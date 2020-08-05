@@ -155,6 +155,7 @@ set(source_files
         model/component-carrier-enb.cc
         model/lte-miesm-error-model.cc
         ${nn_sources}
+        model/ula-5grange.cc
         )
 
 set(header_files
@@ -287,6 +288,7 @@ set(header_files
         model/component-carrier-enb.h
         model/lte-miesm-error-model.h
         ${nn_headers}
+        model/ula-5grange.h
         )
 
 set(libraries_to_link
@@ -303,6 +305,8 @@ set(libraries_to_link
         "${nn_libraries}"
         #kalman
         json-loader
+        ${ARMADILLO_LIBRARIES}
+        OpenBLAS::OpenBLAS
         )
 
 set(test_sources
