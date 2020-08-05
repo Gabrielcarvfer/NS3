@@ -323,18 +323,7 @@ FdMtFfMacScheduler::DoSchedDlMacBufferReq (const struct FfMacSchedSapProvider::S
 int
 FdMtFfMacScheduler::GetRbgSize (int dlbandwidth)
 {
-  //if (dlbandwidth == 100)
-  //    return 2;
-
-  for (int i = 0; i < 4; i++)
-    {
-      if (dlbandwidth < FdMtType0AllocationRbg[i])
-        {
-          return (i + 1);
-        }
-    }
-
-  return (-1);
+    return RbgAllocation::GetRbgSize(dlbandwidth);
 }
 
 

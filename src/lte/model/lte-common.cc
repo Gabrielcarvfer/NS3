@@ -27,6 +27,28 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteCommon");
 
+int RbgAllocation::GetRbgSize (uint8_t dlBandwidth)
+{
+    if (dlBandwidth == Lte5gType0AllocationRbg[4]
+        || dlBandwidth == Lte5gType0AllocationRbg[5]
+        || dlBandwidth == Lte5gType0AllocationRbg[6])
+    {
+        return 2;
+    }
+    else
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (dlBandwidth < Lte5gType0AllocationRbg[i])
+            {
+                return (i + 1);
+            }
+        }
+    }
+
+    return -1;
+}
+
 LteFlowId_t::LteFlowId_t ()
 {
 }

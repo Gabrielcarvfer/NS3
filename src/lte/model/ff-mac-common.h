@@ -24,6 +24,7 @@
 #include <ns3/simple-ref-count.h>
 #include <ns3/ptr.h>
 #include <vector>
+#include <ns3/lte-common.h>
 
 
 /**

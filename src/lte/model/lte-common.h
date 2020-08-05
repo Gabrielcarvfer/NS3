@@ -38,8 +38,32 @@
 
 namespace ns3 {
 
+    static const int Lte5gType0AllocationRbg[7] = {
+            10,       // RGB size 1
+            26,       // RGB size 2
+            63,       // RGB size 3
+            110,      // RGB size 4
+            33,       // 5G RANGE, RGB size 1
+            44,       // 5G RANGE, RGB size 1
+            132      // 5G RANGE, RGB size 1
+    };
 
-/// LteFlowId structure
+    /// RbgAllocation class
+    class RbgAllocation
+    {
+
+    public:
+        /**
+         * Get RBG size
+         *
+         * \param dlBandwidth number of RBs
+         * \returns rbg group size
+         */
+        static int GetRbgSize (uint8_t dlBandwidth);
+
+    };
+
+    /// LteFlowId structure
 struct LteFlowId_t
 {
   uint16_t  m_rnti; ///< RNTI

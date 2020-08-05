@@ -381,15 +381,7 @@ TdTbfqFfMacScheduler::DoSchedDlMacBufferReq (const struct FfMacSchedSapProvider:
 int
 TdTbfqFfMacScheduler::GetRbgSize (int dlbandwidth)
 {
-  for (int i = 0; i < 4; i++)
-    {
-      if (dlbandwidth < TdTbfqType0AllocationRbg[i])
-        {
-          return (i + 1);
-        }
-    }
-
-  return (-1);
+    return RbgAllocation::GetRbgSize(dlbandwidth);
 }
 
 

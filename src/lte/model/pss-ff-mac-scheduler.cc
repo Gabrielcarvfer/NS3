@@ -365,15 +365,7 @@ PssFfMacScheduler::DoSchedDlMacBufferReq (const struct FfMacSchedSapProvider::Sc
 int
 PssFfMacScheduler::GetRbgSize (int dlbandwidth)
 {
-  for (int i = 0; i < 4; i++)
-    {
-      if (dlbandwidth < PssType0AllocationRbg[i])
-        {
-          return (i + 1);
-        }
-    }
-
-  return (-1);
+    return RbgAllocation::GetRbgSize(dlbandwidth);
 }
 
 
