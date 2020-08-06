@@ -704,22 +704,20 @@ LteEnbPhy::StartSubFrame (void)
               Ptr<DlDciLteControlMessage> dci = DynamicCast<DlDciLteControlMessage> (msg);
               // get the tx power spectral density according to DL-DCI(s)
               // translate the DCI to Spectrum framework
-              uint64_t mask = 0x01;
-              for (int i = 0; i < 64; i++)
-                {
-                    if (((dci->GetDci ().m_rbBitmap & mask) >> i) == 1)
-                    {
-                      for (int k = 0; k < GetRbgSize (); k++)
-                        {
-                            //std::cout << Simulator::Now() << "\n" << std::hex << dci->GetDci ().m_rbBitmap << "\n" << i << "\n" << (i * GetRbgSize ()) + k << "\n--------------------" << std::endl;
-
-                            m_dlDataRbMap.push_back ((i * GetRbgSize ()) + k);
-                          //NS_LOG_DEBUG(this << " [enb]DL-DCI allocated PRB " << (i*GetRbgSize()) + k);
-                          GeneratePowerAllocationMap (dci->GetDci ().m_rnti, (i * GetRbgSize ()) + k );
-                        }
-                    }
-                    mask = (mask << 1);
-                }
+              auto rbBitmap = dci->GetDci().m_rbBitmap;
+              int rbgSize = GetRbgSize();
+              for (int i = 0; i < rbBitmap.size(); i++)
+              {
+                  if (rbBitmap[i])
+                  {
+                      for (int k = 0; k < rbgSize; k++)
+                      {
+                          m_dlDataRbMap.push_back ((i * rbgSize) + k);
+                          //NS_LOG_DEBUG(this << " [enb]DL-DCI allocated PRB " << (i*rbgSize) + k);
+                          GeneratePowerAllocationMap (dci->GetDci ().m_rnti, (i * rbgSize) + k );
+                      }
+                  }
+              }
               // fire trace of DL Tx PHY stats
               for (uint8_t i = 0; i < dci->GetDci ().m_mcs.size (); i++)
                 {
@@ -924,26 +922,7 @@ LteEnbPhy::DoSetBandwidth (uint8_t ulBandwidth, uint8_t dlBandwidth)
   NS_LOG_FUNCTION (this << (uint32_t) ulBandwidth << (uint32_t) dlBandwidth);
   m_ulBandwidth = ulBandwidth;
   m_dlBandwidth = dlBandwidth;
-
-  static const int Type0AllocationRbg[4] = {
-    10,     // RGB size 1
-    26,     // RGB size 2
-    63,     // RGB size 3
-    110     // RGB size 4
-  };  // see table 7.1.6.1-1 of 36.213
-
-  //Todo: implement properly
-  if (dlBandwidth == 100)
-      m_rbgSize = 2;
-  else
-    for (int i = 0; i < 4; i++)
-        {
-          if (dlBandwidth < Type0AllocationRbg[i])
-            {
-              m_rbgSize = i + 1;
-              break;
-            }
-        }
+  m_rbgSize = RbgAllocation::GetRbgSize(dlBandwidth);
 }
 
 void 

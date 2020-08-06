@@ -1050,18 +1050,18 @@ LteUePhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgLi
           std::vector <int> dlRb;
 
           // translate the DCI to Spectrum framework
-          uint64_t mask = 0x01;
-          for (int i = 0; i < 64; i++)
+            auto rbBitmap = dci.m_rbBitmap;
+            int rbgSize = GetRbgSize();
+            for (int i = 0; i < rbBitmap.size(); i++)
             {
-              if (((dci.m_rbBitmap & mask) >> i) == 1)
+                if (rbBitmap[i])
                 {
-                  for (int k = 0; k < GetRbgSize (); k++)
+                    for (int k = 0; k < rbgSize; k++)
                     {
-                      dlRb.push_back ((i * GetRbgSize ()) + k);
+                      dlRb.push_back ((i * rbgSize) + k);
 //             NS_LOG_DEBUG(this << " RNTI " << m_rnti << " RBG " << i << " DL-DCI allocated PRB " << (i*GetRbgSize()) + k);
                     }
                 }
-              mask = (mask << 1);
             }
           if (m_enableUplinkPowerControl)
             {

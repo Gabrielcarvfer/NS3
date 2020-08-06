@@ -1078,16 +1078,14 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
-          for (int j = 0; j < 64; j++)
+          for (int j = 0; j < dci.m_rbBitmap.size(); j++)
             {
-              if (((dci.m_rbBitmap & mask) >> j) == 1)
+              if (dci.m_rbBitmap[j])
               {
                 dciRbg.push_back (j);
                 NS_LOG_INFO ("\t" << j);
               }
-              mask = (mask << 1);
             }
           bool free = true;
           for (uint8_t j = 0; j < dciRbg.size (); j++)
@@ -1131,13 +1129,11 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
+                      dci.m_rbBitmap[k] = 1;
                       rbgAllocatedNum++;
                     }
-                  dci.m_rbBitmap = rbgMask;
                   rbgMap = rbgMapCopy;
                   NS_LOG_INFO (this << " Move retx in RBGs " << dciRbg.size ());
                 }
@@ -1311,7 +1307,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       for ( auto it = ret.m_buildDataList.begin(); it != ret.m_buildDataList.end(); it++)
       {
           ss << "{\"rnti\"      :" << (int) it->m_dci.m_rnti       << ",";
-          ss << "\"rbBitmap\"   :" << (unsigned) it->m_dci.m_rbBitmap   << ",";
+          ss << "\"rbBitmap\"   :" << it->m_dci.m_rbBitmap   << ",";
           ss << "\"rbShift\"    :" << (int) it->m_dci.m_rbShift    << ",";
           ss << "\"resAlloc\"   :" << (int) it->m_dci.m_resAlloc   << "";//",";
           //ss << "\"mcs\"        :" << (int) it->m_dci.m_mcs        << ",";
@@ -1980,16 +1976,12 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), RgbPerRnti * rbgSize) / 8);           // (size of TB in bytes according to table 7.1.7.2.1-1 of 36.213)
       newDci.m_tbsSize.push_back (tbSize);
       newDci.m_resAlloc = 0;            // only allocation type 0 at this stage
-      newDci.m_rbBitmap = 0;    // TBD (32 bit bitmap see 7.1.6 of 36.213)
-      uint64_t rbgMask = 0;
+      std::bitset<132> rbgMask = 0;
       std::multimap <uint8_t, qos_rb_and_CQI_assigned_to_lc> ::iterator itRBGsPerRNTI;
       for ( itRBGsPerRNTI = (*itMap).second.begin (); itRBGsPerRNTI != (*itMap).second.end (); itRBGsPerRNTI++)
         {
-
-          //Leave the cast alone or replace 0x01 with 0x0000000000000001
-          rbgMask += ((uint64_t)0x01 << itRBGsPerRNTI->second.resource_block_index);
+            newDci.m_rbBitmap[itRBGsPerRNTI->second.resource_block_index] = 1;
         }
-      newDci.m_rbBitmap = rbgMask;   // (32 bit bitmap see 7.1.6 of 36.213)
       // NOTE: In this first version of CqaFfMacScheduler, it is assumed one flow per user.
       // create the rlc PDUs -> equally divide resources among active LCs
       std::map <LteFlowId_t, FfMacSchedSapProvider::SchedDlRlcBufferReqParameters>::iterator itBufReq;

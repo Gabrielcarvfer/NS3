@@ -25,6 +25,7 @@
 #include <ns3/ptr.h>
 #include <vector>
 #include <ns3/lte-common.h>
+#include <bitset>
 
 
 /**
@@ -94,7 +95,7 @@ enum NormalExtended_e
 struct DlDciListElement_s
 {
   uint16_t  m_rnti; ///< RNTI
-  uint64_t  m_rbBitmap; ///< rb bitmap
+  std::bitset <132> m_rbBitmap;
   uint8_t   m_rbShift; ///< RB shift
   uint8_t   m_resAlloc; ///< The type of resource allocation
   std::vector <uint32_t>  m_tbsSize; ///< The TBs size

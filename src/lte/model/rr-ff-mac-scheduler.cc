@@ -640,16 +640,14 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
-          for (int j = 0; j < 32; j++)
+          for (int j = 0; j < dci.m_rbBitmap.size(); j++)
             {
-              if (((dci.m_rbBitmap & mask) >> j) == 1)
+              if (dci.m_rbBitmap[j])
                 {
                   dciRbg.push_back (j);
                   NS_LOG_INFO ("\t" << j);
                 }
-              mask = (mask << 1);
             }
           bool free = true;
           for (uint8_t j = 0; j < dciRbg.size (); j++)
@@ -693,14 +691,12 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
+                      dci.m_rbBitmap[dciRbg.at (k)] = 1;
                       NS_LOG_INFO (this << " New allocated RBG " << dciRbg.at (k));
                       rbgAllocatedNum++;
                     }
-                  dci.m_rbBitmap = rbgMask;
                   rbgMap = rbgMapCopy;
                 }
               else
@@ -961,7 +957,6 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       newDci.m_rnti = (*it).m_rnti;
       newDci.m_harqProcess = UpdateHarqProcessId ((*it).m_rnti);
       newDci.m_resAlloc = 0;
-      newDci.m_rbBitmap = 0;
       std::map <uint16_t,uint8_t>::iterator itCqi = m_p10CqiRxed.find (newEl.m_rnti);
       for (uint8_t i = 0; i < nLayer; i++)
         {
@@ -1015,7 +1010,6 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
               break;
             }
         }
-      uint64_t rbgMask = 0;
       uint16_t i = 0;
       NS_LOG_INFO (this << " DL - Allocate user " << newEl.m_rnti << " LCs " << (uint16_t)(*itLcRnti).second << " bytes " << tbSize << " mcs " << (uint16_t) newDci.m_mcs.at (0) << " harqId " << (uint16_t)newDci.m_harqProcess <<  " layers " << nLayer);
       NS_LOG_INFO ("RBG:");
@@ -1023,7 +1017,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
         {
           if (rbgMap.at (rbgAllocated) == false)
             {
-              rbgMask = rbgMask + ( (uint64_t)0x01 << rbgAllocated);
+              newDci.m_rbBitmap[rbgAllocated] = 1;
               NS_LOG_INFO ("\t " << rbgAllocated);
               i++;
               rbgMap.at (rbgAllocated) = true;
@@ -1031,7 +1025,6 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
           rbgAllocated++;
         }
-      newDci.m_rbBitmap = rbgMask; // (32 bit bitmap see 7.1.6 of 36.213)
 
       for (int i = 0; i < nLayer; i++)
         {

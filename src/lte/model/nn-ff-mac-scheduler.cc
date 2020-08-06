@@ -2135,14 +2135,11 @@ NnFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), RgbPerRnti * rbgSize) / 8);           // (size of TB in bytes according to table 7.1.7.2.1-1 of 36.213)
       newDci.m_tbsSize.push_back (tbSize);
       newDci.m_resAlloc = 0;            // only allocation type 0 at this stage
-      newDci.m_rbBitmap = 0;    // TBD (32 bit bitmap see 7.1.6 of 36.213)
-      uint32_t rbgMask = 0;
       std::multimap <uint8_t, qos_rb_and_CQI_assigned_to_lc> ::iterator itRBGsPerRNTI;
       for ( itRBGsPerRNTI = (*itMap).second.begin (); itRBGsPerRNTI != (*itMap).second.end (); itRBGsPerRNTI++)
         {
-          rbgMask = rbgMask + (0x1 << itRBGsPerRNTI->second.resource_block_index);
+            newDci.m_rbBitmap[itRBGsPerRNTI->second.resource_block_index] = 1;
         }
-      newDci.m_rbBitmap = rbgMask;   // (32 bit bitmap see 7.1.6 of 36.213)
       // NOTE: In this first version of NnFfMacScheduler, it is assumed one flow per user.
       // create the rlc PDUs -> equally divide resources among active LCs
       std::map <LteFlowId_t, FfMacSchedSapProvider::SchedDlRlcBufferReqParameters>::iterator itBufReq;

@@ -662,16 +662,14 @@ TdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
           // check the feasibility of retransmitting on the same RBGs
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
-          uint64_t mask = 0x01;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
-          for (int j = 0; j < 32; j++)
+          for (int j = 0; j < dci.m_rbBitmap.size(); j++)
             {
-              if (((dci.m_rbBitmap & mask) >> j) == 1)
+              if (dci.m_rbBitmap[j])
                 {
                   dciRbg.push_back (j);
                   NS_LOG_INFO ("\t" << j);
                 }
-              mask = (mask << 1);
             }
           bool free = true;
           for (uint8_t j = 0; j < dciRbg.size (); j++)
@@ -715,13 +713,11 @@ TdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
               if (j == dciRbg.size ())
                 {
                   // find new RBGs -> update DCI map
-                  uint64_t rbgMask = 0;
                   for (uint16_t k = 0; k < dciRbg.size (); k++)
                     {
-                      rbgMask = rbgMask + ( (uint64_t)0x01 << dciRbg.at (k));
+                      dci.m_rbBitmap[dciRbg.at (k)] = 1;
                       rbgAllocatedNum++;
                     }
-                  dci.m_rbBitmap = rbgMask;
                   rbgMap = rbgMapCopy;
                   NS_LOG_INFO (this << " Move retx in RBGs " << dciRbg.size ());
                 }
@@ -984,14 +980,11 @@ TdMtFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sch
         }
 
       newDci.m_resAlloc = 0;  // only allocation type 0 at this stage
-      newDci.m_rbBitmap = 0; // TBD (32 bit bitmap see 7.1.6 of 36.213)
-      uint64_t rbgMask = 0;
       for (uint16_t k = 0; k < (*itMap).second.size (); k++)
         {
-          rbgMask = rbgMask + ( (uint64_t)0x01 << (*itMap).second.at (k));
+          newDci.m_rbBitmap[(*itMap).second.at (k)] = 1;
           NS_LOG_INFO (this << " Allocated RBG " << (*itMap).second.at (k));
         }
-      newDci.m_rbBitmap = rbgMask; // (32 bit bitmap see 7.1.6 of 36.213)
 
       // create the rlc PDUs -> equally divide resources among actives LCs
       std::map <LteFlowId_t, FfMacSchedSapProvider::SchedDlRlcBufferReqParameters>::iterator itBufReq;

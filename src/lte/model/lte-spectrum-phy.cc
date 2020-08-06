@@ -1084,15 +1084,13 @@ int LteSpectrumPhy::verifyControlMessageBlocks(std::vector<bool> * occupied_RB_i
                     auto p3 = p2->GetDci();
 
                     //Check bits to verify if RB is free or occupied
-                    uint64_t mask = 0x01;
                     for (int j = 0; j < 64-rbgSize; j+= rbgSize)
                     {
-                        if ((p3.m_rbBitmap & mask) != 0)
+                        if (p3.m_rbBitmap[j] != 0)
                         {
                             for (int k = 0; k < rbgSize; k++)
                                 occupied_RB_indexes->at(j+k) = true;
                         }
-                        mask = (mask << 1);
                     }
                     dci_count++;
                 }
