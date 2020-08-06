@@ -52,7 +52,7 @@ LteRlcTm::GetTypeId (void)
     .AddConstructor<LteRlcTm> ()
     .AddAttribute ("MaxTxBufferSize",
                    "Maximum Size of the Transmission Buffer (in Bytes)",
-                   UintegerValue (2 * 1024 * 1024),
+                   UintegerValue (200 * 1024 * 1024),
                    MakeUintegerAccessor (&LteRlcTm::m_maxTxBufferSize),
                    MakeUintegerChecker<uint32_t> ())
     ;
