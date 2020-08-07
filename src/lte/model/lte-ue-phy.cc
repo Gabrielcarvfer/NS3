@@ -1443,38 +1443,7 @@ LteUePhy::DoSetDlBandwidth (uint8_t dlBandwidth)
   if (m_dlBandwidth != dlBandwidth or !m_dlConfigured)
     {
       m_dlBandwidth = dlBandwidth;
-
-
-      static const int Type0AllocationRbg[4] = {
-        10,     // RGB size 1
-        26,     // RGB size 2
-        63,     // RGB size 3
-        110     // RGB size 4
-      };  // see table 7.1.6.1-1 of 36.213
-
-      //Todo: fix this properly
-      if (dlBandwidth == 100)
-          m_rbgSize = 2;
-      else
-          for (int i = 0; i < 4; i++)
-            {
-              if (dlBandwidth < Type0AllocationRbg[i])
-                {
-                  m_rbgSize = i + 1;
-                  break;
-                }
-            }
-      //5G RANGE
-      if (dlBandwidth == 33 || dlBandwidth == 44 || dlBandwidth == 132)
-        {
-          m_rbgSize = 2;
-        }
-
-      //todo: temporarily testing effect of changes to rbg grouping size
-      if (dlBandwidth == 100)
-      {
-        m_rbgSize = 2;
-      }
+      m_rbgSize = RbgAllocation::GetRbgSize(dlBandwidth);
 
       m_noisePsd = LteSpectrumValueHelper::CreateNoisePowerSpectralDensity (m_dlEarfcn, m_dlBandwidth, m_noiseFigure);
       m_downlinkSpectrumPhy->SetNoisePowerSpectralDensity (m_noisePsd);

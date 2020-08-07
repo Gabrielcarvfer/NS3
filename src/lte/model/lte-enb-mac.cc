@@ -927,7 +927,6 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
       m_dlInfoListReceived.clear ();
     }
 
-  dlparams.sensedBitmap = 0;
   if (spectrumSensing)
   {
       //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs

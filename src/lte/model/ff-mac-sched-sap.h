@@ -103,7 +103,7 @@ public:
     std::vector <struct DlInfoListElement_s> m_dlInfoList; ///< DL info list
 
     std::vector <struct VendorSpecificListElement_s> m_vendorSpecificList; ///< vendor specific list
-    uint64_t sensedBitmap;
+    std::bitset<132> sensedBitmap;
   };
 
   /**

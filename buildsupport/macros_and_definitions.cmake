@@ -201,7 +201,8 @@ macro(process_options)
         set(PCRE_FOUND True)
     endif()
 
-    #RANGE-5G uses Armadillo
+    #RANGE-5G uses Armadillo for CDL A and D channels
+    add_package(openblas)
     add_package(Armadillo)
     find_package(Armadillo REQUIRED)
     if (NOT ${ARMADILLO_FOUND})

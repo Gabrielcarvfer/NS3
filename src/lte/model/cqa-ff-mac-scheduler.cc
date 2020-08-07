@@ -793,7 +793,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
   //Take cognitive info into account before scheduling
   for (int i = 0; i < rbgMap.size(); i++)
   {
-      rbgMap.at(i) = ( (params.sensedBitmap>>i) & 0x01 ) ? true : rbgMap.at(i);
+      rbgMap.at(i) = params.sensedBitmap[i];
   }
 
   //SchedulerInput

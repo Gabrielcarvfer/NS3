@@ -1406,7 +1406,7 @@ void LteSpectrumPhy::Sense()
     int groupingSize;
 
     if (senseRBs)
-        groupingSize = 2; //subdivide 100RBs into 25RBGs
+        groupingSize = 2; //subdivide 100RBs into 50RBGs
     else
         groupingSize = 25; //subdivide 100RBs into 4 subchannels of 25RBs each
 
