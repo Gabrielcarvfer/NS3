@@ -80,6 +80,15 @@ RrFfMacScheduler::DoDispose ()
   m_ulHarqProcessesDciBuffer.clear ();
   delete m_cschedSapProvider;
   delete m_schedSapProvider;
+
+  std::ofstream schedulerInput(std::string("schedulerInput.txt"));
+  std::ofstream schedulerOutput(std::string("schedulerOutput.txt"));
+  for (auto it : schedulerInputFile)
+      schedulerInput << it;
+  for (auto it : schedulerOutputFile)
+      schedulerOutput << it;
+  schedulerInput.close();
+  schedulerOutput.close();
 }
 
 TypeId
@@ -458,6 +467,24 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
   std::set <uint16_t> rntiAllocated;
   rbgMap.resize (m_cschedCellConfig.m_dlBandwidth / rbgSize, false);
 
+
+  //Take cognitive info into account before scheduling
+  for (int i = 0; i < rbgMap.size(); i++)
+  {
+      rbgMap.at(i) = params.sensedBitmap[i];
+  }
+
+  //SchedulerInput
+  {
+      std::stringstream ss;
+      ss << Simulator::Now() << ": ";
+      for (int i = 0; i < rbgMap.size(); i++) {
+          ss << (rbgMap.at(i) ? 1 : 0);
+      }
+      ss << "\n";
+      schedulerInputFile.push_back(ss.str());
+  }
+
   //   update UL HARQ proc id
   std::map <uint16_t, uint8_t>::iterator itProcId;
   for (itProcId = m_ulHarqCurrentProcessId.begin (); itProcId != m_ulHarqCurrentProcessId.end (); itProcId++)
@@ -641,7 +668,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           // translate the DCI to Spectrum framework
           std::vector <int> dciRbg;
           NS_LOG_INFO ("Original RBGs " << dci.m_rbBitmap << " rnti " << dci.m_rnti);
-          for (int j = 0; j < dci.m_rbBitmap.size(); j++)
+          for (int j = 0; j < rbgNum; j++)
             {
               if (dci.m_rbBitmap[j])
                 {
@@ -1067,6 +1094,18 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
   ret.m_nrOfPdcchOfdmSymbols = 1;   /// \todo check correct value according the DCIs txed  
 
   m_schedSapUser->SchedDlConfigInd (ret);
+
+  //SchedulerOutput
+  {
+      std::stringstream ss;
+      ss << Simulator::Now() << ": ";
+      for (int i = 0; i < rbgMap.size(); i++) {
+          ss << (rbgMap.at(i) ? 1 : 0);
+      }
+      ss << "\n";
+      schedulerOutputFile.push_back(ss.str());
+  }
+
   return;
 }
 
@@ -1403,7 +1442,9 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
               continue; // CQI == 0 means "out of range" (see table 7.2.3-1 of 36.213)
             }
           std::vector<double> sinrVec = (*itCqi).second;
-          cqi = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
+          int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
+          std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
+          cqi = cqi2;
           uldci.m_mcs = m_amc->GetMcsFromCqi (cqi);
           //std::cout << "cqi " << (int) cqi << " mcs " << (int) uldci.m_mcs << std::endl;
         }

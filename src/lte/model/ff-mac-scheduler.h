@@ -126,7 +126,10 @@ public:
    * \return the User part of the LteFfrSap provided by the FfrAlgorithm
    */
   virtual LteFfrSapUser* GetLteFfrSapUser () = 0;
-  
+
+  std::vector<std::string> schedulerInputFile;
+  std::vector<std::string> schedulerOutputFile;
+
 protected:
     
   UlCqiFilter_t m_ulCqiFilter; ///< UL CQI filter

@@ -412,10 +412,6 @@ private:
 
   std::string m_CqaMetric; ///< CQA metric name
 
-
-  std::vector<std::string> schedulerInputFile;
-  std::vector<std::string> schedulerOutputFile;
-
   typedef struct lcidQciReg{
       uint8_t qci;
       std::vector<uint16_t> rntis;
