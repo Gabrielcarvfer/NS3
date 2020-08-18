@@ -231,7 +231,6 @@ namespace ns3 {
                                                   double speed)
     {
         std::vector<double> sinrAsDoubles;
-        sinrAsDoubles.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
         for (int i = 0; i < sinr.ConstValuesEnd()-sinr.ConstValuesBegin(); i++)
         {
             sinrAsDoubles.push_back(sinr.ValuesAt(i));
@@ -247,7 +246,8 @@ namespace ns3 {
                                                   HarqProcessInfoList_t miHistory,
                                                   uint8_t num,
                                                   std::string chan,
-                                                  double speed) {
+                                                  double speed)
+    {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
         if (map.size() == 0)
@@ -550,6 +550,7 @@ namespace ns3 {
                 {
                     // calculate the effective SNR and corresponding BLER
                     snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+                    snrEff = 10*log10(snrEff); // calculate effective SINR in dB
                     cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
                     // then aggregate the error rate of the TB
@@ -568,6 +569,7 @@ namespace ns3 {
             }
             // calculate the effective SNR and corresponding BLER of the last CB
             snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+            snrEff = 10*log10(snrEff); // calculate effective SINR in dB
             cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
             // then aggregate the error rate of the TB

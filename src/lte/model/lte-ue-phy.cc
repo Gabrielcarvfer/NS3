@@ -1052,14 +1052,15 @@ LteUePhy::ReceiveLteControlMessageList (std::list<Ptr<LteControlMessage> > msgLi
           // translate the DCI to Spectrum framework
             auto rbBitmap = dci.m_rbBitmap;
             int rbgSize = GetRbgSize();
-            for (int i = 0; i < rbBitmap.size(); i++)
+            int rbgNum = m_dlBandwidth/rbgSize;
+            for (int i = 0; i < rbgNum; i++)
             {
                 if (rbBitmap[i])
                 {
                     for (int k = 0; k < rbgSize; k++)
                     {
                       dlRb.push_back ((i * rbgSize) + k);
-//             NS_LOG_DEBUG(this << " RNTI " << m_rnti << " RBG " << i << " DL-DCI allocated PRB " << (i*GetRbgSize()) + k);
+                      NS_LOG_DEBUG(this << " RNTI " << m_rnti << " RBG " << i << " DL-DCI allocated PRB " << (i*rbgSize) + k);
                     }
                 }
             }

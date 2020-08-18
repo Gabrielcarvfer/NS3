@@ -706,7 +706,8 @@ LteEnbPhy::StartSubFrame (void)
               // translate the DCI to Spectrum framework
               auto rbBitmap = dci->GetDci().m_rbBitmap;
               int rbgSize = GetRbgSize();
-              for (int i = 0; i < rbBitmap.size(); i++)
+              int rbgNum = m_dlBandwidth/rbgSize;
+              for (int i = 0; i < rbgNum; i++)
               {
                   if (rbBitmap[i])
                   {

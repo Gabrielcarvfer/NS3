@@ -522,6 +522,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       newRar.m_grant.m_rbStart = rbStart;
       newRar.m_grant.m_rbLen = rbLen;
       newRar.m_grant.m_tbSize = tbSizeBits / 8;
+      //std::cout << "UL RAR MCS " << (int) m_ulGrantMcs << " TB_SIZE " << (int) newRar.m_grant.m_tbSize << std::endl;
       newRar.m_grant.m_hopping = false;
       newRar.m_grant.m_tpc = 0;
       newRar.m_grant.m_cqiRequest = false;
@@ -541,6 +542,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           uldci.m_rbStart = rbStart;
           uldci.m_mcs = m_ulGrantMcs;
           uldci.m_tbSize = tbSizeBits / 8;
+          //std::cout << "UL HARQ MCS " << (int) uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;
           uldci.m_ndi = 1;
           uldci.m_cceIndex = 0;
           uldci.m_aggrLevel = 1;
@@ -997,7 +999,9 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
-      uint16_t rlcPduSize = tbSize / lcNum;
+      uint32_t rlcPduSize = tbSize / lcNum;
+      //std::cout << "DL MCS " << (int) newDci.m_mcs.at (0) << " TB_SIZE " << (int) tbSize << std::endl;
+
       while ((*it).m_rnti == newEl.m_rnti)
         {
           if ( ((*it).m_rlcTransmissionQueueSize > 0)
@@ -1353,7 +1357,7 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
           bool free = true;
           for (uint16_t j = rbAllocated; j < rbAllocated + rbPerFlow; j++)
             {
-              if (rbMap.at (j) == true)
+              if (rbMap.at(j))
                 {
                   free = false;
                   break;
@@ -1443,13 +1447,13 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
           std::vector<double> sinrVec = (*itCqi).second;
           int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
-          std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
+          //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
           cqi = cqi2;
           uldci.m_mcs = m_amc->GetMcsFromCqi (cqi);
-          //std::cout << "cqi " << (int) cqi << " mcs " << (int) uldci.m_mcs << std::endl;
+          //std::cout << "UL CQI " << (int) cqi << " MCS " << (int) uldci.m_mcs << std::endl;
         }
       uldci.m_tbSize = (m_amc->GetUlTbSizeFromMcs (uldci.m_mcs, rbPerFlow) / 8); // MCS 0 -> UL-AMC TBD
-
+      //std::cout << "UL MCS " << (int)uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;
       UpdateUlRlcBufferInfo (uldci.m_rnti, uldci.m_tbSize);
       uldci.m_ndi = 1;
       uldci.m_cceIndex = 0;
