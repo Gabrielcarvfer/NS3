@@ -551,6 +551,7 @@ namespace ns3 {
                     // calculate the effective SNR and corresponding BLER
                     snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
                     snrEff = 10*log10(snrEff); // calculate effective SINR in dB
+                    //std::cout << "snr " << snrEff << std::endl;
                     cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
                     // then aggregate the error rate of the TB
@@ -570,6 +571,7 @@ namespace ns3 {
             // calculate the effective SNR and corresponding BLER of the last CB
             snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
             snrEff = 10*log10(snrEff); // calculate effective SINR in dB
+            //std::cout << "snr " << snrEff << std::endl;
             cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
             // then aggregate the error rate of the TB

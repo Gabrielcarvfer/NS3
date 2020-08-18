@@ -37,7 +37,7 @@ for d in mcs_freq_per_d:
     tripa = []
     for mcs in mcs_freq_per_d[d]["mcs"]:
         tripa.extend([mcs]*mcs_freq_per_d[d]["mcs"][mcs])
-    axis[i].hist(tripa, bins=27, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
+    axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
 
     axis[i].set_xlim((0, 26))
     axis[i].set_xticks(list(range(0, 27)))

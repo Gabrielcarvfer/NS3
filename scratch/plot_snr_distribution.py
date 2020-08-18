@@ -1,4 +1,4 @@
-# To be used with lte-miesm-error-model printing effective SNR of code blocks
+# To be used with CreateCqiFeedbacks printing effective SNR of a given transmission
 import re
 
 ds = [1,50, ]
@@ -35,7 +35,7 @@ for d in snr_freq_per_d:
     tripa = []
     for mcs in snr_freq_per_d[d]["snr"]:
         tripa.extend([mcs]*snr_freq_per_d[d]["snr"][mcs])
-    axis[i].hist(tripa, bins=27, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
+    axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
     axis[i].legend()
     axis[i].set_xlim((-50.0, 150.0))
     i += 1

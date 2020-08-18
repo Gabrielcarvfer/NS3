@@ -334,7 +334,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
               break;
           mcs++;
       }
-      //std::cout << "\n\n\n" << std::endl;
+      std::cout << "snr " << 10*log10(sinr.ValuesAt(0)) << std::endl;
       if (mcs > 0)
       {
           mcs--;

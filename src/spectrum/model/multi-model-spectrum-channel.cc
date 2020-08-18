@@ -329,14 +329,18 @@ MultiModelSpectrumChannel::StartTx (Ptr<SpectrumSignalParameters> txParams)
                       continue;
                     }
                   double pathGainLinear = std::pow (10.0, (-pathLossDb) / 10.0);
-                  //std::cout << Simulator::Now().GetSeconds() << "  StartTx sinr " << log10(rxParams->psd->ValuesAt(0)*180000)*10+50 << " pathloss " << pathLossDb;
                   *(rxParams->psd) *= pathGainLinear;
-                  //std::cout << "SpecCh txPsd " << txParams->psd->ValuesAt(0) << " rxPsd " << rxParams->psd->ValuesAt(0) << std::endl;
 
                   if (m_spectrumPropagationLoss)
                     {
                       rxParams->psd = m_spectrumPropagationLoss->CalcRxPowerSpectralDensity (rxParams->psd, txMobility, receiverMobility);
                     }
+
+                  int psdLen = rxParams->psd->ConstValuesEnd() - rxParams->psd->ConstValuesBegin();
+                  double txPowDbm = 10*log10(txParams->psd->ValuesAt(0)*180000*psdLen)+30;
+                  double rxPowDbm = 10*log10(rxParams->psd->ValuesAt(0)*180000*psdLen)+30;
+                  //if (txPowDbm > -100)
+                  //  std::cout << Simulator::Now().GetSeconds() << "  txPower (dBm) " << txPowDbm << " rxPower (dBm) " << rxPowDbm << " pathloss " << pathLossDb << std::endl;
 
                   if (m_propagationDelay)
                     {
