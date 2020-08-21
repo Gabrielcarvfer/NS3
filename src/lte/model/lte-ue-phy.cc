@@ -348,6 +348,10 @@ LteUePhy::GetTypeId (void)
                    BooleanValue (true),
                    MakeBooleanAccessor (&LteUePhy::m_enableRlfDetection),
                    MakeBooleanChecker ())
+    .AddTraceSource ("StartTxDataframe",
+                     "Trace fired when sending a dataframe.",
+                     MakeTraceSourceAccessor (&LteUePhy::m_startTxDataFrame),
+                     "ns3::LteUePhy::StartTxTracedCallback")
   ;
   return tid;
 }
@@ -1286,6 +1290,7 @@ LteUePhy::SubframeIndication (uint32_t frameNo, uint32_t subframeNo)
               m_txPower = m_powerControl->GetPuschTxPower (rbMask);
               SetSubChannelsForTransmission (rbMask);
             }
+          m_startTxDataFrame(pb, rbMask);
           m_uplinkSpectrumPhy->StartTxDataFrame (pb, ctrlMsg, UL_DATA_DURATION);
         }
       else
@@ -1302,6 +1307,7 @@ LteUePhy::SubframeIndication (uint32_t frameNo, uint32_t subframeNo)
                 }
 
               SetSubChannelsForTransmission (dlRb);
+              m_startTxDataFrame(pb, rbMask);
               m_uplinkSpectrumPhy->StartTxDataFrame (pb, ctrlMsg, UL_DATA_DURATION);
             }
           else

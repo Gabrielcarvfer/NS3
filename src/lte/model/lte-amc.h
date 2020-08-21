@@ -157,6 +157,12 @@ private:
   double m_ber;
 
   /**
+   * The `Perfect Channel` attribute
+   *
+   * Always return max CQI and MCS when enabled
+   */
+  bool m_perfectChannel;
+  /**
    * The `AmcModel` attribute.
    *
    * AMC model used to assign CQI.

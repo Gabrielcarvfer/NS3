@@ -184,7 +184,12 @@ LteAmc::GetTypeId (void)
                  "5GRANGE Channel Model",
                  StringValue("CDL_A"),
                  MakeStringAccessor (&LteAmc::m_channelModel),
-                 MakeStringChecker ());
+                 MakeStringChecker ())
+  .AddAttribute ("PerfectChannel",
+                 "Always return max cqi and mcs",
+                 BooleanValue(false),
+                 MakeBooleanAccessor (&LteAmc::m_perfectChannel),
+                 MakeBooleanChecker ());
   return tid;
 }
 
@@ -194,6 +199,10 @@ LteAmc::GetCqiFromSpectralEfficiency (double s)
 {
   NS_LOG_FUNCTION (s);
   NS_ASSERT_MSG (s >= 0.0, "negative spectral efficiency = " << s);
+
+  if (m_perfectChannel)
+    return 15;
+
   int cqi = 0;
   while ((cqi < 15) && (SpectralEfficiencyForCqi[cqi + 1] < s))
     {
@@ -209,6 +218,9 @@ LteAmc::GetMcsFromCqi (int cqi)
 {
   NS_LOG_FUNCTION (cqi);
   NS_ASSERT_MSG (cqi >= 0 && cqi <= 15, "CQI must be in [0..15] = " << cqi);
+  if (m_perfectChannel)
+    return 26;
+
   double spectralEfficiency = SpectralEfficiencyForCqi[cqi];
   int mcs = 0;
   while ((mcs < 26) && (SpectralEfficiencyForMcs[mcs + 1] <= spectralEfficiency))
@@ -272,8 +284,13 @@ std::vector<int>
 LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
 {
   NS_LOG_FUNCTION (this);
+
+  if (m_perfectChannel)
+    return std::vector<int> (sinr.ConstValuesEnd()-sinr.ConstValuesBegin(), 15);
+
   std::vector<int> cqi;
   cqi.reserve(sinr.ConstValuesEnd()-sinr.ConstValuesBegin());
+
   Values::const_iterator it;
   
   if (m_amcModel == PiroEW2010)
@@ -379,6 +396,10 @@ int LteAmc::GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles, uint8
 
     NS_LOG_DEBUG (this << " AMC-VIENNA RBG size " << (uint16_t)rbgSize);
     NS_ASSERT_MSG (rbgSize > 0, " LteAmc-Vienna: RBG size must be greater than 0");
+
+    if (m_perfectChannel)
+      return 15;
+
     std::vector <int> rbgMap(sinrAsDoubles.size(), 0);
     std::iota(rbgMap.begin(), rbgMap.end(), 0);
     double speed = 0; //todo: calculate speed
