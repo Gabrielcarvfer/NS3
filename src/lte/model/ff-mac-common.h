@@ -240,7 +240,7 @@ struct PhichListElement_s
 struct RlcPduListElement_s
 {
   uint8_t   m_logicalChannelIdentity; ///< logical channel identity
-  uint16_t  m_size; ///< size
+  uint32_t  m_size; ///< size
 };
 
 /**

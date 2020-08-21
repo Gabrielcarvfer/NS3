@@ -1681,7 +1681,7 @@ LteSpectrumPhy::EndRxData ()
   m_sinrPerceived *= m_txModeGain.at (m_transmissionMode);
   while (itTb!=m_expectedTbs.end ())
     {
-      if ((m_dataErrorModelEnabled)&&(m_rxPacketBurstList.size ()>0)) // avoid to check for errors when there is no actual data transmitted
+      if (m_rxPacketBurstList.size ()>0) // avoid to check for errors when there is no actual data transmitted
         {
           // retrieve HARQ info
           HarqProcessInfoList_t harqInfoList;
@@ -1699,8 +1699,16 @@ LteSpectrumPhy::EndRxData ()
                 }
             }
           //TbStats_t tbStats = LteMiErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, (*itTb).second.size, (*itTb).second.mcs, harqInfoList);
-          double speed = 0.0;//todo: fix speed calculation
-          TbStats_t tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
+
+          TbStats_t tbStats{};
+          tbStats.tbler = 0.0;
+
+          if (m_dataErrorModelEnabled)
+          {
+            double speed = 0.0;//todo: fix speed calculation
+            tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
+          }
+
           (*itTb).second.mi = tbStats.mi;
           //std::cout << Simulator::Now().GetSeconds() << "  endRxData " << m_sinrPerceived[0] << " tbler " << tbStats.tbler << std::endl;//log10(sinrval*180000)*10+50
           (*itTb).second.corrupt = m_random->GetValue () > tbStats.tbler ? false : true;

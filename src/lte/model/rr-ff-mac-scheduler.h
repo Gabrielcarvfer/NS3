@@ -234,13 +234,13 @@ private:
    * \param lcid the LCID
    * \param size the size
    */
-  void UpdateDlRlcBufferInfo (uint16_t rnti, uint8_t lcid, uint16_t size);
+  void UpdateDlRlcBufferInfo (uint16_t rnti, uint8_t lcid, uint32_t size);
   /**
    * \brief Update UL RLC buffer info function
    * \param rnti the RNTI
    * \param size the size
    */
-  void UpdateUlRlcBufferInfo (uint16_t rnti, uint16_t size);
+  void UpdateUlRlcBufferInfo (uint16_t rnti, uint32_t size);
 
   /**
   * \brief Update and return a new process Id for the RNTI specified

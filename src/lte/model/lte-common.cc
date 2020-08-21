@@ -33,7 +33,7 @@ int RbgAllocation::GetRbgSize (uint8_t dlBandwidth)
         || dlBandwidth == Lte5gType0AllocationRbg[5]
         || dlBandwidth == Lte5gType0AllocationRbg[6])
     {
-        return 2;
+        return 1;
     }
     else
     {

@@ -11,7 +11,7 @@ foreach(scratch_src ${scratches})
     string(FIND "${DONT_BUILD}" "${scratch_name}" res)
 
     if(res LESS 0)
-        add_executable(${scratch_name} "${scratch_src}")
+        add_executable(${scratch_name} "${scratch_src}" 5grange_cdl_validation.cc)
     target_link_libraries(${scratch_name} "${ns3-libs}" "${ns3-contrib-libs}")
     endif()
 endforeach()

@@ -550,6 +550,7 @@ namespace ns3 {
                 {
                     // calculate the effective SNR and corresponding BLER
                     snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+                    snrEff = 10*log10(snrEff*180000*size);
                     cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
                     // then aggregate the error rate of the TB
@@ -564,10 +565,12 @@ namespace ns3 {
                 }
                 // calculate SNR fraction of the current PRB of a given RB
                 avg_cb_sinr += (prb_sinr * prb_fraction)/(curr_cb < smallBeta ? beta5gBig : beta5gSmall);
+                snrEff = 10*log10(snrEff*180000*size); // sinr efetivo em dB
                 n += prb_fraction;
             }
             // calculate the effective SNR and corresponding BLER of the last CB
             snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
+            snrEff = 10*log10(snrEff*180000*size); // sinr efetivo em dB
             cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
 
             // then aggregate the error rate of the TB

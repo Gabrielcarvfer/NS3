@@ -138,21 +138,22 @@ main (int argc, char *argv[])
   NS_LOG_DEBUG (" Running 5gRangeCdlScript");
 
   //Scenario configuration
-  double simTime              = 3;
-  uint16_t numberOfNodes      = 132;//132
-  uint16_t m_distance         = 1000;
-  uint32_t m_packetSize       = 612; //bytes
-  double interPacketInterval  = 4.59;  //milliseconds
+  double simTime              = 2;
+  uint16_t numberOfNodes      = 1;//132
+  uint16_t m_distance         = 1001;
+  uint32_t m_packetSize       = 612;   //bytes
+  double interPacketInterval  = 4.5;  //milliseconds
   bool sendDownlink           = true;
   bool sendUplink             = false;
   bool enableLog              = true;
+  std::string data_path       = "5g_validacao2/"; //pasta a salvar os resultados
 
   //LTE/5G features
   uint32_t bandwidth      = 24; //6 MHz, 8 MHz or 24 MHz (6 MHz and 8 MHz uses 4 or 3 component carriers, respectively)
-  bool useErrorModel      = false;
+  bool useCdlPathLoss     = true;
+  bool usePerfectChannel  = false;
   bool useHarq            = false;
   bool useIdealRrc        = true;
-  bool useCdlPathLoss     = false;
   double enbTxPower       = 53.0; //dBm
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
@@ -170,12 +171,11 @@ main (int argc, char *argv[])
   //Print information
   bool printMcsTbs        = true;
   bool printEarfcn        = false;
-  bool printRBs           = true;
+  bool printRBs           = false;
   bool printAppTrace      = true;
   std::string traceAppFilename = "5grange_app_trace";
 
   //Trace info
-  std::string data_path = "5g_test/";
   std::string pcapTraceFilename = "5grange_cdl";
   bool traceIpv4 = false;
   std::string traceRlcThroughputFilename = "5grange_rlc_throughput";
@@ -189,7 +189,7 @@ main (int argc, char *argv[])
   if (enableLog)
     {
       LogComponentEnable ("5gRangeCdlScript", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
-      //LogComponentEnable ("LteRlcUm", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
+      //LogComponentEnable ("RrFfMacScheduler", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
     }
 
   std::string trimmed_interval = std::to_string(interPacketInterval).substr(0, std::to_string(interPacketInterval).find(".") + 1 + 1);
@@ -220,7 +220,13 @@ main (int argc, char *argv[])
 
 
   Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
-  Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (useErrorModel));
+
+  if (usePerfectChannel)
+  {
+    Config::SetDefault ("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue (false));
+    Config::SetDefault ("ns3::LteAmc::PerfectChannel", BooleanValue (true));
+  }
+
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (useIdealRrc));
   //Config::SetDefault ("ns3::LteAmc::AmcModel", EnumValue (LteAmc::MiErrorModel));
 
@@ -237,7 +243,6 @@ main (int argc, char *argv[])
   NodeContainer allNodes;
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
-  //Config::SetDefault ("ns3::PfFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
   Config::SetDefault ("ns3::RrFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
   if(useCdlPathLoss)
     {
@@ -427,8 +432,11 @@ main (int argc, char *argv[])
     {
       //Config::Connect ("/NodeList/2/DeviceList/" + std::to_string(enbIds[0]) + "/$ns3::LteEnbNetDevice/ComponentCarrierMap/*/FfMacScheduler/$ns3::PfFfMacScheduler/RBBitmapTrace",  MakeCallback (&RbBitmapTrace));
 
-      //Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteUeNetDevice/ComponentCarrierMapUe/*/LteUePhy/StartTxDataframe", MakeCallback (&StartDataframeTxCallback));
+      //UE (Uplink)
+      Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteUeNetDevice/ComponentCarrierMapUe/*/LteUePhy/StartTxDataframe", MakeCallback (&StartDataframeTxCallback));
 
+      //eNB (Downlink)
+      Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/StartTxDataframe", MakeCallback (&StartDataframeTxCallback));
     }
 
   if (tracePhy)

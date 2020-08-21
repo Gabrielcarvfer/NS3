@@ -309,6 +309,15 @@ public:
     (uint16_t cellId, uint16_t rnti, double sinrLinear, uint8_t componentCarrierId);
 
   /**
+   * TracedCallback signature for seding dataframe events.
+   *
+   * \param [in] pb PacketBurst
+   * \param [in] rbs resource blocks being used
+   */
+  typedef void (* StartTxTracedCallback)
+      (Ptr<PacketBurst> pb, std::vector <int> rbs);
+
+  /**
    * TracedCallback signature for the linear average of SRS SINRs.
    *
    * \param [in] cellId
@@ -508,6 +517,13 @@ private:
    * Exporting cell ID, RNTI, SINR in linear unit and ComponentCarrierId
    */
   TracedCallback<uint16_t, uint16_t, double, uint8_t> m_reportUeSinr;
+
+
+  /**
+   * The `TxDataframe` trace source. Fired upon every UE PHY dataframe transmission.
+   */
+  TracedCallback<Ptr<PacketBurst>, std::vector <int>> m_startTxDataFrame;
+
   /**
    * The `UeSinrSamplePeriod` trace source. The sampling period for reporting
    * UEs' SINR stats.

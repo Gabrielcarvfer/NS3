@@ -74,6 +74,7 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   double d = a->GetDistanceFrom (b) / (1.0e3);
   NS_ASSERT_MSG(d <= 1.0, "The distance between the transmitter and receiver must be larger than 1km.");
 
+  std::cout << d << std::endl;
   Ptr<NetDevice> dev_a = a->GetObject<Node>()->GetDevice(0);
   Ptr<NetDevice> dev_b = b->GetObject<Node>()->GetDevice(0);
 

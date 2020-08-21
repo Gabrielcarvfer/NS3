@@ -248,6 +248,10 @@ LteEnbPhy::GetTypeId (void)
                    PointerValue (),
                    MakePointerAccessor (&LteEnbPhy::GetUlSpectrumPhy),
                    MakePointerChecker <LteSpectrumPhy> ())
+    .AddTraceSource ("StartTxDataframe",
+                     "Trace fired when sending a dataframe.",
+                     MakeTraceSourceAccessor (&LteEnbPhy::m_startTxDataFrame),
+                     "ns3::LteUePhy::StartTxTracedCallback")
 
   ;
   return tid;
@@ -823,6 +827,7 @@ LteEnbPhy::SendDataChannels (Ptr<PacketBurst> pb)
   NS_LOG_LOGIC (this << " eNB start TX DATA");
   std::list<Ptr<LteControlMessage> > ctrlMsgList;
   ctrlMsgList.clear ();
+  m_startTxDataFrame(pb, m_dlDataRbMap);
   m_downlinkSpectrumPhy->StartTxDataFrame (pb, ctrlMsgList, DL_DATA_DURATION);
 }
 

@@ -970,7 +970,8 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
-      uint16_t rlcPduSize = tbSize / lcNum;
+      NS_LOG_INFO(this << " mcs " << (int) newDci.m_mcs.at (0) << " rbgPerTb " << rbgPerTb << " rbg size " << rbgSize << " tbSize " << tbSize << " cqi " << (int)(*itCqi).second);
+      uint32_t rlcPduSize = tbSize / lcNum;
       while ((*it).m_rnti == newEl.m_rnti)
         {
           if ( ((*it).m_rlcTransmissionQueueSize > 0)
@@ -982,7 +983,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
                 {
                   RlcPduListElement_s newRlcEl;
                   newRlcEl.m_logicalChannelIdentity = (*it).m_logicalChannelIdentity;
-                  NS_LOG_INFO (this << "LCID " << (uint32_t) newRlcEl.m_logicalChannelIdentity << " size " << rlcPduSize << " ID " << (*it).m_rnti << " layer " << (uint16_t)j);
+                  NS_LOG_INFO (this << "LCID " << (uint32_t) newRlcEl.m_logicalChannelIdentity << " size " << rlcPduSize << " ID " << (*it).m_rnti << " layer " << (uint16_t)j << " rlcNum " << lcNum);
                   newRlcEl.m_size = rlcPduSize;
                   UpdateDlRlcBufferInfo ((*it).m_rnti, newRlcEl.m_logicalChannelIdentity, rlcPduSize);
                   newRlcPduLe.push_back (newRlcEl);
@@ -999,6 +1000,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
                     }
 
                 }
+
               newEl.m_rlcPduList.push_back (newRlcPduLe);
               lcNum--;
             }
@@ -1738,7 +1740,7 @@ RrFfMacScheduler::RefreshUlCqiMaps (void)
 }
 
 void
-RrFfMacScheduler::UpdateDlRlcBufferInfo (uint16_t rnti, uint8_t lcid, uint16_t size)
+RrFfMacScheduler::UpdateDlRlcBufferInfo (uint16_t rnti, uint8_t lcid, uint32_t size)
 {
   NS_LOG_FUNCTION (this);
   std::list<FfMacSchedSapProvider::SchedDlRlcBufferReqParameters>::iterator it;
@@ -1789,7 +1791,7 @@ RrFfMacScheduler::UpdateDlRlcBufferInfo (uint16_t rnti, uint8_t lcid, uint16_t s
 }
 
 void
-RrFfMacScheduler::UpdateUlRlcBufferInfo (uint16_t rnti, uint16_t size)
+RrFfMacScheduler::UpdateUlRlcBufferInfo (uint16_t rnti, uint32_t size)
 {
 
   size = size - 2; // remove the minimum RLC overhead
