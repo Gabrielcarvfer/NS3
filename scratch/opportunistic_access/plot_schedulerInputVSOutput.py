@@ -2,7 +2,9 @@
 import matplotlib.pyplot as plt
 import numpy
 
-def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=False, col=None, baseFolder="./build/bin/"):
+subframe_duration = 4.6 #ms for 5G-RANGE, 1ms for LTE
+
+def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=False, col=None, baseFolder="../../build/bin/"):
     bufferFileIn = ""
     bufferFileOut = ""
 
@@ -33,7 +35,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         interval = int(interval)#350000000
         interval /= 1000000 #350
 
-        inputAndOutputBitmapPerInterval[interval] = [int(y[1],2), 0x3FFFFFFFFFFFF]
+        inputAndOutputBitmapPerInterval[interval] = [y[1][1:-1], ""]
 
     for intervalBitmap in bufferFileOut:
         y = intervalBitmap.split(sep=':')
@@ -45,7 +47,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         interval /= 1000000 #350
 
 
-        inputAndOutputBitmapPerInterval[interval][1] = int(y[1],2)
+        inputAndOutputBitmapPerInterval[interval][1] = y[1][1:-1]
 
     ax = None
     ax_1 = None
@@ -70,7 +72,8 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
     #ax.grid(True)
     #ax.tick_params('y')
     #yticks = [x for x in list(range(0, 60, 10))]
-    xticks = [float(x) for x in range(20000)]
+    #xticks = sortedInputOutputBitmapKeys
+    xticks = list(numpy.arange(0, sortedInputOutputBitmapKeys[-1]+subframe_duration, subframe_duration))
 
     base = 0
     top  = 50
@@ -94,16 +97,18 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
 
             bitmaps = inputAndOutputBitmapPerInterval[interval]
             marked = False
-            if ( (bitmaps[0]>>i) & 0x01):
-                    input_barh += [(float(interval),1.0)] #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+            if bitmaps[0][i] == '1':
+                    input_barh += [(float(interval),subframe_duration)] #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
                     marked = True
-            if ( (bitmaps[1]>>i) & 0x01) and not marked:
-                    output_barh += [(float(interval),1.0)] #Blocks occupied by transmissions scheduled by the eNB
+            if bitmaps[1][i] == '1' and not marked:
+                    output_barh += [(float(interval),subframe_duration)] #Blocks occupied by transmissions scheduled by the eNB
 
-        ax.broken_barh(input_barh,(i,1.0), facecolors="red", alpha=0.7) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
-        ax.broken_barh(output_barh,(i,1.0), facecolors="blue", alpha=0.5) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+        ax.broken_barh(input_barh,(i,1.0), facecolors="red", alpha=0.7, label= "Occupied RBGs" if i == base else None) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+        ax.broken_barh(output_barh,(i,1.0), facecolors="blue", alpha=0.5, label="Scheduled RBGs"if i == base else None) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
         #ax.set_yticks(yticks)
         #ax.set_xticks(xticks)
+        ax.set_xlim(0, sortedInputOutputBitmapKeys[-1]+subframe_duration)
+        ax.legend()
 
         if(standalone_plot):
             plt.show(block=False)

@@ -899,13 +899,23 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
     }
 
   if (nflows == 0)
+  {
+    if ((ret.m_buildDataList.size () > 0) || (ret.m_buildRarList.size () > 0))
     {
-      if ((ret.m_buildDataList.size () > 0) || (ret.m_buildRarList.size () > 0))
-        {
-          m_schedSapUser->SchedDlConfigInd (ret);
-        }
-      return;
+      m_schedSapUser->SchedDlConfigInd (ret);
     }
+    //SchedulerOutput
+    {
+        std::stringstream ss;
+        ss << Simulator::Now() << ": ";
+        for (int i = 0; i < rbgMap.size(); i++) {
+            ss << (rbgMap.at(i) ? 1 : 0);
+        }
+        ss << "\n";
+        schedulerOutputFile.push_back(ss.str());
+    }
+    return;
+  }
   // Divide the resource equally among the active users according to
   // Resource allocation type 0 (see sec 7.1.6.1 of 36.213)
 

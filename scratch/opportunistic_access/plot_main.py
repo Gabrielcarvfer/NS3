@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-def plot_collaborative_sensing_data(baseFolder = "./build/bin"):
+def plot_collaborative_sensing_data(baseFolder = "../../build/bin"):
 	#Plot figure with 4 subplots sharing the x-axis
     fig, axisRows = plt.subplots(nrows=3, ncols=4, sharex="all", sharey="row", figsize=(16,9))
 

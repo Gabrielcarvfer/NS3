@@ -1,7 +1,7 @@
 import os
 cqi_trace_file = []
 
-dir = "./build/bin/"
+dir = "../../build/bin/"
 tracefile = "CQI_trace.txt"
 tracejson = "CQI_trace.json"
 

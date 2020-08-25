@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy
 
 
-def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel=None, col=None, baseFolder="./build/bin/"):
+def plot_pu_detection_by_ues(standalone_plot=False,ax1=None,ax2=None, subchannel=None, col=None, baseFolder="../../build/bin/"):
     bufferFile = ""
 
     plot_pu_detection_file = "plot_pu.txt"

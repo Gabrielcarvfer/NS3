@@ -5,7 +5,7 @@ import math
 import decimal
 
 
-def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFolder="./build/bin/", col=-1):
+def plot_pu_transmission(standalone_plot=False, axs=None, fileName=None, baseFolder="../../build/bin/", col=-1):
     bufferFileIn = ""
     if fileName is None:
         fileName = "spectrum-analyzer-output-17-0.tr"
