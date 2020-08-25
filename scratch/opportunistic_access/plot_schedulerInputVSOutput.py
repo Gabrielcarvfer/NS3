@@ -36,6 +36,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
         interval /= 1000000 #350
 
         inputAndOutputBitmapPerInterval[interval] = [y[1][1:-1], ""]
+    del bufferFileIn
 
     for intervalBitmap in bufferFileOut:
         y = intervalBitmap.split(sep=':')
@@ -48,6 +49,9 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
 
 
         inputAndOutputBitmapPerInterval[interval][1] = y[1][1:-1]
+    del bufferFileOut
+
+    del interval, y, baseFolder, intervalBitmap
 
     ax = None
     ax_1 = None
@@ -76,7 +80,7 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
     xticks = list(numpy.arange(0, sortedInputOutputBitmapKeys[-1]+subframe_duration, subframe_duration))
 
     base = 0
-    top  = 50
+    top  = len(inputAndOutputBitmapPerInterval[subframe_duration][0])
     ncol = col
     #separate channel into subchannels for plotting
     if not standalone_plot:
@@ -98,17 +102,18 @@ def plot_scheduler_input_n_output(standalone_plot=False, ax1=None, subchannel=Fa
             bitmaps = inputAndOutputBitmapPerInterval[interval]
             marked = False
             if bitmaps[0][i] == '1':
-                    input_barh += [(float(interval),subframe_duration)] #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
+                    input_barh += [(float(interval),subframe_duration-0.1)] #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
                     marked = True
             if bitmaps[1][i] == '1' and not marked:
-                    output_barh += [(float(interval),subframe_duration)] #Blocks occupied by transmissions scheduled by the eNB
+                    output_barh += [(float(interval),subframe_duration-0.1)] #Blocks occupied by transmissions scheduled by the eNB
 
         ax.broken_barh(input_barh,(i,1.0), facecolors="red", alpha=0.7, label= "Occupied RBGs" if i == base else None) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
         ax.broken_barh(output_barh,(i,1.0), facecolors="blue", alpha=0.5, label="Scheduled RBGs"if i == base else None) #Blocks occupied before scheduling (unexpected access reported by UEs, may be a PU,SU,whatever)
         #ax.set_yticks(yticks)
         #ax.set_xticks(xticks)
         ax.set_xlim(0, sortedInputOutputBitmapKeys[-1]+subframe_duration)
-        ax.legend()
+        ax.legend(bbox_to_anchor=(0,1.02,1,0.2), loc="lower left",
+                  mode="expand", borderaxespad=0, ncol=3)
 
         if(standalone_plot):
             plt.show(block=False)
