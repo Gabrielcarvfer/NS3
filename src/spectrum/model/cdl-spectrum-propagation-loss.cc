@@ -67,6 +67,7 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   Ptr<SpectrumValue> rxPsd = Copy<SpectrumValue> (txPsd);
   Values::iterator vit = rxPsd->ValuesBegin ();
   Bands::const_iterator fit = rxPsd->ConstBandsBegin ();
+  double system_freq;
 
   NS_ASSERT (a);
   NS_ASSERT (b);
@@ -74,25 +75,37 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   double d = a->GetDistanceFrom (b) / (1.0e3);
   NS_ASSERT_MSG(d <= 1.0, "The distance between the transmitter and receiver must be larger than 1km.");
 
-  std::cout << d << std::endl;
   Ptr<NetDevice> dev_a = a->GetObject<Node>()->GetDevice(0);
   Ptr<NetDevice> dev_b = b->GetObject<Node>()->GetDevice(0);
 
   Ptr<Ula5gRange> ula_tx, ula_rx;
 
+  //uplink
   if (DynamicCast<LteUeNetDevice>(dev_a))
     {
       ula_tx = DynamicCast<LteUeNetDevice>(dev_a)->GetPhy()->GetUplinkSpectrumPhy()->GetUla();
       ula_rx = DynamicCast<LteEnbNetDevice>(dev_b)->GetPhy()->GetUplinkSpectrumPhy()->GetUla();
+      system_freq = LteSpectrumValueHelper::GetUplinkCarrierFrequency(DynamicCast<LteEnbNetDevice>(dev_b)->GetUlEarfcn());
     }
+  //downlink
   else
     {
       ula_tx = DynamicCast<LteEnbNetDevice> (dev_a)->GetPhy ()->GetDownlinkSpectrumPhy ()->GetUla ();
       ula_rx = DynamicCast<LteUeNetDevice> (dev_b)->GetPhy ()->GetDownlinkSpectrumPhy ()->GetUla ();
+      system_freq = LteSpectrumValueHelper::GetDownlinkCarrierFrequency(DynamicCast<LteEnbNetDevice>(dev_a)->GetDlEarfcn());
     }
 
+  if (ula_tx->GetSystemFreq() == 0.0)
+  {
+    ula_tx->SetSystemFreq(system_freq);
+  }
   ula_tx->SetPosition (a->GetPosition ());
   ula_tx->SetVelocity (a->GetVelocity());
+
+  if (ula_rx->GetSystemFreq() == 0.0)
+  {
+    ula_rx->SetSystemFreq(system_freq);
+  }
   ula_rx->SetPosition (b->GetPosition ());
   ula_rx->SetVelocity (b->GetVelocity());
 
@@ -106,10 +119,13 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
     }
 
   CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx);
+  double path_loss = cdl_inst.get_tot_path_gain();
 
-  *(rxPsd) *= cdl_inst.get_tot_path_gain();
-  std::vector<double> losses = cdl_inst.get_channel_fr_5g (time, rxPsd);
+  *(rxPsd) *= path_loss;
 
+  std::vector<double> losses = cdl_inst.get_channel_fr_5g (0, rxPsd);
+
+  vit = rxPsd->ValuesBegin ();
   size_t i = 0;
   while (vit != rxPsd->ValuesEnd ())
     {

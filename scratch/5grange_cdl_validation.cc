@@ -102,17 +102,18 @@ main (int argc, char *argv[])
     dlRb.push_back (i);
   }
 
-  Ptr<SpectrumValue> rxPsd = svh.CreateTxPowerSpectralDensity(dlEarfcn, dlBandwidth, enbGain, dlRb);
+  Ptr<SpectrumValue> rxPsd = svh.CreateTxPowerSpectralDensity(dlEarfcn, dlBandwidth, enbTxPower, dlRb);
 
 
-  std::ofstream out("cdl_5grange_ns3_" + std::to_string(dist) + "m.txt", std::ios::out);
-  std::ofstream out_freqs("cdl_5grange_ns3_" + std::to_string(dist) + "m_freqs.txt", std::ios::out);
+  std::ofstream out("cdl_5grange_ns3_" + std::to_string(dist) + "-m.txt", std::ios::out);
+  std::ofstream out_freqs("cdl_5grange_ns3_" + std::to_string(dist) + "-m_freqs.txt", std::ios::out);
 
   for (int r = 0; r < reps; r++) {
     Ptr<CdlSpectrumPropagationLossModel> cdl = CreateObject<CdlSpectrumPropagationLossModel> ();
     auto fit = rxPsd->ConstBandsBegin();
-    /*
+/*
     std::cout << "system_freq: " << system_freq << std::endl;
+
     std::cout << "freqs:";
 
 
@@ -123,7 +124,7 @@ main (int argc, char *argv[])
     std::cout << std::endl;
 
 
-    std::cout << "psd:";
+    std::cout << "psd orig:";
 
     fit = rxPsd->ConstBandsBegin();
     for (int i = 0; i < dlBandwidth; i++) {
@@ -131,20 +132,16 @@ main (int argc, char *argv[])
       ++fit;
     }
     std::cout << std::endl;
-    */
+*/
 
     Ptr<SpectrumValue> rxPsdn = cdl->DoCalcRxPowerSpectralDensity(rxPsd, tx, rx);
-
-
-    /*
-    fit = rxPsdn->ConstBandsBegin();
+/*
+    std::cout << "psd final:";
     for (int i = 0; i < dlBandwidth; i++) {
       std::cout << rxPsdn->ValuesAt(i) << " ";
-      ++fit;
     }
     std::cout << std::endl;
-     */
-
+*/
     for (int i = 0; i < dlBandwidth; i++) {
       out << rxPsdn->ValuesAt(i) << " ";
     }
