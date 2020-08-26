@@ -1,6 +1,8 @@
 import os
+import re
 import matplotlib
 import shutil
+import matplotlib.pyplot as plt
 import multiprocessing as mp
 from plot_mcs_distribution import plot_mcs_dist as extract_n_plot_mcs
 from plot_mcs_distribution import plot_mcs_hist as plot_mcs
@@ -99,14 +101,14 @@ if __name__ == "__main__":
             mcs_freq_per_d = {}
             snr_freq_per_d = {}
 
-            # Aggregate results for different distances
+            # Aggregate MCS and SNR results for different distances
             for distance in distances:
+                # Pop MCS and SNR distribution results
                 finished, mcs_freq, snr_freq = results.pop(0)
                 mcs_freq_per_d.update(mcs_freq)
                 snr_freq_per_d.update(snr_freq)
 
-            # Create output figures
-            import matplotlib.pyplot as plt
+            # Create output figures for MCS and SNR
             fig, axis = plt.subplots(nrows=len(mcs_freq_per_d))
             if len(distances) == 1:
                 axis = [axis]
@@ -115,16 +117,45 @@ if __name__ == "__main__":
             if len(distances) == 1:
                 axis2 = [axis2]
 
-            # Plot aggregated results
+            # Plot aggregated results for MCS and SNR
             axis[-1].set_xlabel("MCS")
             axis2[-1].set_xlabel("SNR")
             plot_mcs(axis, mcs_freq_per_d)
             plot_snr(axis2, snr_freq_per_d)
 
-            # Save results to output files
+            # Save results to output files for MCS and SNR
             fig.savefig(channelFolder+"mcs.png")
             fig2.savefig(channelFolder+"snr.png")
 
+            # Clean environment of MCS and SNR variables
+            del fig, fig2, axis, axis2, mcs_freq_per_d, snr_freq_per_d, distance, finished, mcs_freq, snr_freq
+
+
+            # Aggregate results for different distances
+            corrupted_freq_per_d = {}
+            for distance in distances:
+                distanceFolder = channelFolder + str(distance) + "km" + os.sep
+
+                # Open out__km.txt and scan for corrupted transport blocks to calculate the error rate
+                contents = None
+                with open("out%dkm.txt" % distance, "r") as file:
+                    contents = file.readlines()
+
+                corrupted_regex = re.compile(".* corrupted (.*).*")
+                corrupted_TBs = 0
+                total_TBs = 0
+
+                for line in contents:
+                    regex = corrupted_regex.match(line)
+                    if regex is None:
+                        continue
+                    total_TBs += 1
+                    corrupted = regex.groups()[0]
+                    corrupted = int(corrupted)
+                    corrupted_TBs += corrupted
+                corrupted_freq_per_d[distance] = (corrupted_TBs, total_TBs)
+                del regex, line, contents, corrupted, file
+            del corrupted_TBs, total_TBs, contents
 
 
 
