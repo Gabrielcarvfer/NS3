@@ -54,7 +54,7 @@ namespace ns3 {
         if (errorDataLoaded)
             return;
 
-        picojson::object o = load_json("../../src/lte/model/BLER/bler_5g.json");
+        picojson::object o = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/bler_5g.json");
 
         {
             auto temp = o["Channel Models"].get<picojson::array>();
@@ -117,7 +117,7 @@ namespace ns3 {
             }
         }
 
-        o = load_json("../../src/lte/model/BLER/beta_values.json");
+        o = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/beta_values.json");
         {
             auto temp = o["channel"].get<picojson::object>();
             for (auto channel = temp.begin(); channel != temp.end(); channel++)

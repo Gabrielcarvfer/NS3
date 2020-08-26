@@ -106,7 +106,7 @@ bool LteAmc::prbDataLoaded = false;
 
 void LteAmc::LoadPrbData()
 {
-    picojson::object o = load_json("../../src/lte/model/BLER/TBS_MCS.json");
+    picojson::object o = load_json(PROJECT_SOURCE_PATH"/src/lte/model/BLER/TBS_MCS.json");
 
     auto itbs_o = o["TBS"].get<picojson::object>();
 
