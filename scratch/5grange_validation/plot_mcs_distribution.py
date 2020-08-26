@@ -1,4 +1,19 @@
 import re
+import random
+
+
+def plot_mcs_hist(axis, mcs_freq_per_d):
+    i = 0
+    for d in mcs_freq_per_d:
+        tripa = []
+        for mcs in mcs_freq_per_d[d]["mcs"]:
+            tripa.extend([mcs]*mcs_freq_per_d[d]["mcs"][mcs])
+        axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
+
+        axis[i].set_xlim((0, 26))
+        axis[i].set_xticks(list(range(0, 27)))
+        axis[i].legend()
+        i += 1
 
 
 def plot_mcs_dist(ds=(1, 10, 20, 35, 50,),
@@ -29,28 +44,20 @@ def plot_mcs_dist(ds=(1, 10, 20, 35, 50,),
         del regex, mcs, line, contents
 
     del d, mcs_regex
-    import random
     import matplotlib.pyplot as plt
-    fig, axis = plt.subplots(ncols=1, nrows=len(mcs_freq_per_d))
+    fig, axis = plt.subplots(nrows=len(mcs_freq_per_d))
     if len(ds) == 1:
         axis = [axis]
 
-    i = 0
-    for d in mcs_freq_per_d:
-        tripa = []
-        for mcs in mcs_freq_per_d[d]["mcs"]:
-            tripa.extend([mcs]*mcs_freq_per_d[d]["mcs"][mcs])
-        axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d), color=(random.random(), random.random(), random.random()))
-
-        axis[i].set_xlim((0, 26))
-        axis[i].set_xticks(list(range(0, 27)))
-        axis[i].legend()
-        i += 1
+    plot_mcs_hist(axis, mcs_freq_per_d)
 
     plt.xlabel("MCS")
     if not cmd:
         plt.show()
     plt.savefig(base_dir+"mcs.png")
+
+    # Return results for aggregation
+    return mcs_freq_per_d
 
 
 if __name__ == '__main__':

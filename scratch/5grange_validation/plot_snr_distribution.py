@@ -1,4 +1,18 @@
 import re
+import random
+
+
+def plot_snr_hist(axis, snr_freq_per_d):
+    i = 0
+    for d in snr_freq_per_d:
+        tripa = []
+        for mcs in snr_freq_per_d[d]["snr"]:
+            tripa.extend([mcs] * snr_freq_per_d[d]["snr"][mcs])
+        axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d),
+                     color=(random.random(), random.random(), random.random()))
+        axis[i].legend()
+        axis[i].set_xlim((-50.0, 150.0))
+        i += 1
 
 
 def plot_snr_dist(ds=(1, 10, 20, 35, 50,),
@@ -29,27 +43,20 @@ def plot_snr_dist(ds=(1, 10, 20, 35, 50,),
         del regex, snr, line, contents
 
     del d, snr_regex
-    import random
     import matplotlib.pyplot as plt
-    fig, axis = plt.subplots(ncols=1, nrows=len(snr_freq_per_d))
+    fig, axis = plt.subplots(nrows=len(snr_freq_per_d))
     if len(ds) == 1:
         axis = [axis]
 
-    i = 0
-    for d in snr_freq_per_d:
-        tripa = []
-        for mcs in snr_freq_per_d[d]["snr"]:
-            tripa.extend([mcs] * snr_freq_per_d[d]["snr"][mcs])
-        axis[i].hist(tripa, bins=27, density=True, label=("%dkm" % d),
-                     color=(random.random(), random.random(), random.random()))
-        axis[i].legend()
-        axis[i].set_xlim((-50.0, 150.0))
-        i += 1
+    plot_snr_hist(axis, snr_freq_per_d)
+
     plt.xlabel("SINR")
     if not cmd:
         plt.show()
     plt.savefig(base_dir+"sinr.png")
 
+    # Return results for aggregation
+    return snr_freq_per_d
 
 if __name__ == '__main__':
     plot_snr_dist()
