@@ -138,22 +138,24 @@ main (int argc, char *argv[])
   NS_LOG_DEBUG (" Running 5gRangeCdlScript");
 
   //Scenario configuration
-  double simTime              = 2;
+  double simTime              = 5;
   uint16_t numberOfNodes      = 1;//132
-  uint16_t m_distance         = 1001;
-  uint32_t m_packetSize       = 612;   //bytes
-  double interPacketInterval  = 4.5;  //milliseconds
+  uint32_t m_distance         = 50001;
+  uint32_t m_packetSize       = 2000; //bytes
+  double interPacketInterval  = 100;  //milliseconds
   bool sendDownlink           = true;
   bool sendUplink             = false;
   bool enableLog              = true;
-  std::string data_path       = "5g_validacao2/"; //pasta a salvar os resultados
+  std::string data_path       = "./"; //pasta a salvar os resultados
 
   //LTE/5G features
   uint32_t bandwidth      = 24; //6 MHz, 8 MHz or 24 MHz (6 MHz and 8 MHz uses 4 or 3 component carriers, respectively)
-  bool useCdlPathLoss     = true;
+  bool useErrorModel      = true;
   bool usePerfectChannel  = false;
   bool useHarq            = false;
   bool useIdealRrc        = true;
+  bool useCdlPathLoss     = true;
+  bool forceMaxMcsSched   = false;
   double enbTxPower       = 53.0; //dBm
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
@@ -167,6 +169,22 @@ main (int argc, char *argv[])
   int fusionAlgorithm     = 6;
   bool enableDSA          = false; //if false, channels with PUs will be automatically flagged not to be used
   bool SNRSensing         = false; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
+
+  //Process command line options
+  CommandLine cmd;
+  cmd.AddValue("simTime", "Simulation length", simTime);
+  cmd.AddValue("useErrorModel", "Enable error model", useErrorModel);
+  cmd.AddValue("useCdlPathLoss", "Use CDL channel model or 5G-RANGE D3.1 channel model", useCdlPathLoss);
+  cmd.AddValue("distance", "Distance in meters between UE and eNB", m_distance);
+  cmd.AddValue("forceMaxMcsSched", "Force scheduler to use maximum MCS, inducing errors but reaching max throughput", forceMaxMcsSched);
+  cmd.Parse (argc, argv);
+
+  std::cout << "simTime: " << simTime << std::endl;
+  std::cout << "useErrorModel: " << useErrorModel << std::endl;
+  std::cout << "useCdlPathLoss: " << useCdlPathLoss << std::endl;
+  std::cout << "distance: " << m_distance << std::endl;
+  std::cout << "forceMaxMcsSched: " << forceMaxMcsSched << std::endl;
+  m_distance+=1;
 
   //Print information
   bool printMcsTbs        = true;
@@ -187,10 +205,10 @@ main (int argc, char *argv[])
   std::string tracePhyFilename = "5grange_phy_trace";
 
   if (enableLog)
-    {
-      LogComponentEnable ("5gRangeCdlScript", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
-      //LogComponentEnable ("RrFfMacScheduler", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
-    }
+  {
+    LogComponentEnable ("5gRangeCdlScript", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
+    //LogComponentEnable ("RrFfMacScheduler", (LogLevel)(LOG_PREFIX_ALL | LOG_ALL));
+  }
 
   std::string trimmed_interval = std::to_string(interPacketInterval).substr(0, std::to_string(interPacketInterval).find(".") + 1 + 1);
   std::string sim_name = "5gsim_n" + std::to_string (numberOfNodes) + "_p" +std::to_string (m_packetSize) + "_i" + trimmed_interval;
@@ -233,7 +251,7 @@ main (int argc, char *argv[])
   Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(enbTxPower));
   Config::SetDefault("ns3::LteUePhy::TxPower" , DoubleValue(ueTxPower));
 
-  Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (160));
+  Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (40));
   Config::SetDefault ("ns3::LteUePhy::EnableUplinkPowerControl", BooleanValue (false));
   Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
   Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
@@ -241,9 +259,14 @@ main (int argc, char *argv[])
   LteSpectrumPhy::SNRsensing = SNRSensing;
 
   NodeContainer allNodes;
+  Config::SetDefault ("ns3::FfMacScheduler::ForceMaxMcs", BooleanValue (forceMaxMcsSched));
+
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
   Config::SetDefault ("ns3::RrFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
+  //lteHelper->SetSchedulerType ("ns3::CqaFfMacScheduler");
+  //Config::SetDefault ("ns3::CqaFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
+
   if(useCdlPathLoss)
     {
       Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
@@ -253,7 +276,7 @@ main (int argc, char *argv[])
   else
     {
       Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(869e6));
-      Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(4));
+      //Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(10));
       lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
     }
 
@@ -356,7 +379,7 @@ main (int argc, char *argv[])
 
           //From remoteHost
           UdpClientHelper dlClient (ueIpIface.GetAddress (u), dlPort);
-          dlClient.SetAttribute ("Interval", TimeValue (Seconds(interPacketInterval/1000)));
+          dlClient.SetAttribute ("Interval", TimeValue (MicroSeconds(interPacketInterval)));
           dlClient.SetAttribute ("PacketSize", UintegerValue (m_packetSize));
           dlClient.SetAttribute ("MaxPackets", UintegerValue(1000000));
           clientApps.Add (dlClient.Install (remoteHost));
@@ -370,7 +393,7 @@ main (int argc, char *argv[])
 
           //From UEs
           UdpClientHelper ulClient (remoteHostAddr, ulPort);
-          ulClient.SetAttribute ("Interval", TimeValue (Seconds(interPacketInterval/1000)));
+          ulClient.SetAttribute ("Interval", TimeValue (MicroSeconds(interPacketInterval)));
           ulClient.SetAttribute ("PacketSize", UintegerValue (m_packetSize));
           ulClient.SetAttribute ("MaxPackets", UintegerValue(1000000));
           clientApps.Add (ulClient.Install (ueNodes.Get(u)));
