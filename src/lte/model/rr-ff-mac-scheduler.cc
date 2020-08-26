@@ -1005,7 +1005,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
           else
             {
-              newDci.m_mcs.push_back ( m_amc->GetMcsFromCqi ((*itCqi).second) );
+              newDci.m_mcs.push_back ( forceMaxMcs ? 26 : m_amc->GetMcsFromCqi ((*itCqi).second) );
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
