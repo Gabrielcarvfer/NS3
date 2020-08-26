@@ -319,7 +319,7 @@ namespace ns3 {
                 }
                 else
                 {
-                    if (B1 > cbSizeTable5g[mid - 1] * C)
+                    if ( (mid-1 >= 0) && B1 > cbSizeTable5g[mid - 1] * C)
                     {
                         break;
                     }
