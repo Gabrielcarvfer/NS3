@@ -72,6 +72,7 @@ if __name__ == "__main__":
 
     thread_parameters = []
 
+    # Create folders to dump simulation results
     make_dir(output_dir)
     for forceMaxMcs in [False, True]:
         maxMcsFolder = output_dir+"ForceMaxMcs_%s" % str(forceMaxMcs) + os.sep
@@ -87,9 +88,11 @@ if __name__ == "__main__":
 
     del distance, distanceFolder, channel_model, channelFolder, forceMaxMcs, maxMcsFolder
 
+    # Run simulation programs and scripts to process results
     with mp.Pool(processes=10) as p:
         p.starmap(func=exec_sim_parameters, iterable=thread_parameters)
 
+    # Todo: aggregate results in a useful manner
 
 
 
