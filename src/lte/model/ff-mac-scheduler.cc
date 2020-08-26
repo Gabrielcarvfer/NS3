@@ -22,6 +22,7 @@
 #include "ff-mac-scheduler.h"
 #include <ns3/log.h>
 #include <ns3/enum.h>
+#include <ns3/boolean.h>
 
 
 namespace ns3 {
@@ -61,7 +62,11 @@ FfMacScheduler::GetTypeId (void)
                    MakeEnumAccessor (&FfMacScheduler::m_ulCqiFilter),
                    MakeEnumChecker (FfMacScheduler::SRS_UL_CQI, "SRS_UL_CQI",
                                     FfMacScheduler::PUSCH_UL_CQI, "PUSCH_UL_CQI"))
-    ;
+    .AddAttribute ("ForceMaxMcs",
+                   "Force maximum MCS during scheduling",
+                   BooleanValue(false),
+                   MakeBooleanAccessor (&FfMacScheduler::forceMaxMcs),
+                   MakeBooleanChecker());
   return tid;
 }
 

@@ -129,7 +129,7 @@ public:
 
   std::vector<std::string> schedulerInputFile;
   std::vector<std::string> schedulerOutputFile;
-
+  bool forceMaxMcs;
 protected:
     
   UlCqiFilter_t m_ulCqiFilter; ///< UL CQI filter
