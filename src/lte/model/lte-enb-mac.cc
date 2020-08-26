@@ -746,7 +746,10 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   }
 
   //Process DL-CQI entries to reset ACK/NACK counters
-  if (!tempCqi.empty())
+  BooleanValue harmonicDetection;
+  GlobalValue::GetValueByName("HARMONIC_DETECTION", harmonicDetection);
+
+  if (harmonicDetection && !tempCqi.empty())
   {
       //Update current registries with new info
       for (auto & cqiEntry : tempCqi)

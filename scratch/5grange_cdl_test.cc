@@ -169,7 +169,7 @@ main (int argc, char *argv[])
   int fusionAlgorithm     = 6;
   bool enableDSA          = false; //if false, channels with PUs will be automatically flagged not to be used
   bool SNRSensing         = false; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
-
+  bool harmonicDetection  = false;
   //Process command line options
   CommandLine cmd;
   cmd.AddValue("simTime", "Simulation length", simTime);
@@ -185,6 +185,11 @@ main (int argc, char *argv[])
   std::cout << "distance: " << m_distance << std::endl;
   std::cout << "forceMaxMcsSched: " << forceMaxMcsSched << std::endl;
   m_distance+=1;
+
+  static GlobalValue g_harmonic_detection =
+          GlobalValue ("HARMONIC_DETECTION", "Use harmonic detection to prevent Byzantine attackers",
+                       BooleanValue (harmonicDetection),
+                       MakeBooleanChecker());
 
   //Print information
   bool printMcsTbs        = true;
