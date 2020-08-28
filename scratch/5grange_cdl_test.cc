@@ -150,12 +150,13 @@ main (int argc, char *argv[])
 
   //LTE/5G features
   uint32_t bandwidth      = 24; //6 MHz, 8 MHz or 24 MHz (6 MHz and 8 MHz uses 4 or 3 component carriers, respectively)
-  bool useErrorModel      = false;
+  bool useErrorModel      = true;
   bool usePerfectChannel  = false;
   bool useHarq            = false;
   bool useIdealRrc        = true;
   bool useCdlPathLoss     = true;
   bool forceMaxMcsSched   = false;
+  double kval             = 0; //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
   double enbTxPower       = 53.0; //dBm
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
@@ -274,6 +275,7 @@ main (int argc, char *argv[])
 
   if(useCdlPathLoss)
     {
+      Config::SetDefault ("ns3::CdlCommon::KValue", DoubleValue(kval));
       Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
       lteHelper->SetPathlossModelType (TypeId::LookupByName ("ns3::CdlSpectrumPropagationLossModel"));
       //lteHelper->SetPathlossModelAttribute ("CdlType", EnumValue (CdlSpectrumPropagationLossModel::CDL_A));
@@ -281,7 +283,7 @@ main (int argc, char *argv[])
   else
     {
       Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(869e6));
-      //Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(10));
+      Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(kval));
       lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
     }
 

@@ -11,6 +11,8 @@
 namespace ns3
 {
 
+NS_OBJECT_ENSURE_REGISTERED (CdlCommon);
+
 TypeId
 CdlCommon::GetTypeId (void)
 {
