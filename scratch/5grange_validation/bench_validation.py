@@ -219,7 +219,7 @@ if __name__ == "__main__":
 
         # Set axis labels for corruption rate plot
         axis4[-1].set_xlabel("Distance (km)")
-        axis4[-1].set_ylabel("Received throughput (mbps)")
+        axis4[-1].set_ylabel("Received throughput (Mbps)")
         axis4[-1].legend()
 
         # Save results to output files for corruption rate
