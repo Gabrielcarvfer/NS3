@@ -157,10 +157,10 @@ main (int argc, char *argv[])
   bool useCdlPathLoss     = true;
   bool forceMaxMcsSched   = false;
   double kval             = 0; //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
-  double enbTxPower       = 53.0; //dBm
+  double enbTxPower       = 40.8; //dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
-  double ueGain           = 9.0;  //dBi
+  double ueGain           = 0.0;  //dBi, 9dBi is for CPEs
   uint32_t dlEarfcn       = 50000; //5G: 50000, LTE: 2400 for band 5 (~850MHz)
   uint32_t ulEarfcn       = 60000; //5G: 60000, LTE: 20400 for band 5 (~850MHz)
   uint32_t dlBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
