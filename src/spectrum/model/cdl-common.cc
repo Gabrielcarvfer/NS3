@@ -43,7 +43,7 @@ CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_
       shadow_fading = dB2lin (-CDL_D_param::SF_stddev * arma::randn ());
     }
 
-  path_loss = get_path_loss (tx->GetPosition (), rx->GetPosition (), system_freq);
+  path_loss = get_path_loss (tx->GetPosition (), rx->GetPosition (), system_freq, m_kvalue);
   tot_path_gain = (1.0 / path_loss) * shadow_fading;
   combined_pattern ();
 }
@@ -321,7 +321,7 @@ void CdlCommon::combined_pattern ()
     }  // END FOR for each ray
 }
 
-double CdlCommon::get_path_loss (const arma::vec3 &tx_position, const arma::vec3 &rx_position, double system_freq)
+double CdlCommon::get_path_loss (const arma::vec3 &tx_position, const arma::vec3 &rx_position, double system_freq, double k_value)
 {
   double distance_km = arma::norm (tx_position - rx_position) / (1.0e3);
 
@@ -334,7 +334,7 @@ double CdlCommon::get_path_loss (const arma::vec3 &tx_position, const arma::vec3
 
   double fc = system_freq / (1.0e6);
 
-  double Pl_dB = 32.44 + 20 * log10 (fc) + 20 * log10 (distance_km) + 29.38;
+  double Pl_dB = 32.44 + 20 * log10 (fc) + 20 * log10 (distance_km) + k_value;
 
   return std::pow (10.0, Pl_dB / 10.0);
 }

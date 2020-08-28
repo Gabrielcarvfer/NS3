@@ -93,9 +93,10 @@ class CdlCommon : public Object {
  * @param tx_position transmitter position [meter]
  * @param rx_position receiver position [meter]
  * @param system_freq system frequency [Hz]
+ * @param k_value k-value adjustment value [dB]
  * @return the path loss in linear scale
  */
-  static double get_path_loss (const arma::vec3 &tx_position, const arma::vec3 &rx_position, double system_freq);
+  static double get_path_loss (const arma::vec3 &tx_position, const arma::vec3 &rx_position, double system_freq, double k_value);
 
   static arma::vec3 vec2arma(const Vector &in);
 

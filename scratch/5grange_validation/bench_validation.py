@@ -73,8 +73,8 @@ def randcolor():
 
 if __name__ == "__main__":
     mp.freeze_support()
-    channel_models = ("RANGE5G", )#"CDL")
-    forcedMaxMcs = (True,)
+    channel_models = ("RANGE5G", "CDL")
+    forcedMaxMcs = (False,)
     distances = [1, 5, 10, 20, 35, 50, 100, ]
 
     thread_parameters = []
