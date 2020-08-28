@@ -150,7 +150,7 @@ main (int argc, char *argv[])
 
   //LTE/5G features
   uint32_t bandwidth      = 24; //6 MHz, 8 MHz or 24 MHz (6 MHz and 8 MHz uses 4 or 3 component carriers, respectively)
-  bool useErrorModel      = true;
+  bool useErrorModel      = false;
   bool usePerfectChannel  = false;
   bool useHarq            = false;
   bool useIdealRrc        = true;
@@ -185,7 +185,7 @@ main (int argc, char *argv[])
   std::cout << "distance: " << m_distance << std::endl;
   std::cout << "forceMaxMcsSched: " << forceMaxMcsSched << std::endl;
   m_distance+=1;
-
+  usePerfectChannel = !useErrorModel;
   static GlobalValue g_harmonic_detection =
           GlobalValue ("HARMONIC_DETECTION", "Use harmonic detection to prevent Byzantine attackers",
                        BooleanValue (harmonicDetection),

@@ -188,6 +188,7 @@ if __name__ == "__main__":
                 with open(distanceFolder + "out%dkm.txt" % distance, "r") as file:
                     contents = file.readlines()
 
+                corrupted = 0
                 corrupted_regex = re.compile(".* corrupted (.*).*")
                 corrupted_TBs = 0
                 total_TBs = 0
@@ -201,7 +202,7 @@ if __name__ == "__main__":
                     corrupted = regex.groups()[0]
                     corrupted = int(corrupted)
                     corrupted_TBs += corrupted
-                corrupted_freq_per_d[distance] = corrupted_TBs/total_TBs*100
+                corrupted_freq_per_d[distance] = corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0
                 del regex, line, contents, corrupted, file
             del corrupted_TBs, total_TBs
 
