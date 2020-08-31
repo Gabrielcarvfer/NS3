@@ -50,7 +50,7 @@ CdlSpectrumPropagationLossModel::GetTypeId (void)
       .AddConstructor<CdlSpectrumPropagationLossModel> ()
       .AddAttribute ("CdlType",
                      "CDL Type, A or D.",
-                     EnumValue (CdlSpectrumPropagationLossModel::CDL_A),
+                     EnumValue (CdlSpectrumPropagationLossModel::CDL_D),
                      MakeEnumAccessor (&CdlSpectrumPropagationLossModel::m_cdlType),
                      MakeEnumChecker (CdlSpectrumPropagationLossModel::CDL_A, "CDL_A",
                                       CdlSpectrumPropagationLossModel::CDL_D, "CDL_D"))

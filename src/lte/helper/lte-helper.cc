@@ -201,7 +201,7 @@ TypeId LteHelper::GetTypeId (void)
                    MakeUintegerChecker<uint16_t> ())
     .AddAttribute ("ChannelModel",
                    "5GRANGE Channel Model",
-                   StringValue("CDL_A"),
+                   StringValue("CDL_D"), //CDL_A is non-LOS
                    MakeStringAccessor (&LteHelper::m_channelModel),
                    MakeStringChecker ());
   ;
