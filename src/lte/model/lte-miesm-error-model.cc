@@ -566,6 +566,7 @@ namespace ns3 {
                 }
                 // calculate SNR fraction of the current PRB of a given RB
                 avg_cb_sinr += (prb_sinr * prb_fraction)/(curr_cb < smallBeta ? beta5gBig : beta5gSmall);
+                snrEff = 10*log10(snrEff*180000*size); // sinr efetivo em dB
                 n += prb_fraction;
             }
             // calculate the effective SNR and corresponding BLER of the last CB

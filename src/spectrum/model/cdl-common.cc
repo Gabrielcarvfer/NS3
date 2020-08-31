@@ -67,6 +67,7 @@ arma::vec CdlCommon::value2arma(Ptr<const SpectrumValue> rxPsd)
 
 std::vector<double> CdlCommon::get_channel_fr_5g (double time, Ptr<SpectrumValue> rxPsd)
 {
+  combined_pattern();
   arma::vec freqs_PRBs = value2arma(rxPsd);
 
   arma::cx_cube fr_losses = get_channel_fr(time, freqs_PRBs);

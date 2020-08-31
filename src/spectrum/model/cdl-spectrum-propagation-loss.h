@@ -55,8 +55,13 @@ class CdlSpectrumPropagationLossModel : public SpectrumPropagationLossModel
       CDL_A, CDL_D
   };
 
+  typedef void (* CdlPsdTracedCallback)
+      (Ptr<SpectrumValue> psd);
+
  private:
   CdlType m_cdlType;
+  TracedCallback<Ptr<SpectrumValue>> m_psdReceived;
+  TracedCallback<Ptr<SpectrumValue>> m_psdCalculated;
 
 };
 
