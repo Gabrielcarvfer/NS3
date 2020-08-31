@@ -200,7 +200,7 @@ LteEnbPhy::GetTypeId (void)
                    "the same overall gain and bandwidth when the receivers "
                    "are connected to sources at the standard noise "
                    "temperature T0.\"  In this model, we consider T0 = 290K.",
-                   DoubleValue (5.0),
+                   DoubleValue (9.0), // 5.0dB for LTE, 9.0 for 5G-RANGE
                    MakeDoubleAccessor (&LteEnbPhy::SetNoiseFigure, 
                                        &LteEnbPhy::GetNoiseFigure),
                    MakeDoubleChecker<double> ())
