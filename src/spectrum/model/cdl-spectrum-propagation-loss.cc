@@ -53,7 +53,15 @@ CdlSpectrumPropagationLossModel::GetTypeId (void)
                      EnumValue (CdlSpectrumPropagationLossModel::CDL_A),
                      MakeEnumAccessor (&CdlSpectrumPropagationLossModel::m_cdlType),
                      MakeEnumChecker (CdlSpectrumPropagationLossModel::CDL_A, "CDL_A",
-                                      CdlSpectrumPropagationLossModel::CDL_D, "CDL_D"));
+                                      CdlSpectrumPropagationLossModel::CDL_D, "CDL_D"))
+      .AddTraceSource ("PsdReceived",
+                       "PsdReceived",
+                       MakeTraceSourceAccessor (&CdlSpectrumPropagationLossModel::m_psdReceived),
+                       "ns3::CdlSpectrumPropagationLossModel::CdlPsdTracedCallback")
+      .AddTraceSource ("PsdCalculated",
+                       "PsdCalculated",
+                       MakeTraceSourceAccessor (&CdlSpectrumPropagationLossModel::m_psdReceived),
+                       "ns3::CdlSpectrumPropagationLossModel::CdlPsdTracedCallback")
   ;
   return tid;
 }
@@ -65,6 +73,7 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
 {
 
   Ptr<SpectrumValue> rxPsd = Copy<SpectrumValue> (txPsd);
+  m_psdReceived(rxPsd);
   Values::iterator vit = rxPsd->ValuesBegin ();
   Bands::const_iterator fit = rxPsd->ConstBandsBegin ();
   double system_freq;
@@ -121,21 +130,23 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx);
   double path_loss = cdl_inst.get_tot_path_gain();
 
-  *(rxPsd) *= path_loss;
+  //rxPsd =
+  //*(rxPsd) *= path_loss;
 
-  std::vector<double> losses = cdl_inst.get_channel_fr_5g (0, rxPsd);
+  std::vector<double> losses = cdl_inst.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
 
   vit = rxPsd->ValuesBegin ();
   size_t i = 0;
   while (vit != rxPsd->ValuesEnd ())
     {
       NS_ASSERT (fit != rxPsd->ConstBandsEnd ());
-      *vit /= losses[i]; // Prx = Ptx / loss
+      *vit *= (losses[i]*losses[i]); // Prx = Ptx / loss
       ++vit;
       ++fit;
       ++i;
     }
 
+  m_psdCalculated(rxPsd);
   return rxPsd;
 }
 

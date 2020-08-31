@@ -20,12 +20,12 @@ main (int argc, char *argv[])
 {
   NS_LOG_DEBUG (" Running 5gRangeCdlValidation");
 
-  int    reps             = 1000;
+  int    reps             = 1;
   double enbTxPower       = 53.0; //dBm
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
   double ueGain           = 9.0;  //dBi
-  int    dist             = 50000; //metros
+  int    dist             = 1001; //metros
   uint32_t bandwidth      = 24; //6 MHz, 8 MHz or 24 MHz (6 MHz and 8 MHz uses 4 or 3 component carriers, respectively)
   uint32_t dlEarfcn       = 50000;
   uint32_t ulEarfcn       = 60000;
