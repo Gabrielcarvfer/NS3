@@ -31,7 +31,11 @@ def exec_sim_parameters(*arg_tuple):
             cmd += " \"NS_LOG=LteAmc:LteSpectrumPhy"
             cmd += " ../../../../5grange_cdl_test"
             cmd += " --forceMaxMcsSched=" + ("true" if forceMaxMcs else "false")
-            cmd += " --useCdlPathLoss=" + ("true" if channel_model == "CDL" else "false")
+            if "CDL" in channel_model:
+                cmd += " --useCdlPathLoss=true"
+                cmd += " --cdlType=" + channel_model
+            else:
+                cmd += " --useCdlPathLoss=false"
             cmd += " --distance=%s" % (distance*1000)
             cmd += " \""
             simProc = subprocess.run(cmd,
@@ -73,8 +77,8 @@ def randcolor():
 
 if __name__ == "__main__":
     mp.freeze_support()
-    channel_models = ("RANGE5G", "CDL")
-    forcedMaxMcs = (False,)
+    channel_models = ("RANGE5G", "CDL_A", "CDL_D")
+    forcedMaxMcs = (False, True)
     distances = [1, 5, 10, 20, 35, 50, 100, ]
 
     thread_parameters = []

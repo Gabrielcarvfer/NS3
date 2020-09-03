@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 //#include "ns3/cdl-spectrum-propagation-loss.h"
 #include <ns3/flow-monitor-module.h>
+#include <ns3/spectrum-module.h>
 
 using namespace ns3;
 
@@ -171,11 +172,13 @@ main (int argc, char *argv[])
   bool enableDSA          = false; //if false, channels with PUs will be automatically flagged not to be used
   bool SNRSensing         = false; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
   bool harmonicDetection  = false;
+  std::string cdlType = "CDL_D";
   //Process command line options
   CommandLine cmd;
   cmd.AddValue("simTime", "Simulation length", simTime);
   cmd.AddValue("useErrorModel", "Enable error model", useErrorModel);
   cmd.AddValue("useCdlPathLoss", "Use CDL channel model or 5G-RANGE D3.1 channel model", useCdlPathLoss);
+  cmd.AddValue("cdlType", "CDL-D for LOS and CDL-A for NLOS. Only works if useCdlPathLoss is set to true", cdlType);
   cmd.AddValue("distance", "Distance in meters between UE and eNB", m_distance);
   cmd.AddValue("forceMaxMcsSched", "Force scheduler to use maximum MCS, inducing errors but reaching max throughput", forceMaxMcsSched);
   cmd.Parse (argc, argv);
@@ -183,6 +186,8 @@ main (int argc, char *argv[])
   std::cout << "simTime: " << simTime << std::endl;
   std::cout << "useErrorModel: " << useErrorModel << std::endl;
   std::cout << "useCdlPathLoss: " << useCdlPathLoss << std::endl;
+  if (useCdlPathLoss)
+      std::cout << "cdlType" << cdlType << std::endl;
   std::cout << "distance: " << m_distance << std::endl;
   std::cout << "forceMaxMcsSched: " << forceMaxMcsSched << std::endl;
   m_distance+=1;
@@ -277,8 +282,11 @@ main (int argc, char *argv[])
     {
       Config::SetDefault ("ns3::CdlCommon::KValue", DoubleValue(kval));
       Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
+      if (cdlType == "CDL_A")
+          Config::SetDefault("ns3::CdlSpectrumPropagationLossModel::CdlType", EnumValue(CdlSpectrumPropagationLossModel::CDL_A));
       lteHelper->SetPathlossModelType (TypeId::LookupByName ("ns3::CdlSpectrumPropagationLossModel"));
-      //lteHelper->SetPathlossModelAttribute ("CdlType", EnumValue (CdlSpectrumPropagationLossModel::CDL_A));
+      if (cdlType == "CDL_A")
+          lteHelper->SetAttribute("ChannelModel", StringValue("CDL_A"));
     }
   else
     {
