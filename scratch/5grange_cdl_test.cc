@@ -283,7 +283,10 @@ main (int argc, char *argv[])
       Config::SetDefault ("ns3::CdlCommon::KValue", DoubleValue(kval));
       Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
       if (cdlType == "CDL_A")
+      {
           Config::SetDefault("ns3::CdlSpectrumPropagationLossModel::CdlType", EnumValue(CdlSpectrumPropagationLossModel::CDL_A));
+          Config::SetDefault("ns3::LteAmc::ChannelModel", StringValue("CDL_A"));
+      }
       lteHelper->SetPathlossModelType (TypeId::LookupByName ("ns3::CdlSpectrumPropagationLossModel"));
       if (cdlType == "CDL_A")
           lteHelper->SetAttribute("ChannelModel", StringValue("CDL_A"));
