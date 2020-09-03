@@ -1703,8 +1703,8 @@ LteSpectrumPhy::EndRxData ()
           double speed = 0.0;//todo: fix speed calculation
           TbStats_t tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
           (*itTb).second.mi = tbStats.mi;
-          //std::cout << Simulator::Now().GetSeconds() << "  endRxData " << m_sinrPerceived[0] << " tbler " << tbStats.tbler << std::endl;//log10(sinrval*180000)*10+50
           (*itTb).second.corrupt = m_random->GetValue () > tbStats.tbler ? false : true;
+          //std::cout << Simulator::Now().GetSeconds() << "  endRxData " << 10*log10(m_sinrPerceived[0]) << "dB tbler " << tbStats.tbler << " mcs " << (int)(*itTb).second.mcs << " corrupted " << (*itTb).second.corrupt << std::endl;
           NS_LOG_DEBUG (this << "RNTI " << (*itTb).first.m_rnti << " size " << (*itTb).second.size << " mcs " << (uint32_t)(*itTb).second.mcs << " bitmap " << (*itTb).second.rbBitmap.size () << " layer " << (uint16_t)(*itTb).first.m_layer << " TBLER " << tbStats.tbler << " corrupted " << (*itTb).second.corrupt);
           // fire traces on DL/UL reception PHY stats
           PhyReceptionStatParameters params;
