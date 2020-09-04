@@ -1163,7 +1163,7 @@ LteEnbMac::DoConfigureMac (uint8_t ulBandwidth, uint8_t dlBandwidth)
   m_macChTtiDelay = m_enbPhySapProvider->GetMacChTtiDelay ();
   // ...more parameters can be configured
   m_cschedSapProvider->CschedCellConfigReq (params);
-  bandwidth = (int)dlBandwidth/2;
+  bandwidth = (int)dlBandwidth; //bandwidth is used by the opportunistic access component
 }
 
 

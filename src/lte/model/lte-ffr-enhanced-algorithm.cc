@@ -37,9 +37,9 @@ NS_OBJECT_ENSURE_REGISTERED (LteFfrEnhancedAlgorithm);
 /// Spectral efficiency for CQI table
 static const double SpectralEfficiencyForCqi[16] = {
   0.0, // out of range
-  0.15, 0.23, 0.38, 0.6, 0.88, 1.18,
-  1.48, 1.91, 2.41,
-  2.73, 3.32, 3.9, 4.52, 5.12, 5.55
+  0.15, 0.23, 0.38, 0.60, 0.88,
+  1.18, 1.48, 1.91, 2.41, 2.73,
+  3.32, 3.90, 4.52, 5.12, 5.55
 };
 
 /// FfrEnhancedDownlinkDefaultConfiguration structure
