@@ -1157,8 +1157,10 @@ RrFfMacScheduler::DoSchedDlCqiInfoReq (const struct FfMacSchedSapProvider::Sched
             }
           else
             {
+              int newCqi = params.m_cqiList.at (i).m_wbCqi.at (0);
+              int oldCqi = (*it).second;
               // update the CQI value
-              (*it).second = params.m_cqiList.at (i).m_wbCqi.at (0);
+              (*it).second = newCqi >= oldCqi ? (newCqi+oldCqi)/2 : (newCqi*oldCqi)/(newCqi+oldCqi);
               // update correspondent timer
               std::map <uint16_t,uint32_t>::iterator itTimers;
               itTimers = m_p10CqiTimers.find (rnti);
