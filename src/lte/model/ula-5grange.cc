@@ -6,6 +6,7 @@
 
 namespace ns3
 {
+NS_OBJECT_ENSURE_REGISTERED (Ula5gRange);
 
 TypeId
 Ula5gRange::GetTypeId (void)

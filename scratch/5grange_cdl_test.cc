@@ -158,10 +158,12 @@ main (int argc, char *argv[])
   bool useCdlPathLoss     = true;
   bool forceMaxMcsSched   = false;
   double kval             = 0; //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
-  double enbTxPower       = 40.8; //dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
+  double enbTxPower       = 40.8; //40.8dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
   double ueGain           = 0.0;  //dBi, 9dBi is for CPEs
+  uint32_t numAntennas    = 2;// only affects CDL
+  uint8_t  mimoMode       = 1;// only affects D3.1, 0-SISO, 1-TxDiversity, 3-spatial multiplexing
   uint32_t dlEarfcn       = 50000; //5G: 50000, LTE: 2400 for band 5 (~850MHz)
   uint32_t ulEarfcn       = 60000; //5G: 60000, LTE: 20400 for band 5 (~850MHz)
   uint32_t dlBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
@@ -280,6 +282,7 @@ main (int argc, char *argv[])
 
   if(useCdlPathLoss)
     {
+      Config::SetDefault("ns3::Ula5gRange::NumAntElem", UintegerValue(numAntennas));
       Config::SetDefault ("ns3::CdlCommon::KValue", DoubleValue(kval));
       Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
       if (cdlType == "CDL_A")
@@ -296,6 +299,7 @@ main (int argc, char *argv[])
       Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(869e6));
       Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(kval));
       lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
+      Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue (mimoMode));
     }
 
   lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (enbGain));
