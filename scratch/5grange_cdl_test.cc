@@ -15,6 +15,7 @@
 //#include "ns3/cdl-spectrum-propagation-loss.h"
 #include <ns3/flow-monitor-module.h>
 #include <ns3/spectrum-module.h>
+#include <ns3/lte-spectrum-value-helper.h>
 
 using namespace ns3;
 
@@ -162,12 +163,13 @@ main (int argc, char *argv[])
   double enbGain          = 9.0;  //dBi
   double ueTxPower        = 23.0; //dBm
   double ueGain           = 0.0;  //dBi, 9dBi is for CPEs
-  uint32_t numAntennas    = 2;// only affects CDL
-  uint8_t  mimoMode       = 1;// only affects D3.1, 0-SISO, 1-TxDiversity, 3-spatial multiplexing
-  uint32_t dlEarfcn       = 50000; //5G: 50000, LTE: 2400 for band 5 (~850MHz)
-  uint32_t ulEarfcn       = 60000; //5G: 60000, LTE: 20400 for band 5 (~850MHz)
+  uint32_t numAntennas    = 1;// only affects CDL
+  uint16_t  mimoMode      = 0;// 0-SISO, 1-TxDiversity, 2-spatial multiplexing open
+  uint32_t dlEarfcn       = 50000; //5G: 50000 for ~297MHz, LTE: 2400 for band 5 (~850MHz)
+  uint32_t ulEarfcn       = 60000; //5G: 60000 for ~297MHz, LTE: 20400 for band 5 (~850MHz)
   uint32_t dlBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
   uint32_t ulBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
+  uint16_t  freqBand      = 100;
 
   //Colab
   int fusionAlgorithm     = 6;
@@ -183,6 +185,9 @@ main (int argc, char *argv[])
   cmd.AddValue("cdlType", "CDL-D for LOS and CDL-A for NLOS. Only works if useCdlPathLoss is set to true", cdlType);
   cmd.AddValue("distance", "Distance in meters between UE and eNB", m_distance);
   cmd.AddValue("forceMaxMcsSched", "Force scheduler to use maximum MCS, inducing errors but reaching max throughput", forceMaxMcsSched);
+  cmd.AddValue("numAntennas", "Number of antennas for CDL. Only works if useCdlPathLoss is set to true", numAntennas);
+  cmd.AddValue("mimoMode", "MIMO scheme selection: 0-SISO, 1-TxDiversity, 2-SpatialMultiplexing", mimoMode);
+  cmd.AddValue("freqBand", "Frequency band for transmission", freqBand);
   cmd.Parse (argc, argv);
 
   std::cout << "simTime: " << simTime << std::endl;
@@ -192,6 +197,10 @@ main (int argc, char *argv[])
       std::cout << "cdlType" << cdlType << std::endl;
   std::cout << "distance: " << m_distance << std::endl;
   std::cout << "forceMaxMcsSched: " << forceMaxMcsSched << std::endl;
+  std::cout << "numAntennas: " << numAntennas << std::endl;
+  std::cout << "mimoMode: " << mimoMode << std::endl;
+  std::cout << "freqBand: " << freqBand << std::endl;
+
   m_distance+=1;
   usePerfectChannel = !useErrorModel;
   static GlobalValue g_harmonic_detection =
@@ -233,7 +242,19 @@ main (int argc, char *argv[])
   mkdir(data_path.c_str(),0777); // notice that 777 is different than 0777
 #endif
 
+  //Get EARFCN for specified frequency band
+  double carrierFreq = 0.0;
 
+  for (int i = 0; i < NUM_EUTRA_BANDS; i++)
+  {
+      if (freqBand != g_eutraChannelNumbers[i].band)
+          continue;
+      carrierFreq = (g_eutraChannelNumbers[i].fDlLow+g_eutraChannelNumbers[i].fUlLow)/2;
+      dlEarfcn = g_eutraChannelNumbers[i].nOffsDl;
+      ulEarfcn = g_eutraChannelNumbers[i].nOffsUl;
+  }
+  carrierFreq *= 10e6;
+  
   Config::SetDefault ("ns3::ComponentCarrier::DlEarfcn", UintegerValue (dlEarfcn));
   Config::SetDefault ("ns3::ComponentCarrier::UlEarfcn", UintegerValue (ulEarfcn));
   Config::SetDefault ("ns3::ComponentCarrier::DlBandwidth", UintegerValue (dlBandwidth));
@@ -280,6 +301,8 @@ main (int argc, char *argv[])
   //lteHelper->SetSchedulerType ("ns3::CqaFfMacScheduler");
   //Config::SetDefault ("ns3::CqaFfMacScheduler::HarqEnabled", BooleanValue (useHarq));
 
+  Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue (mimoMode));
+
   if(useCdlPathLoss)
     {
       Config::SetDefault("ns3::Ula5gRange::NumAntElem", UintegerValue(numAntennas));
@@ -296,10 +319,9 @@ main (int argc, char *argv[])
     }
   else
     {
-      Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(869e6));
+      Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(carrierFreq));
       Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(kval));
       lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
-      Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue (mimoMode));
     }
 
   lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (enbGain));
