@@ -252,9 +252,9 @@ main (int argc, char *argv[])
       carrierFreq = (g_eutraChannelNumbers[i].fDlLow+g_eutraChannelNumbers[i].fUlLow)/2;
       dlEarfcn = g_eutraChannelNumbers[i].nOffsDl;
       ulEarfcn = g_eutraChannelNumbers[i].nOffsUl;
+      carrierFreq *= 1000000; // Hz to MHz
   }
-  carrierFreq *= 10e6;
-  
+
   Config::SetDefault ("ns3::ComponentCarrier::DlEarfcn", UintegerValue (dlEarfcn));
   Config::SetDefault ("ns3::ComponentCarrier::UlEarfcn", UintegerValue (ulEarfcn));
   Config::SetDefault ("ns3::ComponentCarrier::DlBandwidth", UintegerValue (dlBandwidth));

@@ -250,6 +250,8 @@ if __name__ == "__main__":
                                 continue
                             total_TBs += 1
                             corrupted = regex.groups()[0]
+                            if "snr" in corrupted:
+                                continue
                             corrupted = int(corrupted)
                             corrupted_TBs += corrupted
                         corrupted_freq_per_d[distance] = corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0
