@@ -186,16 +186,6 @@ namespace ns3 {
         if (!errorDataLoaded)
             LoadErrorData();
 
-        NS_ASSERT_MSG (mcs < MIESM_MAX_MCS, "mcs " << mcs << " is out of range");
-        size_t cbSizeIndex = findIndex(cbSizeTable5g, cbSize);
-        NS_ASSERT_MSG (cbSizeIndex < cbSizeTable5g.size(), "cbSize " << cbSize << " not found");
-
-        size_t numIndex = findIndex(numerologyTable5g, num);
-        NS_ASSERT_MSG (numIndex < numerologyTable5g.size(), "num " << num << " not found");
-
-        size_t chanIndex = findIndex(channelModelTable5g, chan);
-        NS_ASSERT_MSG (chanIndex < channelModelTable5g.size(), "chan " << chan << " not found");
-
         size_t snrIndex = snrValueTable5g.size() - 1;
 
         //get nearest larger snr
@@ -208,7 +198,6 @@ namespace ns3 {
             }
         }
         
-        //NS_LOG_DEBUG ("BLER of channel " << chanIndex << " numerology " << numIndex << " code block " << cbSizeIndex << " mcs " << (size_t)mcs << " snr " << snrIndex);
         std::stringstream ss;
         ss << chan << "_" << (int) num << "_" << (int) cbSize;
         std::string scen = ss.str();
@@ -216,6 +205,7 @@ namespace ns3 {
         double bler = 1.0;
         if (blerTable5g.find(scen) != blerTable5g.end())
             bler = blerTable5g[scen][mcs][snrIndex];
+        //std::cout << scen << " cbler " << bler << std::endl;
         return bler;
     }
 
@@ -355,6 +345,7 @@ namespace ns3 {
                 small_cb_num = floor((((double) C * big_cb_size) - (double) B1) / (double) deltaK);
                 big_cb_num = C - small_cb_num;
             }
+            //std::cout << "tbs bits " << tbs_bits << " B1 " << B1 << std::endl;
         }
 
         // Load beta values from the lookup table
