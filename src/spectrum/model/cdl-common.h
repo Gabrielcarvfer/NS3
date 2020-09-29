@@ -24,7 +24,7 @@ class CdlCommon : public Object {
  public:
   CdlCommon () = default;
 
-   CdlCommon (bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_rx);
+   CdlCommon (bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_rx, double distance);
    static TypeId GetTypeId (void);
 
 
@@ -141,9 +141,11 @@ class CdlCommon : public Object {
 
   /// Total path gain. It is usefull to ensure a CIR with unitary power.
   double tot_path_gain{};
-
+  arma::vec3 prevTxPos;
+  arma::vec3 prevRxPos;
+  double prevDistance{};
 public:
-  double get_tot_path_gain () const;
+  double get_tot_path_gain (double distance);
 protected:
   /// Struct Rays
   Rays rays;
@@ -161,6 +163,7 @@ protected:
 
 
   static arma::vec value2arma(Ptr<const SpectrumValue> rxPsd);
+
 };
 
 }

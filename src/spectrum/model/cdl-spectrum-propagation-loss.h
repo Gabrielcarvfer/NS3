@@ -62,6 +62,7 @@ class CdlSpectrumPropagationLossModel : public SpectrumPropagationLossModel
   CdlType m_cdlType;
   TracedCallback<Ptr<SpectrumValue>> m_psdReceived;
   TracedCallback<Ptr<SpectrumValue>> m_psdCalculated;
+  static std::map<std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>,CdlCommon> cdlInstances;
 
 };
 

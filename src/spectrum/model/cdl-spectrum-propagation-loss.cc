@@ -37,9 +37,9 @@ namespace ns3
 
 NS_OBJECT_ENSURE_REGISTERED (CdlSpectrumPropagationLossModel);
 
-CdlSpectrumPropagationLossModel::~CdlSpectrumPropagationLossModel ()
-{
-}
+CdlSpectrumPropagationLossModel::~CdlSpectrumPropagationLossModel(){};
+std::map<std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>,CdlCommon> CdlSpectrumPropagationLossModel::cdlInstances;
+
 
 TypeId
 CdlSpectrumPropagationLossModel::GetTypeId (void)
@@ -120,20 +120,24 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
 
   double time = ns3::Simulator::Now().GetSeconds ();
 
-  bool is_cdl_a = true;
+  bool is_cdl_a = m_cdlType == CDL_A;
 
-  if(m_cdlType != CDL_A)
-    {
-     is_cdl_a = false;
-    }
+  auto tupleKey = std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>{a,b};
+  auto cdlInstance = cdlInstances.find(tupleKey);
+  if (cdlInstance == cdlInstances.end())
+  {
+      //If CDL instance for a given pair doesn't exist, create one
+      CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx, d);
+      cdlInstances.emplace(tupleKey, cdl_inst);
+      cdlInstance = cdlInstances.find(tupleKey);
+  }
 
-  CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx);
-  double path_loss = cdl_inst.get_tot_path_gain();
+  double path_loss = cdlInstance->second.get_tot_path_gain(d);
 
   //rxPsd =
   //*(rxPsd) *= path_loss;
 
-  std::vector<double> losses = cdl_inst.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
+  std::vector<double> losses = cdlInstance->second.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
 
   vit = rxPsd->ValuesBegin ();
   size_t i = 0;

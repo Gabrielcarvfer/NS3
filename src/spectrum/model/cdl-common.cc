@@ -28,24 +28,14 @@ CdlCommon::GetTypeId (void)
   return tid;
 }
 
-CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_rx) :
+CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_rx, double distance) :
     is_CDL_A(is_cdl_a),
     tx(ula_tx),
     rx(ula_rx),
     system_freq(ula_tx->GetSystemFreq())
 {
-
-  if (is_cdl_a) {
-      rays = setup_rays_CDL_A (tx->GetPosition (), rx->GetPosition ());
-      shadow_fading = dB2lin (-CDL_A_param::SF_stddev * arma::randn ());
-    } else {
-      rays = setup_rays_CDL_D (tx->GetPosition (), rx->GetPosition (), system_freq);
-      shadow_fading = dB2lin (-CDL_D_param::SF_stddev * arma::randn ());
-    }
-
-  path_loss = get_path_loss (tx->GetPosition (), rx->GetPosition (), system_freq, m_kvalue);
-  tot_path_gain = (1.0 / path_loss) * shadow_fading;
-  combined_pattern ();
+  prevDistance = distance + 100; // force processing in get_tot_path_gain
+  get_tot_path_gain(distance);
 }
 
 arma::vec CdlCommon::value2arma(Ptr<const SpectrumValue> rxPsd)
@@ -348,9 +338,33 @@ arma::vec3 CdlCommon::vec2arma (const Vector &in)
 {
   return arma::vec3{in.x, in.y, in.z};
 }
+
 double
-CdlCommon::get_tot_path_gain () const
+CdlCommon::get_tot_path_gain (double distance)
 {
-  return tot_path_gain;
+    // Recalculate pathloss and fading in case the node moves above a certain distance from the previous
+    // Check if distance between them changed from the previous run
+    double distanceDiff = sqrt(pow(distance-prevDistance,2));
+
+    // If distance changed by more than 50m, redo the rays and pathloss calculation (nodes can't be near origin (0,0,0))
+    if (distanceDiff > 50)
+    {
+        // Update previous distance with the new one
+        prevDistance = distance;
+
+        // Get coordinates of transmitter and receiver
+        arma::vec3 txPos = tx->GetPosition();
+        arma::vec3 rxPos = rx->GetPosition();
+
+        // Update rays setup if node moved
+        rays = is_CDL_A ? setup_rays_CDL_A (txPos, rxPos) : setup_rays_CDL_D (txPos, rxPos, system_freq);
+        combined_pattern ();
+
+        // Update large scale pathloss
+        path_loss = get_path_loss(tx->GetPosition(), rx->GetPosition(), system_freq, m_kvalue);
+        shadow_fading = dB2lin((is_CDL_A ? -CDL_A_param::SF_stddev : -CDL_D_param::SF_stddev) * arma::randn());
+        tot_path_gain = (1.0 / path_loss) * shadow_fading;
+    }
+    return tot_path_gain;
 }
 }

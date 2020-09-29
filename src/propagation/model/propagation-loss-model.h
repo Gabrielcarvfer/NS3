@@ -1019,6 +1019,7 @@ private:
         double m_kValue;        //!< 5G-RANGE constant
         double m_shadowMu;      //!< mu value for normal shadowing
         double m_shadowSigma;   //!< sigma value for normal shadowing
+        static std::map<std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>,std::vector<double>> prevDistanceAndShadows;
         Ptr<NormalRandomVariable> m_normalGen;
     };
 

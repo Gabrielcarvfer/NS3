@@ -939,6 +939,8 @@ NS_OBJECT_ENSURE_REGISTERED (RANGE5GPropagationLossModel);
 //As defined in 5G-RANGE D3.1
 // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
 //
+std::map<std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>,std::vector<double>> RANGE5GPropagationLossModel::prevDistanceAndShadows;
+
 TypeId
 RANGE5GPropagationLossModel::GetTypeId (void)
 {
@@ -1038,8 +1040,7 @@ RANGE5GPropagationLossModel::DbmFromW (double w) const
 double
 RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
                                           Ptr<MobilityModel> a,
-                                          Ptr<MobilityModel> b) const
-{
+                                          Ptr<MobilityModel> b) const {
     /*
      * RANGE path loss equation:
      * where Pt, Gr, Gr and P are in Watt units
@@ -1070,27 +1071,42 @@ RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
      * lambda: wavelength (m)
      * K: 5G-RANGE pathloss constant
      */
-    double distance = a->GetDistanceFrom (b);
-    if (distance < 3*m_lambda)
-    {
+    double distance = a->GetDistanceFrom(b);
+    if (distance < 3 * m_lambda) {
         NS_LOG_WARN ("distance not within the far field region => inaccurate propagation loss value");
     }
-    if (distance <= 0)
-    {
+    if (distance <= 0) {
         return txPowerDbm - m_minLoss;
     }
 
-    if (m_normalGen->GetMean() != m_shadowMu || m_normalGen->GetVariance() != m_shadowSigma*m_shadowSigma)
-    {
+    if (m_normalGen->GetMean() != m_shadowMu || m_normalGen->GetVariance() != m_shadowSigma * m_shadowSigma) {
         m_normalGen->SetAttribute("Mean", DoubleValue(m_shadowMu));
-        m_normalGen->SetAttribute("Variance", DoubleValue(m_shadowSigma*m_shadowSigma));
+        m_normalGen->SetAttribute("Variance", DoubleValue(m_shadowSigma * m_shadowSigma));
     }
 
     double numerator = m_lambda * m_lambda;
     double denominator = 16 * M_PI * M_PI * distance * distance * m_systemLoss;
-    double lossDb = -10 * log10 (numerator / denominator);
-    double shadow = m_normalGen->GetValue();
-    lossDb += m_kValue + shadow;
+    double lossDb = -10 * log10(numerator / denominator);
+
+    // Search for the entry that hold the values of shadowing for different pairs of nodes
+    auto tupleKey = std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>{a,b};
+    auto prevDistanceAndShadowInstance = prevDistanceAndShadows.find(tupleKey);
+
+    // Create an entry on a dictionary to hold the values of shadowing for different pairs of nodes if one doesn't exist
+    if (prevDistanceAndShadowInstance == prevDistanceAndShadows.end())
+    {
+        //If CDL instance for a given pair doesn't exist, create one
+        prevDistanceAndShadows.emplace(tupleKey,  std::vector<double>{distance+100, 0});
+        prevDistanceAndShadowInstance = prevDistanceAndShadows.find(tupleKey);
+    }
+
+    // If the distance between the nodes is greater than 50m from the last calculation, recalculate a new shadowing value
+    if (distance > (prevDistanceAndShadowInstance->second[0] + 50))
+    {
+        prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
+    }
+
+    lossDb += m_kValue + prevDistanceAndShadowInstance->second[1];
     NS_LOG_DEBUG ("distance=" << distance<< "m, loss=" << lossDb <<"dB");
     //Print RANGE pathloss and shadowing
     //std::cout << this << ": " << lossDb1 << " " << lossDb << " " << shadow << "\n";
