@@ -505,7 +505,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       // Ideal: no needs of configuring m_dci
       // UL-RACH Allocation
       newRar.m_grant.m_rnti = newRar.m_rnti;
-      newRar.m_grant.m_mcs = forceMaxMcs ? 26 : m_ulGrantMcs;
+      newRar.m_grant.m_mcs = forceMaxMcs ? 23 : m_ulGrantMcs;
       uint16_t rbLen = 1;
       uint32_t tbSizeBits = 0;
       // find lowest TB size that fits UL grant estimated size
@@ -540,7 +540,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           uldci.m_rnti = newRar.m_rnti;
           uldci.m_rbLen = rbLen;
           uldci.m_rbStart = rbStart;
-          uldci.m_mcs = forceMaxMcs ? 26 : m_ulGrantMcs;
+          uldci.m_mcs = forceMaxMcs ? 23 : m_ulGrantMcs;
           uldci.m_tbSize = tbSizeBits / 8;
           //std::cout << "UL HARQ MCS " << (int) uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;
           uldci.m_ndi = 1;
@@ -1005,7 +1005,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
           else
             {
-              newDci.m_mcs.push_back ( forceMaxMcs ? 26 : m_amc->GetMcsFromCqi ((*itCqi).second) );
+              newDci.m_mcs.push_back ( forceMaxMcs ? 23 : m_amc->GetMcsFromCqi ((*itCqi).second) );
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
@@ -1463,7 +1463,7 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
           int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
           //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
           cqi = cqi2;
-          uldci.m_mcs = forceMaxMcs ? 26 : m_amc->GetMcsFromCqi (cqi);
+          uldci.m_mcs = forceMaxMcs ? 23 : m_amc->GetMcsFromCqi (cqi);
           //std::cout << "UL CQI " << (int) cqi << " MCS " << (int) uldci.m_mcs << std::endl;
         }
       uldci.m_tbSize = (m_amc->GetUlTbSizeFromMcs (uldci.m_mcs, rbPerFlow) / 8); // MCS 0 -> UL-AMC TBD

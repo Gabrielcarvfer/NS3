@@ -99,11 +99,11 @@ mimoMarkers = ("o", "p", "*")
 
 if __name__ == "__main__":
     mp.freeze_support()
-    frequencyBands = (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
+    frequencyBands = (freqBands.MHz525, )  # (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
     numAntennas = (1, 2, 4, )
     mimoModes = (mimoModes.SISO, mimoModes.TxDiversity, mimoModes.SpatialMultiplexing)
-    channel_models = ("RANGE5G", "CDL_A", "CDL_D", )
-    forcedMaxMcs = (False, )
+    channel_models = ("RANGE5G", "CDL_D", "CDL_A",)
+    forcedMaxMcs = (True, )# False, )
     distances = [1, 5, 10, 20, 35, 50, 100, ]
 
     thread_parameters = []
@@ -220,7 +220,10 @@ if __name__ == "__main__":
                                 continue
                             throughput = regex.groups()[0]
                             throughput = float(throughput)
-                        received_throughput_per_d[distance] = throughput
+                        # field trials used 2/3 code rate instead of 5/6,
+                        #   we compensate for that reducing the throughput here
+                        #   and increasing the antenna gain on the simulation side
+                        received_throughput_per_d[distance] = throughput*0.8
                         del regex, line, contents, throughput, file
 
                     # Plot throughput for a given channel model

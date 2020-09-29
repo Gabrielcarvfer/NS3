@@ -156,19 +156,22 @@ main (int argc, char *argv[])
   bool usePerfectChannel  = false;
   bool useHarq            = false;
   bool useIdealRrc        = true;
-  bool useCdlPathLoss     = true;
+  bool useCdlPathLoss     = false;
   bool forceMaxMcsSched   = false;
-  double kval             = 0; //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
-  double enbTxPower       = 40.8; //40.8dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
-  double enbGain          = 9.0;  //dBi
-  double ueTxPower        = 23.0; //dBm
-  double ueGain           = 0.0;  //dBi, 9dBi is for CPEs
-  uint32_t numAntennas    = 1;// only affects CDL
-  uint16_t  mimoMode      = 0;// 0-SISO, 1-TxDiversity, 2-spatial multiplexing open
+  double kval             = 0;     //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
+  double enbTxPower       = 40.8;  //40.8dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
+  // field trials used 2/3 code rate instead of 5/6,
+  //   we compensate for that reducing the throughput on the validation script
+  //   and increasing the antenna gains below (1.5dBi each)
+  double enbGain          = 9.0+1.5;   //dBi
+  double ueTxPower        = 23.0;  //dBm
+  double ueGain           = 9.0+1.5;   //dBi, 9dBi is for CPEs
+  uint32_t numAntennas    = 1;     // only affects CDL
+  uint16_t  mimoMode      = 0;     // 0-SISO, 1-TxDiversity, 2-spatial multiplexing open
   uint32_t dlEarfcn       = 50000; //5G: 50000 for ~297MHz, LTE: 2400 for band 5 (~850MHz)
   uint32_t ulEarfcn       = 60000; //5G: 60000 for ~297MHz, LTE: 20400 for band 5 (~850MHz)
-  uint32_t dlBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
-  uint32_t ulBandwidth    = 132; //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
+  uint32_t dlBandwidth    = 132;   //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
+  uint32_t ulBandwidth    = 132;   //6MHz = 33 RBs, 8MHz = 44 RBs, 24MHz = 132 RBs (no CA)
   uint16_t  freqBand      = 100;
 
   //Colab
