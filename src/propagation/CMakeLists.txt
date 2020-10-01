@@ -11,6 +11,7 @@ set(source_files
         model/itu-r-1411-los-propagation-loss-model.cc
         model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.cc
         model/kun-2600-mhz-propagation-loss-model.cc
+        model/spatially-correlated-shadowing-map.cc
         )
 
 set(header_files
@@ -25,6 +26,7 @@ set(header_files
         model/itu-r-1411-los-propagation-loss-model.h
         model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.h
         model/kun-2600-mhz-propagation-loss-model.h
+        model/spatially-correlated-shadowing-map.h
         )
 
 set(libraries_to_link ${libnetwork} ${libmobility} )

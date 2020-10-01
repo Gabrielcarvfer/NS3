@@ -81,3 +81,6 @@ endforeach()
 #target_link_libraries(collaborative_sensing_demonstration_json_noMarkov___Harmonic_10Attackers "${ns3-libs}")
 #target_link_libraries(collaborative_sensing_demonstration_json___Markov_noHarmonic_10Attackers "${ns3-libs}")
 #target_link_libraries(collaborative_sensing_demonstration_json___Markov___Harmonic_10Attackers "${ns3-libs}")
+
+add_executable(shadowing_map_test ../src/propagation/test/spatially-correlated-shadowing-map-test.cc)
+target_link_libraries(shadowing_map_test ${libpropagation})
