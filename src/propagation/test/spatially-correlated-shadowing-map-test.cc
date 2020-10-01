@@ -11,7 +11,7 @@ int main()
 {
     ns3::RngSeedManager::SetSeed(1);
     ns3::RngSeedManager::SetRun(1);
-    SpatiallyCorrelatedShadowingMap(0.0, 2*4.47, 37);
+    SpatiallyCorrelatedShadowingMap(0.0, 4.47, 37);//6*sigma to 3x3x3 exponential cell correlation, 12*sigma to 5x5x5, 50*sigma to 9x9x9
 
     double shadowing = 0;
 
@@ -23,11 +23,11 @@ int main()
     int i = SpatiallyCorrelatedShadowingMap::m_shadowingMap.size();
     for (auto entry: SpatiallyCorrelatedShadowingMap::m_shadowingMap) // shadowingMap must be public to do this
     {
-        std::cout << "{\"x\":"<< entry.first[0] << ",\"y\":" << entry.first[1] << ",\"z\":" << entry.first[2] << ",\"shadowing\":" << std::get<2>(entry.second) << "}";
+        std::cout << "{\"x\":"<< entry.first[0] << ",\"y\":" << entry.first[1] << ",\"z\":" << entry.first[2] << ",\"shadowing\":" << (std::isnan(std::get<2>(entry.second)) ? 0.0 : std::get<2>(entry.second)) << "}";
         if (i > 1)
-            std::cout << ",";
+            std::cout << ",\n";
         i--;
     }
-    std::cout << "]}" << std::endl;
+    std::cout << "]\n}" << std::endl;
     return 0;
 }

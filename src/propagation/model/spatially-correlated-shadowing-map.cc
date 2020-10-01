@@ -55,9 +55,6 @@ namespace ns3 {
         //Check if coordinate exists in the shadowing map
         auto entry = m_shadowingMap.find(cellCoord);
 
-        //Compute average value of all shadowing samples for slow path
-        float avg = 0;
-
         //If it does, fast path returns the precomputed value
         if (entry != m_shadowingMap.end())
         {
@@ -66,35 +63,27 @@ namespace ns3 {
             {
                 return std::get<2>(entry->second);
             }
-
             //Cell hasn't been precomputed yet, proceed to slow path
-            avg += std::get<1>(entry->second);
         }
-        else
-        {
-            //If the entry doesn't exist, create one
-
-            //Generate a random shadowing sample
-            float shadowing = (float) m_normalGen->GetValue();
-
-            //Create an entry indicating the cell was a surrounding cell and not precomputed
-            m_shadowingMap.emplace(cellCoord, std::tuple<bool, float, float>{false, shadowing, 0.0});
-            avg += shadowing;
-
-            entry = m_shadowingMap.find(cellCoord);
-        }
-        avg *= 6;//50% weight to the central sample
 
         //If it doesn't, create the coordinate for the cell and surrounding cells
-        std::vector<std::vector<int>> surroundingCellCoordinates = {{cellCoord[0]-1,cellCoord[1],cellCoord[2]},
-                                                {cellCoord[0]+1,cellCoord[1],cellCoord[2]},
-                                                {cellCoord[0],cellCoord[1]-1,cellCoord[2]},
-                                                {cellCoord[0],cellCoord[1]+1,cellCoord[2]},
-                                                {cellCoord[0],cellCoord[1],cellCoord[2]-1},
-                                                {cellCoord[0],cellCoord[1],cellCoord[2]+1}
-                                                };
+        // 26 surrounding cells
+        std::vector<std::vector<int>> surroundingCellCoordinates;
+        for(int i = -5; i <= 5; i++)
+            for(int j = -5; j <= 5; j++)
+                for(int k = -5; k <= 5; k++)
+                    surroundingCellCoordinates.push_back({cellCoord[0]+i,cellCoord[1]+j,cellCoord[2]+k});
+
+        //Compute average value of all shadowing samples for slow path
+        double avg = 0;
+        double denominator = 0;
         for (unsigned i = 0; i < surroundingCellCoordinates.size(); i++)
         {
+            //Calculate exponential decay due to distance to the central coordinate
+            float distance = sqrt(pow(surroundingCellCoordinates[i][0],2) + pow(surroundingCellCoordinates[i][1],2) + pow(surroundingCellCoordinates[i][2],2));
+            double decay = pow(2,-1-distance);
+            denominator += decay;
+
             //Search for surrounding cell entry
             auto surroundingEntry = m_shadowingMap.find(surroundingCellCoordinates[i]);
 
@@ -106,18 +95,20 @@ namespace ns3 {
 
                 //Create an entry indicating the cell was a surrounding cell and not precomputed
                 m_shadowingMap.emplace(surroundingCellCoordinates[i], std::tuple<bool, float, float>{false, shadowing, 0.0});
-                avg += shadowing;
+                avg += shadowing*decay;
             }
             //If it exists, just read the shadowing value
             else
             {
-                avg += std::get<1>(surroundingEntry->second);
+                avg += std::get<1>(surroundingEntry->second)*decay;
             }
         }
 
 
         //When all surrounding coordinates have been visited, precompute and save the final value
-        avg /= 12;
+        entry = m_shadowingMap.find(cellCoord);
+        avg /= denominator;
+        //avg /= surroundingCellCoordinates.size();
         std::get<2>(entry->second) = avg;
         std::get<0>(entry->second) = true;
 
