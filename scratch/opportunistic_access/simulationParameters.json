@@ -1,0 +1,182 @@
+{
+    "SimulationParameters": {
+        "ts": 10,
+        "fc": 869000000.0,
+        "bw": 20000000.0,
+        "fusionAlgorithm": 6,
+        "fusionAlgorithmName": "MRG_OR",
+        "propagationModel": "ns3::RANGE5GPropagationLossModel",
+        "ueTxPeriodSec": 0.1,
+        "ueTxSizeBytes": 6000,
+        "enableDSA": true,
+        "SNRSensing": false
+        },
+    "PU": {
+        "0": {
+            "position": [
+                75000.0,
+                75000.0,
+                0.08
+            ],
+            "tx_power": 40,
+            "bw": 2500000.0,
+            "fc": 860250000.0,
+            "duty_cycle": 0.15,
+            "period": 1.0,
+            "num": 0
+        },
+        "1": {
+            "position": [
+                35000.0,
+                75000.0,
+                0.08
+            ],
+            "tx_power": 40,
+            "bw": 2500000.0,
+            "fc": 865250000.0,
+            "duty_cycle": 0.2,
+            "period": 2.0,
+            "num": 1
+        },
+        "2": {
+            "position": [
+                75000.0,
+                35000.0,
+                0.08
+            ],
+            "tx_power": 40,
+            "bw": 2500000.0,
+            "fc": 870250000.0,
+            "duty_cycle": 0.25,
+            "period": 3.0,
+            "num": 2
+        },
+        "3": {
+            "position": [
+                47000.0,
+                47000.0,
+                0.08
+            ],
+            "tx_power": 40,
+            "bw": 2500000.0,
+            "fc": 875250000.0,
+            "duty_cycle": 0.3,
+            "period": 4.0,
+            "num": 3
+        }
+    },
+    "eNB": {
+        "0": {
+            "num": 0,
+            "position": [
+                50000.0,
+                50000.0,
+                0
+            ],
+            "tx_power": 53,
+            "gain": 9
+        }
+    },
+    "UE": {
+        "0": {
+            "num": 0,
+            "position": [
+                75000.0,
+                45000.0,
+                0.1
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "1": {
+            "num": 1,
+            "position": [
+                70306.966049,
+                45369.349782,
+                0.07
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "2": {
+            "num": 2,
+            "position": [
+                65729.490169,
+                46468.304511,
+                0.0
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "3": {
+            "num": 3,
+            "position": [
+                61380.285008,
+                48269.804274,
+                0.08
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "4": {
+            "num": 4,
+            "position": [
+                57366.442431,
+                50729.490169,
+                0.07
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "5": {
+            "num": 5,
+            "position": [
+                53786.796564,
+                53786.796564,
+                0.04
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "6": {
+            "num": 6,
+            "position": [
+                50729.490169,
+                57366.442431,
+                0.02
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "7": {
+            "num": 7,
+            "position": [
+                48269.804274,
+                61380.285008,
+                0.0
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "8": {
+            "num": 8,
+            "position": [
+                46468.304511,
+                65729.490169,
+                0.04
+            ],
+            "tx_power": 23,
+            "gain": 9
+        },
+        "9": {
+            "num": 9,
+            "position": [
+                45369.349782,
+                70306.966049,
+                0.01
+            ],
+            "tx_power": 23,
+            "gain": 9
+        }
+    }
+}
