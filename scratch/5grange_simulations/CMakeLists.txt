@@ -1,0 +1,2 @@
+add_executable(5g_range_demonstration_json 5g_range_demonstration_json.cc)
+target_link_libraries(5g_range_demonstration_json ${ns3-libs})

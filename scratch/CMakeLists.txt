@@ -17,4 +17,6 @@ foreach(scratch_src ${scratches})
 endforeach()
 
 add_subdirectory(opportunistic_access) # OG COLAB code
-add_subdirectory(5grange_validation) # CDL tests, performance plots, shadowing map
+add_subdirectory(5grange_validation)   # CDL tests, performance plots, shadowing map
+add_subdirectory(5grange_simulations)  # COLAB + MHM + 5G-RANGE
+
