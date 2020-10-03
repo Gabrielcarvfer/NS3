@@ -29,6 +29,7 @@
 
 #include <map>
 #include <ns3/contrib-haraldott-module.h>
+#include <sys/stat.h>
 
 using namespace ns3;
 
@@ -150,78 +151,154 @@ PhyTxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std:
 //Simple network setup
 int main() {
     std::ios::sync_with_stdio(false);
+    std::string data_path       = "./output"; //folder to save results
 
+    picojson::object inputJson = load_json("simulationParameters.json");
+    picojson::object simulationParameters = inputJson["SimulationParameters"].get<picojson::object>();
+#if defined(_WIN32)
+    _mkdir(data_path.c_str());
+#else
+    mkdir(data_path.c_str(),0777); // notice that 777 is different than 0777
+#endif
 
-    double simTime = 10;
-    double enbTxPower              =  53.0; //dBm
-    double enbGain                 =   9.0; //dBi
-    double ueTxPower               =  23.0; //dBm
-    double ueGain                  =   9.0; //dBi
-    double carrierFrequency        = 869e6; //Hz
-    double channelBandwidth        =  20e6; //Hz
-    double ueTxPeriodSec           =   0.1; //sec     | 48Mbps throughput at the LTE uplink
-    int    ueTxSizeBytes           =   6e5; //bytes  /
-    std::string propagationModel   = "ns3::FriisPropagationLossModel"; //or ns3::RANGE5GPropagationLossModel
+    //Get EARFCN for specified frequency band
+    double carrierFreq = 0.0;
 
-    //Default COLAB parameters
-    bool   enableDSA               =  false; //if false, channels with PUs will be automatically flagged not to be used
-    bool   SNRSensing              =  false; //if true, SNR based sensing curves are loaded/used instead of distance based sensing curves
-    int    fusionAlgorithm         = LteEnbMac::MRG_1_OF_N;
+    //Find DL and UL frequencies based on the bands
+    {
+        int freqBand = (int) simulationParameters["freqBand"].get<double>();
+        uint32_t dlEarfcn, ulEarfcn;
 
-    // Default MHM parameters
-    int attackers_per_channel = 0;
-    bool markov_detection = false;
-    bool harmonic_detection = false;
+        for (int i = 0; i < NUM_EUTRA_BANDS; i++)
+        {
+            if (freqBand != g_eutraChannelNumbers[i].band)
+                continue;
+            carrierFreq = g_eutraChannelNumbers[i].fDlLow;
+            dlEarfcn = g_eutraChannelNumbers[i].nOffsDl;
+            ulEarfcn = g_eutraChannelNumbers[i].nOffsUl;
+            carrierFreq *= 1000000; // Hz to MHz
+        }
+
+        Config::SetDefault ("ns3::ComponentCarrier::DlEarfcn", UintegerValue (dlEarfcn));
+        Config::SetDefault ("ns3::ComponentCarrier::UlEarfcn", UintegerValue (ulEarfcn));
+        Config::SetDefault ("ns3::LteUeNetDevice::DlEarfcn", UintegerValue (dlEarfcn));
+        Config::SetDefault ("ns3::LteEnbNetDevice::DlEarfcn", UintegerValue (dlEarfcn));
+        Config::SetDefault ("ns3::LteEnbNetDevice::UlEarfcn", UintegerValue (ulEarfcn));
+    }
+
+    int dlBandwidth, ulBandwidth;
+    int channelBandwidth = 6000000; // 6MHz
+    dlBandwidth = ulBandwidth = (int)(simulationParameters["bw"].get<double>()*5.5); // 33 RBs per 6MHz channel (BR)
+                                                                                     // or 44 RBs per 8MHz channel (UE)
+                                                                                     // or 5.5 RBs per 1MHz
+
+    Config::SetDefault ("ns3::ComponentCarrier::DlBandwidth", UintegerValue (dlBandwidth));
+    Config::SetDefault ("ns3::ComponentCarrier::UlBandwidth", UintegerValue (ulBandwidth));
+
+    Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (dlBandwidth));
+    Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (ulBandwidth));
+
+    Config::SetDefault ("ns3::LteHelper::NumberOfComponentCarriers", UintegerValue (1));
+    Config::SetDefault ("ns3::LteHelper::UseCa", BooleanValue (false));
+    Config::SetDefault ("ns3::LteHelper::EnbComponentCarrierManager", StringValue ("ns3::RrComponentCarrierManager"));
+    Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
+
+    Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
+
+    {
+        // Even though the json parameters assume individual txPower for eNB and UEs, we use a single one
+        double enbTxPower = inputJson["eNB"].get<picojson::object>().begin()->second.get<picojson::object>()["tx_power"].get<double>();
+        double ueTxPower =  inputJson["UE"].get<picojson::object>().begin()->second.get<picojson::object>()["tx_power"].get<double>();
+
+        Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(enbTxPower));
+        Config::SetDefault("ns3::LteUePhy::TxPower", DoubleValue(ueTxPower));
+    }
+
+    Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (40));
+    Config::SetDefault ("ns3::LteUePhy::EnableUplinkPowerControl", BooleanValue (false));
+
+    {
+        Config::SetDefault("ns3::LteEnbMac::SpectrumSensing",
+                           BooleanValue(simulationParameters["enableDSA"].get<bool>()));
+        Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing",
+                           BooleanValue(simulationParameters["enableDSA"].get<bool>()));
+        Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm",
+                           UintegerValue((int)simulationParameters["fusionAlgorithm"].get<double>()));
+        LteSpectrumPhy::SNRsensing = false;
+    }
+    NodeContainer allNodes;
+
+    Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
+    lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
+    Config::SetDefault ("ns3::RrFfMacScheduler::HarqEnabled", BooleanValue (simulationParameters["useHarq"].get<bool>()));
+
+    Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode",
+                        UintegerValue ((int)simulationParameters["mimoMode"].get<double>()));
+
+    if(simulationParameters["useCdlPathLoss"].get<bool>())
+    {
+        Config::SetDefault("ns3::Ula5gRange::NumAntElem",
+                           UintegerValue((int)simulationParameters["numAntennas"].get<double>()));
+
+        Config::SetDefault ("ns3::CdlCommon::KValue",
+                            DoubleValue(simulationParameters["kval"].get<double>()));
+
+        Config::SetDefault ("ns3::TraceFadingLossModel::RbNum", UintegerValue (dlBandwidth));
+        std::string cdlType = simulationParameters["cdlType"].get<std::string>();
+        if (cdlType == "CDL_A")
+        {
+            Config::SetDefault("ns3::CdlSpectrumPropagationLossModel::CdlType",
+                               EnumValue(CdlSpectrumPropagationLossModel::CDL_A));
+            Config::SetDefault("ns3::LteAmc::ChannelModel", StringValue("CDL_A"));
+        }
+        lteHelper->SetPathlossModelType (TypeId::LookupByName ("ns3::CdlSpectrumPropagationLossModel"));
+        if (cdlType == "CDL_A")
+            lteHelper->SetAttribute("ChannelModel", StringValue("CDL_A"));
+    }
+    else
+    {
+        Config::SetDefault("ns3::RANGE5GPropagationLossModel::Frequency", DoubleValue(carrierFreq));
+        Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value",
+                           DoubleValue(simulationParameters["kval"].get<double>()));
+        lteHelper->SetAttribute ("PathlossModel", StringValue ("ns3::RANGE5GPropagationLossModel"));
+    }
+
+    {
+        // Even though the json parameters assume individual txPower for eNB and UEs, we use a single one
+        double enbGain = inputJson["eNB"].get<picojson::object>().begin()->second.get<picojson::object>()["gain"].get<double>();
+        double ueGain =  inputJson["UE"].get<picojson::object>().begin()->second.get<picojson::object>()["gain"].get<double>();
+
+        lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (enbGain));
+        lteHelper->SetUeAntennaModelAttribute  ("Gain",     DoubleValue (ueGain));
+    }
 
     // Default 5G-RANGE parameters
-
-
-
     Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
-    Config::SetDefault("ns3::LteEnbMac::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
-    Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing", BooleanValue(false));//for whatever reason, refuses to work
-
 
     static GlobalValue g_attackers_per_channel =
             GlobalValue ("ATTACKERS_PER_CHANNEL", "Number of attackers per channel",
-                         IntegerValue (attackers_per_channel),
+                         IntegerValue ((int)simulationParameters["attackers_per_channel"].get<double>()),
                          MakeIntegerChecker<int64_t>());
 
     static GlobalValue g_markov_detection =
             GlobalValue ("MARKOV_DETECTION", "Use Markov-chain to improve individual sensing report",
-                         BooleanValue (markov_detection),
+                         BooleanValue (simulationParameters["markov_detection"].get<bool>()),
                          MakeBooleanChecker());
 
     static GlobalValue g_harmonic_detection =
             GlobalValue ("HARMONIC_DETECTION", "Use harmonic detection to prevent Byzantine attackers",
-                         BooleanValue (harmonic_detection),
+                         BooleanValue (simulationParameters["harmonic_detection"].get<bool>()),
                          MakeBooleanChecker());
 
-    picojson::object inputJson = load_json("simulationParameters.json");
 
-    //       numUE/eNB      [ X      Y        Z      txPower  Gain]
+    //       UE/eNB      [ X      Y        Z ]
     std::map<int, std::vector<double>> enbParameters;
     std::map<int, std::vector<double>> ueParameters;
 
-    //       numUE/eNB      [X      Y        Z      txPower  fc      bw      duty   period]
+    //       PU      [X      Y        Z      txPower  channelNumber     dutyCycle   period]
     std::map<int, std::vector<double>> puParameters;
     //Load simulation parameters from json file
     {
-
-        picojson::object parameters = inputJson["SimulationParameters"].get<picojson::object>();
-
-        simTime          = parameters["ts"].get<double>();
-        carrierFrequency = parameters["fc"].get<double>();
-        channelBandwidth = parameters["bw"].get<double>();
-        fusionAlgorithm  = (int)parameters["fusionAlgorithm"].get<double>();
-        propagationModel = parameters["propagationModel"].get<std::string>();
-        enableDSA        = parameters["enableDSA"].get<bool>();
-        SNRSensing       = parameters["SNRSensing"].get<bool>();
-        ueTxPeriodSec    = parameters["ueTxPeriodSec"].get<double>();
-        ueTxSizeBytes    = (int) parameters["ueTxSizeBytes"].get<double>();
-
-        LteSpectrumPhy::SNRsensing = SNRSensing;
-
         //Load PU data
         picojson::object PUjson = inputJson["PU"].get<picojson::object>();
         for (picojson::value::object::const_iterator i = PUjson.begin(); i != PUjson.end(); i++)
@@ -239,16 +316,14 @@ int main() {
                 coordinatesVector.push_back(it->get<double>());
 
             //Read PU tx power, bw, fc, duty and period
-            double txPower            = puContents["tx_power"].get<double>();
-            double bandwidth          = puContents["bw"].get<double>();
-            double puCarrierFrequency = puContents["fc"].get<double>();
+            double channelNumber      = puContents["channel"].get<double>();
             double dutyCycle          = puContents["duty_cycle"].get<double>();
             double period             = puContents["period"].get<double>();
-            puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, puCarrierFrequency, bandwidth, dutyCycle, period});
+            double txPower            = puContents["tx_power"].get<double>();
+            puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, channelNumber, dutyCycle, period});
 
-            int puSubchannel = (int) (puCarrierFrequency-(carrierFrequency-channelBandwidth/2))/(channelBandwidth/4);
-            if(!enableDSA)
-                LteEnbMac::nonDSAChannels.push_back(puSubchannel);
+            if(!simulationParameters["enableDSA"].get<bool>())
+                LteEnbMac::nonDSAChannels.push_back(channelNumber);
         }
         
         //Load eNB data
@@ -266,13 +341,7 @@ int main() {
             picojson::array coordinatesArray = enbContents["position"].get<picojson::array>();
             for (auto it = coordinatesArray.begin(); it != coordinatesArray.end(); it++)
                 coordinatesVector.push_back(it->get<double>());
-
-            //Read eNB tx power and gain
-            double txPower          = enbContents["tx_power"].get<double>();
-            double antennaGain      = enbContents["gain"].get<double>();
-            enbParameters.emplace(enbId, std::vector<double>{coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, antennaGain});
-            enbTxPower = txPower;
-            enbGain    = antennaGain;
+            enbParameters.emplace(enbId, coordinatesVector);
         }
 
         //Load UE data
@@ -291,72 +360,31 @@ int main() {
             picojson::array coordinatesArray = ueContents["position"].get<picojson::array>();
             for (auto it = coordinatesArray.begin(); it != coordinatesArray.end(); it++)
                 coordinatesVector.push_back(it->get<double>());
-
-            //Read eNB tx power and gain
-            double txPower          = ueContents["tx_power"].get<double>();
-            double antennaGain      = ueContents["gain"].get<double>();
-            ueParameters.emplace(ueId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, antennaGain});
-            ueTxPower = txPower;
-            ueGain    = antennaGain;
+            ueParameters.emplace(ueId, coordinatesVector);
         }
     }
 
+    //Print information
+    bool printMcsTbs        = true;
+    bool printEarfcn        = false;
+    bool printRBs           = false;
+    bool printAppTrace      = true;
+    std::string traceAppFilename = "5grange_app_trace";
 
-    //LogComponentEnableAll(LOG_LEVEL_DEBUG);
+    //Trace info
+    std::string pcapTraceFilename = "5grange_cdl";
+    bool traceIpv4 = false;
+    std::string traceRlcThroughputFilename = "5grange_rlc_throughput";
+    bool traceRlcThroughput = false;
+    std::string traceNetworkThrFilaname = "5grange_network_throughput";
 
-    NodeContainer allNodes;
-    Ptr<LteHelper> lteHelper = CreateObject<LteHelper>();
-
-    //0.1 Configure channel bandwidth
-    Config::SetDefault("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue(100));
-    Config::SetDefault("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue(100));
-
-    //0.2 Configure channel frequency
-    Config::SetDefault("ns3::LteEnbNetDevice::DlEarfcn",    UintegerValue(2400)); // band 5 (~850MHz), check src/lte/model/lte-spectrum-value-helper.cc for references
-    Config::SetDefault("ns3::LteEnbNetDevice::UlEarfcn",    UintegerValue(20400));// band 5 (~850MHz), check src/lte/model/lte-spectrum-value-helper.cc for references
-
-    //0.3 Configure error model (disable error model for control channel, assuming it works on a different channel without interference)
-    Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
-    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(false));
-
-    //0.4 Configure fusion algorithm for the collaborative sensing
-    Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm", UintegerValue(fusionAlgorithm));
+    bool traceNetworkThr = false;
+    bool tracePhy = true;
+    std::string tracePhyFilename = "5grange_phy_trace";
 
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
-
-    //60dBm = 1    kW
-    //53dBm = 200  kW // Taken from
-    //49dBm =  80   W // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
-    //38dBm = 6.3   W
-    //30dBm =   1   W
-    //20dBm = 100  mW
-    //10dBm =  10  mW
-    // 0dBm =   1  mW
-
-
-    //0.5 Configure Tx power for UEs and eNB
-    Config::SetDefault("ns3::LteEnbPhy::TxPower", DoubleValue(enbTxPower));
-    Config::SetDefault("ns3::LteUePhy::TxPower",  DoubleValue(ueTxPower));
-    Config::SetDefault("ns3::LteUePhy::EnableUplinkPowerControl",  BooleanValue(false));
-
-
-    Config::SetDefault("ns3::RANGE5GPropagationLossModel::K-value", DoubleValue(4));
-
-
-    //0.6 Configure antenna gains for UEs and eNB
-    lteHelper->SetEnbAntennaModelAttribute("Gain", DoubleValue(enbGain)); // Taken from
-    lteHelper->SetUeAntennaModelAttribute( "Gain", DoubleValue(ueGain)); // http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip
-
-    //0.7 Select the eNB MAC Scheduler
-
-    //0.8 Select the propagation loss model
-    std::stringstream ss;
-    ss << propagationModel << "::Frequency";
-    Config::SetDefault(ss.str(), DoubleValue(carrierFrequency));
-    lteHelper->SetAttribute("PathlossModel", StringValue(propagationModel));
-
 
     //1 Configure EPC e PGW
     Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper>();
@@ -393,7 +421,6 @@ int main() {
     {
         positionAlloc2->Add(Vector( ueData.second[0], ueData.second[1], ueData.second[2])); //  1 - UE 0
     }
-
 
 
     //5 Install mobility model to the nodes
@@ -479,8 +506,8 @@ int main() {
     UdpEchoClientHelper echoClient(serverAddress, serverPort);
 #endif
     echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(Seconds(ueTxPeriodSec)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(ueTxSizeBytes));
+    echoClient.SetAttribute("Interval", TimeValue(Seconds(0.1)));
+    echoClient.SetAttribute("PacketSize", UintegerValue(400));
 
     ApplicationContainer clientApps;
 #ifndef UE_SRV
@@ -490,11 +517,6 @@ int main() {
 #endif
     clientApps.Start(Seconds(0.2));
 
-
-
-    //16 Colect LTE and P2P traces
-    //lteHelper->EnableTraces();
-    p2ph.EnablePcapAll("p2p", false);
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)
@@ -536,8 +558,8 @@ int main() {
          double basePsdWattsHz = pow (10.0, (puData.second[3] - 30) / 10.0); // convert dBm to W/Hz
 
          Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
-         phy->SetAttribute("StartFrequency", DoubleValue(puData.second[4]));
-         phy->SetAttribute("ChannelBandwidth", DoubleValue(puData.second[5]));
+         phy->SetAttribute("StartFrequency", DoubleValue(carrierFreq+channelBandwidth*puData.second[4]));
+         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth));
          phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
          phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
          phy->CreateTvPsd();
@@ -549,62 +571,17 @@ int main() {
          waveformGeneratorHelper.SetChannel(lteHelper->GetDownlinkSpectrumChannel());
          waveformGeneratorHelper.SetTxPowerSpectralDensity(psd);
 
-         waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(puData.second[7])));   // corresponds to 60 Hz
-         waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(puData.second[6]));
+         waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(puData.second[6])));   // corresponds to 60 Hz
+         waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(puData.second[5]));
          waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
-         Simulator::Schedule(Seconds(2.5)+Seconds(puData.second[7]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
+         Simulator::Schedule(Seconds(2.5)+Seconds(puData.second[6]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
                  waveformGeneratorDevices.GetN()-1)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
          i++;
     }
 
-
-    //20 capture the spectrum transmissions with the spectrum analyzer
-    //SpectrumAnalyzerHelper spectrumAnalyzerHelper;
-    //spectrumAnalyzerHelper.SetChannel (lteHelper->GetDownlinkSpectrumChannel());
-    //Ptr<LteEnbNetDevice> enbNetDev = enbLteDevs.Get(0)->GetObject<LteEnbNetDevice>();
-    //Ptr<LteEnbPhy> enbPhy = enbNetDev->GetPhy();
-    //Ptr<LteSpectrumPhy> enbSpectrPhy = enbPhy->GetUlSpectrumPhy();
-    //Ptr<const SpectrumModel> rxSpectrumModel = enbSpectrPhy->GetRxSpectrumModel();
-    //Ptr<SpectrumModel> model = Copy(rxSpectrumModel);
-    //spectrumAnalyzerHelper.SetRxSpectrumModel(SpectrumModelRANGE);
-    //spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (1)));
-
-    //From lte-spectrum-value-helper.cc
-    //const double kT_dBm_Hz = -174.0;  // dBm/Hz
-    //double kT_W_Hz = std::pow (10.0, (kT_dBm_Hz - 30) / 10.0);
-    //double noiseFigureLinear = std::pow (10.0, enbPhy->GetNoiseFigure() / 10.0);
-    //double noisePowerSpectralDensity =  kT_W_Hz * noiseFigureLinear;
-
-    //spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (noisePowerSpectralDensity));  // -174 dBm/Hz
-    //spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");
-
-    //NetDeviceContainer spectrumDevice;
-    //spectrumDevice = spectrumAnalyzerHelper.Install(spectrumAnalyzer);
-
-    //21 install the Flow monitor
-    Ptr<FlowMonitor> flowMonitor;
-    FlowMonitorHelper flowHelper;
-    flowMonitor = flowHelper.InstallAll();
-
-    //22 Export the netanim animation for the simulation
-
-    //BaseStationNetDevice b;
-    //SubscriberStationNetDevice s;
-    //CsmaNetDevice c;
-    //UanNetDevice u;
-
-    //AnimationInterface anim("anim.xml");
-    //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
-    //anim.EnablePacketMetadata(true);
-
-
     //23 Run simulation
-    Simulator::Stop(Seconds(simTime));
+    Simulator::Stop(Seconds(simulationParameters["ts"].get<double>()));
     Simulator::Run();
-
-    //24 Dump flowmonitor results
-    flowMonitor->SerializeToXmlFile("flow.xml", true, true);
-
     Simulator::Destroy();
 
     return 0;

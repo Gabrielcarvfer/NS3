@@ -1252,7 +1252,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     std::vector<bool> PU_detected_V(PU_presence_V.size());
 
     //Look for empty RBs SINR on the DCI
-    std::vector<bool> occupied_RB_indexes(64);
+    std::vector<bool> occupied_RB_indexes(132);
 
     int dci_count = 0;
 
@@ -1409,7 +1409,7 @@ void LteSpectrumPhy::Sense()
     if (senseRBs)
         groupingSize = 2; //subdivide 100RBs into 50RBGs
     else
-        groupingSize = 25; //subdivide 100RBs into 4 subchannels of 25RBs each
+        groupingSize = 44; //subdivide 132RBs into 4 subchannels of 6MHz=44RBs each
 
     //Precalculate SNR for RBGs and channel-wise SNR
     calculateAvgSinr(sinrHistory.back(), groupingSize, &avgSinr, &historicalSNR);

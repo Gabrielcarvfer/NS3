@@ -88,7 +88,7 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   Ptr<NetDevice> dev_b = b->GetObject<Node>()->GetDevice(0);
 
   Ptr<Ula5gRange> ula_tx, ula_rx;
-
+  //todo: workaround for NonCommunicatingNetDevice - > WaveformGenerator = PU
   //uplink
   if (DynamicCast<LteUeNetDevice>(dev_a))
     {

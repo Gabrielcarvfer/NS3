@@ -7,9 +7,9 @@ from .enb_model import eNB_Model
 from .ue_model import UE_Model
 from .simulation_topology import generatePosition
 from .simulation_parameters import SimulationParameters, fusionAlgorithms, mimoSchemes
-from .plot_network_topology import plot_network_topology
+from .plot_simulation_topology import plot_simulation_topology
 
-def generateRandomPUs(
+def generate_random_pus(
         numPUs         = 4,           #
         xRange         = (0, 100e3),  # m
         yRange         = (0, 100e3),  # m
@@ -26,12 +26,12 @@ def generateRandomPUs(
         channel           = pu % numPUs
         PU_Model(generatePosition(xRange, yRange, zRange), txPower, dutyCycle, txPeriod, channel)
 
-def generateScenario(ueSpeed=0, numUEs=100, clusters=False):
+def generate_scenario(ueSpeed=0, numUEs=100, clusters=False):
     xRange = (0, 100e3),  # m
     yRange = (0, 100e3),  # m
     zRange = (0,   0.1),  # m
 
-    generateRandomPUs(numPUs=4, txPowerRange=(30, 40), txPeriodRange=(1, 3), xRange=xRange, yRange=yRange, zRange=zRange)
+    generate_random_pus(numPUs=4, txPowerRange=(30, 40), txPeriodRange=(1, 3), xRange=xRange, yRange=yRange, zRange=zRange)
 
     ueTxPower      = 23   #dBm
     ueAntennaGain  = 9    #dBi
@@ -63,7 +63,7 @@ def generateScenario(ueSpeed=0, numUEs=100, clusters=False):
     return sim.dictio
 
 
-def generateScenarios(baseFolder,
+def generate_scenarios(baseFolder,
                       batch,
                       numUEs,
                       ueSpeeds,
@@ -100,7 +100,7 @@ def generateScenarios(baseFolder,
 
         # Otherwise generate a new base scenario that will be replicated with different settings
         else:
-            simulationScenario = generateScenario(numUEs=numUEs, clusters=clustersOption)
+            simulationScenario = generate_scenario(numUEs=numUEs, clusters=clustersOption)
             with open(baseSimulationJsonPath, "w") as f:
                 json.dump(simulationScenario, f, indent=4)
 
