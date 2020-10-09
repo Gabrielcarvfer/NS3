@@ -351,7 +351,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
               break;
           mcs++;
       }
-      std::cout << "snr " << 10*log10(sinr.ValuesAt(0)) << std::endl;
+      //std::cout << "snr " << 10*log10(sinr.ValuesAt(0)) << std::endl; //enable this to collect calculated SNR
       if (mcs > 0)
       {
           mcs--;

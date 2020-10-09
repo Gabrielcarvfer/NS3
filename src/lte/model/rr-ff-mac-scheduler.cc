@@ -81,14 +81,14 @@ RrFfMacScheduler::DoDispose ()
   delete m_cschedSapProvider;
   delete m_schedSapProvider;
 
-  std::ofstream schedulerInput(std::string("schedulerInput.txt"));
-  std::ofstream schedulerOutput(std::string("schedulerOutput.txt"));
-  for (auto it : schedulerInputFile)
-      schedulerInput << it;
-  for (auto it : schedulerOutputFile)
-      schedulerOutput << it;
-  schedulerInput.close();
-  schedulerOutput.close();
+  //std::ofstream schedulerInput(std::string("schedulerInput.txt"));
+  //std::ofstream schedulerOutput(std::string("schedulerOutput.txt"));
+  //for (auto it : schedulerInputFile)
+  //    schedulerInput << it;
+  //for (auto it : schedulerOutputFile)
+  //    schedulerOutput << it;
+  //schedulerInput.close();
+  //schedulerOutput.close();
 }
 
 TypeId

@@ -133,11 +133,14 @@ PhyTxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std:
   *trace_file->GetStream () << ","; //correcteness
   *trace_file->GetStream () << (uint32_t) params.m_ccId << std::endl;
 }
-
+#include <chrono>
 int
 main (int argc, char *argv[])
 {
   NS_LOG_DEBUG (" Running 5gRangeCdlScript");
+  auto now = std::chrono::system_clock::now();
+  ns3::RngSeedManager::SetSeed(now.time_since_epoch().count());
+  std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
   //Scenario configuration
   double simTime              = 5;
@@ -163,9 +166,9 @@ main (int argc, char *argv[])
   // field trials used 2/3 code rate instead of 5/6,
   //   we compensate for that reducing the throughput on the validation script
   //   and increasing the antenna gains below (1.5dBi each)
-  double enbGain          = 9.0+1.5;   //dBi
+  double enbGain          = 9.0;//+1.5;   //dBi
   double ueTxPower        = 23.0;  //dBm
-  double ueGain           = 9.0+1.5;   //dBi, 9dBi is for CPEs
+  double ueGain           = 9.0;//+1.5;   //dBi, 9dBi is for CPEs
   uint32_t numAntennas    = 1;     // only affects CDL
   uint16_t  mimoMode      = 0;     // 0-SISO, 1-TxDiversity, 2-spatial multiplexing open
   uint32_t dlEarfcn       = 50000; //5G: 50000 for ~297MHz, LTE: 2400 for band 5 (~850MHz)
@@ -454,9 +457,9 @@ main (int argc, char *argv[])
 
   lteHelper->EnableTraces ();
 
-  Ptr<FlowMonitor> flowMonitor;
-  FlowMonitorHelper flowHelper;
-  flowMonitor = flowHelper.InstallAll();
+  //Ptr<FlowMonitor> flowMonitor;
+  //FlowMonitorHelper flowHelper;
+  //flowMonitor = flowHelper.InstallAll();
 
   Ptr<RadioBearerStatsCalculator> rlcStats = lteHelper->GetRlcStats ();
   Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats ();
@@ -645,7 +648,7 @@ main (int argc, char *argv[])
       NS_LOG_INFO ("\t Achieved: " << totalUlThr*8 / 1000 / 1000 << " mbps");
     }
 
-  flowMonitor->SerializeToXmlFile("flow.xml", true, true);
+  //flowMonitor->SerializeToXmlFile("flow.xml", true, true);
   Simulator::Destroy();
   return 0;
 
