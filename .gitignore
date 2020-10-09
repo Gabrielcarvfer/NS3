@@ -103,3 +103,5 @@ UlTxPhyStats.txt
 src/lte/model/BLER/BLER_interpolation_validation/bler.txt
 
 src/lte/model/BLER/BLER_interpolation_validation/
+
+configFile.cmake

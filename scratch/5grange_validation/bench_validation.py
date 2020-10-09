@@ -110,6 +110,55 @@ class mimoModes(Enum):
 
 mimoMarkers = ("o", "p", "*")
 
+def extract_throughput(distanceFolder):
+    # Open perf.txt and scan for received throughput
+    contents = None
+    with open(distanceFolder + "perf.txt", "r", encoding="utf-8") as file:
+        contents = file.readlines()
+
+    PHY_DL_received_throughput_regex = re.compile("DL Vazão: (.*)mbps")
+    #PHY_DL_injected_throughput_regex = re.compile("Vazão esperada PHY: (.*)mbps")
+
+    regex = None
+    throughput = 0.0
+    for line in contents:
+        regex = PHY_DL_received_throughput_regex.match(line)
+        if regex is None:
+            continue
+        throughput = regex.groups()[0]
+        throughput = float(throughput)
+    # field trials used 2/3 code rate instead of 5/6,
+    #   we compensate for that reducing the throughput here
+    #   and increasing the antenna gain on the simulation side
+    return throughput#*0.8
+
+def extract_corruption(distanceFolder, distance):
+    # Open out__km.txt and scan for corrupted transport blocks to calculate the error rate
+    contents = None
+    with lzma.open(distanceFolder + "out%dkm.txt.lzma" % distance, "r") as file:
+        contents = file.readlines()
+
+    corrupted = 0
+    corrupted_regex = re.compile(".* corrupted (.*).*")
+    corrupted_TBs = 0
+    total_TBs = 0
+
+    regex = None
+    for line in contents:
+        regex = corrupted_regex.match(line.decode("utf-8"))
+        if regex is None:
+            continue
+        total_TBs += 1
+        corrupted = regex.groups()[0]
+        if "snr" in corrupted:
+            continue
+        corrupted = int(corrupted)
+        corrupted_TBs += corrupted
+
+    return corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0
+
+def extract_perf(distanceFolder, distance):
+    return extract_throughput(distanceFolder), extract_corruption(distanceFolder, distance)
 
 if __name__ == "__main__":
     mp.freeze_support()
@@ -193,74 +242,16 @@ if __name__ == "__main__":
                         for channel_model in channel_models:
                             channelFolder = antennaAndMimoFolder + channel_model + os.sep
 
-                            # Aggregate throughput rate results for different distances
-                            received_throughput_per_d = {}
+                            pool_args = []
                             for distance in distances:
                                 distanceFolder = channelFolder + str(distance) + "km" + os.sep
+                                pool_args.append((distanceFolder, distance))
 
-                                # Open perf.txt and scan for received throughput
-                                contents = None
-                                with open(distanceFolder + "perf.txt", "r", encoding="utf-8") as file:
-                                    contents = file.readlines()
+                            result = p.starmap(func=extract_perf, iterable=pool_args)
 
-                                PHY_DL_received_throughput_regex = re.compile("DL Vazão: (.*)mbps")
-                                #PHY_DL_injected_throughput_regex = re.compile("Vazão esperada PHY: (.*)mbps")
-
-                                regex = None
-                                throughput = 0.0
-                                for line in contents:
-                                    regex = PHY_DL_received_throughput_regex.match(line)
-                                    if regex is None:
-                                        continue
-                                    throughput = regex.groups()[0]
-                                    throughput = float(throughput)
-                                # field trials used 2/3 code rate instead of 5/6,
-                                #   we compensate for that reducing the throughput here
-                                #   and increasing the antenna gain on the simulation side
-                                received_throughput_per_d[distance] = throughput#*0.8
-                                del regex, line, contents, throughput, file
-
-                            # Plot throughput for a given channel model
-                            #axis4[0].plot(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), label=channel_model, color=randcolor())
-                            #axis6[0].plot(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), label="%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name), color=randcolor(), marker=mimoMarkers[mimoMode.value])
-
-                            batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"]["%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name)] = received_throughput_per_d
-
-
-                            # Aggregate corruption rate results for different distances
-                            corrupted_freq_per_d = {}
                             for distance in distances:
-                                distanceFolder = channelFolder + str(distance) + "km" + os.sep
-
-                                # Open out__km.txt and scan for corrupted transport blocks to calculate the error rate
-                                contents = None
-                                with lzma.open(distanceFolder + "out%dkm.txt.lzma" % distance, "r") as file:
-                                    contents = file.readlines()
-
-                                corrupted = 0
-                                corrupted_regex = re.compile(".* corrupted (.*).*")
-                                corrupted_TBs = 0
-                                total_TBs = 0
-
-                                regex = None
-                                for line in contents:
-                                    regex = corrupted_regex.match(line.decode("utf-8"))
-                                    if regex is None:
-                                        continue
-                                    total_TBs += 1
-                                    corrupted = regex.groups()[0]
-                                    if "snr" in corrupted:
-                                        continue
-                                    corrupted = int(corrupted)
-                                    corrupted_TBs += corrupted
-                                corrupted_freq_per_d[distance] = corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0
-                                del regex, line, contents, corrupted, file
-                            del corrupted_TBs, total_TBs
-
-                            # Plot corruption rate plots for a given channel model
-                            #axis3[0].plot(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), label=channel_model, color=randcolor())
-                            #axis5[0].plot(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), label="%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name), color=randcolor(), marker=mimoMarkers[mimoMode.value])
-                            batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"]["%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name)] = corrupted_freq_per_d
+                                batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"]["%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name)] = result[distance][0]
+                                batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"]["%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name)] = result[distance][1]
 
                         """
                         # Set axis labels for corruption rate plot
@@ -285,77 +276,78 @@ if __name__ == "__main__":
         with lzma.open(lzma_pickle_results, "wb") as f:
             pickle.dump(batch_results, f)
 
-    for forceMaxMcs in forcedMaxMcs:
-        batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs] = {"frequencyBand": {}}
+    with mp.Pool(processes=10) as p:
+        for forceMaxMcs in forcedMaxMcs:
+            batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs] = {"frequencyBand": {}}
 
-        for frequencyBand in frequencyBands:
-            fig5, axis5 = plt.subplots(figsize=(10, 6))
-            axis5 = [axis5]
+            for frequencyBand in frequencyBands:
+                fig5, axis5 = plt.subplots(figsize=(10, 6))
+                axis5 = [axis5]
 
-            fig6, axis6 = plt.subplots(figsize=(10, 6))
-            axis6 = [axis6]
+                fig6, axis6 = plt.subplots(figsize=(10, 6))
+                axis6 = [axis6]
 
-            # Calculate statistics between batches
-            TBLER = None
-            THR = None
-            for batch in range(batches-1):
-                if TBLER is None:
-                    TBLER = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"]
-                    for key, valueDict in TBLER.items():
-                        for distance in valueDict.keys():
-                            TBLER[key][distance] = [valueDict[distance]]
-                else:
-                    for key, valueDict in batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"].items():
-                        for distance in valueDict.keys():
-                            TBLER[key][distance].append(valueDict[distance])
+                # Calculate statistics between batches
+                TBLER = None
+                THR = None
+                for batch in range(batches-1):
+                    if TBLER is None:
+                        TBLER = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"]
+                        for key, valueDict in TBLER.items():
+                            for distance in valueDict.keys():
+                                TBLER[key][distance] = [valueDict[distance]]
+                    else:
+                        for key, valueDict in batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"].items():
+                            for distance in valueDict.keys():
+                                TBLER[key][distance].append(valueDict[distance])
 
-                if THR is None:
-                    THR = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"]
-                    for key, valueDict in THR.items():
-                        for distance in valueDict.keys():
-                            THR[key][distance] = [valueDict[distance]]
-                else:
-                    for key, valueDict in batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"].items():
-                        for distance in valueDict.keys():
-                            THR[key][distance].append(valueDict[distance])
+                    if THR is None:
+                        THR = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"]
+                        for key, valueDict in THR.items():
+                            for distance in valueDict.keys():
+                                THR[key][distance] = [valueDict[distance]]
+                    else:
+                        for key, valueDict in batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"].items():
+                            for distance in valueDict.keys():
+                                THR[key][distance].append(valueDict[distance])
 
-            # Calculate statistics and plot
-            z_value = 1.96  # for p=0.05
-            for lab in sorted(list(THR.keys())):
-                received_throughput_per_d = {}
-                received_throughput_per_d_error = {}
-                for distance in THR[lab].keys():
-                    received_throughput_per_d[distance] = statistics.mean(THR[lab][distance])
-                    received_throughput_per_d_error[distance] = statistics.stdev(THR[lab][distance])*z_value/((batches)**0.5)
-                axis6[0].errorbar(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), yerr=list(received_throughput_per_d_error.values()), label=lab, color=randcolor())
+                # Calculate statistics and plot
+                z_value = 1.96  # for p=0.05
+                for lab in sorted(list(THR.keys())):
+                    received_throughput_per_d = {}
+                    received_throughput_per_d_error = {}
+                    for distance in THR[lab].keys():
+                        received_throughput_per_d[distance] = statistics.mean(THR[lab][distance])
+                        received_throughput_per_d_error[distance] = statistics.stdev(THR[lab][distance])*z_value/((batches)**0.5)
+                    axis6[0].errorbar(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), yerr=list(received_throughput_per_d_error.values()), label=lab, color=randcolor())
 
-            for lab in sorted(list(TBLER.keys())):
-                corrupted_freq_per_d = {}
-                corrupted_freq_per_d_error = {}
-                for distance in TBLER[lab].keys():
-                    corrupted_freq_per_d[distance] = statistics.mean(TBLER[lab][distance])
-                    corrupted_freq_per_d_error[distance] = statistics.stdev(TBLER[lab][distance])*z_value/((batches)**0.5)
-                axis5[0].errorbar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), yerr=list(corrupted_freq_per_d_error.values()), label=lab, color=randcolor())
+                for lab in sorted(list(TBLER.keys())):
+                    corrupted_freq_per_d = {}
+                    corrupted_freq_per_d_error = {}
+                    for distance in TBLER[lab].keys():
+                        corrupted_freq_per_d[distance] = statistics.mean(TBLER[lab][distance])
+                        corrupted_freq_per_d_error[distance] = statistics.stdev(TBLER[lab][distance])*z_value/((batches)**0.5)
+                    axis5[0].errorbar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), yerr=list(corrupted_freq_per_d_error.values()), label=lab, color=randcolor())
 
 
-            # Set axis labels for corruption rate plot
-            axis5[-1].set_xlabel("Distance (km)")
-            axis5[-1].set_ylabel("Transport Block Corruption Rate (%)")
-            axis5[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
-                             mode="expand", ncol=3, borderaxespad=0, columnspacing=4.0, fontsize=10)
+                # Set axis labels for corruption rate plot
+                axis5[-1].set_xlabel("Distance (km)")
+                axis5[-1].set_ylabel("Transport Block Corruption Rate (%)")
+                axis5[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
+                                 mode="expand", ncol=3, borderaxespad=0, columnspacing=4.0, fontsize=10)
 
-            # Save results to output files for corruption rate
-            fig5.savefig("corruption_rate.png", bbox_inches='tight', dpi=300)
+                # Save results to output files for corruption rate
+                fig5.savefig("corruption_rate.png", bbox_inches='tight', dpi=300)
 
-            # Set axis labels for corruption rate plot
-            axis6[-1].set_xlabel("Distance (km)")
-            axis6[-1].set_ylabel("Received Throughput (Mbps)")
-            axis6[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
-                             mode="expand", ncol=3, borderaxespad=0, fontsize=10)
+                # Set axis labels for corruption rate plot
+                axis6[-1].set_xlabel("Distance (km)")
+                axis6[-1].set_ylabel("Received Throughput (Mbps)")
+                axis6[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
+                                 mode="expand", ncol=3, borderaxespad=0, fontsize=10)
 
-            # Save results to output files for corruption rate
-            fig6.savefig("throughput.png", bbox_inches='tight', dpi=300)
+                # Save results to output files for corruption rate
+                fig6.savefig("throughput.png", bbox_inches='tight', dpi=300)
 
+            pass
+        # end main
         pass
-    # end main
-    pass
