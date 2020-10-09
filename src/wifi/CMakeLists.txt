@@ -114,7 +114,8 @@ set(header_files
         model/wifi-mode.h
         model/ssid.h
         model/wifi-preamble.h
-        model/wifi-phy-standard.h
+        model/wifi-phy-band.h
+        model/wifi-standards.h
         model/yans-wifi-phy.h
         model/spectrum-wifi-phy.h
         model/yans-wifi-channel.h
@@ -216,6 +217,7 @@ set(header_files
         helper/yans-wifi-helper.h
         helper/spectrum-wifi-helper.h
         helper/wifi-mac-helper.h
+        model/wifi-phy-band.h
         )
 
 set(libraries_to_link

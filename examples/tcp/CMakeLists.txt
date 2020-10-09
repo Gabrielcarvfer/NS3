@@ -50,6 +50,12 @@ set(source_files ${name}.cc)
 set(libraries_to_link ${libpoint-to-point} ${libinternet} ${libapplications} ${libflow-monitor})
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
+set(name tcp-linux-reno)
+set(source_files ${name}.cc)
+set(libraries_to_link ${libpoint-to-point} ${libinternet} ${libapplications} ${libtraffic-control} ${libnetwork})
+set(ignore_example 1)
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 set(name dctcp-example)
 set(source_files ${name}.cc)
 set(libraries_to_link ${libcore} ${libnetwork} ${libinternet} ${libpoint-to-point} ${libapplications} ${libtraffic-control})

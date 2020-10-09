@@ -54,11 +54,21 @@ set(files_to_copy)
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 
 
+set(name fatal-example)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${libcore})
+set(files_to_copy)
+set(ignore_example 1)
+build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
+
+
 set(name hash-example)
 set(source_files ${name}.cc)
 set(header_files)
 set(libraries_to_link ${libcore})
 set(files_to_copy)
+set(ignore_example 0)
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 
 
@@ -77,6 +87,7 @@ set(libraries_to_link ${libcore})
 set(files_to_copy)
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 
+
 set(name sample-show-progress)
 set(source_files ${name}.cc)
 set(header_files)
@@ -84,6 +95,15 @@ set(libraries_to_link ${libcore})
 set(files_to_copy)
 build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 
+
+if (${NS3_ENABLE_BUILD_VERSION})
+    set(name build-version-example)
+    set(source_files ${name}.cc)
+    set(header_files)
+    set(libraries_to_link ${libcore})
+    set(files_to_copy)
+    build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
+endif()
 
 
 if(${NS3_REALTIME})
@@ -94,9 +114,11 @@ if(${NS3_REALTIME})
     build_lib_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${files_to_copy}")
 endif()
 
+
 set(name empirical-random-variable-example)
 add_executable(${name} ${name}.cc)
 target_link_libraries(${name} ${libcore} ${libflow-monitor})
+
 
 set(name system-path-examples)
 add_executable(${name} ${name}.cc)

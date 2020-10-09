@@ -54,3 +54,5 @@ configFile.cmake
 cmake-build-relwithdebinfo/
 
 utils/failed_tests.json
+
+cmake-build-minsizerel/

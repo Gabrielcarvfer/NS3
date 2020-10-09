@@ -39,6 +39,7 @@ set(source_files
         model/file-aggregator.cc
         model/gnuplot-aggregator.cc
         model/get-wildcard-matches.cc
+        model/histogram.cc
         )
 
 set(header_files
@@ -66,6 +67,7 @@ set(header_files
         model/file-aggregator.h
         model/gnuplot-aggregator.h
         model/get-wildcard-matches.h
+        model/histogram.h
         )
 
 
@@ -75,6 +77,7 @@ set(test_sources
         test/basic-data-calculators-test-suite.cc
         test/average-test-suite.cc
         test/double-probe-test-suite.cc
+        test/histogram-test-suite.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

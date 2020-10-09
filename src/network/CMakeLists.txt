@@ -143,6 +143,7 @@ set(header_files
         helper/trace-helper.h
         helper/delay-jitter-estimation.h
         helper/simple-net-device-helper.h
+        utils/lollipop-counter.h
         )
 
 set(libraries_to_link ${libcore} ${libstats})
@@ -158,6 +159,8 @@ set(test_sources
         test/pcap-file-test-suite.cc
         test/sequence-number-test-suite.cc
         test/packet-socket-apps-test-suite.cc
+        test/lollipop-counter-test.cc
+        test/test-data-rate.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

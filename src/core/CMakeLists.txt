@@ -19,6 +19,7 @@ endif()
 
 #Check for dependencies and add sources accordingly
 set(rt_sources)
+set(rt_headers)
 if (${NS3_REALTIME})
     set(rt_sources
             model/realtime-simulator-impl.cc
@@ -82,54 +83,60 @@ endif()
 
 set(thread_sources)
 set(thread_headers)
+set(thread_test_sources)
 
-if (${THREADS_FOUND})
-    if(WIN32)
-		set(thread_sources
-				model/win32-fd-reader.cc
-				)
-		set(thread_headers
-				model/win32-fd-reader.h
-				)
-		set(winsock_libraries)
-		if (NOT MSVC) # using pragma for MSVC
-			set(winsock_libraries
-					wsock32
-					ws2_32
+if (${NS3_PTHREAD})
+	if (${THREADS_FOUND})
+		if(WIN32)
+			set(thread_sources
+					model/win32-fd-reader.cc
+					)
+			set(thread_headers
+					model/win32-fd-reader.h
+					)
+			set(winsock_libraries)
+			if (NOT MSVC) # using pragma for MSVC
+				set(winsock_libraries
+						wsock32
+						ws2_32
+						)
+			endif()
+			set(libraries_to_link
+					${libraries_to_link}
+					${winsock_libraries}
+					)
+
+		else()
+			set(thread_sources
+					model/unix-fd-reader.cc
+					)
+			set(thread_headers
+					model/unix-fd-reader.h
 					)
 		endif()
-		set(libraries_to_link
-				${libraries_to_link}
-				${winsock_libraries}
+		set(thread_sources
+				${thread_sources}
+				model/system-thread.cc
+				model/unix-system-mutex.cc
+				model/unix-system-condition.cc
 				)
 
-    else()
-        set(thread_sources
-                model/unix-fd-reader.cc
-                )
-        set(thread_headers
-                model/unix-fd-reader.h
-                )
-    endif()
-	set(thread_sources
-	        ${thread_sources}
-	        model/system-thread.cc
-	        model/unix-system-mutex.cc
-	        model/unix-system-condition.cc
-	        )
+		set(thread_headers
+				${thread_headers}
+				model/system-mutex.h
+				model/system-thread.h
+				model/system-condition.h
+				)
 
-	set(thread_headers
-	        ${thread_headers}
-	        model/system-mutex.h
-	        model/system-thread.h
-	        model/system-condition.h
-	        )
+		set(libraries_to_link
+			${libraries_to_link}
+			pthread
+			)
 
-	set(libraries_to_link
-	    ${libraries_to_link}
-	    ${CMAKE_THREAD_LIBS_INIT}
-	    )
-
+		set(thread_test_sources
+				test/threaded-test-suite.cc
+				)
+	endif()
 endif()
 
 if (UNIX)
@@ -144,6 +151,14 @@ if (UNIX)
 			test/examples-as-tests-test-suite.cc
 			)
 	endif()
+endif()
+
+#Embedded version support
+set(embedded_version_sources)
+set(embedded_version_headers)
+if(${NS3_ENABLE_BUILD_VERSION})
+	set(embedded_version_sources model/version.cc)
+	set(embedded_version_headers model/version.h)
 endif()
 
 #Define core lib sources
@@ -269,6 +284,8 @@ set (header_files
         model/int-to-type.h
         model/attribute.h
         model/attribute-accessor-helper.h
+		model/attribute-container.h
+		model/attribute-container-accessor-helper.h
         model/boolean.h
         model/int64x64.h
         model/int64x64-double.h
@@ -312,6 +329,7 @@ set (header_files
         model/show-progress.h
         model/time-printer.h
 		model/example-as-test.h
+		model/pair.h
         )
 
 set(test_sources
@@ -331,14 +349,16 @@ set(test_sources
         test/ptr-test-suite.cc
         test/sample-test-suite.cc
         test/simulator-test-suite.cc
-        test/threaded-test-suite.cc
         test/time-test-suite.cc
         test/timer-test-suite.cc
         test/traced-callback-test-suite.cc
         test/type-id-test-suite.cc
         test/watchdog-test-suite.cc
+		test/attribute-container-test-suite.cc
+		test/pair-value-test-suite.cc
 		${examples_as_tests_test_sources}
         ${gsl_test_sources}
+		${thread_test_sources}
         )
 
 #Build core lib

@@ -3,6 +3,8 @@ set(name fd-net-device)
 
 set(fd-net-device_creators)
 
+#todo: port the rest of fd-net-devices options introducted in 3.32
+
 if(${NS3_TAP})
     set(tap_sources
             helper/tap-fd-net-device-helper.cc

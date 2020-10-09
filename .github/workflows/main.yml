@@ -16,7 +16,7 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install apt-utils
           sudo apt-get -y install git gcc g++ cmake python make ninja-build
-          sudo apt-get -y install qt5-default
+          #sudo apt-get -y install qt5-default
           sudo apt-get -y install gdb valgrind
           sudo apt-get -y install tcpdump
           sudo apt-get -y install curl unzip tar
@@ -25,7 +25,7 @@ jobs:
         run: |
           mkdir cmake-cache
           cd cmake-cache
-          cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja"  ..
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja"  ..
       - name: Build ns-3
         run: |
           cd cmake-cache
@@ -35,27 +35,31 @@ jobs:
       -  name: Run examples
          run : |
            cd cmake-cache
-           ctest -j 4 --timeout 600
+           ctest -j 4 --timeout 800
 
   Windows_MinGW:
 
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v1
-      - name: Install msys2/mingw64
-        #steps from https://github.com/msys2/MINGW-packages/blob/master/azure-pipelines.yml
-        run: |
-          git clone https://github.com/msys2/msys2-ci-base.git D:\msys64
-          D:\msys64\usr\bin\rm -rf D:\msys64\.git
-          set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
-          D:\msys64\usr\bin\pacman --noconfirm -Syyuu
-          set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
-          D:\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
-          D:\msys64\usr\bin\pacman --noconfirm -Scc
-        shell: cmd
+      # Manual setup
+      #- name: Install msys2/mingw64
+      #  #steps from https://github.com/msys2/MINGW-packages/blob/master/azure-pipelines.yml
+      #  run: |
+      #    git clone https://github.com/msys2/msys2-ci-base.git D:\msys64 # they removed this repo :(
+      #    D:\msys64\usr\bin\rm -rf D:\msys64\.git
+      #    set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+      #    D:\msys64\usr\bin\pacman --noconfirm -Syyuu
+      #    set PATH=D:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
+      #    D:\msys64\usr\bin\pacman --noconfirm --needed -S git base-devel
+      #    D:\msys64\usr\bin\pacman --noconfirm -Scc
+      #  shell: cmd
+      - uses: msys2/setup-msys2@v2
       - name: Install required msys2/mingw64 packages
         run: |
-          set PATH=C:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
           pacman -S --noconfirm unzip
           pacman -S --noconfirm tar
           pacman -S --noconfirm mingw-w64-x86_64-curl
@@ -68,35 +72,25 @@ jobs:
           pacman -S --noconfirm mingw-w64-x86_64-gcc-objc
           pacman -S --noconfirm mingw-w64-x86_64-gdb
           pacman -S --noconfirm mingw-w64-x86_64-make
-          pacman -S --noconfirm mingw-w64-x86_64-python2
-          pacman -S --noconfirm mingw-w64-x86_64-python3
-          pacman -S --noconfirm mingw-w64-x86_64-qt5
+          pacman -S --noconfirm mingw-w64-x86_64-python
           pacman -S --noconfirm mingw-w64-x86_64-ccache
           pacman --noconfirm -Scc
-        shell: cmd
       - name: Configure CMake
         run: |
-          set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
           mkdir cmake-cache
           cd cmake-cache
-          cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" -DAUTOINSTALL_DEPENDENCIES=ON ..
-        shell: cmd
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" -DAUTOINSTALL_DEPENDENCIES=ON ..
       - name: Build ns-3
         run: |
-          set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
           cd cmake-cache
           ninja
-        shell: cmd
       - name: Run tests
-        run: |
-          set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;%WINDIR%;%WINDIR%\System32
-          python3 ./utils/test-runner-script.py
-        shell: cmd
-      -  name: Run examples
-         run : |
-           cd cmake-cache
-           ctest -j 4 --timeout 600
-         shell: cmd
+        run: python ./utils/test-runner-script.py
+      - name: Run examples
+        run : |
+          cd cmake-cache
+          ctest -j 4 --timeout 800
+
   Mac_OS_X:
 
     runs-on: macos-latest
@@ -105,18 +99,18 @@ jobs:
       - uses: actions/checkout@v1
       - name: Install required packages
         run: |
-          brew install ninja cmake qt5 gcc@9
+          brew install ninja cmake gcc@9 #qt5
       - name: Configure CMake
         run: |
-          export PATH=/usr/local/bin:/usr/local/opt/qt/bin:$PATH
+          export PATH=/usr/local/bin:$PATH #:/usr/local/opt/qt/bin
           export CXX=g++-9
           export CC=gcc-9
           mkdir cmake-cache
           cd cmake-cache
-          cmake -DCMAKE_BUILD_TYPE=RELWITHDEBINFO -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" ..
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja" ..
       - name: Build ns-3
         run: |
-          export PATH="/usr/local/opt/qt/bin:$PATH"
+          export PATH="$PATH" #:/usr/local/opt/qt/bin
           cd cmake-cache
           ninja
       -  name: Run tests
@@ -125,7 +119,7 @@ jobs:
       -  name: Run examples
          run : |
            cd cmake-cache
-           ctest -j 4 --timeout 600
+           ctest -j 4 --timeout 800
     #  - name: Clean release with debug artifacts
     #    run: |
     #      rm -Rf ../build

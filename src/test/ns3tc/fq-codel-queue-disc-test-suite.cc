@@ -963,7 +963,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt);
+  void AddPacket (Ptr<FqCoDelQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt);
   void AddPacketWithDelay (Ptr<FqCoDelQueueDisc> queue,Ipv4Header hdr, double delay, uint32_t nPkt);
   void Dequeue (Ptr<FqCoDelQueueDisc> queue, uint32_t nPkt);
   void DequeueWithDelay (Ptr<FqCoDelQueueDisc> queue, double delay, uint32_t nPkt);
