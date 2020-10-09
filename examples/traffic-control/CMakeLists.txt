@@ -27,11 +27,13 @@ set(name tbf-example)
 set(source_files ${name}.cc)
 set(header_files)
 set(libraries_to_link ${libinternet} ${libpoint-to-point} ${libapplications} ${libtraffic-control})
+set(ignore_example 1)
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
 set(name cobalt-vs-codel)
 set(source_files ${name}.cc)
 set(header_files)
 set(libraries_to_link ${libinternet} ${libpoint-to-point} ${libapplications} ${libtraffic-control})
+set(ignore_example 1)
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 

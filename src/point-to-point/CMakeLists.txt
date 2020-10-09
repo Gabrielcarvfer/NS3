@@ -19,7 +19,7 @@ if (${NS3_MPI})
 endif()
 
 set(source_files
-        model/point-to-point-remote-channel.cc
+        ${mpi_sources}
         model/point-to-point-net-device.cc
         model/point-to-point-channel.cc
         model/ppp-header.cc
@@ -27,7 +27,7 @@ set(source_files
         )
 
 set(header_files
-        model/point-to-point-remote-channel.h
+        ${mpi_headers}
         model/point-to-point-net-device.h
         model/point-to-point-channel.h
         model/ppp-header.h
@@ -36,7 +36,7 @@ set(header_files
 
 set(libraries_to_link
         ${libnetwork}
-        ${libmpi}
+        ${mpi_libraries}
         )
 
 set(test_sources

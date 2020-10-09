@@ -144,6 +144,7 @@ set(source_files
         model/rip.cc
         model/rip-header.cc
         helper/rip-helper.cc
+        model/tcp-linux-reno.cc
         )
 
 set(private_header_files
@@ -268,13 +269,13 @@ set(header_files
         model/rip.h
         model/rip-header.h
         helper/rip-helper.h
+        model/tcp-linux-reno.h
         )
 
 set(libraries_to_link
         ${libnetwork}
         ${libcore}
         ${libbridge}
-        ${libmpi}
         ${libtraffic-control}
         )
 
@@ -348,6 +349,8 @@ set(test_sources
         test/ipv4-deduplication-test.cc
         test/tcp-dctcp-test.cc
         test/tcp-syn-connection-failed-test.cc
+        test/tcp-linux-reno-test.cc
+        test/tcp-pacing-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

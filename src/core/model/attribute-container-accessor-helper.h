@@ -30,7 +30,7 @@
 #include <list>
 
 namespace ns3 {
-
+#undef I //definition collision with complex.h I=sqrt(-1)
 /**
  * \ingroup attributeimpl
  *

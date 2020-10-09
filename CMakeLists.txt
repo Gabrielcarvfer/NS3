@@ -10,6 +10,7 @@ find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     SET_PROPERTY(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
     SET_PROPERTY(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+    message(STATUS "CCache is enabled")
 endif(CCACHE_FOUND)
 
 #######################################
@@ -19,13 +20,15 @@ project(NS3 CXX C)
 
 include(buildsupport/macros_and_definitions.cmake)
 
-set(NS3_VER 3.30.1)
+set(NS3_VER 3.32.0)
 
 option(NS3_LOG "Enable logging to be built" ON)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
 
 option(NS3_EXAMPLES "Enable examples to be built" OFF)
+
+option(NS3_ENABLE_BUILD_VERSION "Embed version info into libraries" OFF)
 
 option(NS3_SANITIZE "Run Google sanitizers" OFF)
 
@@ -62,7 +65,7 @@ option(NS3_NSC "Build with NSC" OFF)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 
-option(NS3_PTHREAD "Build with pthread support" ON)
+option(NS3_PTHREAD "Build with pthread support" TRUE)
 
 option(NS3_REALTIME "Build with realtime support" OFF)
 
@@ -81,6 +84,8 @@ SUBDIRLIST(libs_to_build ${CMAKE_SOURCE_DIR}/src)
 #Scan contribution libraries
 SUBDIRLIST(contribution_libraries_to_build ${CMAKE_SOURCE_DIR}/contrib)
 
+#Hold list of 3rd-party libraries to build
+set(3rd_party_libraries_to_build)
 #######################################
 # Process options                     #
 #######################################
@@ -89,9 +94,9 @@ process_options()
 #######################################
 # Add subdirectories                  #
 #######################################
-
-#Build NS3 3rd-party library support
-#add_subdirectory(3rd-party)
+foreach(libname ${3rd_party_libraries_to_build})
+    add_subdirectory(${PROJECT_SOURCE_DIR}/3rd-party/${libname})
+endforeach()
 
 #Build NS3 library core
 add_subdirectory(src)
