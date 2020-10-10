@@ -113,13 +113,27 @@ if (${NS3_PTHREAD})
 			set(thread_headers
 					model/unix-fd-reader.h
 					)
+			set(libraries_to_link
+					${libraries_to_link}
+					pthread
+					)
 		endif()
-		set(thread_sources
-				${thread_sources}
-				model/system-thread.cc
-				model/unix-system-mutex.cc
-				model/unix-system-condition.cc
-				)
+
+		if(MSVC)
+			set(thread_sources
+					${thread_sources}
+					model/system-thread.cc
+					model/win32-system-mutex.cc
+					model/win32-system-condition.cc
+					)
+		else()
+			set(thread_sources
+					${thread_sources}
+					model/system-thread.cc
+					model/unix-system-mutex.cc
+					model/unix-system-condition.cc
+					)
+		endif()
 
 		set(thread_headers
 				${thread_headers}
@@ -127,11 +141,6 @@ if (${NS3_PTHREAD})
 				model/system-thread.h
 				model/system-condition.h
 				)
-
-		set(libraries_to_link
-			${libraries_to_link}
-			pthread
-			)
 
 		set(thread_test_sources
 				test/threaded-test-suite.cc

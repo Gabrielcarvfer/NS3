@@ -68,6 +68,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef _MSC_VER
+#include<filesystem>
+#endif
+
 /**
  * \def SYSTEM_PATH_SEP
  * System-specific path separator used between directory names.
@@ -131,6 +135,9 @@ std::tuple<std::list<std::string>, bool> ReadFilesNoThrow (std::string path)
     }
   while (FindNextFile (hFind, &fileData));
   FindClose (hFind);
+#elif defined (_MSC_VER)
+  for(auto& p: std::filesystem::directory_iterator(path))
+      files.push_back(p.path().filename().string());
 #else
 #error "No support for reading a directory on this platform"
 #endif
@@ -198,7 +205,7 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__WIN32__)
+#elif defined (__WIN32__) and not defined(_MSC_VER)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *
@@ -313,8 +320,8 @@ std::string Join (std::list<std::string>::const_iterator begin,
 std::list<std::string> ReadFiles (std::string path)
 {
   NS_LOG_FUNCTION (path);
+  std::list<std::string> files;
 #if defined HAVE_OPENDIR
-    std::list<std::string> files;
   DIR *dp = opendir (path.c_str ());
   if (dp == NULL)
     {
@@ -327,6 +334,9 @@ std::list<std::string> ReadFiles (std::string path)
       de = readdir (dp);
     }
   closedir (dp);
+#elif defined (_MSC_VER)
+    for(auto& p: std::filesystem::directory_iterator(path))
+        files.push_back(p.path().filename().string());
 #else
 #error "No support for reading a directory on this platform"
 #endif

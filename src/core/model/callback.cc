@@ -133,7 +133,9 @@ CallbackImplBase::Demangle (const std::string& mangled)
 std::string
 ns3::CallbackImplBase::Demangle (const std::string& mangled)
 {
+#ifndef _MSC_VER
   NS_LOG_FUNCTION (this << mangled);
+#endif
   return mangled;
 }
 

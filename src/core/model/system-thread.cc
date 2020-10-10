@@ -98,7 +98,57 @@ SystemThread::Equals (SystemThread::ThreadId id)
   NS_LOG_FUNCTION (id);
   return (pthread_equal (pthread_self (), id) != 0);
 }
+#elif __WIN32__
 
+    SystemThread::SystemThread (Callback<void> callback)
+            : m_callback (callback)
+    {
+        NS_LOG_FUNCTION (this << &callback);
+    }
+
+    SystemThread::~SystemThread ()
+    {
+        NS_LOG_FUNCTION (this);
+    }
+
+    void
+    SystemThread::Start (void)
+    {
+        NS_LOG_FUNCTION (this);
+        m_thread = new std::thread(&SystemThread::DoRun, (void*)this);
+    }
+
+    void
+    SystemThread::Join (void)
+    {
+        NS_LOG_FUNCTION (this);
+
+        m_thread->join();
+    }
+
+    void *
+    SystemThread::DoRun (void *arg)
+    {
+        NS_LOG_FUNCTION (arg);
+
+        SystemThread *self = static_cast<SystemThread *> (arg);
+        self->m_callback ();
+
+        return 0;
+    }
+    SystemThread::ThreadId
+    SystemThread::Self (void)
+    {
+        NS_LOG_FUNCTION_NOARGS ();
+        return std::this_thread::get_id();
+    }
+
+    bool
+    SystemThread::Equals (SystemThread::ThreadId id)
+    {
+        NS_LOG_FUNCTION (id);
+        return std::this_thread::get_id() == id;
+    }
 #endif /* HAVE_PTHREAD_H */
 
 } // namespace ns3

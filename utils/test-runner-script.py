@@ -2,7 +2,7 @@
 import subprocess, os, json, sys
 
 runner_name = "test-runner" if os.name != "nt" else "test-runner.exe"
-dot_path = "."+ os.sep 
+dot_path = "." + os.sep
 
 cwd_path = os.getcwd()
 cwd_components = cwd_path.split(os.sep)
@@ -21,9 +21,9 @@ cwd_offset_dict = { "ns-3-dev"  : len(cwd_components),
 					}
 
 cwd_offset = cwd_offset_dict[cwd_components[-1]]
-ns3_path = "/".join(cwd_components[:cwd_offset])
-bin_path = "/".join([ns3_path,"build","bin",""])
-utils_path = "/".join([ns3_path,"utils",""])
+ns3_path = os.sep.join(cwd_components[:cwd_offset])
+bin_path = os.sep.join([ns3_path, "build", "bin", ""])
+utils_path = os.sep.join([ns3_path, "utils", ""])
 
 
 #Run a test case and return output + error 

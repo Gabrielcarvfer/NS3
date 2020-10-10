@@ -24,7 +24,9 @@
 #include "ns3/core-config.h"
 #include "callback.h"
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+    #include <pthread.h>
+#elif __WIN32__
+    #include <thread>
 #endif /* HAVE_PTHREAD_H */
 
 /**
@@ -60,6 +62,8 @@ public:
 #ifdef HAVE_PTHREAD_H
   /** Type alias for the system-dependent thread object. */
   typedef pthread_t ThreadId;
+#elif __WIN32__
+    typedef std::thread::id ThreadId;
 #endif
 
   /**
@@ -168,6 +172,17 @@ private:
 
   Callback<void> m_callback;  /**< The main function for this thread when launched. */
   pthread_t m_thread;  /**< The thread id of the child thread. */
+#elif __WIN32__
+    /**
+       * Invoke the callback in the new thread.
+       *
+       * @param [in] arg This SystemThread instance to communicate to the newly
+       *                 launched thread.
+       */
+    static void * DoRun (void *arg);
+
+    Callback<void> m_callback;  /**< The main function for this thread when launched. */
+    std::thread* m_thread;  /**< The thread id of the child thread. */
 #endif
 };
 

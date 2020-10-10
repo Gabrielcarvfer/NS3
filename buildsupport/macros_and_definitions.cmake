@@ -90,11 +90,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" AND NOT APPLE)
     set(BUILD_SHARED_LIBS TRUE)
 elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Intel")
     # using Intel C++
-elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
-    # using Visual Studio C++
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
-    set(BUILD_SHARED_LIBS TRUE)
-    set(CMAKE_MSVC_PARALLEL ${NumThreads})
+else()
 endif()
 
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND APPLE)
@@ -327,14 +323,28 @@ macro(process_options)
         set(NS3_PYTORCH OFF)
     endif()
 
+    if(MSVC)
+        # using Visual Studio C++
+        set(CMAKE_CXX_STANDARD 17) #c++17 for inline variables in Windows and filesystem support for MSVC
+        set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+        # MSVC is dumb and need explicit flag to enable exceptions support
+        # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?redirectedfrom=MSDN&view=vs-2019
+        add_definitions(/EHa)
+
+        # Suppress warnings
+        #add_definitions(/W0)
+
+        set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+        set(BUILD_SHARED_LIBS TRUE)
+        set(CMAKE_MSVC_PARALLEL ${NumThreads})
+    endif()
+
     #Set C++ standard
     if(${NS3_PYTORCH})
         set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
         set(CMAKE_CXX_STANDARD_REQUIRED OFF) #ABI requirements for PyTorch affect this
         add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS -DNS3_PYTORCH)
-    else()
-        set(CMAKE_CXX_STANDARD 11) #c++17 for inline variables in Windows
-        set(CMAKE_CXX_STANDARD_REQUIRED ON)
     endif()
 
     if(${NS3_SANITIZE})
@@ -408,7 +418,10 @@ macro(process_options)
         else()
             include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
             set(THREADS_FOUND TRUE)
-            set(HAVE_PTHREAD_H TRUE) # for core-config.h
+            if(${CMAKE_USE_WIN32_THREADS_INIT})
+            else()
+                set(HAVE_PTHREAD_H TRUE) # for core-config.h
+            endif()
         endif()
     endif()
 
@@ -570,22 +583,27 @@ macro(process_options)
             message(WARNING "Int128 not found. Falling back to long double.")
             set(INT64X64 "DOUBLE")
         endif()
-    elseif(INT64X64 STREQUAL "DOUBLE")
+    endif()
+    
+    if(INT64X64 STREQUAL "DOUBLE")
         #WSLv1 has a long double issue that will result in at least 5 tests crashing https://github.com/microsoft/WSL/issues/830
         include(CheckTypeSize)
         CHECK_TYPE_SIZE("double" SIZEOF_DOUBLE)
         CHECK_TYPE_SIZE("long double" SIZEOF_LONG_DOUBLE)
-        if (${SIZEOF_LONG_DOUBLE} EQUAL ${SIZEOF_DOUBLE})
-            message(WARNING "Long double has the wrong size: LD ${SIZEOF_LONG_DOUBLE} vs D ${SIZEOF_DOUBLE}. Falling back to CAIRO.")
-            set(INT64X64 "CAIRO")
+        if (MSVC)
+            set(INT64X64_USE_DOUBLE TRUE) # MSVC is special (not in a good way) and uses 64 bit long double
         else()
-            set(INT64X64_USE_DOUBLE TRUE)
+            if (${SIZEOF_LONG_DOUBLE} EQUAL ${SIZEOF_DOUBLE})
+                message(WARNING "Long double has the wrong size: LD ${SIZEOF_LONG_DOUBLE} vs D ${SIZEOF_DOUBLE}. Falling back to CAIRO.")
+                set(INT64X64 "CAIRO")
+            else()
+                set(INT64X64_USE_DOUBLE TRUE)
+            endif()
         endif()
-    elseif(INT64X64 STREQUAL "CAIRO")
+    endif()
+
+    if(INT64X64 STREQUAL "CAIRO")
         set(INT64X64_USE_CAIRO TRUE)
-    else()
-        message(FATAL_ERROR "Try another int64x64 implementation")
-        set(INT64X64)
     endif()
 
     include(CheckIncludeFileCXX)
@@ -813,10 +831,6 @@ macro (build_example name source_files header_files libraries_to_link)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
 
-    if (COMMAND cotire)
-        cotire(${name})
-    endif()
-
     #Link the shared library with the libraries passed
     target_link_libraries(${name}  ${LIB_AS_NEEDED_PRE} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
 
@@ -865,10 +879,6 @@ endmacro()
 macro (build_lib_example name source_files header_files libraries_to_link files_to_copy)
     #Create shared library with sources and headers
     add_executable(${name} "${source_files}" "${header_files}")
-
-    if (COMMAND cotire)
-        cotire(${name})
-    endif()
 
     #Link the shared library with the libraries passed
     target_link_libraries(${name} ${LIB_AS_NEEDED_PRE} ${lib${libname}} ${libraries_to_link} ${LIB_AS_NEEDED_POST})
