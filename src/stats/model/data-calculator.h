@@ -28,7 +28,7 @@
 namespace ns3 {
 
 #ifndef _MSC_VER
- constexpr const double NaN = (double) 0.0 / (double) 0.0; //!< Stored representation of NaN
+const double NaN = (double)0.0/(double)0.0; //!< Stored representation of NaN 
  #else
 const double NaN = nan ((const char*)0);
 #endif
