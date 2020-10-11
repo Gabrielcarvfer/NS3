@@ -23,6 +23,9 @@
 
 namespace ns3 {
 
+#ifndef _MSC_VER
+Ptr<SpectrumModel> SpectrumModel300Khz300GhzLog;
+#endif
 
 class static_SpectrumModel300Khz300GhzLog_initializer
 {

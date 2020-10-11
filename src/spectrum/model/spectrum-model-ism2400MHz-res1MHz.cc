@@ -23,6 +23,9 @@
 
 namespace ns3 {
 
+#ifndef _MSC_VER
+Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz;
+#endif
 
 class static_SpectrumModelIsm2400MhzRes1Mhz_initializer
 {

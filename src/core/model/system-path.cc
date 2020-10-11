@@ -40,15 +40,17 @@
     #include <sys/types.h>
 #endif
 
+#ifdef __MINGW64__
+#define HAVE_MKDIR_H
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#undef min
+#undef max
+#endif
+
 #if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
     /** Do we have a \c makedir function? */
     #define HAVE_MKDIR_H
-    #if __WIN32__
-        #define WIN32_LEAN_AND_MEAN
-        #include <windows.h>
-        #undef min
-        #undef max
-    #endif
     #include <sys/types.h>
     #include <sys/stat.h>
 #endif
