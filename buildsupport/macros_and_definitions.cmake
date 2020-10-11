@@ -330,10 +330,10 @@ macro(process_options)
 
         # MSVC is dumb and need explicit flag to enable exceptions support
         # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?redirectedfrom=MSDN&view=vs-2019
-        add_definitions(/EHa)
+        add_definitions(/EHs)
 
         # Suppress warnings
-        add_definitions(/W0)
+        #add_definitions(/W0)
 
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
         set(BUILD_SHARED_LIBS TRUE)

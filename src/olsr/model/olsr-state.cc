@@ -523,7 +523,7 @@ OlsrState::FindAssociationTuple (const Ipv4Address &gatewayAddr, const Ipv4Addre
   for (AssociationSet::iterator it = m_associationSet.begin ();
        it != m_associationSet.end (); it++)
     {
-      if (it->gatewayAddr == gatewayAddr and it->networkAddr == networkAddr and it->netmask == netmask)
+      if (it->gatewayAddr == gatewayAddr && it->networkAddr == networkAddr && it->netmask == netmask)
         {
           return &(*it);
         }

@@ -49,7 +49,7 @@ public:
   void Unlock (void);       /**< Release ownership of the mutex. */
 
 private:
-  std::unique_lock<std::mutex> m_mutex;  /**< The mutex. */
+  std::mutex m_mutex{}; /**< The mutex. */
 };
 
 SystemMutexPrivate::SystemMutexPrivate ()

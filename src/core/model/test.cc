@@ -1077,9 +1077,9 @@ TestRunnerImpl::Run (int argc, char *argv[])
       std::cerr << "Error:  no tests match the requested string" << std::endl;
       return 1;
     }
-  for (std::list<TestCase *>::const_iterator i = tests.begin (); i != tests.end (); ++i)
+  for (auto &i : tests)
     {
-      TestCase *test = *i;
+      TestCase *test = i;
 
 #ifdef ENABLE_DES_METRICS
       {
