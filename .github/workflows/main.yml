@@ -133,7 +133,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - uses: seanmiddleditch/gha-setup-ninja@master
+    - uses: actions/setup-python@v2
     - name: Configure CMake
       run: |
         %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
@@ -149,7 +149,7 @@ jobs:
       shell: cmd
     - name: Run tests
       run: |
-        python3 ./utils/test-runner-script.py
+        python ./utils/test-runner-script.py
       shell: cmd
     - name: Run examples
       run : |
