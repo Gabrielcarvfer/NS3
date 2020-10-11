@@ -54,6 +54,8 @@
     #undef CreateFile
     #undef Rectangle
     #undef interface    //MSYS2 defines "interface" as a struct in mingw/include/rpc.h
+    #undef min
+    #undef max
 #else
     #include <netinet/in.h>
     #include <sys/socket.h>
@@ -68,7 +70,9 @@ NS_LOG_COMPONENT_DEFINE ("NscTcpL4Protocol");
 NS_OBJECT_ENSURE_REGISTERED (NscTcpL4Protocol);
 
 /* see http://www.iana.org/assignments/protocol-numbers */
+#ifndef _MSC_VER
 const uint8_t NscTcpL4Protocol::PROT_NUMBER = 6;
+#endif
 
 /**
  * \ingroup nsctcp

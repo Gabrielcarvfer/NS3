@@ -24,10 +24,6 @@
 namespace ns3 {
 
 
-Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz;
-
-
-
 class static_SpectrumModelIsm2400MhzRes1Mhz_initializer
 {
 public:

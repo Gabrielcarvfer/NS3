@@ -28,6 +28,8 @@
     #include <winsock2.h>
     #include <windows.h>
     #include <ws2tcpip.h>
+    #undef min
+    #undef max
 #else
     #include <unistd.h>
     #include <sys/socket.h>

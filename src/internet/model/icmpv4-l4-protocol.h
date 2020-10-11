@@ -50,8 +50,11 @@ public:
    * \return the object TypeId
    */
   static TypeId GetTypeId (void);
-  static const uint8_t PROT_NUMBER; //!< ICMP protocol number (0x1)
-
+#ifndef _MSC_VER
+        static const uint16_t PROT_NUMBER;//!< ICMP protocol number (0x1)
+#else
+        constexpr static const uint16_t PROT_NUMBER = 0x1;
+#endif
   Icmpv4L4Protocol ();
   virtual ~Icmpv4L4Protocol ();
 

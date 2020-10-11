@@ -32,6 +32,10 @@
 #include <ostream>
 #include <set>
 
+#ifdef __WIN32__
+#undef min
+#endif
+
 /**
  * \file
  * \ingroup time
@@ -656,8 +660,11 @@ private:
    *  we add a call to StaticInit (below) to every compilation unit which
    *  includes nstime.h.
    */
-  static MarkedTimes * g_markingTimes;
-
+#ifdef _MSC_VER
+  inline static MarkedTimes * g_markingTimes = {}; //requires c++17
+#else
+static MarkedTimes * g_markingTimes;
+#endif
 public:
   /**
    *  Function to force static initialization of Time.

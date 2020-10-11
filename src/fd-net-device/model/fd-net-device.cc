@@ -38,6 +38,8 @@
 
 #ifdef __WIN32__
     #include <windows.h>
+    #undef min
+    #undef max
 #else
     #include <unistd.h>
     #include <arpa/inet.h>

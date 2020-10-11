@@ -65,7 +65,7 @@ option(NS3_NSC "Build with NSC" OFF)
 
 option(NS3_NETANIM "Build netanim support" OFF)
 
-option(NS3_PTHREAD "Build with pthread support" TRUE)
+option(NS3_PTHREAD "Build with pthread support" ON)
 
 option(NS3_REALTIME "Build with realtime support" OFF)
 
@@ -102,7 +102,7 @@ endforeach()
 add_subdirectory(src)
 
 #Build NS library examples
-add_subdirectory(examples)
+#add_subdirectory(examples)
 
 #Build scratch/simulation scripts
 add_subdirectory(scratch)

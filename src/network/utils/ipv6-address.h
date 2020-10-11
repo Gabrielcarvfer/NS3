@@ -685,7 +685,7 @@ inline bool operator != (const Ipv6Prefix& a, const Ipv6Prefix& b)
  * \class Ipv6AddressHash
  * \brief Hash function class for IPv6 addresses.
  */
-class Ipv6AddressHash : public std::unary_function<Ipv6Address, size_t>
+class Ipv6AddressHash : public spp_unary_function<Ipv6Address, size_t>
 {
 public:
   /**

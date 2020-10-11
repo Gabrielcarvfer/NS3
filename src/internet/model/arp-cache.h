@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 #include <list>
+#include <unordered_map>
 #include "ns3/simulator.h"
 #include "ns3/callback.h"
 #include "ns3/packet.h"
@@ -313,11 +314,11 @@ private:
   /**
    * \brief ARP Cache container
    */
-  typedef sgi::hash_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash> Cache;
+  typedef std::unordered_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash> Cache;
   /**
    * \brief ARP Cache container iterator
    */
-  typedef sgi::hash_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash>::iterator CacheI;
+  typedef std::unordered_map<Ipv4Address, ArpCache::Entry *, Ipv4AddressHash>::iterator CacheI;
 
   virtual void DoDispose (void);
 

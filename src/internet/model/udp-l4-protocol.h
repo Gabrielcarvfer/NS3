@@ -65,8 +65,11 @@ public:
    * \return the object TypeId
    */
   static TypeId GetTypeId (void);
-  static const uint8_t PROT_NUMBER; //!< protocol number (0x11)
-
+#ifndef _MSC_VER
+        static const uint16_t PROT_NUMBER;//!< protocol number (0x11)
+#else
+        constexpr static const uint16_t PROT_NUMBER = 0x11;
+#endif
   UdpL4Protocol ();
   virtual ~UdpL4Protocol ();
 

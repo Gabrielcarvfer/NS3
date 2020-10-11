@@ -72,13 +72,12 @@ endif()
 
 
 
-set(valgrind_sources)
 set(valgrind_headers)
-if (NS3_VALGRIND)
-	set(valgrind_headers
-	        model/valgrind.h
-		)
-endif()
+
+set(valgrind_headers
+        model/valgrind.h
+	)
+
 
 
 set(thread_sources)

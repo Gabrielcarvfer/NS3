@@ -55,7 +55,9 @@ NS_LOG_COMPONENT_DEFINE ("Ipv6L3Protocol");
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv6L3Protocol);
 
+#ifndef _MSC_VER
 const uint16_t Ipv6L3Protocol::PROT_NUMBER = 0x86DD;
+#endif
 
 TypeId Ipv6L3Protocol::GetTypeId ()
 {

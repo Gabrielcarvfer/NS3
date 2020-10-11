@@ -26,9 +26,11 @@
 
 namespace ns3 {
 
-
+#ifndef _MSC_VER
 extern Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz;
-
+#else
+static Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz = 0;
+#endif
 
 }
 

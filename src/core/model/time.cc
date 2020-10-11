@@ -40,7 +40,10 @@ NS_LOG_COMPONENT_DEFINE_MASK ("Time", ns3::LOG_PREFIX_TIME);
 
 // The set of marked times
 // static
+#ifdef _MSC_VER
+#else
 Time::MarkedTimes * Time::g_markingTimes = 0;
+#endif
 
 /**
  * \internal

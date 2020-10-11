@@ -8,6 +8,10 @@ if (${NS3_TESTS})
 
         add_executable(test-runner test-runner.cc ${local-ns3-libs-tests} $<TARGET_OBJECTS:${libtest}>)
         target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${libraries_to_link}  ${LIB_AS_NEEDED_POST})
+
+        if (MSVC)
+            target_link_options(test-runner PUBLIC /OPT:NOREF)
+        endif()
     else()
         add_executable(test-runner test-runner.cc)
         target_link_libraries(test-runner ${LIB_AS_NEEDED_PRE} ${local-ns3-libs} ${local-ns3-libs-tests} ${LIB_AS_NEEDED_POST})

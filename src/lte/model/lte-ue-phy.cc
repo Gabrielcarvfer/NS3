@@ -1447,7 +1447,7 @@ void
 LteUePhy::DoSetDlBandwidth (uint16_t dlBandwidth)
 {
   NS_LOG_FUNCTION (this << (uint32_t) dlBandwidth);
-  if (m_dlBandwidth != dlBandwidth or !m_dlConfigured)
+  if ((m_dlBandwidth != dlBandwidth) || !m_dlConfigured)
     {
       m_dlBandwidth = dlBandwidth;
 

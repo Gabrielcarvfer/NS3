@@ -113,7 +113,7 @@ if __name__ == '__main__':
 		tmp = tmp.decode()
 		os.chdir(cwd_path)
 
-		tests = tmp.replace("\r","").split("\n")[:-1]
+		tests = tmp.replace("\r", "").split("\n")[:-1]
 
 		#If there is a failed tests file, load
 		have_previous, previous_results, previously_failed_tests = load_previous(dumpfile)

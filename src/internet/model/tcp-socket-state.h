@@ -148,6 +148,7 @@ public:
                         *  This state is used for tracing.                                                               */
   } EcnState_t;
 
+#ifndef _MSC_VER
   /**
    * \brief Literal names of TCP states for use in log messages
    */
@@ -157,7 +158,17 @@ public:
    * \brief Literal names of ECN states for use in log messages
    */
   static const char* const EcnStateName[TcpSocketState::ECN_CWR_SENT + 1];
+#else
+  /**
+   * \brief Literal names of TCP states for use in log messages
+   */
+  inline static const char* const TcpCongStateName[TcpSocketState::CA_LAST_STATE] = {"CA_OPEN", "CA_DISORDER", "CA_CWR", "CA_RECOVERY", "CA_LOSS"};
 
+  /**
+   * \brief Literal names of ECN states for use in log messages
+   */
+  inline static const char* const EcnStateName[TcpSocketState::ECN_CWR_SENT + 1] = {"ECN_DISABLED", "ECN_IDLE", "ECN_CE_RCVD", "ECN_SENDING_ECE", "ECN_ECE_RCVD", "ECN_CWR_SENT"};
+#endif
   // Congestion control
   TracedValue<uint32_t>  m_cWnd             {0}; //!< Congestion window
   TracedValue<uint32_t>  m_cWndInfl         {0}; //!< Inflated congestion window trace (used only for backward compatibility purpose)

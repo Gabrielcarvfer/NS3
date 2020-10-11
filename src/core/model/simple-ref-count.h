@@ -29,6 +29,11 @@
 #include <stdint.h>
 #include <limits>
 
+#ifdef __WIN32__
+#undef min
+#undef max
+#endif
+
 /**
  * \file
  * \ingroup ptr

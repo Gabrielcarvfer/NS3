@@ -1307,7 +1307,7 @@ CqaFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sche
           break;
         }
 
-      while (availableRBGs.size ()>0 and itCurrentGroup->second.size ()>0)
+      while (availableRBGs.size ()>0 && itCurrentGroup->second.size ()>0)
         {
           bool currentRBchecked = false;
           int currentRB = *(availableRBGs.begin ());

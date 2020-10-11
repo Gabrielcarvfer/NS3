@@ -34,7 +34,9 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <cstdlib>
 
 

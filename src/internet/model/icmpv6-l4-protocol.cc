@@ -35,6 +35,7 @@
 #include "ipv6-l3-protocol.h"
 #include "ipv6-interface.h"
 #include "icmpv6-l4-protocol.h"
+#include "ipv4-interface.h"
 
 namespace ns3 {
 
@@ -42,7 +43,9 @@ NS_LOG_COMPONENT_DEFINE ("Icmpv6L4Protocol");
 
 NS_OBJECT_ENSURE_REGISTERED (Icmpv6L4Protocol);
 
+#ifndef _MSC_VER
 const uint8_t Icmpv6L4Protocol::PROT_NUMBER = 58;
+#endif
 
 //const uint8_t Icmpv6L4Protocol::MAX_INITIAL_RTR_ADVERT_INTERVAL = 16; // max initial RA initial interval.
 //const uint8_t Icmpv6L4Protocol::MAX_INITIAL_RTR_ADVERTISEMENTS = 3;   // max initial RA transmission.

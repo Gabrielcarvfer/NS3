@@ -60,6 +60,8 @@
     #undef CreateFile
     #undef Rectangle
     #undef interface    //MSYS2 defines "interface" as a struct in mingw/include/rpc.h
+    #undef min
+    #undef max
 #else
     #include <netinet/in.h>
     #include <sys/socket.h>

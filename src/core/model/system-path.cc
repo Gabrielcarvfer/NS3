@@ -46,6 +46,8 @@
     #if __WIN32__
         #define WIN32_LEAN_AND_MEAN
         #include <windows.h>
+        #undef min
+        #undef max
     #endif
     #include <sys/types.h>
     #include <sys/stat.h>
@@ -205,7 +207,7 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__WIN32__) and not defined(_MSC_VER)
+#elif defined (__WIN32__) && !defined(_MSC_VER)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *

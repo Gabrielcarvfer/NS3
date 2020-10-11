@@ -26,7 +26,8 @@
 #include "ns3/simulator.h"
 
 namespace ns3 {
-extern const double NaN; //!< Stored representation of NaN
+
+const double NaN = (double)0.0/(double)0.0; //!< Stored representation of NaN
 
 /**
  * \brief true if x is NaN

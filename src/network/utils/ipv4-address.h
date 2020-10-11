@@ -435,7 +435,7 @@ inline bool operator < (const Ipv4Address &a, const Ipv4Address &b)
  *
  * \brief Class providing an hash for IPv4 addresses
  */
-class Ipv4AddressHash : public std::unary_function<Ipv4Address, size_t> {
+class Ipv4AddressHash : public spp_unary_function<Ipv4Address, size_t> {
 public:
   /**
    * Returns the hash of the address

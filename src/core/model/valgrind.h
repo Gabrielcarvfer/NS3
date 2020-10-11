@@ -70,6 +70,9 @@
    problem, you can compile with the NVALGRIND symbol defined (gcc
    -DNVALGRIND) so that client requests are not even compiled in.  */
 
+#ifdef _MSC_VER
+#define RUNNING_ON_VALGRIND false
+#else
 #ifndef __VALGRIND_H
 #define __VALGRIND_H
 
@@ -5622,5 +5625,5 @@ VALGRIND_PRINTF_BACKTRACE(const char *format, ...)
 #undef PLAT_mips64_linux
 
 #endif   /* __VALGRIND_H */
-
+#endif
 /* *NS_CHECK_STYLE_ON* */

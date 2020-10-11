@@ -29,6 +29,23 @@
 
 namespace ns3 {
 
+//std::unary_function got deprecated in C++11 and removed in C++17, it got replaced with something like this
+// (https://github.com/greg7mdp/sparsepp/commit/1ca7189fe81ee8c59bf08196852f70843a68a63a)
+template <class ArgumentType, class ResultType>
+struct spp_unary_function
+{
+    typedef ArgumentType argument_type;
+    typedef ResultType result_type;
+};
+
+template <class ArgumentType1, class ArgumentType2, class ResultType>
+struct spp_binary_function
+{
+    typedef ArgumentType1 argument_type1;
+    typedef ArgumentType1 argument_type2;
+    typedef ResultType result_type;
+};
+
 /**
  * \ingroup network
  * \defgroup address Address

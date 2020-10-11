@@ -24,10 +24,6 @@
 namespace ns3 {
 
 
-Ptr<SpectrumModel> SpectrumModel300Khz300GhzLog;
-
-
-
 class static_SpectrumModel300Khz300GhzLog_initializer
 {
 public:

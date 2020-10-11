@@ -28,6 +28,10 @@
 #include "ns3/type-id.h"
 #include "buffer.h"
 
+#ifdef __WIN32__
+#undef max
+#endif
+
 namespace ns3 {
 
 class Chunk;

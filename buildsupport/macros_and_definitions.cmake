@@ -333,7 +333,7 @@ macro(process_options)
         add_definitions(/EHa)
 
         # Suppress warnings
-        #add_definitions(/W0)
+        add_definitions(/W0)
 
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
         set(BUILD_SHARED_LIBS TRUE)

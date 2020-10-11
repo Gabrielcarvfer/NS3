@@ -20,10 +20,10 @@ endif()
 
 set(source_files
         ${nsc_sources}
+        model/ipv4-interface.cc
         model/ip-l4-protocol.cc
         model/udp-header.cc
         model/tcp-header.cc
-        model/ipv4-interface.cc
         model/ipv4-l3-protocol.cc
         model/ipv4-end-point.cc
         model/udp-l4-protocol.cc
