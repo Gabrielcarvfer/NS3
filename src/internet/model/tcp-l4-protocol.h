@@ -85,9 +85,9 @@ public:
    */
   static TypeId GetTypeId (void);
 #ifndef _MSC_VER
-        static const uint16_t PROT_NUMBER;//!< protocol number (0x6)
+        static const uint8_t PROT_NUMBER;//!< protocol number (0x6)
 #else
-        constexpr static const uint16_t PROT_NUMBER = 0x6;
+        constexpr static const uint8_t PROT_NUMBER = 0x6;
 #endif
 
   TcpL4Protocol ();

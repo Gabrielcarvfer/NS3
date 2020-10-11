@@ -63,9 +63,9 @@ public:
    * \brief ICMPv6 protocol number (58).
    */
 #ifndef _MSC_VER
-        static const uint16_t PROT_NUMBER;//!< protocol number (0x58)
+        static const uint8_t PROT_NUMBER;//!< protocol number (0x58)
 #else
-        constexpr static const uint16_t PROT_NUMBER = 0x58;
+        constexpr static const uint8_t PROT_NUMBER = 0x58;
 #endif
 
   /**
