@@ -367,8 +367,7 @@ LteUplinkSrsSinrTestCase::DoRun (void)
   int numOfIntfSignals = 4;
   int numOfSignals = numOfDataSignals + numOfIntfSignals;
 
-  std::vector<uint16_t> pbCellId;
-  pbCellId.reserve(numOfSignals);
+  std::vector<uint16_t> pbCellId(numOfSignals,0);
   
   
   

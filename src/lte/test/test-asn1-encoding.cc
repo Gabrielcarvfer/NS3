@@ -51,10 +51,8 @@ public:
   static std::string sprintPacketContentsHex (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
-    std::vector<uint8_t> buffer;
-    buffer.reserve(psize);
-    std::vector<char> sbuffer;
-    sbuffer.reserve(psize * 3);
+    std::vector<uint8_t> buffer(psize, 0);
+    std::vector<char> sbuffer(psize * 3,0);
     pkt->CopyData (buffer.data(), psize);
     for (uint32_t i = 0; i < psize; i++)
       {
@@ -71,8 +69,7 @@ public:
   static std::string sprintPacketContentsBin (Ptr<Packet> pkt)
   {
     uint32_t psize = pkt->GetSize ();
-    std::vector<uint8_t> buffer;
-    buffer.reserve(psize);
+    std::vector<uint8_t> buffer(psize, 0);
     std::ostringstream oss (std::ostringstream::out);
     pkt->CopyData (buffer.data(), psize);
     for (uint32_t i = 0; i < psize; i++)

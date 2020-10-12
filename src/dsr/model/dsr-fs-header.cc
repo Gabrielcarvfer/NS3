@@ -158,8 +158,7 @@ uint32_t DsrFsHeader::Deserialize (Buffer::Iterator start)
   m_payloadLen = i.ReadU16 ();
 
   uint32_t dataLength = GetPayloadLength ();
-  std::vector<uint8_t> data;
-  data.reserve(dataLength);
+  std::vector<uint8_t> data(dataLength,0);
   i.Read (data.data(), dataLength);
 
   if (dataLength > m_data.GetSize ())
@@ -214,8 +213,7 @@ void DsrOptionField::Serialize (Buffer::Iterator start) const
 
 uint32_t DsrOptionField::Deserialize (Buffer::Iterator start, uint32_t length)
 {
-  std::vector<uint8_t> buf;
-  buf.reserve(length);
+  std::vector<uint8_t> buf(length,0);
   start.Read (buf.data(), length);
   m_optionData = Buffer ();
   m_optionData.AddAtEnd (length);

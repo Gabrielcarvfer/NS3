@@ -351,9 +351,9 @@ TestCase::Run (TestRunnerImpl *runner)
   m_runner = runner;
   DoSetup ();
   m_result->clock.Start ();
-  for (std::vector<TestCase *>::const_iterator i = m_children.begin (); i != m_children.end (); ++i)
+  for (auto &i : m_children)
     {
-      TestCase *test = *i;
+      TestCase *test = i;
       test->Run (runner);
       if (IsFailed ())
         {

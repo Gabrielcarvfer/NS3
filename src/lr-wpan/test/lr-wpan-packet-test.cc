@@ -84,8 +84,7 @@ LrWpanPacketTestCase::DoRun (void)
 
   // Test serialization and deserialization
   uint32_t size = p->GetSerializedSize ();
-  std::vector<uint8_t> buffer;
-  buffer.reserve(size);
+  std::vector<uint8_t> buffer(size,0);
   p->Serialize (buffer.data(), size);
   Ptr<Packet> p2 = Create<Packet> (buffer.data(), size, true);
 
