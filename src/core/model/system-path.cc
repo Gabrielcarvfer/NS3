@@ -258,6 +258,8 @@ std::string FindSelfDirectory (void)
     sysctl (mib, 4, buf, &bufSize, NULL, 0);
     filename = buf;
   }
+#elif defined(_MSC_VER)
+  return std::filesystem::current_path().string();
 #endif
   return Dirname (filename);
 }
@@ -422,6 +424,10 @@ MakeDirectories (std::string path)
     #else
           makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
     #endif
+#endif
+#ifdef _MSC_VER
+      if (!std::filesystem::exists (tmp))
+        makeDirErr = !std::filesystem::create_directory (tmp);
 #endif
 
       if (makeDirErr)
