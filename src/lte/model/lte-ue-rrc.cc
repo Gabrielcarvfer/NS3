@@ -2647,14 +2647,15 @@ LteUeRrc::CancelEnteringTrigger (uint8_t measId, uint16_t cellId)
     {
       NS_ASSERT (it2->measId == measId);
 
-      ConcernedCells_t::iterator it3;
-      for (it3 = it2->concernedCells.begin ();
-           it3 != it2->concernedCells.end (); ++it3)
+      ConcernedCells_t::iterator it3 = it2->concernedCells.begin();
+      for (unsigned i = 0; i < it2->concernedCells.size(); i++)
         {
           if (*it3 == cellId)
             {
               it3 = it2->concernedCells.erase (it3);
             }
+          else
+              it3++;
         }
 
       if (it2->concernedCells.empty ())
