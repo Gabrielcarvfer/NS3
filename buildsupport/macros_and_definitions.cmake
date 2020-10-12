@@ -335,6 +335,10 @@ macro(process_options)
         # Suppress warnings
         #add_definitions(/W0)
 
+        # For whatever reason getting M_PI and other math.h definitions from cmath requires this definition
+        # https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=vs-2019
+        add_definitions(-D_USE_MATH_DEFINES)
+
         set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
         set(BUILD_SHARED_LIBS TRUE)
         set(CMAKE_MSVC_PARALLEL ${NumThreads})
