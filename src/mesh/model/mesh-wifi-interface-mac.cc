@@ -221,7 +221,7 @@ MeshWifiInterfaceMac::ForwardDown (Ptr<Packet> packet, Mac48Address from, Mac48A
   // Address 1 is unknown here. Routing plugin is responsible to correctly set it.
   hdr.SetAddr1 (Mac48Address ());
   // Filter packet through all installed plugins
-  for (PluginList::const_iterator i = m_plugins.end () - 1; i != m_plugins.begin () - 1; i--)
+  for (PluginList::const_reverse_iterator i = m_plugins.crbegin (); i != m_plugins.crend (); i++)
     {
       bool drop = !((*i)->UpdateOutcomingFrame (packet, hdr, from, to));
       if (drop)
@@ -266,7 +266,7 @@ MeshWifiInterfaceMac::SendManagementFrame (Ptr<Packet> packet, const WifiMacHead
 {
   //Filter management frames:
   WifiMacHeader header = hdr;
-  for (PluginList::const_iterator i = m_plugins.end () - 1; i != m_plugins.begin () - 1; i--)
+  for (PluginList::const_reverse_iterator i = m_plugins.crbegin (); i != m_plugins.crend (); i++)
     {
       bool drop = !((*i)->UpdateOutcomingFrame (packet, header, Mac48Address (), Mac48Address ()));
       if (drop)
