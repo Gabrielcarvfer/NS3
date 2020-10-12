@@ -1,0 +1,44 @@
+name: Ubuntu
+
+on: [push]
+  #schedule:
+#  - cron:  '0 5 * * *'  #daily build at 5AM
+jobs:
+
+  Ubuntu:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install required packages
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install apt-utils
+          sudo apt-get -y install git gcc g++ cmake python make ninja-build
+          #sudo apt-get -y install qt5-default
+          sudo apt-get -y install gdb valgrind
+          sudo apt-get -y install tcpdump
+          sudo apt-get -y install curl unzip tar
+          sudo apt-get -y install ccache
+      - name: Configure CMake
+        run: |
+          mkdir cmake-cache
+          cd cmake-cache
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja"  ..
+      - name: Build ns-3
+        run: |
+          cd cmake-cache
+          ninja
+      -  name: Run tests
+         run: python3 ./utils/test-runner-script.py
+      -  name: Run examples
+         run : |
+           cd cmake-cache
+           ctest -j 4 --timeout 800
+
+
+
+
+
+
