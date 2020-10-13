@@ -335,6 +335,9 @@ macro(process_options)
         # Suppress warnings
         #add_definitions(/W0)
 
+        # /Gy forces object functions to be made into a COMDAT(WTF is that MSFT?), preventing removal by the linker
+        add_definitions(/Gy)
+
         # For whatever reason getting M_PI and other math.h definitions from cmath requires this definition
         # https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=vs-2019
         add_definitions(-D_USE_MATH_DEFINES)
@@ -576,6 +579,11 @@ macro(process_options)
 
     #Process core-config
     set(INT64X64 "128")
+    if(MSVC)
+        #MSVC doesn't support 128 bit soft operations, which is weird since they support 128 bit numbers...
+        #Clang does support, but didn't expose them https://reviews.llvm.org/D41813
+        set(INT64X64 "CAIRO")
+    endif()
 
     if(INT64X64 STREQUAL "128")
         include(buildsupport/custom_modules/FindInt128.cmake)
@@ -595,7 +603,7 @@ macro(process_options)
         CHECK_TYPE_SIZE("double" SIZEOF_DOUBLE)
         CHECK_TYPE_SIZE("long double" SIZEOF_LONG_DOUBLE)
         if (MSVC)
-            set(INT64X64_USE_DOUBLE TRUE) # MSVC is special (not in a good way) and uses 64 bit long double
+            set(INT64X64_USE_DOUBLE TRUE) # MSVC is special (not in a good way) and uses 64 bit long double. This will break things.
         else()
             if (${SIZEOF_LONG_DOUBLE} EQUAL ${SIZEOF_DOUBLE})
                 message(WARNING "Long double has the wrong size: LD ${SIZEOF_LONG_DOUBLE} vs D ${SIZEOF_DOUBLE}. Falling back to CAIRO.")
@@ -747,6 +755,7 @@ macro (build_lib libname source_files header_files libraries_to_link test_source
     target_link_libraries(${lib${libname}} ${LIB_AS_NEEDED_PRE} "${libraries_to_link}" ${LIB_AS_NEEDED_POST})
 
     if(MSVC)
+        # /OPT:NOREF prevents the compiler and linker from removing unused symbols/functions
         target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
     endif()
 

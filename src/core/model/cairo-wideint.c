@@ -34,6 +34,10 @@
 #include <climits>
 #include "cairo-wideint-private.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \file
  * \ingroup highprec
@@ -825,3 +829,7 @@ _cairo_int_96by64_32x64_divrem (cairo_int128_t num, cairo_int64_t den)
 	qr.quo = uqr.quo;
     return qr;
 }
+
+#ifdef __cplusplus
+};
+#endif

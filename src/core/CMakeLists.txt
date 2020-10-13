@@ -61,12 +61,17 @@ elseif(INT64X64 STREQUAL "DOUBLE")
             model/int64x64-double.h
             )
 elseif(INT64X64 STREQUAL "CAIRO")
+    add_library(cairo STATIC model/cairo-wideint-private.h model/cairo-wideint.c)
     set(int64x64_sources
             model/int64x64-cairo.cc
             )
     set(int64x64_headers
             model/int64x64-cairo.h
             model/cairo-wideint-private.h
+            )
+    set(libraries_to_link
+            cairo
+            ${libraries_to_link}
             )
 endif()
 

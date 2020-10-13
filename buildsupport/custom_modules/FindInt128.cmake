@@ -144,7 +144,8 @@ MACRO(FIND_INT128_TYPES)
     endif()
   endif()
 
-  #MSVC doesn't support 128 bit soft operations, which is weird and stupid since they support 128 bit numbers...
+  #MSVC doesn't support 128 bit soft operations, which is weird since they support 128 bit numbers...
+  #Clang does support, but didn't expose them https://reviews.llvm.org/D41813
   if(MSVC)
     set(UINT128_FOUND False)
   endif()

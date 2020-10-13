@@ -60,7 +60,7 @@
 #endif
 #endif
 
-#if   HAVE_STDINT_H
+#ifdef HAVE_STDINT_H
 # include <stdint.h>
 #elif HAVE_INTTYPES_H
 # include <inttypes.h>
@@ -354,7 +354,6 @@ _cairo_int_96by64_32x64_divrem (cairo_int128_t num,
 #define                 _cairo_int128_ge(a,b)       (!_cairo_int128_lt (a,b))
 #define                 _cairo_int128_gt(a,b)       _cairo_int128_lt (b,a)
 
-#undef I
 
 #ifdef __cplusplus
 };

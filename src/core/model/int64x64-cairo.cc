@@ -25,11 +25,6 @@
 #include <iostream>
 #include "int64x64-cairo.h"
 
-// Include directly to allow optimizations within this compilation unit.
-extern "C" {
-#include "cairo-wideint.c"
-}
-
 /**
  * \file
  * \ingroup highprec
