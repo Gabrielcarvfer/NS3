@@ -25,6 +25,17 @@ set(THIRD_PARTY_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party)
 link_directories(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
+if(MSVC)
+#Is that so hard not to break people's CI, MSFT?
+#Why would you output the targets to a Debug/Release subfolder? Why?
+foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+    string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
+    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} )
+    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY} )
+endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+endif()
+
 #fPIC and fPIE
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -851,6 +862,19 @@ macro (build_example name source_files header_files libraries_to_link)
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
             )
+    
+    if(MSVC)
+        #Is that so hard not to break people's CI, MSFT?
+        #Why would you output the targets to a Debug/Release subfolder? Why?
+        foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+            string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+            set_target_properties( ${name}
+            PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples/${name}/
+            )
+        endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+    endif()
+
     #message(WARNING "${examples}")
     if(ignore_example)
     else()
@@ -900,6 +924,18 @@ macro (build_lib_example name source_files header_files libraries_to_link files_
             PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/
             )
+    
+    if(MSVC)
+        #Is that so hard not to break people's CI, MSFT?
+        #Why would you output the targets to a Debug/Release subfolder? Why?
+        foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+            string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+            set_target_properties( ${name}
+            PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/
+            )
+        endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+    endif()
 
     file(COPY ${files_to_copy} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${libname}/examples/${name}/)
 
