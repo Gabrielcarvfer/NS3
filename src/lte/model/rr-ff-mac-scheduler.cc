@@ -32,6 +32,7 @@
 #include <ns3/lte-vendor-specific-parameters.h>
 #include <ns3/boolean.h>
 #include <ns3/spectrum-test.h>
+#include <ns3/global-value.h>
 
 namespace ns3 {
 
@@ -496,6 +497,8 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
   m_rachAllocationMap.resize (m_cschedCellConfig.m_ulBandwidth, 0);
   uint16_t rbStart = 0;
   std::vector <struct RachListElement_s>::iterator itRach;
+  UintegerValue maxMcsSched;
+  GlobalValue::GetValueByName("MAX_MCS_SCHED", maxMcsSched);
   for (itRach = m_rachList.begin (); itRach != m_rachList.end (); itRach++)
     {
       NS_ASSERT_MSG (m_amc->GetUlTbSizeFromMcs (m_ulGrantMcs, m_cschedCellConfig.m_ulBandwidth) > (*itRach).m_estimatedSize, " Default UL Grant MCS does not allow to send RACH messages");
@@ -505,7 +508,8 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       // Ideal: no needs of configuring m_dci
       // UL-RACH Allocation
       newRar.m_grant.m_rnti = newRar.m_rnti;
-      newRar.m_grant.m_mcs = forceMaxMcs ? 23 : m_ulGrantMcs;
+      newRar.m_grant.m_mcs = forceMaxMcs ? maxMcsSched.Get() : m_ulGrantMcs;
+      std::cout << "newrarGrant " << newRar.m_grant.m_mcs << std::endl;
       uint16_t rbLen = 1;
       uint32_t tbSizeBits = 0;
       // find lowest TB size that fits UL grant estimated size
@@ -532,6 +536,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
         {
           m_rachAllocationMap.at (i) = (*itRach).m_rnti;
         }
+        GlobalValue::GetValueByName("MAX_MCS_SCHED", maxMcsSched);
 
       if (m_harqOn == true)
         {
@@ -540,9 +545,9 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           uldci.m_rnti = newRar.m_rnti;
           uldci.m_rbLen = rbLen;
           uldci.m_rbStart = rbStart;
-          uldci.m_mcs = forceMaxMcs ? 23 : m_ulGrantMcs;
+          uldci.m_mcs = forceMaxMcs ? maxMcsSched.Get() : m_ulGrantMcs;
           uldci.m_tbSize = tbSizeBits / 8;
-          //std::cout << "UL HARQ MCS " << (int) uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;
+          std::cout << "UL HARQ MCS " << (int) uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;
           uldci.m_ndi = 1;
           uldci.m_cceIndex = 0;
           uldci.m_aggrLevel = 1;
@@ -997,7 +1002,9 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       newDci.m_harqProcess = UpdateHarqProcessId ((*it).m_rnti);
       newDci.m_resAlloc = 0;
       std::map <uint16_t,uint8_t>::iterator itCqi = m_p10CqiRxed.find (newEl.m_rnti);
-      for (uint8_t i = 0; i < nLayer; i++)
+        GlobalValue::GetValueByName("MAX_MCS_SCHED", maxMcsSched);
+
+        for (uint8_t i = 0; i < nLayer; i++)
         {
           if (itCqi == m_p10CqiRxed.end ())
             {
@@ -1005,7 +1012,8 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
             }
           else
             {
-              newDci.m_mcs.push_back ( forceMaxMcs ? 23 : m_amc->GetMcsFromCqi ((*itCqi).second) );
+              newDci.m_mcs.push_back ( forceMaxMcs ? maxMcsSched.Get() : m_amc->GetMcsFromCqi ((*itCqi).second) );
+              std::cout << "newCdi.m_mcs " << int(newDci.m_mcs.back()) << std::endl;
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
@@ -1463,8 +1471,11 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
           int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
           //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
           cqi = cqi2;
-          uldci.m_mcs = forceMaxMcs ? 23 : m_amc->GetMcsFromCqi (cqi);
-          //std::cout << "UL CQI " << (int) cqi << " MCS " << (int) uldci.m_mcs << std::endl;
+          UintegerValue maxMcsSched;
+            GlobalValue::GetValueByName("MAX_MCS_SCHED", maxMcsSched);
+
+            uldci.m_mcs = forceMaxMcs ? maxMcsSched.Get() : m_amc->GetMcsFromCqi (cqi);
+          std::cout << "UL CQI " << (int) cqi << " MCS " << (int) uldci.m_mcs << std::endl;
         }
       uldci.m_tbSize = (m_amc->GetUlTbSizeFromMcs (uldci.m_mcs, rbPerFlow) / 8); // MCS 0 -> UL-AMC TBD
       //std::cout << "UL MCS " << (int)uldci.m_mcs << " TB_SIZE " << (int) uldci.m_tbSize << std::endl;

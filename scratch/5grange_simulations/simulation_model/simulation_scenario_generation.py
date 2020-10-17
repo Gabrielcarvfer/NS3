@@ -26,7 +26,7 @@ def generate_random_pus(
         channel           = pu % numPUs
         PU_Model(generatePosition(xRange, yRange, zRange), txPower, dutyCycle, txPeriod, channel)
 
-def generate_scenario(ueSpeed=0, numUEs=100, clusters=False):
+def generate_scenario(ueSpeed=0, numUEs=100, clusters=False): #todo: equidistantes
     xRange = (0, 100e3),  # m
     yRange = (0, 100e3),  # m
     zRange = (0,   0.1),  # m

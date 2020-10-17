@@ -133,13 +133,37 @@ PhyTxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std:
   *trace_file->GetStream () << ","; //correcteness
   *trace_file->GetStream () << (uint32_t) params.m_ccId << std::endl;
 }
-#include <chrono>
+
+
+unsigned int good_seed()
+{
+    unsigned int random_seed, random_seed_a, random_seed_b;
+    std::ifstream file ("/dev/urandom", std::ios::binary);
+    if (file.is_open())
+    {
+        char * memblock;
+        int size = sizeof(int);
+        memblock = new char [size];
+        file.read (memblock, size);
+        file.close();
+        random_seed_a = *reinterpret_cast<int*>(memblock);
+        delete[] memblock;
+    }// end if
+    else
+    {
+        random_seed_a = 0;
+    }
+    random_seed_b = std::time(0);
+    random_seed = random_seed_a xor random_seed_b;
+    return random_seed;
+} // end good_seed()
+
 int
 main (int argc, char *argv[])
 {
   NS_LOG_DEBUG (" Running 5gRangeCdlScript");
-  auto now = std::chrono::system_clock::now();
-  ns3::RngSeedManager::SetSeed(now.time_since_epoch().count());
+  auto now = std::chrono::high_resolution_clock::now();
+  ns3::RngSeedManager::SetSeed(good_seed());
   std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
   //Scenario configuration
@@ -161,8 +185,9 @@ main (int argc, char *argv[])
   bool useIdealRrc        = true;
   bool useCdlPathLoss     = false;
   bool forceMaxMcsSched   = false;
+  uint16_t maxMcsSched    = 26;
   double kval             = 0;     //D3.1 indicates it should be 29.38 but it seems to be overly pessimistic
-  double enbTxPower       = 40.8;  //40.8dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
+  double enbTxPower       = 38;//dbm for earlier field trials and 40.8 for later  //40.8dBm, 53dBm was defined in D3.1 but isn't necessary according to field trials
   // field trials used 2/3 code rate instead of 5/6,
   //   we compensate for that reducing the throughput on the validation script
   //   and increasing the antenna gains below (1.5dBi each)
@@ -191,6 +216,7 @@ main (int argc, char *argv[])
   cmd.AddValue("cdlType", "CDL-D for LOS and CDL-A for NLOS. Only works if useCdlPathLoss is set to true", cdlType);
   cmd.AddValue("distance", "Distance in meters between UE and eNB", m_distance);
   cmd.AddValue("forceMaxMcsSched", "Force scheduler to use maximum MCS, inducing errors but reaching max throughput", forceMaxMcsSched);
+  cmd.AddValue("maxMcsSched", "Force maximum MCS value", maxMcsSched);
   cmd.AddValue("numAntennas", "Number of antennas for CDL. Only works if useCdlPathLoss is set to true", numAntennas);
   cmd.AddValue("mimoMode", "MIMO scheme selection: 0-SISO, 1-TxDiversity, 2-SpatialMultiplexing", mimoMode);
   cmd.AddValue("freqBand", "Frequency band for transmission", freqBand);
@@ -213,6 +239,11 @@ main (int argc, char *argv[])
           GlobalValue ("HARMONIC_DETECTION", "Use harmonic detection to prevent Byzantine attackers",
                        BooleanValue (harmonicDetection),
                        MakeBooleanChecker());
+
+  static GlobalValue g_max_mcs_sched =
+          GlobalValue ("MAX_MCS_SCHED", "Force maximum MCS value",
+                       UintegerValue (maxMcsSched),
+                       MakeUintegerChecker<uint16_t>());
 
   //Print information
   bool printMcsTbs        = true;

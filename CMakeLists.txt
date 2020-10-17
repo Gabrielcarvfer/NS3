@@ -80,7 +80,7 @@ option(NS3_NSC "Build with NSC" OFF)
 #TODO: download, build and link sources
 
 option(NS3_NETANIM "Build netanim support" OFF)
-set(NS3_NETANIM ON)
+set(NS3_NETANIM OFF)
 
 set(USE_QT 5)# Choose between Qt 4 or 5
 

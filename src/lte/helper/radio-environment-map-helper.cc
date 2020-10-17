@@ -40,7 +40,7 @@
 
 #include <fstream>
 #include <limits>
-#include <model/lte-common.h>
+#include <ns3/lte-common.h>
 
 namespace ns3 {
 
