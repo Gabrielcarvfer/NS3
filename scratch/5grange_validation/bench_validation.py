@@ -94,7 +94,7 @@ def exec_sim_parameters(*arg_tuple):
 
         except Exception as e:
             return False, None, None
-    mcs = None  # extract_n_plot_mcs([distance], base_dir=folder, cmd=True)
+    mcs = None # extract_n_plot_mcs([distance], base_dir=folder, cmd=True)
     snr = None  # extract_n_plot_snr([distance], base_dir=folder, cmd=True)
     return True, mcs, snr
 
@@ -180,7 +180,7 @@ def extract_perf(distanceFolder, distance):
     return extract_throughput(distanceFolder), extract_corruption(distanceFolder, distance)
 
 
-# tuples of distance
+# Results for 713MHz carrier with 6MHz channel bandwidth
 fieldTrialResults = {"LOS": {
                                 10:{"d_km": 10,
                                  "thr_Mbps": 22,
@@ -261,17 +261,30 @@ fieldTrialResults = {"LOS": {
                              }
                      }
 
+# Results for 525MHz carrier with 24MHz channel bandwidth
+fieldTrialResults = {"LOS": {
+                            50: {"d_km": 50.5,
+                                 "thr_Mbps": 102,
+                                 "ber": 0,
+                                 # QAM256 2/3 isn't available in latest MCS scheme, so we approximate by adding gain and reducing throughput
+                                 "mcs_trial": "QAM256 2/3",
+                                 "nearest_mcs_to_simulate": 24,  # QAM256 5/6
+                                 "gain_adj_add": 3,  # link gain, can be added to eNB or UE
+                                 "throughtput_adj_mult": 0.8
+                                },
+                        }
+                    }
 
 if __name__ == "__main__":
     import numpy
     import pandas
     mp.freeze_support()
-    frequencyBands = (freqBands.MHz713, )  # (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
+    frequencyBands = (freqBands.MHz525, )  # (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
     numAntennas = (2, )  # 1, 4
     mimoModes = (mimoModes.TxDiversity, )  # mimoModes.SISO, mimoModes.SpatialMultiplexing)
-    channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
-    forcedMaxMcs = (True, )  # False,)
-    distances = [10, 20, 30, 40, 50, ]  # 1, 5, 10, 20, 35, 50, 100
+    channel_models = ("CDL_D", )#"CDL_A",)  # "RANGE5G",
+    forcedMaxMcs = (True, )  # False, True,)
+    distances = [ 50, ]  # 10, 20, 30, 40, 1, 5, 10, 20, 35, 50, 100
     batches = 40
 
     thread_parameters = []
@@ -363,7 +376,7 @@ if __name__ == "__main__":
                                 result = p.starmap(func=extract_perf, iterable=pool_args)
 
                                 i = 0
-                                label = "%s-%dAnt-%s" %(channel_model, numAntenna, mimoMode.name)
+                                label = "%s-%dAnt-%s" % (channel_model, numAntenna, mimoMode.name)
                                 batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"][label] = {}
                                 batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"][label] = {}
                                 for folder, distance in pool_args:
@@ -448,7 +461,7 @@ if __name__ == "__main__":
                 received_throughput_per_d_error = {}
                 for distance in distances:
                     if distance in THR[lab].keys():
-                        received_throughput_per_d[distance] = statistics.mean(THR[lab][distance])  # trial samples are for 6MHz wide channels instead of 24MHz wide like ours
+                        received_throughput_per_d[distance] = statistics.mean(THR[lab][distance])*0.8  # trial samples are for 6MHz wide channels instead of 24MHz wide like ours
                         received_throughput_per_d_error[distance] = statistics.stdev(THR[lab][distance])*z_value/((batches)**0.5)
                     else:
                         received_throughput_per_d[distance] = 0
@@ -488,7 +501,7 @@ if __name__ == "__main__":
 
                     # Get trial parameters and forward to simulation
                     sample = fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"][distance]
-                    received_throughput_per_d[distance] = sample["thr_Mbps"]*4
+                    received_throughput_per_d[distance] = sample["thr_Mbps"]
                     corrupted_freq_per_d[distance] = sample["ber"]*100  # convert to tbler? how?
 
                 lab = "Field trial %s" % channel_model.replace("CDL_D", "LOS").replace("CDL_A", "NLOS")
@@ -539,10 +552,11 @@ if __name__ == "__main__":
                 axis5[-1].text(i.get_x()+0.02, 1, label, fontsize=12, color='black', rotation=90)
 
                 j += 1
-            #axis5[-1].text(2.0, -15.00, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
+            #axis5[-1].text(0.0, 0.00, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
             #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
 
             # Set axis labels for corruption rate plot
+            axis5[-1].set_yticks(list(range(0, 101, 10)))
             axis5[-1].set_xlabel("Distance (km)")
             axis5[-1].set_ylabel("Transport Block Error Rate - TBLER (%)")
             axis5[-1].set_ylim([0,100])
@@ -592,7 +606,7 @@ if __name__ == "__main__":
                 axis6[-1].text(i.get_x()+0.02, 2, label, fontsize=12, color='black', rotation=90)
                 j += 1
             axis6[-1].set_yticks(list(range(0, 170, 10)))
-            #axis6[-1].text(2.0, -23.50, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
+            #axis6[-1].text(0.0, -1.50, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
             #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
             # Set axis labels for corruption rate plot
             axis6[-1].set_xlabel("Distance (km)")
