@@ -287,16 +287,16 @@ fieldTrialResults = {"LOS": {
                     }
 
 if __name__ == "__main__":
+    mp.freeze_support()
     import numpy
     import pandas
-    mp.freeze_support()
     frequencyBands = (freqBands.MHz525, )  # (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
     numAntennas = (2, )  # 1, 4
     mimoModes = (mimoModes.TxDiversity, )  # mimoModes.SISO, mimoModes.SpatialMultiplexing)
     channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
     forcedMaxMcs = (False, )  # False, True,)
     distances = [ 1, 5, 10, 20, 35, 50, 100, ]  # 10, 20, 30, 40,
-    batches = 40
+    batches = 3
 
     thread_parameters = []
     # Create folders to dump simulation results
@@ -496,7 +496,7 @@ if __name__ == "__main__":
             error_dataset = OrderedDict({"THR": {},
                              "TBLER": {}
                              })
-            z_value = 2.0  # 1.96 for p=0.05 with #samples = infty, 2.0 for p=0.05 with #samples=40, 2.262 for p=0.05 with #samples=10
+            z_value = 4.303  # p=0.05 requires 1.96 with #samples=infty, 2.0 with #samples=40, 2.262 with #samples=10, 4.303 with #samples=3
             for lab in sorted(list(THR.keys())):
                 received_throughput_per_d = {}
                 received_throughput_per_d_error = {}
@@ -542,7 +542,7 @@ if __name__ == "__main__":
                 #axis5[0].bar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), yerr=list(corrupted_freq_per_d_error.values()), label=lab, color=randcolor())
                 lab = "%s Simulation" % lab[:5].replace('_', ' ')
 
-                fig, axis = plt.subplots(nrows=len(mcs_dist_per_d))
+                fig, axis = plt.subplots(nrows=len(mcs_dist_per_d), sharex=True, sharey=True, figsize=(5, 8))
                 if len(distances) == 1:
                     axis = [axis]
 
@@ -551,18 +551,21 @@ if __name__ == "__main__":
                     tripa = []
                     tripa_err = []
                     total_freq = 0
+                    temp = 0
                     for mcs in mcs_dist_per_d[d]:
                         total_freq += mcs_dist_per_d[d][mcs]
                     for mcs in mcs_dist_per_d[d]:
                         tripa.append(mcs_dist_per_d[d][mcs]/total_freq)
                         tripa_err.append(mcs_dist_per_d_error[d][mcs]/total_freq)
-                    axis[i].bar(x=list(range(0, 28)), height=tripa, yerr=tripa_err, label=lab)
-
+                    label = "%d km" % d
+                    axis[i].bar(x=list(range(1, 29)), height=tripa, yerr=tripa_err, label=label)
+                    axis[i].set_ylim((0, 1.01))
                     axis[i].set_xlim((0, 28))
-                    axis[i].set_xticks(list(range(0, 28)))
-                    axis[i].legend()
+                    if i == 3:
+                        axis[i].set_ylabel("Distribution of MCSs")
+                    axis[i].set_xticks(list(range(1, 29, 2)))
+                    axis[i].legend(loc='upper left')
                     i += 1
-
                 plt.xlabel("MCS")
                 plt.savefig("mcs_%s.png" % lab)
 
