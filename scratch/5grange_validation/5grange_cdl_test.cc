@@ -191,9 +191,9 @@ main (int argc, char *argv[])
   // field trials used 2/3 code rate instead of 5/6,
   //   we compensate for that reducing the throughput on the validation script
   //   and increasing the antenna gains below (1.5dBi each)
-  double enbGain          = 10.5;//9.0;//+1.5;   //dBi
+  double enbGain          = 9;//9.0;//+1.5;   //dBi
   double ueTxPower        = 23.0;  //dBm
-  double ueGain           = 10.5;//9.0;//+1.5;   //dBi, 9dBi is for CPEs
+  double ueGain           = 9;//9.0;//+1.5;   //dBi, 9dBi is for CPEs
   uint32_t numAntennas    = 1;     // only affects CDL
   uint16_t  mimoMode      = 0;     // 0-SISO, 1-TxDiversity, 2-spatial multiplexing open
   uint32_t dlEarfcn       = 50000; //5G: 50000 for ~297MHz, LTE: 2400 for band 5 (~850MHz)

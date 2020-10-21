@@ -145,12 +145,10 @@ def extract_throughput(distanceFolder):
             continue
         throughput = regex.groups()[0]
         throughput = float(throughput)
-    # field trials used 2/3 code rate instead of 5/6,
-    #   we compensate for that reducing the throughput here
-    #   and increasing the antenna gain on the simulation side
-    return throughput#*0.8
 
-def extract_corruption(distanceFolder, distance):
+    return throughput
+
+def extract_corruption_and_mcs(distanceFolder, distance):
     # Open out__km.txt and scan for corrupted transport blocks to calculate the error rate
     contents = None
     with lzma.open(distanceFolder + "out%dkm.txt.lzma" % distance, "r") as file:
@@ -161,23 +159,36 @@ def extract_corruption(distanceFolder, distance):
     corrupted_TBs = 0
     total_TBs = 0
 
+    mcs_regex = re.compile(".*MCS (.*) TBLER .*")
+    mcs_freq = {}
+    for mcs in range(28):
+        mcs_freq[mcs] = 0
+
+    mcs = None
     regex = None
     for line in contents:
         regex = corrupted_regex.match(line.decode("utf-8"))
+        if regex is not None:
+            total_TBs += 1
+            corrupted = regex.groups()[0]
+            if "snr" in corrupted:
+                continue
+            corrupted = int(corrupted)
+            corrupted_TBs += corrupted
+            continue
+
+        regex = mcs_regex.match(line.decode("utf-8"))
         if regex is None:
             continue
-        total_TBs += 1
-        corrupted = regex.groups()[0]
-        if "snr" in corrupted:
-            continue
-        corrupted = int(corrupted)
-        corrupted_TBs += corrupted
+        mcs = regex.groups()[0]
+        mcs = int(mcs)
+        mcs_freq[mcs] += 1
 
-    return corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0
+    return (corrupted_TBs/total_TBs*100 if corrupted_TBs > 0 else 0, mcs_freq)
 
 
 def extract_perf(distanceFolder, distance):
-    return extract_throughput(distanceFolder), extract_corruption(distanceFolder, distance)
+    return extract_throughput(distanceFolder), *extract_corruption_and_mcs(distanceFolder, distance)
 
 
 # Results for 713MHz carrier with 6MHz channel bandwidth
@@ -282,9 +293,9 @@ if __name__ == "__main__":
     frequencyBands = (freqBands.MHz525, )  # (freqBands.MHz850, freqBands.MHz713, freqBands.MHz525, freqBands.MHz240)
     numAntennas = (2, )  # 1, 4
     mimoModes = (mimoModes.TxDiversity, )  # mimoModes.SISO, mimoModes.SpatialMultiplexing)
-    channel_models = ("CDL_D", )#"CDL_A",)  # "RANGE5G",
-    forcedMaxMcs = (True, )  # False, True,)
-    distances = [ 50, ]  # 10, 20, 30, 40, 1, 5, 10, 20, 35, 50, 100
+    channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
+    forcedMaxMcs = (False, )  # False, True,)
+    distances = [ 1, 5, 10, 20, 35, 50, 100, ]  # 10, 20, 30, 40,
     batches = 40
 
     thread_parameters = []
@@ -318,6 +329,17 @@ if __name__ == "__main__":
                             #    sample = fieldTrialResults["LOS" if channel_model != "CDL_D" else "NLOS"][distance]
 
                             maxMcsSched = sample["nearest_mcs_to_simulate"]
+                            sample = None
+                            try:
+                                if distance in fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"]:
+                                    # Get trial parameters and forward to simulation
+                                    sample = fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"][distance]
+                                else:
+                                    # If field trial doesn't have the sample for LOS/NLOS, use the NLOS/LOS MCS for consistency
+                                    sample = fieldTrialResults["LOS" if channel_model != "CDL_D" else "NLOS"][distance]
+                                maxMcsSched = sample["nearest_mcs_to_simulate"]
+                            except:
+                                maxMcsSched = 1
                             thread_parameters.append((forceMaxMcs, maxMcsSched-1, channel_model, distance, distanceFolder, numAntenna, mimoMode.value, frequencyBand.value))
     del distance, distanceFolder, channel_model, channelFolder, forceMaxMcs, maxMcsFolder, numAntenna, mimoMode
 
@@ -352,7 +374,8 @@ if __name__ == "__main__":
                     for frequencyBand in frequencyBands:
                         frequencyFolder = maxMcsFolder + "freq_%s" % frequencyBand.name + os.sep
                         batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand] = {"TBLER": {},
-                                                                                                                     "THR": {}}
+                                                                                                                     "THR": {},
+                                                                                                                     "MCS_DIST": {}}
 
                         for (numAntenna, mimoMode) in zip(numAntennas, mimoModes):
                             antennaAndMimoFolder = frequencyFolder + "Mimo_%s" % mimoMode.name + os.sep
@@ -379,9 +402,11 @@ if __name__ == "__main__":
                                 label = "%s-%dAnt-%s" % (channel_model, numAntenna, mimoMode.name)
                                 batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"][label] = {}
                                 batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"][label] = {}
+                                batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["MCS_DIST"][label] = {}
                                 for folder, distance in pool_args:
                                     batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["THR"][label][distance] = result[i][0]
                                     batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"][label][distance] = result[i][1]
+                                    batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["MCS_DIST"][label][distance] = result[i][2]
                                     i += 1
                             """
                             # Set axis labels for corruption rate plot
@@ -426,6 +451,7 @@ if __name__ == "__main__":
             # Calculate statistics between batches
             TBLER = None
             THR = None
+            MCS_DIST = None
             for batch in range(batches-1):
                 if TBLER is None:
                     TBLER = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["TBLER"]
@@ -447,6 +473,21 @@ if __name__ == "__main__":
                         for distance in valueDict.keys():
                             THR[key][distance].append(valueDict[distance])
 
+                if MCS_DIST is None:
+                    temp_mcs_dist = batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["MCS_DIST"]
+                    MCS_DIST = {}
+                    for key, valueDict in temp_mcs_dist.items():
+                        MCS_DIST[key] = {}
+                        for distance in valueDict.keys():
+                            MCS_DIST[key][distance] = {}
+                            for mcs in valueDict[distance].keys():
+                                MCS_DIST[key][distance][mcs] = [valueDict[distance][mcs]]
+                else:
+                    for key, valueDict in batch_results["batch"][batch]["forceMaxMcs"][forceMaxMcs]["frequencyBand"][frequencyBand]["MCS_DIST"].items():
+                        for distance in valueDict.keys():
+                            for mcs in valueDict[distance].keys():
+                                MCS_DIST[key][distance][mcs].append(valueDict[distance][mcs])
+
             # Calculate statistics and plot
             from collections import OrderedDict
             plot_dataset = OrderedDict({"THR": {},
@@ -461,7 +502,7 @@ if __name__ == "__main__":
                 received_throughput_per_d_error = {}
                 for distance in distances:
                     if distance in THR[lab].keys():
-                        received_throughput_per_d[distance] = statistics.mean(THR[lab][distance])*0.8  # trial samples are for 6MHz wide channels instead of 24MHz wide like ours
+                        received_throughput_per_d[distance] = statistics.mean(THR[lab][distance]) # trial samples are for 6MHz wide channels instead of 24MHz wide like ours
                         received_throughput_per_d_error[distance] = statistics.stdev(THR[lab][distance])*z_value/((batches)**0.5)
                     else:
                         received_throughput_per_d[distance] = 0
@@ -488,31 +529,70 @@ if __name__ == "__main__":
                 error_dataset["TBLER"][lab] = list(corrupted_freq_per_d_error.values())
             del lab, corrupted_freq_per_d, corrupted_freq_per_d_error
 
-            # Plot field trial results
-            for channel_model in channel_models:
-                corrupted_freq_per_d = {}
-                received_throughput_per_d = {}
-
+            for lab in sorted(list(MCS_DIST.keys())):
+                mcs_dist_per_d = {}
+                mcs_dist_per_d_error = {}
                 for distance in distances:
-                    if distance not in fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"]:
-                        received_throughput_per_d[distance] = 0
-                        corrupted_freq_per_d[distance] = 0
-                        continue
+                    if distance in MCS_DIST[lab].keys():
+                        mcs_dist_per_d[distance] = {}
+                        mcs_dist_per_d_error[distance] = {}
+                        for mcs in MCS_DIST[lab][distance].keys():
+                            mcs_dist_per_d[distance][mcs] = statistics.mean(MCS_DIST[lab][distance][mcs])
+                            mcs_dist_per_d_error[distance][mcs] = statistics.stdev(MCS_DIST[lab][distance][mcs])*z_value/((batches)**0.5)
+                #axis5[0].bar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), yerr=list(corrupted_freq_per_d_error.values()), label=lab, color=randcolor())
+                lab = "%s Simulation" % lab[:5].replace('_', ' ')
 
-                    # Get trial parameters and forward to simulation
-                    sample = fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"][distance]
-                    received_throughput_per_d[distance] = sample["thr_Mbps"]
-                    corrupted_freq_per_d[distance] = sample["ber"]*100  # convert to tbler? how?
+                fig, axis = plt.subplots(nrows=len(mcs_dist_per_d))
+                if len(distances) == 1:
+                    axis = [axis]
 
-                lab = "Field trial %s" % channel_model.replace("CDL_D", "LOS").replace("CDL_A", "NLOS")
-                plot_dataset["THR"][lab] = list(received_throughput_per_d.values())
-                error_dataset["THR"][lab] = [0]*len(distances)
+                i = 0
+                for d in mcs_dist_per_d:
+                    tripa = []
+                    tripa_err = []
+                    total_freq = 0
+                    for mcs in mcs_dist_per_d[d]:
+                        total_freq += mcs_dist_per_d[d][mcs]
+                    for mcs in mcs_dist_per_d[d]:
+                        tripa.append(mcs_dist_per_d[d][mcs]/total_freq)
+                        tripa_err.append(mcs_dist_per_d_error[d][mcs]/total_freq)
+                    axis[i].bar(x=list(range(0, 28)), height=tripa, yerr=tripa_err, label=lab)
 
-                plot_dataset["TBLER"][lab] = list(corrupted_freq_per_d.values())
-                error_dataset["TBLER"][lab] = [0]*len(distances)
-                #axis5[0].bar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), label=("Field trial %s" % channel_model), color=randcolor())
-                #axis6[0].bar(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), label=("Field trial %s" % channel_model), color=randcolor())
-                del lab, sample, received_throughput_per_d, corrupted_freq_per_d
+                    axis[i].set_xlim((0, 28))
+                    axis[i].set_xticks(list(range(0, 28)))
+                    axis[i].legend()
+                    i += 1
+
+                plt.xlabel("MCS")
+                plt.savefig("mcs_%s.png" % lab)
+
+            del lab, tripa, tripa_err, total_freq, mcs, d, mcs_dist_per_d, mcs_dist_per_d_error, fig, axis
+
+            # Plot field trial results
+            #for channel_model in channel_models:
+            #    corrupted_freq_per_d = {}
+            #    received_throughput_per_d = {}
+#
+            #    for distance in distances:
+            #        if distance not in fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"]:
+            #            received_throughput_per_d[distance] = 0
+            #            corrupted_freq_per_d[distance] = 0
+            #            continue
+#
+            #        # Get trial parameters and forward to simulation
+            #        sample = fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"][distance]
+            #        received_throughput_per_d[distance] = sample["thr_Mbps"]
+            #        corrupted_freq_per_d[distance] = sample["ber"]*100  # convert to tbler? how?
+#
+            #    lab = "%s Field trial" % channel_model.replace('_', ' ')
+            #    plot_dataset["THR"][lab] = list(received_throughput_per_d.values())
+            #    error_dataset["THR"][lab] = [0]*len(distances)
+#
+            #    plot_dataset["TBLER"][lab] = list(corrupted_freq_per_d.values())
+            #    error_dataset["TBLER"][lab] = [0]*len(distances)
+            #    #axis5[0].bar(list(corrupted_freq_per_d.keys()), list(corrupted_freq_per_d.values()), label=("Field trial %s" % channel_model), color=randcolor())
+            #    #axis6[0].bar(list(received_throughput_per_d.keys()), list(received_throughput_per_d.values()), label=("Field trial %s" % channel_model), color=randcolor())
+            #    del lab, sample, received_throughput_per_d, corrupted_freq_per_d
 
             tbler = OrderedDict()
             for key in sorted(plot_dataset["TBLER"], key=lambda x: x[1]+x[-4:]):
@@ -528,30 +608,31 @@ if __name__ == "__main__":
 
             pandas.DataFrame(tbler, index=distances).plot(kind='bar', yerr=error_dataset["TBLER"], ax=axis5[-1])
 
-            patches = axis5[-1].patches
-            x_list = distances*4
-            j = 0
-            for i in axis5[-1].patches:
-                # get_x pulls left or right; get_height pushes up or down
-                x = x_list.pop(0)
-                asterisk = False
-                notMeasured = False
-                list_labels =list(tbler.keys())
-                key = j//5
-                try:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
-                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
-                except:
-                    asterisk = True
-                    label = "Not simulated"
-                    if "trial" in list_labels[key]:
-                        notMeasured = True
-                        label = "Not measured"
-                    pass
+            #patches = axis5[-1].patches
+            #x_list = distances*4
+            #j = 0
+            #for i in axis5[-1].patches:
+            #    # get_x pulls left or right; get_height pushes up or down
+            #    x = x_list.pop(0)
+            #    asterisk = False
+            #    notMeasured = False
+            #    list_labels =list(tbler.keys())
+            #    key = j//5
+            #    try:
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+            #    except:
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
+            #        asterisk = True
+            #        if "trial" in list_labels[key]:
+            #            notMeasured = True
+            #        pass
+            #    if not notMeasured:
+            #        label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate']+1, "*" if asterisk else "")
+            #    else:
+            #        label = "Not measured"
+            #    axis5[-1].text(i.get_x()+0.02, 1, label, fontsize=12, color='black', rotation=90)
 
-                axis5[-1].text(i.get_x()+0.02, 1, label, fontsize=12, color='black', rotation=90)
-
-                j += 1
+            #    j += 1
             #axis5[-1].text(0.0, 0.00, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
             #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
 
@@ -584,27 +665,28 @@ if __name__ == "__main__":
             x_list = distances*4
             notMeasured = False
 
-            j = 0
-            for i in axis6[-1].patches:
-                # get_x pulls left or right; get_height pushes up or down
-                x = x_list.pop(0)
-                asterisk = False
-                notMeasured = False
-                list_labels =list(tbler.keys())
-                key = j//5
-                try:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
-                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
-                except:
-                    asterisk = True
-                    label = "Not simulated"
-                    if "trial" in list_labels[key]:
-                        notMeasured = True
-                        label = "Not measured"
-                    pass
-
-                axis6[-1].text(i.get_x()+0.02, 2, label, fontsize=12, color='black', rotation=90)
-                j += 1
+            #j = 0
+            #for i in axis6[-1].patches:
+            #    # get_x pulls left or right; get_height pushes up or down
+            #    x = x_list.pop(0)
+            #    asterisk = False
+            #    notMeasured = False
+            #    list_labels =list(tbler.keys())
+            #    key = j//5
+            #    try:
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+            #    except:
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
+            #        asterisk = True
+            #        if "trial" in list_labels[key]:
+            #            notMeasured = True
+            #        pass
+            #    if not notMeasured:
+            #        label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate']+1, "*" if asterisk else "")
+            #    else:
+            #        label = "Not measured"
+            #    axis6[-1].text(i.get_x()+0.02, 1, label, fontsize=12, color='black', rotation=90)
+            #    j += 1
             axis6[-1].set_yticks(list(range(0, 170, 10)))
             #axis6[-1].text(0.0, -1.50, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
             #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
