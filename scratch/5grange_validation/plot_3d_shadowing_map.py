@@ -7,7 +7,7 @@ shadowing_map_lists = [[], [], []]
 file_contents = None
 
 import json
-with open("../../../build/bin/shadowing_map_10km_cube.json", "r") as f:
+with open("../../build/bin/shadowing_map_10km_cube.json", "r") as f:
     shadowMap = json.load(f)["shadowMap"]
 
 for entry in shadowMap:
@@ -58,6 +58,21 @@ ax.plot_surface(X, Y, Z)
 ax.set_xlabel("X cell")
 ax.set_ylabel("Y cell")
 ax.set_zlabel("Shadowing (dB)")
-plt.show()
+fig.show()
+
+#Calculate exponential decay due to distance to the central coordinate
+x = []
+y = []
+for i in range(6):
+    decay = pow(2, -1-i)
+    x.append(i)
+    y.append(decay)
+
+fig2 = plt.figure()
+axis2 = fig2.add_subplot(111)
+axis2.plot(x, y)
+axis2.set_xlabel("Euclidian distance from the central cell")
+axis2.set_ylabel("Weight")
+fig2.show()
 
 print()
