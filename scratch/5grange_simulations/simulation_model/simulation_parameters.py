@@ -38,7 +38,7 @@ class SimulationParameters():
                  useCdlPathLoss = False,
                  forceMaxMcsSched = False,
                  kval = 0.0,
-                 numAntennas = 1,
+                 numAntennas = 2,
                  mimoMode = 0,
                  channel_bandwidth = 24,  # converted into number of RBS inside the simulation program
                  freqBand = 100,  # converted into frequency ranges inside the simulation program

@@ -11,12 +11,12 @@ int main()
 {
     ns3::RngSeedManager::SetSeed(1);
     ns3::RngSeedManager::SetRun(1);
-    SpatiallyCorrelatedShadowingMap(0.0, 4.47, 37);//6*sigma to 3x3x3 exponential cell correlation, 12*sigma to 5x5x5, 18/50*sigma to 9x9x9
+    SpatiallyCorrelatedShadowingMap(0, 18*4.47, 110);//6*sigma to 3x3x3 exponential cell correlation, 12*sigma to 5x5x5, 18/50*sigma to 9x9x9
 
     double shadowing = 0;
 
-    for (int x = 0; x < 1000; x+=37)
-        for (int y = 0; y < 1000; y+=37)
+    for (int x = 0; x < 6000; x+=37)
+        for (int y = 0; y < 6000; y+=37)
             for (int z = 0; z < 100; z+=37)
                 shadowing = SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(x, y, z));
     std::cout << "{ \"shadowMap\" : [" << std::endl;

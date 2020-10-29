@@ -30,6 +30,7 @@
 #include <map>
 #include <ns3/contrib-haraldott-module.h>
 #include <sys/stat.h>
+#include "ns3/spatially-correlated-shadowing-map.h"
 
 using namespace ns3;
 
@@ -148,8 +149,34 @@ PhyTxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std:
     *trace_file->GetStream () << (uint32_t) params.m_ccId << std::endl;
 }
 
+unsigned int good_seed()
+{
+    unsigned int random_seed, random_seed_a, random_seed_b;
+    std::ifstream file ("/dev/urandom", std::ios::binary);
+    if (file.is_open())
+    {
+        char * memblock;
+        int size = sizeof(int);
+        memblock = new char [size];
+        file.read (memblock, size);
+        file.close();
+        random_seed_a = *reinterpret_cast<int*>(memblock);
+        delete[] memblock;
+    }// end if
+    else
+    {
+        random_seed_a = 0;
+    }
+    random_seed_b = std::time(0);
+    random_seed = random_seed_a xor random_seed_b;
+    return random_seed;
+} // end good_seed()
+
 //Simple network setup
 int main() {
+    ns3::RngSeedManager::SetSeed(good_seed());
+    std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
+
     std::ios::sync_with_stdio(false);
     std::string data_path       = "./output"; //folder to save results
 
@@ -271,9 +298,15 @@ int main() {
         lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (enbGain));
         lteHelper->SetUeAntennaModelAttribute  ("Gain",     DoubleValue (ueGain));
     }
+    ns3::RngSeedManager::SetRun((int)simulationParameters["Run"].get<double>());
 
     // Default 5G-RANGE parameters
     Config::SetDefault("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue(160));
+
+    static GlobalValue g_max_mcs_sched =
+            GlobalValue ("MAX_MCS_SCHED", "Force maximum MCS value",
+                         UintegerValue (0),
+                         MakeUintegerChecker<uint16_t>());
 
     static GlobalValue g_attackers_per_channel =
             GlobalValue ("ATTACKERS_PER_CHANNEL", "Number of attackers per channel",
@@ -363,6 +396,12 @@ int main() {
             ueParameters.emplace(ueId, coordinatesVector);
         }
     }
+
+    //Setup shadowing map
+    if ((int)simulationParameters["Run"].get<double>() < 4)
+        SpatiallyCorrelatedShadowingMap(0, 4.47, 110);
+    else
+        SpatiallyCorrelatedShadowingMap(0, 18*4.47, 110);// 18* is an adjustment factor for exponential-decay of spatial correlation
 
     //Print information
     bool printMcsTbs        = true;

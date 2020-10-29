@@ -13,13 +13,15 @@ class LteSpectrumPhyResults:
             return
 
         # Process if path is different
-        simulation_std_error_output = simulation_path + os.path + "out.txt"
+        simulation_std_error_output = simulation_path + os.path + "out.txt.lzma"
         if not os.path.exists(simulation_std_error_output):
             raise Exception("Failed extracting LteSpectrumPhy results. Skipping to the next simulation. Source path:" + simulation_path)
 
         file_contents = None
-        with open(simulation_std_error_output, "r") as f:
+        with lzma.open(simulation_std_error_output, "r") as f:
             file_contents.read_lines(f)
+        for line in range(len(file_contents)):
+            file_contents[line] = file_contents[line].decode("utf-8")
 
         mcs_regex = re.compile(".*MCS (.*) TBLER .*")
         snr_regex = re.compile("snr (.*[^\n])")

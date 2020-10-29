@@ -24,24 +24,30 @@ def execute_simulation(simulation_path, base_dir):
 
         # Executable is assumed to be at the base_dir, then we calculate
         # how many ../ is equivalent to that from simulation_path
-        relative_path_from_simulation_to_base_dir = "../"*(len(simulation_path.split(os.sep))-len(base_dir.split(os.sep))+1)
+        #relative_path_from_simulation_to_base_dir = "../"*(len(simulation_path.split(os.sep))-len(base_dir.split(os.sep))+1)
+        relative_path_from_simulation_to_base_dir = "/media/gabri/dev/tools/source/sims/"
 
         # Execute simulation
         try:
-            cmd = "bash -c "
-            cmd += "\"NS_LOG=LteAmc:LteSpectrumPhy "
-            cmd += relative_path_from_simulation_to_base_dir + "5g_range_demonstration_json "
-            cmd += "\""
+            if os.sep == "\\":
+                cmd = "bash -c "
+                cmd += "\"NS_LOG=LteAmc:LteSpectrumPhy "
+                cmd += relative_path_from_simulation_to_base_dir + "5g_range_demonstration_json "
+                cmd += "\""
+            else:
+                cmd = [relative_path_from_simulation_to_base_dir+"5g_range_demonstration_json"]
+
             simProc = subprocess.run(cmd,
                                      stdout=subprocess.PIPE,
                                      stderr=subprocess.STDOUT,
-                                     cwd=simulation_path
+                                     cwd=simulation_path,
+                                     env={"NS_LOG": "LteAmc:LteSpectrumPhy"}
                                      )
 
-            with open(simulation_path + os.sep + "out.txt", "w") as file:
-                file.write(simProc.stdout.decode("utf-8"))
+            with lzma.open(simulation_path + os.sep +"out.txt.lzma", "w") as file:
+                file.write(simProc.stdout)
 
-            throughputProc = subprocess.run(["python",
+            throughputProc = subprocess.run(["python3",
                                              cwd+os.sep+"get_thr.py"
                                              ],
                                             stdout=subprocess.PIPE,
