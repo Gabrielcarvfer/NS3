@@ -149,7 +149,9 @@ def generate_scenarios(baseFolder,
                             if not os.path.exists(dsaFolder):
                                 os.mkdir(dsaFolder)
 
-                            if not dynamicSpectrumAccess:
+                            if not dynamicSpectrumAccessOption:
+                                # default value is ignored
+                                fusionAlgorithm = 6
                                 # Ideal scenario, we remove PUs and disable DSA/MHM/etc
                                 for channelModel in channel_models: #"D3.1", "CDL_D",
                                     channelModelFolder = dsaFolder+os.sep+"channelModel_"+channelModel
