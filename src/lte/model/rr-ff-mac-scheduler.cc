@@ -509,7 +509,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       // UL-RACH Allocation
       newRar.m_grant.m_rnti = newRar.m_rnti;
       newRar.m_grant.m_mcs = forceMaxMcs ? maxMcsSched.Get() : m_ulGrantMcs;
-      std::cout << "newrarGrant " << newRar.m_grant.m_mcs << std::endl;
+      //std::cout << "newrarGrant " << (int) newRar.m_grant.m_mcs << std::endl;
       uint16_t rbLen = 1;
       uint32_t tbSizeBits = 0;
       // find lowest TB size that fits UL grant estimated size
