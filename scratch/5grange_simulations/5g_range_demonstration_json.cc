@@ -244,11 +244,12 @@ int main() {
     Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (40));
     Config::SetDefault ("ns3::LteUePhy::EnableUplinkPowerControl", BooleanValue (false));
 
+    bool enableDSA = simulationParameters["enableDSA"].get<bool>();
     {
         Config::SetDefault("ns3::LteEnbMac::SpectrumSensing",
-                           BooleanValue(simulationParameters["enableDSA"].get<bool>()));
+                           BooleanValue(enableDSA));
         Config::SetDefault("ns3::LteSpectrumPhy::SpectrumSensing",
-                           BooleanValue(simulationParameters["enableDSA"].get<bool>()));
+                           BooleanValue(enableDSA));
         Config::SetDefault("ns3::LteEnbMac::FusionAlgorithm",
                            UintegerValue((int)simulationParameters["fusionAlgorithm"].get<double>()));
         LteSpectrumPhy::SNRsensing = false;
@@ -336,6 +337,8 @@ int main() {
         picojson::object PUjson = inputJson["PU"].get<picojson::object>();
         for (picojson::value::object::const_iterator i = PUjson.begin(); i != PUjson.end(); i++)
         {
+            if (!enableDSA)
+                break;
             //Copy PU number
             int puId = std::stoi(i->first);
 
@@ -355,8 +358,7 @@ int main() {
             double txPower            = puContents["tx_power"].get<double>();
             puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, channelNumber, dutyCycle, period});
 
-            if(!simulationParameters["enableDSA"].get<bool>())
-                LteEnbMac::nonDSAChannels.push_back(channelNumber);
+            LteEnbMac::nonDSAChannels.push_back(channelNumber);
         }
         
         //Load eNB data
