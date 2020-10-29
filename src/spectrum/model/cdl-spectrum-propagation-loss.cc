@@ -88,7 +88,7 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   Ptr<NetDevice> dev_b = b->GetObject<Node>()->GetDevice(0);
 
   Ptr<Ula5gRange> ula_tx, ula_rx;
-  //todo: workaround for NonCommunicatingNetDevice - > WaveformGenerator = PU
+
   //uplink
   if (DynamicCast<LteUeNetDevice>(dev_a))
     {
@@ -97,12 +97,16 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
       system_freq = LteSpectrumValueHelper::GetUplinkCarrierFrequency(DynamicCast<LteEnbNetDevice>(dev_b)->GetUlEarfcn());
     }
   //downlink
-  else
+  else if (DynamicCast<LteEnbNetDevice>(dev_a))
     {
       ula_tx = DynamicCast<LteEnbNetDevice> (dev_a)->GetPhy ()->GetDownlinkSpectrumPhy ()->GetUla ();
       ula_rx = DynamicCast<LteUeNetDevice> (dev_b)->GetPhy ()->GetDownlinkSpectrumPhy ()->GetUla ();
       system_freq = LteSpectrumValueHelper::GetDownlinkCarrierFrequency(DynamicCast<LteEnbNetDevice>(dev_a)->GetDlEarfcn());
     }
+  else
+  {
+      return rxPsd; //workaround for other devices e.g. NonCommunicatingNetDevice - > WaveformGenerator/PU
+  }
 
   if (ula_tx->GetSystemFreq() == 0.0)
   {
