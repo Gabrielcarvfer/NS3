@@ -606,15 +606,22 @@ LteEnbMac::~LteEnbMac ()
 
       for (int subchannel = 0; subchannel < 4; subchannel++)
       {
-          sensing_list_file << "\n\nFor subchannel " << subchannel << " average of " << averageReportedBits[subchannel] << " bits per UE transmitted :";
+          int avgReportedBits = std::isnan(averageReportedBits[subchannel]) ? 0 : averageReportedBits[subchannel];
+          sensing_list_file << "\n\nFor subchannel " << subchannel << " average of " << avgReportedBits << " bits per UE transmitted :";
           sensing_list_file << "\nFrom " << totalFusions[subchannel] << " fusions,";
           sensing_list_file << " " << falseAlarmBitmapReports[subchannel] << " were false positive and";
           sensing_list_file << " " << falseNegativeFusions[subchannel] << " were false negative.";
+
+          double falsePositives = 100 * (double) falseAlarmBitmapReports[subchannel] / ((double) totalFusions[subchannel] - (double) puSubframePresence[subchannel]);
+          falsePositives = std::isnan(falsePositives) ? 0.0 : falsePositives;
           sensing_list_file << "\nTotal false positives were "
-                            << 100 * (double) falseAlarmBitmapReports[subchannel] / ((double) totalFusions[subchannel] - (double) puSubframePresence[subchannel]) << "% ("
+                            << falsePositives << "% ("
                             << (double) falseAlarmBitmapReports[subchannel] << ") of " << ((double) totalFusions[subchannel] - (double) puSubframePresence[subchannel])
                             << " subframes.";
-          sensing_list_file << "\nTotal false negatives were " << 100 * (double) falseNegativeFusions[subchannel] / (double) puSubframePresence[subchannel] << "% ("
+
+          double falseNegatives = 100 * (double) falseNegativeFusions[subchannel] / (double) puSubframePresence[subchannel];
+          falseNegatives = std::isnan(falseNegatives) ? 0.0 : falseNegatives;
+          sensing_list_file << "\nTotal false negatives were " << falseNegatives << "% ("
                             << (double) falseNegativeFusions[subchannel] << ") of " << (double) puSubframePresence[subchannel] << " subframes.";
       }
       sensing_list_file << std::endl;
