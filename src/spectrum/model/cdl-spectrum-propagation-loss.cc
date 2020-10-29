@@ -122,21 +122,21 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
 
   bool is_cdl_a = m_cdlType == CDL_A;
 
-  //auto tupleKey = std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>{a,b};
-  //auto cdlInstance = cdlInstances.find(tupleKey);
-  //if (cdlInstance == cdlInstances.end())
-  //{
-  //    //If CDL instance for a given pair doesn't exist, create one
-  //    CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx, d);
-  //    cdlInstances.emplace(tupleKey, cdl_inst);
-  //    cdlInstance = cdlInstances.find(tupleKey);
-  //}
-  CdlCommon cdlInstance = CdlCommon(is_cdl_a, ula_tx, ula_rx, d);
+  auto tupleKey = std::tuple<Ptr<const MobilityModel>, Ptr<const MobilityModel>>{a,b};
+  auto cdlInstance = cdlInstances.find(tupleKey);
+  if (cdlInstance == cdlInstances.end())
+  {
+      //If CDL instance for a given pair doesn't exist, create one
+      CdlCommon cdl_inst(is_cdl_a, ula_tx, ula_rx, d);
+      cdlInstances.emplace(tupleKey, cdl_inst);
+      cdlInstance = cdlInstances.find(tupleKey);
+  }
+  //CdlCommon cdlInstance = CdlCommon(is_cdl_a, ula_tx, ula_rx, d);
 
   //rxPsd =
   //*(rxPsd) *= path_loss;
-
-  std::vector<double> losses = cdlInstance.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
+  double path_loss = cdlInstance->second.get_tot_path_gain(d);
+  std::vector<double> losses = cdlInstance->second.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
 
   vit = rxPsd->ValuesBegin ();
   size_t i = 0;
