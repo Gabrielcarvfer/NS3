@@ -9,6 +9,7 @@ namespace ns3 {
     float SpatiallyCorrelatedShadowingMap::m_mu{};
     float SpatiallyCorrelatedShadowingMap::m_sigma{};
     int   SpatiallyCorrelatedShadowingMap::m_cell_length{};
+    int   SpatiallyCorrelatedShadowingMap::m_currentRun;
     Ptr<NormalRandomVariable> SpatiallyCorrelatedShadowingMap::m_normalGen = nullptr;
     SpatiallyCorrelatedShadowingMap * SpatiallyCorrelatedShadowingMap::m_instance = nullptr;
     std::map<std::vector<int>, std::tuple<bool, float, float>> SpatiallyCorrelatedShadowingMap::m_shadowingMap;
@@ -19,6 +20,7 @@ namespace ns3 {
         {
             m_instance = this;
             m_normalGen = CreateObject<NormalRandomVariable> ();
+            m_currentRun = ns3::RngSeedManager::GetRun();
         }
         m_mu = mu;
         m_sigma = sigma;
@@ -29,6 +31,11 @@ namespace ns3 {
 
     float SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D coordinate)
     {
+        if (m_currentRun >= 0 && m_currentRun < 2)
+            return -3*m_sigma; // assume best case shadowing scenario
+        if (m_currentRun >= 2 && m_currentRun < 4)
+            return 3*m_sigma; // assume worst case shadowing scenario
+
         // The spatially correlated shadowing map is generated on demand based
         //  on the received parameters and position of nodes
         //

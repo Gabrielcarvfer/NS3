@@ -22,6 +22,7 @@ namespace ns3
             static int m_cell_length;
             static SpatiallyCorrelatedShadowingMap * m_instance;
             static Ptr<NormalRandomVariable> m_normalGen;
+            static int m_currentRun;
     public:
         static std::map<std::vector<int>, std::tuple<bool, float, float>> m_shadowingMap;
     };

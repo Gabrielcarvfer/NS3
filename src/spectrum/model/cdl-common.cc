@@ -7,6 +7,7 @@
 #include <ns3/double.h>
 #include <ns3/enum.h>
 #include <ns3/uinteger.h>
+#include "ns3/spatially-correlated-shadowing-map.h"
 
 namespace ns3
 {
@@ -346,8 +347,8 @@ CdlCommon::get_tot_path_gain (double distance)
     // Check if distance between them changed from the previous run
     double distanceDiff = sqrt(pow(distance-prevDistance,2));
 
-    // If distance changed by more than 50m, redo the rays and pathloss calculation (nodes can't be near origin (0,0,0))
-    if (distanceDiff > 50)
+    // If distance changed by more than 110m for rura/37m for urban, redo the rays and pathloss calculation (nodes can't be near origin (0,0,0))
+    if (distanceDiff > 110)
     {
         // Update previous distance with the new one
         prevDistance = distance;
@@ -362,7 +363,11 @@ CdlCommon::get_tot_path_gain (double distance)
 
         // Update large scale pathloss
         path_loss = get_path_loss(tx->GetPosition(), rx->GetPosition(), system_freq, m_kvalue);
-        shadow_fading = dB2lin((is_CDL_A ? -CDL_A_param::SF_stddev : -CDL_D_param::SF_stddev) * arma::randn());
+        //shadow_fading = dB2lin((is_CDL_A ? -CDL_A_param::SF_stddev : -CDL_D_param::SF_stddev) * arma::randn());
+
+        shadow_fading = dB2lin(SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(rxPos.at(0), rxPos.at(1), rxPos.at(2))));
+        //prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
+
         tot_path_gain = (1.0 / path_loss) * shadow_fading;
     }
     return tot_path_gain;

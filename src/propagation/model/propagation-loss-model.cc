@@ -30,6 +30,8 @@
 #include "ns3/pointer.h"
 #include <cmath>
 #include <random>
+#include "ns3/spatially-correlated-shadowing-map.h"
+
 
 namespace ns3 {
 
@@ -1100,10 +1102,12 @@ RANGE5GPropagationLossModel::DoCalcRxPower (double txPowerDbm,
         prevDistanceAndShadowInstance = prevDistanceAndShadows.find(tupleKey);
     }
 
-    // If the distance between the nodes is greater than 50m from the last calculation, recalculate a new shadowing value
-    if (distance > (prevDistanceAndShadowInstance->second[0] + 50))
+    // If the distance between the nodes is greater than 110m for rural/37m for urban from the last calculation, recalculate a new shadowing value
+    if (distance > (prevDistanceAndShadowInstance->second[0] + 110))
     {
-        prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
+        prevDistanceAndShadowInstance->second[1] = SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(b->GetPosition());
+        prevDistanceAndShadowInstance->second[0] = distance;
+        //prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
     }
 
     lossDb += m_kValue + prevDistanceAndShadowInstance->second[1];
