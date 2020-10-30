@@ -599,8 +599,8 @@ int main() {
          double basePsdWattsHz = pow (10.0, (puData.second[3] - 30) / 10.0); // convert dBm to W/Hz
 
          Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
-         phy->SetAttribute("StartFrequency", DoubleValue(carrierFreq+channelBandwidth*puData.second[4]));
-         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth));
+         phy->SetAttribute("StartFrequency", DoubleValue(carrierFreq+(channelBandwidth-60000)*(puData.second[4]-2)));
+         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth-30000));
          phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
          phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
          phy->CreateTvPsd();
