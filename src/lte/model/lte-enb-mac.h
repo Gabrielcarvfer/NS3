@@ -526,7 +526,7 @@ public://todo: implement this properly through the SAP
     std::map <uint16_t, bool> UeRntiMap;
     //void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
-    uint64_t mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs);
+    std::bitset<132> mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs, bool harmonicDetection);
     uint16_t bandwidth;
 
     static std::vector<int> nonDSAChannels;

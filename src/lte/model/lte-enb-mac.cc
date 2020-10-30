@@ -941,13 +941,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
   {
       //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
       bool senseRBs = false;
-      dlparams.sensedBitmap = mergeSensingReports(FusionAlgorithm, senseRBs);
-
-      for (auto &channel: nonDSAChannels)
-      {
-          dlparams.sensedBitmap |= (uint64_t) 0x01fff << channel;
-      }
-      dlparams.sensedBitmap &= (uint64_t) 0x03ffffffffffff;
+      dlparams.sensedBitmap = mergeSensingReports(FusionAlgorithm, senseRBs, harmonicDetection);
   }
 
     //Calls for the scheduler
@@ -1903,7 +1897,7 @@ bool LteEnbMac::harmonicMeanFraudDetector(uint16_t ueRnti, std::vector<unsigned 
 
 
 //Implements the fusion algorithm for collaborative sensing reports
-uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
+std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs, bool harmonicDetection)
 {
     //Proceed to spectrum sensing fusion
     std::vector<std::vector<bool>> fusedResults;
@@ -1962,8 +1956,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         int j = 0;
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-
-                            bool fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
+                            bool fraudulent = false;
+                            if (harmonicDetection)
+                                fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
 
                             if ( !fraudulent )
                             {
@@ -2020,7 +2015,9 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
                         int i = 0;
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
-                            bool fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
+                            bool fraudulent = false;
+                            if (harmonicDetection)
+                               fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
 
                             if ( !fraudulent )
                             {
@@ -2601,28 +2598,21 @@ uint64_t LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs)
 
 
     //Create bitmap to feed the scheduler
-    int numRbsPerChannel = (bandwidth/fusedResults.size())+1;
+    int numRbsPerChannel = bandwidth/fusedResults.size();
     int i = 0;
-    uint64_t sensedBitmap = 0;
-    for (int k = bandwidth; k > 0; k-=numRbsPerChannel,i++)
-    {
-        if (k < numRbsPerChannel)
-            numRbsPerChannel = k;
+    std::bitset<132> sensedBitmap{};
 
-        if(!fusedResults[i][0])
-            continue;
-
-        //std::cout << "k=" << k << std::endl;
-        uint64_t sensedBitmapChannel = 0;
-        for(int j = 0; j < numRbsPerChannel; j++)
+    for (unsigned c = 0; c < fusedResults.size(); c++)
+        for (unsigned k = c*numRbsPerChannel; k < (c+1)*numRbsPerChannel; k++)
         {
-            sensedBitmapChannel |= ((uint64_t)0x01)<<j;
-            //std::cout << "j=" << j << " sensedBitmapChannel " << std::bitset<50>(sensedBitmapChannel)  << std::endl;
-        }
-        sensedBitmap |= (sensedBitmapChannel << (bandwidth-k));
-        //std::cout << "k=" << k << " sensedBitmap " << std::bitset<50>(sensedBitmap)  << std::endl;
+            if(!fusedResults[i][0])
+                continue;
 
-    }
+            sensedBitmap[k] = fusedResults[c][0];
+
+            //std::cout << "k=" << k << " sensedBitmap " << std::bitset<50>(sensedBitmap)  << std::endl;
+
+        }
 
     return sensedBitmap;
 }
