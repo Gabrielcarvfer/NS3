@@ -31,6 +31,9 @@
 #include "ns3/lte-ue-net-device.h"
 #include "ns3/lte-enb-net-device.h"
 #include "ns3/node.h"
+#include "ns3/core-module.h"
+#include "ns3/spatially-correlated-shadowing-map.h"
+
 
 namespace ns3
 {
@@ -105,7 +108,23 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
     }
   else
   {
-      return rxPsd; //workaround for other devices e.g. NonCommunicatingNetDevice - > WaveformGenerator/PU
+      //workaround for other devices e.g. NonCommunicatingNetDevice - > WaveformGenerator/PU = FSPL
+      // taken from RANGE5G propagation model and multi-model-spectrum-channel
+      const double C = 299792458.0; // speed of light in vacuum
+      const double m_systemLoss = 1.0;
+      const double frequency = 713000000;
+      const double m_lambda = C/frequency;
+      const double numerator = m_lambda * m_lambda;
+      const double m_sigma = 4.47;
+      double denominator = 16 * M_PI * M_PI * d * d * m_systemLoss;
+      double lossDb = 10 * log10(numerator / denominator);
+      double shadowing = 0.0;
+      auto rxPos = b->GetPosition();
+      shadowing = SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(rxPos.x, rxPos.y, rxPos.z));
+      lossDb += shadowing;
+      double linearGain = std::pow (10.0, (lossDb) / 10.0);
+      *rxPsd *= linearGain;
+      return rxPsd;
   }
 
   if (ula_tx->GetSystemFreq() == 0.0)
