@@ -442,7 +442,7 @@ TestCase::CreateTempDirFilename (std::string filename)
         {
             //Windows doesn't like paths with empty spaces or special symbols(e.g :), so enforce underline
             std::string underlined_name = current->m_name;
-            for (int i =0; i < underlined_name.size(); i++)
+            for (unsigned i =0; i < underlined_name.size(); i++)
                 switch(underlined_name[i])
                 {
                     case ' ':
