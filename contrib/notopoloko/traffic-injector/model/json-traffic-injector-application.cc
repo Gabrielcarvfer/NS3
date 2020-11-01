@@ -1,11 +1,10 @@
 #include "json-traffic-injector-application.h"
 
-using namespace ns3;
 
 JsonTrafficInjectorApplication::JsonTrafficInjectorApplication ()
   : m_socket (nullptr),
     m_peer (), 
-    m_packetSize (0), 
+    m_packetSizes (0),
     m_nPackets (0), 
     m_sendEvent (), 
     m_running (false), 
@@ -20,15 +19,19 @@ JsonTrafficInjectorApplication::~JsonTrafficInjectorApplication()
 }
 
 void
-JsonTrafficInjectorApplication::Setup (const ns3::Ptr<ns3::Socket> &socket, const ns3::Address &address, uint16_t port, uint32_t packetSize, uint32_t nPackets, std::vector<float> &timeToSend)
+JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
+                                       uint16_t port,
+                                       std::vector<uint16_t> packetSizes,
+                                       uint32_t nPackets,
+                                       std::vector<float> &timeToSend)
 {
-  m_socket = socket;
   m_peer = address;
   m_peer_port = port;
-  m_packetSize = packetSize;
+  m_packetSizes = packetSizes;
   m_nPackets = nPackets;
   m_timeToSend = timeToSend;
   m_currentTime = 0;
+  m_currentPacketSize = 0;
 }
 void
 JsonTrafficInjectorApplication::Start()
@@ -41,18 +44,27 @@ JsonTrafficInjectorApplication::StartApplication ()
 {
   m_running = true;
   m_packetsSent = 0;
-  int a = m_socket->Bind ();
-    Ipv4Address ipv4 = Ipv4Address::ConvertFrom (m_peer);
-    InetSocketAddress inetSocket = InetSocketAddress (ipv4,
-                                                      m_peer_port);
-  int b = m_socket->Connect (inetSocket);
-
-  if (a == -1 || b == -1){
-    std::cout << "Unable to Connect";
-    return;
+  m_recvBack = 0;
+  m_bytesRecvBack = 0;
+  if (m_socket == 0)
+  {
+      ns3::TypeId tid = ns3::TypeId::LookupByName ("ns3::TcpSocketFactory");
+      m_socket = ns3::Socket::CreateSocket (GetNode (), tid);
+      if (ns3::Ipv4Address::IsMatchingType(m_peer) == true)
+      {
+          m_socket->Bind();
+          m_socket->Connect (ns3::InetSocketAddress (ns3::Ipv4Address::ConvertFrom(m_peer), m_peer_port));
+      }
+      else if (ns3::Ipv6Address::IsMatchingType(m_peer) == true)
+      {
+          m_socket->Bind6();
+          m_socket->Connect (ns3::Inet6SocketAddress (ns3::Ipv6Address::ConvertFrom(m_peer), m_peer_port));
+      }
   }
 
-  SendPacket ();
+  m_socket->SetRecvCallback (ns3::MakeCallback (&JsonTrafficInjectorApplication::ReceivePacket, this));
+
+  ScheduleTx ();
 }
 
 void 
@@ -74,7 +86,8 @@ JsonTrafficInjectorApplication::StopApplication ()
 void 
 JsonTrafficInjectorApplication::SendPacket ()
 {
-  ns3::Ptr<ns3::Packet> packet = ns3::Create<ns3::Packet> (m_packetSize);
+  ns3::Ptr<ns3::Packet> packet = ns3::Create<ns3::Packet> (m_packetSizes.at(m_currentPacketSize));
+  m_currentPacketSize = (m_currentPacketSize+1) % m_packetSizes.size();
   m_socket->Send (packet);
 
   if (++m_packetsSent < m_nPackets)
@@ -90,7 +103,7 @@ JsonTrafficInjectorApplication::ScheduleTx ()
   {
     // Time tNext (Seconds (m_packetSize * 8 / static_cast<double> (m_dataRate.GetBitRate ())));
     // std::cout << "Scheduling next message to: " << m_timeToSend.at(m_currentTime) << std::endl;
-    ns3::Time tNext (ns3::Minutes (m_timeToSend.at(m_currentTime)));
+    ns3::Time tNext (ns3::Seconds (m_timeToSend.at(m_currentTime)));
     m_currentTime++;
     m_sendEvent = ns3::Simulator::Schedule (tNext, &JsonTrafficInjectorApplication::SendPacket, this);
   }
@@ -108,5 +121,19 @@ JsonTrafficInjectorApplication::ScheduleTx ()
   //  StopApplication();
   //}
   
+
+}
+
+void
+JsonTrafficInjectorApplication::ReceivePacket (ns3::Ptr<ns3::Socket> socket)
+{
+    ns3::Ptr<ns3::Packet> packet;
+    ns3::Address from;
+    while ((packet = socket->RecvFrom (from)))
+    {
+        // don't check if data returned is the same data sent earlier
+        m_recvBack++;
+        m_bytesRecvBack += packet->GetSize ();
+    }
 
 }
