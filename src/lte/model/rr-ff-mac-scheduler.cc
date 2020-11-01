@@ -1013,7 +1013,7 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
           else
             {
               newDci.m_mcs.push_back ( forceMaxMcs ? maxMcsSched.Get() : m_amc->GetMcsFromCqi ((*itCqi).second) );
-              std::cout << "newCdi.m_mcs " << int(newDci.m_mcs.back()) << std::endl;
+              //std::cout << "newCdi.m_mcs " << int(newDci.m_mcs.back()) << std::endl;
             }
         }
       int tbSize = (m_amc->GetDlTbSizeFromMcs (newDci.m_mcs.at (0), rbgPerTb * rbgSize) / 8);
