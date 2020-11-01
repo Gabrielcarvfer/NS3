@@ -35,7 +35,7 @@ CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_
     rx(ula_rx),
     system_freq(ula_tx->GetSystemFreq())
 {
-  prevDistance = distance + 100; // force processing in get_tot_path_gain
+  prevDistance = distance + 110; // 110m to force processing in get_tot_path_gain
   get_tot_path_gain(distance);
 }
 
@@ -347,8 +347,8 @@ CdlCommon::get_tot_path_gain (double distance)
     // Check if distance between them changed from the previous run
     double distanceDiff = sqrt(pow(distance-prevDistance,2));
 
-    // If distance changed by more than 110m for rura/37m for urban, redo the rays and pathloss calculation (nodes can't be near origin (0,0,0))
-    if (distanceDiff > 110)
+    // If distance changed by more than 110m for rural/37m for urban, redo the rays and pathloss calculation (nodes can't be near origin (0,0,0))
+    if (distanceDiff >= 110)
     {
         // Update previous distance with the new one
         prevDistance = distance;

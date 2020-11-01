@@ -84,8 +84,8 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   NS_ASSERT (a);
   NS_ASSERT (b);
 
-  double d = a->GetDistanceFrom (b) / (1.0e3);
-  NS_ASSERT_MSG(d <= 1.0, "The distance between the transmitter and receiver must be larger than 1km.");
+  double d = a->GetDistanceFrom (b);
+  NS_ASSERT_MSG(d <= 1000, "The distance between the transmitter and receiver must be larger than 1km.");
 
   Ptr<NetDevice> dev_a = a->GetObject<Node>()->GetDevice(0);
   Ptr<NetDevice> dev_b = b->GetObject<Node>()->GetDevice(0);
@@ -156,8 +156,6 @@ CdlSpectrumPropagationLossModel::DoCalcRxPowerSpectralDensity (Ptr<const Spectru
   }
   //CdlCommon cdlInstance = CdlCommon(is_cdl_a, ula_tx, ula_rx, d);
 
-  //rxPsd =
-  //*(rxPsd) *= path_loss;
   double path_loss = cdlInstance->second.get_tot_path_gain(d);
   std::vector<double> losses = cdlInstance->second.get_channel_fr_5g (Simulator::Now().GetSeconds(), rxPsd);
 
