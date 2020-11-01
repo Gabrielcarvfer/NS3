@@ -171,6 +171,7 @@ Simulator::Run (void)
 {
   NS_LOG_FUNCTION_NOARGS ();
   Time::ClearMarkedTimes ();
+  std::ios_base::sync_with_stdio(false);
   GetImpl ()->Run ();
 }
 
