@@ -1616,7 +1616,6 @@ LteSpectrumPhy::UpdateSinrPerceived (const SpectrumValue& sinr)
 {
   NS_LOG_FUNCTION (this << sinr);
   m_sinrPerceived = sinr;
-  //std::cout << "SpecPhy::UpdateSinr " <<  sinr.ValuesAt(0) << " rxPower " << sinr.ValuesAt(0)*3.16228e-20 << std::endl;
 }
 
 

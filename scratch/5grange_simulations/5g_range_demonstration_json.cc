@@ -242,7 +242,7 @@ int main(int argc, char * argv[]) {
         Config::SetDefault("ns3::LteUePhy::TxPower", DoubleValue(ueTxPower));
     }
 
-    Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (40));
+    Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (80));
     Config::SetDefault ("ns3::LteUePhy::EnableUplinkPowerControl", BooleanValue (false));
 
     bool enableDSA = simulationParameters["enableDSA"].get<bool>();
