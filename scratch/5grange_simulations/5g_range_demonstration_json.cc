@@ -31,6 +31,7 @@
 #include <ns3/contrib-haraldott-module.h>
 #include <sys/stat.h>
 #include "ns3/spatially-correlated-shadowing-map.h"
+#include "ns3/contrib-notopoloko-module.h"
 
 using namespace ns3;
 
@@ -173,7 +174,7 @@ unsigned int good_seed()
 } // end good_seed()
 
 //Simple network setup
-int main() {
+int main(int argc, char * argv[]) {
     ns3::RngSeedManager::SetSeed(good_seed());
     std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
@@ -494,7 +495,7 @@ int main() {
     ipv4h.SetBase("1.0.0.0", "255.0.0.0");
     Ipv4InterfaceContainer internetIpIfaces = ipv4h.Assign(internetDevices);
 
-    // interface 0 is localhost/loopback, 1 is the p2p device
+    // interface 0 is from PGW, 1 is from remotehost
     Ipv4Address remoteHostAddr = internetIpIfaces.GetAddress(1);
 
     //9 Configure static routing between internal and external IPs of the PGW (7.0.0.0 e 1.0.0.0)
@@ -512,51 +513,90 @@ int main() {
     Ipv4InterfaceContainer ueIpIface;
     ueIpIface = epcHelper->AssignUeIpv4Address(NetDeviceContainer(ueLteDevs));
 
-    //13 Modify UEs to use the EPC as the gateway (GPRS tunneling through the eNB)
-    for (uint32_t u = 0; u < ueNodes.GetN(); ++u) {
+    //13 Associate UEs to the eNB
+    lteHelper->Attach(ueLteDevs, enbLteDevs.Get(0));
+
+    //14 Modify UEs to use the EPC as the gateway (GPRS tunneling through the eNB)
+    for (uint32_t u = 0; u < ueNodes.GetN(); u++)
+    {
         Ptr<Node> ueNode = ueNodes.Get(u);
         Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting(ueNode->GetObject<Ipv4>());
         ueStaticRouting->SetDefaultRoute(epcHelper->GetUeDefaultGatewayAddress(), 1);
+        //for (uint32_t uu = 0; uu < ueNodes.GetN(); uu++)
+        //{
+        //    if (u == uu)
+        //        continue;
+        //    ueStaticRouting->AddHostRouteTo(ueNodes.Get(uu)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+        //                                epcHelper->GetUeDefaultGatewayAddress(),
+        //                                1,
+        //                                0);
+        //}
+
     }
 
-    //14 Associate UEs to the eNB
-    lteHelper->Attach(ueLteDevs, enbLteDevs.Get(0));
+
 
     //15 Configure and install applications
-    uint16_t serverPort = 9;
+    uint16_t voipListenPort = 300;
+    uint16_t webListenPort = 8080;
 
-    UdpEchoServerHelper echoServer(serverPort); // Porta #9
     ApplicationContainer serverApps;
     ApplicationContainer serverApp;
-
-//#define UE_SRV
-#ifndef UE_SRV
-    serverApp = echoServer.Install(remoteHost);
-#else
-    serverApp = echoServer.Install(ueNodes.Get(0));
-#endif
-    serverApps.Add(serverApp);
-    serverApp.Start(Seconds(0.1));
-
-//ECHO APP
-#ifndef UE_SRV
-    Ipv4Address serverAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
-    UdpEchoClientHelper echoClient(serverAddress, serverPort);
-#else
-    Ipv4Address serverAddress = ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
-    UdpEchoClientHelper echoClient(serverAddress, serverPort);
-#endif
-    echoClient.SetAttribute("MaxPackets", UintegerValue(1000000));
-    echoClient.SetAttribute("Interval", TimeValue(Seconds(0.1)));
-    echoClient.SetAttribute("PacketSize", UintegerValue(400));
-
     ApplicationContainer clientApps;
-#ifndef UE_SRV
-    clientApps.Add(echoClient.Install(ueNodes));
-#else
-    clientApps.Add(echoClient.Install(remoteHost));
-#endif
-    clientApps.Start(Seconds(0.2));
+    ApplicationContainer tempUeApps;
+
+    enum simulationCase{
+        VOIP_BASE_SCENARIO = 1<<0,
+        WEB_BASE_SCENARIO  = 1<<1,
+        STREAMING_BASE_SCENARIO = 1<<2,
+        VIDEOCONFERENCE_BASE_SCENARIO = 1<<3,
+    };
+    LoaderTrafficHelper loader = LoaderTrafficHelper();
+
+
+    uint16_t simulationScenario = 3;
+    std::string executablePath = std::string(argv[0]); // when launching the simulations, we pass the absolute path to the executable
+
+    std::size_t found = executablePath.find_last_of("/\\");
+    executablePath = executablePath.substr(0,found+1); // get path with last separator
+
+    std::string voip_charge_10s = executablePath + std::string ("voip_charge0_10s.json"); // absolute path to injected traffic
+    if (simulationScenario & VOIP_BASE_SCENARIO)
+    {
+        //In this scenario we should have only two UEs talking to each other to see how the network behaves
+        TcpEchoServerHelper echoServer(voipListenPort);
+        serverApps.Add(echoServer.Install(ueNodes));
+        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0), ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), voipListenPort, voip_charge_10s);
+        clientApps.Add(tempUeApps);
+        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(1), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), voipListenPort, voip_charge_10s);
+        clientApps.Add(tempUeApps);
+    }
+
+    std::string web_charge_10s = executablePath + std::string ("web_charge0_10s.json");
+    if (simulationScenario & WEB_BASE_SCENARIO)
+    {
+        //In this scenario we should have only two UEs talking to each other to see how the network behaves
+        TcpEchoServerHelper echoServer(webListenPort);
+        serverApps.Add(echoServer.Install(ueNodes));
+        auto addr1 = ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0), ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), webListenPort, web_charge_10s);
+        clientApps.Add(tempUeApps);
+        auto addr0 = ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+
+        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(1), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), webListenPort, web_charge_10s);
+        clientApps.Add(tempUeApps);
+    }
+
+
+
+
+
+    //Echo server on remote host and echo clients on UEs
+    //UdpEchoServerHelper echoServer(serverPort); // Porta #9
+    //serverApp = echoServer.Install(remoteHost);
+    //serverApps.Add(serverApp);
+    serverApps.Start(Seconds(0.2));
+    clientApps.Start(Seconds(0.3));
 
 
 
@@ -740,6 +780,7 @@ int main() {
     {
         internet.EnableAsciiIpv4All (data_path + pcapTraceFilename);
     }
+    //internet.EnablePcapIpv4All(data_path+"fil.pcap");
 
     //Print Earfcn
     if (printEarfcn)
@@ -751,6 +792,10 @@ int main() {
         NS_LOG_INFO("eNB UL Bandwidth: " << (int)eNbDev->GetUlBandwidth ());
     }
 
+    Ipv4GlobalRoutingHelper g;
+    Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
+            ("dynamic-global-routing.routes", std::ios::out);
+    g.PrintRoutingTableAllAt (Seconds (1), routingStream);
 
     //23 Run simulation
     Simulator::Stop(Seconds(simulationParameters["ts"].get<double>()+2));
@@ -819,6 +864,8 @@ int main() {
     }
 
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
+
+
 
     Simulator::Destroy();
 
