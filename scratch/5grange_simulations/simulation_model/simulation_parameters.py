@@ -33,7 +33,7 @@ class SimulationParameters():
                  harmonic_detection = False,
                  useErrorModel = True,
                  usePerfectChannel = False,
-                 useHarq = False,
+                 useHarq = True,
                  useIdealRrc = True,
                  useCdlPathLoss = False,
                  forceMaxMcsSched = False,

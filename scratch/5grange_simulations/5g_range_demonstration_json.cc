@@ -191,6 +191,11 @@ int main(int argc, char * argv[]) {
 
     //Get EARFCN for specified frequency band
     double carrierFreq = 0.0;
+    int dlBandwidth, ulBandwidth;
+    int channelBandwidth = 6000000; // 6MHz
+    dlBandwidth = ulBandwidth = (int)(simulationParameters["bw"].get<double>()*5.5); // 33 RBs per 6MHz channel (BR)
+    // or 44 RBs per 8MHz channel (UE)
+    // or 5.5 RBs per 1MHz
 
     //Find DL and UL frequencies based on the bands
     {
@@ -209,28 +214,20 @@ int main(int argc, char * argv[]) {
 
         Config::SetDefault ("ns3::ComponentCarrier::DlEarfcn", UintegerValue (dlEarfcn));
         Config::SetDefault ("ns3::ComponentCarrier::UlEarfcn", UintegerValue (ulEarfcn));
+        Config::SetDefault ("ns3::ComponentCarrier::DlBandwidth", UintegerValue (dlBandwidth));
+        Config::SetDefault ("ns3::ComponentCarrier::UlBandwidth", UintegerValue (ulBandwidth));
+
         Config::SetDefault ("ns3::LteUeNetDevice::DlEarfcn", UintegerValue (dlEarfcn));
         Config::SetDefault ("ns3::LteEnbNetDevice::DlEarfcn", UintegerValue (dlEarfcn));
         Config::SetDefault ("ns3::LteEnbNetDevice::UlEarfcn", UintegerValue (ulEarfcn));
+        Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (dlBandwidth));
+        Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (ulBandwidth));
     }
-
-    int dlBandwidth, ulBandwidth;
-    int channelBandwidth = 6000000; // 6MHz
-    dlBandwidth = ulBandwidth = (int)(simulationParameters["bw"].get<double>()*5.5); // 33 RBs per 6MHz channel (BR)
-                                                                                     // or 44 RBs per 8MHz channel (UE)
-                                                                                     // or 5.5 RBs per 1MHz
-
-    Config::SetDefault ("ns3::ComponentCarrier::DlBandwidth", UintegerValue (dlBandwidth));
-    Config::SetDefault ("ns3::ComponentCarrier::UlBandwidth", UintegerValue (ulBandwidth));
-
-    Config::SetDefault ("ns3::LteEnbNetDevice::DlBandwidth", UintegerValue (dlBandwidth));
-    Config::SetDefault ("ns3::LteEnbNetDevice::UlBandwidth", UintegerValue (ulBandwidth));
 
     Config::SetDefault ("ns3::LteHelper::NumberOfComponentCarriers", UintegerValue (1));
     Config::SetDefault ("ns3::LteHelper::UseCa", BooleanValue (false));
     Config::SetDefault ("ns3::LteHelper::EnbComponentCarrierManager", StringValue ("ns3::RrComponentCarrierManager"));
     Config::SetDefault ("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue (false));
-
     Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
 
     {
@@ -242,7 +239,6 @@ int main(int argc, char * argv[]) {
         Config::SetDefault("ns3::LteUePhy::TxPower", DoubleValue(ueTxPower));
     }
 
-    Config::SetDefault ("ns3::LteEnbRrc::SrsPeriodicity", UintegerValue (80));
     Config::SetDefault ("ns3::LteUePhy::EnableUplinkPowerControl", BooleanValue (false));
 
     bool enableDSA = simulationParameters["enableDSA"].get<bool>();
@@ -595,8 +591,8 @@ int main(int argc, char * argv[]) {
     //UdpEchoServerHelper echoServer(serverPort); // Porta #9
     //serverApp = echoServer.Install(remoteHost);
     //serverApps.Add(serverApp);
-    serverApps.Start(Seconds(0.2));
-    clientApps.Start(Seconds(0.3));
+    serverApps.Start(Seconds(0.9));
+    clientApps.Start(Seconds(1.0));
 
 
 
