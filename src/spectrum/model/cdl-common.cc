@@ -14,6 +14,10 @@ namespace ns3
 
 NS_OBJECT_ENSURE_REGISTERED (CdlCommon);
 
+std::vector<std::vector<float>> CdlCommon::cosSinTable{};
+
+
+
 TypeId
 CdlCommon::GetTypeId (void)
 {
@@ -35,6 +39,12 @@ CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_
     rx(ula_rx),
     system_freq(ula_tx->GetSystemFreq())
 {
+  if (cosSinTable.size() == 0)
+  {
+      cosSinTable.reserve(630);
+      for (float i = 0.0; i <= 2.0*M_PI; i+=0.01)
+        cosSinTable.push_back({std::cos(i), std::sin(i)});
+  }
   prevDistance = distance + 110; // 110m to force processing in get_tot_path_gain
   get_tot_path_gain(distance);
 }
@@ -84,27 +94,44 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
   auto num_rays = static_cast<unsigned int>(cir.n_slices);
   auto num_fr = static_cast<unsigned int>(freqs_PRBs.n_elem);
 
-  arma::cx_cube cir_fr (num_rx, num_tx, num_fr);
+  arma::cx_cube cir_fr (num_rx, num_tx, num_fr, arma::fill::zeros);
+  for (unsigned int id_ray = 0; id_ray < num_rays; id_ray++)
+  {
+      for (unsigned int id_fr = 0; id_fr < num_fr; id_fr++)
+      {
+          std::complex<double> param = -1i * 2.0 * units::pi * freqs_PRBs (id_fr) * rays.delay (id_ray);
 
-  for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
-    {
-      for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
-        {
-          for (unsigned int id_fr = 0; id_fr < num_fr; id_fr++)
-            {
-              std::complex<double> channel_freq = 0.0;
+          //Storing a copy of each imaginary fraction is way too expensive.
+          //Compute the modulus
+          auto imgMod = param.imag() - floor(param.imag()/(2*M_PI))*2*M_PI;
 
-              for (unsigned int id_ray = 0; id_ray < num_rays; id_ray++)
-                {
-                  std::complex<double> param = -1i * 2.0 * units::pi * freqs_PRBs (id_fr) * rays.delay (id_ray);
-                  param = exp(param);
-                  channel_freq = channel_freq + cir.at (id_rx, id_tx, id_ray)*param;
-                }
-              cir_fr.at (id_rx, id_tx, id_fr) = channel_freq;
-            }
-        }
-    }
+          //Too much precision also increases the amount of cached values. Explicitly round to first 2 decimal places
+          imgMod = round(imgMod*100)/100;
 
+          //auto og = sin(param.imag());
+          //auto ng = sin(imgMod);
+          //if (og != ng)
+          //    std::cout << "oof img " << param.imag() << " og " << og << " imgmod " << imgMod << " ng " << ng << std::endl; //mostly due to different implicit roundings
+
+          //param = exp(param); // libc exp is way too expensive for us as it keeps recalculating the sin/cos
+          //we compute the sin/cos once and keep it for later
+          unsigned key = (unsigned)(imgMod*100);
+          std::vector<float> cosSin = cosSinTable[key];
+
+          if (key > 628 || imgMod < 0)
+            std::cout << "bing " << key << " " << imgMod << std::endl;
+
+          double expRe = std::exp(param.real());
+          param = std::complex<double>(expRe*cosSin[0], expRe*cosSin[1]);
+          for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
+          {
+              for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
+              {
+                  cir_fr.at (id_rx, id_tx, id_fr) += cir.at (id_rx, id_tx, id_ray)*param;
+              }
+          }
+      }
+  }
   return cir_fr;
 }
 

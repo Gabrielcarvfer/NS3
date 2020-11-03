@@ -163,6 +163,7 @@ protected:
 
 
   static arma::vec value2arma(Ptr<const SpectrumValue> rxPsd);
+  static std::vector<std::vector<float>> cosSinTable; //indexed by radians*100
 
 };
 
