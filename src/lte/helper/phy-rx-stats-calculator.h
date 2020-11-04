@@ -141,7 +141,8 @@ private:
    * files have not been opened yet
    */
   bool m_ulRxFirstWrite;
-
+  std::ofstream m_dlRxOutFile;
+  std::ofstream m_ulRxOutFile;
 };
 
 } // namespace ns3

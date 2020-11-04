@@ -221,6 +221,9 @@ private:
    */
   std::string m_interferenceFilename;
 
+  std::ofstream m_rsrpOutFile;
+  std::ofstream m_ueSinrOutFile;
+  std::ofstream m_uinterferenceOutFile;
 };
 
 } // namespace ns3
