@@ -95,6 +95,19 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
 
   arma::cx_cube cir_fr (1, 1, num_fr, arma::fill::zeros);
 
+  std::vector<std::complex<double>> ray_sums;
+  for (unsigned int id_ray = 0; id_ray < num_rays; id_ray++)
+  {
+      std::complex<double> sum = 0;
+      for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
+      {
+          for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
+          {
+              sum += cir.at(id_rx, id_tx, id_ray);
+          }
+      }
+      ray_sums.push_back(sum);
+  }
   for (unsigned int id_ray = 0; id_ray < num_rays; id_ray++)
   {
       for (unsigned int id_fr = 0; id_fr < num_fr; id_fr++)
@@ -123,13 +136,8 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
 
           double expRe = std::exp(param.real());
           param = std::complex<double>(expRe*cosSin[0], expRe*cosSin[1]);
-          for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
-          {
-              for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
-              {
-                  cir_fr.at (0, 0, id_fr) += cir.at (id_rx, id_tx, id_ray)*param;
-              }
-          }
+          
+          cir_fr.at (0, 0, id_fr) += ray_sums.at(id_ray) * param;
       }
   }
   return cir_fr;
