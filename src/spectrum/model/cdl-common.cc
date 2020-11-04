@@ -68,7 +68,6 @@ arma::vec CdlCommon::value2arma(Ptr<const SpectrumValue> rxPsd)
 
 std::vector<double> CdlCommon::get_channel_fr_5g (double time, Ptr<SpectrumValue> rxPsd)
 {
-  combined_pattern();
   arma::vec freqs_PRBs = value2arma(rxPsd);
 
   arma::cx_cube fr_losses = get_channel_fr(time, freqs_PRBs);
@@ -390,7 +389,6 @@ CdlCommon::get_tot_path_gain (double distance)
 
         // Update rays setup if node moved
         rays = is_CDL_A ? setup_rays_CDL_A (txPos, rxPos) : setup_rays_CDL_D (txPos, rxPos, system_freq);
-        combined_pattern ();
 
         // Update large scale pathloss
         path_loss = get_path_loss(tx->GetPosition(), rx->GetPosition(), system_freq, m_kvalue);
@@ -400,6 +398,8 @@ CdlCommon::get_tot_path_gain (double distance)
         //prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
 
         tot_path_gain = (1.0 / path_loss) * shadow_fading;
+
+        combined_pattern ();
     }
     return tot_path_gain;
 }
