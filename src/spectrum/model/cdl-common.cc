@@ -79,7 +79,7 @@ std::vector<double> CdlCommon::get_channel_fr_5g (double time, Ptr<SpectrumValue
   for (unsigned int id_fr = 0; id_fr < num_fr; id_fr++)
     {
       //fading[id_fr] = 20 * std::log10 (std::abs (fr_losses(0,0,id_fr)));
-      fading[id_fr] = std::abs (fr_losses(0,0,id_fr));
+      fading[id_fr] = std::abs (fr_losses(0, 0, id_fr));
     }
 
     return fading;
@@ -94,7 +94,8 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
   auto num_rays = static_cast<unsigned int>(cir.n_slices);
   auto num_fr = static_cast<unsigned int>(freqs_PRBs.n_elem);
 
-  arma::cx_cube cir_fr (num_rx, num_tx, num_fr, arma::fill::zeros);
+  arma::cx_cube cir_fr (1, 1, num_fr, arma::fill::zeros);
+
   for (unsigned int id_ray = 0; id_ray < num_rays; id_ray++)
   {
       for (unsigned int id_fr = 0; id_fr < num_fr; id_fr++)
@@ -127,7 +128,7 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
           {
               for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
               {
-                  cir_fr.at (id_rx, id_tx, id_fr) += cir.at (id_rx, id_tx, id_ray)*param;
+                  cir_fr.at (0, 0, id_fr) += cir.at (id_rx, id_tx, id_ray)*param;
               }
           }
       }
