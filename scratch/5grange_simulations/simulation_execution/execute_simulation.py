@@ -37,6 +37,7 @@ def execute_simulation(simulation_path, base_dir):
                                      stderr=subprocess.STDOUT,
                                      cwd=simulation_path,
                                      env={"NS_LOG": "LteAmc:LteSpectrumPhy",
+                                          "OPENBLAS_NUM_THREADS": "1",
                                           }
                                      )
 
