@@ -37,6 +37,7 @@ class SimulationParameters():
                  useIdealRrc = True,
                  useCdlPathLoss = False,
                  forceMaxMcsSched = False,
+                 numerology = 0,
                  kval = 0.0,
                  numAntennas = 2,
                  mimoMode = 0,
@@ -77,6 +78,7 @@ class SimulationParameters():
         self.dictio["SimulationParameters"]["mimoMode"]          = mimoMode
         self.dictio["SimulationParameters"]["freqBand"]          = freqBand
         self.dictio["SimulationParameters"]["cdlType"]           = cdlType
+        self.dictio["SimulationParameters"]["numerology"]        = numerology
 
         # EROS generated traffic profile to inject into applications
         self.dictio["SimulationParameters"]["traffic_profile_model"] = traffic_profile_model

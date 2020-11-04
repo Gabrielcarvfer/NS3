@@ -253,6 +253,8 @@ int main(int argc, char * argv[]) {
     }
     NodeContainer allNodes;
 
+    Config::SetDefault("ns3::LteHelper::Numerology", UintegerValue((int)simulationParameters["numerology"].get<double>()));
+
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
     Config::SetDefault ("ns3::RrFfMacScheduler::HarqEnabled", BooleanValue (simulationParameters["useHarq"].get<bool>()));
