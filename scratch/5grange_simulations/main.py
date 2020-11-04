@@ -25,14 +25,17 @@ if __name__ == "__main__":
     createAndRunScenarios = True
 
     # Output folder
-    #baseDir = "E:\\tools\\source\\sims\\"
-    baseDir = "/media/gabri/dev/tools/source/sims/"
+    baseDir = os.path.abspath("../../build/bin/")
 
     # You're supposed to run this script inside the scratch/5grange_simulations folder
     cwd = os.path.abspath(os.getcwd())  # do not touch this
 
-    # Copy simulation binary to baseDir folder
-    shutil.copy("../../build/bin/5g_range_demonstration_json", baseDir)
+    # Copy injected traffic files to baseDir (where the 5g_range_demonstration_json executable is)
+    shutil.copy("voip_charge0_10s.json", baseDir)
+    shutil.copy("voip_charge0_100s.json", baseDir)
+    shutil.copy("web_charge0_10s.json", baseDir)
+    shutil.copy("web_charge0_100s.json", baseDir)
+
 
     resultsDict = {"scenario": {}}
     numBatches = 10
