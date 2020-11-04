@@ -253,7 +253,9 @@ int main(int argc, char * argv[]) {
     }
     NodeContainer allNodes;
 
-    Config::SetDefault("ns3::LteHelper::Numerology", UintegerValue((int)simulationParameters["numerology"].get<double>()));
+    unsigned int numerology = (int)simulationParameters["numerology"].get<double>();
+    Config::SetDefault("ns3::LteHelper::Numerology", UintegerValue(numerology));
+    Config::SetDefault("ns3::LteAmc::Numerology", UintegerValue(numerology));
 
     Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
     lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");

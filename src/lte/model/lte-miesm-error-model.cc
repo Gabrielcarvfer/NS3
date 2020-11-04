@@ -364,18 +364,39 @@ namespace ns3 {
 
             if (big_cb_num > 0)
                 if (betaTable5g.find(betaKeyBig) != betaTable5g.end())
-                    if (betaTable5g[betaKeyBig][mcs].find(speed) != betaTable5g[betaKeyBig][mcs].end())
-                        beta5gBig = betaTable5g[betaKeyBig][mcs][speed];
-                    else
-                        std::cout << "speed not listed : " << speed << std::endl;
+                {
+                    auto betaTable5gMcsAndSpeed = betaTable5g[betaKeyBig][mcs];
+                    double interpolatedBeta = betaTable5gMcsAndSpeed.begin()->second;
+                    for (auto it = betaTable5gMcsAndSpeed.begin(); it != betaTable5gMcsAndSpeed.end(), it->first != speed; it++)
+                    {
+                        if (it->first > speed)
+                        {
+                            interpolatedBeta = (interpolatedBeta + it->second) / 2;
+                            break;
+                        }
+                        interpolatedBeta = it->second;
+                    }
+                    beta5gBig = interpolatedBeta;
+                }
                 else
                     std::cout << betaKeyBig << " is missing from the beta registry" << std::endl;
+
             if (small_cb_num > 0)
                 if (betaTable5g.find(betaKeySmall) != betaTable5g.end())
-                    if (betaTable5g[betaKeySmall][mcs].find(speed) != betaTable5g[betaKeySmall][mcs].end())
-                        beta5gSmall = betaTable5g[betaKeySmall][mcs][speed];
-                    else
-                        std::cout << "speed not listed : " << speed << std::endl;
+                {
+                    auto betaTable5gMcsAndSpeed = betaTable5g[betaKeySmall][mcs];
+                    double interpolatedBeta = betaTable5gMcsAndSpeed.begin()->second;
+                    for (auto it = betaTable5gMcsAndSpeed.begin(); it != betaTable5gMcsAndSpeed.end(), it->first != speed; it++)
+                    {
+                        if (it->first > speed)
+                        {
+                            interpolatedBeta = (interpolatedBeta + it->second) / 2;
+                            break;
+                        }
+                        interpolatedBeta = it->second;
+                    }
+                    beta5gSmall = interpolatedBeta;
+                }
                 else
                     std::cout << betaKeySmall << " is missing from the beta registry" << std::endl;
         }
