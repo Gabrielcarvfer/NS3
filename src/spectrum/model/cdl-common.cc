@@ -330,14 +330,17 @@ void CdlCommon::combined_pattern ()
 
       // For each antenna antenna element at BS and UE the channel is calculated
       auto magnitude_field = std::sqrt (rays.power (id_ray) * tot_path_gain);
-      for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
-        {
-          for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
-            {
+
+      for (unsigned int id_rx = 0; id_rx < num_rx; id_rx++)
+      {
+          auto magn_field_times_rx_gain_times_xpr_mat = magnitude_field * rx_gain.col (id_rx).st () * xpr_mat;
+
+          for (unsigned int id_tx = 0; id_tx < num_tx; id_tx++)
+          {
               comb_pattern.at (id_rx, id_tx, id_ray) =
-                  arma::as_scalar (magnitude_field * rx_gain.col (id_rx).st () * xpr_mat * tx_gain.col (id_tx));
-            }
-        }
+                  arma::as_scalar (magn_field_times_rx_gain_times_xpr_mat * tx_gain.col (id_tx));
+          }
+      }
     }  // END FOR for each ray
 }
 
