@@ -121,18 +121,8 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
           //Too much precision also increases the amount of cached values. Explicitly round to first 2 decimal places
           imgMod = round(imgMod*100)/100;
 
-          //auto og = sin(param.imag());
-          //auto ng = sin(imgMod);
-          //if (og != ng)
-          //    std::cout << "oof img " << param.imag() << " og " << og << " imgmod " << imgMod << " ng " << ng << std::endl; //mostly due to different implicit roundings
-
-          //param = exp(param); // libc exp is way too expensive for us as it keeps recalculating the sin/cos
-          //we compute the sin/cos once and keep it for later
           unsigned key = (unsigned)(imgMod*100);
           std::vector<float> cosSin = cosSinTable[key];
-
-          if (key > 628 || imgMod < 0)
-            std::cout << "bing " << key << " " << imgMod << std::endl;
 
           double expRe = std::exp(param.real());
           param = std::complex<double>(expRe*cosSin[0], expRe*cosSin[1]);
