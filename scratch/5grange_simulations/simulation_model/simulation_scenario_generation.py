@@ -127,27 +127,39 @@ def generate_scenarios(baseFolder,
             if not os.path.exists(freqBandFolder):
                 os.mkdir(freqBandFolder)
 
+            simulationScenario["SimulationParameters"]["freqBand"] = freqBand.value
+
             # Create folder for different mimo options
             for mimoMode in mimoOptions:
                 mimoModeFolder = freqBandFolder+os.sep+"mimo_"+mimoMode.name
                 if not os.path.exists(mimoModeFolder):
                     os.mkdir(mimoModeFolder)
 
+                simulationScenario["SimulationParameters"]["mimoMode"] = mimoMode.value
+
                 for numerology in numerologies:
                     numerologyFolder = mimoModeFolder+os.sep+"num_"+str(numerology)
                     if not os.path.exists(numerologyFolder):
                         os.mkdir(numerologyFolder)
+
+                    simulationScenario["SimulationParameters"]["fusionAlgorithm"] = numerology
 
                     for ueSpeed in ueSpeeds:
                         speedFolder = numerologyFolder+os.sep+"speed_"+str(ueSpeed)
                         if not os.path.exists(speedFolder):
                             os.mkdir(speedFolder)
 
+                        for ue in simulationScenario["UE"]:
+                            simulationScenario["UE"][ue]["speed"] = ueSpeed
+
                         # Create folders for scenarios with and without dynamic spectrum access
                         for dynamicSpectrumAccessOption in dynamicSpectrumAccess:
                             dsaFolder = speedFolder+os.sep+"dsa_"+str(dynamicSpectrumAccessOption)
                             if not os.path.exists(dsaFolder):
                                 os.mkdir(dsaFolder)
+
+                            simulationScenario["SimulationParameters"]["enableDSA"] = dynamicSpectrumAccessOption
+                            simulationScenario["SimulationParameters"]["attackers_per_channel"] = 0
 
                             if not dynamicSpectrumAccessOption:
                                 # default value is ignored
@@ -160,17 +172,10 @@ def generate_scenarios(baseFolder,
                                     # Replace appropriate settings in base scenario and dump to json inside the folder
                                     simulationScenario["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
                                     simulationScenario["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
-                                    simulationScenario["SimulationParameters"]["enableDSA"] = False
-                                    simulationScenario["SimulationParameters"]["attackers_per_channel"] = 0
                                     simulationScenario["SimulationParameters"]["markov_detection"]   = False
                                     simulationScenario["SimulationParameters"]["harmonic_detection"] = False
                                     simulationScenario["SimulationParameters"]["useCdlPathLoss"]    = channelModel in ["CDL_D", "CDL_A"]
                                     simulationScenario["SimulationParameters"]["cdlType"]           = channelModel if channelModel == "CDL_A" else "CDL_D"
-                                    simulationScenario["SimulationParameters"]["mimoMode"]          = mimoMode.value
-                                    simulationScenario["SimulationParameters"]["freqBand"]          = freqBand.value
-
-                                    for ue in simulationScenario["UE"]:
-                                        simulationScenario["UE"][ue]["speed"] = ueSpeed
 
                                     # Check if output file already exists to skip rewriting it
                                     SimulationJsonPath = channelModelFolder+os.sep+"simulationParameters.json"
@@ -183,6 +188,10 @@ def generate_scenarios(baseFolder,
                                     mhmFolder = dsaFolder+os.sep+"markov_"+str(markovOption)+"_harmonic_"+str(harmonicOption)
                                     if not os.path.exists(mhmFolder):
                                         os.mkdir(mhmFolder)
+
+                                    simulationScenario["SimulationParameters"]["markov_detection"]   = markovOption
+                                    simulationScenario["SimulationParameters"]["harmonic_detection"] = harmonicOption
+
 
                                     # Create folders for different number of attackers
                                     for numAttackers in attackerOptions:
@@ -199,27 +208,19 @@ def generate_scenarios(baseFolder,
                                             if not os.path.exists(fusionAlgorithmFolder):
                                                 os.mkdir(fusionAlgorithmFolder)
 
-                                                for channelModel in channel_models:
-                                                    channelModelFolder = fusionAlgorithmFolder+os.sep+"channelModel_"+channelModel
-                                                    if not os.path.exists(channelModelFolder):
-                                                        os.mkdir(channelModelFolder)
+                                            simulationScenario["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
+                                            simulationScenario["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
 
-                                                    # Replace appropriate settings in base scenario and dump to json inside the folder
-                                                    simulationScenario["SimulationParameters"]["fusionAlgorithm"] = fusionAlgorithm
-                                                    simulationScenario["SimulationParameters"]["fusionAlgorithmName"] = fusionAlgorithms[fusionAlgorithm]
-                                                    simulationScenario["SimulationParameters"]["enableDSA"] = True
-                                                    simulationScenario["SimulationParameters"]["attackers_per_channel"] = numAttackers
-                                                    simulationScenario["SimulationParameters"]["markov_detection"]   = markovOption
-                                                    simulationScenario["SimulationParameters"]["harmonic_detection"] = harmonicOption
-                                                    simulationScenario["SimulationParameters"]["useCdlPathLoss"]    = channelModel in ["CDL_D", "CDL_A"]
-                                                    simulationScenario["SimulationParameters"]["cdlType"]           = channelModel if channelModel == "CDL_A" else "CDL_D"
-                                                    simulationScenario["SimulationParameters"]["mimoMode"]          = mimoMode.value
-                                                    simulationScenario["SimulationParameters"]["freqBand"]          = freqBand.value
+                                            for channelModel in channel_models:
+                                                channelModelFolder = fusionAlgorithmFolder+os.sep+"channelModel_"+channelModel
+                                                if not os.path.exists(channelModelFolder):
+                                                    os.mkdir(channelModelFolder)
 
-                                                    for ue in simulationScenario["UE"]:
-                                                        simulationScenario["UE"][ue]["speed"] = ueSpeed
+                                                # Replace appropriate settings in base scenario and dump to json inside the folder
+                                                simulationScenario["SimulationParameters"]["useCdlPathLoss"]    = channelModel in ["CDL_D", "CDL_A"]
+                                                simulationScenario["SimulationParameters"]["cdlType"]           = channelModel if channelModel == "CDL_A" else "CDL_D"
 
-                                                    SimulationJsonPath = channelModelFolder+os.sep+"simulationParameters.json"
-                                                    if not os.path.exists(SimulationJsonPath):
-                                                        with open(SimulationJsonPath, "w") as f:
-                                                            json.dump(simulationScenario, f, indent=4)
+                                                SimulationJsonPath = channelModelFolder+os.sep+"simulationParameters.json"
+                                                if not os.path.exists(SimulationJsonPath):
+                                                    with open(SimulationJsonPath, "w") as f:
+                                                        json.dump(simulationScenario, f, indent=4)
