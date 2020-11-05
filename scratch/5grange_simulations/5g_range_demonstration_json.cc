@@ -173,6 +173,27 @@ unsigned int good_seed()
     return random_seed;
 } // end good_seed()
 
+
+void make_ue_pairs(uint32_t numUes, float fraction, std::map<std::pair<uint16_t, uint16_t>, bool> &uePairs)
+{
+    // if more than 2 UEs, we assume a fraction of the UEs are talking to each other
+    int numPairs = numUes * fraction / 2;
+    uint16_t prevSize = 0;
+    uint16_t currSize = 0;
+    while (numPairs > 0)
+    {
+        uint16_t ue0 = rand() % numUes;
+        uint16_t ue1 = rand() % numUes;
+        if (ue0 == ue1)
+            continue;
+        uePairs.emplace(std::make_pair(ue0, ue1), true);
+        currSize = uePairs.size();
+        if (prevSize != currSize)
+            numPairs--;
+        prevSize = currSize;
+    }
+}
+
 //Simple network setup
 int main(int argc, char * argv[]) {
     ns3::RngSeedManager::SetSeed(good_seed());
@@ -563,13 +584,43 @@ int main(int argc, char * argv[]) {
     std::string voip_charge_10s = executablePath + std::string ("voip_charge0_10s.json"); // absolute path to injected traffic
     if (simulationScenario & VOIP_BASE_SCENARIO)
     {
-        //In this scenario we should have only two UEs talking to each other to see how the network behaves
-        TcpEchoServerHelper echoServer(voipListenPort);
-        serverApps.Add(echoServer.Install(ueNodes));
-        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0), ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), voipListenPort, voip_charge_10s);
-        clientApps.Add(tempUeApps);
-        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(1), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), voipListenPort, voip_charge_10s);
-        clientApps.Add(tempUeApps);
+        std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
+        int numUes = ueNodes.GetN();
+
+        if (numUes == 2)
+        {
+            // If only two UEs in voip scenario, assume both are talking to each other with something similar to a conversation
+            voipPairs.emplace(std::make_pair(0, 1), true);
+        }
+        else
+        {
+            // We generate random pairs of UEs and setup these applications to have something similar to a conversation
+            make_ue_pairs(numUes, 0.3, voipPairs);
+        }
+
+        std::set<uint16_t> uesWithVoip;
+        for (auto uePairsIt = voipPairs.begin(); uePairsIt != voipPairs.end(); uePairsIt++)
+        {
+            unsigned ue0 = uePairsIt->first.first;
+            unsigned ue1 = uePairsIt->first.second;
+            uesWithVoip.insert(ue0);
+            uesWithVoip.insert(ue1);
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue0),
+                                                ueNodes.Get(ue1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                voipListenPort,
+                                                voip_charge_10s,
+                                                false);
+            clientApps.Add(tempUeApps);
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue1),
+                                                ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                voipListenPort,
+                                                voip_charge_10s,
+                                                false);
+            clientApps.Add(tempUeApps);
+        }
+        PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), voipListenPort));
+        for (auto ue : uesWithVoip)
+            serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
     std::string web_charge_10s = executablePath + std::string ("web_charge0_10s.json");
