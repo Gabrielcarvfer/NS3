@@ -105,3 +105,7 @@ src/lte/model/BLER/BLER_interpolation_validation/bler.txt
 src/lte/model/BLER/BLER_interpolation_validation/
 
 configFile.cmake
+
+scratch/5grange_simulations/videoconf_charge0_100s.json
+
+scratch/5grange_simulations/videoconf_charge0_10s.json

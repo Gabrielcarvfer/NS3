@@ -2,7 +2,7 @@ import os
 import shutil
 import multiprocessing
 from enum import Enum
-
+import json
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
 
@@ -35,13 +35,61 @@ if __name__ == "__main__":
     shutil.copy("voip_charge0_100s.json", baseDir)
     shutil.copy("web_charge0_10s.json", baseDir)
     shutil.copy("web_charge0_100s.json", baseDir)
+    shutil.copy("stream_charge0_9mbps_10s.json", baseDir)
+    shutil.copy("stream_charge0_9mbps_100s.json", baseDir)
+
+    # We don't have a model for videoconferences, so we cheat by interleaving voip + video streaming
+    for duration in [10, 100]:
+        interleaved_traffic = None
+        input_traffics = []
+
+        # The interleaving process starts by zipping time_between_packets of all traffics
+        for inputFileName in ["stream_charge0_2mbps_%ds.json" % duration, "voip_charge0_%ds.json" % duration]:
+            with open(inputFileName, "r") as inputFile:
+                traffic = json.load(inputFile)
+                if type(traffic["packet_size"]) == list:
+                    input_traffics.append(list(zip(traffic["time_between_packets"], traffic["packet_size"])))
+                    interleaved_traffic = traffic  # just to get the output file structure
+                else:
+                    input_traffics.append(list(zip(traffic["time_between_packets"], [traffic["packet_size"]]*len(traffic["time_between_packets"]))))
+        del traffic, inputFile
+
+        # We then replace relative times with absolute times to make merging easier
+        interleaved_packets = []
+        for traffic in input_traffics:
+            accumulated_time_of_traffic = 0.0
+            for time_between_packets, packet_size in traffic:
+                accumulated_time_of_traffic += time_between_packets
+                interleaved_packets.append([accumulated_time_of_traffic, packet_size])
+        del input_traffics, traffic, accumulated_time_of_traffic, time_between_packets, packet_size
+
+        # Merging is done, now we sort everything
+        interleaved_packets.sort()
+
+        # Then we bring back to time_between_packets format by subtracting time of the previous packet from the next one
+        # We do this in reverse order to make things easier
+        i = len(interleaved_packets)-1
+        while i > 1:
+            interleaved_packets[i][0] -= interleaved_packets[i-1][0]
+            i -= 1
+
+        # We split time_between_packets and packet_size and save into output structure
+        interleaved_traffic["time_between_packets"], interleaved_traffic["packet_size"] = list(zip(*interleaved_packets))
+        del interleaved_packets
+
+        # Save interleaved traffic
+        with open("videoconf_charge0_%ds.json" % duration, "w") as output:
+            json.dump(interleaved_traffic, output, indent=4)
+        del interleaved_traffic
+    shutil.copy("videoconf_charge0_10s.json", baseDir)
+    shutil.copy("videoconf_charge0_100s.json", baseDir)
 
 
     resultsDict = {"scenario": {}}
     numBatches = 10
     numUEs = [1, 3, 20, 50, 100, ] # 2, 5, 10, 20, 50, 100
     numerology_and_numUEs_threshold = [(0, 0), (2, 20), (3, 50)]
-    dynamic_spectrum_access = [False, True,]
+    dynamic_spectrum_access = [False, True, ]
     if createAndRunScenarios:
         for batch in range(numBatches):
             for numUes in numUEs:
