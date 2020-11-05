@@ -18,7 +18,8 @@ public:
               uint16_t port,
               std::vector<uint16_t> packetSizes,
               uint32_t nPackets,
-              std::vector<float> &timeToSend);
+              std::vector<float> &timeToSend,
+              bool tcp);
   void Start();
 private:
   void StartApplication () override;
@@ -43,6 +44,7 @@ private:
   uint32_t              m_recvBack;
   uint64_t              m_bytesRecvBack;
   uint8_t               m_currentTime;
+  bool                  m_tcp;
 };
 
 #endif //JSON_TRAFFIC_INJECTOR_APPLICATION_H

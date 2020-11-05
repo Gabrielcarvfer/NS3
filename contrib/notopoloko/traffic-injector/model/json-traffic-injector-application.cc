@@ -9,7 +9,8 @@ JsonTrafficInjectorApplication::JsonTrafficInjectorApplication ()
     m_sendEvent (), 
     m_running (false), 
     m_packetsSent (0),
-    m_currentTime (0)
+    m_currentTime (0),
+    m_tcp (false)
 {
 }
 
@@ -23,7 +24,8 @@ JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
                                        uint16_t port,
                                        std::vector<uint16_t> packetSizes,
                                        uint32_t nPackets,
-                                       std::vector<float> &timeToSend)
+                                       std::vector<float> &timeToSend,
+                                       bool tcp)
 {
   m_peer = address;
   m_peer_port = port;
@@ -32,6 +34,7 @@ JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
   m_timeToSend = timeToSend;
   m_currentTime = 0;
   m_currentPacketSize = 0;
+  m_tcp = tcp;
 }
 void
 JsonTrafficInjectorApplication::Start()
@@ -48,7 +51,12 @@ JsonTrafficInjectorApplication::StartApplication ()
   m_bytesRecvBack = 0;
   if (m_socket == 0)
   {
-      ns3::TypeId tid = ns3::TypeId::LookupByName ("ns3::TcpSocketFactory");
+      ns3::TypeId tid;
+      if (m_tcp)
+        tid = ns3::TypeId::LookupByName ("ns3::TcpSocketFactory");
+      else
+        tid = ns3::TypeId::LookupByName ("ns3::UdpSocketFactory") ;
+
       m_socket = ns3::Socket::CreateSocket (GetNode (), tid);
       if (ns3::Ipv4Address::IsMatchingType(m_peer) == true)
       {

@@ -12,7 +12,12 @@ LoaderTrafficHelper::~LoaderTrafficHelper() = default;
 
 //For IOT traffic
 
-ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeContainer &clientNodes, ns3::Address serverAddress, uint16_t serverPort, std::string jsonfile) {
+ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeContainer &clientNodes,
+                                                               ns3::Address serverAddress,
+                                                               uint16_t serverPort,
+                                                               std::string jsonfile,
+                                                               bool tcp)
+{
     std::vector<float> timeToSend{0};
     ns3::ApplicationContainer apps;
 
@@ -47,7 +52,7 @@ ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeCo
         }
 
         ns3::Ptr<JsonTrafficInjectorApplication> app = ns3::CreateObject<JsonTrafficInjectorApplication> ();
-        app->Setup (serverAddress, serverPort, packetSizes, array_size, timeToSend);
+        app->Setup (serverAddress, serverPort, packetSizes, array_size, timeToSend, tcp);
         clientNodes.Get (i)->AddApplication (app);
 
         //Simulator::Schedule(Seconds(o["init_time"].get<double>()), &IOTClient::Start, app);

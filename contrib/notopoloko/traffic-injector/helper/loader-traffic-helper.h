@@ -16,7 +16,11 @@ public:
      LoaderTrafficHelper();
     ~LoaderTrafficHelper();
 
-    ns3::ApplicationContainer LoadJsonTraffic(const ns3::NodeContainer &clientNodes, ns3::Address serverAddress, uint16_t serverPort, std::string jsonfile);
+    ns3::ApplicationContainer LoadJsonTraffic(const ns3::NodeContainer &clientNodes,
+                                              ns3::Address serverAddress,
+                                              uint16_t serverPort,
+                                              std::string jsonfile,
+                                              bool tcp);
 };
 
 #endif /* LOADER_TRAFFIC_H */
