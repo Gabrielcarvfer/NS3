@@ -543,18 +543,7 @@ int main(int argc, char * argv[]) {
         Ptr<Node> ueNode = ueNodes.Get(u);
         Ptr<Ipv4StaticRouting> ueStaticRouting = ipv4RoutingHelper.GetStaticRouting(ueNode->GetObject<Ipv4>());
         ueStaticRouting->SetDefaultRoute(epcHelper->GetUeDefaultGatewayAddress(), 1);
-        //for (uint32_t uu = 0; uu < ueNodes.GetN(); uu++)
-        //{
-        //    if (u == uu)
-        //        continue;
-        //    ueStaticRouting->AddHostRouteTo(ueNodes.Get(uu)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
-        //                                epcHelper->GetUeDefaultGatewayAddress(),
-        //                                1,
-        //                                0);
-        //}
-
     }
-
 
 
     //15 Configure and install applications
@@ -626,16 +615,55 @@ int main(int argc, char * argv[]) {
     std::string web_charge_10s = executablePath + std::string ("web_charge0_10s.json");
     if (simulationScenario & WEB_BASE_SCENARIO)
     {
-        //In this scenario we should have only two UEs talking to each other to see how the network behaves
-        TcpEchoServerHelper echoServer(webListenPort);
-        serverApps.Add(echoServer.Install(ueNodes));
-        auto addr1 = ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
-        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0), ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), webListenPort, web_charge_10s);
-        clientApps.Add(tempUeApps);
-        auto addr0 = ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+        std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
+        int numUes = ueNodes.GetN();
+        if (numUes == 2)
+        {
+            //We assume both server and client are inside the same cell for measurements purposes only
+            //Node 0 acts like the server and node 1 like an user, but requests are injected in the inverse order (server->client->server)
+            TcpEchoServerHelper echoServer(webListenPort, 0.3);
+            serverApps.Add(echoServer.Install(ueNodes.Get(1)));
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
+                                                ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                webListenPort,
+                                                web_charge_10s,
+                                                true);
+            clientApps.Add(tempUeApps);
+        }
+        else
+        {
+            // client will return 30% of downlink payload to represent uplink requests to the server
+            TcpEchoServerHelper echoServer(webListenPort, 0.3);
 
-        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(1), ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(), webListenPort, web_charge_10s);
-        clientApps.Add(tempUeApps);
+            // For internet select a fraction of random UEs to receive the injected traffic coming from the remotehost
+            unsigned numUes = ueNodes.GetN();
+            unsigned numUesWeb = numUes * 0.7;
+            std::map<uint16_t, bool> uesWithWeb;
+            while(numUesWeb > 0)
+            {
+                unsigned ue0 = rand() % numUes;
+
+                if (uesWithWeb.find(ue0) != uesWithWeb.end())
+                    continue;
+
+                uesWithWeb.emplace(ue0, true);
+
+                // this is added to the client apps container, but acts as the server on the remote host
+                tempUeApps = loader.LoadJsonTraffic(remoteHost,
+                                                    ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                    webListenPort,
+                                                    web_charge_10s,
+                                                    true);
+                clientApps.Add(tempUeApps);
+
+                // this is added to the server apps container, but acts as the client on the UE
+                serverApps.Add(echoServer.Install(ueNodes.Get(ue0)));
+                numUesWeb--;
+            }
+
+        }
+
+
     }
 
 
