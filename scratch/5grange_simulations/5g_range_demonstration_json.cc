@@ -178,6 +178,7 @@ void make_ue_pairs(uint32_t numUes, float fraction, std::map<std::pair<uint16_t,
 {
     // if more than 2 UEs, we assume a fraction of the UEs are talking to each other
     int numPairs = numUes * fraction / 2;
+    numPairs = numPairs > 0 ? numPairs : 1;
     uint16_t prevSize = 0;
     uint16_t currSize = 0;
     while (numPairs > 0)
@@ -547,8 +548,10 @@ int main(int argc, char * argv[]) {
 
 
     //15 Configure and install applications
-    uint16_t voipListenPort = 300;
-    uint16_t webListenPort = 8080;
+    uint16_t voipListenPort      = 8000;
+    uint16_t webListenPort       = 8001;
+    uint16_t streamingListenPort = 8002;
+    uint16_t videoconfListenPort = 8003;
 
     ApplicationContainer serverApps;
     ApplicationContainer serverApp;
@@ -612,16 +615,59 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
+    std::string videoconf_charge_10s = executablePath + std::string ("videoconf_charge0_10s.json"); // absolute path to injected traffic
+    if (simulationScenario & VIDEOCONFERENCE_BASE_SCENARIO)
+    {
+        std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
+        int numUes = ueNodes.GetN();
+
+        if (numUes == 2)
+        {
+            // If only two UEs in voip scenario, assume both are talking to each other with something similar to a conversation
+            videoconfPairs.emplace(std::make_pair(0, 1), true);
+        }
+        else
+        {
+            // We generate random pairs of UEs and setup these applications to have something similar to a conversation
+            make_ue_pairs(numUes, 0.1, videoconfPairs);
+        }
+
+        std::set<uint16_t> uesWithVideoconf;
+        for (auto uePairsIt = videoconfPairs.begin(); uePairsIt != videoconfPairs.end(); uePairsIt++)
+        {
+            unsigned ue0 = uePairsIt->first.first;
+            unsigned ue1 = uePairsIt->first.second;
+            uesWithVideoconf.insert(ue0);
+            uesWithVideoconf.insert(ue1);
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue0),
+                                                ueNodes.Get(ue1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                videoconfListenPort,
+                                                videoconf_charge_10s,
+                                                false);
+            clientApps.Add(tempUeApps);
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue1),
+                                                ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                videoconfListenPort,
+                                                videoconf_charge_10s,
+                                                false);
+            clientApps.Add(tempUeApps);
+        }
+        PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), videoconfListenPort));
+        for (auto ue : uesWithVideoconf)
+            serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
+    }
+
     std::string web_charge_10s = executablePath + std::string ("web_charge0_10s.json");
     if (simulationScenario & WEB_BASE_SCENARIO)
     {
-        std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
+        // client will return 30% of downlink payload to represent uplink requests to the server
+        TcpEchoServerHelper echoServer(webListenPort, 0.3);
+
         int numUes = ueNodes.GetN();
         if (numUes == 2)
         {
             //We assume both server and client are inside the same cell for measurements purposes only
             //Node 0 acts like the server and node 1 like an user, but requests are injected in the inverse order (server->client->server)
-            TcpEchoServerHelper echoServer(webListenPort, 0.3);
             serverApps.Add(echoServer.Install(ueNodes.Get(1)));
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
                                                 ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
@@ -632,11 +678,7 @@ int main(int argc, char * argv[]) {
         }
         else
         {
-            // client will return 30% of downlink payload to represent uplink requests to the server
-            TcpEchoServerHelper echoServer(webListenPort, 0.3);
-
-            // For internet select a fraction of random UEs to receive the injected traffic coming from the remotehost
-            unsigned numUes = ueNodes.GetN();
+            // For internet select a fraction (70%) of random UEs to receive the injected traffic coming from the remotehost
             unsigned numUesWeb = numUes * 0.7;
             std::map<uint16_t, bool> uesWithWeb;
             while(numUesWeb > 0)
@@ -660,10 +702,55 @@ int main(int argc, char * argv[]) {
                 serverApps.Add(echoServer.Install(ueNodes.Get(ue0)));
                 numUesWeb--;
             }
-
         }
+    }
 
+    std::string streaming_charge_10s = executablePath + std::string ("stream_charge0_9mbps_10s.json");
+    if (simulationScenario & STREAMING_BASE_SCENARIO)
+    {
+        // client will return 5% of downlink payload to represent uplink requests to the server
+        TcpEchoServerHelper echoServer(webListenPort, 0.05);
 
+        int numUes = ueNodes.GetN();
+        if (numUes == 2)
+        {
+            //We assume both server and client are inside the same cell for measurements purposes only
+            //Node 0 acts like the server and node 1 like an user, but requests are injected in the inverse order (server->client->server)
+            serverApps.Add(echoServer.Install(ueNodes.Get(1)));
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
+                                                ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                streamingListenPort,
+                                                streaming_charge_10s,
+                                                true);
+            clientApps.Add(tempUeApps);
+        }
+        else
+        {
+            // For internet select a fraction (10%) of random UEs to receive the injected traffic coming from the remotehost
+            unsigned numUesStreaming = numUes * 0.1;
+            std::map<uint16_t, bool> uesWithStreaming;
+            while(numUesStreaming > 0)
+            {
+                unsigned ue0 = rand() % numUes;
+
+                if (uesWithStreaming.find(ue0) != uesWithStreaming.end())
+                    continue;
+
+                uesWithStreaming.emplace(ue0, true);
+
+                // this is added to the client apps container, but acts as the server on the remote host
+                tempUeApps = loader.LoadJsonTraffic(remoteHost,
+                                                    ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                    streamingListenPort,
+                                                    streaming_charge_10s,
+                                                    true);
+                clientApps.Add(tempUeApps);
+
+                // this is added to the server apps container, but acts as the client on the UE
+                serverApps.Add(echoServer.Install(ueNodes.Get(ue0)));
+                numUesStreaming--;
+            }
+        }
     }
 
 
