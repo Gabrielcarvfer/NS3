@@ -96,41 +96,31 @@ MacStatsCalculator::DlScheduling (uint16_t cellId, uint64_t imsi, DlSchedulingCa
 		  dlSchedulingCallbackInfo.rnti << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << dlSchedulingCallbackInfo.sizeTb1 << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << dlSchedulingCallbackInfo.sizeTb2);
   NS_LOG_INFO ("Write DL Mac Stats in " << GetDlOutputFilename ().c_str ());
 
-  std::ofstream outFile;
+
   if ( m_dlFirstWrite == true )
     {
-      outFile.open (GetDlOutputFilename ().c_str ());
-      if (!outFile.is_open ())
+      dlOutFile.open (GetDlOutputFilename ().c_str ());
+      if (!dlOutFile.is_open ())
         {
           NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
           return;
         }
       m_dlFirstWrite = false;
-      outFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcsTb1\tsizeTb1\tmcsTb2\tsizeTb2\tccId";
-      outFile << std::endl;
-    }
-  else
-    {
-      outFile.open (GetDlOutputFilename ().c_str (),  std::ios_base::app);
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetDlOutputFilename ().c_str ());
-          return;
-        }
+      dlOutFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcsTb1\tsizeTb1\tmcsTb2\tsizeTb2\tccId";
+      dlOutFile << "\n";
     }
 
-  outFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  outFile << (uint32_t) cellId << "\t";
-  outFile << imsi << "\t";
-  outFile << dlSchedulingCallbackInfo.frameNo << "\t";
-  outFile << dlSchedulingCallbackInfo.subframeNo << "\t";
-  outFile << dlSchedulingCallbackInfo.rnti << "\t";
-  outFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << "\t";
-  outFile << dlSchedulingCallbackInfo.sizeTb1 << "\t";
-  outFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << "\t";
-  outFile << dlSchedulingCallbackInfo.sizeTb2 << "\t";
-  outFile << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << std::endl;
-  outFile.close ();
+  dlOutFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  dlOutFile << (uint32_t) cellId << "\t";
+  dlOutFile << imsi << "\t";
+  dlOutFile << dlSchedulingCallbackInfo.frameNo << "\t";
+  dlOutFile << dlSchedulingCallbackInfo.subframeNo << "\t";
+  dlOutFile << dlSchedulingCallbackInfo.rnti << "\t";
+  dlOutFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb1 << "\t";
+  dlOutFile << dlSchedulingCallbackInfo.sizeTb1 << "\t";
+  dlOutFile << (uint32_t) dlSchedulingCallbackInfo.mcsTb2 << "\t";
+  dlOutFile << dlSchedulingCallbackInfo.sizeTb2 << "\t";
+  dlOutFile << (uint32_t) dlSchedulingCallbackInfo.componentCarrierId << std::endl;
 }
 
 void
@@ -140,43 +130,29 @@ MacStatsCalculator::UlScheduling (uint16_t cellId, uint64_t imsi, uint32_t frame
   NS_LOG_FUNCTION (this << cellId << imsi << frameNo << subframeNo << rnti << (uint32_t) mcsTb << size);
   NS_LOG_INFO ("Write UL Mac Stats in " << GetUlOutputFilename ().c_str ());
 
-  std::ofstream outFile;
   if ( m_ulFirstWrite == true )
     {
-      outFile.open (GetUlOutputFilename ().c_str ());
-      if (!outFile.is_open ())
+        ulOutFile.open (GetUlOutputFilename ().c_str ());
+      if (!ulOutFile.is_open ())
         {
           NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
           return;
         }
       m_ulFirstWrite = false;
-      outFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcs\tsize\tccId";
-      outFile << std::endl;
-    }
-  else
-    {
-      outFile.open (GetUlOutputFilename ().c_str (),  std::ios_base::app);
-      if (!outFile.is_open ())
-        {
-          NS_LOG_ERROR ("Can't open file " << GetUlOutputFilename ().c_str ());
-          return;
-        }
+      ulOutFile << "% time\tcellId\tIMSI\tframe\tsframe\tRNTI\tmcs\tsize\tccId";
+      ulOutFile << "\n";
     }
 
   std::stringstream ss;
-  ss << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
-  ss << (uint32_t) cellId << "\t";
-  ss << imsi << "\t";
-  ss << frameNo << "\t";
-  ss << subframeNo << "\t";
-  ss << rnti << "\t";
-  ss << (uint32_t) mcsTb << "\t";
-  ss << size << "\t";
-  ss << (uint32_t) componentCarrierId << std::endl;
-  outFile << ss.str();
-  outFile.close ();
-
-
+  ulOutFile << Simulator::Now ().GetNanoSeconds () / (double) 1e9 << "\t";
+  ulOutFile << (uint32_t) cellId << "\t";
+  ulOutFile << imsi << "\t";
+  ulOutFile << frameNo << "\t";
+  ulOutFile << subframeNo << "\t";
+  ulOutFile << rnti << "\t";
+  ulOutFile << (uint32_t) mcsTb << "\t";
+  ulOutFile << size << "\t";
+  ulOutFile << (uint32_t) componentCarrierId << "\n";
 }
 
 void

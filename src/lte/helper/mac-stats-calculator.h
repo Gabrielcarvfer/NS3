@@ -165,6 +165,8 @@ private:
    * files have not been opened yet
    */
   bool m_ulFirstWrite;
+  std::ofstream dlOutFile;
+  std::ofstream ulOutFile;
 
 };
 
