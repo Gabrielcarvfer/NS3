@@ -32,7 +32,7 @@
 #include "ns3/socket-factory.h"
 #include "ns3/packet.h"
 #include "ns3/uinteger.h"
-
+#include "ns3/double.h"
 #include "tcp-echo-server.h"
 
 namespace ns3 {
@@ -50,6 +50,10 @@ namespace ns3 {
                                UintegerValue (7),
                                MakeUintegerAccessor (&TcpEchoServer::m_port),
                                MakeUintegerChecker<uint16_t> ())
+                .AddAttribute ("EchoFraction", "How much of the received payload should be sent back.",
+                               DoubleValue (1.0),
+                               MakeDoubleAccessor (&TcpEchoServer::m_echoFraction),
+                               MakeDoubleChecker<double> (0.0, 10.0))
         ;
         return tid;
     }
@@ -153,10 +157,16 @@ namespace ns3 {
                                                     Inet6SocketAddress::ConvertFrom (from).GetIpv6 ());
                 }
 
-                        packet->RemoveAllPacketTags ();
+                packet->RemoveAllPacketTags ();
                 packet->RemoveAllByteTags ();
 
                 NS_LOG_LOGIC ("Echoing packet");
+                unsigned oldPacketSize = packet->GetSize();
+                unsigned newPacketSize = oldPacketSize*m_echoFraction;
+                if (oldPacketSize > newPacketSize)
+                    packet->RemoveAtEnd(oldPacketSize - newPacketSize);
+                else
+                    packet->AddPaddingAtEnd(newPacketSize - oldPacketSize);
                 s->Send (packet);
             }
         }

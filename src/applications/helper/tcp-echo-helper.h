@@ -51,6 +51,15 @@ namespace ns3 {
         TcpEchoServerHelper (uint16_t port);
 
         /**
+         * Create TcpEchoServerHelper which will make life easier for people trying
+         * to set up simulations with TCP echos.
+         *
+         * \param port The port the server will wait on for incoming packets
+         * \param echoFraction How much of the received payload should be sent back
+         */
+        TcpEchoServerHelper (uint16_t port, double echoFraction);
+
+        /**
          * Record an attribute to be set in each Application after it is is created.
          *
          * \param name the name of the attribute to set

@@ -24,6 +24,7 @@
 #include "ns3/tcp-echo-server.h"
 #include "ns3/tcp-echo-client.h"
 #include "ns3/uinteger.h"
+#include "ns3/double.h"
 #include "ns3/names.h"
 
 namespace ns3 {
@@ -32,6 +33,12 @@ namespace ns3 {
     TcpEchoServerHelper::TcpEchoServerHelper(uint16_t port) {
         m_factory.SetTypeId(TcpEchoServer::GetTypeId());
         SetAttribute("Port", UintegerValue(port));
+    }
+
+    TcpEchoServerHelper::TcpEchoServerHelper(uint16_t port, double echoFraction) {
+        m_factory.SetTypeId(TcpEchoServer::GetTypeId());
+        SetAttribute("Port", UintegerValue(port));
+        SetAttribute("EchoFraction", DoubleValue(echoFraction));
     }
 
     void

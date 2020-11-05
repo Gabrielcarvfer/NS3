@@ -92,6 +92,7 @@ namespace ns3 {
         Ptr<Socket> m_socket;
         Ptr<Socket> m_socket6;
         uint16_t m_port;
+        double m_echoFraction;
         bool m_running;
     };
 
