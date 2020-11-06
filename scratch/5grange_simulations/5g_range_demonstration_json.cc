@@ -565,20 +565,20 @@ int main(int argc, char * argv[]) {
     LoaderTrafficHelper loader = LoaderTrafficHelper();
 
 
-    uint16_t simulationScenario = 0xFF;
+    uint32_t simulationScenario = 0x0FF;
     std::string executablePath = std::string(argv[0]); // when launching the simulations, we pass the absolute path to the executable
 
     std::size_t found = executablePath.find_last_of("/\\");
     executablePath = executablePath.substr(0,found+1); // get path with last separator
 
+    int numUes = ueNodes.GetN();
 
-    uint16_t voipListenPort      = 8000;
-    std::string voip_workload = executablePath + std::string ("voip_workload0_100s.json"); // absolute path to injected traffic
     if (simulationScenario & VOIP_BASE_SCENARIO)
     {
-        std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
-        int numUes = ueNodes.GetN();
+        uint16_t voipListenPort      = 8000;
+        std::string voip_workload = executablePath + std::string ("voip_workload0_100s.json"); // absolute path to injected traffic
 
+        std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
         if (numUes == 2)
         {
             // If only two UEs in voip scenario, assume both are talking to each other with something similar to a conversation
@@ -615,13 +615,12 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    uint16_t videoconfListenPort = 8001;
-    std::string videoconf_workload = executablePath + std::string ("videoconf_workload0_100s.json"); // absolute path to injected traffic
     if (simulationScenario & VIDEOCONFERENCE_BASE_SCENARIO)
     {
-        std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
-        int numUes = ueNodes.GetN();
+        uint16_t videoconfListenPort = 8001;
+        std::string videoconf_workload = executablePath + std::string ("videoconf_workload0_100s.json"); // absolute path to injected traffic
 
+        std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
         if (numUes == 2)
         {
             // If only two UEs in voip scenario, assume both are talking to each other with something similar to a conversation
@@ -658,14 +657,14 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    uint16_t webListenPort       = 8002;
-    std::string web_workload = executablePath + std::string ("web_workload0_100s.json");
     if (simulationScenario & WEB_BASE_SCENARIO)
     {
+        uint16_t webListenPort       = 8002;
+        std::string web_workload = executablePath + std::string ("web_workload0_100s.json");
+
         // client will return 30% of downlink payload to represent uplink requests to the server
         TcpEchoServerHelper echoServer(webListenPort, 0.3);
 
-        int numUes = ueNodes.GetN();
         if (numUes == 2)
         {
             //We assume both server and client are inside the same cell for measurements purposes only
@@ -682,6 +681,7 @@ int main(int argc, char * argv[]) {
         {
             // For internet select a fraction (70%) of random UEs to receive the injected traffic coming from the remotehost
             unsigned numUesWeb = numUes * 0.7;
+
             std::map<uint16_t, bool> uesWithWeb;
             while(numUesWeb > 0)
             {
@@ -707,14 +707,14 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    uint16_t streamingListenPort = 8003;
-    std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
     if (simulationScenario & STREAMING_BASE_SCENARIO)
     {
+        uint16_t streamingListenPort = 8003;
+        std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
+
         // client will return 5% of downlink payload to represent uplink requests to the server
         TcpEchoServerHelper echoServer(webListenPort, 0.05);
 
-        int numUes = ueNodes.GetN();
         if (numUes == 2)
         {
             //We assume both server and client are inside the same cell for measurements purposes only
@@ -756,11 +756,12 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    uint16_t backhaulListenPort = 8004;
-    std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
-    std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
     if (simulationScenario & BACKHAUL_BASE_SCENARIO)
     {
+        uint16_t backhaulListenPort = 8004;
+        std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
+        std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
+
         // the remote host sends an entire subnetwork dl traffic to a single UE, to simulate backhaul scenarios
         tempUeApps = loader.LoadJsonTraffic(remoteHost,
                                             ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
@@ -778,11 +779,14 @@ int main(int argc, char * argv[]) {
         clientApps.Add(tempUeApps);
     }
 
-    uint16_t iotListenPort = 8005;
-    std::string iot_workload = executablePath + std::string ("iot_workload0_100s.json");
+    if (numUes != 100 && numUes != 300)
+        simulationScenario &= ~IOT_BASE_SCENARIO;
     if (simulationScenario & IOT_BASE_SCENARIO)
     {
-        int numUes = ueNodes.GetN();
+        uint16_t iotListenPort = 8005;
+        std::stringstream ss;
+        ss << "iot_workload0_100s_" << ueNodes.GetN() << "nodes.json";
+        std::string iot_workload = executablePath + ss.str();
         for(unsigned i = 0; i < numUes; i++)
         {
             //We assume all devices are IOT and send traffic to the same remote server

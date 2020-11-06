@@ -34,6 +34,10 @@ if __name__ == "__main__":
     shutil.copy("voip_workload0_100s.json", baseDir)
     shutil.copy("web_workload0_100s.json", baseDir)
     shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
+    shutil.copy("backhaul_dl_workload0_100s.json", baseDir)
+    shutil.copy("backhaul_ul_workload0_100s.json", baseDir)
+    shutil.copy("iot_workload0_100s_100nodes.json", baseDir)
+    shutil.copy("iot_workload0_100s_300nodes.json", baseDir)
 
     # We don't have a model for videoconferences, so we cheat by interleaving voip + video streaming
     for duration in [100, ]:
