@@ -20,6 +20,7 @@
 #include "udp-echo-helper.h"
 #include "ns3/udp-echo-server.h"
 #include "ns3/udp-echo-client.h"
+#include "ns3/double.h"
 #include "ns3/uinteger.h"
 #include "ns3/names.h"
 
@@ -29,6 +30,13 @@ UdpEchoServerHelper::UdpEchoServerHelper (uint16_t port)
 {
   m_factory.SetTypeId (UdpEchoServer::GetTypeId ());
   SetAttribute ("Port", UintegerValue (port));
+}
+
+UdpEchoServerHelper::UdpEchoServerHelper (uint16_t port, double echoFraction)
+{
+    m_factory.SetTypeId (UdpEchoServer::GetTypeId ());
+    SetAttribute ("Port", UintegerValue (port));
+    SetAttribute ("EchoFraction", DoubleValue (echoFraction));
 }
 
 void 

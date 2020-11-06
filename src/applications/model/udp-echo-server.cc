@@ -28,6 +28,7 @@
 #include "ns3/simulator.h"
 #include "ns3/socket-factory.h"
 #include "ns3/packet.h"
+#include "ns3/double.h"
 #include "ns3/uinteger.h"
 
 #include "udp-echo-server.h"
@@ -49,12 +50,17 @@ UdpEchoServer::GetTypeId (void)
                    UintegerValue (9),
                    MakeUintegerAccessor (&UdpEchoServer::m_port),
                    MakeUintegerChecker<uint16_t> ())
+    .AddAttribute ("EchoFraction", "How much of the received payload should be sent back.",
+                   DoubleValue (1.0),
+                   MakeDoubleAccessor (&UdpEchoServer::m_echoFraction),
+                   MakeDoubleChecker<double> (0.0, 10.0))
     .AddTraceSource ("Rx", "A packet has been received",
                      MakeTraceSourceAccessor (&UdpEchoServer::m_rxTrace),
                      "ns3::Packet::TracedCallback")
     .AddTraceSource ("RxWithAddresses", "A packet has been received",
                      MakeTraceSourceAccessor (&UdpEchoServer::m_rxTraceWithAddresses),
                      "ns3::Packet::TwoAddressTracedCallback")
+
   ;
   return tid;
 }
@@ -182,6 +188,13 @@ UdpEchoServer::HandleRead (Ptr<Socket> socket)
       packet->RemoveAllByteTags ();
 
       NS_LOG_LOGIC ("Echoing packet");
+
+      unsigned oldPacketSize = packet->GetSize();
+      unsigned newPacketSize = oldPacketSize*m_echoFraction;
+      if (oldPacketSize > newPacketSize)
+          packet->RemoveAtEnd(oldPacketSize - newPacketSize);
+      else
+          packet->AddPaddingAtEnd(newPacketSize - oldPacketSize);
       socket->SendTo (packet, 0, from);
 
       if (InetSocketAddress::IsMatchingType (from))
