@@ -109,3 +109,5 @@ configFile.cmake
 scratch/5grange_simulations/videoconf_charge0_100s.json
 
 scratch/5grange_simulations/videoconf_charge0_10s.json
+
+scratch/5grange_simulations/videoconf_workload0_100s.json
