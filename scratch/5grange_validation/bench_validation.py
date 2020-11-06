@@ -299,7 +299,7 @@ if __name__ == "__main__":
     mimoModes = (mimoModes.TxDiversity, )  # mimoModes.SISO, mimoModes.SpatialMultiplexing)
     channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
     forcedMaxMcs = (False, )  # False, True,)
-    distances = [ 1, 5, 10, 20, 35, 50, 100, ]  # 10, 20, 30, 40,
+    distances = [ 1, 5, 10, 20, 35, 50, ]  # 10, 20, 30, 40,
     batches = 10
 
     thread_parameters = []

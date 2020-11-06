@@ -546,12 +546,12 @@ namespace ns3 {
         std::vector<double> tbs_snr_components;
         double errorRate = 1.0;
         {
-            volatile double n = 0;
+            double n = 0;
             int curr_cb = 0;
-            volatile double avg_cb_sinr = 0;
-            volatile double snrEff = 0;
-            volatile double cbler = 0;
-            volatile double beta = curr_cb < smallBeta ? beta5gBig : beta5gSmall;
+            double avg_cb_sinr = 0;
+            double snrEff = 0;
+            double cbler = 0;
+            double beta = curr_cb < smallBeta ? beta5gBig : beta5gSmall;
             unsigned cb_size = curr_cb < smallBeta ? big_cb_size : small_cb_size;
 
             // compute mean SINR of CBs based on PRBs SINR and fraction used
@@ -566,7 +566,8 @@ namespace ns3 {
                 if (cb_index != curr_cb)
                 {
                     // calculate the effective SNR and corresponding BLER
-                    snrEff = -beta * log(avg_cb_sinr / n);
+                    //snrEff = -beta*log(avg_cb_sinr/n);
+                    snrEff = 10*log10(avg_cb_sinr/n);
                     cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
                     // then aggregate the error rate of the TB
@@ -581,12 +582,14 @@ namespace ns3 {
                 }
 
                 // calculate effective SNR fraction of the current PRB of a given CB
-                avg_cb_sinr += exp(-10 * log10(prb_sinr) / beta) * prb_fraction;
+                //avg_cb_sinr += exp(-10 * log10(prb_sinr) / beta) * prb_fraction;
+                avg_cb_sinr += prb_sinr * prb_fraction;
                 n += prb_fraction;
 
             }
             // calculate the effective SNR and corresponding BLER of the last CB
-            snrEff = -beta * log(avg_cb_sinr/n);
+            //snrEff = -beta*log(avg_cb_sinr/n);
+            snrEff = 10*log10(avg_cb_sinr/n);
             cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
             // then aggregate the error rate of the TB
