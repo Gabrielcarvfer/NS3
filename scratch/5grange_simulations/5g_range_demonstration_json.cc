@@ -548,10 +548,6 @@ int main(int argc, char * argv[]) {
 
 
     //15 Configure and install applications
-    uint16_t voipListenPort      = 8000;
-    uint16_t webListenPort       = 8001;
-    uint16_t streamingListenPort = 8002;
-    uint16_t videoconfListenPort = 8003;
 
     ApplicationContainer serverApps;
     ApplicationContainer serverApp;
@@ -559,21 +555,25 @@ int main(int argc, char * argv[]) {
     ApplicationContainer tempUeApps;
 
     enum simulationCase{
-        VOIP_BASE_SCENARIO = 1<<0,
-        WEB_BASE_SCENARIO  = 1<<1,
-        STREAMING_BASE_SCENARIO = 1<<2,
+        VOIP_BASE_SCENARIO            = 1<<0,
+        WEB_BASE_SCENARIO             = 1<<1,
+        STREAMING_BASE_SCENARIO       = 1<<2,
         VIDEOCONFERENCE_BASE_SCENARIO = 1<<3,
+        BACKHAUL_BASE_SCENARIO        = 1<<4,
+        IOT_BASE_SCENARIO             = 1<<5,
     };
     LoaderTrafficHelper loader = LoaderTrafficHelper();
 
 
-    uint16_t simulationScenario = 3;
+    uint16_t simulationScenario = 0xFF;
     std::string executablePath = std::string(argv[0]); // when launching the simulations, we pass the absolute path to the executable
 
     std::size_t found = executablePath.find_last_of("/\\");
     executablePath = executablePath.substr(0,found+1); // get path with last separator
 
-    std::string voip_charge_10s = executablePath + std::string ("voip_charge0_10s.json"); // absolute path to injected traffic
+
+    uint16_t voipListenPort      = 8000;
+    std::string voip_workload = executablePath + std::string ("voip_workload0_100s.json"); // absolute path to injected traffic
     if (simulationScenario & VOIP_BASE_SCENARIO)
     {
         std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
@@ -600,13 +600,13 @@ int main(int argc, char * argv[]) {
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue0),
                                                 ueNodes.Get(ue1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 voipListenPort,
-                                                voip_charge_10s,
+                                                voip_workload,
                                                 false);
             clientApps.Add(tempUeApps);
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue1),
                                                 ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 voipListenPort,
-                                                voip_charge_10s,
+                                                voip_workload,
                                                 false);
             clientApps.Add(tempUeApps);
         }
@@ -615,7 +615,8 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    std::string videoconf_charge_10s = executablePath + std::string ("videoconf_charge0_10s.json"); // absolute path to injected traffic
+    uint16_t videoconfListenPort = 8001;
+    std::string videoconf_workload = executablePath + std::string ("videoconf_workload0_100s.json"); // absolute path to injected traffic
     if (simulationScenario & VIDEOCONFERENCE_BASE_SCENARIO)
     {
         std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
@@ -642,13 +643,13 @@ int main(int argc, char * argv[]) {
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue0),
                                                 ueNodes.Get(ue1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 videoconfListenPort,
-                                                videoconf_charge_10s,
+                                                videoconf_workload,
                                                 false);
             clientApps.Add(tempUeApps);
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(ue1),
                                                 ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 videoconfListenPort,
-                                                videoconf_charge_10s,
+                                                videoconf_workload,
                                                 false);
             clientApps.Add(tempUeApps);
         }
@@ -657,7 +658,8 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    std::string web_charge_10s = executablePath + std::string ("web_charge0_10s.json");
+    uint16_t webListenPort       = 8002;
+    std::string web_workload = executablePath + std::string ("web_workload0_100s.json");
     if (simulationScenario & WEB_BASE_SCENARIO)
     {
         // client will return 30% of downlink payload to represent uplink requests to the server
@@ -672,7 +674,7 @@ int main(int argc, char * argv[]) {
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
                                                 ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 webListenPort,
-                                                web_charge_10s,
+                                                web_workload,
                                                 true);
             clientApps.Add(tempUeApps);
         }
@@ -694,7 +696,7 @@ int main(int argc, char * argv[]) {
                 tempUeApps = loader.LoadJsonTraffic(remoteHost,
                                                     ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                     webListenPort,
-                                                    web_charge_10s,
+                                                    web_workload,
                                                     true);
                 clientApps.Add(tempUeApps);
 
@@ -705,7 +707,8 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    std::string streaming_charge_10s = executablePath + std::string ("stream_charge0_9mbps_10s.json");
+    uint16_t streamingListenPort = 8003;
+    std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
     if (simulationScenario & STREAMING_BASE_SCENARIO)
     {
         // client will return 5% of downlink payload to represent uplink requests to the server
@@ -720,7 +723,7 @@ int main(int argc, char * argv[]) {
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
                                                 ueNodes.Get(1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 streamingListenPort,
-                                                streaming_charge_10s,
+                                                streaming_workload,
                                                 true);
             clientApps.Add(tempUeApps);
         }
@@ -742,7 +745,7 @@ int main(int argc, char * argv[]) {
                 tempUeApps = loader.LoadJsonTraffic(remoteHost,
                                                     ueNodes.Get(ue0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                     streamingListenPort,
-                                                    streaming_charge_10s,
+                                                    streaming_workload,
                                                     true);
                 clientApps.Add(tempUeApps);
 
@@ -753,17 +756,50 @@ int main(int argc, char * argv[]) {
         }
     }
 
+    uint16_t backhaulListenPort = 8004;
+    std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
+    std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
+    if (simulationScenario & BACKHAUL_BASE_SCENARIO)
+    {
+        // the remote host sends an entire subnetwork dl traffic to a single UE, to simulate backhaul scenarios
+        tempUeApps = loader.LoadJsonTraffic(remoteHost,
+                                            ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                            backhaulListenPort,
+                                            backhaul_workload_downlink,
+                                            false);
+        clientApps.Add(tempUeApps);
 
+        // the ue sends an entire subnetwork ul traffic to the remote host, to simulate backhaul scenarios
+        tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(0),
+                                            remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                            backhaulListenPort,
+                                            backhaul_workload_uplink,
+                                            false);
+        clientApps.Add(tempUeApps);
+    }
 
+    uint16_t iotListenPort = 8005;
+    std::string iot_workload = executablePath + std::string ("iot_workload0_100s.json");
+    if (simulationScenario & IOT_BASE_SCENARIO)
+    {
+        int numUes = ueNodes.GetN();
+        for(unsigned i = 0; i < numUes; i++)
+        {
+            //We assume all devices are IOT and send traffic to the same remote server
+            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(i),
+                                                remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                iotListenPort,
+                                                iot_workload,
+                                                false);
+            clientApps.Add(tempUeApps);
+        }
+        PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), iotListenPort));
+        serverApps.Add(ulPacketSinkHelper.Install(remoteHost));
+    }
 
-
-    //Echo server on remote host and echo clients on UEs
-    //UdpEchoServerHelper echoServer(serverPort); // Porta #9
-    //serverApp = echoServer.Install(remoteHost);
-    //serverApps.Add(serverApp);
+    //Start servers before starting clients
     serverApps.Start(Seconds(0.9));
     clientApps.Start(Seconds(1.0));
-
 
 
     //17 Create interference generators (PUs) and spectrum analyzers (1 per PU)
