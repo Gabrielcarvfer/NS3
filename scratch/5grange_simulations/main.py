@@ -31,20 +31,17 @@ if __name__ == "__main__":
     cwd = os.path.abspath(os.getcwd())  # do not touch this
 
     # Copy injected traffic files to baseDir (where the 5g_range_demonstration_json executable is)
-    shutil.copy("voip_charge0_10s.json", baseDir)
-    shutil.copy("voip_charge0_100s.json", baseDir)
-    shutil.copy("web_charge0_10s.json", baseDir)
-    shutil.copy("web_charge0_100s.json", baseDir)
-    shutil.copy("stream_charge0_9mbps_10s.json", baseDir)
-    shutil.copy("stream_charge0_9mbps_100s.json", baseDir)
+    shutil.copy("voip_workload0_100s.json", baseDir)
+    shutil.copy("web_workload0_100s.json", baseDir)
+    shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
 
     # We don't have a model for videoconferences, so we cheat by interleaving voip + video streaming
-    for duration in [10, 100]:
+    for duration in [100, ]:
         interleaved_traffic = None
         input_traffics = []
 
         # The interleaving process starts by zipping time_between_packets of all traffics
-        for inputFileName in ["stream_charge0_2mbps_%ds.json" % duration, "voip_charge0_%ds.json" % duration]:
+        for inputFileName in ["stream_workload0_2mbps_%ds.json" % duration, "voip_workload0_%ds.json" % duration]:
             with open(inputFileName, "r") as inputFile:
                 traffic = json.load(inputFile)
                 if type(traffic["packet_size"]) == list:
@@ -78,15 +75,14 @@ if __name__ == "__main__":
         del interleaved_packets
 
         # Save interleaved traffic
-        with open("videoconf_charge0_%ds.json" % duration, "w") as output:
+        with open("videoconf_workload0_%ds.json" % duration, "w") as output:
             json.dump(interleaved_traffic, output, indent=4)
         del interleaved_traffic
-    shutil.copy("videoconf_charge0_10s.json", baseDir)
-    shutil.copy("videoconf_charge0_100s.json", baseDir)
+    shutil.copy("videoconf_workload0_100s.json", baseDir)
 
 
     resultsDict = {"scenario": {}}
-    numBatches = 10
+    numBatches = 2
     numUEs = [1, 3, 20, 50, 100, ] # 2, 5, 10, 20, 50, 100
     numerology_and_numUEs_threshold = [(0, 0), (2, 20), (3, 50)]
     dynamic_spectrum_access = [False, True, ]
@@ -117,15 +113,22 @@ if __name__ == "__main__":
         import glob
         simulationParameterFilesList = glob.glob(baseDir+os.sep+"**"+os.sep+"simulationParameters.json", recursive=True)
 
+        thread_parameters = []
         for scenarioJson in simulationParameterFilesList:
             # Before executing anything, we check if the outputs file has been processed for that given scenario
             simulation_path = os.path.dirname(scenarioJson)
 
             # Run simulation if necessary and try to extract results into a single output file
-            execute_simulation(simulation_path, baseDir)
+            execute_simulation(simulation_path, baseDir)  # run simulations individually
+            #thread_parameters.append((simulation_path, baseDir))
+
+        # Dispatch simulations
+        p = multiprocessing.Pool(processes=8)  # run simulations in parallel
+        results = p.starmap(func=execute_simulation, iterable=thread_parameters)
 
 
-        # When all simulations have finished, load up their results and apply some statistics/plots
+
+    # When all simulations have finished, load up their results and apply some statistics/plots
         # Result files were pickled and compressed
 
     pass
