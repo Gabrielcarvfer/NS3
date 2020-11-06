@@ -24,7 +24,7 @@ JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
                                        uint16_t port,
                                        std::vector<uint16_t> packetSizes,
                                        uint32_t nPackets,
-                                       std::vector<float> &timeToSend,
+                                       std::vector<float> timeToSend,
                                        bool tcp)
 {
   m_peer = address;
@@ -32,7 +32,7 @@ JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
   m_packetSizes = packetSizes;
   m_nPackets = nPackets;
   m_timeToSend = timeToSend;
-  m_currentTime = 0;
+  m_currentTime = rand() % timeToSend.size();
   m_currentPacketSize = 0;
   m_tcp = tcp;
 }
@@ -117,7 +117,7 @@ JsonTrafficInjectorApplication::ScheduleTx ()
   }
 
   //Repeats undefinitely
-  if (m_currentTime == m_timeToSend.size())
+  if (m_currentTime >= m_timeToSend.size())
   {
       m_currentTime = 0;
   }

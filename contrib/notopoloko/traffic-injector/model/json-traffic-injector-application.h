@@ -18,7 +18,7 @@ public:
               uint16_t port,
               std::vector<uint16_t> packetSizes,
               uint32_t nPackets,
-              std::vector<float> &timeToSend,
+              std::vector<float> timeToSend,
               bool tcp);
   void Start();
 private:
