@@ -16,6 +16,7 @@
 #include <ns3/flow-monitor-module.h>
 #include <ns3/spectrum-module.h>
 #include <ns3/lte-spectrum-value-helper.h>
+#include <ns3/spatially-correlated-shadowing-map.h>
 
 using namespace ns3;
 
@@ -340,6 +341,7 @@ main (int argc, char *argv[])
 
   Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue (mimoMode));
 
+  SpatiallyCorrelatedShadowingMap(0, 18*4.47, 110);
   if(useCdlPathLoss)
     {
       Config::SetDefault("ns3::Ula5gRange::NumAntElem", UintegerValue(numAntennas));

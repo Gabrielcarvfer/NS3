@@ -30,7 +30,7 @@
 #include <string>
 #include "stdlib.h"
 #include <unordered_map>
-#include <ns3/lte-miesm-error-model.h>
+#include <ns3/lte-eesm-error-model.h>
 #include <ns3/lte-module.h>
 
 #include "json_loader.h"
@@ -38,7 +38,7 @@
 
 namespace ns3 {
 
-    NS_LOG_COMPONENT_DEFINE ("LteMiesmErrorModel");
+    NS_LOG_COMPONENT_DEFINE ("LteEesmErrorModel");
 
     static std::vector<uint16_t> cbSizeTable5g;
     static std::vector<std::string> channelModelTable5g;
@@ -48,8 +48,8 @@ namespace ns3 {
     static std::map<std::string, std::vector<std::vector<double>>> blerTable5g;
     static std::map<std::string, std::map<uint16_t, std::map<uint16_t,double>>> betaTable5g;
     static std::unordered_map<double, uint16_t> snrIndex5g;
-    bool LteMiesmErrorModel::errorDataLoaded = false;
-    void LteMiesmErrorModel::LoadErrorData()
+    bool LteEesmErrorModel::errorDataLoaded = false;
+    void LteEesmErrorModel::LoadErrorData()
     {
         if (errorDataLoaded)
             return;
@@ -180,16 +180,16 @@ namespace ns3 {
     }
 
     double
-    LteMiesmErrorModel::MappingMiBler (double snreff, uint8_t mcs, uint16_t cbSize, uint8_t num, std::string chan)
+    LteEesmErrorModel::MappingMiBler (double snreff, uint8_t mcs, uint16_t cbSize, uint8_t num, std::string chan)
     {
 
         if (!errorDataLoaded)
             LoadErrorData();
 
-        size_t snrIndex = snrValueTable5g.size() - 1;
-
+        unsigned snrIndex = snrValueTable5g.size() - 1;
+        //std::cout << snreff << std::endl;
         //get nearest larger snr
-        for (size_t i = 0; i < snrValueTable5g.size();i++)
+        for (unsigned i = 0; i < snrValueTable5g.size();i++)
         {
             if (snrValueTable5g[i] >= snreff)
             {
@@ -205,20 +205,20 @@ namespace ns3 {
         double bler = 1.0;
         if (blerTable5g.find(scen) != blerTable5g.end())
             bler = blerTable5g[scen][mcs][snrIndex];
-        //std::cout << scen << " cbler " << bler << std::endl;
+        //std::cout << "snrIndex " << snrIndex << " scenario " << scen << " cbler " << bler << std::endl;
         return bler;
     }
 
     TbStats_t
-    LteMiesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr,
-                                                  const std::vector<int>& map,
-                                                  uint16_t prb_size,
-                                                  uint32_t size,
-                                                  uint8_t mcs,
-                                                  HarqProcessInfoList_t miHistory,
-                                                  uint8_t num,
-                                                  std::string chan,
-                                                  double speed)
+    LteEesmErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr,
+                                                 const std::vector<int>& map,
+                                                 uint16_t prb_size,
+                                                 uint32_t size,
+                                                 uint8_t mcs,
+                                                 HarqProcessInfoList_t miHistory,
+                                                 uint8_t num,
+                                                 std::string chan,
+                                                 double speed)
     {
         std::vector<double> sinrAsDoubles;
         for (int i = 0; i < sinr.ConstValuesEnd()-sinr.ConstValuesBegin(); i++)
@@ -227,16 +227,17 @@ namespace ns3 {
         }
         return GetTbDecodificationStatsDoubles(sinrAsDoubles, map, prb_size, size, mcs, miHistory, num, chan, speed);
     }
+
     TbStats_t
-    LteMiesmErrorModel::GetTbDecodificationStatsDoubles (std::vector<double> sinr,
-                                                  const std::vector<int>& map,
-                                                  uint16_t prb_size,
-                                                  uint32_t size,
-                                                  uint8_t mcs,
-                                                  HarqProcessInfoList_t miHistory,
-                                                  uint8_t num,
-                                                  std::string chan,
-                                                  double speed)
+    LteEesmErrorModel::GetTbDecodificationStatsDoubles (std::vector<double> sinr,
+                                                        const std::vector<int>& map,
+                                                        uint16_t prb_size,
+                                                        uint32_t size,
+                                                        uint8_t mcs,
+                                                        HarqProcessInfoList_t miHistory,
+                                                        uint8_t num,
+                                                        std::string chan,
+                                                        double speed)
     {
         NS_LOG_FUNCTION (sinr << &map << (uint32_t) size << (uint32_t) mcs);
 
@@ -471,6 +472,8 @@ namespace ns3 {
             // Calculate the SINR components of the CBS
             auto it = map.begin();
             double curr_prb_sinr = sinr[*it];
+
+            // Proceed to CB SINR fraction calculations
             int tbs_size = tbs_bits;
             double curr_cb_size = big_cb_num > 0 ? big_cb_size : (small_cb_num > 0 ? small_cb_size : 0);
             int curr_cb_index, used_budget, prb_budget, new_cb_budget, new_cb_size;
@@ -543,11 +546,13 @@ namespace ns3 {
         std::vector<double> tbs_snr_components;
         double errorRate = 1.0;
         {
-            double n = 0;
+            volatile double n = 0;
             int curr_cb = 0;
-            double avg_cb_sinr = 0;
-            double snrEff = 0;
-            double cbler = 0;
+            volatile double avg_cb_sinr = 0;
+            volatile double snrEff = 0;
+            volatile double cbler = 0;
+            volatile double beta = curr_cb < smallBeta ? beta5gBig : beta5gSmall;
+            unsigned cb_size = curr_cb < smallBeta ? big_cb_size : small_cb_size;
 
             // compute mean SINR of CBs based on PRBs SINR and fraction used
             for (auto entry: cb_snr_components)
@@ -561,31 +566,28 @@ namespace ns3 {
                 if (cb_index != curr_cb)
                 {
                     // calculate the effective SNR and corresponding BLER
-                    snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
-                    snrEff = 10*log10(snrEff); // calculate effective SINR in dB
-                    //std::cout << "snr " << snrEff << std::endl;
-                    cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
+                    snrEff = -beta * log(avg_cb_sinr / n);
+                    cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
                     // then aggregate the error rate of the TB
                     errorRate *= (1.0 - cbler);
-
-                    //std::cout << "sinr " << snrEff << " cbs " << big_cb_size << " cbler " << cbler << " tbler "<< 1-errorRate << std::endl;
 
                     // and finally reset the variables that will get reused by the next CB
                     n = 0;
                     avg_cb_sinr = 0;
                     curr_cb = cb_index;
+                    beta = curr_cb < smallBeta ? beta5gBig : beta5gSmall;
+                    cb_size = curr_cb < smallBeta ? big_cb_size : small_cb_size;
                 }
-                // calculate SNR fraction of the current PRB of a given RB
-                avg_cb_sinr += (prb_sinr * prb_fraction)/(curr_cb < smallBeta ? beta5gBig : beta5gSmall);
-                snrEff = 10*log10(snrEff); // sinr efetivo em dB
+
+                // calculate effective SNR fraction of the current PRB of a given CB
+                avg_cb_sinr += exp(-10 * log10(prb_sinr) / beta) * prb_fraction;
                 n += prb_fraction;
+
             }
             // calculate the effective SNR and corresponding BLER of the last CB
-            snrEff = (curr_cb < smallBeta ? beta5gBig : beta5gSmall) * avg_cb_sinr/n;
-            snrEff = 10*log10(snrEff); // calculate effective SINR in dB
-            //std::cout << "snr " << snrEff << std::endl;
-            cbler = MappingMiBler(snrEff, mcs, (curr_cb < smallBeta ? big_cb_size : small_cb_size), num, chan);
+            snrEff = -beta * log(avg_cb_sinr/n);
+            cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
             // then aggregate the error rate of the TB
             errorRate *= (1.0 - cbler);
@@ -594,11 +596,6 @@ namespace ns3 {
 
         // compute final TB error rate
         errorRate = 1.0 - errorRate;
-
-        //if (tbs_bits > 64000)
-        //{
-        //    std::cout << "-----------------------\ntbler "<< errorRate << " tbs " << size << "\n\n\n" << std::endl ;
-        //}
 
         NS_LOG_LOGIC (" Error rate " << errorRate);
         TbStats_t ret{};

@@ -1700,7 +1700,7 @@ LteSpectrumPhy::EndRxData ()
             }
           //TbStats_t tbStats = LteMiErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, (*itTb).second.size, (*itTb).second.mcs, harqInfoList);
           double speed = 0.0;//todo: fix speed calculation
-          TbStats_t tbStats = LteMiesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
+          TbStats_t tbStats = LteEesmErrorModel::GetTbDecodificationStats (m_sinrPerceived, (*itTb).second.rbBitmap, LteAmc::GetPrbSizeFromMcsAndNumerology((*itTb).second.mcs, m_numerology), (*itTb).second.size, (*itTb).second.mcs, harqInfoList, m_numerology, m_channelModel, speed);
           (*itTb).second.mi = tbStats.mi;
           (*itTb).second.corrupt = m_random->GetValue () > tbStats.tbler ? false : true;
           //std::cout << Simulator::Now().GetSeconds() << "  endRxData " << 10*log10(m_sinrPerceived[0]) << "dB tbler " << tbStats.tbler << " mcs " << (int)(*itTb).second.mcs << " corrupted " << (*itTb).second.corrupt << std::endl;

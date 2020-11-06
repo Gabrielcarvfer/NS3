@@ -31,10 +31,10 @@ namespace ns3 {
 
     float SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D coordinate)
     {
-        if (m_currentRun >= 0 && m_currentRun < 2)
-            return -3*m_sigma; // assume best case shadowing scenario
-        if (m_currentRun >= 2 && m_currentRun < 4)
-            return 3*m_sigma; // assume worst case shadowing scenario
+        //if (m_currentRun >= 0 && m_currentRun < 2)
+        //    return -3*m_sigma; // assume best case shadowing scenario
+        //if (m_currentRun >= 2 && m_currentRun < 4)
+        //    return 3*m_sigma; // assume worst case shadowing scenario
 
         // The spatially correlated shadowing map is generated on demand based
         //  on the received parameters and position of nodes

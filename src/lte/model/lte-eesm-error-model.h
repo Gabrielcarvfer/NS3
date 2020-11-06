@@ -42,7 +42,7 @@ namespace ns3 {
 /**
  * This class provides the BLER estimation based on mutual information metrics
  */
-    class LteMiesmErrorModel
+    class LteEesmErrorModel
     {
 
     public:

@@ -153,7 +153,7 @@ set(source_files
         helper/cc-helper.cc
         model/component-carrier-ue.cc
         model/component-carrier-enb.cc
-        model/lte-miesm-error-model.cc
+        model/lte-eesm-error-model.cc
         ${nn_sources}
         model/ula-5grange.cc
         )
@@ -286,7 +286,7 @@ set(header_files
         model/component-carrier.h
         model/component-carrier-ue.h
         model/component-carrier-enb.h
-        model/lte-miesm-error-model.h
+        model/lte-eesm-error-model.h
         ${nn_headers}
         model/ula-5grange.h
         )

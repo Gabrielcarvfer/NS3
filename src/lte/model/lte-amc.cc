@@ -30,7 +30,7 @@
 #include <ns3/double.h>
 #include "ns3/enum.h"
 #include <ns3/lte-mi-error-model.h>
-#include <ns3/lte-miesm-error-model.h>
+#include <ns3/lte-eesm-error-model.h>
 #include <ns3/string.h>
 #include "json_loader.h"
 
@@ -345,7 +345,7 @@ LteAmc::CreateCqiFeedbacks (const SpectrumValue& sinr, uint8_t rbgSize)
           if (m_amcModel == MiErrorModel)
               tbStats = LteMiErrorModel::GetTbDecodificationStats (sinr, rbgMap, tbsBytes, mcs, harqInfoList);
           else
-              tbStats = LteMiesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+              tbStats = LteEesmErrorModel::GetTbDecodificationStats (sinr, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
           //std::cout << "mcs " << (int) mcs << " rbs " << (int) rbgMap.size() << " tbs " << (int) tbsBytes << " tbler " << tbStats.tbler << std::endl;
           if (tbStats.tbler > 0.1)
               break;
@@ -412,7 +412,7 @@ int LteAmc::GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles, uint8
         uint32_t prbSize = GetDlTbSizeFromMcs (mcs, 1);
         uint32_t tbsBytes = (prbSize*rbgSize) / 8; // rbgMap.size()?
         if (m_amcModel == MiesmErrorModel)
-            tbStats = LteMiesmErrorModel::GetTbDecodificationStatsDoubles (sinrAsDoubles, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
+            tbStats = LteEesmErrorModel::GetTbDecodificationStatsDoubles (sinrAsDoubles, rbgMap, (double) prbSize, tbsBytes, mcs, harqInfoList, m_numerology, m_channelModel, speed);
         //std::cout << "mcs " << (int) mcs << " tbs " << (int) tbsBytes<< " tbler " << tbStats.tbler << std::endl;
         if (tbStats.tbler > 0.1)
             break;

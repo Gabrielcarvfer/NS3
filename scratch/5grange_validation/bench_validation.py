@@ -151,9 +151,13 @@ def extract_throughput(distanceFolder):
 def extract_corruption_and_mcs(distanceFolder, distance):
     # Open out__km.txt and scan for corrupted transport blocks to calculate the error rate
     contents = None
-    with lzma.open(distanceFolder + "out%dkm.txt.lzma" % distance, "r") as file:
-        contents = file.readlines()
-
+    filename = distanceFolder + "out%dkm.txt.lzma" % distance
+    with lzma.open(filename, "r") as file:
+        try:
+            contents = file.readlines()
+        except Exception as e:
+            print("Failed to open ", filename)
+            raise e
     corrupted = 0
     corrupted_regex = re.compile(".* corrupted (.*).*")
     corrupted_TBs = 0
@@ -296,7 +300,7 @@ if __name__ == "__main__":
     channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
     forcedMaxMcs = (False, )  # False, True,)
     distances = [ 1, 5, 10, 20, 35, 50, 100, ]  # 10, 20, 30, 40,
-    batches = 3
+    batches = 10
 
     thread_parameters = []
     # Create folders to dump simulation results
@@ -496,7 +500,7 @@ if __name__ == "__main__":
             error_dataset = OrderedDict({"THR": {},
                              "TBLER": {}
                              })
-            z_value = 4.303  # p=0.05 requires 1.96 with #samples=infty, 2.0 with #samples=40, 2.262 with #samples=10, 4.303 with #samples=3
+            z_value = 2.262  # p=0.05 requires 1.96 with #samples=infty, 2.0 with #samples=40, 2.262 with #samples=10, 4.303 with #samples=3
             for lab in sorted(list(THR.keys())):
                 received_throughput_per_d = {}
                 received_throughput_per_d_error = {}
