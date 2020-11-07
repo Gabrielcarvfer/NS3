@@ -779,26 +779,24 @@ int main(int argc, char * argv[]) {
         clientApps.Add(tempUeApps);
     }
 
-    if (numUes != 100 && numUes != 300)
-        simulationScenario &= ~IOT_BASE_SCENARIO;
     if (simulationScenario & IOT_BASE_SCENARIO)
     {
         uint16_t iotListenPort = 8005;
-        std::stringstream ss;
-        ss << "iot_workload0_100s_" << ueNodes.GetN() << "nodes.json";
-        std::string iot_workload = executablePath + ss.str();
-        for(unsigned i = 0; i < numUes; i++)
+        std::string iot_workload = executablePath + std::string("iot_workload0_100s_100nodes.json");
+        for(unsigned i = 1; i < numUes; i++)
         {
-            //We assume all devices are IOT and send traffic to the same remote server
+            //We assume all devices are IOT sinks, transmitting traffic of 100 IoT devices each and sending traffic to the same remote server
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(i),
-                                                remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                //remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                ueNodes.Get(0),
                                                 iotListenPort,
                                                 iot_workload,
                                                 false);
             clientApps.Add(tempUeApps);
         }
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), iotListenPort));
-        serverApps.Add(ulPacketSinkHelper.Install(remoteHost));
+        //serverApps.Add(ulPacketSinkHelper.Install(remoteHost));
+        serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(0)));
     }
 
     //Start servers before starting clients
