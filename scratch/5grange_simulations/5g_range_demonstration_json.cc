@@ -443,7 +443,10 @@ int main(int argc, char * argv[]) {
     LoaderTrafficHelper loader = LoaderTrafficHelper();
 
 
-    uint32_t simulationScenario = 0x0FF;
+    uint32_t simulationCase = 0x0FF; // Set to run everything
+
+    simulationCase = (unsigned)simulationParameters["SimulationCase"].get<double>(); // overrided by settings file
+
     std::string executablePath = std::string(argv[0]); // when launching the simulations, we pass the absolute path to the executable
 
     std::size_t found = executablePath.find_last_of("/\\");
@@ -451,9 +454,9 @@ int main(int argc, char * argv[]) {
 
     int numUes = ueNodes.GetN();
 
-    if (simulationScenario & VOIP_BASE_SCENARIO)
+    if (simulationCase & VOIP_BASE_SCENARIO)
     {
-        uint16_t voipListenPort   = ApplicationPorts.voipListenPort;
+        uint16_t voipListenPort   = ApplicationPorts::voipListenPort;
         std::string voip_workload = executablePath + std::string ("voip_workload0_100s.json"); // absolute path to injected traffic
 
         std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
@@ -493,9 +496,9 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    if (simulationScenario & VIDEOCONFERENCE_BASE_SCENARIO)
+    if (simulationCase & VIDEOCONFERENCE_BASE_SCENARIO)
     {
-        uint16_t videoconfListenPort   = ApplicationPorts.videoconfListenPort;
+        uint16_t videoconfListenPort   = ApplicationPorts::videoconfListenPort;
         std::string videoconf_workload = executablePath + std::string ("videoconf_workload0_100s.json"); // absolute path to injected traffic
 
         std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
@@ -507,7 +510,7 @@ int main(int argc, char * argv[]) {
         else
         {
             // We generate random pairs of UEs and setup these applications to have something similar to a conversation
-            make_ue_pairs(numUes, 0.1, videoconfPairs);
+            make_ue_pairs(numUes, 0.05, videoconfPairs);
         }
 
         std::set<uint16_t> uesWithVideoconf;
@@ -535,9 +538,9 @@ int main(int argc, char * argv[]) {
             serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(ue)));
     }
 
-    if (simulationScenario & WEB_BASE_SCENARIO)
+    if (simulationCase & WEB_BASE_SCENARIO)
     {
-        uint16_t webListenPort   = ApplicationPorts.webListenPort;
+        uint16_t webListenPort   = ApplicationPorts::webListenPort;
         std::string web_workload = executablePath + std::string ("web_workload0_100s.json");
 
         // client will return 30% of downlink payload to represent uplink requests to the server
@@ -585,13 +588,13 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    if (simulationScenario & STREAMING_BASE_SCENARIO)
+    if (simulationCase & STREAMING_BASE_SCENARIO)
     {
-        uint16_t streamingListenPort   = ApplicationPorts.streamingListenPort;
-        std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
+        uint16_t streamingListenPort   = ApplicationPorts::streamingListenPort;
+        std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");//1080p stream
 
         // client will return 5% of downlink payload to represent uplink requests to the server
-        TcpEchoServerHelper echoServer(streamingListenPort, 0.05);
+        TcpEchoServerHelper echoServer(streamingListenPort, 0.1);
 
         if (numUes == 2)
         {
@@ -634,9 +637,9 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    if (simulationScenario & BACKHAUL_BASE_SCENARIO)
+    if (simulationCase & BACKHAUL_BASE_SCENARIO)
     {
-        uint16_t backhaulListenPort = ApplicationPorts.backhaulListenPort;
+        uint16_t backhaulListenPort = ApplicationPorts::backhaulListenPort;
         std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
         std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
 
@@ -657,9 +660,9 @@ int main(int argc, char * argv[]) {
         clientApps.Add(tempUeApps);
     }
 
-    if (simulationScenario & IOT_BASE_SCENARIO)
+    if (simulationCase & IOT_BASE_SCENARIO)
     {
-        uint16_t iotListenPort   = ApplicationPorts.iotListenPort;
+        uint16_t iotListenPort   = ApplicationPorts::iotListenPort;
         std::string iot_workload = executablePath + std::string("iot_workload0_100s_100nodes.json");
 
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), iotListenPort));

@@ -75,30 +75,26 @@ def generate_scenarios(baseFolder,
                       fusionAlgs,
                       attackerOptions,
                       frequencyBandOptions,
-                      mimoOptions):
+                      mimoOptions,
+                      simulationCase):
 
-    channel_models = ["CDL_A",] # "CDL_D", "D3.1",]
+    channel_models = ["CDL_A", ] # "CDL_D", "D3.1",]
     # Create base folder if it doesnt exist
     if not os.path.exists(baseFolder):
         os.mkdir(baseFolder)
 
-    # Create batch folder if it doesnt exist
-    batchFolder = baseFolder+os.sep+"batch_"+str(batch)
-    if not os.path.exists(batchFolder):
-        os.mkdir(batchFolder)
-
-    uesFolder = batchFolder+os.sep+"ues_"+str(numUEs)
+    uesFolder = baseFolder+os.sep+"ues_"+str(numUEs)+"_simulationCase_"+str(simulationCase)
     if not os.path.exists(uesFolder):
         os.mkdir(uesFolder)
 
-    # Batches 0-1 and 2-3 are special cases
-    # 0, 1 forces reasonable worst case shadowing = -3*sigma
-    # 2, 3 forces reasonable best case shadowing = 3*sigma
-    # Batches 4-9 have shadowing with u=0db sigma = 4.47dB
+    # Create batch folder if it doesnt exist
+    batchFolder = uesFolder+os.sep+"batch_"+str(batch)
+    if not os.path.exists(batchFolder):
+        os.mkdir(batchFolder)
 
     # Create folders for clustered and randomly distributed UEs
     for clustersOption in clusteredUes:
-        clusteredUesBatchFolder = uesFolder+os.sep+"clusteredUes_"+str(clustersOption)
+        clusteredUesBatchFolder = batchFolder+os.sep+"clusteredUes_"+str(clustersOption)
         if not os.path.exists(clusteredUesBatchFolder):
             os.mkdir(clusteredUesBatchFolder)
 
@@ -121,6 +117,8 @@ def generate_scenarios(baseFolder,
             plot_simulation_topology(clusteredUesBatchFolder, simulationScenario)
 
         simulationScenario["SimulationParameters"]["Run"] = batch
+        simulationScenario["SimulationParameters"]["SimulationCase"] = simulationCase
+
         # Create folder for different frequency bands
         for freqBand in frequencyBandOptions:
             freqBandFolder = clusteredUesBatchFolder+os.sep+"freqBand_"+str(freqBand)

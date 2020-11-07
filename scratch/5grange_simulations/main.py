@@ -3,6 +3,8 @@ import shutil
 import multiprocessing
 from enum import Enum
 import json
+from functools import reduce
+
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
 
@@ -17,6 +19,13 @@ class mimoModes(Enum):
     TxDiversity = 1
     SpatialMultiplexing = 2
 
+class simulationCase(Enum):
+    VOIP_BASE_SCENARIO            = 1<<0,
+    WEB_BASE_SCENARIO             = 1<<1,
+    STREAMING_BASE_SCENARIO       = 1<<2,
+    VIDEOCONFERENCE_BASE_SCENARIO = 1<<3,
+    BACKHAUL_BASE_SCENARIO        = 1<<4,
+    IOT_BASE_SCENARIO             = 1<<5,
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
@@ -39,7 +48,7 @@ if __name__ == "__main__":
     shutil.copy("iot_workload0_100s_100nodes.json", baseDir)
     shutil.copy("iot_workload0_100s_300nodes.json", baseDir)
 
-    # We don't have a model for videoconferences, so we cheat by interleaving voip + video streaming
+    # We don't have a model for videoconferences, so we cheat by interleaving voip + video streaming (we assume 480p at 2Mbps)
     for duration in [100, ]:
         interleaved_traffic = None
         input_traffics = []
@@ -84,15 +93,47 @@ if __name__ == "__main__":
         del interleaved_traffic
     shutil.copy("videoconf_workload0_100s.json", baseDir)
 
+    def caseValue(case):
+        print(case)
+        return case.value[0]
 
     resultsDict = {"scenario": {}}
-    numBatches = 2
-    numUEs = [1, 3, 20, 50, 100, ] # 2, 5, 10, 20, 50, 100
+    numBatches = 10
+    numUEs_and_applications = [# core scenarios
+                               [  2, [simulationCase.VOIP_BASE_SCENARIO, ]],  # two ues talking to each other
+                               [  3, [simulationCase.WEB_BASE_SCENARIO, ]],   # three ues connecting to the internet
+                               [ 20, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO]],  # 30%/70% of ues for voip/web
+                               [ 50, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO]],  # 30%/70% of ues for voip/web
+                               [100, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO]],  # 30%/70% of ues for voip/web
+                               [ 20, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO, simulationCase.STREAMING_BASE_SCENARIO]],  # 30%/70%/10% of ues for voip/web/video
+                               [ 50, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO, simulationCase.STREAMING_BASE_SCENARIO]],  # 30%/70%/10% of ues for voip/web/video
+                               [100, [simulationCase.VOIP_BASE_SCENARIO,  simulationCase.WEB_BASE_SCENARIO, simulationCase.STREAMING_BASE_SCENARIO]],  # 30%/70%/10% of ues for voip/web/video
+                               # e-health,  scenarios
+                               [  2, [simulationCase.VIDEOCONFERENCE_BASE_SCENARIO, ]],  # two ues talking to each other
+                               [ 20, [simulationCase.VOIP_BASE_SCENARIO, simulationCase.WEB_BASE_SCENARIO, simulationCase.VIDEOCONFERENCE_BASE_SCENARIO]],  # 30%/70%/5% of ues for voip/web/telemedicine
+                               [ 50, [simulationCase.VOIP_BASE_SCENARIO, simulationCase.WEB_BASE_SCENARIO, simulationCase.VIDEOCONFERENCE_BASE_SCENARIO]],  # 30%/70%/5% of ues for voip/web/telemedicine
+                               [100, [simulationCase.VOIP_BASE_SCENARIO, simulationCase.WEB_BASE_SCENARIO, simulationCase.VIDEOCONFERENCE_BASE_SCENARIO]],  # 30%/70%/5% of ues for voip/web/telemedicine
+                               # iot scenarios
+                               [ 27, [simulationCase.IOT_BASE_SCENARIO, ]],  # 26 of ues acting as sinks for 100 rural IOT sensors each (a.k.a. traffic of 25k IOT), forwarding data to an aggregator UE
+                               # backhaul scenario
+                               [  1, [simulationCase.BACKHAUL_BASE_SCENARIO, ]],
+                               ]  # 2, 5, 10, 20, 50, 100
+
+    # I'm dumb and worn off. This should be enough
+    for i in range(len(numUEs_and_applications)):
+        caseApplicationSum = 0
+        for app in numUEs_and_applications[i][1]:
+            caseApplicationSum += app.value[0]
+        # Replace list of scenarios with a bitmap
+        numUEs_and_applications[i][1] = caseApplicationSum
+
     numerology_and_numUEs_threshold = [(0, 0), (2, 20), (3, 50)]
     dynamic_spectrum_access = [False, True, ]
+
+    # Generate the jsons specifying the simulation scenarios
     if createAndRunScenarios:
-        for batch in range(numBatches):
-            for numUes in numUEs:
+        for (numUes, applications) in numUEs_and_applications:
+            for batch in range(numBatches):
                 for use_dsa in dynamic_spectrum_access:
                     for numerology, numUesThreshold in numerology_and_numUEs_threshold:
                         if numUes >= numUesThreshold:
@@ -110,6 +151,7 @@ if __name__ == "__main__":
                                           attackerOptions=[0, ],  # 1, 2, 5],
                                           frequencyBandOptions=[freqBands.MHz713, ],  # 101, 5, 7],
                                           mimoOptions=[mimoModes.TxDiversity, ],  # 0, 1, 2]
+                                          simulationCase=applications
                                           )
 
         # Easier than trying to figure out all directories for the individual simulations is to use glob
@@ -133,6 +175,6 @@ if __name__ == "__main__":
 
 
     # When all simulations have finished, load up their results and apply some statistics/plots
-        # Result files were pickled and compressed
+    # Result files were pickled and compressed
 
     pass
