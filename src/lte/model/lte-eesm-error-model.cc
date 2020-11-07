@@ -566,8 +566,8 @@ namespace ns3 {
                 if (cb_index != curr_cb)
                 {
                     // calculate the effective SNR and corresponding BLER
-                    //snrEff = -beta*log(avg_cb_sinr/n);
-                    snrEff = 10*log10(avg_cb_sinr/n);
+                    snrEff = -beta*log(avg_cb_sinr/n);
+                    //snrEff = 10*log10(avg_cb_sinr/n);
                     cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
                     // then aggregate the error rate of the TB
@@ -582,14 +582,14 @@ namespace ns3 {
                 }
 
                 // calculate effective SNR fraction of the current PRB of a given CB
-                //avg_cb_sinr += exp(-10 * log10(prb_sinr) / beta) * prb_fraction;
-                avg_cb_sinr += prb_sinr * prb_fraction;
+                avg_cb_sinr += exp(-10 * log10(prb_sinr) / beta) * prb_fraction;
+                //avg_cb_sinr += prb_sinr * prb_fraction;
                 n += prb_fraction;
 
             }
             // calculate the effective SNR and corresponding BLER of the last CB
-            //snrEff = -beta*log(avg_cb_sinr/n);
-            snrEff = 10*log10(avg_cb_sinr/n);
+            snrEff = -beta*log(avg_cb_sinr/n);
+            //snrEff = 10*log10(avg_cb_sinr/n);
             cbler = MappingMiBler(snrEff, mcs, cb_size, num, chan);
 
             // then aggregate the error rate of the TB

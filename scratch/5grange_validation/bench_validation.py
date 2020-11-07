@@ -300,7 +300,7 @@ if __name__ == "__main__":
     channel_models = ("CDL_D", "CDL_A",)  # "RANGE5G",
     forcedMaxMcs = (False, )  # False, True,)
     distances = [ 1, 5, 10, 20, 35, 50, ]  # 10, 20, 30, 40,
-    batches = 10
+    batches = 40
 
     thread_parameters = []
     # Create folders to dump simulation results
@@ -500,7 +500,7 @@ if __name__ == "__main__":
             error_dataset = OrderedDict({"THR": {},
                              "TBLER": {}
                              })
-            z_value = 2.262  # p=0.05 requires 1.96 with #samples=infty, 2.0 with #samples=40, 2.262 with #samples=10, 4.303 with #samples=3
+            z_value = 2.0  # p=0.05 requires 1.96 with #samples=infty, 2.0 with #samples=40, 2.262 with #samples=10, 4.303 with #samples=3
             for lab in sorted(list(THR.keys())):
                 received_throughput_per_d = {}
                 received_throughput_per_d_error = {}
