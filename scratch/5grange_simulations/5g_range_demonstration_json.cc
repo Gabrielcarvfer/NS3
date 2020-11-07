@@ -37,119 +37,6 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("5gRangeDemonstration");
 
-uint32_t lastDlTbs = 0, lastDlMcs = 0, lastUlMcs = 0, lastUlTbs = 0;
-
-void
-RangeDlSchedulingCallback (std::string path, DlSchedulingCallbackInfo dlInfo)
-{
-    if (lastDlMcs != (uint32_t)dlInfo.mcsTb1 || lastDlTbs != (uint32_t)dlInfo.sizeTb1)
-    {
-        lastDlMcs = (uint32_t)dlInfo.mcsTb1;
-        lastDlTbs = (uint32_t)dlInfo.sizeTb1;
-        NS_LOG_INFO(Simulator::Now() << " DL MCS: " << (uint32_t)dlInfo.mcsTb1 << " DL TBS: " << (uint32_t)dlInfo.sizeTb1 << " bytes");
-        //std::cout << Simulator::Now() << " DL MCS: " << (uint32_t)dlInfo.mcsTb1 << " DL TBS: " << (uint32_t)dlInfo.sizeTb1 << " bytes" << std::endl;
-    }
-}
-
-void
-StartDataframeTxCallback (std::string path, Ptr<PacketBurst> pb, std::vector<int> rbs)
-{
-    if (pb)
-    {
-        std::string str_rbs = std::to_string(rbs[0]);
-        for (int i = 1; i < rbs.size(); ++i)
-        {
-            str_rbs = str_rbs + ", " + std::to_string (rbs[i]);
-        }
-
-        //*stream->GetStream () << Simulator::Now ().GetSeconds () << " UE Phy TX - Packets: " << pb->GetNPackets () << " Size: " << pb->GetSize () << " RBs: " << str_rbs << std::endl;
-
-        NS_LOG_INFO(Simulator::Now() << path << " UE Phy TX - Packets: " << pb->GetNPackets () << " Size: " << pb->GetSize () << " RBs: " << str_rbs);
-    }
-}
-
-void
-RangeUlSchedulingCallback (std::string path, uint32_t frameNo, uint32_t subframeNo, uint16_t rnti, uint8_t mcs, uint32_t sizeTb, uint8_t componentCarrierId)
-{
-    if (lastUlMcs != (uint32_t)mcs || lastUlTbs != (uint32_t)sizeTb)
-    {
-        lastUlMcs = (uint32_t)mcs;
-        lastUlTbs = (uint32_t)sizeTb;
-        NS_LOG_INFO(Simulator::Now() << " UL MCS: " << (uint32_t)mcs << " UL TBS: " << sizeTb << " bytes");
-    }
-}
-
-void PacketCallback(const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, Ptr< const Packet > packet)
-{
-    //NS_LOG_INFO(Simulator::Now() << " " << path << " " << tipo << " " << packet->GetSize());
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << ",1," << packet->GetSize() << std::endl;
-}
-
-void PacketBurstCallback(const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, Ptr< const PacketBurst > packet)
-{
-    uint32_t size = 0;
-    uint32_t qtd = 0;
-    if (packet)
-    {
-        qtd = packet->GetNPackets();
-        size = packet->GetSize();
-    }
-
-    //NS_LOG_INFO(Simulator::Now() << " " << path << " " << tipo << " " << qtd << " " << size);
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << "," << qtd << "," << size << std::endl;
-}
-
-void
-PacketWith2AddressesCallback(const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, Ptr< const Packet > packet, const Address &address, const Address &address2)
-{
-    //NS_LOG_INFO(Simulator::Now() << " " << path << " " << tipo << " " << packet->GetSize());
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << ",1," << packet->GetSize() << std::endl;
-}
-
-void
-PacketWithAddressCallback(const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, Ptr< const Packet > packet, const Address &address)
-{
-    //NS_LOG_INFO(Simulator::Now() << " " << path << " " << tipo << " " << packet->GetSize());
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << ",1," << packet->GetSize() << std::endl;
-}
-
-
-void
-PhyRxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, PhyReceptionStatParameters params)
-{
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << ",RX,";
-    *trace_file->GetStream () << params.m_timestamp << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_cellId << ",";
-    *trace_file->GetStream () << params.m_imsi << ",";
-    *trace_file->GetStream () << params.m_rnti << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_txMode << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_layer << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_mcs << ",";
-    *trace_file->GetStream () << params.m_size << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_rv << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_ndi << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_correctness << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_ccId << std::endl;
-}
-
-void
-PhyTxCallback (const Ptr<OutputStreamWrapper> trace_file, std::string tipo, std::string path, PhyTransmissionStatParameters params)
-{
-    *trace_file->GetStream () << Simulator::Now() << "," << path << "," << tipo << ",TX,";
-    *trace_file->GetStream () << params.m_timestamp << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_cellId << ",";
-    *trace_file->GetStream () << params.m_imsi << ",";
-    *trace_file->GetStream () << params.m_rnti << ",";
-    *trace_file->GetStream () << ","; //txmode
-    *trace_file->GetStream () << (uint32_t) params.m_layer << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_mcs << ",";
-    *trace_file->GetStream () << params.m_size << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_rv << ",";
-    *trace_file->GetStream () << (uint32_t) params.m_ndi << ",";
-    *trace_file->GetStream () << ","; //correcteness
-    *trace_file->GetStream () << (uint32_t) params.m_ccId << std::endl;
-}
-
 unsigned int good_seed()
 {
     unsigned int random_seed, random_seed_a, random_seed_b;
@@ -713,7 +600,7 @@ int main(int argc, char * argv[]) {
         std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
 
         // client will return 5% of downlink payload to represent uplink requests to the server
-        TcpEchoServerHelper echoServer(webListenPort, 0.05);
+        TcpEchoServerHelper echoServer(streamingListenPort, 0.05);
 
         if (numUes == 2)
         {
@@ -788,7 +675,7 @@ int main(int argc, char * argv[]) {
             //We assume all devices are IOT sinks, transmitting traffic of 100 IoT devices each and sending traffic to the same remote server
             tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(i),
                                                 //remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
-                                                ueNodes.Get(0),
+                                                ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
                                                 iotListenPort,
                                                 iot_workload,
                                                 false);
@@ -864,137 +751,9 @@ int main(int argc, char * argv[]) {
          i++;
     }
 
-
-    lteHelper->EnableTraces ();
-
     Ptr<FlowMonitor> flowMonitor;
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
-
-    Ptr<RadioBearerStatsCalculator> rlcStats = lteHelper->GetRlcStats ();
-    Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats ();
-
-    rlcStats->SetDlOutputFilename (data_path + "rlc_stats_dl.txt");
-    rlcStats->SetUlOutputFilename (data_path + "rlc_stats_ul.txt");
-    pdcpStats->SetDlPdcpOutputFilename (data_path + "pdcp_stats_dl.txt");
-    pdcpStats->SetUlPdcpOutputFilename (data_path + "pdcp_stats_ul.txt");
-
-    //Print Node ids
-    int numberOfNodes = ueParameters.size();
-    uint32_t m_packetSize       = 2000; //bytes
-    double interPacketInterval  = 100;  //milliseconds
-    std::vector<uint32_t> ueIds, enbIds;
-    uint32_t  pgwId = pgw->GetId(), remoteHostId = remoteHost->GetId();
-    NS_LOG_INFO("NODE IDs");
-    NS_LOG_INFO("\tPGW: " << pgwId);
-    NS_LOG_INFO("\tremoteHost: " << remoteHostId);
-    NS_LOG_INFO("\teNB: ");
-    for (int i = 0; i < enbNodes.GetN(); ++i)
-    {
-        enbIds.push_back(enbNodes.Get(i)->GetId());
-        NS_LOG_INFO("\t\t eNB " << i << ": " << enbNodes.Get(i)->GetId());
-    }
-    NS_LOG_INFO("\tUEs: " << pgw->GetId());
-    for (int i = 0; i < ueNodes.GetN(); ++i)
-    {
-        ueIds.push_back(ueNodes.Get(i)->GetId());
-        NS_LOG_INFO("\t\t UE " << i << ": " << ueNodes.Get(i)->GetId());
-    }
-
-    //Print TBS and MCS for each subframe
-    if (printMcsTbs)
-    {
-        Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteEnbNetDevice/LteEnbMac/DlScheduling", MakeCallback (&RangeDlSchedulingCallback));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbMac/DlScheduling", MakeCallback (&RangeDlSchedulingCallback));
-        //Config::Connect ("/NodeList/" + std::to_string(enbIds[0]) + "/DeviceList/0/$ns3::LteEnbNetDevice/LteEnbMac/DlScheduling", MakeCallback (&RangeDlSchedulingCallback));
-        //Config::Connect ("/NodeList/" + std::to_string(enbIds[0]) + "/DeviceList/0/ComponentCarrierMap/*/LteEnbMac/DlScheduling", MakeCallback (&RangeDlSchedulingCallback));
-        //Config::Connect ("/NodeList/" + std::to_string(enbIds[0]) + "/DeviceList/0/ComponentCarrierMap/*/LteEnbMac/UlScheduling",  MakeCallback (&RangeUlSchedulingCallback));
-    }
-
-    //Print RBs
-    if (printRBs)
-    {
-        //Config::Connect ("/NodeList/2/DeviceList/" + std::to_string(enbIds[0]) + "/$ns3::LteEnbNetDevice/ComponentCarrierMap/*/FfMacScheduler/$ns3::PfFfMacScheduler/RBBitmapTrace",  MakeCallback (&RbBitmapTrace));
-
-        //UE (Uplink)
-        Config::Connect ("/NodeList/*/DeviceList/*/$ns3::LteUeNetDevice/ComponentCarrierMapUe/*/LteUePhy/StartTxDataframe", MakeCallback (&StartDataframeTxCallback));
-
-        //eNB (Downlink)
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/StartTxDataframe", MakeCallback (&StartDataframeTxCallback));
-    }
-
-    if (tracePhy)
-    {
-        AsciiTraceHelper phy_ascii_trace;
-        Ptr<OutputStreamWrapper> phy_trace = phy_ascii_trace.CreateFileStream (data_path + tracePhyFilename+ ".txt");
-        Ptr<OutputStreamWrapper> phy_trace_lte = phy_ascii_trace.CreateFileStream (data_path + tracePhyFilename+ "_lte.txt");
-        *phy_trace->GetStream() << "time,path,node,channel,rxtx,status,qtd_pkts,size" << std::endl;
-        *phy_trace_lte->GetStream() << "time,path,node,channel,rxtx,% time,cellId,IMSI,RNTI,txMode,layer,mcs,size,rv,ndi,correct,ccId" << std::endl;
-
-        //eNB
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/DlSpectrumPhy/RxEndOk", MakeBoundCallback (&PacketCallback, phy_trace, "ENB,DL,RX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/DlSpectrumPhy/RxEndError", MakeBoundCallback (&PacketCallback, phy_trace, "ENB,DL,RX,ERROR"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/DlSpectrumPhy/TxEnd", MakeBoundCallback (&PacketBurstCallback, phy_trace, "ENB,DL,TX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/UlSpectrumPhy/RxEndOk", MakeBoundCallback (&PacketCallback, phy_trace, "ENB,UL,RX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/UlSpectrumPhy/RxEndError", MakeBoundCallback (&PacketCallback, phy_trace, "ENB,UL,RX,ERROR"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/UlSpectrumPhy/TxEnd", MakeBoundCallback (&PacketBurstCallback, phy_trace, "ENB,UL,TX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/UlSpectrumPhy/UlPhyReception", MakeBoundCallback (&PhyRxCallback, phy_trace_lte, "ENB,UL"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/DlSpectrumPhy/DlPhyReception", MakeBoundCallback (&PhyRxCallback, phy_trace_lte, "ENB,DL"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMap/*/LteEnbPhy/DlPhyTransmission", MakeBoundCallback (&PhyTxCallback, phy_trace_lte, "ENB,DL"));
-
-        //UE
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/DlSpectrumPhy/RxEndOk", MakeBoundCallback (&PacketCallback, phy_trace, "UE,DL,RX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/DlSpectrumPhy/RxEndError", MakeBoundCallback (&PacketCallback, phy_trace, "UE,DL,RX,ERROR"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/DlSpectrumPhy/TxEnd", MakeBoundCallback (&PacketBurstCallback, phy_trace, "UE,DL,TX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/UlSpectrumPhy/RxEndOk", MakeBoundCallback (&PacketCallback, phy_trace, "UE,UL,RX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/UlSpectrumPhy/RxEndError", MakeBoundCallback (&PacketCallback, phy_trace, "UE,UL,RX,ERROR"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/UlSpectrumPhy/TxEnd", MakeBoundCallback (&PacketBurstCallback, phy_trace, "UE,UL,TX,OK"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/DlSpectrumPhy/DlPhyReception", MakeBoundCallback (&PhyRxCallback, phy_trace_lte, "UE,DL"));
-        Config::Connect ("/NodeList/*/DeviceList/*/ComponentCarrierMapUe/*/LteUePhy/UlPhyTransmission", MakeBoundCallback (&PhyTxCallback, phy_trace_lte, "UE,UL"));
-
-        //RemoteHost e PGW p2p interface
-        //p2ph.EnableAsciiAll("5grange_p2p_trace.txt");
-        AsciiTraceHelper p2p_asciihelper;
-        Ptr<OutputStreamWrapper> ascii_enb = p2p_asciihelper.CreateFileStream (data_path + "p2p_ascii_enb.txt");
-        Ptr<OutputStreamWrapper> ascii_remote = p2p_asciihelper.CreateFileStream (data_path + "p2p_ascii_remote.txt");
-        p2ph.EnableAscii(ascii_enb, enbIds[0], 2);
-        p2ph.EnableAscii(ascii_remote, remoteHostId, 1);
-    }
-
-    //Print app trace
-    if (printAppTrace)
-    {
-        AsciiTraceHelper app_ascii_trace;
-        Ptr<OutputStreamWrapper> app_trace = app_ascii_trace.CreateFileStream (data_path + traceAppFilename + ".txt");
-        *app_trace->GetStream() << "time,path,node,channel,rxtx,status,qtd_pkts,size" << std::endl;
-        //RemoteHost
-        //Config::Connect ("/NodeList/" + std::to_string(remoteHostId) + "/ApplicationList/0/$ns3::UdpEchoServer/RxWithAddresses", MakeBoundCallback (&PacketWithAddressCallback, app_trace, "RH -- TX OK"));
-        for (int i = 0; i < ueIds.size(); i++)
-        {
-            //Recebido pelo UE
-            Config::Connect ("/NodeList/" + std::to_string(ueIds[i]) + "/ApplicationList/0/$ns3::PacketSink/Rx", MakeBoundCallback (&PacketWithAddressCallback, app_trace, "UE,--,RX,OK"));
-        }
-
-        //Recebido pelo eNB, do remoteHost
-        //Config::Connect ("/NodeList/" + std::to_string(enbIds[0]) + "/DeviceList/2/$ns3::PointToPointNetDevice/MacRx", MakeCallback (&PacketCallback));
-    }
-
-    //Trace Pcap
-    if (traceIpv4)
-    {
-        internet.EnableAsciiIpv4All (data_path + pcapTraceFilename);
-    }
-    //internet.EnablePcapIpv4All(data_path+"fil.pcap");
-
-    //Print Earfcn
-    if (printEarfcn)
-    {
-        Ptr<LteEnbNetDevice> eNbDev = enbLteDevs.Get (0)->GetObject<LteEnbNetDevice> ();
-        NS_LOG_INFO("eNB DL Earfcn: " << eNbDev->GetDlEarfcn () << " DL Carrier Frequency: " << LteSpectrumValueHelper::GetDownlinkCarrierFrequency (eNbDev->GetDlEarfcn ()) << " DL Band: " << (uint16_t)LteSpectrumValueHelper::GetDownlinkCarrierBand (eNbDev->GetDlEarfcn ()));
-        NS_LOG_INFO("eNB DL Bandwidth: " << (int)eNbDev->GetDlBandwidth ());
-        NS_LOG_INFO("eNB UL Earfcn: " << eNbDev->GetUlEarfcn () << " UL Carrier Frequency: " << LteSpectrumValueHelper::GetUplinkCarrierFrequency (eNbDev->GetUlEarfcn ()) << " UL Band: " << (uint16_t)LteSpectrumValueHelper::GetUplinkCarrierBand (eNbDev->GetUlEarfcn ()));
-        NS_LOG_INFO("eNB UL Bandwidth: " << (int)eNbDev->GetUlBandwidth ());
-    }
 
     Ipv4GlobalRoutingHelper g;
     Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
@@ -1005,70 +764,7 @@ int main(int argc, char * argv[]) {
     Simulator::Stop(Seconds(simulationParameters["ts"].get<double>()+2));
     Simulator::Run();
 
-
-    if (traceRlcThroughput)
-    {
-        AsciiTraceHelper ascii_helper;
-        Ptr<OutputStreamWrapper> rlc_output_dl = ascii_helper.CreateFileStream (data_path + traceRlcThroughputFilename+ "_dl.txt");
-
-        NS_LOG_INFO("Simulation parameters:");
-        NS_LOG_INFO("\t - Nodes: " << numberOfNodes);
-        NS_LOG_INFO("\t - Packet size: " << m_packetSize << " bytes");
-        NS_LOG_INFO("\t - Period: " << interPacketInterval << " ms");
-        NS_LOG_INFO ("\t - Maximum theoretical throughput: " << (1000/4.6) * (2292) * 132/10e6 << " mbps");
-        NS_LOG_INFO("DOWNLINK THROUGHPUT");
-        std::vector <uint64_t> dlDataRxed;
-        double epochDuration = rlcStats->GetEpoch().GetSeconds();
-        double totalDlThr = 0.0;
-        for (int i = 0; i < numberOfNodes; i++)
-        {
-            uint64_t imsi = ueLteDevs.Get (i)->GetObject<LteUeNetDevice> ()->GetImsi ();
-            uint8_t lcId = 3;
-            dlDataRxed.push_back (rlcStats->GetDlRxData (imsi, lcId));
-            totalDlThr+=(double)dlDataRxed.at (i) / epochDuration;
-            *rlc_output_dl->GetStream () << Simulator::Now().GetNanoSeconds () << "\t" << i << "\t" << (double)dlDataRxed.at (i) / epochDuration << "\t" << (m_packetSize + 32) * (1000/interPacketInterval) << std::endl;
-            NS_LOG_INFO ("\tUE " << i << " imsi " << imsi << " bytes rxed " << (double)dlDataRxed.at (i) / epochDuration << " expected " << (m_packetSize + 32) * (1000/interPacketInterval) );
-        }
-
-        if (traceNetworkThr)
-        {
-            Ptr<OutputStreamWrapper> net_output_dl = ascii_helper.CreateFileStream (data_path + traceNetworkThrFilaname + "_dl.txt");
-            double net_real = numberOfNodes*(m_packetSize + 32) * 8 / interPacketInterval / 1000;
-            *net_output_dl->GetStream ()  << interPacketInterval << "\t" << numberOfNodes << "\t" << m_packetSize << "\t" << totalDlThr*8 / 1000 / 1000 << "\t" <<  net_real << std::endl;
-        }
-
-        NS_LOG_INFO ("\t Expected: " << numberOfNodes*(m_packetSize + 32) * 8 / interPacketInterval / 1000 << " mbps");
-        NS_LOG_INFO ("\t Achieved: " << totalDlThr*8 / 1000 / 1000 << " mbps");
-
-
-        Ptr<OutputStreamWrapper> rlc_output_up = ascii_helper.CreateFileStream (data_path + traceRlcThroughputFilename+ "_up.txt");
-
-        NS_LOG_INFO ("UPLINK THROUGHPUT");
-        std::vector <uint64_t> ulDataRxed;
-        double totalUlThr = 0.0;
-        for (int i = 0; i < numberOfNodes; i++)
-        {
-            uint64_t imsi = ueLteDevs.Get (i)->GetObject<LteUeNetDevice> ()->GetImsi ();
-            uint8_t lcId = 3;
-            ulDataRxed.push_back (rlcStats->GetUlRxData (imsi, lcId));
-            totalUlThr+=(double)ulDataRxed.at (i) / epochDuration;
-
-            *rlc_output_up->GetStream () << Simulator::Now().GetNanoSeconds () << "\t" << i << "\t" << (double)ulDataRxed.at (i) / epochDuration << "\t" << (m_packetSize + 32) * (1000/interPacketInterval) << std::endl;
-            NS_LOG_INFO ("\tUE " << i << " imsi " << imsi << " bytes rxed " << (double)ulDataRxed.at (i) / epochDuration << " expected " << (m_packetSize + 32) * (1000/interPacketInterval) );
-        }
-
-        if (traceNetworkThr)
-        {
-            Ptr<OutputStreamWrapper> net_output_ul = ascii_helper.CreateFileStream (data_path + traceNetworkThrFilaname + "_ul.txt");
-            *net_output_ul->GetStream () << interPacketInterval << "\t" << numberOfNodes << "\t" << m_packetSize << "\t" << totalUlThr*8 / 1000 / 1000 << "\t" <<  numberOfNodes*(m_packetSize + 32) * 8 / interPacketInterval / 1000 << std::endl;
-        }
-
-        NS_LOG_INFO ("\t Expected: " << numberOfNodes*(m_packetSize + 32) * 8 /interPacketInterval / 1000 << " mbps");
-        NS_LOG_INFO ("\t Achieved: " << totalUlThr*8 / 1000 / 1000 << " mbps");
-    }
-
     flowMonitor->SerializeToXmlFile("flow.xml", true, true);
-
 
 
     Simulator::Destroy();
