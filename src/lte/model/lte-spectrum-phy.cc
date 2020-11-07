@@ -1318,7 +1318,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
         //MonteCarlo probability
         //std::cout << "detection " << answer;
-        if(markov)
+        if(markov.Get())
         {
             //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
 

@@ -1942,17 +1942,17 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
                         //1st check against Byzantine attacks
                         //Skip reports from UEs that report fraudulent CQIs
 
-                        auto fraudulentUE = fraudulentCqiUEs.find(origAddr.first);
+                        //auto fraudulentUE = fraudulentCqiUEs.find(origAddr.first);
                         //if (fraudulentUE != fraudulentCqiUEs.end()) //Only makes sense if not subdivided by subchannel
                         //    continue;
 
                         //Skip reports from UEs that didn't reported their CQI at least twice
-                        if(prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(origAddr.first) == ue_to_cqi_map.end())
-                            continue;
+                        //if(prev_ue_to_cqi_map.find(origAddr.first) == prev_ue_to_cqi_map.end() || ue_to_cqi_map.find(origAddr.first) == ue_to_cqi_map.end())
+                        //    continue;
 
                         //Check if there is an entry for Cqi per subchannel for the current UE
-                        auto prevCqi   = prev_ue_to_cqi_map.at(origAddr.first);
-                        auto latestCqi = ue_to_cqi_map.at(origAddr.first);
+                        //auto prevCqi   = prev_ue_to_cqi_map.at(origAddr.first);
+                        //auto latestCqi = ue_to_cqi_map.at(origAddr.first);
 
                         //Iterate through UE channel sensing information and fuse
                         int i = 0;
@@ -1960,8 +1960,8 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
                         for(auto channelReg: origAddr.second.UnexpectedAccess_FalseAlarm_FalseNegBitmap)
                         {
                             bool fraudulent = false;
-                            if (harmonicDetection)
-                                fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
+                            //if (harmonicDetection)
+                            //    fraudulent = harmonicMeanFraudDetector(origAddr.first, prevCqi, latestCqi, channelReg, i);
 
                             if ( !fraudulent )
                             {
@@ -1969,11 +1969,11 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
                                 fusedResults[i][0] = fusedResults[i][0] || channelReg[0];
                             }
 
-                            if (prevSensing.find(origAddr.first) == prevSensing.end())
-                            {
-                                std::vector<bool> temp{false, false, false, false};
-                                prevSensing.insert({origAddr.first, temp});
-                            }
+                           if (prevSensing.find(origAddr.first) == prevSensing.end())
+                           {
+                               std::vector<bool> temp{false, false, false, false};
+                               prevSensing.insert({origAddr.first, temp});
+                           }
 
                             //Count if prevSensing != currSensing
                             if (countRequiredBits.find(origAddr.first) == countRequiredBits.end())

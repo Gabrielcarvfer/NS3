@@ -473,6 +473,8 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
   for (int i = 0; i < rbgMap.size(); i++)
   {
       rbgMap.at(i) = params.sensedBitmap[i];
+      if (params.sensedBitmap[i])
+          rbgAllocatedNum++;
   }
 
   //SchedulerInput
@@ -1063,16 +1065,17 @@ RrFfMacScheduler::DoSchedDlTriggerReq (const struct FfMacSchedSapProvider::Sched
       uint16_t i = 0;
       NS_LOG_INFO (this << " DL - Allocate user " << newEl.m_rnti << " LCs " << (uint16_t)(*itLcRnti).second << " bytes " << tbSize << " mcs " << (uint16_t) newDci.m_mcs.at (0) << " harqId " << (uint16_t)newDci.m_harqProcess <<  " layers " << nLayer);
       NS_LOG_INFO ("RBG:");
+
       while (i < rbgPerTb)
         {
           if (rbgMap.at (rbgAllocated) == false)
-            {
-              newDci.m_rbBitmap[rbgAllocated] = 1;
-              NS_LOG_INFO ("\t " << rbgAllocated);
-              i++;
-              rbgMap.at (rbgAllocated) = true;
-              rbgAllocatedNum++;
-            }
+          {
+            newDci.m_rbBitmap[rbgAllocated] = 1;
+            NS_LOG_INFO ("\t " << rbgAllocated);
+            i++;
+            rbgMap.at (rbgAllocated) = true;
+            rbgAllocatedNum++;
+          }
           rbgAllocated++;
         }
 
