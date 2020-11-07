@@ -315,24 +315,6 @@ int main(int argc, char * argv[]) {
     else
         SpatiallyCorrelatedShadowingMap(0, 18*4.47, 110);// 18* is an adjustment factor for exponential-decay of spatial correlation
 
-    //Print information
-    bool printMcsTbs        = true;
-    bool printEarfcn        = false;
-    bool printRBs           = false;
-    bool printAppTrace      = true;
-    std::string traceAppFilename = "5grange_app_trace";
-
-    //Trace info
-    std::string pcapTraceFilename = "5grange_cdl";
-    bool traceIpv4 = false;
-    std::string traceRlcThroughputFilename = "5grange_rlc_throughput";
-    bool traceRlcThroughput = false;
-    std::string traceNetworkThrFilaname = "5grange_network_throughput";
-
-    bool traceNetworkThr = false;
-    bool tracePhy = true;
-    std::string tracePhyFilename = "5grange_phy_trace";
-
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::NnFfMacScheduler")); //NN scheduler
@@ -449,6 +431,15 @@ int main(int argc, char * argv[]) {
         BACKHAUL_BASE_SCENARIO        = 1<<4,
         IOT_BASE_SCENARIO             = 1<<5,
     };
+
+    enum ApplicationPorts{
+        voipListenPort      = 8000,
+        videoconfListenPort = 8001,
+        webListenPort       = 8002,
+        streamingListenPort = 8003,
+        backhaulListenPort  = 8004,
+        iotListenPort       = 8005,
+    };
     LoaderTrafficHelper loader = LoaderTrafficHelper();
 
 
@@ -462,7 +453,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & VOIP_BASE_SCENARIO)
     {
-        uint16_t voipListenPort      = 8000;
+        uint16_t voipListenPort   = ApplicationPorts.voipListenPort;
         std::string voip_workload = executablePath + std::string ("voip_workload0_100s.json"); // absolute path to injected traffic
 
         std::map<std::pair<uint16_t, uint16_t>, bool> voipPairs;
@@ -504,7 +495,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & VIDEOCONFERENCE_BASE_SCENARIO)
     {
-        uint16_t videoconfListenPort = 8001;
+        uint16_t videoconfListenPort   = ApplicationPorts.videoconfListenPort;
         std::string videoconf_workload = executablePath + std::string ("videoconf_workload0_100s.json"); // absolute path to injected traffic
 
         std::map<std::pair<uint16_t, uint16_t>, bool> videoconfPairs;
@@ -546,7 +537,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & WEB_BASE_SCENARIO)
     {
-        uint16_t webListenPort       = 8002;
+        uint16_t webListenPort   = ApplicationPorts.webListenPort;
         std::string web_workload = executablePath + std::string ("web_workload0_100s.json");
 
         // client will return 30% of downlink payload to represent uplink requests to the server
@@ -596,7 +587,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & STREAMING_BASE_SCENARIO)
     {
-        uint16_t streamingListenPort = 8003;
+        uint16_t streamingListenPort   = ApplicationPorts.streamingListenPort;
         std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");
 
         // client will return 5% of downlink payload to represent uplink requests to the server
@@ -645,7 +636,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & BACKHAUL_BASE_SCENARIO)
     {
-        uint16_t backhaulListenPort = 8004;
+        uint16_t backhaulListenPort = ApplicationPorts.backhaulListenPort;
         std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
         std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
 
@@ -668,7 +659,7 @@ int main(int argc, char * argv[]) {
 
     if (simulationScenario & IOT_BASE_SCENARIO)
     {
-        uint16_t iotListenPort = 8005;
+        uint16_t iotListenPort   = ApplicationPorts.iotListenPort;
         std::string iot_workload = executablePath + std::string("iot_workload0_100s_100nodes.json");
 
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), iotListenPort));
