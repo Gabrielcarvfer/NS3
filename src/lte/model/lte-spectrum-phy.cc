@@ -53,6 +53,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("LteSpectrumPhy");
 
+static const double cellDiameter = 100e3;
 
 /// duration of SRS portion of UL subframe  
 /// = 1 symbol for SRS -1ns as margin to avoid overlapping simulator events
@@ -824,9 +825,10 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
               }
           }
 
-          channel = (firstIndex + 1) / ((k - 1) / 4);
+          channel = (firstIndex + 1) / ((spectrumRxParams->psd->ConstValuesEnd()-spectrumRxParams->psd->ConstValuesBegin())/4); // assuming 4 subchannels
 
-          //ss << "PU channel " << channel << " index " << firstIndex << " k " << k << " distance" << spectrumRxParams->distance << "\n";
+          //ss << "PU channel " << channel << " index " << firstIndex << " distance " << spectrumRxParams->distance << "\n";
+          //std::cout << ss.str() << std::endl;
 
           //Schedule event to store PU presence
           Simulator::ScheduleNow(&LteSpectrumPhy::reset_PU_presence, this, true, spectrumRxParams->distance, channel);//Set PU_presence to true after the transmission starts
@@ -1004,8 +1006,13 @@ double LteSpectrumPhy::interpolateProbabilitySNR(double sinrVal)
 
 double LteSpectrumPhy::interpolateProbabilityDistance(double distance)
 {
-    //Find the first sinr value bigger than the current one
+    //Fast path for cases where interpolation doesn't make any sense
+    if (distance == cellDiameter)
+        return 0;
+
+    //Find the first distance value bigger than the current one
     int32_t index = -1;
+    //I gave a stupid name to this variable, but during load it actually loaded the distance
     for (auto it = SNRdB.begin(); it != SNRdB.end(); it++)
     {
         if (*it > distance)
@@ -1278,6 +1285,9 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
     }
     //std::cout << Simulator::Now().GetSeconds() << " #PUs " << numPus << std::endl;
 
+    BooleanValue markov;
+    GlobalValue::GetValueByName("MARKOV_DETECTION", markov);
+
     //Calculate the probability of PU detection on given RBs
     int k = 0;
     for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
@@ -1285,7 +1295,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         //if (occupied_RB_indexes.at(i))
         //    continue;
 
-        double distance = 10.0e10;
+        double distance = cellDiameter;
         if (PUsDistance.find(k) != PUsDistance.end())
         {
             double minDist = distance;
@@ -1297,7 +1307,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
         //std::cout << Simulator::Now() << " UE " << this << " " << ss.str() << std::endl;
         //Mark PU_presence with the current channel PU presence
-        PU_presence_V[k] = distance != 10e10;
+        PU_presence_V[k] = distance < cellDiameter; //cell diameter
 
 
         double prob = SNRsensing ? interpolateProbabilitySNR(*groupSNR) : interpolateProbabilityDistance(distance);
@@ -1307,52 +1317,58 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
 
         //MonteCarlo probability
-        //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
-        
-        //std::cout << this << " k " << k << " answer " << answer << std::endl;
-        //std::cout << this << " k " << k << " pre MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
-        if(std::get<1>(monteCarloState_flip_monteCarloProbability[k]))
+        //std::cout << "detection " << answer;
+        if(markov)
         {
-            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
-            if (answer != monteCarloState)
-            {
-                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
-                p += (1 - p) / 2;
+            //if flipped, accumulate certainty if (answer != montecarlo state), else unflip
 
-                //if p > 90%, flip montecarlo state, unflip flag and reset certainty
-                if (p > 0.9)
-                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
+            //std::cout << this << " k " << k << " answer " << answer << std::endl;
+            //if (distance != cellDiameter)
+            //    std::cout << this << " distance " << distance/1000 << "km prob " << prob << " answer " << answer << " k " << k << " pre MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+            if(std::get<1>(monteCarloState_flip_monteCarloProbability[k]))
+            {
+                auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+                if (answer != monteCarloState)
+                {
+                    auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                    p += (1 - p) / 2;
+
+                    //if p > 90%, flip montecarlo state, unflip flag and reset certainty
+                    if (p > 0.9)
+                        monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
+                    else
+                        monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
+                }
                 else
-                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
+                {
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, 0);
+                }
+
             }
+            //if unflipped, accumulate probability if answer == montecarlo state, else flip
             else
             {
-                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, 0);
-            }
+                auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
+                if (answer == monteCarloState)
+                {
+                    auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
+                    p += (1 - p) / 2;
 
-        }
-        //if unflipped, accumulate probability if answer == montecarlo state, else flip
-        else
-        {
-            auto monteCarloState = std::get<0>(monteCarloState_flip_monteCarloProbability[k]);
-            if (answer == monteCarloState)
-            {
-                auto p = std::get<2>(monteCarloState_flip_monteCarloProbability[k]);
-                p += (1 - p) / 2;
-
-                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, p);
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, false, p);
+                }
+                else
+                {
+                    monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
+                }
             }
-            else
-            {
-                monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
-            }
-        }
-        //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+            //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
 
-        BooleanValue num;
-        GlobalValue::GetValueByName("MARKOV_DETECTION", num);
-        if(num)
+
             answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]); //TODO: find a better way to disable the markovChain process (and rename MonteCarlo to MarkovChain)
+            //std::cout << " markov " << answer;
+        }
+        //std::cout << std::endl;
+
         //if (k == 1 || k == 3)
         //    std::cout << Simulator::Now().GetSeconds() << " k=" << k << " PUpresence=" << PU_presence_V[k] << " detected=" << answer << std::endl;
         //ss << this << " " << std::setw(8) << std::fixed << std::setprecision(3) << avgSinrSubchannel << "\t" << answer << "\t" << PU_presence << "\t\n";//std::hex << ( (uint64_t)0x01fff<<(13*k) )<< std::endl;
@@ -1376,7 +1392,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
         k++;
     }
 
-    puPresence_V.emplace_back(PU_detected_V);
+    //puPresence_V.emplace_back(PU_detected_V);
 }
 
 
@@ -1403,13 +1419,13 @@ void LteSpectrumPhy::Sense()
     double avgSinr = 0;
     std::vector<double> historicalSNR;
     bool senseRBs = false;
-    int rbgSize = 2;
+    int rbgSize = 1;
     int groupingSize;
 
     if (senseRBs)
         groupingSize = 2; //subdivide 100RBs into 50RBGs
     else
-        groupingSize = 44; //subdivide 132RBs into 4 subchannels of 6MHz=44RBs each
+        groupingSize = 33; //subdivide 132RBs into 4 subchannels of 6MHz=33RBs each
 
     //Precalculate SNR for RBGs and channel-wise SNR
     calculateAvgSinr(sinrHistory.back(), groupingSize, &avgSinr, &historicalSNR);

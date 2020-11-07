@@ -14,7 +14,7 @@ def generate_random_pus(
         xRange         = (0, 100e3),  # m
         yRange         = (0, 100e3),  # m
         zRange         = (0,   0.1),  # m
-        txPowerRange   = (30,   40),  # dBm
+        txPowerRange   = (40,   45),  # dBm
         dutyCycleRange = (0.1, 0.4),  # percentage of period to transmit and precision
         txPeriodRange  = (1, 5),      # period between Txs
 ):

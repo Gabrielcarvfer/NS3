@@ -115,10 +115,11 @@ int main(int argc, char * argv[]) {
         {
             if (freqBand != g_eutraChannelNumbers[i].band)
                 continue;
-            carrierFreq = g_eutraChannelNumbers[i].fDlLow;
+            //carrierFreq = g_eutraChannelNumbers[i].fDlLow;
+            carrierFreq = g_eutraChannelNumbers[i].fUlLow;
             dlEarfcn = g_eutraChannelNumbers[i].nOffsDl;
             ulEarfcn = g_eutraChannelNumbers[i].nOffsUl;
-            carrierFreq *= 1000000; // Hz to MHz
+            carrierFreq *= 1000000; // MHz to Hz
         }
 
         Config::SetDefault ("ns3::ComponentCarrier::DlEarfcn", UintegerValue (dlEarfcn));
@@ -718,24 +719,21 @@ int main(int argc, char * argv[]) {
 
     //19 configure the interference generator (acting as a PU)
     int i = 0;
-    double j = 0.3;
-
     NetDeviceContainer waveformGeneratorDevices;
 
     for (auto & puData: puParameters)
     {
-         double basePsdWattsHz = pow (10.0, (puData.second[3] - 30) / 10.0); // convert dBm to W/Hz
-
          Ptr<TvSpectrumTransmitter> phy = CreateObject<TvSpectrumTransmitter>();
-         phy->SetAttribute("StartFrequency", DoubleValue(carrierFreq+(channelBandwidth-60000)*(puData.second[4]-2)));
-         phy->SetAttribute("ChannelBandwidth", DoubleValue(channelBandwidth-30000));
-         phy->SetAttribute("BasePsd", DoubleValue(basePsdWattsHz));
+         double startFreq = carrierFreq+(channelBandwidth-60000)*(puData.second[4]-2)+15000;
+         double bandwidth = channelBandwidth-30000;
+         phy->SetAttribute("StartFrequency", DoubleValue(startFreq));
+         phy->SetAttribute("ChannelBandwidth", DoubleValue(bandwidth));
+         phy->SetAttribute("BasePsd", DoubleValue(puData.second[3]));
          phy->SetAttribute("TvType", EnumValue(TvSpectrumTransmitter::TVTYPE_COFDM));//TVTYPE_8VSB or TVTYPE_ANALOG
          phy->CreateTvPsd();
 
          /* Test max PSD value */
          Ptr<SpectrumValue> psd = phy->GetTxPsd();
-
          WaveformGeneratorHelper waveformGeneratorHelper;
          waveformGeneratorHelper.SetChannel(lteHelper->GetDownlinkSpectrumChannel());
          waveformGeneratorHelper.SetTxPowerSpectralDensity(psd);
@@ -743,8 +741,8 @@ int main(int argc, char * argv[]) {
          waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(puData.second[6])));   // corresponds to 60 Hz
          waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(puData.second[5]));
          waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
-         Simulator::Schedule(Seconds(2.5)+Seconds(puData.second[6]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
-                 waveformGeneratorDevices.GetN()-1)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
+         Simulator::Schedule(Seconds(1.5)+Seconds(puData.second[6]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
+                 i)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
          i++;
     }
 

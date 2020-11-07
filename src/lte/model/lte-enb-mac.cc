@@ -528,8 +528,11 @@ LteEnbMac::~LteEnbMac ()
 
                   }
                   //Print sensedBitmap
-                  //sensing_list_file << "\n\t\t UE " << ue << " reported bitmap " << std::bitset<50>(sensedBitmap) << " in frame " << cognitiveReg.SensedFrameNo << " and subframe "
-                  //                  << cognitiveReg.SensedSubframeNo;
+                  //sensing_list_file << "\n\t\t UE " << ue;
+                  //sensing_list_file << " reported bitmap " << std::bitset<132>(sensedBitmap);
+                  //sensing_list_file << " in frame " << cognitiveReg.SensedFrameNo;
+                  //sensing_list_file << " and subframe "<< cognitiveReg.SensedSubframeNo;
+
                   if (sensingUesAndEventsMap.find(ue) == sensingUesAndEventsMap.end())
                       sensingUesAndEventsMap.emplace(ue, 0);
                   sensingUesAndEventsMap.at(ue) += 1;
@@ -2586,9 +2589,11 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
         break;//out of if
     }
 
+    std::bitset<132> sensedBitmap{};
+
     //No entries to fuse
     if(fusedResults.empty())
-        return (uint64_t) 0x0;
+        return sensedBitmap;
 
     //First create map for sensed frames
     unexpectedChannelAccessBitmap.emplace(m_frameNo, std::map <uint64_t, std::vector<std::vector<bool>> > ());
@@ -2600,19 +2605,17 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
     //Create bitmap to feed the scheduler
     int numRbsPerChannel = bandwidth/fusedResults.size();
     int i = 0;
-    std::bitset<132> sensedBitmap{};
 
     for (unsigned c = 0; c < fusedResults.size(); c++)
+    {
+        if(!fusedResults[c][0])
+            continue;
         for (unsigned k = c*numRbsPerChannel; k < (c+1)*numRbsPerChannel; k++)
         {
-            if(!fusedResults[i][0])
-                continue;
-
             sensedBitmap[k] = fusedResults[c][0];
-
             //std::cout << "k=" << k << " sensedBitmap " << std::bitset<50>(sensedBitmap)  << std::endl;
-
         }
+    }
 
     return sensedBitmap;
 }
