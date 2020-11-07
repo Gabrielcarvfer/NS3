@@ -5,10 +5,7 @@ import subprocess
 import lzma
 
 from simulation_results.extract_collaborative_spectrum_sensing_results import extract_collaborative_spectrum_sensing_results
-from simulation_results.extract_mcs_distribution import extract_mcs_distribution
-from simulation_results.extract_sinr_distribution import extract_sinr_distribution
-from simulation_results.extract_tbler_results import extract_tbler_results
-from simulation_results.extract_throughput_results import extract_throughput_results
+from simulation_results.extract_network_performance_metrics import extract_network_performance_metrics
 from simulation_results.extract_rbg_activity_results import extract_rbg_activity_results
 
 cwd = os.path.abspath(os.getcwd())
@@ -70,49 +67,16 @@ def execute_simulation(simulation_path, base_dir):
             "collaborative_spectrum_sensing_results": None,
         }
 
-        # Try to extract throughput
+        # Try to extract flow statistics
         try:
-            throughput_results = extract_throughput_results(simulation_path)
+            flow_statistics = extract_network_performance_metrics(simulation_path)
         except Exception:
-            print("Failed extracting throughput results. ",
+            print("Failed extracting flow statistics. ",
                   "Skipping to next simulation. Source path: ",
                   simulation_path)
             break
-        simulation_results["throughput"] = throughput_results
-        del throughput_results
-
-        # Try to extract throughput
-        try:
-            tbler_results = extract_tbler_results(simulation_path)
-        except Exception:
-            print("Failed extracting transport block error rate results. ",
-                  "Skipping to next simulation. Source path: ",
-                  simulation_path)
-            break
-        simulation_results["tbler"] = tbler_results
-        del tbler_results
-
-        # Try to extract mcs distribution
-        try:
-            mcs_results = extract_mcs_distribution(simulation_path)
-        except Exception:
-            print("Failed extracting transport block error rate results. ",
-                  "Skipping to next simulation. Source path: ",
-                  simulation_path)
-            break
-        simulation_results["mcs_distribution"] = mcs_results
-        del mcs_results
-
-        # Try to extract sinr distribution
-        try:
-            sinr_results = extract_sinr_distribution(simulation_path)
-        except Exception:
-            print("Failed extracting transport block error rate results. ",
-                  "Skipping to next simulation. Source path: ",
-                  simulation_path)
-            break
-        simulation_results["mcs_distribution"] = sinr_results
-        del sinr_results
+        simulation_results["flow_statistics"] = flow_statistics
+        del flow_statistics
 
         # Try to extract sinr distribution
         try:
