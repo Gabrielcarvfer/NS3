@@ -20,41 +20,28 @@ def execute_simulation(simulation_path, base_dir):
             break
 
         # Execute simulation
-        try:
-            if os.sep == "\\":
-                cmd = "bash -c "
-                cmd += "\"NS_LOG=LteAmc:LteSpectrumPhy "
-                cmd += base_dir + os.sep + "5g_range_demonstration_json "
-                cmd += "\""
-            else:
-                cmd = [base_dir + os.sep + "5g_range_demonstration_json"]
+        if not os.path.exists(simulation_path + os.sep + "flow.xml"):
+            try:
+                if os.sep == "\\":
+                    cmd = "bash -c "
+                    cmd += "\"NS_LOG=LteAmc:LteSpectrumPhy "
+                    cmd += base_dir + os.sep + "5g_range_demonstration_json "
+                    cmd += "\""
+                else:
+                    cmd = [base_dir + os.sep + "5g_range_demonstration_json"]
 
-            simProc = subprocess.run(cmd,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.STDOUT,
-                                     cwd=simulation_path,
-                                     env={"NS_LOG": "LteAmc:LteSpectrumPhy",
-                                          "OPENBLAS_NUM_THREADS": "1",
-                                          }
-                                     )
-
-            with lzma.open(simulation_path + os.sep +"out.txt.lzma", "w") as file:
-                file.write(simProc.stdout)
-
-            throughputProc = subprocess.run(["python3",
-                                             cwd+os.sep+"get_thr.py"
-                                             ],
-                                            stdout=subprocess.PIPE,
-                                            stderr=subprocess.STDOUT,
-                                            cwd=simulation_path
-                                            )
-
-            with open(simulation_path + os.sep + "perf.txt", "w", encoding="utf-8") as file:
-                file.write(throughputProc.stdout.decode("utf-8"))
-        except Exception:
-            print("Failed to execute simulation. Source path: ",
-                  simulation_path)
-            break
+                simProc = subprocess.run(cmd,
+                                         stdout=subprocess.PIPE,
+                                         stderr=subprocess.STDOUT,
+                                         cwd=simulation_path,
+                                         env={"NS_LOG": "LteAmc:LteSpectrumPhy",
+                                              "OPENBLAS_NUM_THREADS": "1",
+                                              }
+                                         )
+            except Exception:
+                print("Failed to execute simulation. Source path: ",
+                      simulation_path)
+                break
 
         # When it finishes, extract all results and preprocess them to be able
         # to delete simulation traces and save up some disk space
