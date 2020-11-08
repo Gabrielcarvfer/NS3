@@ -115,8 +115,8 @@ int main(int argc, char * argv[]) {
         {
             if (freqBand != g_eutraChannelNumbers[i].band)
                 continue;
-            //carrierFreq = g_eutraChannelNumbers[i].fDlLow;
-            carrierFreq = g_eutraChannelNumbers[i].fUlLow;
+            carrierFreq = g_eutraChannelNumbers[i].fDlLow;
+            //carrierFreq = g_eutraChannelNumbers[i].fUlLow;
             dlEarfcn = g_eutraChannelNumbers[i].nOffsDl;
             ulEarfcn = g_eutraChannelNumbers[i].nOffsUl;
             carrierFreq *= 1000000; // MHz to Hz
@@ -269,7 +269,7 @@ int main(int argc, char * argv[]) {
             double txPower            = puContents["tx_power"].get<double>();
             puParameters.emplace(puId, std::vector<double> {coordinatesVector[0], coordinatesVector[1], coordinatesVector[2], txPower, channelNumber, dutyCycle, period});
 
-            LteEnbMac::nonDSAChannels.push_back(channelNumber);
+            //LteEnbMac::nonDSAChannels.push_back(channelNumber);
         }
         
         //Load eNB data
@@ -741,7 +741,7 @@ int main(int argc, char * argv[]) {
          waveformGeneratorHelper.SetPhyAttribute("Period", TimeValue(Seconds(puData.second[6])));   // corresponds to 60 Hz
          waveformGeneratorHelper.SetPhyAttribute("DutyCycle", DoubleValue(puData.second[5]));
          waveformGeneratorDevices.Add(waveformGeneratorHelper.Install(waveformGeneratorNodes.Get(i)));
-         Simulator::Schedule(Seconds(1.5)+Seconds(puData.second[6]), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
+         Simulator::Schedule(Seconds(1.5), &WaveformGenerator::Start, waveformGeneratorDevices.Get(
                  i)->GetObject<NonCommunicatingNetDevice>()->GetPhy()->GetObject<WaveformGenerator>());
          i++;
     }

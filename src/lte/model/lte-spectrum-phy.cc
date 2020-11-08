@@ -167,6 +167,7 @@ LteSpectrumPhy::LteSpectrumPhy ()
   waitingForSensingReportTransmission = false;
   for (int i =0; i < 4; i++)
     monteCarloState_flip_monteCarloProbability.push_back({false, false, 0});
+  resetSensingStatus();
 
 }
 
@@ -1290,7 +1291,9 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
 
     //Calculate the probability of PU detection on given RBs
     int k = 0;
-    for(auto groupSNR = sinrGroupHistory.back().begin(); groupSNR < sinrGroupHistory.back().end(); groupSNR++) {
+    auto groupSNR = sinrGroupHistory.back().begin();
+    while (SNRsensing ? groupSNR < sinrGroupHistory.back().end() : k < 4)
+    {
         //Skip if the RB is supposed to be occupied by an UE transmission
         //if (occupied_RB_indexes.at(i))
         //    continue;
@@ -1334,7 +1337,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                     p += (1 - p) / 2;
 
                     //if p > 90%, flip montecarlo state, unflip flag and reset certainty
-                    if (p > 0.9)
+                    if (p > 0.8)
                         monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
                     else
                         monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
@@ -1361,11 +1364,11 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                     monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, 0);
                 }
             }
-            //std::cout << this << " k " << k << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
-
-
             answer = std::get<0>(monteCarloState_flip_monteCarloProbability[k]); //TODO: find a better way to disable the markovChain process (and rename MonteCarlo to MarkovChain)
             //std::cout << " markov " << answer;
+            //if (distance != cellDiameter)
+            //    std::cout << this << " k " << k << " answer " << answer << " post MCstate " << std::get<0>(monteCarloState_flip_monteCarloProbability[k]) << " flip " << std::get<1>(monteCarloState_flip_monteCarloProbability[k]) << " MCprob " << std::get<2>(monteCarloState_flip_monteCarloProbability[k])<< std::endl;
+
         }
         //std::cout << std::endl;
 
@@ -1390,6 +1393,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                 UnexpectedAccess_FalseAlarm_FalseNegBitmap[k][2] = true;
         }
         k++;
+        groupSNR++;
     }
 
     //puPresence_V.emplace_back(PU_detected_V);
