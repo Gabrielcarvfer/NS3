@@ -170,7 +170,7 @@ if __name__ == "__main__":
 
         # Dispatch simulations
         p = multiprocessing.Pool(processes=14)  # run simulations in parallel
-        results = p.starmap(func=execute_simulation, iterable=thread_parameters)
+        results = p.starmap(func=execute_simulation, iterable=sorted(thread_parameters, reverse=True))
 
 
 

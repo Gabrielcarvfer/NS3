@@ -116,5 +116,5 @@ def execute_simulation(simulation_path, base_dir):
         #outputFiles = glob.glob(simulation_path+os.sep+"*.*", recursive=True)
         #todo: remove files other than parameters and results pickle
         print("Finished working on ", simulation_path)
-        pass
+        break  #end of while
     pass
