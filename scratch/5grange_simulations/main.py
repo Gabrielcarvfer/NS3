@@ -145,7 +145,7 @@ if __name__ == "__main__":
                                           ueSpeeds=[0, ],  # 10, 50, 100],
                                           clusteredUes=[False, ],  # True],
                                           dynamicSpectrumAccess=[use_dsa, ],  # True],
-                                          markovOptions=[use_dsa, ],  # True],
+                                          markovOptions=[False, True, ],  # True],
                                           harmonicOptions=[False, ],  # True], # not working with attackers
                                           fusionAlgs=[6, ],  # 7, 11, 12, 13],
                                           attackerOptions=[0, ],  # 1, 2, 5],
