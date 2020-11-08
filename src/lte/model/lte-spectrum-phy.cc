@@ -1337,7 +1337,7 @@ void LteSpectrumPhy::sensingProcedure(std::list< Ptr<LteControlMessage> > dci, i
                     p += (1 - p) / 2;
 
                     //if p > 90%, flip montecarlo state, unflip flag and reset certainty
-                    if (p > 0.8)
+                    if (p > 0.7) // originally 90%, but relaxed for scenarios with less UEs
                         monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(!monteCarloState, false, 0);
                     else
                         monteCarloState_flip_monteCarloProbability[k] = std::tuple<bool, bool, double>(monteCarloState, true, p);
