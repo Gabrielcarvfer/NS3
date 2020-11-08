@@ -23,7 +23,7 @@ include(buildsupport/macros_and_definitions.cmake)
 
 set(NS3_VER 3.30.1)
 
-option(NS3_LOG "Enable logging to be built" ON)
+option(NS3_LOG "Enable logging to be built" OFF)
 
 option(NS3_TESTS "Enable tests to be built" OFF)
 set(NS3_TESTS ON)
