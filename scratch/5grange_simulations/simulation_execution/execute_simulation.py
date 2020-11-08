@@ -65,28 +65,29 @@ def execute_simulation(simulation_path, base_dir):
         simulation_results["flow_statistics"] = flow_statistics
         del flow_statistics
 
-        # Try to extract rbg activity (scheduling, PU, etc) distribution
-        # Requires scheduler_input.txt and scheduler_output.txt
-        #try:
-        #    rbg_activity = extract_rbg_activity_results(simulation_path)
-        #except Exception:
-        #    print("Failed extracting transport block error rate results. ",
-        #          "Skipping to next simulation. Source path: ",
-        #          simulation_path)
-        #    break
-        #simulation_results["rbg_activity"] = rbg_activity
-        #del rbg_activity
+        if "dsa_True" in simulation_path:
+            # Try to extract rbg activity (scheduling, PU, etc) distribution
+            # Requires scheduler_input.txt and scheduler_output.txt
+            #try:
+            #    rbg_activity = extract_rbg_activity_results(simulation_path)
+            #except Exception:
+            #    print("Failed extracting transport block error rate results. ",
+            #          "Skipping to next simulation. Source path: ",
+            #          simulation_path)
+            #    break
+            #simulation_results["rbg_activity"] = rbg_activity
+            #del rbg_activity
 
-        # Try to extract collaborative spectrum sensing results
-        try:
-            css_results = extract_collaborative_spectrum_sensing_results(simulation_path)
-        except Exception:
-            print("Failed extracting collaborative spectrum sensing results. ",
-                  "Skipping to next simulation. Source path: ",
-                  simulation_path)
-            break
-        simulation_results["collaborative_spectrum_sensing_results"] = css_results
-        del css_results
+            # Try to extract collaborative spectrum sensing results
+            try:
+                css_results = extract_collaborative_spectrum_sensing_results(simulation_path)
+            except Exception:
+                print("Failed extracting collaborative spectrum sensing results. ",
+                      "Skipping to next simulation. Source path: ",
+                      simulation_path)
+                break
+            simulation_results["collaborative_spectrum_sensing_results"] = css_results
+            del css_results
 
         # Try dumping results into compressed pickle
         try:
