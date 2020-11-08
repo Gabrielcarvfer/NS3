@@ -182,6 +182,11 @@ def generate_scenarios(baseFolder,
                                             json.dump(simulationScenario, f, indent=4)
                             else:
                                 # Create folders for scenarios with different MHM settings
+                                if len(markovOptions) > len(harmonicOptions):
+                                    harmonicOptions = harmonicOptions*int(len(markovOptions)/len(harmonicOptions))
+                                else:
+                                    markovOptions = markovOptions*int(len(harmonicOptions)/len(markovOptions))
+
                                 for markovOption, harmonicOption in zip(markovOptions, harmonicOptions):
                                     mhmFolder = dsaFolder+os.sep+"markov_"+str(markovOption)+"_harmonic_"+str(harmonicOption)
                                     if not os.path.exists(mhmFolder):
