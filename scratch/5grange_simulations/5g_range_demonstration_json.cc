@@ -92,11 +92,6 @@ int main(int argc, char * argv[]) {
 
     picojson::object inputJson = load_json("simulationParameters.json");
     picojson::object simulationParameters = inputJson["SimulationParameters"].get<picojson::object>();
-#if defined(_WIN32)
-    _mkdir(data_path.c_str());
-#else
-    mkdir(data_path.c_str(),0777); // notice that 777 is different than 0777
-#endif
 
     //Get EARFCN for specified frequency band
     double carrierFreq = 0.0;
@@ -749,11 +744,6 @@ int main(int argc, char * argv[]) {
     Ptr<FlowMonitor> flowMonitor;
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
-
-    Ipv4GlobalRoutingHelper g;
-    Ptr<OutputStreamWrapper> routingStream = Create<OutputStreamWrapper>
-            ("dynamic-global-routing.routes", std::ios::out);
-    g.PrintRoutingTableAllAt (Seconds (1), routingStream);
 
     //23 Run simulation
     Simulator::Stop(Seconds(simulationParameters["ts"].get<double>()+2));
