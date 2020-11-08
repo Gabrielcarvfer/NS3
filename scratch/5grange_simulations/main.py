@@ -165,11 +165,11 @@ if __name__ == "__main__":
             simulation_path = os.path.dirname(scenarioJson)
 
             # Run simulation if necessary and try to extract results into a single output file
-            execute_simulation(simulation_path, baseDir)  # run simulations individually
-            #thread_parameters.append((simulation_path, baseDir))
+            #execute_simulation(simulation_path, baseDir)  # run simulations individually
+            thread_parameters.append((simulation_path, baseDir))
 
         # Dispatch simulations
-        p = multiprocessing.Pool(processes=8)  # run simulations in parallel
+        p = multiprocessing.Pool(processes=14)  # run simulations in parallel
         results = p.starmap(func=execute_simulation, iterable=thread_parameters)
 
 
