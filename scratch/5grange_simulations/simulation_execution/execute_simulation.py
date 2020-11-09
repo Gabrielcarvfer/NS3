@@ -37,10 +37,13 @@ def execute_simulation(simulation_path, base_dir):
                                          env={"OPENBLAS_NUM_THREADS": "1",
                                               }
                                          )
+                if simProc.returncode != 0:
+                    raise Exception("ProgramFailed")
             except Exception:
                 print("Failed to execute simulation. Source path: ",
                       simulation_path)
                 break
+
 
         # When it finishes, extract all results and preprocess them to be able
         # to delete simulation traces and save up some disk space
