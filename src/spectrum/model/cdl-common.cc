@@ -8,7 +8,7 @@
 #include <ns3/enum.h>
 #include <ns3/uinteger.h>
 #include "ns3/spatially-correlated-shadowing-map.h"
-
+#include "fasttrigo.h"
 namespace ns3
 {
 
@@ -39,12 +39,7 @@ CdlCommon::CdlCommon(bool is_cdl_a, Ptr<Ula5gRange> ula_tx, Ptr<Ula5gRange> ula_
     rx(ula_rx),
     system_freq(ula_tx->GetSystemFreq())
 {
-  if (cosSinTable.size() == 0)
-  {
-      cosSinTable.reserve(630);
-      for (float i = 0.0; i <= 2.0*M_PI; i+=0.01)
-        cosSinTable.push_back({std::cos(i), std::sin(i)});
-  }
+
   prevDistance = distance + 110; // 110m to force processing in get_tot_path_gain
   get_tot_path_gain(distance);
 }
@@ -114,19 +109,12 @@ arma::cx_cube CdlCommon::get_channel_fr(double time, const arma::vec &freqs_PRBs
       {
           std::complex<double> param = -1i * 2.0 * units::pi * freqs_PRBs (id_fr) * rays.delay (id_ray);
 
-          //Storing a copy of each imaginary fraction is way too expensive.
-          //Compute the modulus
-          auto imgMod = param.imag() - floor(param.imag()/(2*M_PI))*2*M_PI;
-
-          //Too much precision also increases the amount of cached values. Explicitly round to first 2 decimal places
-          imgMod = round(imgMod*100)/100;
-
-          unsigned key = (unsigned)(imgMod*100);
-          std::vector<float> cosSin = cosSinTable[key];
-
           double expRe = std::exp(param.real());
-          param = std::complex<double>(expRe*cosSin[0], expRe*cosSin[1]);
-          
+          float cos = 0.0;
+          float sin = 0.0;
+          FT::sincos (param.imag(), &sin, &cos);
+          param = std::complex<double>(expRe*cos, expRe*sin);
+
           cir_fr.at (0, 0, id_fr) += ray_sums.at(id_ray) * param;
       }
   }

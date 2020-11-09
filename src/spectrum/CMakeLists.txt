@@ -37,6 +37,7 @@ set(source_files
         helper/tv-spectrum-transmitter-helper.cc
         model/cdl-common.cc
         model/cdl-spectrum-propagation-loss.cc
+        model/fasttrigo.cpp
         )
 
 set(header_files
