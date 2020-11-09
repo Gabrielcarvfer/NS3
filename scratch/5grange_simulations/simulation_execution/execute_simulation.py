@@ -24,7 +24,7 @@ def execute_simulation(simulation_path, base_dir):
             try:
                 if os.sep == "\\":
                     cmd = "bash -c "
-                    cmd += "\"NS_LOG=LteAmc:LteSpectrumPhy "
+                    cmd += "\""
                     cmd += base_dir + os.sep + "5g_range_demonstration_json "
                     cmd += "\""
                 else:
@@ -34,8 +34,7 @@ def execute_simulation(simulation_path, base_dir):
                                          stdout=subprocess.PIPE,
                                          stderr=subprocess.STDOUT,
                                          cwd=simulation_path,
-                                         env={"NS_LOG": "LteAmc:LteSpectrumPhy",
-                                              "OPENBLAS_NUM_THREADS": "1",
+                                         env={"OPENBLAS_NUM_THREADS": "1",
                                               }
                                          )
             except Exception:
