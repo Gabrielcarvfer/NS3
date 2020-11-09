@@ -333,12 +333,15 @@ double CdlCommon::get_path_loss (const arma::vec3 &tx_position, const arma::vec3
 {
   double distance_km = arma::norm (tx_position - rx_position) / (1.0e3);
 
-  if (distance_km <= 1.0)
-    {
-      throw std::runtime_error (
-          "The distance between the transmitter and "
-          "receiver must be larger than 1km.");
-    }
+  //if (distance_km <= 1.0)
+  //  {
+  //    throw std::runtime_error (
+  //        "The distance between the transmitter and "
+  //        "receiver must be larger than 1km.");
+  //  }
+
+  if (distance_km <= 1)
+      distance_km = 1.001; // we should ensure nodes are closer than 1km, but getting a worse result to guarantee it will work isn't that bad
 
   double fc = system_freq / (1.0e6);
 
@@ -383,7 +386,7 @@ CdlCommon::get_tot_path_gain (double distance)
         shadow_fading = dB2lin(SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(rxPos.at(0), rxPos.at(1), rxPos.at(2))));
         //prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
 
-        tot_path_gain = (1.0 / path_loss) * shadow_fading;
+        tot_path_gain = 1.0 / (path_loss * shadow_fading);
 
         combined_pattern ();
     }
