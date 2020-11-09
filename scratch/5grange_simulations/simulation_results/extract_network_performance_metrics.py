@@ -12,6 +12,38 @@ class ApplicationPorts(Enum):
     backhaulListenPort  = 8004,
     iotListenPort       = 8005,
 
+# Taken from D6.3 and previous 5G-RANGE deliverables
+application_KPIs = {ApplicationPorts.voipListenPort: {"lost_packet_ratio": 0,
+                                                      "latency": 0,
+                                                      "jitter": 0,
+                                                      "dl_throughput_kbps": 0,
+                                                      "ul_throughput_kbps": 0},
+                    ApplicationPorts.videoconfListenPort: {"lost_packet_ratio": 0,
+                                                           "latency": 0,
+                                                           "jitter": 0,
+                                                           "dl_throughput_kbps": 0,
+                                                           "ul_throughput_kbps": 0},
+                    ApplicationPorts.webListenPort: {"lost_packet_ratio": 0,
+                                                     "latency": 0,
+                                                     "jitter": 0,
+                                                     "dl_throughput_kbps": 0,
+                                                     "ul_throughput_kbps": 0},
+                    ApplicationPorts.streamingListenPort: {"lost_packet_ratio": 0,
+                                                           "latency": 0,
+                                                           "jitter": 0,
+                                                           "dl_throughput_kbps": 0,
+                                                           "ul_throughput_kbps": 0},
+                    ApplicationPorts.iotListenPort: {"lost_packet_ratio": 0,
+                                                     "latency": 0,
+                                                     "jitter": 0,
+                                                     "dl_throughput_kbps": 0,
+                                                     "ul_throughput_kbps": 0},
+                    ApplicationPorts.backhaulListenPort: {"lost_packet_ratio": 0,
+                                                          "latency": 0,
+                                                          "jitter": 0,
+                                                          "dl_throughput_kbps": 0,
+                                                          "ul_throughput_kbps": 0},
+                    }
 
 def extract_network_performance_metrics(path_to_simulation_folder):
     flow_monitor_contents = None
