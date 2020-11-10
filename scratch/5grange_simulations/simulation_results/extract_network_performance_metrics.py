@@ -1,7 +1,7 @@
 import os
 import xmltodict
 from enum import Enum
-
+import sys
 
 # Taken from 5g_range_demonstration_json.cc
 class ApplicationPorts(Enum):
@@ -13,36 +13,36 @@ class ApplicationPorts(Enum):
     iotListenPort       = 8005,
 
 # Taken from D6.3 and previous 5G-RANGE deliverables
-application_KPIs = {ApplicationPorts.voipListenPort: {"lost_packet_ratio": 0,
-                                                      "latency": 0,
-                                                      "jitter": 0,
-                                                      "dl_throughput_kbps": 0,
-                                                      "ul_throughput_kbps": 0},
-                    ApplicationPorts.videoconfListenPort: {"lost_packet_ratio": 0,
-                                                           "latency": 0,
-                                                           "jitter": 0,
-                                                           "dl_throughput_kbps": 0,
-                                                           "ul_throughput_kbps": 0},
-                    ApplicationPorts.webListenPort: {"lost_packet_ratio": 0,
-                                                     "latency": 0,
-                                                     "jitter": 0,
-                                                     "dl_throughput_kbps": 0,
-                                                     "ul_throughput_kbps": 0},
-                    ApplicationPorts.streamingListenPort: {"lost_packet_ratio": 0,
-                                                           "latency": 0,
-                                                           "jitter": 0,
-                                                           "dl_throughput_kbps": 0,
-                                                           "ul_throughput_kbps": 0},
-                    ApplicationPorts.iotListenPort: {"lost_packet_ratio": 0,
-                                                     "latency": 0,
-                                                     "jitter": 0,
-                                                     "dl_throughput_kbps": 0,
-                                                     "ul_throughput_kbps": 0},
-                    ApplicationPorts.backhaulListenPort: {"lost_packet_ratio": 0,
-                                                          "latency": 0,
-                                                          "jitter": 0,
-                                                          "dl_throughput_kbps": 0,
-                                                          "ul_throughput_kbps": 0},
+application_KPIs = {ApplicationPorts.voipListenPort.value[0]: {"lost_packet_ratio": 0.1,
+                                                      "latency": 0.1,
+                                                      "jitter": 0.4,
+                                                      "dl_throughput_kbps": 500,
+                                                      "ul_throughput_kbps": 500},
+                    ApplicationPorts.videoconfListenPort.value[0]: {"lost_packet_ratio": 0.01,
+                                                           "latency": 0.1,
+                                                           "jitter": sys.float_info.max,
+                                                           "dl_throughput_kbps": 3000,
+                                                           "ul_throughput_kbps": 3000},
+                    ApplicationPorts.webListenPort.value[0]: {"lost_packet_ratio": 0.1,
+                                                     "latency": 0.1,
+                                                     "jitter": 0.1,
+                                                     "dl_throughput_kbps": 500,
+                                                     "ul_throughput_kbps": 500},
+                    ApplicationPorts.streamingListenPort.value[0]: {"lost_packet_ratio": 0,
+                                                           "latency": sys.float_info.max,
+                                                           "jitter": sys.float_info.max,
+                                                           "dl_throughput_kbps": 9000,
+                                                           "ul_throughput_kbps":  900},
+                    ApplicationPorts.iotListenPort.value[0]: {"lost_packet_ratio": 0.001,
+                                                     "latency": 0.05,
+                                                     "jitter": sys.float_info.max,
+                                                     "dl_throughput_kbps": 500,
+                                                     "ul_throughput_kbps": 500},
+                    ApplicationPorts.backhaulListenPort.value[0]: {"lost_packet_ratio": 0.005,
+                                                          "latency": sys.float_info.max,
+                                                          "jitter": sys.float_info.max,
+                                                          "dl_throughput_kbps": 100000,  # 50km CDL D/LOS
+                                                          "ul_throughput_kbps":  25000},
                     }
 
 def extract_network_performance_metrics(path_to_simulation_folder):

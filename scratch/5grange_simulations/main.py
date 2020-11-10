@@ -6,6 +6,7 @@ import json
 import glob
 import lzma
 import pickle
+import statistics
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
@@ -216,7 +217,7 @@ if __name__ == "__main__":
 
     # now we need to group different batch results with each other to calculate error margins
     for simulation in simulation_list:
-        simulation_keys = simulation.split('/')[1:-1]
+        simulation_keys = simulation.split("/")[1:-1]
         current_simulation_results = all_simulation_results[simulation][1]
 
         # ideally we would create a level for each key, but my deadline is killing me
@@ -262,15 +263,10 @@ if __name__ == "__main__":
         return float(timestampo)
 
     for simulation_case_key in compiled_simulation_results["case"]:
-        simulation_case = compiled_simulation_results["case"][simulation_case_key]
-        for dsa in simulation_case["dsa"]:
-            dsa_simulation_case = simulation_case["dsa"][dsa]
-            dsa_simulation_case["KPIs_per_batch"] = {}
-            for batch in dsa_simulation_case["flow_per_batch"]:
-                dsa_simulation_case["KPIs_per_batch"][batch] = {}
-                batch_dsa_simulation_case = dsa_simulation_case["flow_per_batch"][batch]
-                for port in batch_dsa_simulation_case["applicationPort"]:
-                    batch_dsa_simulation_case["applicationPort"]["appStatus"] = {
+        for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+            for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
+                for port in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"]:
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"] = {
                         "dl_throughput_kbps": [],
                         "ul_throughput_kbps": [],
                         "lost_packets": [],
@@ -278,43 +274,122 @@ if __name__ == "__main__":
                         "delay_histogram": [],
                         "jitter_histogram": [],
                         "passed_kpi": [],
-                        "failed_kpi": []
+                        "failed_kpi": [],
+                        "agg_dl_throughput_kbps": [],
+                        "agg_ul_throughput_kbps": [],
                     }
-
-                    flow_batch_dsa_simulation_case = batch_dsa_simulation_case["applicationPort"][port]["flows"]
-                    for flow in flow_batch_dsa_simulation_case:
-                        metadata = flow_batch_dsa_simulation_case[flow]["metadata"]
-                        status = flow_batch_dsa_simulation_case[flow]["status"]
+                    agg_dl_throughput_kbps = 0
+                    agg_ul_throughput_kbps = 0
+                    for flow in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"]:
+                        metadata = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["metadata"]
+                        status = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["status"]
 
                         # Calculate individual performance of UE application
                         duration = (ns_timestamp_to_float(status["@timeLastRxPacket"]) - ns_timestamp_to_float(status["@timeFirstRxPacket"]))
                         duration = duration / 1e9
-                        dl_throughput_kbps = int(status["@rxBytes"])*8/duration*1024
-                        ul_throughput_kbps = int(status["@txBytes"])*8/duration*1024
-                        lost_packets  = int(status["@lostPackets"])
+                        if duration > 0:
+                            dl_throughput_kbps = int(status["@rxBytes"])*8/(duration*1024)
+                            ul_throughput_kbps = int(status["@txBytes"])*8/(duration*1024)
+                        else:
+                            dl_throughput_kbps = 0
+                            ul_throughput_kbps = 0
+
+                        # Traffic coming out of an UE
+                        if metadata["@sourceAddress"][0] == '7' and metadata['@sourceAddress'][-1] != '1':
+                            agg_dl_throughput_kbps += dl_throughput_kbps
+                            agg_ul_throughput_kbps += ul_throughput_kbps
+                        if metadata["@sourceAddress"][0] == '1':
+                            agg_dl_throughput_kbps += ul_throughput_kbps
+                            agg_ul_throughput_kbps += dl_throughput_kbps
+
+
+                        lost_packets = int(status["@lostPackets"])
                         lost_packets_pct = int(status["@lostPackets"])/int(status["@txPackets"])
                         delay_histogram = []
-                        for entry in status["delayHistogram"]["bin"]:
-                            delay_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
+                        if "bin" in status["delayHistogram"]:
+                            for entry in status["delayHistogram"]["bin"]:
+                                try:
+                                    delay_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
+                                except TypeError:
+                                    continue
                         jitter_histogram = []
-                        for entry in status["jitterHistogram"]["bin"]:
-                            jitter_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
+                        if "bin" in status["jitterHistogram"]:
+                            for entry in status["jitterHistogram"]["bin"]:
+                                try:
+                                    jitter_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
+                                except TypeError:
+                                    continue
 
-                        #todo: Check if individual application of UE meets or exceeds the KPIs established for the application
+                        # Check if individual application of UE meets or exceeds the KPIs established for the application
                         passed = True
+
+                        if dl_throughput_kbps < application_KPIs[port]["dl_throughput_kbps"]:
+                            passed = False
+                        if ul_throughput_kbps < application_KPIs[port]["ul_throughput_kbps"]:
+                            passed = False
+                        if lost_packets_pct > application_KPIs[port]["lost_packet_ratio"]:
+                            passed = False
+
+                        if len(delay_histogram) > 0:
+                            delayMean = statistics.mean(delay_histogram)
+                            delayStdDev = statistics.stdev(delay_histogram)
+                            if delayMean+3*delayStdDev > application_KPIs[port]["latency"]:
+                                passed = False
+
+                        if len(jitter_histogram) > 0:
+                            jitterMean = statistics.mean(jitter_histogram)
+                            jitterStdDev = statistics.stdev(jitter_histogram)
+                            if jitterMean+3*jitterStdDev > application_KPIs[port]["latency"]:
+                                passed = False
+
                         if passed:
-                            batch_dsa_simulation_case["applicationPort"]["appStatus"]["passed_kpi"] = flow
+                            compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["passed_kpi"].append(flow)
                         else:
-                            batch_dsa_simulation_case["applicationPort"]["appStatus"]["failed_kpi"] = flow
+                            compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["failed_kpi"].append(flow)
 
                         # Aggregate application performance of multiple UEs to get overall picture for the simulation
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["dl_throughput_kbps"].append(dl_throughput_kbps)
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["lost_packets"].append(lost_packets)
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["delay_histogram"].append(delay_histogram)
-                        batch_dsa_simulation_case["applicationPort"]["appStatus"]["jitter_histogram"].append(jitter_histogram)
-                        del batch_dsa_simulation_case["applicationPort"][port]["flows"][flow]  # reclaim memory
-                        print()
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["dl_throughput_kbps"].append(dl_throughput_kbps)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets"].append(lost_packets)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_histogram"].append(delay_histogram)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_histogram"].append(jitter_histogram)
+                        #print()
+
+                    # Store complete traffic for application
+                    agg_dl_throughput_kbps /= 2  # traffic was counted twice
+                    agg_ul_throughput_kbps /= 2
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"] = agg_dl_throughput_kbps
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"] = agg_ul_throughput_kbps
+                    #print()
+
+                    # end of flor for
+                # end of port for
+            # end of batch for
+        # end of dsa for
+
+        for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+
+            # Now we traverse the results by ports to aggregate results of different batches
+            compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"] = {
+                "agg_dl_throughput_kbps": [],
+                "agg_ul_throughput_kbps": [],
+                "port": {}
+            }
+
+            for port in [port.value[0] for port in ApplicationPorts]:
+                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port] = {
+                    "agg_dl_throughput_kbps": [],
+                    "agg_ul_throughput_kbps": [],
+                }
+                for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_dl_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"])
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_ul_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"])
+                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["agg_dl_throughput_kbps"].append(sum(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_dl_throughput_kbps"]))
+                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["agg_ul_throughput_kbps"].append(sum(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_ul_throughput_kbps"]))
+
+        # end of dsa for
+        print()
+    # end of simulation_case for
     print()
     pass

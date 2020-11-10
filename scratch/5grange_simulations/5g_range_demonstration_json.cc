@@ -589,7 +589,7 @@ int main(int argc, char * argv[]) {
         uint16_t streamingListenPort   = ApplicationPorts::streamingListenPort;
         std::string streaming_workload = executablePath + std::string ("stream_workload0_9mbps_100s.json");//1080p stream
 
-        // client will return 5% of downlink payload to represent uplink requests to the server
+        // client will return 10% of downlink payload to represent uplink requests to the server
         TcpEchoServerHelper echoServer(streamingListenPort, 0.1);
 
         if (numUes == 2)
