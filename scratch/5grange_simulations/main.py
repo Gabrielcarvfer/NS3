@@ -368,27 +368,61 @@ if __name__ == "__main__":
             # end of batch for
         # end of dsa for
 
-        for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
-
-            # Now we traverse the results by ports to aggregate results of different batches
-            compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"] = {
+        compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"] = {"port": {}}
+        for port in [port.value[0] for port in ApplicationPorts]:
+            compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port] = {
                 "agg_dl_throughput_kbps": [],
                 "agg_ul_throughput_kbps": [],
-                "port": {}
+                "appStatusPerDsa": {"dsa": {}}
             }
+            for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
 
-            for port in [port.value[0] for port in ApplicationPorts]:
-                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port] = {
+                # Now we traverse the results by ports to aggregate results of different batches
+                compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa] = {
                     "agg_dl_throughput_kbps": [],
                     "agg_ul_throughput_kbps": [],
                 }
-                for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
-                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_dl_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"])
-                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_ul_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"])
-                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["agg_dl_throughput_kbps"].append(sum(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_dl_throughput_kbps"]))
-                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["agg_ul_throughput_kbps"].append(sum(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["appStatusPerDsa"]["port"][port]["agg_ul_throughput_kbps"]))
 
-        # end of dsa for
+
+                for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
+                    compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"])
+                    compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"])
+
+                # end for batch
+            # end for dsa
+        # end for port
+
+        # Time to plot boxplots for the applications of each application (column) for each scenario
+        import matplotlib.pyplot as plt
+        fig, axes = plt.subplots(nrows=3, ncols=2*len(ApplicationPorts), figsize=(24, 6), sharex=True, sharey=True)
+        i = 0
+
+        dsa_labels = ["Without\n PUs", "Throughput (kbps)\nWith\n PUs", "With PUs \n+ Markov"]
+        # Set y label on the central row
+        for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
+            # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
+            for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+                if dsa == 0:
+                    # Set column labels on top
+                    axes[dsa][i].set_xlabel('              %s\nDL' % appName)
+                    axes[dsa][i].xaxis.set_label_position('top')
+                    axes[dsa][i+1].set_xlabel('UL')
+                    axes[dsa][i+1].xaxis.set_label_position('top')
+
+                axes[dsa][0].set_ylabel(dsa_labels[dsa])
+
+                # Plot boxplots with results
+                axes[dsa][i].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"])
+                axes[dsa][i+1].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"])
+
+
+            # Skip to the next two columns
+            i += 2
+
+        fig.tight_layout(pad=3.0)
+        plt.xticks([], [])
+        plt.show()
+        fig.savefig("perf_per_app_%s.png" % simulation_case_key)
         print()
     # end of simulation_case for
     print()
