@@ -14,10 +14,6 @@ namespace ns3
 
 NS_OBJECT_ENSURE_REGISTERED (CdlCommon);
 
-std::vector<std::vector<float>> CdlCommon::cosSinTable{};
-
-
-
 TypeId
 CdlCommon::GetTypeId (void)
 {
