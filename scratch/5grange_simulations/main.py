@@ -262,7 +262,9 @@ if __name__ == "__main__":
         timestampo = timestampo[1:-2]
         return float(timestampo)
 
+    usedAppsDict = {}
     for simulation_case_key in compiled_simulation_results["case"]:
+        usedAppsDict[simulation_case_key] = set()
         for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
             for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                 for port in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"]:
@@ -359,6 +361,8 @@ if __name__ == "__main__":
                     # Store complete traffic for application
                     agg_dl_throughput_kbps /= 2  # traffic was counted twice
                     agg_ul_throughput_kbps /= 2
+                    if agg_dl_throughput_kbps > 0:
+                        usedAppsDict[simulation_case_key].add(port)
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"] = agg_dl_throughput_kbps
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"] = agg_ul_throughput_kbps
                     #print()
@@ -387,38 +391,58 @@ if __name__ == "__main__":
                 for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                     compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"])
                     compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"].append(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"])
-
                 # end for batch
             # end for dsa
         # end for port
 
         # Time to plot boxplots for the applications of each application (column) for each scenario
         import matplotlib.pyplot as plt
-        fig, axes = plt.subplots(nrows=3, ncols=2*len(ApplicationPorts), figsize=(24, 6), sharex=True, sharey=True)
+        fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=2*3, figsize=(15, 6*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
         i = 0
-
-        dsa_labels = ["Without\n PUs", "Throughput (kbps)\nWith\n PUs", "With PUs \n+ Markov"]
+        dsa_labels = ["                      Without\n                        PUs",
+                      "                      With PUs\n",
+                      "                      With PUs\n                    + Markov"]
         # Set y label on the central row
         for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
+            k = 0
+            # Skip application if no data is available
+            if port not in usedAppsDict[simulation_case_key]:
+                continue
+
             # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
             for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
-                if dsa == 0:
-                    # Set column labels on top
-                    axes[dsa][i].set_xlabel('              %s\nDL' % appName)
-                    axes[dsa][i].xaxis.set_label_position('top')
-                    axes[dsa][i+1].set_xlabel('UL')
-                    axes[dsa][i+1].xaxis.set_label_position('top')
+                dsa_dl_column = k
+                dsa_ul_column = dsa_dl_column+1
 
-                axes[dsa][0].set_ylabel(dsa_labels[dsa])
+                # Set column labels on top
+                axes[i][dsa_dl_column].set_xlabel('%s\nDL' % dsa_labels[dsa])
+                axes[i][dsa_dl_column].xaxis.set_label_position('top')
+                axes[i][dsa_ul_column].set_xlabel('UL')
+                axes[i][dsa_ul_column].xaxis.set_label_position('top')
+
+                axes[i][0].set_ylabel("     %s\n Aggregate Throughput (kbps)" % appName)
+
+                axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][dsa_dl_column])
+                axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][dsa_ul_column])
 
                 # Plot boxplots with results
-                axes[dsa][i].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"])
-                axes[dsa][i+1].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"])
+                axes[i][dsa_dl_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"],
+                                               )
+                axes[i][dsa_ul_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"],
+                                               )
 
 
-            # Skip to the next two columns
-            i += 2
+                if dsa_dl_column != 0:
+                    plt.setp(axes[i][dsa_dl_column].get_yticklabels(), visible=False)
+                plt.setp(axes[i][dsa_ul_column].get_yticklabels(), visible=False)
 
+                axes[i][dsa_dl_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                axes[i][dsa_ul_column].grid(b=True, which='major', color='#999999', linestyle='-')
+
+                # Next columns
+                k += 2
+            # Next row
+            i += 1
         fig.tight_layout(pad=3.0)
         plt.xticks([], [])
         plt.show()
