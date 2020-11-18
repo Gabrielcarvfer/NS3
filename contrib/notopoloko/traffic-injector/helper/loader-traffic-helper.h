@@ -21,6 +21,13 @@ public:
                                               uint16_t serverPort,
                                               std::string jsonfile,
                                               bool tcp);
+
+    ns3::ApplicationContainer LoadJsonTraffic(const ns3::NodeContainer &clientNodes,
+                                              ns3::Address serverAddress,
+                                              uint16_t serverPort,
+                                              std::string jsonfile,
+                                              bool tcp,
+                                              uint16_t portsToSpreadTraffic);
 };
 
 #endif /* LOADER_TRAFFIC_H */

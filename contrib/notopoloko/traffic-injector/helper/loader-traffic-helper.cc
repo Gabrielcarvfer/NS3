@@ -11,12 +11,21 @@ LoaderTrafficHelper::LoaderTrafficHelper()
 LoaderTrafficHelper::~LoaderTrafficHelper() = default;
 
 //For IOT traffic
-
 ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeContainer &clientNodes,
                                                                ns3::Address serverAddress,
                                                                uint16_t serverPort,
                                                                std::string jsonfile,
                                                                bool tcp)
+{
+    return LoadJsonTraffic(clientNodes, serverAddress, serverPort, jsonfile, tcp, 1);
+}
+
+ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeContainer &clientNodes,
+                                                               ns3::Address serverAddress,
+                                                               uint16_t serverPort,
+                                                               std::string jsonfile,
+                                                               bool tcp,
+                                                               uint16_t portsToSpreadTraffic)
 {
     std::vector<float> timeToSend{0};
     ns3::ApplicationContainer apps;
@@ -45,14 +54,14 @@ ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeCo
         packetSizes.resize(packet_sizes_array.size());
         for (uint32_t j = 0; j < packet_sizes_array.size(); j++)
         {
-            packetSizes[j] = packet_sizes_array[j].get<double>();
+            packetSizes[j] = (uint32_t) packet_sizes_array[j].get<double>();
         }
     }
 
     for (uint32_t i = 0; i < clientNodes.GetN(); i++)
     {
         ns3::Ptr<JsonTrafficInjectorApplication> app = ns3::CreateObject<JsonTrafficInjectorApplication> ();
-        app->Setup (serverAddress, serverPort, packetSizes, timeToSend, tcp);
+        app->Setup (serverAddress, serverPort, packetSizes, timeToSend, tcp, portsToSpreadTraffic);
         clientNodes.Get (i)->AddApplication (app);
         apps.Add(app);
     }
