@@ -16,8 +16,7 @@ public:
 
   void Setup (const ns3::Address &address,
               uint16_t port,
-              std::vector<uint16_t> packetSizes,
-              uint32_t nPackets,
+              std::vector<uint32_t> packetSizes,
               std::vector<float> timeToSend,
               bool tcp);
   void Start();
@@ -29,16 +28,16 @@ private:
 
 
   void ScheduleTx ();
-  void SendPacket ();
+  void SendPacket (uint64_t packetSize);
 
   std::vector<float>    m_timeToSend;
   ns3::Ptr<ns3::Socket> m_socket;
   ns3::Address          m_peer;
   uint16_t              m_peer_port;
-  std::vector<uint16_t> m_packetSizes;
+  std::vector<uint32_t> m_packetSizes;
   uint16_t              m_currentPacketSize;
   uint32_t              m_nPackets;
-  ns3::EventId          m_sendEvent;
+  std::list<ns3::EventId> m_sendEvent;
   bool                  m_running;
   uint32_t              m_packetsSent;
   uint32_t              m_recvBack;

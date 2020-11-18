@@ -22,15 +22,13 @@ JsonTrafficInjectorApplication::~JsonTrafficInjectorApplication()
 void
 JsonTrafficInjectorApplication::Setup (const ns3::Address &address,
                                        uint16_t port,
-                                       std::vector<uint16_t> packetSizes,
-                                       uint32_t nPackets,
+                                       std::vector<uint32_t> packetSizes,
                                        std::vector<float> timeToSend,
                                        bool tcp)
 {
   m_peer = address;
   m_peer_port = port;
   m_packetSizes = packetSizes;
-  m_nPackets = nPackets;
   m_timeToSend = timeToSend;
   m_currentTime = rand() % timeToSend.size();
   m_currentPacketSize = 0;
@@ -80,9 +78,14 @@ JsonTrafficInjectorApplication::StopApplication ()
 {
   m_running = false;
 
-  if (m_sendEvent.IsRunning ())
+    while (m_sendEvent.size() > 0)
     {
-      ns3::Simulator::Cancel (m_sendEvent);
+        ns3::EventId event = m_sendEvent.front();
+        m_sendEvent.pop_front();
+        if (event.IsRunning ())
+        {
+            ns3::Simulator::Cancel (event);
+        }
     }
 
   if (m_socket)
@@ -92,16 +95,11 @@ JsonTrafficInjectorApplication::StopApplication ()
 }
 
 void 
-JsonTrafficInjectorApplication::SendPacket ()
+JsonTrafficInjectorApplication::SendPacket (uint64_t packetSize)
 {
-  ns3::Ptr<ns3::Packet> packet = ns3::Create<ns3::Packet> (m_packetSizes.at(m_currentPacketSize));
-  m_currentPacketSize = (m_currentPacketSize+1) % m_packetSizes.size();
+  ns3::Ptr<ns3::Packet> packet = ns3::Create<ns3::Packet> (packetSize);
   m_socket->Send (packet);
-
-  if (++m_packetsSent < m_nPackets)
-    {
-      ScheduleTx ();
-    }
+  m_sendEvent.pop_front();
 }
 
 void 
@@ -109,17 +107,47 @@ JsonTrafficInjectorApplication::ScheduleTx ()
 {
   if (m_running)
   {
-    // Time tNext (Seconds (m_packetSize * 8 / static_cast<double> (m_dataRate.GetBitRate ())));
-    // std::cout << "Scheduling next message to: " << m_timeToSend.at(m_currentTime) << std::endl;
+    // Get time to transmit the next packet and packet size
+    //std::cout << "Scheduling next message to: " << m_timeToSend.at(m_currentTime) << std::endl;
     ns3::Time tNext (ns3::Seconds (m_timeToSend.at(m_currentTime)));
+    uint64_t packetSize = m_packetSizes.at(m_currentPacketSize);
+
+    if (m_sendEvent.size()>0)
+        m_sendEvent.pop_front();
+
+    // If we have an UDP application, we need to fragment the packet to prevent issues
+    if (!m_tcp)
+    {
+        unsigned maxFragmentSizeBytes = 64000;
+        uint16_t remBytes = packetSize % maxFragmentSizeBytes;
+        unsigned nPackets = packetSize / maxFragmentSizeBytes;
+        for (unsigned i = 0; i < nPackets; i++)
+            m_sendEvent.push_back(ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::SendPacket, this, maxFragmentSizeBytes));
+
+        if (remBytes > 0)
+            m_sendEvent.push_back(ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::SendPacket, this, remBytes));
+    }
+    else
+    {
+        m_sendEvent.push_back(ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::SendPacket, this, packetSize));
+    }
+
+    // Schedule next transmission event
+    m_sendEvent.push_back(ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::ScheduleTx, this));
+
+    // Increment offsets
     m_currentTime++;
-    m_sendEvent = ns3::Simulator::Schedule (tNext, &JsonTrafficInjectorApplication::SendPacket, this);
+    m_currentPacketSize++;
   }
 
   //Repeats undefinitely
   if (m_currentTime >= m_timeToSend.size())
   {
       m_currentTime = 0;
+  }
+  if (m_currentPacketSize >= m_packetSizes.size())
+  {
+      m_currentPacketSize = 0;
   }
 
   //todo:create a better way to stop
