@@ -891,6 +891,7 @@ LteUePhy::CreateDlCqiFeedbackMessage (const SpectrumValue& sinr)
   else if (Simulator::Now () > m_a30CqiLast + m_a30CqiPeriodicity)
     {
       cqi = m_amc->CreateCqiFeedbacks (newSinr, GetRbgSize ());
+      //std::cout << Simulator::Now().GetSeconds() << " reported cqi " << cqi.at(0) << " mcs " << m_amc->GetMcsFromCqi(cqi.at(0)) << "-"<< m_amc->GetMcsFromCqi(cqi.at(0)+1) << " sinr " << 10*log10(newSinr.ValuesAt(0)) <<  "dB" << std::endl;
       int nLayer = TransmissionModesLayers::TxMode2LayerNum (m_transmissionMode);
       int nbSubChannels = cqi.size ();
       int rbgSize = GetRbgSize ();
