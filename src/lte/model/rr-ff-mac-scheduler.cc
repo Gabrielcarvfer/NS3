@@ -1453,10 +1453,14 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
                                  ( (-std::log (5.0 * 0.00005 )) / 1.5) ));
 
 
-          //cqi = m_amc->GetCqiFromSpectralEfficiency (s); // this comes from LTE and doesn't work correctly for RANGE
+          cqi = m_amc->GetCqiFromSpectralEfficiency (s);
           std::vector<double> sinrVec = (*itCqi).second;
-          cqi = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen); //cqi2
-          //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
+          int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen); //cqi2
+          //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << "\n";
+          //for (auto value: sinrVec)
+          //    std::cout << value << " ";
+          //std::cout << "\n" << std::endl;
+          cqi = cqi > cqi2 ? cqi : cqi2;
 
           if (cqi == 0)
             {
