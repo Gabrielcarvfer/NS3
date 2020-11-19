@@ -118,7 +118,7 @@ JsonTrafficInjectorApplication::ScheduleTx ()
   // If we have an UDP application, we need to fragment the packet to prevent issues
   if (!m_tcp)
   {
-      const unsigned maxFragmentSizeBytes = 1400;
+      const unsigned maxFragmentSizeBytes = 64000;
       uint16_t remBytes = packetSize % maxFragmentSizeBytes;
       unsigned nPackets = packetSize / maxFragmentSizeBytes;
       for (unsigned i = 0; i < nPackets; i++)
