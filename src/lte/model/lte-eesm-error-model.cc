@@ -583,7 +583,8 @@ namespace ns3 {
 
                 // calculate effective SNR fraction of the current PRB of a given CB
                 //avg_cb_sinr += exp(-prb_sinr/beta) * prb_fraction;
-                avg_cb_sinr += prb_sinr * prb_fraction;
+                double cb_sinr_db = 10*log10(prb_sinr);
+                avg_cb_sinr +=  cb_sinr_db * prb_fraction;
                 n += prb_fraction;
 
             }
