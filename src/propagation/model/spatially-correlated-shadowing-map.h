@@ -14,7 +14,7 @@ namespace ns3
     class SpatiallyCorrelatedShadowingMap
     {
         public:
-            SpatiallyCorrelatedShadowingMap(float mu, float sigma, int cell_length);
+            SpatiallyCorrelatedShadowingMap(float mu, float sigma, int cell_length, bool correlated);
             static float get_coordinate_shadowing(Vector3D);
         private:
             static float m_mu;
@@ -23,6 +23,7 @@ namespace ns3
             static SpatiallyCorrelatedShadowingMap * m_instance;
             static Ptr<NormalRandomVariable> m_normalGen;
             static int m_currentRun;
+            static bool m_correlated;
     public:
         static std::map<std::vector<int>, std::tuple<bool, float, float>> m_shadowingMap;
     };

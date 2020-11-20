@@ -10,11 +10,12 @@ namespace ns3 {
     float SpatiallyCorrelatedShadowingMap::m_sigma{};
     int   SpatiallyCorrelatedShadowingMap::m_cell_length{};
     int   SpatiallyCorrelatedShadowingMap::m_currentRun;
+    bool   SpatiallyCorrelatedShadowingMap::m_correlated;
     Ptr<NormalRandomVariable> SpatiallyCorrelatedShadowingMap::m_normalGen = nullptr;
     SpatiallyCorrelatedShadowingMap * SpatiallyCorrelatedShadowingMap::m_instance = nullptr;
     std::map<std::vector<int>, std::tuple<bool, float, float>> SpatiallyCorrelatedShadowingMap::m_shadowingMap;
 
-    SpatiallyCorrelatedShadowingMap::SpatiallyCorrelatedShadowingMap(float mu, float sigma, int cell_length)
+    SpatiallyCorrelatedShadowingMap::SpatiallyCorrelatedShadowingMap(float mu, float sigma, int cell_length, bool correlated)
     {
         if (m_instance==nullptr)
         {
@@ -65,6 +66,9 @@ namespace ns3 {
         //If it does, fast path returns the precomputed value
         if (entry != m_shadowingMap.end())
         {
+            if (!m_correlated)
+                return std::get<1>(entry->second);
+
             //Check if spatially correlated shadowing (mean of current and surrounding cells) has been computed
             if (std::get<0>(entry->second))
             {
@@ -120,6 +124,6 @@ namespace ns3 {
         std::get<0>(entry->second) = true;
 
         //Return the spatially correlated shadowing
-        return avg;
+        return m_correlated ? avg : std::get<1>(entry->second);
     }
 }
