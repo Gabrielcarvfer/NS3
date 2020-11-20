@@ -343,7 +343,7 @@ double CdlCommon::get_path_loss (const arma::vec3 &tx_position, const arma::vec3
 
   double Pl_dB = 32.44 + 20 * log10 (fc) + 20 * log10 (distance_km) + k_value;
 
-  return std::pow (10.0, Pl_dB / 10.0);
+  return dB2lin(Pl_dB);
 }
 
 CdlCommon::Rays CdlCommon::get_rays () const noexcept
@@ -379,7 +379,8 @@ CdlCommon::get_tot_path_gain (double distance)
         path_loss = get_path_loss(tx->GetPosition(), rx->GetPosition(), system_freq, m_kvalue);
         //shadow_fading = dB2lin((is_CDL_A ? -CDL_A_param::SF_stddev : -CDL_D_param::SF_stddev) * arma::randn());
 
-        shadow_fading = dB2lin(SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(rxPos.at(0), rxPos.at(1), rxPos.at(2))));
+        float shadowing_db = SpatiallyCorrelatedShadowingMap::get_coordinate_shadowing(Vector3D(rxPos.at(0), rxPos.at(1), rxPos.at(2)));
+        shadow_fading = dB2lin(shadowing_db);
         //prevDistanceAndShadowInstance->second = std::vector<double>{distance,m_normalGen->GetValue()};
 
         tot_path_gain = 1.0 / (path_loss * shadow_fading);

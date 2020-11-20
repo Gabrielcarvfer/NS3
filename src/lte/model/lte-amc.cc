@@ -423,7 +423,7 @@ int LteAmc::GetCqiFromSinrDoubles(const std::vector<double> sinrAsDoubles, uint8
     {
         mcs--;
     }
-    //std::cout << Simulator::Now().GetSeconds() << "  generateCqiFeedback " << log10(sinr[0]*180000)*10+50 << " tbler " << tbStats.tbler << std::endl;
+    //std::cout << Simulator::Now().GetSeconds() << "  generateCqiFeedback " << 10*log10(sinrAsDoubles[0]) << " tbler " << tbStats.tbler << std::endl;
 
     NS_LOG_DEBUG (this << "\t RBG " << rbgMap.size() << " MCS " << (uint16_t)mcs << " TBLER " << tbStats.tbler);
     int rbgCqi = 0;
