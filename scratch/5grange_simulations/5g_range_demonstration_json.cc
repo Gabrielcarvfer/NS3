@@ -633,8 +633,8 @@ int main(int argc, char * argv[]) {
     if (simulationCase & BACKHAUL_BASE_SCENARIO)
     {
         uint16_t backhaulListenPort = ApplicationPorts::backhaulListenPort;
-        std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_100s.json");
-        std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_100s.json");
+        std::string backhaul_workload_downlink = executablePath + std::string ("backhaul_dl_workload0_10s.json");
+        std::string backhaul_workload_uplink   = executablePath + std::string ("backhaul_ul_workload0_10s.json");
 
         // the remote host sends an entire subnetwork dl traffic to a single UE, to simulate backhaul scenarios
         tempUeApps = loader.LoadJsonTraffic(remoteHost,
