@@ -306,10 +306,7 @@ int main(int argc, char * argv[]) {
     }
 
     //Setup shadowing map
-    if ((int)simulationParameters["Run"].get<double>() < 4)
-        SpatiallyCorrelatedShadowingMap(0, 4.47, 110);
-    else
-        SpatiallyCorrelatedShadowingMap(0, 18*4.47, 110);// 18* is an adjustment factor for exponential-decay of spatial correlation
+    SpatiallyCorrelatedShadowingMap(0, 4.47, 110, false);// 18* is an adjustment factor for exponential-decay of spatial correlation
 
     lteHelper->SetAttribute("Scheduler", StringValue("ns3::RrFfMacScheduler"));
     //lteHelper->SetAttribute("Scheduler", StringValue("ns3::CqaFfMacScheduler")); //QoS aware scheduler
