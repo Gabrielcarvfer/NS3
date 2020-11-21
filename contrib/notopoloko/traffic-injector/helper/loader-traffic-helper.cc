@@ -33,18 +33,26 @@ ns3::ApplicationContainer LoaderTrafficHelper::LoadJsonTraffic(const ns3::NodeCo
     //Read from Json
     picojson::object o = load_json(jsonfile);
 
-    auto time_between_packets = o["time_between_packets"].get<picojson::array>();
-    int array_size = time_between_packets.size();
-    timeToSend.resize(array_size);
-
-    for (uint32_t j = 0; j < array_size; j++)
+    if (o["time_between_packets"].is<double>())
     {
-        timeToSend[j] = time_between_packets[j].get<double>();
+        // Used for uniformly spaced packets
+        timeToSend[0] = o["time_between_packets"].get<double>();
     }
+    else
+    {
+        auto time_between_packets = o["time_between_packets"].get<picojson::array>();
+        int array_size = time_between_packets.size();
+        timeToSend.resize(array_size);
 
+        for (uint32_t j = 0; j < array_size; j++)
+        {
+            timeToSend[j] = time_between_packets[j].get<double>();
+        }
+    }
     std::vector<uint32_t> packetSizes{};
     if (o["packet_size"].is<double>())
     {
+        // Used for uniformly sized packets
         double packetSize = o["packet_size"].get<double>();
         packetSizes.push_back(packetSize);
     }
