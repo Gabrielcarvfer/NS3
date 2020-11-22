@@ -6,7 +6,7 @@ import json
 import glob
 import lzma
 import pickle
-import statistics
+import numpy
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
@@ -198,6 +198,7 @@ if __name__ == "__main__":
     if not os.path.exists("voip_workload0_100s.json"):
         print("Make sure to unzip injected_workloads.7z")
         exit(-1)
+
     shutil.copy("voip_workload0_100s.json", baseDir)
     shutil.copy("web_workload0_100s.json", baseDir)
     shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
@@ -269,6 +270,7 @@ if __name__ == "__main__":
         return float(timestampo)
 
     usedAppsDict = {}
+
     for simulation_case_key in compiled_simulation_results["case"]:
         usedAppsDict[simulation_case_key] = set()
         for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
@@ -293,19 +295,22 @@ if __name__ == "__main__":
                         status = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["status"]
 
                         # Calculate individual performance of UE application
-                        duration = (ns_timestamp_to_float(status["@timeLastRxPacket"]) - ns_timestamp_to_float(status["@timeFirstRxPacket"]))
-                        duration = duration / 1e9
-                        if duration > 0:
-                            dl_throughput_kbps = int(status["@rxBytes"])*8/(duration*1024)
-                            ul_throughput_kbps = int(status["@txBytes"])*8/(duration*1024)
-                        else:
-                            dl_throughput_kbps = 0
-                            ul_throughput_kbps = 0
+                        #duration = (ns_timestamp_to_float(status["@timeLastRxPacket"]) - ns_timestamp_to_float(status["@timeFirstRxPacket"]))
+                        duration = 10  # duration / 1e9
+                        dl_throughput_kbps = 0
+                        ul_throughput_kbps = int(status["@rxBytes"])*8/(duration*1024) if duration > 0 else 0
 
                         # Traffic coming out of an UE
                         if metadata["@sourceAddress"][0] == '7' and metadata['@sourceAddress'][-1] != '1':
-                            agg_dl_throughput_kbps += dl_throughput_kbps
-                            agg_ul_throughput_kbps += ul_throughput_kbps
+                            # Traffic going towards a remote host
+                            if metadata["@destinationAddress"][0] != '7':
+                                agg_ul_throughput_kbps += ul_throughput_kbps
+                                agg_dl_throughput_kbps += dl_throughput_kbps
+                            #Traffic going towards a different UE (count uplink twice as part of the downlink)
+                            else:
+                                agg_ul_throughput_kbps += ul_throughput_kbps
+                                agg_dl_throughput_kbps += ul_throughput_kbps
+                        # Traffic coming out of a remote host
                         if metadata["@sourceAddress"][0] == '1':
                             agg_dl_throughput_kbps += ul_throughput_kbps
                             agg_ul_throughput_kbps += dl_throughput_kbps
@@ -331,22 +336,22 @@ if __name__ == "__main__":
                         # Check if individual application of UE meets or exceeds the KPIs established for the application
                         passed = True
 
-                        if dl_throughput_kbps < application_KPIs[port]["dl_throughput_kbps"]:
-                            passed = False
+                        #if dl_throughput_kbps < application_KPIs[port]["dl_throughput_kbps"]:
+                        #    passed = False
                         if ul_throughput_kbps < application_KPIs[port]["ul_throughput_kbps"]:
                             passed = False
                         if lost_packets_pct > application_KPIs[port]["lost_packet_ratio"]:
                             passed = False
 
                         if len(delay_histogram) > 0:
-                            delayMean = statistics.mean(delay_histogram)
-                            delayStdDev = statistics.stdev(delay_histogram)
+                            delayMean = numpy.mean(delay_histogram)
+                            delayStdDev = numpy.std(delay_histogram)
                             if delayMean+3*delayStdDev > application_KPIs[port]["latency"]:
                                 passed = False
 
                         if len(jitter_histogram) > 0:
-                            jitterMean = statistics.mean(jitter_histogram)
-                            jitterStdDev = statistics.stdev(jitter_histogram)
+                            jitterMean = numpy.mean(jitter_histogram)
+                            jitterStdDev = numpy.std(jitter_histogram)
                             if jitterMean+3*jitterStdDev > application_KPIs[port]["latency"]:
                                 passed = False
 
@@ -365,9 +370,7 @@ if __name__ == "__main__":
                         #print()
 
                     # Store complete traffic for application
-                    agg_dl_throughput_kbps /= 2  # traffic was counted twice
-                    agg_ul_throughput_kbps /= 2
-                    if agg_dl_throughput_kbps > 0:
+                    if agg_dl_throughput_kbps > 0 or agg_ul_throughput_kbps > 0:
                         usedAppsDict[simulation_case_key].add(port)
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"] = agg_dl_throughput_kbps
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"] = agg_ul_throughput_kbps
@@ -453,7 +456,7 @@ if __name__ == "__main__":
         plt.xticks([], [])
         plt.show()
         fig.savefig("perf_per_app_%s.png" % simulation_case_key)
-        print()
+        #print()
     # end of simulation_case for
     print()
     pass
