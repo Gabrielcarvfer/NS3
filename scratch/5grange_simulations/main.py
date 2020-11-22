@@ -31,9 +31,9 @@ class simulationCase(Enum):
     BACKHAUL_BASE_SCENARIO        = 1<<4,
     IOT_BASE_SCENARIO             = 1<<5,
 
-def setup_simulations():
+def setup_simulations(createAndRunScenarios):
     resultsDict = {"scenario": {}}
-    numBatches = 10
+    numBatches = 20
     numUEs_and_applications = [# core scenarios
         [  2, [simulationCase.VOIP_BASE_SCENARIO, ]],  # two ues talking to each other
         [  3, [simulationCase.WEB_BASE_SCENARIO, ]],   # three ues connecting to the internet
@@ -64,27 +64,28 @@ def setup_simulations():
 
     numerology_and_numUEs_threshold = [(0, 0), ]  # (2, 20), (3, 50)]
     dynamic_spectrum_access = [False, True, ]
-    for (numUes, applications) in numUEs_and_applications:
-        for batch in range(numBatches):
-            for use_dsa in dynamic_spectrum_access:
-                for numerology, numUesThreshold in numerology_and_numUEs_threshold:
-                    if numUes >= numUesThreshold:
-                        # Prepare the simulationParameter json files for all simulations
-                        generate_scenarios(baseDir,
-                                           batch,
-                                           numUes,
-                                           numerologies=[numerology, ],
-                                           ueSpeeds=[0, ],  # 10, 50, 100],
-                                           clusteredUes=[False, ],  # True],
-                                           dynamicSpectrumAccess=[use_dsa, ],  # True],
-                                           markovOptions=[False, True, ],  # True],
-                                           harmonicOptions=[False, ],  # True], # not working with attackers
-                                           fusionAlgs=[6, ],  # 7, 11, 12, 13],
-                                           attackerOptions=[0, ],  # 1, 2, 5],
-                                           frequencyBandOptions=[freqBands.MHz713, ],  # 101, 5, 7],
-                                           mimoOptions=[mimoModes.TxDiversity, ],  # 0, 1, 2]
-                                           simulationCase=applications
-                                           )
+    if createAndRunScenarios:
+        for (numUes, applications) in numUEs_and_applications:
+            for batch in range(numBatches):
+                for use_dsa in dynamic_spectrum_access:
+                    for numerology, numUesThreshold in numerology_and_numUEs_threshold:
+                        if numUes >= numUesThreshold:
+                            # Prepare the simulationParameter json files for all simulations
+                            generate_scenarios(baseDir,
+                                               batch,
+                                               numUes,
+                                               numerologies=[numerology, ],
+                                               ueSpeeds=[0, ],  # 10, 50, 100],
+                                               clusteredUes=[False, ],  # True],
+                                               dynamicSpectrumAccess=[use_dsa, ],  # True],
+                                               markovOptions=[False, True, ],  # True],
+                                               harmonicOptions=[False, ],  # True], # not working with attackers
+                                               fusionAlgs=[6, ],  # 7, 11, 12, 13],
+                                               attackerOptions=[0, ],  # 1, 2, 5],
+                                               frequencyBandOptions=[freqBands.MHz713, ],  # 101, 5, 7],
+                                               mimoOptions=[mimoModes.TxDiversity, ],  # 0, 1, 2]
+                                               simulationCase=applications
+                                               )
 
     # Easier than trying to figure out all directories for the individual simulations is to use glob
     # to find all json files with simulation parameters and pass the list for parallel execution
@@ -186,6 +187,7 @@ if __name__ == "__main__":
     # Select if you want to generate new simulation scenarios or run manually created ones
     createAndRunScenarios = False
 
+
     # Output folder
     baseDir = os.path.abspath("../../build/bin/")
 
@@ -193,19 +195,21 @@ if __name__ == "__main__":
     cwd = os.path.abspath(os.getcwd())  # do not touch this
 
     # Copy injected traffic files to baseDir (where the 5g_range_demonstration_json executable is)
+    if not os.path.exists("voip_workload0_100s.json"):
+        print("Make sure to unzip injected_workloads.7z")
+        exit(-1)
     shutil.copy("voip_workload0_100s.json", baseDir)
     shutil.copy("web_workload0_100s.json", baseDir)
     shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
-    shutil.copy("backhaul_dl_workload0_100s.json", baseDir)
-    shutil.copy("backhaul_ul_workload0_100s.json", baseDir)
+    shutil.copy("backhaul_dl_workload0_10s.json", baseDir)
+    shutil.copy("backhaul_ul_workload0_10s.json", baseDir)
     shutil.copy("iot_workload0_100s_100nodes.json", baseDir)
     shutil.copy("iot_workload0_100s_300nodes.json", baseDir)
     interleave_videconf_traffic()
     shutil.copy("videoconf_workload0_100s.json", baseDir)
 
     # Generate the jsons specifying the simulation scenarios
-    if createAndRunScenarios:
-        setup_simulations()
+    setup_simulations(createAndRunScenarios)
 
     all_simulation_results = load_raw_results(baseDir)  # path to parameters, [parameterscontent, resultscontents]
 
@@ -250,9 +254,11 @@ if __name__ == "__main__":
         else:
             num_batches_loaded = len(compiled_simulation_results["case"][simulation_keys[0]]["dsa"][dsa_key]["flow_per_batch"])
             compiled_simulation_results["case"][simulation_keys[0]]["dsa"][dsa_key]["flow_per_batch"][num_batches_loaded] = current_simulation_results["flow_statistics"]
+            del num_batches_loaded
+        del current_simulation_results
 
     # At this point it is safe to delete the raw results
-    del all_simulation_results, current_simulation_results, simulation_list, num_batches_loaded
+    del all_simulation_results, simulation_list
 
     # Now we check if the KPIs for the different applications were met
     # Ideally this would be done in extract_network_performance_metrics, but whatever
