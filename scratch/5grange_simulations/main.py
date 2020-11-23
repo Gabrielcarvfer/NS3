@@ -7,6 +7,7 @@ import glob
 import lzma
 import pickle
 import numpy
+import matplotlib.pyplot as plt
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
@@ -271,10 +272,41 @@ if __name__ == "__main__":
         return float(timestampo)
 
     usedAppsDict = {}
+    def fraction (possible, actual):
+        return actual/possible
 
     for simulation_case_key in compiled_simulation_results["case"]:
         usedAppsDict[simulation_case_key] = set()
         for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+            if dsa == 0:
+                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing'] = {'status':{"falseNegatives": [0],
+                                                                                                             "falsePositives": [0],
+                                                                                                             "reportedFramesPerUe": [0]
+                                                                                                             }
+                                                                                                   }
+            else:
+                compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status'] = {"falseNegatives": [],
+                                                                                                            "falsePositives": [],
+                                                                                                            "reportedFramesPerUe": []
+                                                                                                            }
+                for channel in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel']:
+                    falseNegativesFraction = list(map(fraction,
+                                                      compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["frames_pu_was_active"],
+                                                      compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["total_false_negatives"]
+                                                      ))
+                    falsePositivesFraction = list(map(fraction,
+                                                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["frames_pu_was_inactive"],
+                                                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["total_false_positives"]
+                                                     ))
+                    reportedFramesFraction = list(map(fraction,
+                                                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["total_fusions"],
+                                                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['channel'][channel]["avg_bits_per_ue"]
+                                                     ))
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falseNegatives"].extend(falseNegativesFraction)
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falsePositives"].extend(falsePositivesFraction)
+                    compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["reportedFramesPerUe"].extend(reportedFramesFraction)
+                del falseNegativesFraction, falsePositivesFraction, reportedFramesFraction
+
             for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                 for port in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"]:
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"] = {
@@ -412,8 +444,7 @@ if __name__ == "__main__":
             # end for dsa
         # end for port
 
-        # Time to plot boxplots for the applications of each application (column) for each scenario
-        import matplotlib.pyplot as plt
+        # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
         fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=2*3, figsize=(15, 6*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
         i = 0
         dsa_labels = ["                      Without\n                        PUs",
@@ -464,7 +495,57 @@ if __name__ == "__main__":
         plt.xticks([], [])
         #plt.show()
         fig.savefig("perf_per_app_%s.png" % simulation_case_key)
-        #print()
+        # End of aggregate throughput boxplots
+
+
+        # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
+        fig, axes = plt.subplots(nrows=1, ncols=2*3, figsize=(6*len(usedAppsDict[simulation_case_key]), 8), sharex=True, sharey=True, squeeze=False)
+        i = 0
+        k = 0
+        dsa_labels = ["                                                                                 Without PUs",
+                      "                                                                                 With PUs\n",
+                      "                                                                                 With PUs + MHM\n"]
+
+        # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
+        for dsa in list(compiled_simulation_results["case"][simulation_case_key]["dsa"].keys())[1:]:
+            dsa_falsePositive_column = k
+            dsa_falseNegative_column = k+1
+            dsa_reportedFrames_column = k+2
+
+            # Set column labels on top
+            axes[i][dsa_falsePositive_column].set_xlabel('%s\nFalse\nPositives' % dsa_labels[dsa], fontsize=14)
+            axes[i][dsa_falsePositive_column].xaxis.set_label_position('top')
+            axes[i][dsa_falseNegative_column].set_xlabel('False\nNegatives', fontsize=14)
+            axes[i][dsa_falseNegative_column].xaxis.set_label_position('top')
+            axes[i][dsa_reportedFrames_column].set_xlabel('Reported frames\n per UE', fontsize=14)
+            axes[i][dsa_reportedFrames_column].xaxis.set_label_position('top')
+
+            axes[i][0].set_ylabel("Fraction")
+            axes[i][0].set_ylim([-0.01,1.01])
+            axes[i][0].set_yticks([x/5 for x in range(6)])
+
+            # Plot boxplots with results
+            axes[i][dsa_falsePositive_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falsePositives"])
+            axes[i][dsa_falseNegative_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falseNegatives"])
+            axes[i][dsa_reportedFrames_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["reportedFramesPerUe"])
+
+            if dsa_falsePositive_column != 0:
+                plt.setp(axes[i][dsa_falsePositive_column].get_yticklabels(), visible=False)
+            plt.setp(axes[i][dsa_falseNegative_column].get_yticklabels(), visible=False)
+            plt.setp(axes[i][dsa_reportedFrames_column].get_yticklabels(), visible=False)
+
+            axes[i][dsa_falsePositive_column].grid(b=True, which='major', color='#999999', linestyle='-')
+            axes[i][dsa_falseNegative_column].grid(b=True, which='major', color='#999999', linestyle='-')
+            axes[i][dsa_reportedFrames_column].grid(b=True, which='major', color='#999999', linestyle='-')
+            # Next columns
+            k += 3
+        # Next row
+        i += 1
+        fig.tight_layout(pad=2.0)
+        plt.xticks([], [])
+        #plt.show()
+        fig.savefig("sensing_per_scenario_%s.png" % simulation_case_key)
+        # End of collaborative spectrum sensing boxplots
     # end of simulation_case for
     print()
     pass
