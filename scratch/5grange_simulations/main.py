@@ -65,6 +65,21 @@ def setup_simulations(createAndRunScenarios):
     numerology_and_numUEs_threshold = [(0, 0), ]  # (2, 20), (3, 50)]
     dynamic_spectrum_access = [False, True, ]
     if createAndRunScenarios:
+        # Copy injected traffic files to baseDir (where the 5g_range_demonstration_json executable is)
+        if not os.path.exists("videoconf_workload0_100s.json"):
+            print("Make sure to unzip injected_workloads.7z")
+            exit(-1)
+
+            shutil.copy("voip_workload0_100s.json", baseDir)
+            shutil.copy("web_workload0_100s.json", baseDir)
+            shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
+            shutil.copy("backhaul_dl_workload0_10s.json", baseDir)
+            shutil.copy("backhaul_ul_workload0_10s.json", baseDir)
+            shutil.copy("iot_workload0_100s_100nodes.json", baseDir)
+            shutil.copy("iot_workload0_100s_300nodes.json", baseDir)
+            interleave_videconf_traffic()
+            shutil.copy("videoconf_workload0_100s.json", baseDir)
+
         for (numUes, applications) in numUEs_and_applications:
             for batch in range(numBatches):
                 for use_dsa in dynamic_spectrum_access:
@@ -194,20 +209,6 @@ if __name__ == "__main__":
     # You're supposed to run this script inside the scratch/5grange_simulations folder
     cwd = os.path.abspath(os.getcwd())  # do not touch this
 
-    # Copy injected traffic files to baseDir (where the 5g_range_demonstration_json executable is)
-    if not os.path.exists("voip_workload0_100s.json"):
-        print("Make sure to unzip injected_workloads.7z")
-        exit(-1)
-
-    shutil.copy("voip_workload0_100s.json", baseDir)
-    shutil.copy("web_workload0_100s.json", baseDir)
-    shutil.copy("stream_workload0_9mbps_100s.json", baseDir)
-    shutil.copy("backhaul_dl_workload0_10s.json", baseDir)
-    shutil.copy("backhaul_ul_workload0_10s.json", baseDir)
-    shutil.copy("iot_workload0_100s_100nodes.json", baseDir)
-    shutil.copy("iot_workload0_100s_300nodes.json", baseDir)
-    interleave_videconf_traffic()
-    shutil.copy("videoconf_workload0_100s.json", baseDir)
 
     # Generate the jsons specifying the simulation scenarios
     setup_simulations(createAndRunScenarios)
@@ -417,7 +418,7 @@ if __name__ == "__main__":
         i = 0
         dsa_labels = ["                      Without\n                        PUs",
                       "                      With PUs\n",
-                      "                      With PUs\n                    + Markov"]
+                      "                      With PUs\n                    +  MHM"]
         # Set y label on the central row
         for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
             k = 0
