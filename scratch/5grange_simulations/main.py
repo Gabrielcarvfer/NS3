@@ -281,8 +281,8 @@ if __name__ == "__main__":
                         "ul_throughput_kbps": [],
                         "lost_packets": [],
                         "lost_packets_pct": [],
-                        "delay_histogram": [],
-                        "jitter_histogram": [],
+                        "delay_n_mean_std": [],
+                        "jitter_n_mean_std": [],
                         "passed_kpi": [],
                         "failed_kpi": [],
                         "agg_dl_throughput_kbps": [],
@@ -338,21 +338,28 @@ if __name__ == "__main__":
 
                         #if dl_throughput_kbps < application_KPIs[port]["dl_throughput_kbps"]:
                         #    passed = False
-                        if ul_throughput_kbps < application_KPIs[port]["ul_throughput_kbps"]:
-                            passed = False
+                        #if ul_throughput_kbps < application_KPIs[port]["ul_throughput_kbps"]:
+                        #    passed = False
                         if lost_packets_pct > application_KPIs[port]["lost_packet_ratio"]:
                             passed = False
 
+                        delayMean   = 0
+                        delayStdDev = 0
                         if len(delay_histogram) > 0:
                             delayMean = numpy.mean(delay_histogram)
                             delayStdDev = numpy.std(delay_histogram)
-                            if delayMean+3*delayStdDev > application_KPIs[port]["latency"]:
+                            # mean + 1.5*sigma = >90% reliable
+                            # mean + 2*sigma = >99% reliable
+                            # mean + 2.5*sigma = >99.9% reliable
+                            if delayMean+2.5*delayStdDev > application_KPIs[port]["latency"]:
                                 passed = False
 
+                        jitterMean   = 0
+                        jitterStdDev = 0
                         if len(jitter_histogram) > 0:
                             jitterMean = numpy.mean(jitter_histogram)
                             jitterStdDev = numpy.std(jitter_histogram)
-                            if jitterMean+3*jitterStdDev > application_KPIs[port]["latency"]:
+                            if jitterMean+2.5*jitterStdDev > application_KPIs[port]["latency"]:
                                 passed = False
 
                         if passed:
@@ -365,8 +372,8 @@ if __name__ == "__main__":
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets"].append(lost_packets)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
-                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_histogram"].append(delay_histogram)
-                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_histogram"].append(jitter_histogram)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((len(delay_histogram), delayMean, delayStdDev))
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((len(jitter_histogram), jitterMean, jitterStdDev))
                         #print()
 
                     # Store complete traffic for application
@@ -454,7 +461,7 @@ if __name__ == "__main__":
             i += 1
         fig.tight_layout(pad=3.0)
         plt.xticks([], [])
-        plt.show()
+        #plt.show()
         fig.savefig("perf_per_app_%s.png" % simulation_case_key)
         #print()
     # end of simulation_case for

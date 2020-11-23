@@ -626,9 +626,9 @@ if __name__ == "__main__":
             #    list_labels =list(tbler.keys())
             #    key = j//5
             #    try:
-            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
             #    except:
-            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][-4] != " " else "NLOS"][x]
             #        asterisk = True
             #        if "trial" in list_labels[key]:
             #            notMeasured = True
@@ -681,9 +681,9 @@ if __name__ == "__main__":
             #    list_labels =list(tbler.keys())
             #    key = j//5
             #    try:
-            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
             #    except:
-            #        mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
+            #        mcs = fieldTrialResults["LOS" if list_labels[key][-4] != " " else "NLOS"][x]
             #        asterisk = True
             #        if "trial" in list_labels[key]:
             #            notMeasured = True
