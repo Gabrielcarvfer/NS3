@@ -198,22 +198,15 @@ fieldTrialResults = {"LOS": {
                                  "gain_adj_mult": 1,
                                  "throughtput_adj_mult": 1
                                  },
-                                30:{"d_km": 30,
-                                 "thr_Mbps": 13,
-                                 "ber": 0,
-                                 "mcs_trial": "QAM16 2/3 trial B",
-                                 "nearest_mcs_to_simulate": 14,
-                                 "gain_adj_mult": 1,
-                                 "throughtput_adj_mult": 1
-                                 },
-                                30:{"d_km": 30,
-                                 "thr_Mbps": 13,
-                                 "ber": 0,
-                                 "mcs_trial": "QAM16 2/3 trial C",
-                                 "nearest_mcs_to_simulate": 14,
-                                 "gain_adj_mult": 1,
-                                 "throughtput_adj_mult": 1
-                                 },
+                                20:{
+                                    "d_km": 20,
+                                    "thr_Mbps": 22,
+                                    "ber": 0,
+                                    "mcs_trial": "QAM64 3/4 trial B",
+                                    "nearest_mcs_to_simulate": 15,
+                                    "gain_adj_mult": 1,
+                                    "throughtput_adj_mult": 1
+                                },
                                 50:{"d_km": 50,
                                  "thr_Mbps": 22,
                                  "ber": 0,
@@ -224,15 +217,7 @@ fieldTrialResults = {"LOS": {
                                  }
                             },
                      "NLOS": {
-                                20:{
-                                 "d_km": 20,
-                                 "thr_Mbps": 22,
-                                 "ber": 0,
-                                 "mcs_trial": "QAM64 3/4 trial B",
-                                 "nearest_mcs_to_simulate": 15,
-                                 "gain_adj_mult": 1,
-                                 "throughtput_adj_mult": 1
-                                },
+
                                 30:{"d_km": 30,
                                  "thr_Mbps": 13,
                                  "ber": 0,
@@ -241,6 +226,22 @@ fieldTrialResults = {"LOS": {
                                  "gain_adj_mult": 1,
                                  "throughtput_adj_mult": 1
                                  },
+                                30:{"d_km": 30,
+                                    "thr_Mbps": 13,
+                                    "ber": 0,
+                                    "mcs_trial": "QAM16 2/3 trial B",
+                                    "nearest_mcs_to_simulate": 14,
+                                    "gain_adj_mult": 1,
+                                    "throughtput_adj_mult": 1
+                                    },
+                                30:{"d_km": 30,
+                                    "thr_Mbps": 13,
+                                    "ber": 0,
+                                    "mcs_trial": "QAM16 2/3 trial C",
+                                    "nearest_mcs_to_simulate": 14,
+                                    "gain_adj_mult": 1,
+                                    "throughtput_adj_mult": 1
+                                    },
                                 40:{"d_km": 40,
                                  "thr_Mbps": 13,
                                  "ber": 0.5,
@@ -299,9 +300,9 @@ if __name__ == "__main__":
                             if distance in fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"]:
                                 # Get trial parameters and forward to simulation
                                 sample = fieldTrialResults["LOS" if channel_model == "CDL_D" else "NLOS"][distance]
-                            else:
-                                # If field trial doesn't have the sample for LOS/NLOS, use the NLOS/LOS MCS for consistency
-                                sample = fieldTrialResults["LOS" if channel_model != "CDL_D" else "NLOS"][distance]
+                            #else:
+                            #    # If field trial doesn't have the sample for LOS/NLOS, use the NLOS/LOS MCS for consistency
+                            #    sample = fieldTrialResults["LOS" if channel_model != "CDL_D" else "NLOS"][distance]
 
                             maxMcsSched = sample["nearest_mcs_to_simulate"]
                             thread_parameters.append((forceMaxMcs, maxMcsSched-1, channel_model, distance, distanceFolder, numAntenna, mimoMode.value, frequencyBand.value))
@@ -504,6 +505,14 @@ if __name__ == "__main__":
             for key in sorted(plot_dataset["TBLER"], key=lambda x: x[1]+x[-4:]):
                 tbler[key] = plot_dataset["TBLER"][key]
             del plot_dataset["TBLER"]
+
+            for i in range(0, 4, 2):
+                key_i = list(tbler.keys())[i]
+                key_ipp = list(tbler.keys())[i+1]
+                for j in range(len(tbler[key_i])):
+                    tbler[key_i][j] = 0 if tbler[key_ipp][j] == 0 else tbler[key_i][j]
+                    error_dataset["TBLER"][key_i][j] = 0 if tbler[key_i][j] == 0 else error_dataset["TBLER"][key_i][j]
+
             pandas.DataFrame(tbler, index=distances).plot(kind='bar', yerr=error_dataset["TBLER"], ax=axis5[-1])
 
             patches = axis5[-1].patches
@@ -517,36 +526,44 @@ if __name__ == "__main__":
                 list_labels =list(tbler.keys())
                 key = j//5
                 try:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+                    mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
+                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
                 except:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
                     asterisk = True
+                    label = "Not simulated"
                     if "trial" in list_labels[key]:
                         notMeasured = True
+                        label = "Not measured"
                     pass
-                if not notMeasured:
-                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
-                else:
-                    label = "Not measured"
+
                 axis5[-1].text(i.get_x()+0.02, 1, label, fontsize=12, color='black', rotation=90)
 
                 j += 1
-            axis5[-1].text(2.0, -15.00, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
-                           ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
+            #axis5[-1].text(2.0, -15.00, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
+            #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
 
             # Set axis labels for corruption rate plot
             axis5[-1].set_xlabel("Distance (km)")
             axis5[-1].set_ylabel("Transport Block Error Rate - TBLER (%)")
-            axis5[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
+            axis5[-1].set_ylim([0,100])
+            axis5[-1].legend(bbox_to_anchor=(0, -0.2, 1, 0.2), loc="lower left",
                              mode="expand", ncol=4, borderaxespad=0, columnspacing=4.0, fontsize=10)
 
             # Save results to output files for corruption rate
             fig5.savefig("corruption_rate.png", bbox_inches='tight', dpi=300)
 
             thr = OrderedDict()
+
             for key in sorted(plot_dataset["THR"], key=lambda x: x[1]+x[-4:]):
                 thr[key] = plot_dataset["THR"][key]
             del plot_dataset["THR"]
+
+            for i in range(0, 4, 2):
+                key_i = list(thr.keys())[i]
+                key_ipp = list(thr.keys())[i+1]
+                for j in range(len(thr[key_i])):
+                    thr[key_i][j] = 0 if thr[key_ipp][j] == 0 else thr[key_i][j]
+                    error_dataset["THR"][key_i][j] = 0 if thr[key_i][j] == 0 else error_dataset["THR"][key_i][j]
             pandas.DataFrame(thr, index=distances).plot(kind='bar', yerr=error_dataset["THR"], ax=axis6[-1])
 
             patches = axis6[-1].patches
@@ -562,26 +579,25 @@ if __name__ == "__main__":
                 list_labels =list(tbler.keys())
                 key = j//5
                 try:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][:5] == "CDL D" else "NLOS"][x]
+                    mcs = fieldTrialResults["LOS" if list_labels[key][-4] == " " else "NLOS"][x]
+                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
                 except:
-                    mcs = fieldTrialResults["LOS" if list_labels[key][:5] != "CDL D" else "NLOS"][x]
                     asterisk = True
+                    label = "Not simulated"
                     if "trial" in list_labels[key]:
                         notMeasured = True
+                        label = "Not measured"
                     pass
-                if not notMeasured:
-                    label = "MCS %d %s" % (mcs['nearest_mcs_to_simulate'], "*" if asterisk else "")
-                else:
-                    label = "Not measured"
+
                 axis6[-1].text(i.get_x()+0.02, 2, label, fontsize=12, color='black', rotation=90)
                 j += 1
             axis6[-1].set_yticks(list(range(0, 170, 10)))
-            axis6[-1].text(2.0, -23.50, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
-                           ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
+            #axis6[-1].text(2.0, -23.50, "*: MCS values were taken from field trial samples with same distance but different LOS conditions",
+            #               ha="center", fontsize=7, bbox={"facecolor": "white", "alpha": 0.5, "pad": 5})
             # Set axis labels for corruption rate plot
             axis6[-1].set_xlabel("Distance (km)")
             axis6[-1].set_ylabel("Received Throughput (Mbps)")
-            axis6[-1].legend(bbox_to_anchor=(0, -0.25, 1, 0.2), loc="lower left",
+            axis6[-1].legend(bbox_to_anchor=(0, -0.2, 1, 0.2), loc="lower left",
                              mode="expand", ncol=4, borderaxespad=0, fontsize=10)
 
             # Save results to output files for corruption rate
