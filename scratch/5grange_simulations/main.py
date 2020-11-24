@@ -8,6 +8,7 @@ import lzma
 import pickle
 import numpy
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FormatStrFormatter
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
@@ -502,82 +503,102 @@ if __name__ == "__main__":
 
 
         # Time to plot kpis boxplots for the applications of each application (column) for each scenario
-        fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=3*3, figsize=(28, 8*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
-        i = 0
-        dsa_labels = ["Without PUs",
-                      "With PUs",
-                      "With PUs +  MHM"]
-        # Set y label on the central row
-        for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
-            k = 0
-            # Skip application if no data is available
-            if port not in usedAppsDict[simulation_case_key]:
-                continue
+        for metric in ["lostPackets", "delay", "jitter"]:
+            fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=3, figsize=(12, 6*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
+            i = 0
+            dsa_labels = ["Without PUs\n",
+                          "With PUs\n",
+                          "With PUs\n +  MHM"]
+            # Set y label on the central row
+            for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
+                k = 0
+                # Skip application if no data is available
+                if port not in usedAppsDict[simulation_case_key]:
+                    continue
 
-            # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
-            for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
-                lost_packets = []
-                delay_hist_agg = []
-                jitter_hist_agg = []
-                for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
-                    lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
-                    for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
-                        delay_hist_agg.extend([max(mean-3*std, 0), mean, mean+3*std])
-                    for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
-                        jitter_hist_agg.extend([max(mean-3*std, 0), mean, mean+3*std])
-                    del _, mean, std
-                del batch
+                # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
+                for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+                    lost_packets = []
+                    delay_hist_agg = []
+                    jitter_hist_agg = []
+                    for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
+                        if metric == "lostPackets":
 
-
-                packet_loss_column = k
-                delay_column = k+1
-                jitter_column = k+2
-                axes[i][0].set_ylabel("     %s" % appName)
-
-                # Set column labels on top
-                axes[i][packet_loss_column].set_xlabel('Packet Loss')
-                axes[i][packet_loss_column].xaxis.set_label_position('top')
-                axes[i][delay_column].set_xlabel('%s\nDelay (s)' % (dsa_labels[dsa] if i == 0 else ""))
-                axes[i][delay_column].xaxis.set_label_position('top')
-                axes[i][jitter_column].set_xlabel('Jitter (s)')
-                axes[i][jitter_column].xaxis.set_label_position('top')
-
-                # Link Y axis of same metrics
-                axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][packet_loss_column])
-                axes[i][1].get_shared_y_axes().join(axes[i][1], axes[i][delay_column])
-                axes[i][2].get_shared_y_axes().join(axes[i][2], axes[i][jitter_column])
+                            lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
+                        elif metric == "delay":
+                            for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
+                                delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                                del _, mean, std
+                        else:
+                            for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
+                                jitter_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                            del _, mean, std
+                    del batch
 
 
-                # Plot boxplots with results
-                axes[i][packet_loss_column].boxplot(lost_packets)
-                axes[i][delay_column].boxplot(delay_hist_agg)
-                axes[i][jitter_column].boxplot(jitter_hist_agg)
+                    packet_loss_column = k
+                    delay_column = k
+                    jitter_column = k
+                    axes[i][0].set_ylabel("     %s\n" % appName)
 
-                axes[i][packet_loss_column].grid(b=True, which='major', color='#999999', linestyle='-')
-                axes[i][delay_column].grid(b=True, which='major', color='#999999', linestyle='-')
-                axes[i][jitter_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                    # Set column labels on top
+                    if metric == "lostPackets":
+                        if i == 0:
+                            axes[i][packet_loss_column].set_xlabel('%s\n\nPacket Loss\n' % dsa_labels[dsa])
+                            axes[i][packet_loss_column].xaxis.set_label_position('top')
+                        # Link Y axis of same metrics
+                        axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][packet_loss_column])
+                        # Plot boxplots with results
+                        axes[i][packet_loss_column].boxplot(lost_packets)
+                        axes[i][packet_loss_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                    elif metric == "delay":
+                        if i == 0:
+                            axes[i][delay_column].set_xlabel('%s\n\nDelay (s)\n' % dsa_labels[dsa])
+                            axes[i][delay_column].xaxis.set_label_position('top')
+                        # Link Y axis of same metrics
+                        axes[i][1].get_shared_y_axes().join(axes[i][1], axes[i][delay_column])
+                        # Plot boxplots with results
+                        axes[i][delay_column].boxplot(delay_hist_agg)
+                        axes[i][delay_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                        axes[i][delay_column].set_yscale("log")
+                        axes[i][delay_column].set_yticks([1/(10**x) for x in range(-3, 2)])
+                    else:
+                        if i == 0:
+                            axes[i][jitter_column].set_xlabel('%s\n\nJitter (s)\n' % dsa_labels[dsa])
+                            axes[i][jitter_column].xaxis.set_label_position('top')
+                        # Link Y axis of same metrics
+                        axes[i][2].get_shared_y_axes().join(axes[i][2], axes[i][jitter_column])
+                        # Plot boxplots with results
+                        axes[i][jitter_column].boxplot(jitter_hist_agg)
+                        axes[i][jitter_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                        axes[i][jitter_column].set_yscale("log")
+                    # Next columns
+                    k += 1
+                # Next row
+                i += 1
+            if metric != "lostPackets":
+                for i in range(len(usedAppsDict[simulation_case_key])):
+                    for k in range(len(compiled_simulation_results["case"][simulation_case_key]["dsa"])):
+                        axes[i][k].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+                        axes[i][k].set_ylim([0.0001,100.0])
+                        axes[i][k].set_yticks([0.001, 0.01, 0.1, 1.0, 10.0])
 
-                # Next columns
-                k += 3
-            # Next row
-            i += 1
-
-        del packet_loss_column, delay_column, jitter_column, i, k, lost_packets, delay_hist_agg, jitter_hist_agg
-        fig.tight_layout(pad=8.0)
-        plt.xticks([], [])
-        #plt.show()
-        fig.savefig("kpi_per_app_%s.png" % simulation_case_key)
-        plt.clf()
+            del packet_loss_column, delay_column, jitter_column, i, k, lost_packets, delay_hist_agg, jitter_hist_agg
+            fig.tight_layout(pad=2.0)
+            plt.xticks([], [])
+            #plt.show()
+            fig.savefig("kpi_per_app_%s_%s.png" % (metric, simulation_case_key))
+            plt.clf()
         # End of kpis boxplots
 
 
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
-        fig, axes = plt.subplots(nrows=1, ncols=2*3, figsize=(6*len(usedAppsDict[simulation_case_key]), 8), sharex=True, sharey=True, squeeze=False)
+        fig, axes = plt.subplots(nrows=1, ncols=2*3, figsize=(15, 8), sharex=True, sharey=True, squeeze=False)
         i = 0
         k = 0
-        dsa_labels = ["                                                                                 Without PUs",
-                      "                                                                                 With PUs\n",
-                      "                                                                                 With PUs + MHM\n"]
+        dsa_labels = ["Without PUs",
+                      "With PUs\n",
+                      "With PUs + MHM\n"]
 
         # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
         for dsa in list(compiled_simulation_results["case"][simulation_case_key]["dsa"].keys())[1:]:
@@ -586,11 +607,11 @@ if __name__ == "__main__":
             dsa_reportedFrames_column = k+2
 
             # Set column labels on top
-            axes[i][dsa_falsePositive_column].set_xlabel('%s\nFalse\nPositives' % dsa_labels[dsa], fontsize=14)
+            axes[i][dsa_falsePositive_column].set_xlabel('False\nPositives', fontsize=14)
             axes[i][dsa_falsePositive_column].xaxis.set_label_position('top')
-            axes[i][dsa_falseNegative_column].set_xlabel('False\nNegatives', fontsize=14)
+            axes[i][dsa_falseNegative_column].set_xlabel('%s\nFalse\nNegatives' % dsa_labels[dsa], fontsize=14)
             axes[i][dsa_falseNegative_column].xaxis.set_label_position('top')
-            axes[i][dsa_reportedFrames_column].set_xlabel('Reported frames\n per UE', fontsize=14)
+            axes[i][dsa_reportedFrames_column].set_xlabel('Reported subframes\n per UE', fontsize=14)
             axes[i][dsa_reportedFrames_column].xaxis.set_label_position('top')
 
             axes[i][0].set_ylabel("Fraction")
