@@ -521,11 +521,11 @@ if __name__ == "__main__":
                 jitter_hist_agg = []
                 for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                     lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
-                    for (delay_hist, _, _) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
-                        delay_hist_agg.extend(delay_hist)
-                    for (jitter_hist, _, _) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
-                        jitter_hist_agg.extend(jitter_hist)
-                    del delay_hist, _
+                    for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
+                        delay_hist_agg.extend([mean-3*std, mean, mean+3*std])
+                    for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
+                        jitter_hist_agg.extend([mean-3*std, mean, mean+3*std])
+                    del _, mean, std
                 del batch
 
 
