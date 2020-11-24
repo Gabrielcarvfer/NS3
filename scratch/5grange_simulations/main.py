@@ -522,9 +522,9 @@ if __name__ == "__main__":
                 for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                     lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
                     for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
-                        delay_hist_agg.extend([mean-3*std, mean, mean+3*std])
+                        delay_hist_agg.extend([max(mean-3*std, 0), mean, mean+3*std])
                     for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
-                        jitter_hist_agg.extend([mean-3*std, mean, mean+3*std])
+                        jitter_hist_agg.extend([max(mean-3*std, 0), mean, mean+3*std])
                     del _, mean, std
                 del batch
 
@@ -541,6 +541,11 @@ if __name__ == "__main__":
                 axes[i][delay_column].xaxis.set_label_position('top')
                 axes[i][jitter_column].set_xlabel('Jitter (s)')
                 axes[i][jitter_column].xaxis.set_label_position('top')
+
+                # Link Y axis of same metrics
+                axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][packet_loss_column])
+                axes[i][1].get_shared_y_axes().join(axes[i][1], axes[i][delay_column])
+                axes[i][2].get_shared_y_axes().join(axes[i][2], axes[i][jitter_column])
 
 
                 # Plot boxplots with results
