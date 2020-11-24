@@ -661,18 +661,19 @@ int main(int argc, char * argv[]) {
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), iotListenPort));
         //serverApps.Add(ulPacketSinkHelper.Install(remoteHost));
         serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(0)));
-        
-        for(unsigned i = 1; i < numUes; i++)
-        {
-            //We assume all devices are IOT sinks, transmitting traffic of 100 IoT devices each and sending traffic to the same remote server
-            tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(i),
-                                                //remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
-                                                ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
-                                                iotListenPort,
-                                                iot_workload,
-                                                false);
-            clientApps.Add(tempUeApps);
-        }
+
+        for(unsigned k = 0; k < 100; k++)
+            for(unsigned i = 1; i < numUes; i++)
+            {
+                //We assume all devices are IOT sinks, transmitting traffic of 100 IoT devices each and sending traffic to the same remote server
+                tempUeApps = loader.LoadJsonTraffic(ueNodes.Get(i),
+                                                    //remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                    ueNodes.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal(),
+                                                    iotListenPort,
+                                                    iot_workload,
+                                                    false);
+                clientApps.Add(tempUeApps);
+            }
 
     }
 
