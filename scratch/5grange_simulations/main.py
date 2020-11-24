@@ -323,6 +323,7 @@ if __name__ == "__main__":
                     }
                     agg_dl_throughput_kbps = 0
                     agg_ul_throughput_kbps = 0
+                    status = None
                     for flow in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"]:
                         metadata = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["metadata"]
                         status = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["status"]
@@ -405,16 +406,17 @@ if __name__ == "__main__":
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets"].append(lost_packets)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
-                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((len(delay_histogram), delayMean, delayStdDev))
-                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((len(jitter_histogram), jitterMean, jitterStdDev))
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((delay_histogram, delayMean, delayStdDev))
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((jitter_histogram, jitterMean, jitterStdDev))
                         #print()
+                        del duration, dl_throughput_kbps, ul_throughput_kbps
 
                     # Store complete traffic for application
                     if agg_dl_throughput_kbps > 0 or agg_ul_throughput_kbps > 0:
                         usedAppsDict[simulation_case_key].add(port)
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"] = agg_dl_throughput_kbps
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"] = agg_ul_throughput_kbps
-                    #print()
+                    del status, agg_dl_throughput_kbps, agg_ul_throughput_kbps
 
                     # end of flor for
                 # end of port for
@@ -495,7 +497,73 @@ if __name__ == "__main__":
         plt.xticks([], [])
         #plt.show()
         fig.savefig("perf_per_app_%s.png" % simulation_case_key)
+        plt.clf()
         # End of aggregate throughput boxplots
+
+
+        # Time to plot kpis boxplots for the applications of each application (column) for each scenario
+        fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=3*3, figsize=(28, 8*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
+        i = 0
+        dsa_labels = ["Without PUs",
+                      "With PUs",
+                      "With PUs +  MHM"]
+        # Set y label on the central row
+        for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
+            k = 0
+            # Skip application if no data is available
+            if port not in usedAppsDict[simulation_case_key]:
+                continue
+
+            # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
+            for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
+                lost_packets = []
+                delay_hist_agg = []
+                jitter_hist_agg = []
+                for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
+                    lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
+                    for (delay_hist, _, _) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
+                        delay_hist_agg.extend(delay_hist)
+                    for (jitter_hist, _, _) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
+                        jitter_hist_agg.extend(jitter_hist)
+                    del delay_hist, _
+                del batch
+
+
+                packet_loss_column = k
+                delay_column = k+1
+                jitter_column = k+2
+                axes[i][0].set_ylabel("     %s" % appName)
+
+                # Set column labels on top
+                axes[i][packet_loss_column].set_xlabel('Packet Loss')
+                axes[i][packet_loss_column].xaxis.set_label_position('top')
+                axes[i][delay_column].set_xlabel('%s\nDelay (s)' % (dsa_labels[dsa] if i == 0 else ""))
+                axes[i][delay_column].xaxis.set_label_position('top')
+                axes[i][jitter_column].set_xlabel('Jitter (s)')
+                axes[i][jitter_column].xaxis.set_label_position('top')
+
+
+                # Plot boxplots with results
+                axes[i][packet_loss_column].boxplot(lost_packets)
+                axes[i][delay_column].boxplot(delay_hist_agg)
+                axes[i][jitter_column].boxplot(jitter_hist_agg)
+
+                axes[i][packet_loss_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                axes[i][delay_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                axes[i][jitter_column].grid(b=True, which='major', color='#999999', linestyle='-')
+
+                # Next columns
+                k += 3
+            # Next row
+            i += 1
+
+        del packet_loss_column, delay_column, jitter_column, i, k, lost_packets, delay_hist_agg, jitter_hist_agg
+        fig.tight_layout(pad=8.0)
+        plt.xticks([], [])
+        #plt.show()
+        fig.savefig("kpi_per_app_%s.png" % simulation_case_key)
+        plt.clf()
+        # End of kpis boxplots
 
 
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
@@ -545,6 +613,7 @@ if __name__ == "__main__":
         plt.xticks([], [])
         #plt.show()
         fig.savefig("sensing_per_scenario_%s.png" % simulation_case_key)
+        plt.clf()
         # End of collaborative spectrum sensing boxplots
     # end of simulation_case for
     print()
