@@ -308,6 +308,7 @@ public:
   void SendCognitiveMessage(std::vector<std::vector<bool>> UnexpectedAccess_FalseAlarm_FalseNegBitmap, std::vector<bool> PU_presence_V); //todo: implement this properly through the SAP
   Ptr<LteSpectrumPhy> ueSpectrumPhy; //todo: implement this properly through the SAP
   static uint32_t ueCount;
+  std::bitset<132> lastSensedBitmap;
 };
 
 } // namespace ns3

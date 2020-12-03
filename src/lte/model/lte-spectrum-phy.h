@@ -636,7 +636,6 @@ public:
     std::vector<bool> PU_presence_V;
     static bool SNRsensing; //false - Use distance based detection curves, true - Use SNR based detection curves
     std::vector<std::tuple<bool,bool,double>> monteCarloState_flip_monteCarloProbability;
-
 };
 
 

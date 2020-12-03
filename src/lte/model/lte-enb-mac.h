@@ -527,6 +527,7 @@ public://todo: implement this properly through the SAP
     //void RecvCognitiveMessage(Ptr<Packet> p);
     void RecvCognitiveMessageC(Ptr<CognitiveLteControlMessage> p);
     std::bitset<132> mergeSensingReports(mergeAlgorithmEnum alg, bool senseRBs, bool harmonicDetection);
+    std::bitset<132> lastSensedBitmap;
     uint16_t bandwidth;
 
     static std::vector<int> nonDSAChannels;

@@ -945,6 +945,7 @@ LteEnbMac::DoSubframeIndication (uint32_t frameNo, uint32_t subframeNo)
       //Cognitive engine has to check channelOccupation and decide whether to flag or not specific RBs
       bool senseRBs = false;
       dlparams.sensedBitmap = mergeSensingReports(FusionAlgorithm, senseRBs, harmonicDetection);
+      this->lastSensedBitmap = dlparams.sensedBitmap;
   }
 
     //Calls for the scheduler
@@ -2613,10 +2614,10 @@ std::bitset<132> LteEnbMac::mergeSensingReports(mergeAlgorithmEnum alg, bool sen
         for (unsigned k = c*numRbsPerChannel; k < (c+1)*numRbsPerChannel; k++)
         {
             sensedBitmap[k] = fusedResults[c][0];
-            //std::cout << "k=" << k << " sensedBitmap " << std::bitset<50>(sensedBitmap)  << std::endl;
         }
     }
 
+    //std::cout << " sensedBitmap " << sensedBitmap  << std::endl;
     return sensedBitmap;
 }
 

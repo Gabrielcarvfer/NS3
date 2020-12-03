@@ -593,6 +593,38 @@ LteSpectrumPhy::StartTxDataFrame (Ptr<PacketBurst> pb, std::list<Ptr<LteControlM
       txParams->packetBurst = pb;
       txParams->ctrlMsgList = ctrlMsgList;
       txParams->cellId = m_cellId;
+      Ptr<LteEnbNetDevice> dev = GetDevice()->GetObject<LteEnbNetDevice>();
+      if (dev != 0)
+          txParams->sensedBitmap = dev->GetMac()->GetObject<LteEnbMac>()->lastSensedBitmap;
+      //std::cout << " sensedBitmap " << txParams->sensedBitmap  << std::endl;
+
+
+        // We need to deal with virtual channel SINRs when PUs are occupied the channel.
+        // Instead of letting a single virtual channel drag the entire channel SINR, we copy the max value to occupied RBGs
+        double avgSinr = *(txParams->psd->ConstValuesBegin());
+
+        volatile int changed = 0;
+        unsigned k = 0;
+        for (auto sinrValueIt = txParams->psd->ConstValuesBegin()+1; sinrValueIt != txParams->psd->ConstValuesEnd(); sinrValueIt++)
+        {
+            if (!txParams->sensedBitmap[k])
+            {
+                avgSinr += *sinrValueIt;
+                k++;
+            }
+        }
+        avgSinr /= k;
+        auto it = txParams->psd->ValuesBegin();
+        for (unsigned i = 0; i < txParams->sensedBitmap.size(); i++)
+            if (txParams->sensedBitmap[i])
+            {
+                *(it+i) = avgSinr;
+                changed++;
+            }
+        //
+      //if (changed > 0)
+      //    std::cout << "oops" << std::endl;
+
       m_channel->StartTx (txParams);
       m_endTxEvent = Simulator::Schedule (duration, &LteSpectrumPhy::EndTxData, this);
     }
@@ -786,6 +818,14 @@ LteSpectrumPhy::StartRx (Ptr<SpectrumSignalParameters> spectrumRxParams)
       //std::cout << "SpecPhy::RxData currPsd " << m_interferenceData->GetAllSignals()->ValuesAt(0) << " rxPsd " << rxPsd->ValuesAt(0) << std::endl;
       m_interferenceData->AddSignal (rxPsd, duration);
       StartRxData (lteDataRxParams);
+      Ptr<LteEnbNetDevice> dev = GetDevice()->GetObject<LteEnbNetDevice>();
+      if (dev != 0)
+          dev->GetMac()->GetObject<LteEnbMac>()->lastSensedBitmap = lteDataRxParams->sensedBitmap;
+      else
+      {
+          Ptr<LteUeNetDevice> dev = GetDevice()->GetObject<LteUeNetDevice>();
+          dev->GetMac()->GetObject<LteUeMac>()->lastSensedBitmap = lteDataRxParams->sensedBitmap;
+      }
     }
   else if (lteDlCtrlRxParams!=0)
     {
