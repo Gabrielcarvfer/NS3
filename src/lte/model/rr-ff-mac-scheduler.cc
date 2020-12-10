@@ -1460,7 +1460,7 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
           //for (auto value: sinrVec)
           //    std::cout << value << " ";
           //std::cout << "\n" << std::endl;
-          cqi = cqi > cqi2 ? cqi : cqi2;
+          cqi = cqi2;// cqi > cqi2 ? cqi : cqi2;
 
           if (cqi == 0)
             {
