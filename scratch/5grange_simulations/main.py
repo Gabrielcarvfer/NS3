@@ -9,6 +9,7 @@ import pickle
 import numpy
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
+import scipy.stats as st
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation
@@ -412,6 +413,7 @@ if __name__ == "__main__":
                         #print()
                         del duration, dl_throughput_kbps, ul_throughput_kbps
 
+
                     # Store complete traffic for application
                     if agg_dl_throughput_kbps > 0 or agg_ul_throughput_kbps > 0:
                         usedAppsDict[simulation_case_key].add(port)
@@ -447,6 +449,29 @@ if __name__ == "__main__":
             # end for dsa
         # end for port
 
+        output_csv_table = {}
+        output_csv_table["apps"] = {}
+        output_csv_table["generic"] = {}
+        output_csv_table["generic"]["False Positives"] = []
+        output_csv_table["generic"]["False Negatives"] = []
+        output_csv_table["generic"]["Reported Subframes per UE"] = []
+
+        for (port, appName) in [(port.value[0], port.name[:-10].capitalize()) for port in ApplicationPorts]:
+            k = 0
+            # Skip application if no data is available
+            if port not in usedAppsDict[simulation_case_key]:
+                continue
+
+            output_csv_table["apps"][appName] = {
+                "Aggregate Throughput DL (kbps)": [],
+                "Aggregate Throughput UL (kbps)": [],
+                "Packet Loss": [],
+                "Delay (s)": [],
+                "Jitter (s)": [],
+            }
+
+
+
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
         fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=2*3, figsize=(15, 6*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
         i = 0
@@ -477,11 +502,19 @@ if __name__ == "__main__":
                 axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][dsa_ul_column])
 
                 # Plot boxplots with results
-                axes[i][dsa_dl_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"],
-                                               )
-                axes[i][dsa_ul_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"],
-                                               )
+                dl = compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_dl_throughput_kbps"]
+                ul = compiled_simulation_results["case"][simulation_case_key]["appStatusPerPort"]["port"][port]["appStatusPerDsa"]["dsa"][dsa]["agg_ul_throughput_kbps"]
+                axes[i][dsa_dl_column].boxplot(dl)
+                axes[i][dsa_ul_column].boxplot(ul)
 
+                dl_mean = numpy.mean(dl)
+                dl_inferiorlimit = st.t.interval(0.95, len(dl)-1, loc=dl_mean, scale=st.sem(dl))[0]
+                ul_mean = numpy.mean(ul)
+                ul_inferiorlimit = st.t.interval(0.95, len(ul)-1, loc=ul_mean, scale=st.sem(ul))[0]
+                output_csv_table["apps"][appName]["Aggregate Throughput DL (kbps)"].extend([dl_mean, dl_mean-dl_inferiorlimit])
+                output_csv_table["apps"][appName]["Aggregate Throughput UL (kbps)"].extend([ul_mean, ul_mean-ul_inferiorlimit])
+
+                del dl_mean, dl_inferiorlimit, ul_mean, ul_inferiorlimit, dl, ul
 
                 if dsa_dl_column != 0:
                     plt.setp(axes[i][dsa_dl_column].get_yticklabels(), visible=False)
@@ -535,6 +568,21 @@ if __name__ == "__main__":
                             del _, mean, std
                     del batch
 
+                    if metric == "lostPackets":
+                        loss_mean = numpy.mean(lost_packets)
+                        loss_inferiorlimit = st.t.interval(0.95, len(lost_packets)-1, loc=loss_mean, scale=st.sem(lost_packets))[0]
+                        output_csv_table["apps"][appName]["Packet Loss"].extend([loss_mean, loss_mean-loss_inferiorlimit])
+                        del loss_mean, loss_inferiorlimit,
+                    elif metric == "delay":
+                        delay_mean = numpy.mean(delay_hist_agg)
+                        delay_inferiorlimit = st.t.interval(0.95, len(delay_hist_agg)-1, loc=delay_mean, scale=st.sem(delay_hist_agg))[0]
+                        output_csv_table["apps"][appName]["Delay (s)"].extend([delay_mean, delay_mean-delay_inferiorlimit])
+                        del delay_mean, delay_inferiorlimit
+                    else:
+                        jitter_mean = numpy.mean(jitter_hist_agg)
+                        jitter_inferiorlimit = st.t.interval(0.95, len(jitter_hist_agg)-1, loc=jitter_mean, scale=st.sem(jitter_hist_agg))[0]
+                        output_csv_table["apps"][appName]["Jitter (s)"].extend([jitter_mean, jitter_mean-jitter_inferiorlimit])
+                        del jitter_mean, jitter_inferiorlimit
 
                     packet_loss_column = k
                     delay_column = k
@@ -580,7 +628,7 @@ if __name__ == "__main__":
                 for i in range(len(usedAppsDict[simulation_case_key])):
                     for k in range(len(compiled_simulation_results["case"][simulation_case_key]["dsa"])):
                         axes[i][k].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
-                        axes[i][k].set_ylim([0.0001,100.0])
+                        axes[i][k].set_ylim([0.0001, 100.0])
                         axes[i][k].set_yticks([0.001, 0.01, 0.1, 1.0, 10.0])
 
             del packet_loss_column, delay_column, jitter_column, i, k, lost_packets, delay_hist_agg, jitter_hist_agg
@@ -600,6 +648,10 @@ if __name__ == "__main__":
                       "With PUs\n",
                       "With PUs + MHM\n"]
 
+        output_csv_table["generic"]["False Positives"].extend([0, 0])
+        output_csv_table["generic"]["False Negatives"].extend([0, 0])
+        output_csv_table["generic"]["Reported Subframes per UE"].extend([0, 0])
+
         # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
         for dsa in list(compiled_simulation_results["case"][simulation_case_key]["dsa"].keys())[1:]:
             dsa_falsePositive_column = k
@@ -615,13 +667,39 @@ if __name__ == "__main__":
             axes[i][dsa_reportedFrames_column].xaxis.set_label_position('top')
 
             axes[i][0].set_ylabel("Fraction")
-            axes[i][0].set_ylim([-0.01,1.01])
+            axes[i][0].set_ylim([-0.01, 1.01])
             axes[i][0].set_yticks([x/5 for x in range(6)])
 
+            fp = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falsePositives"]
+            fn = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falseNegatives"]
+            rf = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["reportedFramesPerUe"]
+
+            fp_mean = numpy.mean(fp)
+            fp_inferiorlimit = st.t.interval(0.95, len(fp)-1, loc=fp_mean, scale=st.sem(fp))[0]
+            fp_inferiorlimit = fp_mean-fp_inferiorlimit
+            fp_inferiorlimit = 0 if numpy.isnan(fp_inferiorlimit) else fp_inferiorlimit
+
+            fn_mean = numpy.mean(fn)
+            fn_inferiorlimit = st.t.interval(0.95, len(fn)-1, loc=fn_mean, scale=st.sem(fn))[0]
+            fn_inferiorlimit = fn_mean-fn_inferiorlimit
+            fn_inferiorlimit = 0 if numpy.isnan(fn_inferiorlimit) else fn_inferiorlimit
+
+            rf_mean = numpy.mean(rf)
+            rf_inferiorlimit = st.t.interval(0.95, len(rf)-1, loc=rf_mean, scale=st.sem(rf))[0]
+            rf_inferiorlimit = rf_mean-rf_inferiorlimit
+            rf_inferiorlimit = 0 if numpy.isnan(rf_inferiorlimit) else rf_inferiorlimit
+
+            output_csv_table["generic"]["False Positives"].extend([fp_mean, fp_inferiorlimit])
+            output_csv_table["generic"]["False Negatives"].extend([fn_mean, fn_inferiorlimit])
+            output_csv_table["generic"]["Reported Subframes per UE"].extend([rf_mean, rf_mean-rf_inferiorlimit])
+            del fp_mean, fp_inferiorlimit, fn_mean, fn_inferiorlimit, rf_mean, rf_inferiorlimit
+
             # Plot boxplots with results
-            axes[i][dsa_falsePositive_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falsePositives"])
-            axes[i][dsa_falseNegative_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["falseNegatives"])
-            axes[i][dsa_reportedFrames_column].boxplot(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]['sensing']['status']["reportedFramesPerUe"])
+            axes[i][dsa_falsePositive_column].boxplot(fp)
+            axes[i][dsa_falseNegative_column].boxplot(fn)
+            axes[i][dsa_reportedFrames_column].boxplot(rf)
+
+
 
             if dsa_falsePositive_column != 0:
                 plt.setp(axes[i][dsa_falsePositive_column].get_yticklabels(), visible=False)
@@ -640,6 +718,25 @@ if __name__ == "__main__":
         #plt.show()
         fig.savefig("sensing_per_scenario_%s.png" % simulation_case_key)
         plt.clf()
+
+        with open("results_table_per_scenario_%s.csv" % simulation_case_key, "w") as f:
+            lines = []
+            lines.append("Sensing Results,Without PUs,With PUs,With PUs + MHM,\n")
+
+            for metric in output_csv_table["generic"]:
+                lines.append(u"%s,%f\u00B1%f,%f\u00B1%f,%f\u00B1%f,\n" % (metric, *output_csv_table["generic"][metric]))
+
+            lines.append(",,,,\n")
+            lines.append(",,,,\n")
+
+            for appName in output_csv_table["apps"]:
+                lines.append("%s,Without PUs,With PUs,With PUs + MHM,\n" % appName)
+                for metric in output_csv_table["apps"][appName]:
+                    lines.append(u"%s,%f\u00B1%f,%f\u00B1%f,%f\u00B1%f,\n" % (metric, *output_csv_table["apps"][appName][metric]))
+                lines.append(",,,,\n")
+            f.writelines(lines)
+
+        del output_csv_table
         # End of collaborative spectrum sensing boxplots
     # end of simulation_case for
     print()
