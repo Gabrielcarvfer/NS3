@@ -46,10 +46,9 @@ include(buildsupport/vcpkg_hunter.cmake)
 
 
 #If on Linux, add cotire for PCH builds. Others were having issues, so I disabled them
-if(LINUX)
-    include(buildsupport/cotire.cmake)
-	#include(buildsupport/cotire_force_pch.cmake)
-endif()
+#if(LINUX)
+#    include(buildsupport/cotire.cmake)
+#endif()
 
 
 if (COMMAND cotire)
