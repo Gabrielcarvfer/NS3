@@ -54,7 +54,7 @@ def setup_simulations(createAndRunScenarios):
         # iot scenarios
         [ 27, [simulationCase.IOT_BASE_SCENARIO, ]],  # 26 of ues acting as sinks for 100 rural IOT sensors each (a.k.a. traffic of 25k IOT), forwarding data to an aggregator UE
         # backhaul scenario
-        [  1, [simulationCase.BACKHAUL_BASE_SCENARIO, ]],
+        [ 27, [simulationCase.BACKHAUL_BASE_SCENARIO, ]],
     ]  # 2, 5, 10, 20, 50, 100
 
     # I'm dumb and worn off. This should be enough
@@ -521,10 +521,9 @@ if __name__ == "__main__":
 
                 axes[i][dsa_dl_column].grid(b=True, which='major', color='#999999', linestyle='-')
                 axes[i][dsa_ul_column].grid(b=True, which='major', color='#999999', linestyle='-')
-                del dl, ul,
 
-                axes[i][dsa_dl_column].set_yticks([x for x in range(25000, 100000, 25000)])
-                axes[i][dsa_ul_column].set_yticks([x for x in range(25000, 100000, 25000)])
+                axes[i][dsa_dl_column].set_yticks([x for x in range(25000, 100000, 15000)])
+                axes[i][dsa_ul_column].set_yticks([x for x in range(25000, 100000, 15000)])
 
                 # Next columns
                 k += 2
@@ -562,13 +561,15 @@ if __name__ == "__main__":
 
                             lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
                         elif metric == "delay":
-                            for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
-                                delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
-                                del _, mean, std
+                            for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
+                                #delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                                delay_hist_agg.extend(h)
+                                del h, mean, std
                         else:
-                            for (_, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
-                                jitter_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
-                            del _, mean, std
+                            for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
+                                #jitter_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                                jitter_hist_agg.extend(h)
+                            del h, mean, std
                     del batch
 
                     if metric == "lostPackets":
@@ -727,16 +728,21 @@ if __name__ == "__main__":
             lines.append("Sensing Results,Without PUs,With PUs,With PUs + MHM,\n")
 
             for metric in output_csv_table["generic"]:
-                lines.append(u"%s,%f\u00B1%f,%f\u00B1%f,%f\u00B1%f,\n" % (metric, *output_csv_table["generic"][metric]))
-
+                lines.append(metric)
+                for i in range(len(output_csv_table["generic"][metric])//2):
+                    lines.append(u",%f\u00B1%f" % (*output_csv_table["generic"][metric][2*i:2*i+2],))
+                lines.append("\n")
             lines.append(",,,,\n")
             lines.append(",,,,\n")
 
             for appName in output_csv_table["apps"]:
                 lines.append("%s,Without PUs,With PUs,With PUs + MHM,\n" % appName)
                 for metric in output_csv_table["apps"][appName]:
-                    lines.append(u"%s,%f\u00B1%f,%f\u00B1%f,%f\u00B1%f,\n" % (metric, *output_csv_table["apps"][appName][metric]))
-                lines.append(",,,,\n")
+                    lines.append(metric)
+                    for i in range(len(output_csv_table["apps"][appName][metric])//2):
+                        lines.append(u",%f\u00B1%f" % (*output_csv_table["apps"][appName][metric],))
+                    lines.append("\n")
+            lines.append(",,,,\n")
             f.writelines(lines)
 
         del output_csv_table
