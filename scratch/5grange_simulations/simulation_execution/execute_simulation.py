@@ -10,6 +10,11 @@ from simulation_results.extract_rbg_activity_results import extract_rbg_activity
 
 cwd = os.path.abspath(os.getcwd())
 
+def execute_simulation_thread(job_queue):
+    while not job_queue.empty():
+        simulation_path, base_dir = job_queue.get()
+        job_queue.task_done()
+        execute_simulation(simulation_path, base_dir)
 
 def execute_simulation(simulation_path, base_dir):
     while True:  # Just a big if
@@ -35,7 +40,8 @@ def execute_simulation(simulation_path, base_dir):
                                          stderr=subprocess.STDOUT,
                                          cwd=simulation_path,
                                          env={"OPENBLAS_NUM_THREADS": "1",
-                                              }
+                                              },
+                                         timeout=8000
                                          )
                 if simProc.returncode != 0:
                     raise Exception("ProgramFailed")

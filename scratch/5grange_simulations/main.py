@@ -12,7 +12,7 @@ from matplotlib.ticker import FormatStrFormatter
 import scipy.stats as st
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
-from simulation_execution.execute_simulation import execute_simulation
+from simulation_execution.execute_simulation import execute_simulation, execute_simulation_thread
 
 
 class freqBands(Enum):
@@ -109,7 +109,10 @@ def setup_simulations(createAndRunScenarios):
     # to find all json files with simulation parameters and pass the list for parallel execution
     simulationParameterFilesList = glob.glob(baseDir+os.sep+"**"+os.sep+"simulationParameters.json", recursive=True)
 
+    from queue import Queue
+    from threading import Thread
     thread_parameters = []
+    thread_parameters_queue = Queue()
     for scenarioJson in simulationParameterFilesList:
         # Before executing anything, we check if the outputs file has been processed for that given scenario
         simulation_path = os.path.dirname(scenarioJson)
@@ -117,10 +120,19 @@ def setup_simulations(createAndRunScenarios):
         # Run simulation if necessary and try to extract results into a single output file
         #execute_simulation(simulation_path, baseDir)  # run simulations individually
         thread_parameters.append((simulation_path, baseDir))
+        thread_parameters_queue.put((simulation_path, baseDir))
 
     # Dispatch simulations
-    p = multiprocessing.Pool(processes=12)  # run simulations in parallel
-    results = p.starmap(func=execute_simulation, iterable=sorted(thread_parameters, reverse=True))
+    num_processes = 14
+    threads = []
+    for i in range(num_processes):
+        threads.append(Thread(target=execute_simulation_thread, kwargs={"job_queue":thread_parameters_queue}))
+        threads[i].start()
+    for i in range(num_processes):
+        threads[i].join()
+
+    #p = Pool(processes=num_processes) # run simulations in parallel
+    #results = p.starmap(func=execute_simulation, iterable=sorted(thread_parameters, reverse=True))
 
     # When all simulations have finished, load up their results and apply some statistics/plots
     # Result files were pickled and compressed
