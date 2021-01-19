@@ -624,9 +624,11 @@ PacketMetadata::Allocate (uint32_t n)
       n = PACKET_METADATA_DATA_M_DATA_SIZE;
     }
   size += n - PACKET_METADATA_DATA_M_DATA_SIZE;
-  uint8_t *buf = new uint8_t [size];
+  const int pageSize = 64*1024;
+  int16_t numPages = 1 + (size / pageSize);
+  uint8_t *buf = new uint8_t [numPages*pageSize];
   struct PacketMetadata::Data *data = (struct PacketMetadata::Data *)buf;
-  data->m_size = n;
+  data->m_size = numPages*pageSize;
   data->m_count = 1;
   data->m_dirtyEnd = 0;
   return data;
