@@ -57,11 +57,11 @@ if (COMMAND cotire)
         set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
     endif()
 else()
-    #If cotire is disabled, check if OpenMp is available
-    find_package(OpenMP)
-    if(OpenMP_CXX_FOUND)
-        link_libraries(OpenMP::OpenMP_CXX)
-    endif()
+    ##If cotire is disabled, check if OpenMp is available
+    #find_package(OpenMP)
+    #if(OpenMP_CXX_FOUND)
+    #    link_libraries(OpenMP::OpenMP_CXX)
+    #endif()
 endif()
 
 #Check the number of threads
