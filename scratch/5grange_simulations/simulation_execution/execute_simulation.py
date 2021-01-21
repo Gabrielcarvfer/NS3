@@ -65,10 +65,11 @@ def execute_simulation(simulation_path, base_dir):
         # Try to extract flow statistics
         try:
             flow_statistics = extract_network_performance_metrics(simulation_path)
-        except Exception:
+        except Exception as e:
             print("Failed extracting flow statistics. ",
                   "Skipping to next simulation. Source path: ",
                   simulation_path)
+            print("Error cause: ", e.__str__())
             break
         simulation_results["flow_statistics"] = flow_statistics
         del flow_statistics
