@@ -10,6 +10,7 @@ import numpy
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 import scipy.stats as st
+import sys
 
 from simulation_model.simulation_scenario_generation import generate_scenarios
 from simulation_execution.execute_simulation import execute_simulation, execute_simulation_thread
@@ -137,6 +138,7 @@ def setup_simulations(createAndRunScenarios):
     # When all simulations have finished, load up their results and apply some statistics/plots
     # Result files were pickled and compressed
 
+
 def load_raw_results(baseDir):
     # We then proceed by searching for simulationParameters.json and simulationResults.pickle.lzma
     simulationParameterFilesList = glob.glob(baseDir+os.sep+"**"+os.sep+"simulationParameters.json", recursive=True)
@@ -145,6 +147,7 @@ def load_raw_results(baseDir):
     # To avoid reprocessing this, we dump all raw results to a compressed pickle
     raw_results_file = "raw_results.pickle.lzma"
     if not os.path.exists(raw_results_file):
+        simulationParameterFilesList = simulationParameterFilesList
         for scenarioJson in simulationParameterFilesList:
             # load each pair of parameters and results
             simulation_parameters = None
@@ -156,7 +159,6 @@ def load_raw_results(baseDir):
 
             scenarioJson = scenarioJson[len(baseDir):]  # remove path to basedir to clean things up
             all_simulation_results[scenarioJson] = [simulation_parameters, simulation_results]
-
         with lzma.open(raw_results_file, "wb") as file:
             pickle.dump(all_simulation_results, file)
     else:
@@ -366,20 +368,8 @@ if __name__ == "__main__":
 
                         lost_packets = int(status["@lostPackets"])
                         lost_packets_pct = int(status["@lostPackets"])/int(status["@txPackets"])
-                        delay_histogram = []
-                        if "bin" in status["delayHistogram"]:
-                            for entry in status["delayHistogram"]["bin"]:
-                                try:
-                                    delay_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
-                                except TypeError:
-                                    continue
-                        jitter_histogram = []
-                        if "bin" in status["jitterHistogram"]:
-                            for entry in status["jitterHistogram"]["bin"]:
-                                try:
-                                    jitter_histogram.extend([float(entry["@start"])]*int(entry["@count"]))
-                                except TypeError:
-                                    continue
+                        delay_histogram = status["delayHistogram"]
+                        jitter_histogram = status["jitterHistogram"]
 
                         # Check if individual application of UE meets or exceeds the KPIs established for the application
                         passed = True
@@ -394,21 +384,25 @@ if __name__ == "__main__":
                         delayMean   = 0
                         delayStdDev = 0
                         if len(delay_histogram) > 0:
-                            delayMean = numpy.mean(delay_histogram)
-                            delayStdDev = numpy.std(delay_histogram)
+                            histogram = [x*y for (x, y) in delay_histogram.items()]
+                            delayMean = numpy.mean(histogram)
+                            delayStdDev = numpy.std(histogram)
                             # mean + 1.5*sigma = >90% reliable
                             # mean + 2*sigma = >99% reliable
                             # mean + 2.5*sigma = >99.9% reliable
                             if delayMean+2.5*delayStdDev > application_KPIs[port]["latency"]:
                                 passed = False
+                            del histogram
 
                         jitterMean   = 0
                         jitterStdDev = 0
                         if len(jitter_histogram) > 0:
-                            jitterMean = numpy.mean(jitter_histogram)
-                            jitterStdDev = numpy.std(jitter_histogram)
+                            histogram = [x*y for (x, y) in jitter_histogram.items()]
+                            jitterMean = numpy.mean(histogram)
+                            jitterStdDev = numpy.std(histogram)
                             if jitterMean+2.5*jitterStdDev > application_KPIs[port]["latency"]:
                                 passed = False
+                            del histogram
 
                         if passed:
                             compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["passed_kpi"].append(flow)
@@ -424,6 +418,8 @@ if __name__ == "__main__":
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((jitter_histogram, jitterMean, jitterStdDev))
                         #print()
                         del duration, dl_throughput_kbps, ul_throughput_kbps
+                        del jitterMean, jitterStdDev, jitter_histogram
+                        del delayMean, delayStdDev, delay_histogram
 
 
                     # Store complete traffic for application
@@ -485,7 +481,9 @@ if __name__ == "__main__":
 
 
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
-        fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=2*1, figsize=(15, 6*len(usedAppsDict[simulation_case_key])), sharey=True, sharex=True, squeeze=False)
+        fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]),
+                                 ncols=2*len(compiled_simulation_results["case"][simulation_case_key]["dsa"]),
+                                 figsize=(6*len(compiled_simulation_results["case"][simulation_case_key]["dsa"]), 6*len(usedAppsDict[simulation_case_key])), sharey=True, sharex=True, squeeze=False)
         import matplotlib.pyplot as plt
         i = 0
         dsa_labels = ["                      Without\n                        PUs",
@@ -499,7 +497,7 @@ if __name__ == "__main__":
                 continue
 
             # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
-            for dsa in list(compiled_simulation_results["case"][simulation_case_key]["dsa"].keys())[:1]:
+            for dsa in list(compiled_simulation_results["case"][simulation_case_key]["dsa"].keys()):
                 dsa_dl_column = k
                 dsa_ul_column = dsa_dl_column+1
 
@@ -534,14 +532,15 @@ if __name__ == "__main__":
                 axes[i][dsa_dl_column].grid(b=True, which='major', color='#999999', linestyle='-')
                 axes[i][dsa_ul_column].grid(b=True, which='major', color='#999999', linestyle='-')
 
-                axes[i][dsa_dl_column].set_yticks([x for x in range(25000, 100000, 15000)])
-                axes[i][dsa_ul_column].set_yticks([x for x in range(25000, 100000, 15000)])
+                #axes[i][dsa_dl_column].set_yticks([x for x in range(25000, 100000, 15000)])
+                #axes[i][dsa_ul_column].set_yticks([x for x in range(25000, 100000, 15000)])
 
                 # Next columns
                 k += 2
             # Next row
             i += 1
-        fig.tight_layout(pad=3.0)
+            del dsa_dl_column, dsa_ul_column
+        fig.tight_layout(pad=2.0)
         plt.xticks([], [])
         #plt.show()
         fig.savefig("perf_per_app_%s.png" % simulation_case_key)
@@ -575,13 +574,15 @@ if __name__ == "__main__":
                         elif metric == "delay":
                             for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
                                 #delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
-                                delay_hist_agg.extend(h)
-                                del h, mean, std
+                                histogram = [x*y for (x,y) in h.items()]
+                                delay_hist_agg.extend(histogram)
+                                del h, mean, std, histogram
                         else:
                             for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
                                 #jitter_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                                histogram = [x*y for (x,y) in h.items()]
                                 jitter_hist_agg.extend(h)
-                            del h, mean, std
+                                del h, mean, std, histogram
                     del batch
 
                     if metric == "lostPackets":
@@ -752,7 +753,7 @@ if __name__ == "__main__":
                 for metric in output_csv_table["apps"][appName]:
                     lines.append(metric)
                     for i in range(len(output_csv_table["apps"][appName][metric])//2):
-                        lines.append(u",%f\u00B1%f" % (*output_csv_table["apps"][appName][metric],))
+                        lines.append(u",%f\u00B1%f" % (*output_csv_table["apps"][appName][metric][2*i:2*i+2],))
                     lines.append("\n")
             lines.append(",,,,\n")
             f.writelines(lines)

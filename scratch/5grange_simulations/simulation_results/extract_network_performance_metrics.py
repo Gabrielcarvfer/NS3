@@ -45,7 +45,15 @@ application_KPIs = {ApplicationPorts.voipListenPort.value[0]: {"lost_packet_rati
                                                           "ul_throughput_kbps":  25000},
                     }
 
+
 def extract_network_performance_metrics(path_to_simulation_folder):
+    import multiprocessing as mp
+    with mp.Pool(processes=1) as pool:
+        results = pool.starmap(extract_network_performance_metrics_impl, [[path_to_simulation_folder], ])
+    return results[0]
+
+
+def extract_network_performance_metrics_impl(path_to_simulation_folder):
     flow_monitor_contents = None
     # Load XML output from ns-3 flowmonitor
     with open(path_to_simulation_folder+os.sep+'flow.xml', "r") as file:
@@ -73,11 +81,30 @@ def extract_network_performance_metrics(path_to_simulation_folder):
             pass  # ignore traffics that are not coming from or being sent to an UE
         pass
 
+    def read_histogram(flow_monitor_histogram):
+        histogram = {}
+        skip = False
+        if 'bin' in flow_monitor_histogram:
+            for bin in flow_monitor_histogram['bin']:
+                if type(bin) is str:
+                    bin = flow_monitor_histogram['bin']
+                    skip = True
+                histogram[float(bin['@start'])] = int(bin['@count'])
+                if skip:
+                    break
+        return histogram
+
     # Then collect their statistics
     for flow in flow_monitor_contents['FlowMonitor']['FlowStats']['Flow']:
         flow_id = int(flow["@flowId"])
         if flow_id not in flow_port_map:
             continue
+
+        # Replace histograms with dictionaries
+        flow['delayHistogram'] = read_histogram(flow['delayHistogram'])
+        flow['jitterHistogram'] = read_histogram(flow['jitterHistogram'])
+        flow['packetSizeHistogram'] = read_histogram(flow['packetSizeHistogram'])
+
         application_flows["applicationPort"][flow_port_map[flow_id]]["flows"][flow_id]["status"] = flow
         pass
 
