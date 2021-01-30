@@ -12,6 +12,7 @@ set(source_files
         model/yans-error-rate-model.cc
         model/nist-error-rate-model.cc
         model/dsss-error-rate-model.cc
+        model/table-based-error-rate-model.cc
         model/interference-helper.cc
         model/yans-wifi-phy.cc
         model/yans-wifi-channel.cc
@@ -98,6 +99,7 @@ set(source_files
         model/constant-obss-pd-algorithm.cc
         model/wifi-ack-policy-selector.cc
         model/constant-wifi-ack-policy-selector.cc
+        model/he-ru.cc
         helper/wifi-radio-energy-model-helper.cc
         helper/athstats-helper.cc
         helper/wifi-helper.cc
@@ -211,6 +213,8 @@ set(header_files
         model/constant-obss-pd-algorithm.h
         model/wifi-ack-policy-selector.h
         model/constant-wifi-ack-policy-selector.h
+        model/he-ru.h
+        model/table-based-error-rate-model.h
         helper/wifi-radio-energy-model-helper.h
         helper/athstats-helper.h
         helper/wifi-helper.h
@@ -218,6 +222,7 @@ set(header_files
         helper/spectrum-wifi-helper.h
         helper/wifi-mac-helper.h
         model/wifi-phy-band.h
+        model/reference/error-rate-tables.h
         )
 
 set(libraries_to_link
@@ -242,6 +247,7 @@ set(test_sources
         test/wifi-phy-thresholds-test.cc
         test/wifi-phy-reception-test.cc
         test/inter-bss-test-suite.cc
+        test/wifi-phy-ofdma-test.cc
         )
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")

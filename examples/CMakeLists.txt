@@ -1,6 +1,7 @@
 
 if (${NS3_EXAMPLES})
     set(examples_to_build
+            channel-models
             energy
             error-model
             ipv6

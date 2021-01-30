@@ -229,6 +229,8 @@ set(source_files
         model/show-progress.cc
         model/time-printer.cc
 		model/system-wall-clock-timestamp.cc
+		model/length.cc
+		helper/csv-reader.cc
         )
 
 #Define core lib headers
@@ -330,6 +332,8 @@ set (header_files
         model/time-printer.h
 		model/example-as-test.h
 		model/pair.h
+		model/length.h
+		helper/csv-reader.h
         )
 
 set(test_sources
@@ -356,6 +360,7 @@ set(test_sources
         test/watchdog-test-suite.cc
 		test/attribute-container-test-suite.cc
 		test/pair-value-test-suite.cc
+		test/length-test-suite.cc
 		${examples_as_tests_test_sources}
         ${gsl_test_sources}
 		${thread_test_sources}

@@ -221,6 +221,13 @@ set(libraries_to_link ${libwifi} ${libapplications})
 examples_to_run_find_examples(${name} "${examples_to_run}" examples)
 build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 
+set(name wifi-error-models-comparison)
+set(source_files ${name}.cc)
+set(header_files)
+set(libraries_to_link ${libwifi})
+examples_to_run_find_examples(${name} "${examples_to_run}" examples)
+build_example ("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+
 set(name wifi-spectrum-per-example)
 set(source_files ${name}.cc)
 set(header_files)

@@ -145,6 +145,7 @@ set(source_files
         model/rip-header.cc
         helper/rip-helper.cc
         model/tcp-linux-reno.cc
+        model/tcp-cubic.cc
         )
 
 set(private_header_files
@@ -270,6 +271,7 @@ set(header_files
         model/rip-header.h
         helper/rip-helper.h
         model/tcp-linux-reno.h
+        model/tcp-cubic.h
         )
 
 set(libraries_to_link

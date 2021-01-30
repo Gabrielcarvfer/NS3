@@ -20,7 +20,8 @@ if(${NS3_MPI})
 
     set(libraries_to_link ${libcore} ${libnetwork})
 
-    set(test_sources)
+    set(test_sources
+            test/mpi-test-suite.cc)
 
     build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 endif()
