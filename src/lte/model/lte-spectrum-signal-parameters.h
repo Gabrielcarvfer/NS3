@@ -24,6 +24,7 @@
 
 
 #include <ns3/spectrum-signal-parameters.h>
+#include <bitset>
 
 namespace ns3 {
 
