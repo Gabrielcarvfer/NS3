@@ -3,7 +3,7 @@
 set (name core)
 
 #Set lib core link dependencies
-set(libraries_to_link)
+set(libraries_to_link dl backtrace)
 
 set(gsl_test_sources)
 if (${GSL_FOUND})

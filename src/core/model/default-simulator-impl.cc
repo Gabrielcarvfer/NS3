@@ -29,6 +29,8 @@
 #include "log.h"
 
 #include <cmath>
+#include <boost/stacktrace.hpp>
+
 
 
 /**
@@ -243,6 +245,9 @@ DefaultSimulatorImpl::Schedule (Time const &delay, EventImpl *event)
   m_uid++;
   m_unscheduledEvents++;
   m_events->Insert (ev);
+
+  //std::cout << "SimulationTime: " << m_currentTs << " CurrentEventID: " << m_currentUid << " ScheduledEventID: " << ev.key.m_uid << " ScheduledTimestamp: " << ev.key.m_ts << "\n";
+  //std::cout << boost::stacktrace::stacktrace() << "\n";
   return EventId (event, ev.key.m_ts, ev.key.m_context, ev.key.m_uid);
 }
 
@@ -261,6 +266,8 @@ DefaultSimulatorImpl::ScheduleWithContext (uint32_t context, Time const &delay, 
       ev.key.m_uid = m_uid;
       m_uid++;
       m_unscheduledEvents++;
+      //std::cout << "SimulationTime: " << m_currentTs << " CurrentEventID: " << m_currentUid << " ScheduledEventID: " << ev.key.m_uid << " ScheduledTimestamp: " << ev.key.m_ts << "\n";
+      //std::cout << boost::stacktrace::stacktrace() << "\n";
       m_events->Insert (ev);
     }
   else
@@ -291,6 +298,8 @@ DefaultSimulatorImpl::ScheduleNow (EventImpl *event)
   m_uid++;
   m_unscheduledEvents++;
   m_events->Insert (ev);
+  //std::cout << "SimulationTime: " << m_currentTs << " CurrentEventID: " << m_currentUid << " ScheduledEventID: " << ev.key.m_uid << " ScheduledTimestamp: " << ev.key.m_ts << "\n";
+  //std::cout << boost::stacktrace::stacktrace() << "\n";
   return EventId (event, ev.key.m_ts, ev.key.m_context, ev.key.m_uid);
 }
 
