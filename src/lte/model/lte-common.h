@@ -32,7 +32,7 @@
 //#define SRS_RATIO 0.071428571
 
 // see 36.213 section 8
-#define UL_PUSCH_TTIS_DELAY 4
+#define UL_PUSCH_TTIS_DELAY 2
 
 #define HARQ_PERIOD 7
 
