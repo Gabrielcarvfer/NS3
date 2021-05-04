@@ -113,7 +113,7 @@ def setup_simulations(createAndRunScenarios):
     simulationParameterFilesList = glob.glob(baseDir+os.sep+"**"+os.sep+"simulationParameters.json", recursive=True)
 
     from concurrent.futures.process import ProcessPoolExecutor
-    executor = ProcessPoolExecutor(max_workers=15)
+    executor = ProcessPoolExecutor(max_workers=5)
     sims = []
     for scenarioJson in simulationParameterFilesList:
         # Before executing anything, we check if the outputs file has been processed for that given scenario
@@ -475,7 +475,7 @@ if __name__ == "__main__":
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
         fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]),
                                  ncols=2*len(compiled_simulation_results["case"][simulation_case_key]["dsa"]),
-                                 figsize=(6*len(compiled_simulation_results["case"][simulation_case_key]["dsa"]), 6*len(usedAppsDict[simulation_case_key])), sharey=True, sharex=True, squeeze=False)
+                                 figsize=(6*len(compiled_simulation_results["case"][simulation_case_key]["dsa"]), 6*len(usedAppsDict[simulation_case_key])), sharey=False, sharex=True, squeeze=False)
         import matplotlib.pyplot as plt
         i = 0
         dsa_labels = ["                      Without\n                        PUs",
@@ -566,13 +566,15 @@ if __name__ == "__main__":
                         elif metric == "delay":
                             for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
                                 #delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
-                                histogram = [x*y for (x,y) in h.items()]
+                                histogram = []
+                                [histogram.extend([x]*y) for (x, y) in h.items()]
                                 delay_hist_agg.extend(histogram)
                                 del h, mean, std, histogram
                         else:
                             for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"]:
                                 #jitter_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
-                                histogram = [x*y for (x,y) in h.items()]
+                                histogram = []
+                                [histogram.extend([x] * y) for (x, y) in h.items()]
                                 jitter_hist_agg.extend(h)
                                 del h, mean, std, histogram
                     del batch
@@ -650,7 +652,7 @@ if __name__ == "__main__":
 
 
         # Time to plot aggregate throughput boxplots for the applications of each application (column) for each scenario
-        fig, axes = plt.subplots(nrows=1, ncols=2*3, figsize=(15, 8), sharex=True, sharey=True, squeeze=False)
+        fig, axes = plt.subplots(nrows=1, ncols=2*3, figsize=(15, 8), sharex=True, sharey=False, squeeze=False)
         i = 0
         k = 0
         dsa_labels = ["Without PUs",
