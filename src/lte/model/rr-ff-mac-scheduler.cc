@@ -1454,13 +1454,13 @@ RrFfMacScheduler::DoSchedUlTriggerReq (const struct FfMacSchedSapProvider::Sched
 
 
           cqi = m_amc->GetCqiFromSpectralEfficiency (s);
-          std::vector<double> sinrVec = (*itCqi).second;
-          int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
+          //std::vector<double> sinrVec = (*itCqi).second;
+          //int cqi2 = m_amc->GetCqiFromSinrDoubles(sinrVec, uldci.m_rbLen);
           //std::cout << Simulator::Now().GetSeconds() << ": cqiSpec " << (int) cqi << " cqiFeedback " << (int) cqi2 << std::endl;
           //for (auto value: sinrVec)
           //    std::cout << value << " ";
           //std::cout << "\n" << std::endl;
-          cqi = cqi2;// cqi > cqi2 ? cqi : cqi2;
+          //cqi = cqi2;// cqi > cqi2 ? cqi : cqi2;
 
           if (cqi == 0)
             {
