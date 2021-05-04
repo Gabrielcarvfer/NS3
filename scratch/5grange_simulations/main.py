@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 import shutil
 import multiprocessing
@@ -118,7 +120,7 @@ def setup_simulations(createAndRunScenarios):
         simulation_path = os.path.dirname(scenarioJson)
 
         # Run simulation if necessary and try to extract results into a single output file
-        sims += executor.submit(execute_simulation, simulation_path, baseDir)
+        sims.append(executor.submit(execute_simulation, simulation_path, baseDir))
 
     for sim in sims:
         sim.result()
@@ -205,7 +207,7 @@ if __name__ == "__main__":
     multiprocessing.freeze_support()
 
     # Select if you want to generate new simulation scenarios or run manually created ones
-    createAndRunScenarios = True
+    createAndRunScenarios = False
 
 
     # Output folder
@@ -371,8 +373,9 @@ if __name__ == "__main__":
 
                         delayMean   = 0
                         delayStdDev = 0
+                        histogram = []
                         if len(delay_histogram) > 0:
-                            histogram = [x*y for (x, y) in delay_histogram.items()]
+                            [histogram.extend([x]*y) for (x, y) in delay_histogram.items()]
                             delayMean = numpy.mean(histogram)
                             delayStdDev = numpy.std(histogram)
                             # mean + 1.5*sigma = >90% reliable
@@ -384,8 +387,9 @@ if __name__ == "__main__":
 
                         jitterMean   = 0
                         jitterStdDev = 0
+                        histogram = []
                         if len(jitter_histogram) > 0:
-                            histogram = [x*y for (x, y) in jitter_histogram.items()]
+                            [histogram.extend([x]*y) for (x, y) in jitter_histogram.items()]
                             jitterMean = numpy.mean(histogram)
                             jitterStdDev = numpy.std(histogram)
                             if jitterMean+2.5*jitterStdDev > application_KPIs[port]["latency"]:
