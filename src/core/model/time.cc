@@ -83,7 +83,10 @@ namespace {
 
 // The set of marked times
 // static
+#ifdef _MSC_VER
+#else
 Time::MarkedTimes * Time::g_markingTimes = 0;
+#endif
 
 /**
  * \internal

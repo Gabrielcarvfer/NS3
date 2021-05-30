@@ -18,7 +18,9 @@
  */
 
 #include <iostream>
-#include "unistd.h"
+#ifndef __WIN32__
+#include <unistd.h>
+#endif
 
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"

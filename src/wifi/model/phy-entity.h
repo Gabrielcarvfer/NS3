@@ -798,7 +798,11 @@ protected:
   std::map<UidStaIdPair, std::vector<bool> > m_statusPerMpduMap; //!< Map of the current reception status per MPDU that is filled in as long as MPDUs are being processed by the PHY in case of an A-MPDU
   std::map<UidStaIdPair, SignalNoiseDbm> m_signalNoiseMap; //!< Map of the latest signal power and noise power in dBm (noise power includes the noise figure)
 
+#ifndef _MSC_VER
   static uint64_t m_globalPpduUid; //!< Global counter of the PPDU UID
+#else
+  inline static uint64_t m_globalPpduUid = 0;
+#endif
 }; //class PhyEntity
 
 /**

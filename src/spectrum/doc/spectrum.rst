@@ -162,8 +162,8 @@ are mainly intended as a proof-of-concept and as an example for
 building custom models with the spectrum module. Here is a brief list
 of the available implementations:
 
- * ``SpectrumModel300Khz300GhzLog`` and
-   ``SpectrumModelIsm2400MhzRes1Mhz`` are two example ``SpectrumModel`` implementations
+ * ``SpectrumModel300Khz300GhzLog()`` and
+   ``SpectrumModelIsm2400MhzRes1Mhz()`` are two example ``SpectrumModel`` implementations
 
  * ``HalfDuplexIdealPhy``: a basic PHY model using a gaussian
    interference model (implemented in ``SpectrumInterference``)

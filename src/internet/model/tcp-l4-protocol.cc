@@ -64,7 +64,7 @@ NS_OBJECT_ENSURE_REGISTERED (TcpL4Protocol);
   if (m_node) { std::clog << " [node " << m_node->GetId () << "] "; }
 
 /* see http://www.iana.org/assignments/protocol-numbers */
-const uint8_t TcpL4Protocol::PROT_NUMBER = 6;
+const uint8_t TcpL4Protocol::PROT_NUMBER;
 
 TypeId
 TcpL4Protocol::GetTypeId (void)

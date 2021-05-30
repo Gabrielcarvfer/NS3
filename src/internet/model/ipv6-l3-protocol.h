@@ -71,7 +71,7 @@ public:
   /**
    * \brief The protocol number for IPv6 (0x86DD).
    */
-  static const uint16_t PROT_NUMBER;
+  static const uint16_t PROT_NUMBER = 0x86DD;
 
   /**
    * \enum DropReason

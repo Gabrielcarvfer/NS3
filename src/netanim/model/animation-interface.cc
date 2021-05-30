@@ -25,7 +25,7 @@
 
 
 #include <cstdio>
-#ifndef WIN32
+#ifndef __WIN32__
 #include <unistd.h>
 #endif
 #include <sstream>

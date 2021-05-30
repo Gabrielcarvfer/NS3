@@ -26,14 +26,8 @@
 
 namespace ns3 {
 
-
-extern Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz;
-
+Ptr<SpectrumModel> SpectrumModelIsm2400MhzRes1Mhz();
 
 }
-
-
-
-
 
 #endif /* FREQS_ISM2400MHZ_RES1MHZ_H */

@@ -34,7 +34,10 @@ namespace ns3 {
 NS_LOG_COMPONENT_DEFINE ("TcpTxBuffer");
 NS_OBJECT_ENSURE_REGISTERED (TcpTxBuffer);
 
+#ifndef _MSC_VER
 Callback<void, TcpTxItem *> TcpTxBuffer::m_nullCb = MakeNullCallback<void, TcpTxItem*> ();
+#endif
+
 TypeId
 TcpTxBuffer::GetTypeId (void)
 {

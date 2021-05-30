@@ -48,7 +48,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("Ipv4L3Protocol");
 
-const uint16_t Ipv4L3Protocol::PROT_NUMBER = 0x0800;
+const uint16_t Ipv4L3Protocol::PROT_NUMBER;
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv4L3Protocol);
 

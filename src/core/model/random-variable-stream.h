@@ -1044,8 +1044,11 @@ class NormalRandomVariable : public RandomVariableStream
 {
 public:
   /** Large constant to bound the range. */
-  static const double INFINITE_VALUE;
-
+    #ifdef _MSC_VER
+        constexpr static const double INFINITE_VALUE = 1e307;
+    #else
+        static const double INFINITE_VALUE;
+    #endif
   /**
    * \brief Register this type.
    * \return The object TypeId.

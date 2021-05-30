@@ -26,7 +26,11 @@
 #include "ns3/simulator.h"
 
 namespace ns3 {
+#ifndef _MSC_VER
 extern const double NaN; //!< Stored representation of NaN
+#else
+const double NaN = nan ((const char*)0);
+#endif
 
 /**
  * \brief true if x is NaN

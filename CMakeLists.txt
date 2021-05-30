@@ -25,7 +25,7 @@ if(CCACHE_FOUND)
   # Setting CCACHE_SLOPPINES here only works if you call cmake to build instead of using your build system. Just
   # configure ccache directly and it will do the trick. WARNING: ccache settings and version may cause it to may slown
   # down the build when using pch
-  set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros,file_macros")
+  set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
 endif(CCACHE_FOUND)
 
 # ######################################################################################################################

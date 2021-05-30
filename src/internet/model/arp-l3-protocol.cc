@@ -38,7 +38,7 @@ namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("ArpL3Protocol");
 
-const uint16_t ArpL3Protocol::PROT_NUMBER = 0x0806;
+const uint16_t ArpL3Protocol::PROT_NUMBER;
 
 NS_OBJECT_ENSURE_REGISTERED (ArpL3Protocol);
 

@@ -37,7 +37,7 @@ NS_LOG_COMPONENT_DEFINE ("Icmpv4L4Protocol");
 NS_OBJECT_ENSURE_REGISTERED (Icmpv4L4Protocol);
 
 // see rfc 792
-const uint8_t Icmpv4L4Protocol::PROT_NUMBER = 1;
+const uint8_t Icmpv4L4Protocol::PROT_NUMBER;
 
 TypeId 
 Icmpv4L4Protocol::GetTypeId (void)

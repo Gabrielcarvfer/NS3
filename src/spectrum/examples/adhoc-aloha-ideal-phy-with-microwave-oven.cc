@@ -233,7 +233,7 @@ int main (int argc, char** argv)
 
   SpectrumAnalyzerHelper spectrumAnalyzerHelper;
   spectrumAnalyzerHelper.SetChannel (channel);
-  spectrumAnalyzerHelper.SetRxSpectrumModel (SpectrumModelIsm2400MhzRes1Mhz);
+  spectrumAnalyzerHelper.SetRxSpectrumModel (SpectrumModelIsm2400MhzRes1Mhz());
   spectrumAnalyzerHelper.SetPhyAttribute ("Resolution", TimeValue (MilliSeconds (2)));
   spectrumAnalyzerHelper.SetPhyAttribute ("NoisePowerSpectralDensity", DoubleValue (1e-15));  // -120 dBm/Hz
   spectrumAnalyzerHelper.EnableAsciiAll ("spectrum-analyzer-output");

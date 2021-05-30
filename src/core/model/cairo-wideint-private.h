@@ -67,7 +67,7 @@
 #elif HAVE_SYS_INT_TYPES_H
 # include <sys/int_types.h>
 #elif defined(_MSC_VER)
-typedef __int8 int8_t;
+//typedef __int8 int8_t;
 typedef unsigned __int8 uint8_t;
 typedef __int16 int16_t;
 typedef unsigned __int16 uint16_t;
@@ -108,7 +108,7 @@ extern "C" {
 
 #if !HAVE_UINT64_T
 
-extern const char * cairo_impl64;
+ __declspec(dllimport) extern const char *cairo_impl64;
 
 typedef struct _cairo_uint64 {
   uint32_t    lo, hi;
@@ -149,7 +149,7 @@ int            cairo_I  _cairo_int64_lt (cairo_uint64_t a, cairo_uint64_t b);
 
 #else
 
-extern const char * cairo_impl64;
+ __declspec(dllimport) extern const char *cairo_impl64;
 
 typedef uint64_t    cairo_uint64_t;
 typedef int64_t     cairo_int64_t;
@@ -231,7 +231,7 @@ _cairo_int64_divrem (cairo_int64_t num, cairo_int64_t den);
 
 #if !HAVE_UINT128_T
 
-extern const char * cairo_impl128;
+ __declspec(dllimport) extern const char *cairo_impl128;
 
 typedef struct cairo_uint128 {
   cairo_uint64_t      lo, hi;
@@ -276,7 +276,7 @@ int             cairo_I _cairo_int128_lt (cairo_int128_t a, cairo_int128_t b);
 
 #else   /* !HAVE_UINT128_T */
 
-extern const char * cairo_impl128;
+ __declspec(dllimport) extern const char *cairo_impl128;
 
 typedef uint128_t       cairo_uint128_t;
 typedef int128_t        cairo_int128_t;

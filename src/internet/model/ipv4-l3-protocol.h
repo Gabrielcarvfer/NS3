@@ -85,7 +85,7 @@ public:
    * \return the object TypeId
    */
   static TypeId GetTypeId (void);
-  static const uint16_t PROT_NUMBER; //!< Protocol number (0x0800)
+  static const uint16_t PROT_NUMBER = 0x0800; //!< Protocol number (0x0800)
 
   Ipv4L3Protocol();
   virtual ~Ipv4L3Protocol ();

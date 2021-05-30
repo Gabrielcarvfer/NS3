@@ -19,7 +19,9 @@
 
 #include "ns3/int64x64.h"
 #include "ns3/test.h"
+#ifndef _MSC_VER
 #include "ns3/valgrind.h"  // Bug 1882
+#endif
 
 #include <cmath>    // fabs
 #include <iomanip>

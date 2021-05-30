@@ -337,7 +337,10 @@ CommandLine::PrintHelp (std::ostream &os) const
     << std::endl;
 }
 
+#ifndef _MSC_VER
 #include <unistd.h>  // getcwd
+#endif
+
 std::string
 CommandLine::GetVersion () const
 {

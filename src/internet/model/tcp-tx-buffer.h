@@ -619,7 +619,11 @@ private:
   bool     m_renoSack {false}; //!< Indicates if AddRenoSack was called
   bool     m_sackEnabled {true}; //!< Indicates if SACK is enabled on this connection
 
+#ifndef _MSC_VER
   static Callback<void, TcpTxItem *> m_nullCb; //!< Null callback for an item
+#else
+  inline static  Callback<void, TcpTxItem *> m_nullCb = MakeNullCallback<void, TcpTxItem*> ();
+#endif
 };
 
 /**

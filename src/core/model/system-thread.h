@@ -1,6 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
  * Copyright (c) 2008 INRIA
+ * Copyright (c) 2021 Universidade de Brasília
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -24,7 +25,9 @@
 #include "ns3/core-config.h"
 #include "callback.h"
 #ifdef HAVE_PTHREAD_H
-#include <pthread.h>
+    #include <pthread.h>
+#else
+    #include <thread>
 #endif /* HAVE_PTHREAD_H */
 
 /**
@@ -60,6 +63,8 @@ public:
 #ifdef HAVE_PTHREAD_H
   /** Type alias for the system-dependent thread object. */
   typedef pthread_t ThreadId;
+#else
+  typedef std::thread::id ThreadId;
 #endif
 
   /**
@@ -157,7 +162,6 @@ public:
   static bool Equals (ThreadId id);
 
 private:
-#ifdef HAVE_PTHREAD_H
   /**
    * Invoke the callback in the new thread.
    *
@@ -167,7 +171,10 @@ private:
   static void * DoRun (void *arg);
 
   Callback<void> m_callback;  /**< The main function for this thread when launched. */
+#ifdef HAVE_PTHREAD_H
   pthread_t m_thread;  /**< The thread id of the child thread. */
+#else
+  std::thread* m_thread;  /**< The thread id of the child thread. */
 #endif
 };
 

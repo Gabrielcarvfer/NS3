@@ -29,7 +29,7 @@
 #include <cstring>  // strlen
 #include <tuple>
 
-#if defined (HAVE_DIRENT_H) && defined (HAVE_SYS_TYPES_H)
+#if defined (HAVE_DIRENT_H) && defined (HAVE_SYS_TYPES_H) && !defined(_MSC_VER)
 /** Do we have an \c opendir function? */
 #define HAVE_OPENDIR
 #include <sys/types.h>
@@ -40,13 +40,9 @@
     #include <sys/types.h>
 #endif
 
-#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
+#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H) && !defined(_MSC_VER)
     /** Do we have a \c makedir function? */
     #define HAVE_MKDIR_H
-    #ifdef __WIN32__
-        #define WIN32_LEAN_AND_MEAN
-        #include <windows.h>
-    #endif
     #include <sys/types.h>
     #include <sys/stat.h>
 #endif
@@ -66,6 +62,13 @@
 
 #ifdef __linux__
 #include <unistd.h>
+#endif
+
+#if __WIN32__
+#include <windows.h>
+#if _MSC_VER
+#include <filesystem>
+#endif
 #endif
 
 /**
@@ -131,6 +134,9 @@ std::tuple<std::list<std::string>, bool> ReadFilesNoThrow (std::string path)
     }
   while (FindNextFile (hFind, &fileData));
   FindClose (hFind);
+#elif defined (_MSC_VER)
+  for(auto& p: std::filesystem::directory_iterator(path))
+      files.push_back(p.path().filename().string());
 #else
 #error "No support for reading a directory on this platform"
 #endif
@@ -198,7 +204,7 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__WIN32__)
+#elif defined (__WIN32__) && !defined(_MSC_VER)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *
@@ -247,6 +253,8 @@ std::string FindSelfDirectory (void)
     sysctl (mib, 4, buf, &bufSize, NULL, 0);
     filename = buf;
   }
+#elif defined(_MSC_VER)
+  return std::filesystem::current_path().string();
 #endif
   return Dirname (filename);
 }
@@ -313,8 +321,8 @@ std::string Join (std::list<std::string>::const_iterator begin,
 std::list<std::string> ReadFiles (std::string path)
 {
   NS_LOG_FUNCTION (path);
+  std::list<std::string> files;
 #if defined HAVE_OPENDIR
-    std::list<std::string> files;
   DIR *dp = opendir (path.c_str ());
   if (dp == NULL)
     {
@@ -327,6 +335,9 @@ std::list<std::string> ReadFiles (std::string path)
       de = readdir (dp);
     }
   closedir (dp);
+#elif defined (_MSC_VER)
+    for(auto& p: std::filesystem::directory_iterator(path))
+        files.push_back(p.path().filename().string());
 #else
 #error "No support for reading a directory on this platform"
 #endif
@@ -407,6 +418,11 @@ MakeDirectories (std::string path)
     #else
           makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
     #endif
+#endif
+
+#ifdef _MSC_VER
+      if (!std::filesystem::exists (tmp))
+        makeDirErr = !std::filesystem::create_directory (tmp);
 #endif
 
       if (makeDirErr)

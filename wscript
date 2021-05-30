@@ -644,7 +644,7 @@ def configure(conf):
 
         if sys.platform == 'win32':
             env.append_value("LINKFLAGS", "-Wl,--enable-runtime-pseudo-reloc")
-            env.append_value("CXXFLAGS", "-D_USE_MATH_DEFINES -D__WIN32__")
+            env.append_value("CXXFLAGS", "-D_USE_MATH_DEFINES -D__WIN32__ -DNOMINMAX -DWIN32_LEAN_AND_MEAN")
         elif sys.platform == 'cygwin':
             env.append_value("LINKFLAGS", "-Wl,--enable-auto-import")
 

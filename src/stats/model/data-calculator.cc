@@ -27,8 +27,10 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("DataCalculator");
 
+#ifndef _MSC_VER
 static double zero = 0;
 const double ns3::NaN = zero / zero;
+#endif
 
 //--------------------------------------------------------------
 //----------------------------------------------

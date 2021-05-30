@@ -39,7 +39,7 @@ jobs:
         run: |
           mkdir cmake-cache
           cd cmake-cache
-          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -DNS3_LINK_TIME_OPTIMIZATION=ON -G"Ninja"  ..
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Ninja"  ..
       - name: Build ns-3
         run: |
           cd cmake-cache
@@ -74,8 +74,8 @@ jobs:
           sudo apt-get -y install git gcc g++ cmake python make ninja-build
           #sudo apt-get -y install qt5-default
           #sudo apt-get -y install gdb valgrind
+          #sudo apt-get -y install mpi-default-dev mpi-default-bin # mpi tests with 3 nodes fail on the CI for some unknown reason
           sudo apt-get -y install tcpdump libgsl-dev libxml2-dev
-          #sudo apt-get -y install mpi-default-dev mpi-default-bin
           sudo apt-get -y install curl unzip tar
           sudo apt-get -y install ccache
     - name: Get timestamp
@@ -297,27 +297,31 @@ jobs:
         if: steps.ccache_results.outputs.cache_hit_rate != '100.00'    
         run: python3 test.py --nowaf
 
-  #Windows_Visual_Studio: # disable until remaining issues are not fixed and find a way to cache compilation artifacts
-  #  runs-on: windows-latest
-  #  defaults:
-  #    run:
-  #      shell: cmd
-  #  steps:
-  #    - uses: actions/checkout@v1
-  #    - uses: actions/setup-python@v2
-  #    - name: Configure CMake
-  #      run: |
-  #        %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-  #        mkdir cmake-cache
-  #        cd cmake-cache
-  #        cmake -DCMAKE_BUILD_TYPE=release -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Visual Studio 16 2019" -A x64 -T ClangCL ..
-  #    - name: Build ns-3
-  #      continue-on-error: true
-  #      run: |
-  #        %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
-  #        cd cmake-cache
-  #        cmake --build . --parallel 4
-  #    - name: Run tests and examples
-  #      run: python .\test.py --nowaf
+  Windows_Visual_Studio: # disable until remaining issues are not fixed and find a way to cache compilation artifacts
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: cmd
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v2
+      - name: Configure CMake
+        run: |
+          %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
+          mkdir cmake-cache
+          cd cmake-cache
+          cmake -DCMAKE_BUILD_TYPE=minsizerel -DNS3_EXAMPLES=ON -DNS3_TESTS=ON -G"Visual Studio 16 2019" -A x64 -T ClangCL ..
+      - name: Build ns-3
+        continue-on-error: true
+        run: |
+          %comspec% /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat"
+          cd cmake-cache
+          cmake --build . --parallel 4
+      - name: Run tests and examples
+        continue-on-error: true
+        timeout-minutes: 60
+        run: |
+          set PATH=%CD%\build;%PATH%
+          python .\test.py --nowaf
 
 

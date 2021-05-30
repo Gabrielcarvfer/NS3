@@ -69,7 +69,9 @@ std::ostream & operator << (std::ostream &os, const PhyEntity::PhyFieldRxStatus 
  *       Abstract base class for PHY entities
  *******************************************************/
 
+#ifndef _MSC_VER
 uint64_t PhyEntity::m_globalPpduUid = 0;
+#endif
 
 PhyEntity::~PhyEntity ()
 {

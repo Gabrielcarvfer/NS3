@@ -47,6 +47,8 @@
 
 using namespace ns3;
 
+const WifiMacQueue::ConstIterator WifiMacQueue::EMPTY = g_emptyWifiMacQueue.end ();
+
 /**
  * \ingroup wifi-test
  * \ingroup tests

@@ -61,36 +61,44 @@ elseif(${INT64X64} MATCHES "DOUBLE")
   set(int64x64_headers model/int64x64-double.h)
 elseif(${INT64X64} MATCHES "CAIRO")
   set(int64x64_sources model/int64x64-cairo.cc)
-  set(int64x64_headers model/int64x64-cairo.h model/cairo-wideint-private.h)
+  set(int64x64_headers model/cairo-wideint-private.h model/int64x64-cairo.h)
 endif()
 
 set(thread_sources)
 set(thread_headers)
 set(thread_test_sources)
 
-if(${NS3_PTHREAD})
-  if(${THREADS_FOUND})
-    if(WIN32)
+if(${THREADS_ENABLED})
+  if(WIN32)
       set(thread_sources model/win32-fd-reader.cc)
       set(thread_headers model/win32-fd-reader.h)
-      set(winsock_libraries)
-      if(NOT MSVC) # using pragma for MSVC
-        set(winsock_libraries wsock32 ws2_32)
-      endif()
-      set(libraries_to_link ${libraries_to_link} ${winsock_libraries})
-
     else()
       set(thread_sources model/unix-fd-reader.cc)
       set(thread_headers model/unix-fd-reader.h)
     endif()
-    set(thread_sources ${thread_sources} model/system-thread.cc model/unix-system-mutex.cc
-                       model/unix-system-condition.cc
-    )
 
+    if (${PTHREADS_FOUND})
+      if(WIN32)
+        set(libraries_to_link ${libraries_to_link} wsock32 ws2_32)
+      endif()
+
+      set(libraries_to_link ${libraries_to_link} pthread)
+      set(thread_sources
+              ${thread_sources}
+              model/system-thread.cc
+              model/unix-system-mutex.cc
+              model/unix-system-condition.cc
+              )
+    else()
+      set(thread_sources
+              ${thread_sources}
+              model/cpp-system-thread.cc
+              model/cpp-system-mutex.cc
+              model/cpp-system-condition.cc
+              )
+    endif()
     set(thread_headers ${thread_headers} model/system-mutex.h model/system-thread.h model/system-condition.h)
-    set(libraries_to_link ${libraries_to_link} pthread)
     set(thread_test_sources test/threaded-test-suite.cc)
-  endif()
 endif()
 
 if(WSLv1)

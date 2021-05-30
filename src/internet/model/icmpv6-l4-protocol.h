@@ -62,7 +62,7 @@ public:
   /**
    * \brief ICMPv6 protocol number (58).
    */
-  static const uint8_t PROT_NUMBER;
+  static const uint8_t PROT_NUMBER = 58;
 
   /**
    * \brief Neighbor Discovery node constants: max multicast solicitations.

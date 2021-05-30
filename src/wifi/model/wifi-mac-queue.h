@@ -40,6 +40,7 @@ class QosBlockedDestinations;
 // ns3::Queue<WifiMacQueueItem>"
 extern template class Queue<WifiMacQueueItem>;
 
+static std::list<Ptr<WifiMacQueueItem>> g_emptyWifiMacQueue; //!< empty Wi-Fi MAC queue
 
 /**
  * \ingroup wifi

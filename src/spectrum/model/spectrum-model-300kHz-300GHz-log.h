@@ -26,13 +26,8 @@
 
 namespace ns3 {
 
-
-extern Ptr<SpectrumModel> SpectrumModel300Khz300GhzLog;
-
+Ptr<SpectrumModel> SpectrumModel300Khz300GhzLog();
 
 }
-
-
-
 
 #endif /*  FREQS_300KHZ_300GHZ_LOG_H */

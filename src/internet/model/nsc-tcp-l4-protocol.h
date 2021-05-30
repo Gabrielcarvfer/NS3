@@ -46,7 +46,7 @@ class NetDevice;
  */
 class NscTcpL4Protocol : public IpL4Protocol {
 public:
-  static const uint8_t PROT_NUMBER; //!< protocol number (0x6)
+  static const uint8_t PROT_NUMBER = 6; //!< protocol number (0x6)
   /**
    * \brief Get the type ID.
    * \return the object TypeId

@@ -507,4 +507,4 @@ EpcPgwApplication::SetUeAddress6 (uint64_t imsi, Ipv6Address ueAddr)
   ueit->second->SetUeAddr6 (ueAddr);
 }
 
-}  // namespace ns3
+};  // namespace ns3
