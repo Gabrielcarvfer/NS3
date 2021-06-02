@@ -40,6 +40,10 @@ macro(ns3_cmake_package)
   # Hack to get the install_manifest.txt file before finishing the installation, which we can then install along with
   # ns3 to make uninstallation trivial
   set(sep "/")
+  if(WIN32)
+    # This looks completely stupid, and it is. Cmake escaping twice the double backslash used by windows (2->4->8)...
+    set(sep "\\\\\\\\")
+  endif()
   install(
     CODE "string(REPLACE \";\" \"\\n\" MY_CMAKE_INSTALL_MANIFEST_CONTENT \"\$\{CMAKE_INSTALL_MANIFEST_FILES\}\")\n\
             string(REPLACE \"/\" \"${sep}\" MY_CMAKE_INSTALL_MANIFEST_CONTENT_FINAL \"\$\{MY_CMAKE_INSTALL_MANIFEST_CONTENT\}\")\n\
@@ -49,8 +53,17 @@ macro(ns3_cmake_package)
 endmacro()
 
 # You will need administrative privileges to run this
-add_custom_target(
-  uninstall COMMAND rm -R `cat ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3/manifest.txt` && rm -R
-                    ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3 && rm -R ${CMAKE_INSTALL_FULL_INCLUDEDIR}/ns3
-)
-
+if(WIN32)
+  add_custom_target(
+    uninstall
+    COMMAND
+      powershell -Command \" Get-Content \\"${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3/manifest.txt\\" | Remove-Item \" &&
+      powershell -Command \" Remove-Item \\"${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3\\" -Recurse \" && powershell
+      -Command \" Remove-Item \\"${CMAKE_INSTALL_FULL_INCLUDEDIR}/ns3\\" -Recurse \"
+  )
+else()
+  add_custom_target(
+    uninstall COMMAND rm -R `cat ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3/manifest.txt` && rm -R
+                      ${CMAKE_INSTALL_FULL_LIBDIR}/cmake/ns3 && rm -R ${CMAKE_INSTALL_FULL_INCLUDEDIR}/ns3
+  )
+endif()

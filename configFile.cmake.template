@@ -1,0 +1,46 @@
+message(WARNING "Configuration file being used")
+# common options
+#set(NS3_ASSERT ON)
+#set(NS3_EXAMPLES ON)
+#set(NS3_LOG ON)
+#set(NS3_TESTS ON)
+
+# fd-net-device options
+#set(NS3_EMU ON)
+#set(NS3_PLANETLAB ON)
+#set(NS3_TAP ON)
+
+# maintenance and documentation
+#set(NS3_COVERAGE ON)
+#set(NS3_CLANG_FORMAT ON)
+#set(NS3_CLANG_TIDY ON)
+#set(NS3_DOCS ON)
+#set(NS3_SANITIZE ON)
+#set(NS3_SCAN_PYTHON_BINDINGS ON)
+#set(NS3_LINK_WHAT_YOU_USE ON)
+#set(NS3_INCLUDE_WHAT_YOU_USE ON)
+
+# 3rd-party libraries/programs
+#set(NS3_BRITE ON)
+#set(NS3_CLICK ON)
+#set(NS3_NETANIM ON)
+#set(NS3_OPENFLOW ON)
+
+# other options
+#set(NS3_ENABLE_BUILD_VERSION ON)
+#set(NS3_GNUPLOT ON)
+#set(NS3_GSL ON)
+#set(NS3_GTK3 ON)
+#set(NS3_LINK_TIME_OPTIMIZATION ON)
+#set(NS3_MPI OFF)
+#set(NS3_NATIVE_OPTIMIZATIONS ON)
+#set(NS3_NSC ON) # currently not supported
+#set(NS3_PRECOMPILE_HEADERS ON)
+#set(NS3_PTHREAD ON)
+#set(NS3_PYTHON_BINDINGS ON)
+#set(NS3_REALTIME ON)
+#set(NS3_STATIC ON)
+
+# custom options
+#set(NS3_PYTORCH ON)
+#set(AUTOINSTALL_DEPENDENCIES ON)

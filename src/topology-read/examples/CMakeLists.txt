@@ -5,5 +5,5 @@ if(PCRE_FOUND)
   set(libraries_to_link ${libtopology-read} ${libinternet} ${libnix-vector-routing} ${libpoint-to-point}
                         ${libapplications}
   )
-    build_lib_example("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
+  build_lib_example("${name}" "${source_files}" "${header_files}" "${libraries_to_link}")
 endif()

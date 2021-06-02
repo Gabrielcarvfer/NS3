@@ -138,7 +138,7 @@ set(source_files
     model/tcp-linux-reno.cc
 )
 
-set(private_header_files)
+set(private_header_files model/win32-internet-private.h)
 
 set(header_files
     ${header_files}
@@ -344,4 +344,4 @@ set(test_sources
 
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
 
-# file(COPY ${private_header_files} DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/private)
+file(COPY "${private_header_files}" DESTINATION ${CMAKE_HEADER_OUTPUT_DIRECTORY}/private)

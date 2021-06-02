@@ -27,14 +27,14 @@ function(fetch_ns3_store_module modulename subfolder src_type url tag_or_hash pa
     # Only fetch archives if store/module doesn't exist, to prevent overwriting modified sources
     if( (NOT (EXISTS ${module_dir})) OR ( (EXISTS ${module_dir}) AND NOT (EXISTS ${module_dir}/.git) ) )
         include(FetchContent)
-        if(${src_type} MATCHES "URL")
+        if("${src_type}" MATCHES "URL")
             FetchContent_Declare(
                     ${modulename}-module
                     URL ${url}
                     URL_HASH ${tag_or_hash}
                     SOURCE_DIR ${module_dir}
             )
-        elseif(${src_type} MATCHES "GIT")
+        elseif("${src_type}" MATCHES "GIT")
             FetchContent_Declare(
                     ${modulename}-module
                     GIT_REPOSITORY ${url}

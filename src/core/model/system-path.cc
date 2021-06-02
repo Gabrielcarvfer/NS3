@@ -35,13 +35,26 @@
 #include <sys/types.h>
 #include <dirent.h>
 #endif
-#if defined (HAVE_SYS_STAT_H) && defined (HAVE_SYS_TYPES_H)
-/** Do we have a \c makedir function? */
-#define HAVE_MKDIR_H
-#include <sys/types.h>
-#include <sys/stat.h>
+
+#ifdef HAVE_OPENDIR
+    #include <sys/types.h>
 #endif
+
+#if defined (HAVE_SYS_STAT_H) and defined (HAVE_SYS_TYPES_H)
+    /** Do we have a \c makedir function? */
+    #define HAVE_MKDIR_H
+    #ifdef __WIN32__
+        #define WIN32_LEAN_AND_MEAN
+        #include <windows.h>
+    #endif
+    #include <sys/types.h>
+    #include <sys/stat.h>
+#endif
+
 #include <sstream>
+#include <ctime>
+
+
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif /* __APPLE__ */
@@ -59,7 +72,7 @@
  * \def SYSTEM_PATH_SEP
  * System-specific path separator used between directory names.
  */
-#if defined (__win32__)
+#if defined (__WIN32__)
 #define SYSTEM_PATH_SEP "\\"
 #else
 #define SYSTEM_PATH_SEP "/"
@@ -185,20 +198,20 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__win32__)
+#elif defined (__WIN32__)
   {
     /** \todo untested. it should work if code is compiled with
      *  LPTSTR = char *
      */
     DWORD size = 1024;
     LPTSTR lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-    DWORD status = GetModuleFilename (0, lpFilename, size);
+    DWORD status = GetModuleFileName (0, lpFilename, size);
     while (status == size)
       {
-        size = size * 2;
-        free (lpFilename);
-        lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-        status = GetModuleFilename (0, lpFilename, size);
+	size = size * 2;
+	free (lpFilename);
+	lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
+	status = GetModuleFileName (0, lpFilename, size);
       }
     NS_ASSERT (status != 0);
     filename = lpFilename;
@@ -300,13 +313,23 @@ std::string Join (std::list<std::string>::const_iterator begin,
 std::list<std::string> ReadFiles (std::string path)
 {
   NS_LOG_FUNCTION (path);
-  bool err;
-  std::list<std::string> files;
-  std::tie (files, err) = ReadFilesNoThrow (path);
-  if (err)
+#if defined HAVE_OPENDIR
+    std::list<std::string> files;
+  DIR *dp = opendir (path.c_str ());
+  if (dp == NULL)
     {
       NS_FATAL_ERROR ("Could not open directory=" << path);
     }
+  struct dirent *de = readdir (dp);
+  while (de != 0)
+    {
+      files.push_back (de->d_name);
+      de = readdir (dp);
+    }
+  closedir (dp);
+#else
+#error "No support for reading a directory on this platform"
+#endif
   return files;
 }
 
@@ -379,7 +402,11 @@ MakeDirectories (std::string path)
       bool makeDirErr = false;
 
 #if defined(HAVE_MKDIR_H)
-      makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #ifdef __WIN32__
+          makeDirErr = mkdir (tmp.c_str ());
+    #else
+          makeDirErr = mkdir (tmp.c_str (), S_IRWXU);
+    #endif
 #endif
 
       if (makeDirErr)

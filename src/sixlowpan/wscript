@@ -1,4 +1,5 @@
 ## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+import sys
 
 def build(bld):
     module = bld.create_ns3_module('sixlowpan', ['internet', 'network', 'core'])
@@ -21,9 +22,10 @@ def build(bld):
     # This suite runs an example, only include if examples are built
     # Tests encapsulating example programs should be listed here
     if (bld.env['ENABLE_EXAMPLES']):
-        module_test.source.extend([
-            'test/sixlowpan-examples-test-suite.cc',
-            ])
+        if sys.platform != 'win32':
+            module_test.source.extend([
+                'test/sixlowpan-examples-test-suite.cc',
+                ])
     
     headers = bld(features=['ns3header'])
     headers.module = 'sixlowpan'

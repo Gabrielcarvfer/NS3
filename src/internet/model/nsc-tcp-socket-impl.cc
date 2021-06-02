@@ -35,9 +35,15 @@
 
 #include <algorithm>
 
+#ifdef __WIN32__
+    #include "win32-internet-private.h"
+#else
+    #include <netinet/in.h>
+    #include <sys/socket.h>
+#endif
+
 // for ntohs().
 #include <arpa/inet.h>
-#include <netinet/in.h>
 #include "sim_interface.h"
 
 #include "sim_errno.h"

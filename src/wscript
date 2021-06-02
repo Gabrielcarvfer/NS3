@@ -137,6 +137,9 @@ def apply_incpaths_ns3testlib(self):
     if not self.source:
         return
     testdir = self.to_nodes(self.source[-1])[0].parent.path_from(self.bld.srcnode)
+
+    if sys.platform == 'win32':
+        testdir = testdir.replace('\\', '\\\\')
     self.env.append_value("DEFINES", 'NS_TEST_SOURCEDIR="%s"' % (testdir,))
 
 

@@ -76,6 +76,11 @@ macro(
     )
   endif()
 
+  if(${MSVC})
+    # /OPT:NOREF prevents the compiler and linker from removing unused symbols/functions
+    target_link_options(${lib${libname}} PUBLIC /OPT:NOREF)
+  endif()
+
   # Write a module header that includes all headers from that module
   write_module_header("${libname}" "${header_files}")
 
@@ -92,19 +97,30 @@ macro(
       )
 
       get_property(local-ns3-libs-tests GLOBAL PROPERTY ns3-libs-tests)
+      if(WIN32)
+        set_property(GLOBAL PROPERTY ns3-libs-tests "${local-ns3-libs-tests};$<TARGET_OBJECTS:${test${libname}}>")
 
-      set_property(GLOBAL PROPERTY ns3-libs-tests "${local-ns3-libs-tests};${test${libname}}")
+        # Create shared library containing tests of the module
+        add_library(${test${libname}} OBJECT "${test_sources}")
 
-      # Create shared library containing tests of the module
-      add_library(${test${libname}} SHARED "${test_sources}")
+        # Append external libraries to a list that will be linked against test-runner
+        get_property(local-ns3-libs-tests-external GLOBAL PROPERTY ns3-libs-tests-external)
+        set_property(GLOBAL PROPERTY ns3-libs-tests-external "${local-ns3-libs-tests-external};${non_ns_libraries_to_link}")
+      else()
+        set_property(GLOBAL PROPERTY ns3-libs-tests "${local-ns3-libs-tests};${test${libname}}")
 
-      # Link test library to the module library
-      target_link_libraries(
-        ${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST}
-      )
-      set_target_properties(${test${libname}} PROPERTIES OUTPUT_NAME ns${NS3_VER}-${libname}-test-${build_type})
+        # Create shared library containing tests of the module
+        add_library(${test${libname}} SHARED "${test_sources}")
+
+        # Link test library to the module library
+        target_link_libraries(
+          ${test${libname}} ${LIB_AS_NEEDED_PRE} ${lib${libname}} "${libraries_to_link}" ${LIB_AS_NEEDED_POST}
+        )
+        set_target_properties(${test${libname}} PROPERTIES OUTPUT_NAME ns${NS3_VER}-${libname}-test-${build_type})
+      endif()
 
       target_compile_definitions(${test${libname}} PRIVATE NS_TEST_SOURCEDIR="${folder}/${libname}/test")
+
       if(${NS3_PRECOMPILE_HEADERS})
         target_precompile_headers(${test${libname}} REUSE_FROM stdlib_pch)
       endif()

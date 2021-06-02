@@ -276,9 +276,10 @@ def build(bld):
         ]
 
     if (bld.env['ENABLE_EXAMPLES']):
-        core_test.source.extend([
-            'test/examples-as-tests-test-suite.cc',
-            ])
+        if sys.platform != 'win32':
+            core_test.source.extend([
+                'test/examples-as-tests-test-suite.cc',
+                ])
 
     headers = bld(features='ns3header')
     headers.module = 'core'
@@ -421,21 +422,37 @@ def build(bld):
         core_test.use.append('RT')
 
     if env['ENABLE_THREADING']:
-        core.source.extend([
-            'model/system-thread.cc',
-            'model/unix-fd-reader.cc',
-            'model/unix-system-mutex.cc',
-            'model/unix-system-condition.cc',
-            ])
         core.use.append('PTHREAD')
         core_test.use.append('PTHREAD')
         core_test.source.extend(['test/threaded-test-suite.cc'])
+        core.source.extend([
+            'model/system-thread.cc',
+            'model/unix-system-mutex.cc',
+            'model/unix-system-condition.cc',
+            ])
         headers.source.extend([
-                'model/unix-fd-reader.h',
-                'model/system-mutex.h',
-                'model/system-thread.h',
-                'model/system-condition.h',
+            'model/system-mutex.h',
+            'model/system-thread.h',
+            'model/system-condition.h',
+            ])
+
+        if sys.platform == 'win32':
+            core.source.extend([
+                'model/win32-fd-reader.cc',
                 ])
+            headers.source.extend([
+                'model/win32-fd-reader.h',
+                ])
+            core.env.append_value('LIB', 'ws2_32')
+            core.env.append_value('LIB', 'wsock32')
+        else:
+            core.source.extend([
+                'model/unix-fd-reader.cc',
+                ])
+            headers.source.extend([
+                'model/unix-fd-reader.h',
+                ])
+	        
 
     if env['ENABLE_GSL']:
         core.use.extend(['GSL', 'GSLCBLAS', 'M'])

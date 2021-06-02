@@ -551,7 +551,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt, u_int32_t nPktEnqueued, u_int32_t nQueueFlows);
+  void AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt, uint32_t nPktEnqueued, uint32_t nQueueFlows);
   void Dequeue (Ptr<FqCobaltQueueDisc> queue, uint32_t nPkt);
   void DequeueWithDelay (Ptr<FqCobaltQueueDisc> queue, double delay, uint32_t nPkt);
   void DropNextTracer (int64_t oldVal, int64_t newVal);
@@ -569,7 +569,7 @@ FqCobaltQueueDiscEcnMarking::~FqCobaltQueueDiscEcnMarking ()
 }
 
 void
-FqCobaltQueueDiscEcnMarking::AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt, u_int32_t nPktEnqueued, u_int32_t nQueueFlows)
+FqCobaltQueueDiscEcnMarking::AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt, uint32_t nPktEnqueued, uint32_t nQueueFlows)
 {
   Address dest;
   Ptr<Packet> p = Create<Packet> (100);
@@ -955,7 +955,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt);
+  void AddPacket (Ptr<FqCobaltQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt);
   void AddPacketWithDelay (Ptr<FqCobaltQueueDisc> queue,Ipv4Header hdr, double delay, uint32_t nPkt);
   void Dequeue (Ptr<FqCobaltQueueDisc> queue, uint32_t nPkt);
   void DequeueWithDelay (Ptr<FqCobaltQueueDisc> queue, double delay, uint32_t nPkt);

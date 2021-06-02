@@ -44,9 +44,14 @@
 
 #include <string>
 #include <limits>
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <sys/types.h>
+
+#ifdef __WIN32__
+    #include "ns3/private/win32-internet-private.h"
+#else
+    #include <netinet/in.h>
+    #include <sys/socket.h>
+#endif
 
 using namespace ns3;
 

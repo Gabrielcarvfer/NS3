@@ -57,6 +57,9 @@ if(${ENABLE_FDNETDEV})
 
   macro(exec_name name)
     set(${name} ${name})
+    if(WIN32)
+      set(${name} ${name}.exe)
+    endif()
   endmacro()
 
   if(${ENABLE_EMU})

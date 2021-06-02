@@ -1,5 +1,18 @@
+# Copyright (c) 2017-2021 Universidade de Brasília
+#
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+# License version 2 as published by the Free Software Foundation;
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# Author: Gabriel Ferreira <gabrielcarvfer@gmail.com>
+
 # ######################################################################################################################
-# Required CMake version            #
+# Required CMake version#
 # ######################################################################################################################
 cmake_minimum_required(VERSION 3.16)
 
@@ -12,7 +25,7 @@ if(CCACHE_FOUND)
   # Setting CCACHE_SLOPPINES here only works if you call cmake to build instead of using your build system. Just
   # configure ccache directly and it will do the trick. WARNING: ccache settings and version may cause it to may slown
   # down the build when using pch
-  set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros")
+  set(ENV{CCACHE_SLOPPINESS} "pch_defines,time_macros,file_macros")
 endif(CCACHE_FOUND)
 
 # ######################################################################################################################
@@ -65,6 +78,15 @@ option(NS3_PTHREAD "Build with pthread support" ON)
 option(NS3_PYTHON_BINDINGS "Build ns-3 python bindings" OFF)
 option(NS3_REALTIME "Build with realtime support" ON)
 option(NS3_STATIC "Build a static ns-3 library and link it against executables" OFF)
+
+# custom options
+option(NS3_PYTORCH "Build components that rely on PyTorch support" OFF)
+option(AUTOINSTALL_DEPENDENCIES "Automatically download and compile required dependencies with Vcpkg" OFF)
+
+# Check if optional configuration file (configFile.cmake) exists. It will overlap command line arguments.
+if(EXISTS ${CMAKE_SOURCE_DIR}/configFile.cmake)
+  include(${CMAKE_SOURCE_DIR}/configFile.cmake)
+endif()
 
 # Scan module libraries
 subdirlist(libs_to_build ${CMAKE_SOURCE_DIR}/src)

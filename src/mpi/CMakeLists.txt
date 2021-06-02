@@ -19,7 +19,7 @@ set(header_files model/mpi-receiver.h model/mpi-interface.h model/parallel-commu
 set(libraries_to_link ${libcore} ${libnetwork} ${MPI_CXX_LIBRARIES})
 
 set(example_as_test_suite)
-if(${NS3_EXAMPLES})
+if(${NS3_EXAMPLES} AND (NOT WIN32))
   set(example_as_test_suite test/mpi-test-suite.cc)
 endif()
 

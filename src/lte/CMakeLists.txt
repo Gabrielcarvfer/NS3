@@ -1,5 +1,11 @@
 set(name lte)
 
+set(nn_libraries)
+
+if(${TORCH_FOUND})
+  set(nn_libraries "${TORCH_LIBRARIES}")
+endif()
+
 if(${NS3_EMU})
   set(emu_sources helper/emu-epc-helper.cc)
   set(emu_headers helper/emu-epc-helper.h)
@@ -280,6 +286,7 @@ set(libraries_to_link
     ${libapplications}
     ${libinternet}
     ${libcsma}
+    "${nn_libraries}"
 )
 
 set(test_sources

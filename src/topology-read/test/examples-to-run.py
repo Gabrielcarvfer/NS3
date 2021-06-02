@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 ## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
-
+import sys
 # A list of C++ examples to run in order to ensure that they remain
 # buildable and runnable over time.  Each tuple in the list contains
 #
@@ -9,8 +9,12 @@
 # See test.py for more information.
 cpp_examples = [
     ("Inet_small_toposample.txt", "True", "True"),
-    ("RocketFuel_toposample_1239_weights.txt", "True", "True"),
 ]
+
+if sys.platform != 'win32':
+	cpp_examples.extend([
+		("RocketFuel_toposample_1239_weights.txt", "True", "True"),
+		])
 
 # A list of Python examples to run in order to ensure that they remain
 # runnable over time.  Each tuple in the list contains

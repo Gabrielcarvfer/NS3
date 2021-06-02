@@ -42,7 +42,12 @@
 #include <dlfcn.h>
 #include <iomanip>
 
-#include <netinet/in.h>
+#ifdef __WIN32__
+    #include "win32-internet-private.h"
+#else
+    #include <netinet/in.h>
+#endif
+
 #include <arpa/inet.h>
 
 namespace ns3 {

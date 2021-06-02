@@ -181,7 +181,11 @@ set(header_files
 
 set(resource_files resources.qrc qtpropertybrowser/src/qtpropertybrowser.qrc)
 
-add_executable(netanim ${source_files} ${resource_files})
+if(WIN32)
+  add_executable(netanim WIN32 ${source_files} ${resource_files})
+else()
+  add_executable(netanim ${source_files} ${resource_files})
+endif()
 
 if(Qt4_FOUND)
   target_link_libraries(netanim PUBLIC ${libcore} Qt4::QtGui)

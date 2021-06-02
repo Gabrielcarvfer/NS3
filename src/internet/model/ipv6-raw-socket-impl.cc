@@ -18,8 +18,13 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
-#include <netinet/in.h>
-#include <sys/socket.h>
+#ifdef __WIN32__
+    #include "win32-internet-private.h"
+#else
+    #include <netinet/in.h>
+    #include <sys/socket.h>
+#endif
+
 #include <sys/types.h>
 #include "ns3/inet6-socket-address.h"
 #include "ns3/node.h"

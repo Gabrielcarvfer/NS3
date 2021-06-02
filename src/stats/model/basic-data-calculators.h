@@ -323,13 +323,16 @@ template <typename T>
 TypeId
 CounterCalculator<T>::GetTypeId (void)
 {
-  static TypeId tid = TypeId ( ("ns3::CounterCalculator<"
-                                + TypeNameGet<T> ()
-                                + ">").c_str () )
-    .SetParent<Object> ()
-    .SetGroupName ("Stats")
-    .AddConstructor<CounterCalculator<T> > ()
-    ;
+  std::string type = "ns3::CounterCalculator<"
+                      + TypeNameGet<T> ()
+                      + ">";
+  static TypeId tid;
+  if(!TypeId::LookupByNameFailSafe(type.c_str(), &tid))
+    tid = TypeId ( type.c_str () )
+        .SetParent<Object> ()
+        .SetGroupName ("Stats")
+        .AddConstructor<CounterCalculator<T> > ()
+        ;
   return tid;
 }
 

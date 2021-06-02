@@ -39,6 +39,10 @@
 #include <iostream>
 #include <iomanip>
 
+#ifdef __WSLv1__
+extern void wslv1_workaround();
+#endif
+
 /**
  * \file
  * \ingroup simulator
@@ -103,6 +107,9 @@ static SimulatorImpl * GetImpl (void)
    */
   if (*pimpl == 0)
     {
+#ifdef __WSLv1__
+      wslv1_workaround();
+#endif
       {
         ObjectFactory factory;
         StringValue s;

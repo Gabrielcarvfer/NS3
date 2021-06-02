@@ -8,13 +8,25 @@ endforeach()
 if(${NS3_STATIC})
   add_library(${lib-ns3-static} STATIC ${PROJECT_SOURCE_DIR}/buildsupport/empty.cc "${lib-ns3-static-objs}")
   get_property(local-ns3-external-libs GLOBAL PROPERTY ns3-external-libs)
-  target_link_libraries(
-    ${lib-ns3-static}
-    -static
-    -static-libstdc++
-    -static-libgcc
-    ${LIB_AS_NEEDED_PRE_STATIC}
-    ${local-ns3-external-libs}
-    ${LIB_AS_NEEDED_POST_STATIC}
-  )
+
+  if(WIN32)
+    target_link_libraries(
+            ${lib-ns3-static}
+            -static
+            -static-libstdc++
+            -static-libgcc
+            ${LIB_AS_NEEDED_POST_STATIC}
+            ${local-ns3-external-libs}
+    )
+  else()
+    target_link_libraries(
+            ${lib-ns3-static}
+            -static
+            -static-libstdc++
+            -static-libgcc
+            ${LIB_AS_NEEDED_PRE_STATIC}
+            ${local-ns3-external-libs}
+            ${LIB_AS_NEEDED_POST_STATIC}
+    )
+  endif()
 endif()

@@ -1,3 +1,16 @@
+# Copyright (c) 2017-2021 Universidade de Brasília
+#
+# This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public
+# License version 2 as published by the Free Software Foundation;
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+# warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with this program; if not, write to the Free
+# Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# Author: Gabriel Ferreira <gabrielcarvfer@gmail.com>
+
 # Set module name
 set(name core)
 
@@ -6,6 +19,7 @@ set(libraries_to_link)
 
 set(gsl_test_sources)
 if(${GSL_FOUND})
+  include_directories(${GSL_INCLUDE_DIRS})
   set(libraries_to_link ${libraries_to_link} ${GSL_LIBRARIES})
   set(gsl_test_sources test/rng-test-suite.cc test/random-variable-stream-test-suite.cc)
 endif()
@@ -31,8 +45,11 @@ if(${ENABLE_REALTIME})
 endif()
 
 set(osclock_sources)
-set(osclock_sources model/unix-system-wall-clock-ms.cc)
-
+if(WIN32)
+  set(osclock_sources model/win32-system-wall-clock-ms.cc)
+else()
+  set(osclock_sources model/unix-system-wall-clock-ms.cc)
+endif()
 
 set(int64x64_sources)
 set(int64x64_headers)
@@ -53,8 +70,19 @@ set(thread_test_sources)
 
 if(${NS3_PTHREAD})
   if(${THREADS_FOUND})
-    set(thread_sources model/unix-fd-reader.cc)
-    set(thread_headers model/unix-fd-reader.h)
+    if(WIN32)
+      set(thread_sources model/win32-fd-reader.cc)
+      set(thread_headers model/win32-fd-reader.h)
+      set(winsock_libraries)
+      if(NOT MSVC) # using pragma for MSVC
+        set(winsock_libraries wsock32 ws2_32)
+      endif()
+      set(libraries_to_link ${libraries_to_link} ${winsock_libraries})
+
+    else()
+      set(thread_sources model/unix-fd-reader.cc)
+      set(thread_headers model/unix-fd-reader.h)
+    endif()
     set(thread_sources ${thread_sources} model/system-thread.cc model/unix-system-mutex.cc
                        model/unix-system-condition.cc
     )
@@ -65,7 +93,11 @@ if(${NS3_PTHREAD})
   endif()
 endif()
 
-if(${NS3_EXAMPLES})
+if(WSLv1)
+  set(wslv1_sources ${PROJECT_SOURCE_DIR}/buildsupport/wslv1_workaround.cc)
+endif()
+
+if(${NS3_EXAMPLES} AND (NOT WIN32))
   set(example_as_test_sources model/example-as-test.cc)
   set(example_as_test_headers model/example-as-test.h)
   set(example_as_test_suite test/examples-as-tests-test-suite.cc)
@@ -81,6 +113,7 @@ endif()
 
 # Define core lib sources
 set(source_files
+    ${wslv1_sources}
     ${rt_sources}
     ${osclock_sources}
     ${int64x64_sources}
@@ -291,3 +324,7 @@ set(test_sources
 
 # Build core lib
 build_lib("${name}" "${source_files}" "${header_files}" "${libraries_to_link}" "${test_sources}")
+
+if(WSLv1)
+  target_compile_definitions(${libcore-obj} PRIVATE -D__WSLv1__)
+endif()

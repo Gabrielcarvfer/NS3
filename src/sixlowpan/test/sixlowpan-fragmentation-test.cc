@@ -40,7 +40,12 @@
 
 #include <string>
 #include <limits>
+
+#ifdef __WIN32__
+#include "ns3/private/win32-internet-private.h"
+#else
 #include <netinet/in.h>
+#endif
 
 using namespace ns3;
 

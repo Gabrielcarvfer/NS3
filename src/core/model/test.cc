@@ -440,7 +440,22 @@ TestCase::CreateTempDirFilename (std::string filename)
       const TestCase *current = this;
       while (current != 0)
         {
-          names.push_front (current->m_name);
+            //Windows doesn't like paths with empty spaces or special symbols(e.g :), so enforce underline
+          #ifdef __WIN32__
+            std::string underlined_name = current->m_name;
+            for (unsigned int i =0; i < underlined_name.size(); i++)
+                switch(underlined_name[i])
+                {
+                    case ' ':
+                    case ':':
+                        underlined_name[i] = '_';
+                    default:
+                        break;
+                }
+            names.push_front (underlined_name);
+          #else
+            names.push_front(current->m_name);
+          #endif
           current = current->m_parent;
         }
       std::string tempDir = SystemPath::Append (m_runner->GetTempDir (), SystemPath::Join (names.begin (), names.end ()));

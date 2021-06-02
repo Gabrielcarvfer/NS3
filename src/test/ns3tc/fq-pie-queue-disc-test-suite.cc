@@ -657,7 +657,7 @@ public:
 
 private:
   virtual void DoRun (void);
-  void AddPacket (Ptr<FqPieQueueDisc> queue, Ipv4Header hdr, u_int32_t nPkt);
+  void AddPacket (Ptr<FqPieQueueDisc> queue, Ipv4Header hdr, uint32_t nPkt);
   void AddPacketWithDelay (Ptr<FqPieQueueDisc> queue,Ipv4Header hdr, double delay, uint32_t nPkt);
   void Dequeue (Ptr<FqPieQueueDisc> queue, uint32_t nPkt);
   void DequeueWithDelay (Ptr<FqPieQueueDisc> queue, double delay, uint32_t nPkt);

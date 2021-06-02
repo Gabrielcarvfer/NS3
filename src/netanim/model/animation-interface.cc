@@ -43,7 +43,9 @@
 #include "ns3/packet.h"
 #include "ns3/simulator.h"
 #include "ns3/wifi-mac-header.h"
+#include "ns3/bs-net-device.h"
 #include "ns3/wimax-mac-header.h"
+#include "ns3/csma-net-device.h"
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-mac.h"
 #include "ns3/wifi-psdu.h"
@@ -54,6 +56,7 @@
 #include "ns3/lte-enb-phy.h"
 #include "ns3/uan-net-device.h"
 #include "ns3/uan-mac.h"
+#include "ns3/wave-net-device.h"
 #include "ns3/double.h"
 #include "ns3/ipv4.h"
 #include "ns3/ipv6.h"
@@ -92,6 +95,13 @@ AnimationInterface::AnimationInterface (const std::string fn)
 {
   initialized = true;
   StartAnimation ();
+
+  // Ensure libraries are linked
+  BaseStationNetDevice b;
+  CsmaNetDevice c;
+  WifiNetDevice w;
+  UanNetDevice u;
+  WaveNetDevice wv;
 }
 
 AnimationInterface::~AnimationInterface ()

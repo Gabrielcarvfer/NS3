@@ -40,7 +40,13 @@ function(generate_c4che_cachepy)
 
   string(APPEND cache_contents "NS3_ENABLED_CONTRIBUTED_MODULES = [] \n") # missing support
 
-  string(REPLACE ":" "', '" PATH_LIST $ENV{PATH})
+  if(NOT WIN32)
+    string(REPLACE ":" "', '" PATH_LIST $ENV{PATH})
+  else()
+    string(REPLACE ";" "', '" PATHLIST "$ENV{PATH}") # turn CMake list into a single string and replace ; with ,
+    set(PATHLIST "'${PATHLIST}'") # add first and last single quote marks
+    string(REPLACE "\\" "\\\\" PATHLIST ${PATHLIST}) # replace single backslash \ with double backslash \\
+  endif()
   string(APPEND cache_contents
          "NS3_MODULE_PATH = ['${PATH_LIST}', '${CMAKE_OUTPUT_DIRECTORY}', '${CMAKE_LIBRARY_OUTPUT_DIRECTORY}']\n"
   )

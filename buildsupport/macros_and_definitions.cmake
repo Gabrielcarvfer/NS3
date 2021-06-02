@@ -42,6 +42,17 @@ if(APPLE)
 endif()
 
 set(cat_command cat)
+if(WIN32)
+  add_definitions(-D__WIN32__)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+  set(cat_command type)
+endif()
+
+if(MSVC)
+  set(MSVC True)
+else()
+  set(MSVC False)
+endif()
 
 if(CMAKE_XCODE_BUILD_SYSTEM)
   set(XCODE True)
@@ -67,19 +78,22 @@ link_directories(${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 include(GNUInstallDirs)
 include(buildsupport/custom_modules/ns3_cmake_package.cmake)
 
-if(${XCODE})
-  # Is that so hard not to break people's CI, AAPL? Why would you output the targets to a Debug/Release
+if(${MSVC} OR ${XCODE})
+  # Is that so hard not to break people's CI, MSFT and AAPL? Why would you output the targets to a Debug/Release
   # subfolder? Why?
   foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
     string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
-  endforeach()
+  endforeach(OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # fPIC (position-independent code) and fPIE (position-independent executable)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Include the cmake file that provides a Hunter-like interface to VcPkg
+include(buildsupport/vcpkg_hunter.cmake)
 
 # Set compiler options and get command to force unused function linkage (useful for libraries)
 set(CMAKE_CXX_STANDARD 11)
@@ -93,6 +107,36 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU" AND NOT APPLE)
   set(LIB_AS_NEEDED_PRE_STATIC -Wl,--whole-archive,-Bstatic)
   set(LIB_AS_NEEDED_POST_STATIC -Wl,--no-whole-archive)
   set(LIB_AS_NEEDED_POST_STATIC_DYN -Wl,-Bdynamic,--no-whole-archive)
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC" OR "${CMAKE_CXX_SIMULATE_ID}" MATCHES "MSVC")
+  set(CMAKE_CXX_STANDARD 17)
+
+  # using Visual Studio C++
+  set(CMAKE_MSVC_PARALLEL ${NumThreads})
+
+  # Force clang to keep static consts, but can also cause weird linking issues https://reviews.llvm.org/D53457
+  # add_definitions(/clang:-fkeep-static-consts)
+
+  # MSVC needs an explicit flag to enable exceptions support
+  # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?redirectedfrom=MSDN&view=vs-2019
+  add_definitions(/EHs)
+
+  # Suppress warnings add_definitions(/W0)
+
+  # /Gy forces object functions to be made into a COMDAT(???), preventing removal by the linker
+  add_definitions(/Gy)
+
+  # For whatever reason getting M_PI and other math.h definitions from cmath requires this definition
+  # https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=vs-2019
+  add_definitions(/D_USE_MATH_DEFINES)
+
+  # Boring warnings about standard functions being unsafe (as if their version was...)
+  add_definitions(/D_CRT_SECURE_NO_WARNINGS)
+
+  # Set RUNNING_ON_VALGRIND to false to make int64x64 test suite happy
+  add_definitions(/DRUNNING_ON_VALGRIND=false)
+
+  # Prevent windows.h from defining a ton of additional crap
+  add_definitions(/DNOMINMAX /DWIN32_LEAN_AND_MEAN)
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND APPLE)
@@ -192,7 +236,7 @@ macro(process_options)
 
   if(${NS3_CLANG_TIDY})
     find_program(CLANG_TIDY clang-tidy)
-    if(CLANG_TIDY)
+    if(CLANG_TIDY AND NOT ${MSVC})
       set(CMAKE_CXX_CLANG_TIDY "clang-tidy")
     else()
       message(STATUS "Proceeding without clang-tidy static analysis")
@@ -250,7 +294,7 @@ macro(process_options)
     endif()
   endif()
 
-  if(${NS3_LINK_WHAT_YOU_USE})
+  if(${NS3_LINK_WHAT_YOU_USE} AND (NOT WIN32))
     set(CMAKE_LINK_WHAT_YOU_USE TRUE)
   else()
     set(CMAKE_LINK_WHAT_YOU_USE FALSE)
@@ -268,6 +312,81 @@ macro(process_options)
     unset(CMAKE_CXX_INCLUDE_WHAT_YOU_USE)
   endif()
 
+  # PyTorch still need some fixes on Windows
+  if(WIN32 AND ${NS3_PYTORCH})
+    message(WARNING "Libtorch linkage on Windows still requires some fixes. The build will continue without it.")
+    set(NS3_PYTORCH OFF)
+  endif()
+  if(${NS3_PYTORCH})
+    set(CMAKE_CXX_STANDARD 11) # c++17 for inline variables in Windows
+    set(CMAKE_CXX_STANDARD_REQUIRED OFF) # ABI requirements for PyTorch affect this
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -Dtorch_EXPORTS -DC10_BUILD_SHARED_LIBS -DNS3_PYTORCH)
+
+    # Decide which version of libtorch should be downloaded. If you change the build_type, remember to download both
+    # libtorch folder and libtorch.zip to redownload the appropriate version
+    if(WIN32)
+      if(${build_type} STREQUAL "rel")
+        set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-latest.zip)
+      else()
+        set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-debug-latest.zip)
+      endif()
+    elseif(APPLE)
+      set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-macos-latest.zip)
+    else()
+      set(libtorch_url https://download.pytorch.org/libtorch/cpu/libtorch-shared-with-deps-latest.zip)
+    endif()
+
+    # Define executables to download and unzip libtorch archive
+    if(WIN32)
+      set(CURL_EXE curl.exe)
+      if(${MSVC})
+        set(UNZIP_EXE powershell expand-archive)
+        set(UNZIP_POST .\\)
+      else()
+        set(UNZIP_EXE unzip.exe)
+        set(UNZIP_POST)
+      endif()
+    else()
+      set(CURL_EXE curl)
+      set(UNZIP_EXE unzip)
+      set(UNZIP_POST)
+    endif()
+
+    # Download libtorch archive if not already downloaded
+    if(EXISTS ${THIRD_PARTY_DIRECTORY}/libtorch.zip)
+      message(STATUS "Libtorch already downloaded")
+    else()
+      message(STATUS "Downloading libtorch files ${libtorch_url}")
+      execute_process(
+        COMMAND ${CURL_EXE} ${libtorch_url} --output libtorch.zip WORKING_DIRECTORY ${THIRD_PARTY_DIRECTORY}
+      )
+    endif()
+
+    # Extract libtorch.zip into the libtorch folder
+    if(EXISTS ${THIRD_PARTY_DIRECTORY}/libtorch)
+      message(STATUS "Libtorch folder already unzipped")
+    else()
+      message(STATUS "Unzipping libtorch files")
+      execute_process(COMMAND ${UNZIP_EXE} libtorch.zip ${UNZIP_POST} WORKING_DIRECTORY ${THIRD_PARTY_DIRECTORY})
+    endif()
+
+    # Append the libtorch cmake folder to the CMAKE_PREFIX_PATH (enables FindTorch.cmake)
+    list(APPEND CMAKE_PREFIX_PATH "${THIRD_PARTY_DIRECTORY}/libtorch/share/cmake")
+
+    # Torch automatically includes the GNU ABI thing that causes problems (look for PYTORCH references above)
+    set(backup_cxx_flags ${CMAKE_CXX_FLAGS})
+    find_package(Torch REQUIRED)
+    set(CMAKE_CXX_FLAGS ${backup_cxx_flags})
+
+    # Include the libtorch includes and libraries folders
+    include_directories(${TORCH_INCLUDE_DIRS})
+    link_directories(${THIRD_PARTY_DIRECTORY}/libtorch/lib)
+
+    # Torch flags may cause problems to other libraries, so undo them (TorchConfig.cmake)
+    set(TORCH_CXX_FLAGS)
+    set_property(TARGET torch PROPERTY INTERFACE_COMPILE_OPTIONS)
+  endif()
+
   # Set common include folder (./build/include, where we find ns3/core-module.h)
   include_directories(${CMAKE_OUTPUT_DIRECTORY}/include)
 
@@ -278,6 +397,13 @@ macro(process_options)
 
   # GTK3 Don't search for it if you don't have it installed, as it take an insane amount of time
   if(${NS3_GTK3})
+    # For some reason it refuses to find GTK on msys2,
+    # so we set the environment variable used by the FindGTK3.cmake as a hint
+    set(library_path ${CMAKE_CXX_COMPILER}) # e.g. E:/tools/msys64/mingw64/bin/g++.exe
+    get_filename_component(library_path ${library_path} DIRECTORY) # e.g. E:/tools/msys64/mingw64/bin/
+    get_filename_component(library_path ${library_path} DIRECTORY) # e.g. E:/tools/msys64/mingw64/
+    set(ENV{GTKMM_BASEPATH} ${library_path})
+
     find_package(GTK3)
     if(NOT ${GTK3_FOUND})
       message(WARNING "GTK3 was not found. Continuing without it.")
@@ -288,6 +414,7 @@ macro(process_options)
       message(WARNING "Harfbuzz is required by GTK")
       set(GTK3_FOUND FALSE)
     endif()
+    unset(library_path)
   endif()
 
   if(${NS3_STATIC})
@@ -316,8 +443,8 @@ macro(process_options)
 
     # LibRT
     if(${NS3_REALTIME})
-      if(APPLE)
-        message(WARNING "Lib RT is not supported on Mac OS X. Continuing without it.")
+      if(WIN32 OR APPLE)
+        message(WARNING "Lib RT is not supported on Windows/Mac OS X. Continuing without it.")
       else()
         find_library(LIBRT rt QUIET)
         if(NOT ${LIBRT_FOUND})
@@ -337,9 +464,13 @@ macro(process_options)
     find_package(Threads QUIET)
     if(${CMAKE_USE_PTHREADS_INIT})
       include_directories(${THREADS_PTHREADS_INCLUDE_DIR})
-      set(NS3_PTHREAD TRUE)
-      set(PTHREADS_FOUND TRUE)
-      set(HAVE_PTHREAD_H TRUE) # for core-config.h
+      if(${MSVC})
+        set(THREADS_FOUND FALSE)
+      else()
+        set(NS3_PTHREAD TRUE)
+        set(PTHREADS_FOUND TRUE)
+        set(HAVE_PTHREAD_H TRUE) # for core-config.h
+      endif()
     else()
       set(NS3_PTHREAD FALSE)
       set(PTHREADS_FOUND FALSE)
@@ -498,6 +629,12 @@ CommandLine configuration in those files instead.
   endif()
 
   # Process core-config
+  if(MSVC)
+    # MSVC doesn't support 128 bit soft operations, which is weird since they support 128 bit numbers... Clang does
+    # support, but didn't expose them https://reviews.llvm.org/D41813
+    set(INT64X64 "CAIRO")
+  endif()
+
   if(${INT64X64} MATCHES "INT128")
     include(buildsupport/3rd_party/FindInt128.cmake)
     find_int128_types()
@@ -519,15 +656,19 @@ CommandLine configuration in those files instead.
     include(CheckTypeSize)
     check_type_size("double" SIZEOF_DOUBLE)
     check_type_size("long double" SIZEOF_LONG_DOUBLE)
-
-    if(${SIZEOF_LONG_DOUBLE} EQUAL ${SIZEOF_DOUBLE})
-      message(
-        WARNING
-          "Long double has the wrong size: LD ${SIZEOF_LONG_DOUBLE} vs D ${SIZEOF_DOUBLE}. Falling back to CAIRO."
-      )
-      set(INT64X64 "CAIRO")
+    if(MSVC)
+      set(INT64X64_USE_DOUBLE TRUE) # MSVC is special (not in a good way) and uses 64 bit long double. This will break
+                                    # things.
     else()
-      set(INT64X64_USE_DOUBLE TRUE)
+      if(${SIZEOF_LONG_DOUBLE} EQUAL ${SIZEOF_DOUBLE})
+        message(
+          WARNING
+            "Long double has the wrong size: LD ${SIZEOF_LONG_DOUBLE} vs D ${SIZEOF_DOUBLE}. Falling back to CAIRO."
+        )
+        set(INT64X64 "CAIRO")
+      else()
+        set(INT64X64_USE_DOUBLE TRUE)
+      endif()
     endif()
   endif()
 
@@ -565,13 +706,20 @@ CommandLine configuration in those files instead.
   set(PLATFORM_UNSUPPORTED_PRE "Platform doesn't support")
   set(PLATFORM_UNSUPPORTED_POST "features. Continuing without them.")
   # Remove from libs_to_build all incompatible libraries or the ones that dependencies couldn't be installed
-  if(APPLE
+  if(WIN32
+     OR APPLE
      OR WSLv1
   )
     set(NS3_TAP OFF)
     set(NS3_EMU OFF)
     list(REMOVE_ITEM libs_to_build fd-net-device)
     message(WARNING "${PLATFORM_UNSUPPORTED_PRE} TAP and EMU ${PLATFORM_UNSUPPORTED_POST}")
+  endif()
+
+  if(WIN32)
+    set(NS3_BRITE OFF)
+    set(NS3_CLICK OFF)
+    message(WARNING "${PLATFORM_UNSUPPORTED_PRE} BRITE and CLICK ${PLATFORM_UNSUPPORTED_POST}")
   endif()
 
   if(NOT ${NS3_BRITE})
@@ -696,16 +844,21 @@ CommandLine configuration in those files instead.
 
   # Netanim depends on ns-3 core, so we built it later
   if(${NS3_NETANIM})
-    include(FetchContent)
-    FetchContent_Declare(
-      netanim
-      GIT_REPOSITORY https://gitlab.com/nsnam/netanim.git
-      GIT_TAG netanim-3.108
-    )
-    FetchContent_Populate(netanim)
-    file(COPY buildsupport/3rd_party/netanim_cmakelists.cmake DESTINATION ${netanim_SOURCE_DIR})
-    file(RENAME ${netanim_SOURCE_DIR}/netanim_cmakelists.cmake ${netanim_SOURCE_DIR}/CMakeLists.txt)
-    add_subdirectory(${netanim_SOURCE_DIR})
+    if(${MSVC})
+      message(WARNING "Not building netanim with MSVC")
+      set(NS3_NETANIM OFF)
+    else()
+      include(FetchContent)
+      FetchContent_Declare(
+        netanim
+        GIT_REPOSITORY https://gitlab.com/nsnam/netanim.git
+        GIT_TAG netanim-3.108
+      )
+      FetchContent_Populate(netanim)
+      file(COPY buildsupport/3rd_party/netanim_cmakelists.cmake DESTINATION ${netanim_SOURCE_DIR})
+      file(RENAME ${netanim_SOURCE_DIR}/netanim_cmakelists.cmake ${netanim_SOURCE_DIR}/CMakeLists.txt)
+      add_subdirectory(${netanim_SOURCE_DIR})
+    endif()
   endif()
 endmacro()
 
@@ -714,8 +867,8 @@ function(set_runtime_outputdirectory target_name output_directory)
   set_property(GLOBAL PROPERTY ns3-execs "${local-ns3-executables};${output_directory}${target_name}")
 
   set_target_properties(${target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${output_directory})
-  if(${XCODE})
-    # Is that so hard not to break people's CI, AAPL?? Why would you output the targets to a Debug/Release
+  if(${MSVC} OR ${XCODE})
+    # Is that so hard not to break people's CI, MSFT and AAPL?? Why would you output the targets to a Debug/Release
     # subfolder? Why?
     foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
       string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)

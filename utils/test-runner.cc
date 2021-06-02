@@ -18,7 +18,14 @@
 
 #include "ns3/test.h"
 
+#ifdef __WSLv1__
+extern void wslv1_workaround();
+#endif
+
 int main (int argc, char *argv[])
 {
-  return ns3::TestRunner::Run (argc, argv);
+#ifdef __WSLv1__
+    wslv1_workaround();
+#endif
+    return ns3::TestRunner::Run (argc, argv);
 }

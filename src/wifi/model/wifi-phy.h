@@ -1371,7 +1371,7 @@ private:
    * For PHY entities supported by a given WifiPhy instance,
    * \see m_phyEntities.
    */
-  static std::map<WifiModulationClass, Ptr<PhyEntity> > m_staticPhyEntities;
+  static std::map<WifiModulationClass, Ptr<PhyEntity> >* m_staticPhyEntities;
 
   WifiPhyStandard m_standard;               //!< WifiPhyStandard
   WifiPhyBand m_band;                       //!< WifiPhyBand

@@ -7,7 +7,7 @@ set(header_files model/sixlowpan-net-device.h model/sixlowpan-header.h helper/si
 set(libraries_to_link ${libinternet} ${libinternet} ${libcore})
 
 set(example_as_test_suite)
-if(${NS3_EXAMPLES})
+if(${NS3_EXAMPLES} AND (NOT WIN32))
   set(example_as_test_suite test/sixlowpan-examples-test-suite.cc)
 endif()
 

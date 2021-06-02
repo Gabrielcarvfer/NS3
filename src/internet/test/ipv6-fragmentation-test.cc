@@ -43,7 +43,7 @@
 #include "ns3/ipv6-static-routing.h"
 #include "ns3/ipv6-list-routing.h"
 #include "ns3/inet6-socket-address.h"
-#
+
 #include "ns3/arp-l3-protocol.h"
 #include "ns3/ipv4-l3-protocol.h"
 #include "ns3/icmpv4-l4-protocol.h"
@@ -59,7 +59,12 @@
 
 #include <string>
 #include <limits>
-#include <netinet/in.h>
+
+#ifdef __WIN32__
+    #include "ns3/private/win32-internet-private.h"
+#else
+    #include <netinet/in.h>
+#endif
 
 using namespace ns3;
 
