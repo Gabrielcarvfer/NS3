@@ -396,7 +396,7 @@ LteRlcUm::DoNotifyTxOpportunity (LteMacSapUser::TxOpportunityParameters txOpPara
   if (! m_txBuffer.empty ())
     {
       m_rbsTimer.Cancel ();
-      m_rbsTimer = Simulator::Schedule (MilliSeconds (10*SUBFRAME_DURATION), &LteRlcUm::ExpireRbsTimer, this);
+      m_rbsTimer = Simulator::Schedule (MilliSeconds (5*SUBFRAME_DURATION), &LteRlcUm::ExpireRbsTimer, this);
     }
 }
 
@@ -560,7 +560,7 @@ LteRlcUm::DoReceivePdu (LteMacSapUser::ReceivePduParameters rxPduParams)
         {
           NS_LOG_LOGIC ("VR(UH) > VR(UR)");
           NS_LOG_LOGIC ("Start reordering timer");
-          m_reorderingTimer = Simulator::Schedule (Time (MilliSeconds(100*SUBFRAME_DURATION)),
+          m_reorderingTimer = Simulator::Schedule (Time (MilliSeconds(20*SUBFRAME_DURATION)),
                                                    &LteRlcUm::ExpireReorderingTimer ,this);
           m_vrUx = m_vrUh;
           NS_LOG_LOGIC ("New VR(UX) = " << m_vrUx);
@@ -1175,7 +1175,7 @@ LteRlcUm::ExpireReorderingTimer (void)
   if ( m_vrUh > m_vrUr)
     {
       NS_LOG_LOGIC ("Start reordering timer");
-      m_reorderingTimer = Simulator::Schedule (Time ( MilliSeconds(100*SUBFRAME_DURATION)),
+      m_reorderingTimer = Simulator::Schedule (Time ( MilliSeconds(20*SUBFRAME_DURATION)),
                                                &LteRlcUm::ExpireReorderingTimer, this);
       m_vrUx = m_vrUh;
       NS_LOG_LOGIC ("New VR(UX) = " << m_vrUx);
@@ -1191,7 +1191,7 @@ LteRlcUm::ExpireRbsTimer (void)
   if (! m_txBuffer.empty ())
     {
       DoReportBufferStatus ();
-      m_rbsTimer = Simulator::Schedule (MilliSeconds (10*SUBFRAME_DURATION), &LteRlcUm::ExpireRbsTimer, this);
+      m_rbsTimer = Simulator::Schedule (MilliSeconds (5*SUBFRAME_DURATION), &LteRlcUm::ExpireRbsTimer, this);
     }
 }
 
