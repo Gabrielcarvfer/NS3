@@ -78,7 +78,7 @@ def generate_scenarios(baseFolder,
                       mimoOptions,
                       simulationCase):
 
-    channel_models = ["CDL_D", ] # "CDL_D", "D3.1",]
+    channel_models = ["CDL_A", ]  # "CDL_D", "D3.1",]
     # Create base folder if it doesnt exist
     if not os.path.exists(baseFolder):
         os.mkdir(baseFolder)

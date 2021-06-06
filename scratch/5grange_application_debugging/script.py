@@ -9,7 +9,7 @@ caseRange = [0, 1]  # udp, tcp
 pkt_size = 100
 rangeUes = list(range(2, 51, 10))
 rangeDistance = [1, 10, 25, 35, 50]
-rangeInterval = [1 / distance for distance in (1, 10, 50, 100, 200, 500, 1000)]
+rangeInterval = [1 / frequency for frequency in (1, 10, 50, 100, 200, 500, 1000)]
 executor = ProcessPoolExecutor(max_workers=15)
 base_dir = "/mnt/dev/tools/source/NS3/build/bin"
 

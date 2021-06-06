@@ -483,6 +483,19 @@ int main(int argc, char * argv[]) {
                                                 voip_workload,
                                                 false);
             clientApps.Add(tempUeApps);
+
+            //Ptr<EpcTft> tft = Create<EpcTft> ();
+            //EpcTft::PacketFilter dlpf;
+            //dlpf.localPortStart = 0;
+            //dlpf.localPortEnd = 64000;
+            //tft->Add (dlpf);
+            //EpcTft::PacketFilter ulpf;
+            //ulpf.remotePortStart = voipListenPort;
+            //ulpf.remotePortEnd = voipListenPort;
+            //tft->Add (ulpf);
+            //EpsBearer bearer (EpsBearer::GBR_CONV_VOICE);
+            //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue0), bearer, tft);
+            //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue1), bearer, tft);
         }
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), voipListenPort));
         for (auto ue : uesWithVoip)
@@ -525,6 +538,15 @@ int main(int argc, char * argv[]) {
                                                 videoconf_workload,
                                                 false);
             clientApps.Add(tempUeApps);
+
+            //Ptr<EpcTft> tft = Create<EpcTft> ();
+            //EpcTft::PacketFilter ulpf;
+            //ulpf.remotePortStart = videoconfListenPort;
+            //ulpf.remotePortEnd = videoconfListenPort;
+            //tft->Add (ulpf);
+            //EpsBearer bearer (EpsBearer::GBR_CONV_VIDEO);
+            //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue0), bearer, tft);
+            //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue1), bearer, tft);
         }
         PacketSinkHelper ulPacketSinkHelper ("ns3::UdpSocketFactory", InetSocketAddress (Ipv4Address::GetAny (), videoconfListenPort));
         for (auto ue : uesWithVideoconf)
@@ -577,6 +599,15 @@ int main(int argc, char * argv[]) {
                 // this is added to the server apps container, but acts as the client on the UE
                 serverApps.Add(echoServer.Install(ueNodes.Get(ue0)));
                 numUesWeb--;
+
+
+                //Ptr<EpcTft> tft = Create<EpcTft> ();
+                //EpcTft::PacketFilter ulpf;
+                //ulpf.remotePortStart = webListenPort;
+                //ulpf.remotePortEnd = webListenPort;
+                //tft->Add (ulpf);
+                //EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
+                //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue0), bearer, tft);
             }
         }
     }
@@ -626,6 +657,14 @@ int main(int argc, char * argv[]) {
                 // this is added to the server apps container, but acts as the client on the UE
                 serverApps.Add(echoServer.Install(ueNodes.Get(ue0)));
                 numUesStreaming--;
+
+                //Ptr<EpcTft> tft = Create<EpcTft> ();
+                //EpcTft::PacketFilter ulpf;
+                //ulpf.remotePortStart = streamingListenPort;
+                //ulpf.remotePortEnd = streamingListenPort;
+                //tft->Add (ulpf);
+                //EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_PREMIUM);
+                //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (ue0), bearer, tft);
             }
         }
     }
@@ -662,7 +701,15 @@ int main(int argc, char * argv[]) {
         //serverApps.Add(ulPacketSinkHelper.Install(remoteHost));
         serverApps.Add(ulPacketSinkHelper.Install(ueNodes.Get(0)));
 
+        //Ptr<EpcTft> tft = Create<EpcTft> ();
+        //EpcTft::PacketFilter ulpf;
+        //ulpf.remotePortStart = iotListenPort;
+        //ulpf.remotePortEnd = iotListenPort;
+        //tft->Add (ulpf);
+        //EpsBearer bearer (EpsBearer::NGBR_VIDEO_TCP_DEFAULT);
+
         for(unsigned k = 0; k < 100; k++)
+        {
             for(unsigned i = 1; i < numUes; i++)
             {
                 //We assume all devices are IOT sinks, transmitting traffic of 100 IoT devices each and sending traffic to the same remote server
@@ -673,8 +720,9 @@ int main(int argc, char * argv[]) {
                                                     iot_workload,
                                                     false);
                 clientApps.Add(tempUeApps);
+                //lteHelper->ActivateDedicatedEpsBearer (ueLteDevs.Get (i), bearer, tft);
             }
-
+        }
     }
 
     //Start servers before starting clients
@@ -743,11 +791,13 @@ int main(int argc, char * argv[]) {
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
+    //p2ph.EnablePcapAll("p2ph", false);
+
     //23 Run simulation
     Simulator::Stop(Seconds(simulationParameters["ts"].get<double>()+2));
     Simulator::Run();
 
-    flowMonitor->SerializeToXmlFile("flow.xml", true, true);
+    flowMonitor->SerializeToXmlFile("flow.xml", true, false);
 
 
     Simulator::Destroy();

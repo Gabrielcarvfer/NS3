@@ -15,7 +15,7 @@ def get_graph(trace_file):
     graph = {"nodes": {}}
 
     trace_log_len = len(trace_log)
-    while trace_log_len > 0 and len(graph["nodes"]) < 1000:
+    while trace_log_len > 0:
         trace_log_len -= 2
 
         # Now we read the first line with simulation timestamp (ns), current event id and scheduled event id

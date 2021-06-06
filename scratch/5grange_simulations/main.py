@@ -39,7 +39,7 @@ class simulationCase(Enum):
 
 def setup_simulations(createAndRunScenarios):
     resultsDict = {"scenario": {}}
-    numBatches = 25
+    numBatches = 20
     numUEs_and_applications = [# core scenarios
         [  2, [simulationCase.VOIP_BASE_SCENARIO, ]],  # two ues talking to each other
         [  3, [simulationCase.WEB_BASE_SCENARIO, ]],   # three ues connecting to the internet
@@ -113,7 +113,7 @@ def setup_simulations(createAndRunScenarios):
     simulationParameterFilesList = glob.glob(baseDir+os.sep+"**"+os.sep+"simulationParameters.json", recursive=True)
 
     from concurrent.futures.process import ProcessPoolExecutor
-    executor = ProcessPoolExecutor(max_workers=5)
+    executor = ProcessPoolExecutor(max_workers=15)
     sims = []
     for scenarioJson in simulationParameterFilesList:
         # Before executing anything, we check if the outputs file has been processed for that given scenario
@@ -330,9 +330,10 @@ if __name__ == "__main__":
                     agg_dl_throughput_kbps = 0
                     agg_ul_throughput_kbps = 0
                     status = None
-                    for flow in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"]:
-                        metadata = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["metadata"]
-                        status = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"][flow]["status"]
+                    flows = compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["flows"]
+                    for flow in flows:
+                        metadata = flows[flow]["metadata"]
+                        status = flows[flow]["status"]
 
                         # Calculate individual performance of UE application
                         #duration = (ns_timestamp_to_float(status["@timeLastRxPacket"]) - ns_timestamp_to_float(status["@timeFirstRxPacket"]))
@@ -355,6 +356,9 @@ if __name__ == "__main__":
                             agg_dl_throughput_kbps += ul_throughput_kbps
                             agg_ul_throughput_kbps += dl_throughput_kbps
 
+                        uplink = False
+                        if metadata["@sourceAddress"][0] == '7' and metadata["@destinationAddress"][0] != '7':
+                            uplink = True
 
                         lost_packets = int(status["@lostPackets"])
                         lost_packets_pct = int(status["@lostPackets"])/int(status["@txPackets"])
@@ -378,12 +382,8 @@ if __name__ == "__main__":
                             [histogram.extend([x]*y) for (x, y) in delay_histogram.items()]
                             delayMean = numpy.mean(histogram)
                             delayStdDev = numpy.std(histogram)
-                            # mean + 1.5*sigma = >90% reliable
-                            # mean + 2*sigma = >99% reliable
-                            # mean + 2.5*sigma = >99.9% reliable
-                            if delayMean+2.5*delayStdDev > application_KPIs[port]["latency"]:
-                                passed = False
                             del histogram
+
 
                         jitterMean   = 0
                         jitterStdDev = 0
@@ -406,7 +406,7 @@ if __name__ == "__main__":
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets"].append(lost_packets)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
-                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((delay_histogram, delayMean, delayStdDev))
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((delay_histogram, delayMean, delayStdDev, uplink))
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((jitter_histogram, jitterMean, jitterStdDev))
                         #print()
                         del duration, dl_throughput_kbps, ul_throughput_kbps
@@ -420,7 +420,7 @@ if __name__ == "__main__":
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_dl_throughput_kbps"] = agg_dl_throughput_kbps
                     compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["agg_ul_throughput_kbps"] = agg_ul_throughput_kbps
                     del status, agg_dl_throughput_kbps, agg_ul_throughput_kbps
-
+                    del flows
                     # end of flor for
                 # end of port for
             # end of batch for
@@ -564,8 +564,9 @@ if __name__ == "__main__":
 
                             lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
                         elif metric == "delay":
-                            for (h, mean, std) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
+                            for (h, mean, std, uplink) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
                                 #delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
+                                #if uplink:
                                 histogram = []
                                 [histogram.extend([x]*y) for (x, y) in h.items()]
                                 delay_hist_agg.extend(histogram)

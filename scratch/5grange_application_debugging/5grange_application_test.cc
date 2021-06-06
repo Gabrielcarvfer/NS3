@@ -285,7 +285,7 @@ int main(int argc, char * argv[]) {
     //7 Create backhaul link between the remote node and PGW
     PointToPointHelper p2ph;
     p2ph.SetDeviceAttribute("DataRate", DataRateValue(DataRate("100Gb/s")));
-    p2ph.SetDeviceAttribute("Mtu", UintegerValue(15000));
+    p2ph.SetDeviceAttribute("Mtu", UintegerValue(1500));
     p2ph.SetChannelAttribute("Delay", TimeValue(Seconds(0.010)));
     NetDeviceContainer internetDevices = p2ph.Install(pgw, remoteHost);
 
@@ -338,30 +338,23 @@ int main(int argc, char * argv[]) {
   std::map<std::pair<uint16_t, uint16_t>, bool> uePairs;
 
   uint16_t simulationCasePort = 8000;
+#define SEND_TO_SERVER
+#ifdef SEND_TO_SERVER
+  Ipv4Address remoteAddress = remoteHost->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();//i+1
 
-  for(int i = 0; i < ueNodes.GetN()-1; i+=2) {
-      Ipv4Address remoteAddress = ueNodes.Get(i + 1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
-
-      if (tcp)
-      {
-          PacketSinkHelper dlTcpPacketSinkHelper("ns3::TcpSocketFactory",
-                                                 InetSocketAddress(Ipv4Address::GetAny(), simulationCasePort));
-          serverApps.Add(dlTcpPacketSinkHelper.Install(ueNodes.Get(i + 1)));
-      }
-      else
-      {
-
-          PacketSinkHelper dlUdpPacketSinkHelper("ns3::UdpSocketFactory",
-                                                 InetSocketAddress(Ipv4Address::GetAny(), simulationCasePort));
-          serverApps.Add(dlUdpPacketSinkHelper.Install(ueNodes.Get(i + 1)));
-      }
-
-
+  PacketSinkHelper dlTcpPacketSinkHelper("ns3::TcpSocketFactory",
+                                         InetSocketAddress(Ipv4Address::GetAny(), simulationCasePort));
+  serverApps.Add(dlTcpPacketSinkHelper.Install(remoteHost));
+  for(int i = 0; i < ueNodes.GetN(); i++)
+  {
+      interval = (float) (rand() % 1000+1);
+      srand(interval);
+      std::cout << "UE " << i << " interval " << interval << std::endl;
       if (tcp)
       {
         TcpEchoClientHelper packet_generator(remoteAddress, simulationCasePort);
         packet_generator.SetAttribute("MaxPackets", UintegerValue(1000000));
-        packet_generator.SetAttribute("Interval", TimeValue(Seconds(interval)));
+        packet_generator.SetAttribute("Interval", TimeValue(MilliSeconds(interval)));//interval
         packet_generator.SetAttribute("PacketSize", UintegerValue(pkt_size));
         clientApps.Add(packet_generator.Install(ueNodes.Get(i)));
       }
@@ -369,12 +362,50 @@ int main(int argc, char * argv[]) {
       {
         UdpEchoClientHelper packet_generator(remoteAddress, simulationCasePort);
         packet_generator.SetAttribute("MaxPackets", UintegerValue(1000000));
-        packet_generator.SetAttribute("Interval", TimeValue(Seconds(interval)));
+        packet_generator.SetAttribute("Interval", TimeValue(MilliSeconds(interval)));
         packet_generator.SetAttribute("PacketSize", UintegerValue(pkt_size));
         clientApps.Add(packet_generator.Install(ueNodes.Get(i)));
       }
   }
+#endif
 
+#ifdef SEND_BETWEEN_UES_THROUGH_SERVER
+    for(int i = 0; i < ueNodes.GetN()-1; i+=2) {
+        Ipv4Address remoteAddress = ueNodes.Get(i + 1)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+
+        if (tcp)
+        {
+            PacketSinkHelper dlTcpPacketSinkHelper("ns3::TcpSocketFactory",
+                                                   InetSocketAddress(Ipv4Address::GetAny(), simulationCasePort));
+            serverApps.Add(dlTcpPacketSinkHelper.Install(ueNodes.Get(i + 1)));
+        }
+        else
+        {
+
+            PacketSinkHelper dlUdpPacketSinkHelper("ns3::UdpSocketFactory",
+                                                   InetSocketAddress(Ipv4Address::GetAny(), simulationCasePort));
+            serverApps.Add(dlUdpPacketSinkHelper.Install(ueNodes.Get(i + 1)));
+        }
+
+
+        if (tcp)
+        {
+            TcpEchoClientHelper packet_generator(remoteAddress, simulationCasePort);
+            packet_generator.SetAttribute("MaxPackets", UintegerValue(1000000));
+            packet_generator.SetAttribute("Interval", TimeValue(Seconds(interval)));
+            packet_generator.SetAttribute("PacketSize", UintegerValue(pkt_size));
+            clientApps.Add(packet_generator.Install(ueNodes.Get(i)));
+        }
+        else
+        {
+            UdpEchoClientHelper packet_generator(remoteAddress, simulationCasePort);
+            packet_generator.SetAttribute("MaxPackets", UintegerValue(1000000));
+            packet_generator.SetAttribute("Interval", TimeValue(Seconds(interval)));
+            packet_generator.SetAttribute("PacketSize", UintegerValue(pkt_size));
+            clientApps.Add(packet_generator.Install(ueNodes.Get(i)));
+        }
+    }
+#endif
   //Start servers before starting clients
   serverApps.Start(Seconds(0.9));
   clientApps.Start(Seconds(1.0));
