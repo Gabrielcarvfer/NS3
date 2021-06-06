@@ -77,6 +77,7 @@ option(NS3_PRECOMPILE_HEADERS "Precompile module headers to speed up compilation
 option(NS3_PTHREAD "Build with pthread support" ON)
 option(NS3_PYTHON_BINDINGS "Build ns-3 python bindings" OFF)
 option(NS3_REALTIME "Build with realtime support" ON)
+option(NS3_STACKTRACE "Build with stack-based event tracing" OFF)
 option(NS3_STATIC "Build a static ns-3 library and link it against executables" OFF)
 
 # custom options

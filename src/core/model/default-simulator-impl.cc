@@ -30,6 +30,11 @@
 
 #include <cmath>
 
+#ifdef STACK_TRACE_ENABLED
+#include <boost/stacktrace.hpp>
+#endif
+
+
 
 /**
  * \file
@@ -74,6 +79,9 @@ DefaultSimulatorImpl::DefaultSimulatorImpl ()
   m_eventCount = 0;
   m_eventsWithContextEmpty = true;
   m_main = SystemThread::Self ();
+#ifdef STACK_TRACE_ENABLED
+  os = std::ofstream("stacktrace.txt", std::ofstream::out);
+#endif
 }
 
 DefaultSimulatorImpl::~DefaultSimulatorImpl ()
@@ -187,6 +195,15 @@ DefaultSimulatorImpl::ProcessEventsWithContext (void)
       m_uid++;
       m_unscheduledEvents++;
       m_events->Insert (ev);
+
+#ifdef STACK_TRACE_ENABLED
+    os << "SimulationTime: " << event.timestamp
+         << " CurrentEventID: " << m_currentUid
+         << " ScheduledEventID: " << ev.key.m_uid
+         << " ScheduledTimestamp: " << ev.key.m_ts
+         << " Context: " << ev.key.m_context << "\n"
+         << event.stackTrace << "\n";
+#endif
     }
 }
 
@@ -243,6 +260,15 @@ DefaultSimulatorImpl::Schedule (Time const &delay, EventImpl *event)
   m_uid++;
   m_unscheduledEvents++;
   m_events->Insert (ev);
+
+#ifdef STACK_TRACE_ENABLED
+  os << "SimulationTime: " << m_currentTs
+     << " CurrentEventID: " << m_currentUid
+     << " ScheduledEventID: " << ev.key.m_uid
+     << " ScheduledTimestamp: " << ev.key.m_ts
+     << " Context: " << ev.key.m_context << "\n"
+     << boost::stacktrace::stacktrace() << "\n";
+#endif
   return EventId (event, ev.key.m_ts, ev.key.m_context, ev.key.m_uid);
 }
 
@@ -261,6 +287,14 @@ DefaultSimulatorImpl::ScheduleWithContext (uint32_t context, Time const &delay, 
       ev.key.m_uid = m_uid;
       m_uid++;
       m_unscheduledEvents++;
+#ifdef STACK_TRACE_ENABLED
+      os << "SimulationTime: " << m_currentTs
+         << " CurrentEventID: " << m_currentUid
+         << " ScheduledEventID: " << ev.key.m_uid
+         << " ScheduledTimestamp: " << ev.key.m_ts
+         << " Context: " << ev.key.m_context << "\n"
+         << boost::stacktrace::stacktrace() << "\n";
+#endif
       m_events->Insert (ev);
     }
   else
@@ -270,6 +304,9 @@ DefaultSimulatorImpl::ScheduleWithContext (uint32_t context, Time const &delay, 
       // Current time added in ProcessEventsWithContext()
       ev.timestamp = delay.GetTimeStep ();
       ev.event = event;
+#ifdef STACK_TRACE_ENABLED
+    ev.stackTrace = to_string(boost::stacktrace::stacktrace());
+#endif
       {
         CriticalSection cs (m_eventsWithContextMutex);
         m_eventsWithContext.push_back (ev);
@@ -291,6 +328,14 @@ DefaultSimulatorImpl::ScheduleNow (EventImpl *event)
   m_uid++;
   m_unscheduledEvents++;
   m_events->Insert (ev);
+#ifdef STACK_TRACE_ENABLED
+  os << "SimulationTime: " << m_currentTs
+     << " CurrentEventID: " << m_currentUid
+     << " ScheduledEventID: " << ev.key.m_uid
+     << " ScheduledTimestamp: " << ev.key.m_ts
+     << " Context: " << ev.key.m_context << "\n"
+     << boost::stacktrace::stacktrace() << "\n";
+#endif
   return EventId (event, ev.key.m_ts, ev.key.m_context, ev.key.m_uid);
 }
 

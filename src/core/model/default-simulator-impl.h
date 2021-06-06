@@ -30,6 +30,7 @@
 #include "ptr.h"
 
 #include <list>
+#include <fstream>
 
 /**
  * \file
@@ -96,6 +97,7 @@ private:
     uint64_t timestamp;
     /** The event implementation. */
     EventImpl *event;
+    std::string stackTrace;
   };
   /** Container type for the events from a different context. */
   typedef std::list<struct EventWithContext> EventsWithContext;
@@ -136,6 +138,7 @@ private:
 
   /** Main execution thread. */
   SystemThread::ThreadId m_main;
+  std::ofstream os;
 };
 
 } // namespace ns3

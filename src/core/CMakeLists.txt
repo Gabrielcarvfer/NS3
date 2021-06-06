@@ -14,8 +14,20 @@
 # Set module name
 set(name core)
 
-# Set lib core link dependencies
+#Set lib core link dependencies
 set(libraries_to_link)
+
+#Check libraries used for stack tracing
+if(${NS3_STACKTRACE})
+  find_library(DL dl)
+  check_include_file_cxx(boost/stacktrace.hpp HAVE_BACKTRACE_H)
+  if(NOT ("${DL}" STREQUAL "DL-NOTFOUND") AND HAVE_BACKTRACE_H)
+    set(libraries_to_link ${DL})
+    add_definitions(-DSTACK_TRACE_ENABLED)
+  else()
+    message(WARNING "LibDL and Boost stacktrace.hpp are required for stack-based event tracing" )
+  endif()
+endif()
 
 set(gsl_test_sources)
 if(${GSL_FOUND})
