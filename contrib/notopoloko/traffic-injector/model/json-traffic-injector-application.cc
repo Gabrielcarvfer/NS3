@@ -118,11 +118,14 @@ JsonTrafficInjectorApplication::ScheduleTx ()
   // If we have an UDP application, we need to fragment the packet to prevent issues
   if (!m_tcp)
   {
-      const unsigned maxFragmentSizeBytes = 64000;
+      const unsigned maxFragmentSizeBytes = 6400;
       uint16_t remBytes = packetSize % maxFragmentSizeBytes;
       unsigned nPackets = packetSize / maxFragmentSizeBytes;
+
+      float step = m_timeToSend.at(m_currentTime)/nPackets;
+
       for (unsigned i = 0; i < nPackets; i++)
-          ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::SendPacket, this, maxFragmentSizeBytes);
+          ns3::Simulator::Schedule(ns3::Seconds (step*i), &JsonTrafficInjectorApplication::SendPacket, this, maxFragmentSizeBytes);
       if (remBytes > 0)
           ns3::Simulator::Schedule(tNext, &JsonTrafficInjectorApplication::SendPacket, this, remBytes);
   }
