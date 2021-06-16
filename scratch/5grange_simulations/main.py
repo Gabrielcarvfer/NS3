@@ -616,7 +616,7 @@ if __name__ == "__main__":
                     # Set column labels on top
                     if metric == "lostPackets":
                         if i == 0:
-                            axes[i][packet_loss_column].set_xlabel('%s\n\nPacket Loss (%)\n' % dsa_labels[dsa])
+                            axes[i][packet_loss_column].set_xlabel('%s\n\nPacket Loss (%%)\n' % dsa_labels[dsa])
                             axes[i][packet_loss_column].xaxis.set_label_position('top')
                         # Link Y axis of same metrics
                         axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][packet_loss_column])
@@ -625,7 +625,7 @@ if __name__ == "__main__":
                         axes[i][packet_loss_column].grid(b=True, which='major', color='#999999', linestyle='-')
                     elif metric == "lostBytes":
                         if i == 0:
-                            axes[i][bytes_lost_column].set_xlabel('%s\n\nBytes Lost (%)\n' % dsa_labels[dsa])
+                            axes[i][bytes_lost_column].set_xlabel('%s\n\nBytes Lost (%%)\n' % dsa_labels[dsa])
                             axes[i][bytes_lost_column].xaxis.set_label_position('top')
                         # Link Y axis of same metrics
                         axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][bytes_lost_column])
