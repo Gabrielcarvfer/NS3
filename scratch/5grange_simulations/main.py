@@ -320,6 +320,7 @@ if __name__ == "__main__":
                         "ul_throughput_kbps": [],
                         "lost_packets": [],
                         "lost_packets_pct": [],
+                        "lost_bytes_pct": [],
                         "delay_n_mean_std": [],
                         "jitter_n_mean_std": [],
                         "passed_kpi": [],
@@ -362,6 +363,7 @@ if __name__ == "__main__":
 
                         lost_packets = int(status["@lostPackets"])
                         lost_packets_pct = int(status["@lostPackets"])/int(status["@txPackets"])
+                        bytes_lost_pct = 1-(int(status["@rxBytes"])/int(status["@txBytes"]))
                         delay_histogram = status["delayHistogram"]
                         jitter_histogram = status["jitterHistogram"]
 
@@ -406,6 +408,7 @@ if __name__ == "__main__":
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["ul_throughput_kbps"].append(ul_throughput_kbps)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets"].append(lost_packets)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"].append(lost_packets_pct)
+                        compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_bytes_pct"].append(bytes_lost_pct)
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"].append((delay_histogram, delayMean, delayStdDev, uplink))
                         compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["jitter_n_mean_std"].append((jitter_histogram, jitterMean, jitterStdDev))
                         #print()
@@ -466,6 +469,7 @@ if __name__ == "__main__":
                 "Aggregate Throughput DL (kbps)": [],
                 "Aggregate Throughput UL (kbps)": [],
                 "Packet Loss": [],
+                "Bytes Lost": [],
                 "Delay (s)": [],
                 "Jitter (s)": [],
             }
@@ -541,7 +545,7 @@ if __name__ == "__main__":
 
 
         # Time to plot kpis boxplots for the applications of each application (column) for each scenario
-        for metric in ["lostPackets", "delay", "jitter"]:
+        for metric in ["lostPackets", "lostBytes", "delay", "jitter"]:
             fig, axes = plt.subplots(nrows=len(usedAppsDict[simulation_case_key]), ncols=3, figsize=(12, 6*len(usedAppsDict[simulation_case_key])), sharex=True, squeeze=False)
             i = 0
             dsa_labels = ["Without PUs\n",
@@ -557,12 +561,14 @@ if __name__ == "__main__":
                 # Each application occupies two columns (downlink and uplink) and 3 rows (without DSA/PUs, with DSA/PUs + OR fusion, with DSA/PUs + Markov+OR)
                 for dsa in compiled_simulation_results["case"][simulation_case_key]["dsa"]:
                     lost_packets = []
+                    lost_bytes = []
                     delay_hist_agg = []
                     jitter_hist_agg = []
                     for batch in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"]:
                         if metric == "lostPackets":
-
                             lost_packets.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_packets_pct"])
+                        elif metric == "lostBytes":
+                            lost_bytes.extend(compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["lost_bytes_pct"])
                         elif metric == "delay":
                             for (h, mean, std, uplink) in compiled_simulation_results["case"][simulation_case_key]["dsa"][dsa]["flow_per_batch"][batch]["applicationPort"][port]["appStatus"]["delay_n_mean_std"]:
                                 #delay_hist_agg.extend([max(mean-2*std, 0.001), max(mean, 0.001), max(mean+2*std, 0.001)])
@@ -584,7 +590,12 @@ if __name__ == "__main__":
                         loss_mean = numpy.mean(lost_packets)
                         loss_inferiorlimit = st.t.interval(0.95, len(lost_packets)-1, loc=loss_mean, scale=st.sem(lost_packets))[0]
                         output_csv_table["apps"][appName]["Packet Loss"].extend([loss_mean, loss_mean-loss_inferiorlimit])
-                        del loss_mean, loss_inferiorlimit,
+                        del loss_mean, loss_inferiorlimit
+                    elif metric == "lostBytes":
+                        loss_mean = numpy.mean(lost_bytes)
+                        loss_inferiorlimit = st.t.interval(0.95, len(lost_bytes)-1, loc=loss_mean, scale=st.sem(lost_bytes))[0]
+                        output_csv_table["apps"][appName]["Bytes Lost"].extend([loss_mean, loss_mean-loss_inferiorlimit])
+                        del loss_mean, loss_inferiorlimit
                     elif metric == "delay":
                         delay_mean = numpy.mean(delay_hist_agg)
                         delay_inferiorlimit = st.t.interval(0.95, len(delay_hist_agg)-1, loc=delay_mean, scale=st.sem(delay_hist_agg))[0]
@@ -597,6 +608,7 @@ if __name__ == "__main__":
                         del jitter_mean, jitter_inferiorlimit
 
                     packet_loss_column = k
+                    bytes_lost_column = k
                     delay_column = k
                     jitter_column = k
                     axes[i][0].set_ylabel("     %s\n" % appName)
@@ -604,13 +616,22 @@ if __name__ == "__main__":
                     # Set column labels on top
                     if metric == "lostPackets":
                         if i == 0:
-                            axes[i][packet_loss_column].set_xlabel('%s\n\nPacket Loss\n' % dsa_labels[dsa])
+                            axes[i][packet_loss_column].set_xlabel('%s\n\nPacket Loss (%)\n' % dsa_labels[dsa])
                             axes[i][packet_loss_column].xaxis.set_label_position('top')
                         # Link Y axis of same metrics
                         axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][packet_loss_column])
                         # Plot boxplots with results
                         axes[i][packet_loss_column].boxplot(lost_packets)
                         axes[i][packet_loss_column].grid(b=True, which='major', color='#999999', linestyle='-')
+                    elif metric == "lostBytes":
+                        if i == 0:
+                            axes[i][bytes_lost_column].set_xlabel('%s\n\nBytes Lost (%)\n' % dsa_labels[dsa])
+                            axes[i][bytes_lost_column].xaxis.set_label_position('top')
+                        # Link Y axis of same metrics
+                        axes[i][0].get_shared_y_axes().join(axes[i][0], axes[i][bytes_lost_column])
+                        # Plot boxplots with results
+                        axes[i][bytes_lost_column].boxplot(lost_bytes)
+                        axes[i][bytes_lost_column].grid(b=True, which='major', color='#999999', linestyle='-')
                     elif metric == "delay":
                         if i == 0:
                             axes[i][delay_column].set_xlabel('%s\n\nDelay (s)\n' % dsa_labels[dsa])
@@ -636,12 +657,18 @@ if __name__ == "__main__":
                     k += 1
                 # Next row
                 i += 1
-            if metric != "lostPackets":
+            if metric not in ["lostPackets", "lostBytes"]:
                 for i in range(len(usedAppsDict[simulation_case_key])):
                     for k in range(len(compiled_simulation_results["case"][simulation_case_key]["dsa"])):
                         axes[i][k].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
                         axes[i][k].set_ylim([0.0001, 100.0])
                         axes[i][k].set_yticks([0.001, 0.01, 0.1, 1.0, 10.0])
+            else:
+                for i in range(len(usedAppsDict[simulation_case_key])):
+                    for k in range(len(compiled_simulation_results["case"][simulation_case_key]["dsa"])):
+                        axes[i][k].yaxis.set_major_formatter(FormatStrFormatter('%.3f'))
+                        axes[i][k].set_ylim([0.0, 1.0])
+
 
             del packet_loss_column, delay_column, jitter_column, i, k, lost_packets, delay_hist_agg, jitter_hist_agg
             fig.tight_layout(pad=2.0)
