@@ -117,18 +117,24 @@ public:
 
 };  // class MpiTestSuite
 
+#ifndef CMAKE_EXAMPLE_AS_TEST
+#define MODULE_PATH
+#else
+#define MODULE_PATH "./build/src/mpi/examples/"
+#endif
+
 /* Tests using SimpleDistributedSimulatorImpl */
-static MpiTestSuite g_mpiNms2      ("mpi-example-nms-2",       "nms-p2p-nix-distributed", NS_TEST_SOURCEDIR, 2);
-static MpiTestSuite g_mpiComm2     ("mpi-example-comm-2",      "simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 2);
-static MpiTestSuite g_mpiComm2comm ("mpi-example-comm-2-init", "simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 2, "--init");
-static MpiTestSuite g_mpiComm3comm ("mpi-example-comm-3-init", "simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 3, "--init");
-static MpiTestSuite g_mpiEmpty2    ("mpi-example-empty-2",     "simple-distributed-empty-node", NS_TEST_SOURCEDIR, 2);
-static MpiTestSuite g_mpiEmpty3    ("mpi-example-empty-3",     "simple-distributed-empty-node", NS_TEST_SOURCEDIR, 3);
-static MpiTestSuite g_mpiSimple2   ("mpi-example-simple-2",    "simple-distributed", NS_TEST_SOURCEDIR, 2);
-static MpiTestSuite g_mpiThird2    ("mpi-example-third-2",     "third-distributed", NS_TEST_SOURCEDIR, 2);
+static MpiTestSuite g_mpiNms2      ("mpi-example-nms-2",       MODULE_PATH"nms-p2p-nix-distributed", NS_TEST_SOURCEDIR, 2);
+static MpiTestSuite g_mpiComm2     ("mpi-example-comm-2",      MODULE_PATH"simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 2);
+static MpiTestSuite g_mpiComm2comm ("mpi-example-comm-2-init", MODULE_PATH"simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 2, "--init");
+static MpiTestSuite g_mpiComm3comm ("mpi-example-comm-3-init", MODULE_PATH"simple-distributed-mpi-comm", NS_TEST_SOURCEDIR, 3, "--init");
+static MpiTestSuite g_mpiEmpty2    ("mpi-example-empty-2",     MODULE_PATH"simple-distributed-empty-node", NS_TEST_SOURCEDIR, 2);
+static MpiTestSuite g_mpiEmpty3    ("mpi-example-empty-3",     MODULE_PATH"simple-distributed-empty-node", NS_TEST_SOURCEDIR, 3);
+static MpiTestSuite g_mpiSimple2   ("mpi-example-simple-2",    MODULE_PATH"simple-distributed", NS_TEST_SOURCEDIR, 2);
+static MpiTestSuite g_mpiThird2    ("mpi-example-third-2",     MODULE_PATH"third-distributed", NS_TEST_SOURCEDIR, 2);
 
 /* Tests using NullMessageSimulatorImpl */
-static MpiTestSuite g_mpiSimple2NullMsg ("mpi-example-simple-2-nullmsg",    "simple-distributed", NS_TEST_SOURCEDIR, 2, "--nullmsg");
-static MpiTestSuite g_mpiEmpty2NullMsg  ("mpi-example-empty-2-nullmsg",     "simple-distributed-empty-node", NS_TEST_SOURCEDIR, 2, "-nullmsg");
-static MpiTestSuite g_mpiEmpty3NullMsg  ("mpi-example-empty-3-nullmsg",     "simple-distributed-empty-node", NS_TEST_SOURCEDIR, 3, "-nullmsg");
+static MpiTestSuite g_mpiSimple2NullMsg ("mpi-example-simple-2-nullmsg",    MODULE_PATH"simple-distributed", NS_TEST_SOURCEDIR, 2, "--nullmsg");
+static MpiTestSuite g_mpiEmpty2NullMsg  ("mpi-example-empty-2-nullmsg",     MODULE_PATH"simple-distributed-empty-node", NS_TEST_SOURCEDIR, 2, "-nullmsg");
+static MpiTestSuite g_mpiEmpty3NullMsg  ("mpi-example-empty-3-nullmsg",     MODULE_PATH"simple-distributed-empty-node", NS_TEST_SOURCEDIR, 3, "-nullmsg");
 

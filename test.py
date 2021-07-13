@@ -187,6 +187,10 @@ def parse_examples_to_run_file(
 
             # Set the full path for the example.
             example_path = os.path.join(cpp_executable_dir, example_path)
+
+            if not os.path.exists(example_path):
+                example_path = os.path.join(cpp_executable_dir, example_name)
+
             example_name = os.path.join(
                 os.path.relpath(cpp_executable_dir, NS3_BUILDDIR),
                 example_name)
@@ -1078,7 +1082,8 @@ def run_tests():
     # match what is done in the wscript file.
     #
     test_runner_name = "%s%s-%s%s" % (APPNAME, VERSION, "test-runner", BUILD_PROFILE_SUFFIX)
-
+    if not os.path.exists(os.path.join(NS3_BUILDDIR, "utils", test_runner_name)):
+        test_runner_name = "test-runner"
     #
     # Run waf to make sure that everything is built, configured and ready to go
     # unless we are explicitly told not to.  We want to be careful about causing

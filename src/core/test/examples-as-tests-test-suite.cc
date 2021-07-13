@@ -23,6 +23,12 @@
 
 #include <vector>
 
+#ifndef CMAKE_EXAMPLE_AS_TEST
+#define MODULE_PATH
+#else
+#define MODULE_PATH "./build/src/core/examples/"
+#endif
+
 using namespace ns3;
 
 /**
@@ -64,8 +70,8 @@ public:
 };
 
 CommandLineExampleTestCase::CommandLineExampleTestCase ()
-    :   ExampleAsTestCase ("core-example-command-line", 
-                           "command-line-example",
+    :   ExampleAsTestCase ("core-example-command-line",
+                           MODULE_PATH"command-line-example",
                            NS_TEST_SOURCEDIR)
 {}
 
@@ -99,9 +105,9 @@ public:
 ExamplesAsTestsTestSuite::ExamplesAsTestsTestSuite ()
   : TestSuite ("examples-as-tests-test-suite", UNIT)
 {
-  AddTestCase (new ExampleAsTestCase ("core-example-simulator", "sample-simulator", NS_TEST_SOURCEDIR));
+  AddTestCase (new ExampleAsTestCase ("core-example-simulator", MODULE_PATH"sample-simulator", NS_TEST_SOURCEDIR));
 
-  AddTestCase (new ExampleAsTestCase ("core-example-sample-random-variable", "sample-random-variable", NS_TEST_SOURCEDIR));
+  AddTestCase (new ExampleAsTestCase ("core-example-sample-random-variable", MODULE_PATH"sample-random-variable", NS_TEST_SOURCEDIR));
 
   AddTestCase (new CommandLineExampleTestCase ());
 }
@@ -120,7 +126,7 @@ static ExamplesAsTestsTestSuite g_examplesAsTestsTestSuite;
  * Tests ExampleTestSuite which runs a single example as test suite as specified in constructor arguments.
  */
 
-static ExampleAsTestSuite g_exampleCommandLineTest ("core-example-simulator", "sample-simulator", NS_TEST_SOURCEDIR);
+static ExampleAsTestSuite g_exampleCommandLineTest ("core-example-simulator", MODULE_PATH"sample-simulator", NS_TEST_SOURCEDIR);
 
 }  // namespace tests
 

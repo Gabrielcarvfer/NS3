@@ -86,23 +86,28 @@ ExampleAsTestCase::DoRun (void)
   std::string testFile = CreateTempDirFilename  (GetName () + ".reflog");
 
   std::stringstream ss;
-
+#ifndef CMAKE_EXAMPLE_AS_TEST
   // Use bash as shell to allow use of PIPESTATUS
   ss << "bash -c './waf --run-no-build " << m_program
-     << " --command-template=\"" << GetCommandTemplate () << "\""
-
+     << " --command-template=\"" << GetCommandTemplate () << "\"";
+#else
+  char buff[500];
+  sprintf(buff, GetCommandTemplate().c_str(), m_program.c_str());
+  ss << "bash -c '" << buff;
+#endif
     // redirect std::clog, std::cerr to std::cout
-     << " 2>&1 "
+  ss << " 2>&1 "
 
     // Suppress the waf lines from output; waf output contains directory paths which will
     // obviously differ during a test run
+#ifndef CMAKE_EXAMPLE_AS_TEST
      << " | grep -v 'Waf:' "
+#endif
      << GetPostProcessingCommand ()
      << " > " << testFile
 
     // Get the status of waf
      << "; exit ${PIPESTATUS[0]}'";
-
   int status = std::system (ss.str ().c_str ());
 
   std::cout << "command:  " << ss.str () << "\n"
