@@ -258,7 +258,7 @@ public:
   /// \param enableProbes if true, include also the per-probe/flow pair statistics in the output
   void SerializeToXmlFile (std::string fileName, bool enableHistograms, bool enableProbes);
   void ClearFlowStats ();
-  void FlowMPeriodicSerializeToXmlFile ();
+  void PeriodicSerializeToXmlFile ();
 
 protected:
 
