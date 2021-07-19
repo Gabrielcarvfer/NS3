@@ -135,6 +135,24 @@ FlowMonitor::GetStatsForFlow (FlowId flowId)
     }
 }
 
+void
+FlowMonitor::ClearFlowStats ()
+{
+  FlowId flowID = 1;
+  for (FlowStatsContainerI iter = m_flowStats.begin(); iter != m_flowStats.end() ; iter++, flowID++)
+  {
+    FlowMonitor::FlowStats &ref = m_flowStats[flowID];
+      ref.delaySum = Seconds (0);
+      ref.jitterSum = Seconds (0);
+      ref.lastDelay = Seconds (0);
+      ref.txBytes = 0;
+      ref.rxBytes = 0;
+      ref.txPackets = 0;
+      ref.rxPackets = 0;
+      ref.lostPackets = 0;
+      ref.timesForwarded = 0;
+  }
+}
 
 void
 FlowMonitor::ReportFirstTx (Ptr<FlowProbe> probe, uint32_t flowId, uint32_t packetId, uint32_t packetSize)
@@ -520,6 +538,17 @@ FlowMonitor::SerializeToXmlFile (std::string fileName, bool enableHistograms, bo
   os.close ();
 }
 
+void
+FlowMonitor::PeriodicSerializeToXmlFile ()
+{
+  //NS_LOG_FUNCTION (this << fileName << enableHistograms << enableProbes);
+  Time now = Simulator::Now ();
+  std::string now_str = std::to_string(int(now.GetSeconds()));
+  std::string new_filename = now_str + "test_flowmon.xml";
+  FlowMonitor::SerializeToXmlFile(new_filename, false, false);
+  FlowMonitor::ClearFlowStats ();
+  Simulator::Schedule (Seconds(1), &FlowMonitor::PeriodicSerializeToXmlFile, this);
+}
 
 } // namespace ns3
 
