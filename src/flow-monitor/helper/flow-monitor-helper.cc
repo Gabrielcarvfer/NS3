@@ -173,6 +173,14 @@ FlowMonitorHelper::SerializeToXmlFile (std::string fileName, bool enableHistogra
       m_flowMonitor->SerializeToXmlFile (fileName, enableHistograms, enableProbes);
     }
 }
-
+  
+void
+FlowMonitorHelper::PeriodicSerializeToXmlFile ()
+{
+  if (m_flowMonitor)
+    {
+      m_flowMonitor->PeriodicSerializeToXmlFile ();
+    }
+}
 
 } // namespace ns3
