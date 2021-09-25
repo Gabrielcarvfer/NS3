@@ -1,5 +1,5 @@
 """
-Configure gcc with -ftime-report and run "make -j1 1> compile_targets.txt 2> time_reports.txt"
+Configure gcc with -ftime-report and run "make -j1 > compile_targets.txt 2> time_reports.txt"
 Yes, -j1 will take a long time, but you really want these results to analyze your compilation time,
 don't you?
 """
