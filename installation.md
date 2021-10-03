@@ -3,16 +3,10 @@ layout: page
 title: Installation
 permalink: /installation
 ---
-## 0. Download, build and debug ns-3 with CMake 
 
-Assumes pre-existing toolchain and pre-configured environment.
-Remember to enable the subtitles.
+## 0. Pre-requisites
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/db4-Zz5M3oA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-## 1. Pre-requisites
-
-### 1.1 Toolchain
+### 0.1 Toolchain
 Before proceeding you will need: 
 
     1. git
@@ -29,7 +23,7 @@ Those are basic pre-requisites for both ns-3 and VcPkg, used in this version of 
 For package-manager commands used to install these packages, look at `Install required packages` entries in the [CI file](https://github.com/Gabrielcarvfer/NS3/blob/master/.github/workflows/per_commit.yml).
 
 
-## 0. Configure your environment (Windows)
+### 0.2. Configure your environment (Windows)
 
 Wondering how to setup msys2 or WSL? [Check this link](/NS3/environment_setup_windows)
 
