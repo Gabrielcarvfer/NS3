@@ -2,6 +2,7 @@
 layout: page
 title: Installation with Visual Studio
 permalink: /installation/visualstudio
+exclude: true
 ---
 
 ### 3.1 CMake configuration with Visual Studio
