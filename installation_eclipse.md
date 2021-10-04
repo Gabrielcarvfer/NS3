@@ -5,7 +5,7 @@ permalink: /installation/eclipse
 ---
 
 ### 3.0 Preparing Eclipse CDT
-Start by download [Eclipse](https://www.eclipse.org/cdt/downloads.php).
+Start by downloading [Eclipse](https://www.eclipse.org/cdt/downloads.php).
 
 Then unpack it and install the CMake plugins.
 
