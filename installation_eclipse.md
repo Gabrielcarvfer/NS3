@@ -36,8 +36,8 @@ will show both the top level project and the CMake cache folder.
 The project will open and build targets will be listed on the right while sources are in the left.
 ![targets_and_indexer](/NS3/img/eclipse/build_target_and_indexer.png)
 
-Auto-completion and other source-code take a while to begin working, while the C++ indexer runs
-(look at the bottom right of the window).
+Auto-completion and other source-code related analysis take a while to begin working, 
+while the C++ indexer runs (look at the bottom right of the window).
 
 ## 3.3 Building targets with Eclipse CDT
 
