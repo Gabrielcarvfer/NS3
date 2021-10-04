@@ -9,7 +9,7 @@ Navigate to the cloned NS3 folder and run ns3waf
 
 ```
 cd NS3
-./ns3waf -d *buildtype -G *generator*
+./ns3waf -d *buildtype* -G *generator*
 ```
 You can pass arguments to the ns3waf command such as `--enable-tests --enable-examples`
 in order to configure it enabling tests and examples.
@@ -24,7 +24,7 @@ with the following argument: -G "generator name (with double quotes)"
 To simplify things, we are going to automatically select one of the available ones 
 (probably make or ninja).
 
-Most of the arguments match waf, but so I won't list all of them here. Check all
+Most of the arguments match waf, so I won't list all of them here. Check all
 the possible arguments in the ns3waf file.
 
 ## 3.2 Building the project with ns3waf
