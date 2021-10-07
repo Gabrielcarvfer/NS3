@@ -25,7 +25,7 @@ For package-manager commands used to install these packages, look at `Install re
 
 ### 0.2. Configure your environment (Windows)
 
-Wondering how to setup msys2 or WSL? [Check this link](/NS3/environment_setup_windows)
+Wondering how to setup msys2 or WSL? [Check this link](/NS3/windows_dev_setup)
 
 
 ## 1. Getting the code
