@@ -4,16 +4,11 @@
 
 #include "PubSubInfra.h"
 
-template <> uint64_t PubSubInfra<xApp>::m_instanceCount = 0;
-template <> Address PubSubInfra<xApp>::m_node0Address{};
-template <> std::map<const std::string, const PubSubInfra<xApp>*>
-    PubSubInfra<xApp>::m_endpointRootToInstance{};
-template <> std::map<const std::string, std::vector<const PubSubInfra<xApp>*>>
-    PubSubInfra<xApp>::m_endpointToSubscribers{};
+using namespace ns3;
 
-template <> uint64_t PubSubInfra<E2Node>::m_instanceCount = 0;
-template <> Address PubSubInfra<E2Node>::m_node0Address{};
-template <> std::map<const std::string, const PubSubInfra<E2Node>*>
-    PubSubInfra<E2Node>::m_endpointRootToInstance{};
-template <> std::map<const std::string, std::vector<const PubSubInfra<E2Node>*>>
-    PubSubInfra<E2Node>::m_endpointToSubscribers{};
+std::map<const std::string, uint64_t> PubSubInfra::m_instanceCountMap{};
+Address PubSubInfra::m_node0Address{};
+std::map<const std::string, const PubSubInfra*>
+    PubSubInfra::m_endpointRootToInstance{};
+std::map<const std::string, std::vector<const PubSubInfra*>>
+    PubSubInfra::m_endpointToSubscribers{};
