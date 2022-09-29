@@ -9,6 +9,8 @@
 #include <vector>
 
 #include "PubSubInfra.h"
+#include "xApp.h"
+#include "E2Node.h"
 #include "ns3/core-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/point-to-point-module.h"
@@ -29,7 +31,7 @@ int main()
   NS_ASSERT(xapp1.m_instanceId == 1);
   NS_ASSERT(xapp1.m_endpointRoot == "/xApp/1");
 
-  NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == static_cast<PubSubInfra<xApp>*>(&xapp0));
+  NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == static_cast<PubSubInfra*>(&xapp0));
 
   //todo: Testando operator==
   // NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == xapp0);
@@ -43,7 +45,7 @@ int main()
   NS_ASSERT(e2n1.m_instanceId == 1);
   NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
 
-  NS_ASSERT(E2Node::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra<E2Node>*>(&e2t));
+  NS_ASSERT(E2Node::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
 
   // Testes de registros de endpoint
   e2t.RegisterEndpoint("//teste");
@@ -57,7 +59,7 @@ int main()
   {
     auto subscribers = E2Node::m_endpointToSubscribers.find ("/E2Node/1/teste2")->second;
     NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
-                          static_cast<PubSubInfra<E2Node> *> (&e2t)) != subscribers.end ());
+                          static_cast<PubSubInfra *> (&e2t)) != subscribers.end ());
   }
 
 
