@@ -14,6 +14,7 @@ class E2Node : public PubSubInfra
 public:
   E2Node () : PubSubInfra ("E2Node"){};
   ~E2Node (){};
+  void HandlePayload (std::string endpoint, Json payload);
 };
 
 }

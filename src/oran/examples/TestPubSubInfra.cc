@@ -8,9 +8,9 @@
 #include <utility>
 #include <vector>
 
-#include "PubSubInfra.h"
-#include "xApp.h"
-#include "E2Node.h"
+#include "ns3/PubSubInfra.h"
+#include "ns3/xApp.h"
+#include "ns3/E2Node.h"
 #include "ns3/core-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/point-to-point-module.h"
