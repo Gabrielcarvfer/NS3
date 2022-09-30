@@ -3,3 +3,10 @@
 //
 
 #include "dynamicSpectrumAllocationxApp.h"
+
+using namespace ns3;
+
+void dynamicSpectrumAllocationxApp::TakeAction()
+{
+//todo
+};

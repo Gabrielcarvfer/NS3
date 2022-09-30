@@ -7,11 +7,14 @@
 
 #include "xApp.h"
 
-class dynamicSpectrumAllocationxApp: public xApp
+namespace ns3
+{
+class dynamicSpectrumAllocationxApp : public xApp
 {
 public:
-  dynamicSpectrumAllocationxApp(): xApp(){};
-  ~dynamicSpectrumAllocationxApp(){};
+  dynamicSpectrumAllocationxApp () : xApp (){};
+  ~dynamicSpectrumAllocationxApp (){};
+  void TakeAction();
 };
-
+}
 #endif //NS3_DYNAMICSPECTRUMALLOCATIONXAPP_H

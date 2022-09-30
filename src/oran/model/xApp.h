@@ -18,6 +18,7 @@ public:
   xApp () : PubSubInfra ("xApp"){};
   ~xApp (){};
   void HandlePayload (std::string endpoint, Json payload);
+  void TakeAction();
 };
 
 }
