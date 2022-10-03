@@ -10,13 +10,24 @@
 
 #include "ns3/PubSubInfra.h"
 #include "ns3/xApp.h"
-#include "ns3/E2Node.h"
 #include "ns3/core-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/mobility-module.h"
 
 NS_LOG_COMPONENT_DEFINE("TestPubSubInfra");
+
+namespace ns3
+{
+  // Local definition of E2Node just for PubSub testing
+  class E2Node : public PubSubInfra
+  {
+  public:
+    E2Node () : PubSubInfra ("E2Node"){};
+    ~E2Node (){};
+    void HandlePayload (std::string endpoint, Json payload);
+  };
+}
 
 using namespace ns3;
 
