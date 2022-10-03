@@ -8,3 +8,14 @@ build_lib_example(
     ${liblte}
     ${liboran}
 )
+
+build_lib_example(
+        NAME TestE2Node
+        SOURCE_FILES TestE2Node.cc
+        LIBRARIES_TO_LINK
+        ${libcore}
+        ${libmobility}
+        ${libpoint-to-point}
+        ${liblte}
+        ${liboran}
+)
