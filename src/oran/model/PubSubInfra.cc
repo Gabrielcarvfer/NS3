@@ -18,6 +18,8 @@ std::map<const std::string, std::vector<const PubSubInfra*>>
 bool
 PubSubInfra::Connect ()
 {
+  NS_LOG_FUNCTION (this);
+
   auto node = GetNode ();
   if (!node)
     return false;
@@ -49,7 +51,7 @@ PubSubInfra::Connect ()
           tries--;
           portBase++;
         }
-      std::cout << "Binding port at " << m_endpointRoot << std::endl;
+      NS_LOG_FUNCTION("Binding port at " + m_endpointRoot);
     }
   else
     {
@@ -59,11 +61,11 @@ PubSubInfra::Connect ()
               "Failed to bind socket"); //InetSocketAddress(Ipv4Address::GetAny(), 8123));
         }
 
-      std::cout << "Binding port at " << m_endpointRoot << std::endl;
+      NS_LOG_FUNCTION("Binding port at " + m_endpointRoot);
 
       m_socket->Connect (m_node0Address);
-      std::cout << "Connecting to " << m_endpointRootToInstance.begin ()->first << " from "
-                << m_endpointRoot << std::endl;
+      NS_LOG_FUNCTION("Connecting to " + m_endpointRootToInstance.begin ()->first + " from "
+                + m_endpointRoot);
 
       Json REGISTER_CALL;
       REGISTER_CALL["ENDPOINT"] = m_endpointRoot;
@@ -79,13 +81,16 @@ PubSubInfra::Connect ()
 void
 PubSubInfra::Send (Ptr<Packet> packet)
 {
-  std::cout << this->m_endpointRoot << " sending packet " << packet << std::endl;
+  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION(this->m_endpointRoot + " sending packet " << packet);
   m_socket->Send (packet);
 }
 
 void
 PubSubInfra::RegisterEndpoint (std::string endpoint)
 {
+  NS_LOG_FUNCTION (this);
+
   // Chama método estático para fazer o registro
   sRegisterEndpoint (m_endpointRoot, endpoint);
 }
@@ -93,6 +98,7 @@ PubSubInfra::RegisterEndpoint (std::string endpoint)
 void
 PubSubInfra::SubscribeToEndpoint (std::string endpoint)
 {
+  NS_LOG_FUNCTION (this);
   std::cout << this->m_endpointRoot << " subscribing to endpoint " << endpoint << std::endl;
   sSubscribeToEndpoint (endpoint, this);
 }
@@ -100,6 +106,8 @@ PubSubInfra::SubscribeToEndpoint (std::string endpoint)
 void
 PubSubInfra::PublishToEndpointSubscribers (std::string endpoint, Json json)
 {
+  NS_LOG_FUNCTION (this);
+
   if (this->m_endpointRoot == "/E2Node/0")
     {
       // Nó 0 age como roteador
@@ -122,6 +130,8 @@ PubSubInfra::PublishToEndpointSubscribers (std::string endpoint, Json json)
 void
 PubSubInfra::ReceivePacket (Ptr<Socket> socket)
 {
+  NS_LOG_FUNCTION (this);
+
   Ptr<Packet> packet;
   Address from;
   while ((packet = socket->RecvFrom (from)))
@@ -137,9 +147,7 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
           m_endpointToSocketMap.emplace (endpoint, socket);
         }
 
-      std::cout << "Endpoint " << m_endpointRoot << " received message " << msg.dump ()
-                << std::endl;
-
+      NS_LOG_FUNCTION("Endpoint " + m_endpointRoot + " received message: " + msg.dump ());
       ReceiveJsonPayload (msg);
     }
 }
@@ -147,8 +155,9 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
 void
 PubSubInfra::ReceiveJsonPayload (Json msg)
 {
+  NS_LOG_FUNCTION (this);
+
   NS_ASSERT (msg.contains ("ENDPOINT"));
-  std::cout << to_string(msg) << std::endl;
   if (msg.contains("INTENT"))
     {
       std::string rpc;
@@ -161,7 +170,7 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
           rpc = msg.find("INTENT")->get<std::string>();
         }
       NS_ASSERT (msg.contains ("PAYLOAD"));
-
+      NS_LOG_FUNCTION(rpc + "handling of " + to_string(msg));
       if (rpc == "GET")
         {
           // Forward incoming message to endpoint subscribers
@@ -185,8 +194,9 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
     {
       if (msg.contains ("PAYLOAD"))
         {
-          HandlePayload (msg.find ("ENDPOINT")->get<std::string> (),
-                         msg.find ("PAYLOAD")->get<Json> ());
+          Json payload;
+          msg.at("PAYLOAD").get_to(payload);
+          HandlePayload (msg.find ("ENDPOINT")->get<std::string> (), payload);
         }
       else
         {
@@ -200,6 +210,8 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
 Ipv4Address
 PubSubInfra::getNodeAddress (unsigned device)
 {
+  NS_LOG_FUNCTION (this);
+
   Ptr<Ipv4> ipv4 = GetNode ()->GetObject<Ipv4> ();
   return ipv4->GetAddress (device, 0).GetLocal ();
 }
@@ -209,6 +221,8 @@ PubSubInfra::getNodeAddress (unsigned device)
 Ptr<Packet>
 PubSubInfra::encodeJsonToPacket (Json json_contents)
 {
+  NS_LOG_FUNCTION_NOARGS();
+
   std::string json_literal = json_contents.dump ();
   uint64_t size = json_literal.size () + 1;
   uint8_t *data_block = new uint8_t[LEN64 + size];
@@ -222,6 +236,8 @@ PubSubInfra::encodeJsonToPacket (Json json_contents)
 Json
 PubSubInfra::decodePacketToJson (Ptr<Packet> packet)
 {
+  NS_LOG_FUNCTION_NOARGS();
+
   uint64_t size;
   packet->CopyData ((uint8_t *) &size, LEN64);
   uint8_t *json_literal = new uint8_t[LEN64 + size];
@@ -234,7 +250,7 @@ PubSubInfra::decodePacketToJson (Ptr<Packet> packet)
 bool
 PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
 {
-  std::cout << rootEndpoint << " registering endpoint " << endpoint << std::endl;
+  NS_LOG_FUNCTION(rootEndpoint + " registering endpoint " + endpoint);
 
   // Inclui prefixo ao endpoint se não estiver presente
   if (endpoint.find (rootEndpoint) == std::string::npos)
@@ -251,10 +267,12 @@ PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
   if (m_endpointToSubscribers.find (result) == m_endpointToSubscribers.end ())
     {
       m_endpointToSubscribers.emplace (result, std::vector<const PubSubInfra *>{});
+      NS_LOG_FUNCTION("Successful registration of endpoint " + result);
       return true;
     }
   else
     {
+      NS_LOG_FUNCTION("Failed to register endpoint " + result);
       return false;
     }
 }
@@ -262,6 +280,7 @@ PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
 void
 PubSubInfra::sSubscribeToEndpoint (std::string endpoint, PubSubInfra *subscriber)
 {
+  NS_LOG_FUNCTION_NOARGS();
 
   // Register the subscriber to the endpoint
   auto endpointIt = m_endpointToSubscribers.find (endpoint);
@@ -277,6 +296,8 @@ void
 PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::string endpoint,
                                std::string json_literal)
 {
+  NS_LOG_FUNCTION (this);
+
   // Check if publisher is registered
   auto publisherEndpointIt = m_endpointRootToInstance.find (publisherEndpoint);
   if (publisherEndpointIt == m_endpointRootToInstance.end ())
