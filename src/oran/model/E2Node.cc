@@ -399,6 +399,20 @@ E2Node::HandlePayload(std::string endpoint, Json payload)
     }
 }
 
+void E2Node::SendPayload (Json payload)
+{
+  if (m_endpointRoot != "/E2Node/0")
+    {
+      NS_LOG_FUNCTION ("Sending the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " to the RIC: " + to_string(payload));
+      m_socket->SendTo (encodeJsonToPacket (payload), 0, m_node0Address);
+    }
+  else
+    {
+      NS_LOG_FUNCTION ("RIC handling the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " locally: " + to_string(payload));
+      HandlePayload (m_endpointRoot, payload.at ("PAYLOAD"));
+    }
+}
+
 void E2Node::RegisterEndpoint(std::string endpoint)
 {
   NS_LOG_FUNCTION (this);
@@ -429,16 +443,16 @@ void E2Node::RemoveEndpoint(std::string endpoint)
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
 }
 
-void E2Node::SendPayload (Json payload)
+void
+E2Node::SubscribeToEndpoint (std::string endpoint)
 {
-  if (m_endpointRoot != "/E2Node/0")
-    {
-      NS_LOG_FUNCTION ("Sending the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " to the RIC: " + to_string(payload));
-      m_socket->SendTo (encodeJsonToPacket (payload), 0, m_node0Address);
-    }
-  else
-    {
-      NS_LOG_FUNCTION ("RIC handling the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " locally: " + to_string(payload));
-      HandlePayload (m_endpointRoot, payload.at ("PAYLOAD"));
-    }
+  NS_LOG_FUNCTION (m_endpointRoot + " subscribing to endpoint " + endpoint);
+  Json RIC_SUBSCRIPTION_REQUEST_MESSAGE;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["ENDPOINT"] = m_endpointRoot;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_REQUEST;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"];
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Definition"]; //todo
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["Sequence of Actions"];//todo
+  SendPayload (RIC_SUBSCRIPTION_REQUEST_MESSAGE);
+  //sSubscribeToEndpoint (endpoint, this);
 }

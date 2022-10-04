@@ -18,6 +18,7 @@ public:
   void RegisterEndpoint(std::string endpoint);
   void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
   void RemoveEndpoint(std::string endpoint);
+  void SubscribeToEndpoint (std::string endpoint);
 private:
   void SendPayload(Json payload);
 };

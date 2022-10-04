@@ -98,8 +98,7 @@ PubSubInfra::RegisterEndpoint (std::string endpoint)
 void
 PubSubInfra::SubscribeToEndpoint (std::string endpoint)
 {
-  NS_LOG_FUNCTION (this);
-  std::cout << this->m_endpointRoot << " subscribing to endpoint " << endpoint << std::endl;
+  NS_LOG_FUNCTION (this->m_endpointRoot + " subscribing to endpoint " + endpoint);
   sSubscribeToEndpoint (endpoint, this);
 }
 
