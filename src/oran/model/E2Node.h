@@ -16,6 +16,10 @@ public:
   ~E2Node (){};
   void HandlePayload (std::string endpoint, Json payload);
   void RegisterEndpoint(std::string endpoint);
+  void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
+  void RemoveEndpoint(std::string endpoint);
+private:
+  void SendPayload(Json payload);
 };
 
 }

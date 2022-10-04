@@ -170,7 +170,7 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
           rpc = msg.find("INTENT")->get<std::string>();
         }
       NS_ASSERT (msg.contains ("PAYLOAD"));
-      NS_LOG_FUNCTION(rpc + "handling of " + to_string(msg));
+      NS_LOG_FUNCTION(rpc + " handling of " + to_string(msg));
       if (rpc == "GET")
         {
           // Forward incoming message to endpoint subscribers
@@ -247,11 +247,9 @@ PubSubInfra::decodePacketToJson (Ptr<Packet> packet)
   return json;
 }
 
-bool
-PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
+std::string
+PubSubInfra::buildEndpoint(std::string rootEndpoint, std::string endpoint)
 {
-  NS_LOG_FUNCTION(rootEndpoint + " registering endpoint " + endpoint);
-
   // Inclui prefixo ao endpoint se não estiver presente
   if (endpoint.find (rootEndpoint) == std::string::npos)
     {
@@ -262,18 +260,81 @@ PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
   std::regex e ("//"); // matches derived type
   std::string result;
   std::regex_replace (std::back_inserter (result), endpoint.begin (), endpoint.end (), e, "/");
+  return result;
+}
+
+
+bool
+PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
+{
+  NS_LOG_FUNCTION(rootEndpoint + " registering endpoint " + endpoint);
+  std::string resulting_endpoint = buildEndpoint (rootEndpoint, endpoint);
 
   // If registered endpoint doesn't exist, register it
-  if (m_endpointToSubscribers.find (result) == m_endpointToSubscribers.end ())
+  if (m_endpointToSubscribers.find (resulting_endpoint) == m_endpointToSubscribers.end ())
     {
-      m_endpointToSubscribers.emplace (result, std::vector<const PubSubInfra *>{});
-      NS_LOG_FUNCTION("Successful registration of endpoint " + result);
+      m_endpointToSubscribers.emplace (resulting_endpoint, std::vector<const PubSubInfra *>{});
+      NS_LOG_FUNCTION("Successful registration of endpoint " + resulting_endpoint);
       return true;
     }
   else
     {
-      NS_LOG_FUNCTION("Failed to register endpoint " + result);
+      NS_LOG_FUNCTION("Failed to register endpoint " + resulting_endpoint);
       return false;
+    }
+}
+
+bool PubSubInfra::sUpdateEndpoint (std::string rootEndpoint, std::string old_endpoint, std::string new_endpoint)
+{
+  NS_LOG_FUNCTION(rootEndpoint + " updating endpoint " + old_endpoint + " with new endpoint " + new_endpoint);
+  bool successful = true;
+
+  std::string resulting_old_endpoint = buildEndpoint (rootEndpoint, old_endpoint);
+  std::string resulting_new_endpoint = buildEndpoint (rootEndpoint, new_endpoint);
+
+  // Check if old endpoint exists
+  successful &= m_endpointToSubscribers.find (resulting_old_endpoint) != m_endpointToSubscribers.end();
+  if (!successful)
+    {
+      NS_LOG_FUNCTION ("Can't update inexisting endpoint " + resulting_old_endpoint);
+      return false;
+    }
+
+  // Create new endpoint
+  successful &= sRegisterEndpoint (rootEndpoint, new_endpoint);
+  if (!successful)
+    {
+      NS_LOG_FUNCTION ("Can't create new endpoint " + resulting_new_endpoint);
+      return false;
+    }
+
+  // Move subscribers from old endpoint
+  m_endpointToSubscribers.find(resulting_new_endpoint)->second = m_endpointToSubscribers.find(resulting_old_endpoint)->second;
+
+  // Remove old endpoint
+  successful &= sRemoveEndpoint (rootEndpoint, old_endpoint);
+  if (!successful)
+    {
+      NS_LOG_FUNCTION ("Can't remove old endpoint " + resulting_old_endpoint);
+      return false;
+    }
+  return true;
+}
+
+bool PubSubInfra::sRemoveEndpoint (std::string rootEndpoint, std::string endpoint)
+{
+  NS_LOG_FUNCTION(rootEndpoint + " removing endpoint " + endpoint);
+  std::string resulting_endpoint = buildEndpoint (rootEndpoint, endpoint);
+
+  auto it = m_endpointToSubscribers.find(resulting_endpoint);
+  if(it == m_endpointToSubscribers.end())
+    {
+      return false;
+    }
+  else
+    {
+      m_endpointToSubscribers.erase (resulting_endpoint);
+      return true;
     }
 }
 
