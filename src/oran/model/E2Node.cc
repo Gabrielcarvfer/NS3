@@ -456,3 +456,21 @@ E2Node::SubscribeToEndpoint (std::string endpoint)
   SendPayload (RIC_SUBSCRIPTION_REQUEST_MESSAGE);
   //sSubscribeToEndpoint (endpoint, this);
 }
+
+// O-RAN WG3 E2SM KPM v2.00.03 7.3.2
+// Trigger timer: only for REPORT, not INSERT/POLICY
+// ["periodic"] = KPM interval
+
+// O-RAN WG3 E2SM KPM v2.00.03 7.4.1
+// REPORT services
+enum REPORT_KPM_SERVICES {
+  E2_NODE_MEASUREMENT = 1,
+  E2_NODE_MEASUREMENT_FOR_SINGLE_UE,
+  E2_NODE_CONDITIONAL_MEASUREMENT_FOR_UES,
+  E2_NODE_CONDITIONAL_MEASUREMENT_SET_FOR_UES,
+  E2_NODE_MEASUREMENT_FOR_MULTIPLE_UES
+};
+
+// REPORTed measurements
+// 5G https://www.etsi.org/deliver/etsi_TS/128500_128599/128552/16.10.00_60/ts_128552v161000p.pdf
+// 4G https://www.etsi.org/deliver/etsi_TS/132400_132499/132425/14.01.00_60/ts_132425v140100p.pdf
