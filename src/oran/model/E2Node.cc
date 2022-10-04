@@ -109,7 +109,7 @@ E2Node::HandlePayload(std::string endpoint, Json payload)
         }
     }
 
-  NS_LOG_FUNCTION("Handling payload" + to_string (payload));
+  NS_LOG_FUNCTION("Handling payload " + to_string (payload));
 
   // Handle all O-RAN messages
   switch(msg_type)
@@ -255,30 +255,84 @@ E2Node::HandlePayload(std::string endpoint, Json payload)
       case E2_NODE_CONFIGURATION_UPDATE:
         {
           bool successful = true;
+          bool temp = true;
+          std::vector<std::string> failed_addition_list {};
+          std::vector<std::vector<std::string>> failed_update_list {};
+          std::vector<std::string> failed_removal_list {};
+
           if(payload.contains("COMPONENT_CONFIGURATION_ADDITION_LIST"))
             {
               for(std::string new_endpoint: payload.find("COMPONENT_CONFIGURATION_ADDITION_LIST").value())
                 {
-                  successful &= sRegisterEndpoint (endpoint, new_endpoint);
+                  temp = true & sRegisterEndpoint (endpoint, new_endpoint);
+                  if (!temp)
+                    {
+                      failed_addition_list.push_back(new_endpoint);
+                    }
+                  successful &= temp;
                 }
             }
           if(payload.contains("COMPONENT_CONFIGURATION_UPDATE_LIST"))
             {
-              std::cout<< " boop boop" << std::endl;
-
+              for(std::vector<std::string> endpoints: payload.find("COMPONENT_CONFIGURATION_UPDATE_LIST").value())
+                {
+                  temp = true & sUpdateEndpoint (endpoint, endpoints[0], endpoints[1]);
+                  if (!temp)
+                    {
+                      failed_update_list.push_back(endpoints);
+                    }
+                  successful &= temp;
+                }
             }
           if(payload.contains("COMPONENT_CONFIGURATION_REMOVAL_LIST"))
             {
-              std::cout<< " boop boop" << std::endl;
-
+              for(std::string old_endpoint: payload.find("COMPONENT_CONFIGURATION_REMOVAL_LIST").value())
+                {
+                  temp = true & sRemoveEndpoint (endpoint, old_endpoint);
+                  if (!temp)
+                    {
+                      failed_removal_list.push_back({endpoint});
+                    }
+                  successful &= temp;
+                }
             }
           if(successful)
             {
-              //todo: send acknowledge
+              Json E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE;
+              E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE["ENDPOINT"] = endpoint;
+              E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE;
+              if(payload.contains("COMPONENT_CONFIGURATION_ADDITION_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = payload.find("COMPONENT_CONFIGURATION_ADDITION_LIST").value();
+                }
+              if(payload.contains("COMPONENT_CONFIGURATION_UPDATE_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = payload.find("COMPONENT_CONFIGURATION_UPDATE_LIST").value();
+                }
+              if(payload.contains("COMPONENT_CONFIGURATION_REMOVAL_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = payload.find("COMPONENT_CONFIGURATION_REMOVAL_LIST").value();
+                }
+              SendPayload (E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE);
             }
           else
             {
-              //todo: send failure
+              Json E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE;
+              E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE["ENDPOINT"] = endpoint;
+              E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE_FAILURE;
+              if(payload.contains("COMPONENT_CONFIGURATION_ADDITION_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = failed_addition_list;
+                }
+              if(payload.contains("COMPONENT_CONFIGURATION_UPDATE_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = failed_update_list;
+                }
+              if(payload.contains("COMPONENT_CONFIGURATION_REMOVAL_LIST"))
+                {
+                  E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = failed_removal_list;
+                }
+              SendPayload (E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE);
             }
         }
         break;
@@ -286,14 +340,16 @@ E2Node::HandlePayload(std::string endpoint, Json payload)
       // RIC initiated
       case E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE:
         {
-
+          //todo: handle successful case
+          NS_LOG_FUNCTION ("Received E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE from RIC: " + to_string(payload));
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.3.5.3
       // RIC initiated
       case E2_NODE_CONFIGURATION_UPDATE_FAILURE:
         {
-
+          //todo: handle failure case
+          NS_LOG_FUNCTION ("Received E2_NODE_CONFIGURATION_UPDATE_FAILURE from RIC: " + to_string(payload));
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.3.6.2
@@ -350,15 +406,39 @@ void E2Node::RegisterEndpoint(std::string endpoint)
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["ENDPOINT"] = m_endpointRoot;
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = std::vector<std::string>{endpoint};
-  //E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = {};
-  //E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = {};
-  //std::cout << to_string(E2_NODE_CONFIGURATION_UPDATE_MESSAGE) << std::endl;
+  SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
+}
+
+void E2Node::UpdateEndpoint(std::string old_endpoint, std::string new_endpoint)
+{
+  NS_LOG_FUNCTION (this);
+  Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["ENDPOINT"] = m_endpointRoot;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = std::vector<std::vector<std::string>>{{old_endpoint, new_endpoint}};
+  SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
+}
+
+void E2Node::RemoveEndpoint(std::string endpoint)
+{
+  NS_LOG_FUNCTION (this);
+  Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["ENDPOINT"] = m_endpointRoot;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = std::vector<std::string>{endpoint};
+  SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
+}
+
+void E2Node::SendPayload (Json payload)
+{
   if (m_endpointRoot != "/E2Node/0")
     {
-      m_socket->SendTo (encodeJsonToPacket (E2_NODE_CONFIGURATION_UPDATE_MESSAGE), 0, m_node0Address);
+      NS_LOG_FUNCTION ("Sending the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " to the RIC: " + to_string(payload));
+      m_socket->SendTo (encodeJsonToPacket (payload), 0, m_node0Address);
     }
   else
     {
-      HandlePayload (m_endpointRoot, E2_NODE_CONFIGURATION_UPDATE_MESSAGE.at ("PAYLOAD"));
+      NS_LOG_FUNCTION ("RIC handling the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " locally: " + to_string(payload));
+      HandlePayload (m_endpointRoot, payload.at ("PAYLOAD"));
     }
 }

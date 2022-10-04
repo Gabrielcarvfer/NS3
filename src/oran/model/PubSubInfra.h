@@ -87,7 +87,10 @@ public:
   Ipv4Address getNodeAddress (unsigned device = 3);
   static Ptr<Packet> encodeJsonToPacket (Json json_contents);
   static Json decodePacketToJson (Ptr<Packet> packet);
+  static std::string buildEndpoint(std::string rootEndpoint, std::string endpoint);
   static bool sRegisterEndpoint (std::string rootEndpoint, std::string endpoint);
+  static bool sUpdateEndpoint (std::string rootEndpoint, std::string old_endpoint, std::string new_endpoint);
+  static bool sRemoveEndpoint (std::string rootEndpoint, std::string endpoint);
   static void sSubscribeToEndpoint (std::string endpoint, PubSubInfra *subscriber);
   void sPublishToEndpointSubscribers (std::string publisherEndpoint, std::string endpoint,  std::string json_literal);
 };

@@ -28,6 +28,11 @@ void CheckEndpointRegistered(std::string endpoint)
   NS_ASSERT(E2Node::m_endpointToSubscribers.find(endpoint) != E2Node::m_endpointToSubscribers.end());
 }
 
+void CheckEndpointNotRegistered(std::string endpoint)
+{
+  NS_ASSERT(E2Node::m_endpointToSubscribers.find(endpoint) == E2Node::m_endpointToSubscribers.end());
+}
+
 int main()
 {
   // Testes de conexão de nós
@@ -155,15 +160,24 @@ int main()
   Simulator::Schedule(Seconds(1), &E2Node::Connect, &e2n1);
   Simulator::Schedule(Seconds(1.5), &CheckConnected, &e2n1);
 
-  // Testes de registros de endpoints
+  // Testes de registros de endpoints bem-sucedidos
   Simulator::Schedule (Seconds(2.0), &E2Node::RegisterEndpoint, &e2t, "//teste");
   Simulator::Schedule (Seconds(2.0), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
   Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/0/teste");
   Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/1/teste2");
 
+  // Testes de registros de endpoints mal-sucedidos
+  Simulator::Schedule (Seconds(3.0), &E2Node::RegisterEndpoint, &e2t, "//teste");
+  Simulator::Schedule (Seconds(3.0), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
+
   // Testes de atualizações de endpoints
+  Simulator::Schedule (Seconds(3.5), &E2Node::UpdateEndpoint, &e2n1, "/teste2", "/teste3");
+  Simulator::Schedule (Seconds(4.0), &CheckEndpointNotRegistered, "/E2Node/1/teste2");
+  Simulator::Schedule (Seconds(4.0), &CheckEndpointRegistered, "/E2Node/1/teste3");
 
   // Testes de remoção de endpoints
+  Simulator::Schedule (Seconds(4.5), &E2Node::RemoveEndpoint, &e2n1, "/teste3");
+  Simulator::Schedule (Seconds(5.0), &CheckEndpointNotRegistered, "/E2Node/1/teste3");
 
   // Teste de subscrição em endpoints
   //e2t.SubscribeToEndpoint("/E2Node/1/teste2");
@@ -173,7 +187,7 @@ int main()
   //                        static_cast<PubSubInfra *> (&e2t)) != subscribers.end ());
   //}
   //Simulator::Schedule(Seconds(1.5), &E2Node::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
-  
+
   // Teste de cancelamento de subscrição
   Simulator::Stop(Seconds(10));
   Simulator::Run();
