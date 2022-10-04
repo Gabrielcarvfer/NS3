@@ -137,24 +137,18 @@ int main()
    *  │     │ 0.5s Connect         │
    *  │     │ (open socket         │
    *  │◄────┘  and listen)         │
-   *  │                      ┌─────┤
-   *  │                ┌─────┘     │
-   *  │            ┌───┘           │
-   *  │       ┌────┘ 1s Connect    │
-   *  │    ┌──┘      (register     │
-   *  │◄───┘          to RIC)      │
    *  │                            │
-   *  ├──┐                         │
-   *  │  └────┐                    │
-   *  │       └───────────┐        │
-   *  │                   └───────►│
+   *  │◄───────────────────────────┤
+   *  │        1s Connect          │
+   *  │        (register           │
+   *  │         to RIC)            │
    *  │                            │
-   *  │       1.5s CheckConnected  │
-   *  │       (check if connection │
-   *  │        was established)    │
-   *  │                            │
-   *  │                            │
-   *  │                            │
+   *  ├───────────────────────────►│
+   *  │    1.5s CheckConnected     │
+   *  │    (check if connection    │
+   *  │     was established)       │
+   *  ▼                            ▼
+   *  t                            t
    */
   Simulator::Schedule(Seconds(0.5), &E2Node::Connect, &e2t);
   Simulator::Schedule(Seconds(1), &E2Node::Connect, &e2n1);
