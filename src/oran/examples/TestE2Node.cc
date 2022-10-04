@@ -33,6 +33,13 @@ void CheckEndpointNotRegistered(std::string endpoint)
   NS_ASSERT(E2Node::m_endpointToSubscribers.find(endpoint) == E2Node::m_endpointToSubscribers.end());
 }
 
+void CheckEndpointSubscribed(E2Node* node, std::string endpoint)
+{
+  auto subscribers = E2Node::m_endpointToSubscribers.find (endpoint)->second;
+  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
+                        static_cast<PubSubInfra *> (node)) != subscribers.end ());
+}
+
 int main()
 {
   // Testes de conexão de nós
@@ -174,12 +181,10 @@ int main()
   Simulator::Schedule (Seconds(5.0), &CheckEndpointNotRegistered, "/E2Node/1/teste3");
 
   // Teste de subscrição em endpoints
-  //e2t.SubscribeToEndpoint("/E2Node/1/teste2");
-  //{
-  //  auto subscribers = E2Node::m_endpointToSubscribers.find ("/E2Node/1/teste2")->second;
-  //  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
-  //                        static_cast<PubSubInfra *> (&e2t)) != subscribers.end ());
-  //}
+  Simulator::Schedule (Seconds(5.5), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
+  Simulator::Schedule (Seconds(6.0), &E2Node::SubscribeToEndpoint, &e2t, "/E2Node/1/teste2");
+  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, &e2t, "/E2Node/1/teste2");
+
   //Simulator::Schedule(Seconds(1.5), &E2Node::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 
   // Teste de cancelamento de subscrição
