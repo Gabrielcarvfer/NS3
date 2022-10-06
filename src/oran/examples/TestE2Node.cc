@@ -181,9 +181,9 @@ int main()
   Simulator::Schedule (Seconds(5.0), &CheckEndpointNotRegistered, "/E2Node/1/teste3");
 
   // Teste de subscrição em endpoints
-  Simulator::Schedule (Seconds(5.5), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
-  Simulator::Schedule (Seconds(6.0), &E2Node::SubscribeToEndpoint, &e2t, "/E2Node/1/teste2");
-  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, &e2t, "/E2Node/1/teste2");
+  Simulator::Schedule (Seconds(5.5), &E2Node::RegisterEndpoint, &e2n1, "/");
+  Simulator::Schedule (Seconds(6.0), &E2Node::SubscribeToEndpoint, &e2t, "/E2Node/1/");
+  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, &e2t, "/E2Node/1/");
 
   //Simulator::Schedule(Seconds(1.5), &E2Node::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 
