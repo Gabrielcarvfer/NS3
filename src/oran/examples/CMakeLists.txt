@@ -10,8 +10,8 @@ build_lib_example(
 )
 
 build_lib_example(
-        NAME TestE2Node
-        SOURCE_FILES TestE2Node.cc
+        NAME TestE2AP
+        SOURCE_FILES TestE2AP.cc
         LIBRARIES_TO_LINK
         ${libcore}
         ${libmobility}

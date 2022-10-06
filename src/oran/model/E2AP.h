@@ -2,18 +2,18 @@
 // Created by gabriel on 29/09/22.
 //
 
-#ifndef NS3_E2NODE_H
-#define NS3_E2NODE_H
+#ifndef NS3_E2AP_H
+#define NS3_E2AP_H
 
 #include "PubSubInfra.h"
 
 namespace ns3 {
 
-class E2Node : public PubSubInfra
+class E2AP : public PubSubInfra
 {
 public:
-  E2Node () : PubSubInfra ("E2Node"){};
-  ~E2Node (){};
+  E2AP () : PubSubInfra ("E2Node"){};
+  ~E2AP (){};
   void HandlePayload (std::string endpoint, Json payload);
   void RegisterEndpoint(std::string endpoint);
   void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
@@ -34,4 +34,4 @@ enum RIC_EVENT_TRIGGER_DEFINITION_STYLES
 };
 
 }
-#endif //NS3_E2NODE_H
+#endif //NS3_E2AP_H

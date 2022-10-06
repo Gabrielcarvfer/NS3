@@ -2,11 +2,11 @@
 // Created by gabriel on 29/09/22.
 //
 
-#include "E2Node.h"
+#include "E2AP.h"
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("E2Node");
+NS_LOG_COMPONENT_DEFINE ("E2AP");
 
 enum ORAN_MESSAGE_TYPES
     {
@@ -80,7 +80,7 @@ std::map<ORAN_MESSAGE_TYPES, std::string> oran_msg_str
     };
 
 void
-E2Node::HandlePayload(std::string endpoint, Json payload)
+E2AP::HandlePayload(std::string endpoint, Json payload)
 {
   NS_LOG_FUNCTION (this);
 
@@ -399,7 +399,8 @@ E2Node::HandlePayload(std::string endpoint, Json payload)
     }
 }
 
-void E2Node::SendPayload (Json payload)
+void
+E2AP::SendPayload (Json payload)
 {
   if (m_endpointRoot != "/E2Node/0")
     {
@@ -413,7 +414,8 @@ void E2Node::SendPayload (Json payload)
     }
 }
 
-void E2Node::RegisterEndpoint(std::string endpoint)
+void
+E2AP::RegisterEndpoint(std::string endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
@@ -423,7 +425,8 @@ void E2Node::RegisterEndpoint(std::string endpoint)
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
 }
 
-void E2Node::UpdateEndpoint(std::string old_endpoint, std::string new_endpoint)
+void
+E2AP::UpdateEndpoint(std::string old_endpoint, std::string new_endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
@@ -433,7 +436,8 @@ void E2Node::UpdateEndpoint(std::string old_endpoint, std::string new_endpoint)
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
 }
 
-void E2Node::RemoveEndpoint(std::string endpoint)
+void
+E2AP::RemoveEndpoint(std::string endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
@@ -444,7 +448,7 @@ void E2Node::RemoveEndpoint(std::string endpoint)
 }
 
 void
-E2Node::SubscribeToEndpoint (std::string endpoint)
+E2AP::SubscribeToEndpoint (std::string endpoint)
 {
   NS_LOG_FUNCTION (m_endpointRoot + " subscribing to endpoint " + endpoint);
   Json RIC_SUBSCRIPTION_REQUEST_MESSAGE;
