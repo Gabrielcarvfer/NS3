@@ -18,24 +18,24 @@ NS_LOG_COMPONENT_DEFINE("TestE2Node");
 using namespace ns3;
 
 
-void CheckConnected(E2Node* node)
+void CheckConnected(E2AP * node)
 {
   NS_ASSERT_MSG(node->m_socket, node->m_endpointRoot+" could not connect to E2T");
 }
 
 void CheckEndpointRegistered(std::string endpoint)
 {
-  NS_ASSERT(E2Node::m_endpointToSubscribers.find(endpoint) != E2Node::m_endpointToSubscribers.end());
+  NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) != E2AP::m_endpointToSubscribers.end());
 }
 
 void CheckEndpointNotRegistered(std::string endpoint)
 {
-  NS_ASSERT(E2Node::m_endpointToSubscribers.find(endpoint) == E2Node::m_endpointToSubscribers.end());
+  NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) == E2AP::m_endpointToSubscribers.end());
 }
 
-void CheckEndpointSubscribed(E2Node* node, std::string endpoint)
+void CheckEndpointSubscribed(E2AP * node, std::string endpoint)
 {
-  auto subscribers = E2Node::m_endpointToSubscribers.find (endpoint)->second;
+  auto subscribers = E2AP::m_endpointToSubscribers.find (endpoint)->second;
   NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
                         static_cast<PubSubInfra *> (node)) != subscribers.end ());
 }
@@ -121,15 +121,15 @@ int main()
 
   //Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
-  E2Node e2t;
+  E2AP e2t;
   NS_ASSERT(e2t.m_instanceId == 0);
   NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
 
-  E2Node e2n1;
+  E2AP e2n1;
   NS_ASSERT(e2n1.m_instanceId == 1);
   NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
 
-  NS_ASSERT(E2Node::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
+  NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
 
   // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
   // estabelecer os sockets TCP
@@ -157,35 +157,35 @@ int main()
    *  ▼                            ▼
    *  t                            t
    */
-  Simulator::Schedule(Seconds(0.5), &E2Node::Connect, &e2t);
-  Simulator::Schedule(Seconds(1), &E2Node::Connect, &e2n1);
+  Simulator::Schedule(Seconds(0.5), &E2AP::Connect, &e2t);
+  Simulator::Schedule(Seconds(1), &E2AP::Connect, &e2n1);
   Simulator::Schedule(Seconds(1.5), &CheckConnected, &e2n1);
 
   // Testes de registros de endpoints bem-sucedidos
-  Simulator::Schedule (Seconds(2.0), &E2Node::RegisterEndpoint, &e2t, "//teste");
-  Simulator::Schedule (Seconds(2.0), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
+  Simulator::Schedule (Seconds(2.0), &E2AP::RegisterEndpoint, &e2t, "//teste");
+  Simulator::Schedule (Seconds(2.0), &E2AP::RegisterEndpoint, &e2n1, "/teste2");
   Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/0/teste");
   Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/1/teste2");
 
   // Testes de registros de endpoints mal-sucedidos
-  Simulator::Schedule (Seconds(3.0), &E2Node::RegisterEndpoint, &e2t, "//teste");
-  Simulator::Schedule (Seconds(3.0), &E2Node::RegisterEndpoint, &e2n1, "/teste2");
+  Simulator::Schedule (Seconds(3.0), &E2AP::RegisterEndpoint, &e2t, "//teste");
+  Simulator::Schedule (Seconds(3.0), &E2AP::RegisterEndpoint, &e2n1, "/teste2");
 
   // Testes de atualizações de endpoints
-  Simulator::Schedule (Seconds(3.5), &E2Node::UpdateEndpoint, &e2n1, "/teste2", "/teste3");
+  Simulator::Schedule (Seconds(3.5), &E2AP::UpdateEndpoint, &e2n1, "/teste2", "/teste3");
   Simulator::Schedule (Seconds(4.0), &CheckEndpointNotRegistered, "/E2Node/1/teste2");
   Simulator::Schedule (Seconds(4.0), &CheckEndpointRegistered, "/E2Node/1/teste3");
 
   // Testes de remoção de endpoints
-  Simulator::Schedule (Seconds(4.5), &E2Node::RemoveEndpoint, &e2n1, "/teste3");
+  Simulator::Schedule (Seconds(4.5), &E2AP::RemoveEndpoint, &e2n1, "/teste3");
   Simulator::Schedule (Seconds(5.0), &CheckEndpointNotRegistered, "/E2Node/1/teste3");
 
   // Teste de subscrição em endpoints
-  Simulator::Schedule (Seconds(5.5), &E2Node::RegisterEndpoint, &e2n1, "/");
-  Simulator::Schedule (Seconds(6.0), &E2Node::SubscribeToEndpoint, &e2t, "/E2Node/1/");
+  Simulator::Schedule (Seconds(5.5), &E2AP::RegisterEndpoint, &e2n1, "/");
+  Simulator::Schedule (Seconds(6.0), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/");
   Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, &e2t, "/E2Node/1/");
 
-  //Simulator::Schedule(Seconds(1.5), &E2Node::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
+  //Simulator::Schedule(Seconds(1.5), &E2AP::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 
   // Teste de cancelamento de subscrição
   Simulator::Stop(Seconds(10));

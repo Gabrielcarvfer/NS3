@@ -19,12 +19,12 @@ NS_LOG_COMPONENT_DEFINE("TestPubSubInfra");
 
 namespace ns3
 {
-  // Local definition of E2Node just for PubSub testing
-  class E2Node : public PubSubInfra
+  // Local definition of E2AP just for PubSub testing
+  class E2AP : public PubSubInfra
   {
   public:
-    E2Node () : PubSubInfra ("E2Node"){};
-    ~E2Node (){};
+    E2AP () : PubSubInfra ("E2Node"){};
+    ~E2AP (){};
     void HandlePayload (std::string endpoint, Json payload);
   };
 }
@@ -48,27 +48,29 @@ int main()
   // NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == xapp0);
   // NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == &xapp0);
 
-  E2Node e2t;
+  E2AP e2t;
   NS_ASSERT(e2t.m_instanceId == 0);
   NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
 
-  E2Node e2n1;
+  E2AP e2n1;
   NS_ASSERT(e2n1.m_instanceId == 1);
   NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
 
-  NS_ASSERT(E2Node::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
+  NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
 
   // Testes de registros de endpoint
   e2t.RegisterEndpoint("//teste");
-  NS_ASSERT(E2Node::m_endpointToSubscribers.find("/E2Node/0/teste") != E2Node::m_endpointToSubscribers.end());
+  NS_ASSERT(E2AP::m_endpointToSubscribers.find("/E2Node/0/teste") !=
+             E2AP::m_endpointToSubscribers.end());
 
   e2n1.RegisterEndpoint("/teste2");
-  NS_ASSERT(E2Node::m_endpointToSubscribers.find("/E2Node/1/teste2") != E2Node::m_endpointToSubscribers.end());
+  NS_ASSERT(E2AP::m_endpointToSubscribers.find("/E2Node/1/teste2") !=
+             E2AP::m_endpointToSubscribers.end());
 
   // Teste de subscrição em endpoints
   e2t.SubscribeToEndpoint("/E2Node/1/teste2");
   {
-    auto subscribers = E2Node::m_endpointToSubscribers.find ("/E2Node/1/teste2")->second;
+    auto subscribers = E2AP::m_endpointToSubscribers.find ("/E2Node/1/teste2")->second;
     NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
                           static_cast<PubSubInfra *> (&e2t)) != subscribers.end ());
   }
@@ -88,8 +90,8 @@ int main()
   Json test = Json::parse("{\"PUBLIC_RPC\":{\"BODY\":{\"KEY\":\"value\"},\"ENDPOINT\":\"/E2Node/0/teste\"}}");
   NS_ASSERT(RPC_CALL == test);
 
-  Ptr<Packet> post_packaging = E2Node::encodeJsonToPacket(RPC_CALL);
-  Json post_depackaging = E2Node::decodePacketToJson(post_packaging);
+  Ptr<Packet> post_packaging = E2AP::encodeJsonToPacket(RPC_CALL);
+  Json post_depackaging = E2AP::decodePacketToJson(post_packaging);
   NS_ASSERT(RPC_CALL == post_depackaging);
 
   // Testes de conexão de nós
@@ -182,9 +184,9 @@ int main()
 
   // Publishing remoto (abrir socket, mandar requisição para nó 0, repostar a partir do nó 0 para destinatários)
   // e2n1.PublishToEndpoint("/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
-  Simulator::Schedule(Seconds(0.5), &E2Node::Connect, &e2t);
-  Simulator::Schedule(Seconds(1), &E2Node::Connect, &e2n1);
-  Simulator::Schedule(Seconds(1.5), &E2Node::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
+  Simulator::Schedule(Seconds(0.5), &E2AP::Connect, &e2t);
+  Simulator::Schedule(Seconds(1), &E2AP::Connect, &e2n1);
+  Simulator::Schedule(Seconds(1.5), &E2AP::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 
   Simulator::Stop(Seconds(10));
   Simulator::Run();
