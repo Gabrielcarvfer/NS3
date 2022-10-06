@@ -461,6 +461,22 @@ E2Node::SubscribeToEndpoint (std::string endpoint)
 // Trigger timer: only for REPORT, not INSERT/POLICY
 // ["periodic"] = KPM interval
 
+
+// O-RAN WG3 E2SM RC v01.02 7.3.1
+std::vector<std::tuple<enum RIC_EVENT_TRIGGER_DEFINITION_STYLES, std::string, std::pair<uint8_t, uint8_t>>>
+    RIC_EVENT_TRIGGER_DEFINITION_SUPPORTED_RIC_SERVICE_STYLE
+    {
+    {MESSAGE_EVENT,"REPORT", {1,1}},
+    {MESSAGE_EVENT, "POLICY", {1,7}},
+    {CALL_PROCESS_BREAKPOINT,"REPORT", {2,2}},
+    {CALL_PROCESS_BREAKPOINT,"INSERT", {1,7}},
+    {CALL_PROCESS_BREAKPOINT,"POLICY", {1,8}},
+    {E2_NODE_INFORMATION_CHANGE,"REPORT", {3,3}},
+    {UE_INFORMATION_CHANGE,"REPORT", {4,4}},
+    {ON_DEMAND,"REPORT", {5,5}},
+};
+
+
 // O-RAN WG3 E2SM KPM v2.00.03 7.4.1
 // REPORT services
 enum REPORT_KPM_SERVICES {
