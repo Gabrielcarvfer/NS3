@@ -28,7 +28,9 @@ struct PeriodicReportStruct
   uint32_t period_ms;
   EventId eventId;
   std::string subscriberEndpoint;
-  Json buffer;
+  uint64_t timeOffset;
+  std::vector<uint32_t> measurementTimeOffset{};  // Time offset in ms since the measurements started
+  std::vector<double> measurementValues{}; // Measured value
 };
 
 class E2AP : public PubSubInfra
@@ -45,7 +47,7 @@ public:
 private:
   void SendPayload(Json payload);
   void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
-  std::map<std::string, PeriodicReportStruct&> m_endpointPeriodicityAndBuffer;
+  std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
 };
 
 
