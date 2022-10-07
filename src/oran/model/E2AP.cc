@@ -145,7 +145,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
 
           // Register event loop to send payload
           EventId event = Simulator::Schedule (MilliSeconds(period), &E2AP::PeriodicReport, this, endpoint, period, periodic_endpoint_to_report);
-          struct PeriodicReportStruct entry{period, event, endpoint, Json{}};
+          struct PeriodicReportStruct entry{period, event, endpoint, 0, {}, {}};
           m_endpointPeriodicityAndBuffer.emplace (periodic_endpoint_to_report, entry);
 
           //todo: handle actions
@@ -545,13 +545,17 @@ E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::s
   RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = ss.str();
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"];
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["TYPE"] = KPM_INDICATION_FORMAT_1; //todo: complement format fields, this is super non-conformant
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"] = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).buffer;
+  auto it = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint);
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"];
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"] = it.measurementTimeOffset;
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"] = it.measurementValues;
   SendPayload (RIC_INDICATION_MESSAGE);
 
   // Reschedule report event
   EventId event = Simulator::Schedule (MilliSeconds(period_ms), &E2AP::PeriodicReport, this, subscriber_endpoint, period_ms, subscribed_endpoint);
-  m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).eventId = event;
-  m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).buffer = Json{}; //clear buffer
+  it.eventId = event;
+  it.measurementTimeOffset.clear();
+  it.measurementValues.clear();
 }
 
 
