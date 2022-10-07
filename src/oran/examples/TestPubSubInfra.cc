@@ -72,7 +72,7 @@ int main()
   {
     auto subscribers = E2AP::m_endpointToSubscribers.find ("/E2Node/1/teste2")->second;
     NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
-                          static_cast<PubSubInfra *> (&e2t)) != subscribers.end ());
+                          e2t.m_endpointRoot) != subscribers.end ());
   }
 
 

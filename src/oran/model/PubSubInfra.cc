@@ -12,7 +12,7 @@ std::map<const std::string, uint64_t> PubSubInfra::m_instanceCountMap{};
 Address PubSubInfra::m_node0Address{};
 std::map<const std::string, const PubSubInfra*>
     PubSubInfra::m_endpointRootToInstance{};
-std::map<const std::string, std::vector<const PubSubInfra*>>
+std::map<const std::string, std::vector<std::string>>
     PubSubInfra::m_endpointToSubscribers{};
 
 bool
@@ -98,8 +98,8 @@ PubSubInfra::RegisterEndpoint (std::string endpoint)
 void
 PubSubInfra::SubscribeToEndpoint (std::string endpoint)
 {
-  NS_LOG_FUNCTION (this->m_endpointRoot + " subscribing to endpoint " + endpoint);
-  sSubscribeToEndpoint (endpoint, this);
+  NS_LOG_FUNCTION (m_endpointRoot + " subscribing to endpoint " + endpoint);
+  sSubscribeToEndpoint (endpoint, m_endpointRoot);
 }
 
 void
@@ -140,10 +140,10 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
 
       NS_ASSERT (msg.contains ("ENDPOINT"));
       std::string endpoint = msg.find ("ENDPOINT")->get<std::string> ();
-      if (m_endpointToSocketMap.find (endpoint) == m_endpointToSocketMap.end ())
+      if (m_endpointToAddressMap.find (endpoint) == m_endpointToAddressMap.end ())
         {
 
-          m_endpointToSocketMap.emplace (endpoint, socket);
+          m_endpointToAddressMap.emplace (endpoint, from);
         }
 
       NS_LOG_FUNCTION("Endpoint " + m_endpointRoot + " received message: " + msg.dump ());
@@ -272,7 +272,7 @@ PubSubInfra::sRegisterEndpoint (std::string rootEndpoint, std::string endpoint)
   // If registered endpoint doesn't exist, register it
   if (m_endpointToSubscribers.find (resulting_endpoint) == m_endpointToSubscribers.end ())
     {
-      m_endpointToSubscribers.emplace (resulting_endpoint, std::vector<const PubSubInfra *>{});
+      m_endpointToSubscribers.emplace (resulting_endpoint, std::vector<std::string>{});
       NS_LOG_FUNCTION("Successful registration of endpoint " + resulting_endpoint);
       return true;
     }
@@ -338,18 +338,18 @@ bool PubSubInfra::sRemoveEndpoint (std::string rootEndpoint, std::string endpoin
 }
 
 void
-PubSubInfra::sSubscribeToEndpoint (std::string endpoint, PubSubInfra *subscriber)
+PubSubInfra::sSubscribeToEndpoint (std::string subscribed_endpoint, std::string subscriber_endpoint)
 {
   NS_LOG_FUNCTION_NOARGS();
 
   // Register the subscriber to the endpoint
-  auto endpointIt = m_endpointToSubscribers.find (endpoint);
-  if (m_endpointToSubscribers.find (endpoint) == m_endpointToSubscribers.end ())
+  auto endpointIt = m_endpointToSubscribers.find (subscribed_endpoint);
+  if (m_endpointToSubscribers.find (subscribed_endpoint) == m_endpointToSubscribers.end ())
     {
       NS_ASSERT_MSG (false, "Subscriber tried to subscribe to non-existant endpoint: subscriber "
-                                << subscriber->m_endpointRoot << ", endpoint " << endpoint);
+                                << getEndpointRoot(subscriber_endpoint) << ", endpoint " << subscribed_endpoint);
     }
-  endpointIt->second.push_back (subscriber);
+  endpointIt->second.push_back (getEndpointRoot(subscriber_endpoint));
 }
 
 void
@@ -373,9 +373,9 @@ PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::
     }
 
   // Forward published message to each subscriber
-  for (auto &subscriber : EndpointIt->second)
+  for (auto subscriber : EndpointIt->second)
     {
-      if (subscriber == this)
+      if (getInstanceFromEndpointRoot(subscriber) == this)
         {
           // Handle locally
           Json payload;
@@ -390,7 +390,45 @@ PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::
         }
       std::cout
           << json_literal << " " << subscriber
-          << std::
-                 endl; //subscriber->ScheduleReceivePacket(json_literal); // pulando toda a pilha de rede
+          << std::endl; //subscriber->ScheduleReceivePacket(json_literal); // pulando toda a pilha de rede
     }
+}
+
+std::string
+PubSubInfra::getEndpointRoot(std::string endpoint)
+{
+  // trim everything after the second /
+  uint16_t slashes = 0;
+  for(auto character: endpoint)
+    {
+      slashes += character == '/';
+    }
+  while (slashes > 2)
+    {
+      endpoint = endpoint.substr (0, endpoint.find_last_of ('/'));
+      slashes--;
+    }
+  return endpoint;
+}
+
+Address
+PubSubInfra::getAddressFromEndpointRoot(std::string endpoint)
+{
+  auto it = m_endpointToAddressMap.find(endpoint);
+  if (it == m_endpointToAddressMap.end())
+    {
+      NS_ABORT_MSG ("No address for endpoint: " + endpoint);
+    }
+  return it->second;
+}
+
+const PubSubInfra*
+PubSubInfra::getInstanceFromEndpointRoot(std::string endpointRoot)
+{
+  auto it = m_endpointRootToInstance.find(getEndpointRoot (endpointRoot));
+  if (it == m_endpointRootToInstance.end())
+    {
+      NS_ABORT_MSG ("Inexisting instance with endpoint " + endpointRoot);
+    }
+  return it->second;
 }
