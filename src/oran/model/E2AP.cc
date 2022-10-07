@@ -118,18 +118,63 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
       // RIC initiated
       case RIC_SUBSCRIPTION_REQUEST:
         {
+          NS_LOG_FUNCTION(m_endpointRoot + " subscribing " + endpoint + " to " + to_string(payload["RAN Function"]));
+
+          if (payload["RIC Subscription Details"]["RIC Event Trigger Format"] != EVENT_TRIGGER_PERIODIC)
+            {
+              NS_ABORT_MSG ("Inexistent RIC event trigger format");
+            }
+
+          // Fetch data from request
+          uint32_t period = payload["RIC Subscription Details"]["RIC Event Trigger Definition"]["Period"];
+          std::string periodic_endpoint_to_report = payload["RAN Function"];
+
+          auto it = m_endpointPeriodicityAndBuffer.find(periodic_endpoint_to_report);
+
+          // Setup event loop
+          if (it != m_endpointPeriodicityAndBuffer.end())
+            {
+              NS_LOG_FUNCTION(m_endpointRoot + " failed to subscribe " + endpoint + " to " + to_string(payload["RAN Function"]));
+              Json RIC_SUBSCRIPTION_FAILURE_MESSAGE;
+              RIC_SUBSCRIPTION_FAILURE_MESSAGE["ENDPOINT"] = endpoint;
+              RIC_SUBSCRIPTION_FAILURE_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_FAILURE;
+              RIC_SUBSCRIPTION_FAILURE_MESSAGE["PAYLOAD"]["RAN Function"] = periodic_endpoint_to_report;
+              SendPayload(RIC_SUBSCRIPTION_FAILURE_MESSAGE);
+              return;
+            }
+
+          // Register event loop to send payload
+          EventId event = Simulator::Schedule (MilliSeconds(period), &E2AP::PeriodicReport, this, endpoint, period, periodic_endpoint_to_report);
+          struct PeriodicReportStruct entry{period, event, endpoint, Json{}};
+          m_endpointPeriodicityAndBuffer.emplace (periodic_endpoint_to_report, entry);
+
+          //todo: handle actions
+          // payload["RIC Subscription Details"]["Sequence of Actions"];
+
+          NS_LOG_FUNCTION(m_endpointRoot + " subscribed " + endpoint + " to " + to_string(payload["RAN Function"]));
+          Json RIC_SUBSCRIPTION_RESPONSE_MESSAGE;
+          RIC_SUBSCRIPTION_RESPONSE_MESSAGE["ENDPOINT"] = endpoint;
+          RIC_SUBSCRIPTION_RESPONSE_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_RESPONSE;
+          RIC_SUBSCRIPTION_RESPONSE_MESSAGE["PAYLOAD"]["RAN Function"] = periodic_endpoint_to_report;
+          SendPayload(RIC_SUBSCRIPTION_RESPONSE_MESSAGE);
+
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.1.2
       // E2 initiated
       case RIC_SUBSCRIPTION_RESPONSE:
         {
+          NS_LOG_FUNCTION(endpoint + " was successfully subscribed to " + to_string(payload["RAN Function"]));
+
+          // Store registered endpoint on the RIC
+          sSubscribeToEndpoint(payload["RAN Function"], "/E2Node/0");
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.1.3
       // E2 initiated
       case RIC_SUBSCRIPTION_FAILURE:
         {
+          NS_LOG_FUNCTION(endpoint + " failed to subscribed to " + to_string(payload["RAN Function"]));
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.2.2
@@ -402,6 +447,12 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
 void
 E2AP::SendPayload (Json payload)
 {
+  // Replace source endpoint with the corresponding root endpoint
+  if (payload.contains ("ENDPOINT"))
+    {
+      payload["ENDPOINT"] = getEndpointRoot (payload["ENDPOINT"]);
+    }
+
   if (m_endpointRoot != "/E2Node/0")
     {
       NS_LOG_FUNCTION ("Sending the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " to the RIC: " + to_string(payload));
@@ -409,8 +460,22 @@ E2AP::SendPayload (Json payload)
     }
   else
     {
-      NS_LOG_FUNCTION ("RIC handling the payload of type " + oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) + " locally: " + to_string(payload));
-      HandlePayload (m_endpointRoot, payload.at ("PAYLOAD"));
+      // If we are on the RIC, we can handle things locally if the payload is addressed to us
+      if (payload["ENDPOINT"] == "/E2Node/0")
+        {
+          NS_LOG_FUNCTION ("RIC handling the payload of type " +
+                           oran_msg_str.at (payload.at ("PAYLOAD").at ("TYPE")) +
+                           " locally: " + to_string (payload));
+          HandlePayload (m_endpointRoot, payload.at ("PAYLOAD"));
+        }
+      // Or we need to forward to the correct node
+      else
+        {
+          NS_LOG_FUNCTION ("RIC forwarding the payload of type " +
+                           oran_msg_str.at (payload.at ("PAYLOAD").at ("TYPE")) +
+                           " to " + to_string(payload["ENDPOINT"]) + ": " + to_string (payload));
+          m_socket->SendTo (encodeJsonToPacket (payload), 0, getAddressFromEndpointRoot(payload["ENDPOINT"]));
+        }
     }
 }
 
@@ -450,16 +515,45 @@ E2AP::RemoveEndpoint(std::string endpoint)
 void
 E2AP::SubscribeToEndpoint (std::string endpoint)
 {
+  SubscribeToEndpointPeriodic (endpoint, 1000);
+}
+
+void
+E2AP::SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms)
+{
   NS_LOG_FUNCTION (m_endpointRoot + " subscribing to endpoint " + endpoint);
   Json RIC_SUBSCRIPTION_REQUEST_MESSAGE;
-  RIC_SUBSCRIPTION_REQUEST_MESSAGE["ENDPOINT"] = m_endpointRoot;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["ENDPOINT"] = endpoint;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_REQUEST;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RAN Function"] = endpoint;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"];
-  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Definition"]; //todo
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Format"] = EVENT_TRIGGER_PERIODIC;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Definition"]["Period"] = periodicity_ms;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["Sequence of Actions"];//todo
   SendPayload (RIC_SUBSCRIPTION_REQUEST_MESSAGE);
-  //sSubscribeToEndpoint (endpoint, this);
 }
+
+void
+E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint)
+{
+  // Send report
+  Json RIC_INDICATION_MESSAGE;
+  RIC_INDICATION_MESSAGE["ENDPOINT"] = subscriber_endpoint;
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["TYPE"] = RIC_INDICATION;
+  std::stringstream  ss;
+  ss << Time(Simulator::Now() - MilliSeconds (period_ms)).As (Time::MS);
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = ss.str();
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"];
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["TYPE"] = KPM_INDICATION_FORMAT_1; //todo: complement format fields, this is super non-conformant
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"] = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).buffer;
+  SendPayload (RIC_INDICATION_MESSAGE);
+
+  // Reschedule report event
+  EventId event = Simulator::Schedule (MilliSeconds(period_ms), &E2AP::PeriodicReport, this, subscriber_endpoint, period_ms, subscribed_endpoint);
+  m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).eventId = event;
+  m_endpointPeriodicityAndBuffer.at(subscribed_endpoint).buffer = Json{}; //clear buffer
+}
+
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2
 // Trigger timer: only for REPORT, not INSERT/POLICY

@@ -5,13 +5,15 @@
 #include <map>
 #include <string>
 
-#include "ns3/PubSubInfra.h"
-#include "ns3/xApp.h"
-#include "ns3/E2Node.h"
+
 #include "ns3/core-module.h"
 #include "ns3/lte-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/mobility-module.h"
+
+#include "ns3/PubSubInfra.h"
+#include "ns3/xApp.h"
+#include "ns3/E2Node.h"
 
 NS_LOG_COMPONENT_DEFINE("TestE2Node");
 
@@ -33,11 +35,10 @@ void CheckEndpointNotRegistered(std::string endpoint)
   NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) == E2AP::m_endpointToSubscribers.end());
 }
 
-void CheckEndpointSubscribed(E2AP * node, std::string endpoint)
+void CheckEndpointSubscribed(std::string nodeRootEndpoint, std::string endpoint)
 {
   auto subscribers = E2AP::m_endpointToSubscribers.find (endpoint)->second;
-  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (),
-                        static_cast<PubSubInfra *> (node)) != subscribers.end ());
+  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) != subscribers.end ());
 }
 
 int main()
@@ -183,7 +184,7 @@ int main()
   // Teste de subscrição em endpoints
   Simulator::Schedule (Seconds(5.5), &E2AP::RegisterEndpoint, &e2n1, "/");
   Simulator::Schedule (Seconds(6.0), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/");
-  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, &e2t, "/E2Node/1/");
+  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/");
 
   //Simulator::Schedule(Seconds(1.5), &E2AP::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 

@@ -9,6 +9,28 @@
 
 namespace ns3 {
 
+// O-RAN WG3 E2SM KPM v02.00.03
+enum RIC_EVENT_TRIGGER_FORMATS
+{
+  EVENT_TRIGGER_PERIODIC = 1 // Period field is given in milliseconds
+};
+
+// O-RAN WG3 ES2M KPM v02.00.03
+enum KPM_INDICATION_FORMATS
+{
+  KPM_INDICATION_FORMAT_1 = 1,
+  KPM_INDICATION_FORMAT_2,
+  KPM_INDICATION_FORMAT_3
+};
+
+struct PeriodicReportStruct
+{
+  uint32_t period_ms;
+  EventId eventId;
+  std::string subscriberEndpoint;
+  Json buffer;
+};
+
 class E2AP : public PubSubInfra
 {
 public:
@@ -19,9 +41,14 @@ public:
   void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
   void RemoveEndpoint(std::string endpoint);
   void SubscribeToEndpoint (std::string endpoint);
+  void SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms);
 private:
   void SendPayload(Json payload);
+  void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
+  std::map<std::string, PeriodicReportStruct&> m_endpointPeriodicityAndBuffer;
 };
+
+
 
 // O-RAN WG3 E2SM RC v01.02 7.3.1
 enum RIC_EVENT_TRIGGER_DEFINITION_STYLES

@@ -77,12 +77,12 @@ public:
   Ptr<Socket> m_socket;
   std::string m_endpointRoot; // set during initialization
   uint64_t m_instanceId = 0; // set during initialization
-  std::map<std::string, Ptr<Socket>> m_endpointToSocketMap;
+  std::map<std::string, Address> m_endpointToAddressMap;
   static Address m_node0Address; // set during the first connect
   static std::map<const std::string, uint64_t>
       m_instanceCountMap; // incremented during initialization
   static std::map<const std::string, const PubSubInfra *> m_endpointRootToInstance;
-  static std::map<const std::string, std::vector<const PubSubInfra *>> m_endpointToSubscribers;
+  static std::map<const std::string, std::vector<std::string>> m_endpointToSubscribers;
 //static methods
   Ipv4Address getNodeAddress (unsigned device = 3);
   static Ptr<Packet> encodeJsonToPacket (Json json_contents);
@@ -91,8 +91,11 @@ public:
   static bool sRegisterEndpoint (std::string rootEndpoint, std::string endpoint);
   static bool sUpdateEndpoint (std::string rootEndpoint, std::string old_endpoint, std::string new_endpoint);
   static bool sRemoveEndpoint (std::string rootEndpoint, std::string endpoint);
-  static void sSubscribeToEndpoint (std::string endpoint, PubSubInfra *subscriber);
+  static void sSubscribeToEndpoint (std::string subscribed_endpoint, std::string subscriber_endpoint);
   void sPublishToEndpointSubscribers (std::string publisherEndpoint, std::string endpoint,  std::string json_literal);
+  static std::string getEndpointRoot(std::string endpoint);
+  Address getAddressFromEndpointRoot(std::string endpoint);
+  const PubSubInfra* getInstanceFromEndpointRoot(std::string endpointRoot);
 };
 }//namespace ns3
 #endif //NS3_PUBSUBINFRA_H
