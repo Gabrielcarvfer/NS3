@@ -205,6 +205,11 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
       // E2 initiated
       case RIC_INDICATION:
         {
+        //payload["COLLECTION START TIME"];
+        //payload["MESSAGE"]["TYPE"];
+        //payload["MESSAGE"]["MEASUREMENTS"];
+        //payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"];
+        //payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"];
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.4.2
