@@ -229,7 +229,6 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
                       measuringE2NodeIt = kpmIt->second.find(endpoint);
                     }
                   measuringE2NodeIt->second.push_front (PeriodicMeasurementStruct{ts, measurementTimeOffset, measurementValues});
-
                 }
                 break;
               case KPM_INDICATION_FORMAT_2:
