@@ -52,7 +52,8 @@ public:
   void RemoveEndpoint(std::string endpoint);
   void SubscribeToEndpoint (std::string endpoint);
   void SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms);
-private:
+  void UnsubscribeToEndpoint (std::string endpoint);
+//private:
   void SendPayload(Json payload);
   void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;

@@ -353,6 +353,31 @@ PubSubInfra::sSubscribeToEndpoint (std::string subscribed_endpoint, std::string 
 }
 
 void
+PubSubInfra::sUnsubscribeToEndpoint (std::string subscribed_endpoint, std::string subscriber_endpoint)
+{
+  NS_LOG_FUNCTION_NOARGS();
+
+  // Search for subscribed endpoint
+  auto endpointIt = m_endpointToSubscribers.find (subscribed_endpoint);
+
+  NS_ASSERT_MSG (
+      m_endpointToSubscribers.find (subscribed_endpoint) != m_endpointToSubscribers.end (),
+      "Subscriber tried to unsubscribe to non-existant endpoint: subscriber "
+          << getEndpointRoot (subscriber_endpoint) << ", endpoint " << subscribed_endpoint);
+
+  // Then search for the subscriber position
+  auto subscriberEndpointIt = std::find (endpointIt->second.begin (), endpointIt->second.end (),
+                                         getEndpointRoot (subscriber_endpoint));
+
+  NS_ASSERT_MSG (subscriberEndpointIt != endpointIt->second.end (),
+                 "Non-existing subscriber " + subscriber_endpoint + " for endpoint " +
+                     subscriber_endpoint);
+
+  // Finally, remove the subscriber from the list of subscribers
+  endpointIt->second.erase(subscriberEndpointIt);
+}
+
+void
 PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::string endpoint,
                                std::string json_literal)
 {
@@ -410,6 +435,13 @@ PubSubInfra::getEndpointRoot(std::string endpoint)
     }
   return endpoint;
 }
+
+std::string
+PubSubInfra::getSubEndpoint (std::string endpointRoot, std::string completeEndpoint)
+{
+    return completeEndpoint.substr(endpointRoot.size(), completeEndpoint.size()-endpointRoot.size());
+}
+
 
 Address
 PubSubInfra::getAddressFromEndpointRoot(std::string endpoint)
