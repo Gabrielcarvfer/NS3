@@ -92,8 +92,10 @@ public:
   static bool sUpdateEndpoint (std::string rootEndpoint, std::string old_endpoint, std::string new_endpoint);
   static bool sRemoveEndpoint (std::string rootEndpoint, std::string endpoint);
   static void sSubscribeToEndpoint (std::string subscribed_endpoint, std::string subscriber_endpoint);
+  static void sUnsubscribeToEndpoint (std::string subscribed_endpoint, std::string subscriber_endpoint);
   void sPublishToEndpointSubscribers (std::string publisherEndpoint, std::string endpoint,  std::string json_literal);
   static std::string getEndpointRoot(std::string endpoint);
+  static std::string getSubEndpoint(std::string endpointRoot, std::string completeEndpoint);
   Address getAddressFromEndpointRoot(std::string endpoint);
   const PubSubInfra* getInstanceFromEndpointRoot(std::string endpointRoot);
 };

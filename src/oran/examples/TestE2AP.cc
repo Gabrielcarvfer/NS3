@@ -41,6 +41,21 @@ void CheckEndpointSubscribed(std::string nodeRootEndpoint, std::string endpoint)
   NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) != subscribers.end ());
 }
 
+void CheckEndpointUnsubscribed(std::string nodeRootEndpoint, std::string endpoint)
+{
+  auto subscribers = E2AP::m_endpointToSubscribers.find (endpoint)->second;
+  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) == subscribers.end ());
+}
+
+void CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpointRoot)
+{
+  auto kpmIt = node->m_kpmToEndpointStorage.find(kpm);
+  NS_ASSERT_MSG (kpmIt != node->m_kpmToEndpointStorage.end(), "KPM periodic report was not received: " + kpm);
+  auto reportingE2NodeIt = kpmIt->second.find(endpointRoot);
+  NS_ASSERT_MSG(reportingE2NodeIt != kpmIt->second.end(), endpointRoot + " periodic report for KPM " + kpm + " was not received");
+  NS_ASSERT_MSG (!reportingE2NodeIt->second.empty(), endpointRoot + " periodic report history is empty");
+}
+
 int main()
 {
   // Testes de conexão de nós
@@ -185,6 +200,16 @@ int main()
   Simulator::Schedule (Seconds(5.5), &E2AP::RegisterEndpoint, &e2n1, "/");
   Simulator::Schedule (Seconds(6.0), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/");
   Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/");
+
+  // Teste de recebimento de medições periódicas
+  Simulator::Schedule (Seconds(7.6), &CheckEndpointPeriodicReport, &e2t, "/", "/E2Node/1");
+
+  // Teste de cancelamento de subscrição em endpoints vindo do RIC
+  Simulator::Schedule (Seconds(8.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
+  Simulator::Schedule (Seconds(8.5), &CheckEndpointUnsubscribed, e2t.m_endpointRoot, "/E2Node/1/");
+
+  // Tentar cancelar subscrição já cancelada (cheque nos logs por SUBSCRIPTION_DELETE_FAILURE)
+  Simulator::Schedule (Seconds(9.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
 
   //Simulator::Schedule(Seconds(1.5), &E2AP::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
 

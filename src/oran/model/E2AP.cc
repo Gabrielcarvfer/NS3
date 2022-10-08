@@ -109,7 +109,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
         }
     }
 
-  NS_LOG_FUNCTION("Handling payload " + to_string (payload));
+  NS_LOG_FUNCTION("Handling payload with type "  + oran_msg_str.at(msg_type) + " : " + to_string (payload));
 
   // Handle all O-RAN messages
   switch(msg_type)
@@ -167,7 +167,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
           NS_LOG_FUNCTION(endpoint + " was successfully subscribed to " + to_string(payload["RAN Function"]));
 
           // Store registered endpoint on the RIC
-          sSubscribeToEndpoint(payload["RAN Function"], "/E2Node/0");
+          sSubscribeToEndpoint(payload["RAN Function"], m_endpointRoot);
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.1.3
@@ -181,18 +181,56 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
       // RIC initiated
       case RIC_SUBSCRIPTION_DELETE_REQUEST:
         {
+          std::string endpointToUnsubscribe = payload["RAN Function"];
+          std::string subscriber            = payload["SUBSCRIBER"];
+          NS_LOG_FUNCTION(m_endpointRoot + " unsubscribing " + subscriber + " from " + endpointToUnsubscribe);
+          auto endpointIt = m_endpointPeriodicityAndBuffer.find(endpointToUnsubscribe);
+          if (endpointIt == m_endpointPeriodicityAndBuffer.end())
+            {
+              // Failure, send failure message
+              NS_LOG_FUNCTION(m_endpointRoot + " doesn't have a subscription to " + endpointToUnsubscribe);
+              Json RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE;
+              RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE["ENDPOINT"] = subscriber;
+              RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_DELETE_FAILURE;
+              RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE["PAYLOAD"]["RAN Function"] = endpointToUnsubscribe;
+              SendPayload(RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE);
+            }
+          else
+            {
+              NS_LOG_FUNCTION(m_endpointRoot + " have the subscription to " + endpointToUnsubscribe);
+
+              // Cancel periodic event
+              Simulator::Cancel(endpointIt->second.eventId);
+
+              // Remove entry
+              m_endpointPeriodicityAndBuffer.erase(endpointIt);
+
+              NS_LOG_FUNCTION(m_endpointRoot + " removed the subscription to " + endpointToUnsubscribe);
+
+              // Successful, send response message
+              Json RIC_SUBSCRIPTION_DELETE_RESPONSE_MESSAGE;
+              RIC_SUBSCRIPTION_DELETE_RESPONSE_MESSAGE["ENDPOINT"] = subscriber;
+              RIC_SUBSCRIPTION_DELETE_RESPONSE_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_DELETE_RESPONSE;
+              RIC_SUBSCRIPTION_DELETE_RESPONSE_MESSAGE["PAYLOAD"]["RAN Function"] = endpointToUnsubscribe;
+              SendPayload(RIC_SUBSCRIPTION_DELETE_RESPONSE_MESSAGE);
+            }
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.2.2
       // E2 initiated
       case RIC_SUBSCRIPTION_DELETE_RESPONSE:
         {
+          NS_LOG_FUNCTION(endpoint + " was successfully unsubscribed to " + to_string(payload["RAN Function"]));
+
+          // Remove registry of subscribed endpoint from the RIC
+          sUnsubscribeToEndpoint(payload["RAN Function"], m_endpointRoot);
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.2.3
       // E2 initiated
       case RIC_SUBSCRIPTION_DELETE_FAILURE:
         {
+          NS_LOG_FUNCTION(endpoint + " was not unsubscribed from " + to_string(payload["RAN Function"]));
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.2A.2
@@ -213,7 +251,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
                 {
                   std::string ts = payload["COLLECTION START TIME"];
                   std::string subscribed_endpoint = payload["MESSAGE"]["RAN FUNCTION"];
-                  std::string kpm = subscribed_endpoint.substr(endpoint.size(), subscribed_endpoint.size()-endpoint.size()); // Remove endpointRoot from full KPM endpoint
+                  std::string kpm = getSubEndpoint(endpoint, subscribed_endpoint); // Remove endpointRoot from full KPM endpoint
                   std::vector<uint32_t> measurementTimeOffset = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"];
                   std::vector<double> measurementValues = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"];
                   auto kpmIt = m_kpmToEndpointStorage.find(kpm);
@@ -565,29 +603,42 @@ E2AP::SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms
 }
 
 void
+E2AP::UnsubscribeToEndpoint (std::string endpoint)
+{
+  NS_LOG_FUNCTION (m_endpointRoot + " unsubscribing to endpoint " + endpoint);
+  Json RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE;
+  RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["ENDPOINT"] = endpoint;
+  RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_DELETE_REQUEST;
+  RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["PAYLOAD"]["SUBSCRIBER"] = m_endpointRoot;
+  RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["PAYLOAD"]["RAN Function"] = endpoint;
+  SendPayload (RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE);
+}
+
+void
 E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint)
 {
-  auto it = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint);
+  auto it = m_endpointPeriodicityAndBuffer.find(subscribed_endpoint);
+  NS_ASSERT_MSG (it != m_endpointPeriodicityAndBuffer.end(), "Endpoint " + subscribed_endpoint + " to report periodically was not found");
 
   // Send report
   Json RIC_INDICATION_MESSAGE;
   RIC_INDICATION_MESSAGE["ENDPOINT"] = subscriber_endpoint;
   RIC_INDICATION_MESSAGE["PAYLOAD"]["TYPE"] = RIC_INDICATION;
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = it.collectionStartTime.ToString();
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = it->second.collectionStartTime.ToString();
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"];
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["TYPE"] = KPM_INDICATION_FORMAT_1; //todo: complement format fields, this is super non-conformant
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["RAN FUNCTION"] = subscribed_endpoint;
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"];
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"] = it.measurementTimeOffset;
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"] = it.measurementValues;
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"] = it->second.measurementTimeOffset;
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"] = it->second.measurementValues;
   SendPayload (RIC_INDICATION_MESSAGE);
 
   // Reschedule report event
   EventId event = Simulator::Schedule (MilliSeconds(period_ms), &E2AP::PeriodicReport, this, subscriber_endpoint, period_ms, subscribed_endpoint);
-  it.eventId = event;
-  it.measurementTimeOffset.clear();
-  it.measurementValues.clear();
-  it.collectionStartTime = SystemWallClockTimestamp();
+  it->second.eventId = event;
+  it->second.measurementTimeOffset.clear();
+  it->second.measurementValues.clear();
+  it->second.collectionStartTime = SystemWallClockTimestamp();
 }
 
 
