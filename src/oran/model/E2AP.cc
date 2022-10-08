@@ -145,7 +145,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
 
           // Register event loop to send payload
           EventId event = Simulator::Schedule (MilliSeconds(period), &E2AP::PeriodicReport, this, endpoint, period, periodic_endpoint_to_report);
-          struct PeriodicReportStruct entry{period, event, endpoint, 0, {}, {}};
+          struct PeriodicReportStruct entry{period, event, endpoint, {}, {}, {}};
           m_endpointPeriodicityAndBuffer.emplace (periodic_endpoint_to_report, entry);
 
           //todo: handle actions
@@ -205,11 +205,38 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
       // E2 initiated
       case RIC_INDICATION:
         {
-        //payload["COLLECTION START TIME"];
-        //payload["MESSAGE"]["TYPE"];
-        //payload["MESSAGE"]["MEASUREMENTS"];
-        //payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"];
-        //payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"];
+          NS_LOG_FUNCTION (m_endpointRoot + " parsing RIC INDICATION message: " + to_string(payload));
+          enum KPM_INDICATION_FORMATS format = payload["MESSAGE"]["TYPE"];
+          switch(format)
+            {
+              case KPM_INDICATION_FORMAT_1:
+                {
+                  std::string ts = payload["COLLECTION START TIME"];
+                  std::string subscribed_endpoint = payload["MESSAGE"]["RAN FUNCTION"];
+                  std::string kpm = subscribed_endpoint.substr(endpoint.size(), subscribed_endpoint.size()-endpoint.size()); // Remove endpointRoot from full KPM endpoint
+                  std::vector<uint32_t> measurementTimeOffset = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"];
+                  std::vector<double> measurementValues = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"];
+                  auto kpmIt = m_kpmToEndpointStorage.find(kpm);
+                  if (kpmIt == m_kpmToEndpointStorage.end())
+                    {
+                      m_kpmToEndpointStorage.emplace(kpm, std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
+                      kpmIt = m_kpmToEndpointStorage.find(kpm);
+                    }
+                  auto measuringE2NodeIt = kpmIt->second.find(endpoint);
+                  if (measuringE2NodeIt == kpmIt->second.end())
+                    {
+                      kpmIt->second.emplace(endpoint, std::deque<PeriodicMeasurementStruct>{});
+                      measuringE2NodeIt = kpmIt->second.find(endpoint);
+                    }
+                  measuringE2NodeIt->second.push_front (PeriodicMeasurementStruct{ts, measurementTimeOffset, measurementValues});
+
+                }
+                break;
+              case KPM_INDICATION_FORMAT_2:
+              case KPM_INDICATION_FORMAT_3:
+              default:
+                NS_ABORT_MSG ("Unsupported KPM indication format");
+            }
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.4.2
@@ -541,16 +568,16 @@ E2AP::SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms
 void
 E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint)
 {
+  auto it = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint);
+
   // Send report
   Json RIC_INDICATION_MESSAGE;
   RIC_INDICATION_MESSAGE["ENDPOINT"] = subscriber_endpoint;
   RIC_INDICATION_MESSAGE["PAYLOAD"]["TYPE"] = RIC_INDICATION;
-  std::stringstream  ss;
-  ss << Time(Simulator::Now() - MilliSeconds (period_ms)).As (Time::MS);
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = ss.str();
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["COLLECTION START TIME"] = it.collectionStartTime.ToString();
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"];
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["TYPE"] = KPM_INDICATION_FORMAT_1; //todo: complement format fields, this is super non-conformant
-  auto it = m_endpointPeriodicityAndBuffer.at(subscribed_endpoint);
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["RAN FUNCTION"] = subscribed_endpoint;
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"];
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"] = it.measurementTimeOffset;
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"] = it.measurementValues;
@@ -561,6 +588,7 @@ E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::s
   it.eventId = event;
   it.measurementTimeOffset.clear();
   it.measurementValues.clear();
+  it.collectionStartTime = SystemWallClockTimestamp();
 }
 
 

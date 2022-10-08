@@ -6,6 +6,7 @@
 #define NS3_E2AP_H
 
 #include "PubSubInfra.h"
+#include "ns3/system-wall-clock-timestamp.h"
 
 namespace ns3 {
 
@@ -28,7 +29,14 @@ struct PeriodicReportStruct
   uint32_t period_ms;
   EventId eventId;
   std::string subscriberEndpoint;
-  uint64_t timeOffset;
+  SystemWallClockTimestamp collectionStartTime;
+  std::vector<uint32_t> measurementTimeOffset{};  // Time offset in ms since the measurements started
+  std::vector<double> measurementValues{}; // Measured value
+};
+
+struct PeriodicMeasurementStruct
+{
+  std::string timestamp; // Timestamp from start of measurements
   std::vector<uint32_t> measurementTimeOffset{};  // Time offset in ms since the measurements started
   std::vector<double> measurementValues{}; // Measured value
 };
@@ -48,6 +56,7 @@ private:
   void SendPayload(Json payload);
   void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
+  std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
 };
 
 
