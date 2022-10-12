@@ -671,3 +671,27 @@ enum REPORT_KPM_SERVICES {
 // REPORTed measurements
 // 5G https://www.etsi.org/deliver/etsi_TS/128500_128599/128552/16.10.00_60/ts_128552v161000p.pdf
 // 4G https://www.etsi.org/deliver/etsi_TS/132400_132499/132425/14.01.00_60/ts_132425v140100p.pdf
+
+void
+E2AP::RegisterDefaultEndpoints()
+{
+    for (auto& kpmEndpoints: m_defaultEndpointsKpmTypeAndUnit)
+    {
+        if (std::get<2>(kpmEndpoints.second) == IMPLEMENTED)
+        {
+            RegisterEndpoint("/KPM/" + kpmEndpoints.first);
+        }
+    }
+}
+
+void
+E2AP::SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo)
+{
+    for (auto& kpmEndpoints: m_defaultEndpointsKpmTypeAndUnit)
+    {
+        if (std::get<2>(kpmEndpoints.second) == IMPLEMENTED)
+        {
+            SubscribeToEndpoint(e2NodeToSubscribeTo.m_endpointRoot + "/KPM/" + kpmEndpoints.first);
+        }
+    }
+}
