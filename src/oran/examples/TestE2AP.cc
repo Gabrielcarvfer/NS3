@@ -211,10 +211,14 @@ int main()
   // Tentar cancelar subscrição já cancelada (cheque nos logs por SUBSCRIPTION_DELETE_FAILURE)
   Simulator::Schedule (Seconds(9.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
 
-  //Simulator::Schedule(Seconds(1.5), &E2AP::PublishToEndpointSubscribers, &e2n1, "/E2Node/1/teste2", "{\"pimba\" : \"true\"}");
+  // Publicar endpoints padrão
+  Simulator::Schedule(Seconds(10), &E2AP::RegisterDefaultEndpoints, &e2n1);
+
+  // Assinar endpoints padrão
+  Simulator::Schedule(Seconds(12), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n1);
 
   // Teste de cancelamento de subscrição
-  Simulator::Stop(Seconds(10));
+  Simulator::Stop(Seconds(15));
   Simulator::Run();
   Simulator::Destroy();
   return 0;
