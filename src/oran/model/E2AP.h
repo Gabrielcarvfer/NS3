@@ -24,22 +24,71 @@ enum KPM_INDICATION_FORMATS
   KPM_INDICATION_FORMAT_3
 };
 
+enum MeasurementType
+{
+    INTEGER,
+    REAL,
+    NONE
+};
+union MeasurementUnion
+{
+    int64_t integer;
+    double real;
+    uint64_t uinteger;
+    void * none;
+};
+struct MeasurementStruct
+{
+    enum MeasurementType type;
+    uint32_t measurementTimeOffset;
+    union MeasurementUnion measurement;
+};
+void to_json(Json& j, const MeasurementStruct& p) {
+    j = Json{ {"type", p.type}, {"measurementTimeOffset", p.measurementTimeOffset}, {"measurement", p.measurement.uinteger} };
+}
+void from_json(const Json& j, MeasurementStruct& p) {
+    j.at("type").get_to(p.type);
+    j.at("measurementTimeOffset").get_to(p.measurementTimeOffset);
+    j.at("measurement").get_to(p.measurement.uinteger);
+}
+
+struct PeriodicMeasurementStruct
+{
+    std::string timestamp; // Timestamp from start of measurements
+    std::vector<MeasurementStruct> measurements; // Measured value
+};
+void to_json(Json& j, const PeriodicMeasurementStruct& p) {
+    std::vector<Json> measurementsJson;
+    for (auto& measurement: p.measurements)
+    {
+        Json measurementJson;
+        to_json(measurementJson, measurement);
+        measurementsJson.push_back(measurementJson);
+    }
+    j = Json{ {"timestamp", p.timestamp}, {"measurements", measurementsJson}};
+}
+void from_json(const Json& j, PeriodicMeasurementStruct& p)
+{
+    j.at("timestamp").get_to(p.timestamp);
+    std::vector<Json> measurementsJson;
+    j.at("measurements").get_to(measurementsJson);
+    for (auto& measurementJson: measurementsJson)
+    {
+        MeasurementStruct measurement;
+        from_json(measurementJson, measurement);
+        p.measurements.push_back(measurement);
+    }
+}
+
 struct PeriodicReportStruct
 {
   uint32_t period_ms;
   EventId eventId;
   std::string subscriberEndpoint;
   SystemWallClockTimestamp collectionStartTime;
-  std::vector<uint32_t> measurementTimeOffset{};  // Time offset in ms since the measurements started
-  std::vector<double> measurementValues{}; // Measured value
+  std::vector<PeriodicMeasurementStruct> measurements;
 };
 
-struct PeriodicMeasurementStruct
-{
-  std::string timestamp; // Timestamp from start of measurements
-  std::vector<uint32_t> measurementTimeOffset{};  // Time offset in ms since the measurements started
-  std::vector<double> measurementValues{}; // Measured value
-};
 
 class E2AP : public PubSubInfra
 {
