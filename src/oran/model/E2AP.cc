@@ -145,7 +145,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
 
           // Register event loop to send payload
           EventId event = Simulator::Schedule (MilliSeconds(period), &E2AP::PeriodicReport, this, endpoint, period, periodic_endpoint_to_report);
-          struct PeriodicReportStruct entry{period, event, endpoint, {}, {}, {}};
+          struct PeriodicReportStruct entry{period, event, endpoint, {}, {}};
           m_endpointPeriodicityAndBuffer.emplace (periodic_endpoint_to_report, entry);
 
           //todo: handle actions
@@ -252,8 +252,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
                   std::string ts = payload["COLLECTION START TIME"];
                   std::string subscribed_endpoint = payload["MESSAGE"]["RAN FUNCTION"];
                   std::string kpm = getSubEndpoint(endpoint, subscribed_endpoint); // Remove endpointRoot from full KPM endpoint
-                  std::vector<uint32_t> measurementTimeOffset = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"];
-                  std::vector<double> measurementValues = payload["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"];
+                  std::vector<PeriodicMeasurementStruct> measurements = payload["MESSAGE"]["MEASUREMENTS"];
                   auto kpmIt = m_kpmToEndpointStorage.find(kpm);
                   if (kpmIt == m_kpmToEndpointStorage.end())
                     {
@@ -266,7 +265,7 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
                       kpmIt->second.emplace(endpoint, std::deque<PeriodicMeasurementStruct>{});
                       measuringE2NodeIt = kpmIt->second.find(endpoint);
                     }
-                  measuringE2NodeIt->second.push_front (PeriodicMeasurementStruct{ts, measurementTimeOffset, measurementValues});
+                  measuringE2NodeIt->second.push_front (PeriodicMeasurementStruct{ts, {}});
                 }
                 break;
               case KPM_INDICATION_FORMAT_2:
@@ -628,16 +627,13 @@ E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::s
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"];
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["TYPE"] = KPM_INDICATION_FORMAT_1; //todo: complement format fields, this is super non-conformant
   RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["RAN FUNCTION"] = subscribed_endpoint;
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"];
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENTS DATA"] = it->second.measurementTimeOffset;
-  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"]["MEASUREMENT VALUES"] = it->second.measurementValues;
+  RIC_INDICATION_MESSAGE["PAYLOAD"]["MESSAGE"]["MEASUREMENTS"] = it->second.measurements;
   SendPayload (RIC_INDICATION_MESSAGE);
 
   // Reschedule report event
   EventId event = Simulator::Schedule (MilliSeconds(period_ms), &E2AP::PeriodicReport, this, subscriber_endpoint, period_ms, subscribed_endpoint);
   it->second.eventId = event;
-  it->second.measurementTimeOffset.clear();
-  it->second.measurementValues.clear();
+  it->second.measurements.clear();
   it->second.collectionStartTime = SystemWallClockTimestamp();
 }
 
