@@ -11,6 +11,7 @@ build_lib(
     model/E2AP.h
     model/xApp.h
     model/dynamicSpectrumAllocationxApp.h
+    model/ORAN-3GPP-measurements.h
   LIBRARIES_TO_LINK
         ${libcore}
         ${libnetwork}
