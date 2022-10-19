@@ -637,6 +637,59 @@ E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::s
   it->second.collectionStartTime = SystemWallClockTimestamp();
 }
 
+void
+E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
+{
+    // Published content is sent by the periodic reporting in E2Nodes
+    std::string kpm = getSubEndpoint(m_endpointRoot, endpoint); // Remove endpointRoot from full KPM endpoint
+
+    if (!json.contains ("MEASUREMENTS"))
+    {
+        NS_ABORT_MSG("No measurements saved in json: " + to_string(json));
+    }
+    for (auto& measurement: json["MEASUREMENTS"])
+    {
+
+        unsigned measId = measurement["ID"];
+        std::string measName = measurement["NAME"];
+        auto value = measurement["VALUE"];
+        MeasurementType type = measurement["TYPE"];
+
+        // Build struct with open-RAN format for measurements
+        MeasurementStruct measStruct;
+        measStruct.type = type;
+        measStruct.measurementTimeOffset = measId;
+        switch (type)
+        {
+            case INTEGER:
+                measStruct.measurement.integer = value;
+            case REAL:
+                measStruct.measurement.real = value;
+            case NONE:
+                measStruct.measurement.uinteger = value;
+            default:
+                NS_ABORT_MSG("Unknown measurement type");
+        }
+
+        auto kpmIt = m_kpmToEndpointStorage.find(kpm);
+        if (kpmIt == m_kpmToEndpointStorage.end())
+        {
+            m_kpmToEndpointStorage.emplace(
+                kpm,
+                std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
+            kpmIt = m_kpmToEndpointStorage.find(kpm);
+        }
+        auto measuringE2NodeIt = kpmIt->second.find(endpoint);
+        if (measuringE2NodeIt == kpmIt->second.end())
+        {
+            kpmIt->second.emplace(endpoint, std::deque<PeriodicMeasurementStruct>{});
+            measuringE2NodeIt = kpmIt->second.find(endpoint);
+        }
+        measuringE2NodeIt->second.push_front(
+            PeriodicMeasurementStruct{measuringE2NodeIt->second.front().timestamp,
+                                      {measStruct}});
+    }
+}
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2
 // Trigger timer: only for REPORT, not INSERT/POLICY

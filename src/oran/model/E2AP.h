@@ -100,7 +100,7 @@ public:
   void SubscribeToEndpoint (std::string endpoint);
   void SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms);
   void UnsubscribeToEndpoint (std::string endpoint);
-
+  void PublishToEndpointSubscribers(std::string endpoint, Json json);
   // Default endpoints for KPM measurement and control
   void RegisterDefaultEndpoints();
   void SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo);

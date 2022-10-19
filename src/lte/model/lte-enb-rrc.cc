@@ -42,6 +42,7 @@
 #include <ns3/packet.h>
 #include <ns3/pointer.h>
 #include <ns3/simulator.h>
+#include <ns3/E2AP.h>
 
 namespace ns3
 {
@@ -1414,6 +1415,16 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
     /// Report any measurements to ComponentCarrierManager, so it can react to any change or
     /// activate the SCC
     m_rrc->m_ccmRrcSapProvider->ReportUeMeas(m_rnti, msg.measResults);
+
+    Ptr<E2AP> e2ap = DynamicCast<E2AP>(m_rrc->GetObject<Node>()->GetApplication(1));
+    if(e2ap)
+    {
+        Json json;
+        json["RNTI"] = m_rnti;
+        //to_json(json["MEASUREMENTS"], msg);
+        e2ap->PublishToEndpointSubscribers("/Ho.SrcCellQual.RSRP", json);
+    }
+
     // fire a trace source
     m_rrc->m_recvMeasurementReportTrace(m_imsi,
                                         m_rrc->ComponentCarrierToCellId(m_componentCarrierId),
