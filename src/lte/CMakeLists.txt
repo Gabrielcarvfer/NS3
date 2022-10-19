@@ -360,6 +360,7 @@ build_lib(
     ${libinternet}
     ${libcsma}
     ${libconfig-store}
+    ${liboran}
   TEST_SOURCES ${test_sources}
   MODULE_ENABLED_FEATURES ${emu_features}
 )

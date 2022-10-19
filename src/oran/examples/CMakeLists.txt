@@ -18,4 +18,5 @@ build_lib_example(
         ${libpoint-to-point}
         ${liblte}
         ${liboran}
+        ${libapplications}
 )
