@@ -1784,6 +1784,10 @@ class LteEnbRrc : public Object
 
     std::map<uint8_t, Ptr<ComponentCarrierBaseStation>>
         m_componentCarrierPhyConf; ///< component carrier phy configuration
+    Ptr<Node> m_node;
+  public:
+    void SetNode(Ptr<Node>);
+    Ptr<Node> GetNode();
 
 }; // end of `class LteEnbRrc`
 

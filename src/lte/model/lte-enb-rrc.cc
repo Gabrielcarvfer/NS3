@@ -1416,13 +1416,36 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
     /// activate the SCC
     m_rrc->m_ccmRrcSapProvider->ReportUeMeas(m_rnti, msg.measResults);
 
-    Ptr<E2AP> e2ap = DynamicCast<E2AP>(m_rrc->GetObject<Node>()->GetApplication(1));
+    auto node = m_rrc->GetNode();
+    auto app = node->GetApplication(1);
+    Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
     if(e2ap)
     {
         Json json;
-        json["RNTI"] = m_rnti;
-        //to_json(json["MEASUREMENTS"], msg);
-        e2ap->PublishToEndpointSubscribers("/Ho.SrcCellQual.RSRP", json);
+        json["MEASUREMENTS"];
+        json["MEASUREMENTS"]["ID"] = msg.measResults.measId;
+        json["MEASUREMENTS"]["RNTI"] = m_rnti;
+        json["MEASUREMENTS"]["CELLID"] = m_sourceCellId;
+        json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrpResult;
+        e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.SrcCellQual.RSRP", json);
+        json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
+        e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.SrcCellQual.RSRQ", json);
+        for (auto& cell: msg.measResults.measResultListEutra)
+        {
+            json["MEASUREMENTS"]["CELLID"] = cell.physCellId;
+            if (cell.haveRsrpResult)
+            {
+                json["MEASUREMENTS"]["VALUE"] = cell.rsrpResult;
+                json["MEASUREMENTS"]["TARGET"] = cell.physCellId;
+                e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.TrgtCellQual.RSRP", json);
+            }
+            if (cell.haveRsrqResult)
+            {
+                json["MEASUREMENTS"]["VALUE"] = cell.rsrqResult;
+                json["MEASUREMENTS"]["TARGET"] = cell.physCellId;
+                e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.TrgtCellQual.RSRQ", json);
+            }
+        }
     }
 
     // fire a trace source
@@ -3566,6 +3589,18 @@ LteEnbRrc::IsRandomAccessCompleted(uint16_t rnti)
     default:
         return false;
     }
+}
+
+void
+LteEnbRrc::SetNode(Ptr<Node> node)
+{
+    m_node = node;
+}
+
+Ptr<Node>
+LteEnbRrc::GetNode()
+{
+    return m_node;
 }
 
 } // namespace ns3

@@ -602,6 +602,7 @@ LteHelper::InstallSingleEnbDevice(Ptr<Node> n)
     }
 
     Ptr<LteEnbRrc> rrc = CreateObject<LteEnbRrc>();
+    rrc->SetNode(n);
     Ptr<LteEnbComponentCarrierManager> ccmEnbManager =
         m_enbComponentCarrierManagerFactory.Create<LteEnbComponentCarrierManager>();
 
