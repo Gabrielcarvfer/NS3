@@ -51,29 +51,15 @@ void from_json(const Json& j, MeasurementStruct& p) {
 struct PeriodicMeasurementStruct
 {
     std::string timestamp; // Timestamp from start of measurements
-    std::vector<MeasurementStruct> measurements; // Measured value
+    std::vector<Json> measurements; // Measured value
 };
 void to_json(Json& j, const PeriodicMeasurementStruct& p) {
-    std::vector<Json> measurementsJson;
-    for (auto& measurement: p.measurements)
-    {
-        Json measurementJson;
-        to_json(measurementJson, measurement);
-        measurementsJson.push_back(measurementJson);
-    }
-    j = Json{ {"timestamp", p.timestamp}, {"measurements", measurementsJson}};
+    j = Json{ {"timestamp", p.timestamp}, {"measurements", p.measurements}};
 }
 void from_json(const Json& j, PeriodicMeasurementStruct& p)
 {
     j.at("timestamp").get_to(p.timestamp);
-    std::vector<Json> measurementsJson;
-    j.at("measurements").get_to(measurementsJson);
-    for (auto& measurementJson: measurementsJson)
-    {
-        MeasurementStruct measurement;
-        from_json(measurementJson, measurement);
-        p.measurements.push_back(measurement);
-    }
+    j.at("measurements").get_to(p.measurements);
 }
 
 struct PeriodicReportStruct
@@ -100,7 +86,8 @@ public:
   void SubscribeToEndpoint (std::string endpoint);
   void SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms);
   void UnsubscribeToEndpoint (std::string endpoint);
-  void PublishToEndpointSubscribers(std::string endpoint, Json json);
+  void PublishToSubEndpointSubscribers(std::string endpoint, Json json);
+  void PublishToEndpointSubscribers(std::string complete_endpoint, Json json);
   // Default endpoints for KPM measurement and control
   void RegisterDefaultEndpoints();
   void SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo);
