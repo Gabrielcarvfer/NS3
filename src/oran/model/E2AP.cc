@@ -253,19 +253,25 @@ E2AP::HandlePayload(std::string endpoint, Json payload)
                   std::string subscribed_endpoint = payload["MESSAGE"]["RAN FUNCTION"];
                   std::string kpm = getSubEndpoint(endpoint, subscribed_endpoint); // Remove endpointRoot from full KPM endpoint
                   std::vector<PeriodicMeasurementStruct> measurements = payload["MESSAGE"]["MEASUREMENTS"];
+                  if (measurements.size() > 0)
+                  {
+                      std::cout << to_string(measurements[0].measurements[0]) << std::endl;
+                  }
                   auto kpmIt = m_kpmToEndpointStorage.find(kpm);
                   if (kpmIt == m_kpmToEndpointStorage.end())
-                    {
-                      m_kpmToEndpointStorage.emplace(kpm, std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
+                  {
+                      m_kpmToEndpointStorage.emplace(
+                          kpm,
+                          std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
                       kpmIt = m_kpmToEndpointStorage.find(kpm);
-                    }
+                  }
                   auto measuringE2NodeIt = kpmIt->second.find(endpoint);
                   if (measuringE2NodeIt == kpmIt->second.end())
-                    {
+                  {
                       kpmIt->second.emplace(endpoint, std::deque<PeriodicMeasurementStruct>{});
                       measuringE2NodeIt = kpmIt->second.find(endpoint);
-                    }
-                  measuringE2NodeIt->second.push_front (PeriodicMeasurementStruct{ts, {}});
+                  }
+                  measuringE2NodeIt->second.push_front(PeriodicMeasurementStruct{ts, {}});
                 }
                 break;
               case KPM_INDICATION_FORMAT_2:
@@ -594,6 +600,7 @@ E2AP::SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["ENDPOINT"] = endpoint;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_REQUEST;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RAN Function"] = endpoint;
+  RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["SUBSCRIBER"] = m_endpointRoot;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"];
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Format"] = EVENT_TRIGGER_PERIODIC;
   RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["RIC Subscription Details"]["RIC Event Trigger Definition"]["Period"] = periodicity_ms;
@@ -616,6 +623,8 @@ E2AP::UnsubscribeToEndpoint (std::string endpoint)
 void
 E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint)
 {
+  NS_LOG_FUNCTION(this << subscriber_endpoint << period_ms << subscribed_endpoint);
+
   auto it = m_endpointPeriodicityAndBuffer.find(subscribed_endpoint);
   NS_ASSERT_MSG (it != m_endpointPeriodicityAndBuffer.end(), "Endpoint " + subscribed_endpoint + " to report periodically was not found");
 
@@ -638,57 +647,50 @@ E2AP::PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::s
 }
 
 void
-E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
+E2AP::PublishToSubEndpointSubscribers(std::string endpoint, Json json)
 {
+    PublishToEndpointSubscribers(m_endpointRoot+endpoint, json);
+}
+
+void
+E2AP::PublishToEndpointSubscribers(std::string complete_endpoint, Json json)
+{
+    NS_LOG_FUNCTION(this << complete_endpoint << to_string(json));
+
+    // Do not push report if endpoint is not registered
+    auto endpointIt = m_endpointPeriodicityAndBuffer.find(complete_endpoint);
+    if (endpointIt == m_endpointPeriodicityAndBuffer.end())
+    {
+        NS_LOG_FUNCTION(this << "endpoint not registered:" << complete_endpoint);
+        return;
+    }
+
     // Published content is sent by the periodic reporting in E2Nodes
-    std::string kpm = getSubEndpoint(m_endpointRoot, endpoint); // Remove endpointRoot from full KPM endpoint
+    std::string kpm = getSubEndpoint(m_endpointRoot, complete_endpoint); // Remove endpointRoot from full KPM endpoint
 
     if (!json.contains ("MEASUREMENTS"))
     {
         NS_ABORT_MSG("No measurements saved in json: " + to_string(json));
     }
-    for (auto& measurement: json["MEASUREMENTS"])
+
+    auto kpmIt = m_kpmToEndpointStorage.find(kpm);
+    if (kpmIt == m_kpmToEndpointStorage.end())
     {
-
-        unsigned measId = measurement["ID"];
-        std::string measName = measurement["NAME"];
-        auto value = measurement["VALUE"];
-        MeasurementType type = measurement["TYPE"];
-
-        // Build struct with open-RAN format for measurements
-        MeasurementStruct measStruct;
-        measStruct.type = type;
-        measStruct.measurementTimeOffset = measId;
-        switch (type)
-        {
-            case INTEGER:
-                measStruct.measurement.integer = value;
-            case REAL:
-                measStruct.measurement.real = value;
-            case NONE:
-                measStruct.measurement.uinteger = value;
-            default:
-                NS_ABORT_MSG("Unknown measurement type");
-        }
-
-        auto kpmIt = m_kpmToEndpointStorage.find(kpm);
-        if (kpmIt == m_kpmToEndpointStorage.end())
-        {
-            m_kpmToEndpointStorage.emplace(
-                kpm,
-                std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
-            kpmIt = m_kpmToEndpointStorage.find(kpm);
-        }
-        auto measuringE2NodeIt = kpmIt->second.find(endpoint);
-        if (measuringE2NodeIt == kpmIt->second.end())
-        {
-            kpmIt->second.emplace(endpoint, std::deque<PeriodicMeasurementStruct>{});
-            measuringE2NodeIt = kpmIt->second.find(endpoint);
-        }
-        measuringE2NodeIt->second.push_front(
-            PeriodicMeasurementStruct{measuringE2NodeIt->second.front().timestamp,
-                                      {measStruct}});
+        m_kpmToEndpointStorage.emplace(
+            kpm,
+            std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
+        kpmIt = m_kpmToEndpointStorage.find(kpm);
     }
+    auto measuringE2NodeIt = kpmIt->second.find(complete_endpoint);
+    if (measuringE2NodeIt == kpmIt->second.end())
+    {
+        kpmIt->second.emplace(complete_endpoint, std::deque<PeriodicMeasurementStruct>{});
+        measuringE2NodeIt = kpmIt->second.find(complete_endpoint);
+    }
+    measuringE2NodeIt->second.push_front(
+        PeriodicMeasurementStruct{measuringE2NodeIt->second.front().timestamp,
+                                  {json}});
+
 }
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2
@@ -728,6 +730,7 @@ enum REPORT_KPM_SERVICES {
 void
 E2AP::RegisterDefaultEndpoints()
 {
+    NS_LOG_FUNCTION(this);
     for (auto& kpmEndpoints: m_defaultEndpointsKpmTypeAndUnit)
     {
         if (std::get<2>(kpmEndpoints.second) == IMPLEMENTED)
@@ -740,6 +743,7 @@ E2AP::RegisterDefaultEndpoints()
 void
 E2AP::SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo)
 {
+    NS_LOG_FUNCTION(this);
     for (auto& kpmEndpoints: m_defaultEndpointsKpmTypeAndUnit)
     {
         if (std::get<2>(kpmEndpoints.second) == IMPLEMENTED)
