@@ -72,7 +72,7 @@ public:
   void ReceivePacket (Ptr<Socket> socket);
   void ReceiveJsonPayload (Json msg);
   // To be implemented by each custom xApp and E2Node
-  virtual void HandlePayload (std::string endpoint, Json payload){};
+  virtual void HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload){};
   //private:
   Ptr<Socket> m_socket;
   std::string m_endpointRoot; // set during initialization

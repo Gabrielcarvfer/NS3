@@ -68,7 +68,7 @@ PubSubInfra::Connect ()
                 + m_endpointRoot);
 
       Json REGISTER_CALL;
-      REGISTER_CALL["ENDPOINT"] = m_endpointRoot;
+      REGISTER_CALL["DEST_ENDPOINT"] = m_endpointRoot;
       REGISTER_CALL["INTENT"] = "REGISTER";
       REGISTER_CALL["PAYLOAD"] = ""; // Empty payload
       Simulator::Schedule (Seconds (0.1), &PubSubInfra::Send, this,
@@ -116,7 +116,7 @@ PubSubInfra::PublishToEndpointSubscribers (std::string endpoint, Json json)
     {
       // Outros nós serializaram JSON e transmitem para o nó zero para retransmissão.
       Json RPC_CALL;
-      RPC_CALL["ENDPOINT"] = endpoint;
+      RPC_CALL["DEST_ENDPOINT"] = endpoint;
       RPC_CALL["INTENT"] = "RPC";
       RPC_CALL["RPC"] = "GET"; // Forward from source endpoint to subscribed endpoints
       RPC_CALL["PAYLOAD"] = json;
@@ -138,8 +138,8 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
       // decode packet to json
       Json msg = decodePacketToJson (packet);
 
-      NS_ASSERT (msg.contains ("ENDPOINT"));
-      std::string endpoint = msg.find ("ENDPOINT")->get<std::string> ();
+      NS_ASSERT (msg.contains ("DEST_ENDPOINT"));
+      std::string endpoint = msg.find ("DEST_ENDPOINT")->get<std::string> ();
       if (m_endpointToAddressMap.find (endpoint) == m_endpointToAddressMap.end ())
         {
 
@@ -156,7 +156,7 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
 {
   NS_LOG_FUNCTION (this);
 
-  NS_ASSERT (msg.contains ("ENDPOINT"));
+  NS_ASSERT (msg.contains ("DEST_ENDPOINT"));
   if (msg.contains("INTENT"))
     {
       std::string rpc;
@@ -173,7 +173,7 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
       if (rpc == "GET")
         {
           // Forward incoming message to endpoint subscribers
-          PublishToEndpointSubscribers (msg.find ("ENDPOINT")->get<std::string> (),
+          PublishToEndpointSubscribers (msg.find ("DEST_ENDPOINT")->get<std::string> (),
                                         msg.find ("PAYLOAD")->get<Json> ());
         }
       else if (rpc == "POST")
@@ -195,7 +195,7 @@ PubSubInfra::ReceiveJsonPayload (Json msg)
         {
           Json payload;
           msg.at("PAYLOAD").get_to(payload);
-          HandlePayload (msg.find ("ENDPOINT")->get<std::string> (), payload);
+          HandlePayload (msg["SRC_ENDPOINT"], msg["DEST_ENDPOINT"], payload);
         }
       else
         {
@@ -394,7 +394,7 @@ PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::
   auto EndpointIt = m_endpointToSubscribers.find (endpoint);
   if (EndpointIt == m_endpointToSubscribers.end ())
     {
-      NS_ASSERT_MSG (false, "Endpoint" << endpoint << " is not registered");
+      NS_ASSERT_MSG (false, "DEST_ENDPOINT" << endpoint << " is not registered");
     }
 
   // Forward published message to each subscriber
@@ -404,7 +404,7 @@ PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::
         {
           // Handle locally
           Json payload;
-          payload["ENDPOINT"] = endpoint;
+          payload["DEST_ENDPOINT"] = endpoint;
           payload["INTENT"] = "SUBSCRIPTION";
           payload["PAYLOAD"] = json_literal;
           ReceiveJsonPayload (payload);

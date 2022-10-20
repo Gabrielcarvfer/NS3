@@ -79,7 +79,7 @@ class E2AP : public PubSubInfra
 public:
   E2AP () : PubSubInfra ("E2Node"){};
   ~E2AP (){};
-  void HandlePayload (std::string endpoint, Json payload);
+  void HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload);
   void RegisterEndpoint(std::string endpoint);
   void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
   void RemoveEndpoint(std::string endpoint);

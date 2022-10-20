@@ -80,14 +80,14 @@ int main()
   Json RPC_CALL = Json::parse(
               R"({
                 "PUBLIC_RPC": {
-                                "ENDPOINT": "/E2Node/0/teste",
+                                "DEST_ENDPOINT": "/E2Node/0/teste",
                                 "BODY": {
                                            "KEY" : "value"
                                         }
                               }
               })"
       );
-  Json test = Json::parse("{\"PUBLIC_RPC\":{\"BODY\":{\"KEY\":\"value\"},\"ENDPOINT\":\"/E2Node/0/teste\"}}");
+  Json test = Json::parse("{\"PUBLIC_RPC\":{\"BODY\":{\"KEY\":\"value\"},\"DEST_ENDPOINT\":\"/E2Node/0/teste\"}}");
   NS_ASSERT(RPC_CALL == test);
 
   Ptr<Packet> post_packaging = E2AP::encodeJsonToPacket(RPC_CALL);
