@@ -1430,7 +1430,6 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
         e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
         for (auto& cell: msg.measResults.measResultListEutra)
         {
-            json["MEASUREMENTS"]["CELLID"] = cell.physCellId;
             if (cell.haveRsrpResult)
             {
                 json["MEASUREMENTS"]["VALUE"] = cell.rsrpResult;
