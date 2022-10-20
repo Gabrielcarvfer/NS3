@@ -561,7 +561,7 @@ E2AP::RegisterEndpoint(std::string endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
-  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = m_endpointRoot;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = "/E2Node/0";
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = std::vector<std::string>{endpoint};
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
@@ -572,7 +572,7 @@ E2AP::UpdateEndpoint(std::string old_endpoint, std::string new_endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
-  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = m_endpointRoot;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = "/E2Node/0";
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = std::vector<std::vector<std::string>>{{old_endpoint, new_endpoint}};
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
@@ -583,7 +583,7 @@ E2AP::RemoveEndpoint(std::string endpoint)
 {
   NS_LOG_FUNCTION (this);
   Json E2_NODE_CONFIGURATION_UPDATE_MESSAGE;
-  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = m_endpointRoot;
+  E2_NODE_CONFIGURATION_UPDATE_MESSAGE["DEST_ENDPOINT"] = "/E2Node/0";
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["TYPE"] = E2_NODE_CONFIGURATION_UPDATE;
   E2_NODE_CONFIGURATION_UPDATE_MESSAGE["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = std::vector<std::string>{endpoint};
   SendPayload (E2_NODE_CONFIGURATION_UPDATE_MESSAGE);
@@ -674,6 +674,7 @@ E2AP::PublishToEndpointSubscribers(std::string complete_endpoint, Json json)
         NS_ABORT_MSG("No measurements saved in json: " + to_string(json));
     }
 
+    // If there is no entry for the KPM measurements, create an entry
     auto kpmIt = m_kpmToEndpointStorage.find(kpm);
     if (kpmIt == m_kpmToEndpointStorage.end())
     {
@@ -682,16 +683,16 @@ E2AP::PublishToEndpointSubscribers(std::string complete_endpoint, Json json)
             std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
         kpmIt = m_kpmToEndpointStorage.find(kpm);
     }
+
+    // Find the measuring E2Node. If it doesn't exist, create an entry for it.
     auto measuringE2NodeIt = kpmIt->second.find(complete_endpoint);
     if (measuringE2NodeIt == kpmIt->second.end())
     {
         kpmIt->second.emplace(complete_endpoint, std::deque<PeriodicMeasurementStruct>{});
         measuringE2NodeIt = kpmIt->second.find(complete_endpoint);
     }
-    measuringE2NodeIt->second.push_front(
-        PeriodicMeasurementStruct{measuringE2NodeIt->second.front().timestamp,
-                                  {json}});
-
+    auto periodicMeasurement = PeriodicMeasurementStruct{SystemWallClockTimestamp().ToString(),{json}};
+    measuringE2NodeIt->second.push_front(periodicMeasurement);
 }
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2
