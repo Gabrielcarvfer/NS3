@@ -1423,13 +1423,13 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
     {
         Json json;
         json["MEASUREMENTS"];
-        json["MEASUREMENTS"]["ID"] = msg.measResults.measId;
+        json["MEASUREMENTS"]["MEASID"] = msg.measResults.measId;
         json["MEASUREMENTS"]["RNTI"] = m_rnti;
         json["MEASUREMENTS"]["CELLID"] = m_sourceCellId;
         json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrpResult;
-        e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.SrcCellQual.RSRP", json);
+        e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRP", json);
         json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
-        e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.SrcCellQual.RSRQ", json);
+        e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
         for (auto& cell: msg.measResults.measResultListEutra)
         {
             json["MEASUREMENTS"]["CELLID"] = cell.physCellId;
@@ -1437,13 +1437,13 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
             {
                 json["MEASUREMENTS"]["VALUE"] = cell.rsrpResult;
                 json["MEASUREMENTS"]["TARGET"] = cell.physCellId;
-                e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.TrgtCellQual.RSRP", json);
+                e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRP", json);
             }
             if (cell.haveRsrqResult)
             {
                 json["MEASUREMENTS"]["VALUE"] = cell.rsrqResult;
                 json["MEASUREMENTS"]["TARGET"] = cell.physCellId;
-                e2ap->PublishToSubEndpointSubscribers("/KPM/Ho.TrgtCellQual.RSRQ", json);
+                e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRQ", json);
             }
         }
     }
