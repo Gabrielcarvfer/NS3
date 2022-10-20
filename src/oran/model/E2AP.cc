@@ -222,7 +222,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
           NS_LOG_FUNCTION(dest_endpoint + " was successfully unsubscribed to " + to_string(payload["RAN Function"]));
 
           // Remove registry of subscribed endpoint from the RIC
-          sUnsubscribeToEndpoint(payload["RAN Function"], m_endpointRoot);
+          sUnsubscribeToEndpoint(payload["RAN Function"], dest_endpoint);
         }
         break;
       // O-RAN WG3 E2AP v2.02 8.2.2.3
@@ -271,7 +271,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
                       measuringE2NodeIt = kpmIt->second.find(src_endpoint);
                   }
                   measuringE2NodeIt->second.push_front(PeriodicMeasurementStruct{ts, {}});
-                  //todo: notify endpoint that fresh data is available
+                  //todo: notify endpoint (e.g. xapps) that fresh data is available
                 }
                 break;
               case KPM_INDICATION_FORMAT_2:

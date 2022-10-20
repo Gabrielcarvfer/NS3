@@ -48,6 +48,15 @@ void CheckEndpointUnsubscribed(std::string nodeRootEndpoint, std::string endpoin
   NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) == subscribers.end ());
 }
 
+void CheckEndpointUnsubscribedRetainsData(E2AP* node, std::string endpoint)
+{
+    auto kpmIt = node->m_kpmToEndpointStorage.find(E2AP::getSubEndpoint(E2AP::getEndpointRoot(endpoint), endpoint));
+    NS_ASSERT(kpmIt != node->m_kpmToEndpointStorage.end());
+
+    auto subscriberIt = kpmIt->second.find(E2AP::getEndpointRoot(endpoint));
+    NS_ASSERT(subscriberIt != kpmIt->second.end());
+}
+
 void CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpointRoot)
 {
   auto kpmIt = node->m_kpmToEndpointStorage.find(kpm);
@@ -405,8 +414,17 @@ int main()
   Simulator::Schedule(Seconds(12), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n1);
 
   // Teste de cancelamento de subscrição
+  Simulator::Schedule (Seconds(14.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+  Simulator::Schedule (Seconds(14.5), &CheckEndpointUnsubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+  Simulator::Schedule (Seconds(14.5), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+
+  // Teste reinscrever na mesma subscrição
+  Simulator::Schedule (Seconds(15.5), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+  Simulator::Schedule (Seconds(16.0), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+  Simulator::Schedule (Seconds(16.0), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
+
   std::cout << simTime << std::endl;
-  Simulator::Stop(Seconds(15));
+  Simulator::Stop(Seconds(17));
   Simulator::Run();
   Simulator::Destroy();
   return 0;
