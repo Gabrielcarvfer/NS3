@@ -2,8 +2,8 @@
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 10/15/2022.
 //
 
-#ifndef NS3_ORAN_3GPP_MEASUREMENTS_H
-#define NS3_ORAN_3GPP_MEASUREMENTS_H
+#ifndef NS3_E2SM_KPM_MEASUREMENTS_H
+#define NS3_E2SM_KPM_MEASUREMENTS_H
 
 #include <string>
 #include <map>
@@ -353,4 +353,4 @@ const std::map<std::string,
          */
 };
 
-#endif // NS3_ORAN_3GPP_MEASUREMENTS_H
+#endif // NS3_E2SM_KPM_MEASUREMENTS_H

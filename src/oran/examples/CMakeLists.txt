@@ -23,7 +23,7 @@ build_lib_example(
 
 build_lib_example(
         NAME TestIndicationMessages
-        SOURCE_FILES TestIndicationMessages.cc
+        SOURCE_FILES TestE2SmRcIndicationMessages.cc
         LIBRARIES_TO_LINK
         ${libcore}
         ${liboran}

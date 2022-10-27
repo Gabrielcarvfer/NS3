@@ -2,8 +2,8 @@
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 26/10/22.
 //
 
-#ifndef NS3_ORAN_INDICATION_TYPES_H
-#define NS3_ORAN_INDICATION_TYPES_H
+#ifndef NS3_E2SM_RC_INDICATION_TYPES_H
+#define NS3_E2SM_RC_INDICATION_TYPES_H
 
 #include "ns3/json.hpp"
 
@@ -326,4 +326,4 @@ void from_json(const Json& j, RIC_INDICATION_MESSAGE& p)
 }
 
 }
-#endif // NS3_ORAN_INDICATION_TYPES_H
+#endif // NS3_E2SM_RC_INDICATION_TYPES_H
