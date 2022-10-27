@@ -16,7 +16,7 @@
 #include "ns3/xApp.h"
 #include "ns3/E2AP.h"
 
-NS_LOG_COMPONENT_DEFINE("TestE2Node");
+NS_LOG_COMPONENT_DEFINE("TestE2AP");
 
 using namespace ns3;
 
