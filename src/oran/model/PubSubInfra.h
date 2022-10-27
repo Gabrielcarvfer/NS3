@@ -66,9 +66,9 @@ public:
 
   bool Connect ();
   void Send (Ptr<Packet> packet);
-  void RegisterEndpoint (std::string endpoint);
-  void SubscribeToEndpoint (std::string endpoint);
-  void PublishToEndpointSubscribers (std::string endpoint, Json json);
+  virtual void RegisterEndpoint (std::string endpoint);
+  virtual void SubscribeToEndpoint (std::string endpoint);
+  virtual void PublishToEndpointSubscribers (std::string endpoint, Json json);
   void ReceivePacket (Ptr<Socket> socket);
   void ReceiveJsonPayload (Json msg);
   // To be implemented by each custom xApp and E2Node

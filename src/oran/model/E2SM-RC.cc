@@ -2,17 +2,12 @@
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 27/10/22.
 //
 
-#include "E2AP.h"
 #include "E2SM-RC-indication-types.h"
-
-using namespace ns3;
-
-NS_LOG_COMPONENT_DEFINE ("E2SM-RC");
 
 void
 E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& dest_endpoint, Json& payload)
 {
-  NS_LOG_FUNCTION_NOARGS();
+  NS_LOG_FUNCTION(this);
 
   RIC_INDICATION_HEADER indicationHeader;
   NS_ASSERT(payload["MESSAGE"].contains ("HEADER"));
@@ -31,6 +26,7 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
         {
           // INSERT services
           uint16_t rnti = indicationHeader.contents.format_2.RNTI;
+          std::cout << rnti << std::endl;
           switch (indicationHeader.contents.format_2.RICInsertStyleType)
             {
               case RIC_INSERT_SERVICE_STYLES::RADIO_BEARER_CONTROL_REQUEST::VALUE:
