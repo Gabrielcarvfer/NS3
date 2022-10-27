@@ -11,8 +11,8 @@ build_lib(
     model/E2AP.h
     model/xApp.h
     model/dynamicSpectrumAllocationxApp.h
-    model/ORAN-3GPP-measurements.h
-    model/ORAN-indication-types.h
+    model/E2SM-KPM-measurements.h
+    model/E2SM-RC-indication-types.h
     model/ORAN-message-types.h
   LIBRARIES_TO_LINK
     ${libcore}

@@ -7,7 +7,7 @@
 
 #include "PubSubInfra.h"
 #include "ns3/system-wall-clock-timestamp.h"
-#include "ORAN-3GPP-measurements.h"
+#include "E2SM-KPM-measurements.h"
 
 namespace ns3 {
 
@@ -95,6 +95,7 @@ public:
   void SendPayload(Json payload);
   void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
   void HandleIndicationPayload(std::string& src_endpoint, std::string& dest_endpoint, Json& payload);
+  void HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& dest_endpoint, Json& payload);
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
   std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
 };
