@@ -7,6 +7,36 @@
 
 namespace ns3
 {
+// O-RAN WG3 E2SM RC v01.02 7.4.1
+namespace RIC_REPORT_SERVICE_STYLES
+{
+    namespace MESSAGE_COPY
+    {
+        uint8_t VALUE = 1;
+        // O-RAN WG3 E2SM RC v01.02 7.4.2.1 + RAN PARAMETERS 8.3.2
+    }
+    namespace CALL_PROCESS_OUTCOME
+    {
+        uint8_t VALUE = 2;
+        // O-RAN WG3 E2SM RC v01.02 7.4.3.1 + RAN PARAMETERS 8.2.1
+    }
+    namespace E2_NODE_INFORMATION
+    {
+        uint8_t VALUE = 3;
+        // O-RAN WG3 E2SM RC v01.02 7.4.4.1  + RAN PARAMETERS 8.3.4
+    }
+    namespace UE_INFORMATION
+    {
+        uint8_t VALUE = 4;
+        // O-RAN WG3 E2SM RC v01.02 7.4.5.1
+    }
+    namespace ON_DEMAND_REPORT
+    {
+        uint8_t VALUE = 5;
+        // O-RAN WG3 E2SM RC v01.02 7.4.6.1
+    }
+}
+
 // O-RAN WG3 E2SM RC v01.02 7.5.1
 namespace RIC_INSERT_SERVICE_STYLES
 {
