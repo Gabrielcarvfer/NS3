@@ -12,8 +12,10 @@ build_lib(
     model/xApp.h
     model/dynamicSpectrumAllocationxApp.h
     model/ORAN-3GPP-measurements.h
+    model/ORAN-indication-types.h
+    model/ORAN-message-types.h
   LIBRARIES_TO_LINK
-        ${libcore}
-        ${libnetwork}
-        ${libinternet}
+    ${libcore}
+    ${libnetwork}
+    ${libinternet}
 )
