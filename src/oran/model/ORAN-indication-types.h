@@ -5,6 +5,10 @@
 #ifndef NS3_ORAN_INDICATION_TYPES_H
 #define NS3_ORAN_INDICATION_TYPES_H
 
+#include "ns3/json.hpp"
+
+using Json = nlohmann::json;
+
 namespace ns3
 {
 // O-RAN WG3 E2SM RC v01.02 7.4.1
@@ -199,6 +203,52 @@ namespace RIC_CONTROL_SERVICE_STYLES
         // O-RAN WG3 E2SM RC v01.02 7.6.10
         // contain multiple fundamental indications such as the ones above
     }
+}
+
+enum RIC_INDICATION_HEADER_FORMAT{
+    RIC_INDICATION_HEADER_FORMAT_1 = 1,
+    RIC_INDICATION_HEADER_FORMAT_2,
+    RIC_INDICATION_HEADER_FORMAT_3
+};
+
+typedef struct
+{
+    enum RIC_INDICATION_HEADER_FORMAT format;
+    union
+    {
+        struct
+        {
+            uint16_t eventTriggerConditionID;
+            uint16_t padding;
+        }format_1;
+        struct
+        {
+            uint16_t RNTI;
+            // One of subspace VALUEs of RIC_REPORT_SERVICE_STYLES,
+            // RIC_INSERT_SERVICE_STYLES or RIC_CONTROL_SERVICE_STYLES
+            // todo: RIC_REPORT_SERVICE_STYLES
+            uint8_t RICInsertStyleType;
+            // One of subspace VALUEs within RIC_REPORT_SERVICE_STYLES,
+            // RIC_INSERT_SERVICE_STYLES or RIC_CONTROL_SERVICE_STYLES
+            // todo: RIC_REPORT_SERVICE_STYLES
+            uint8_t InsertIndicationID;
+        }format_2;
+        struct
+        {
+            uint16_t eventTriggerConditionID;
+            uint16_t RNTI;
+        }format_3;
+        uint32_t raw;
+    } contents;
+}RIC_INDICATION_HEADER;
+
+void to_json(Json& j, const RIC_INDICATION_HEADER& p) {
+    j.update(Json{ {"format", p.format}, {"contents", p.contents.raw}});
+}
+void from_json(const Json& j, RIC_INDICATION_HEADER& p)
+{
+    j.at("format").get_to(p.format);
+    j.at("contents").get_to(p.contents.raw);
 }
 
 }
