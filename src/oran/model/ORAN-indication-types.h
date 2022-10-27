@@ -251,5 +251,79 @@ void from_json(const Json& j, RIC_INDICATION_HEADER& p)
     j.at("contents").get_to(p.contents.raw);
 }
 
+
+enum RIC_INDICATION_MESSAGE_FORMAT{
+    RIC_INDICATION_MESSAGE_FORMAT_1 = 1,
+    RIC_INDICATION_MESSAGE_FORMAT_2,
+    RIC_INDICATION_MESSAGE_FORMAT_3,
+    RIC_INDICATION_MESSAGE_FORMAT_4,
+    RIC_INDICATION_MESSAGE_FORMAT_5,
+    RIC_INDICATION_MESSAGE_FORMAT_6
+};
+
+typedef uint16_t RNTI;
+typedef uint32_t RAN_PARAMETER_ID;
+typedef double RAN_PARAMETER_VALUE; //todo: implement ELEMENT, STRUCT and LIST formats
+typedef std::string UE_CONTEXT_INFORMATION;
+typedef std::string CELL_CONTEXT_INFORMATION;
+typedef uint8_t INDICATION_STYLE;
+typedef uint16_t CELL_GLOBAL_ID;
+
+typedef struct
+{
+    enum RIC_INDICATION_MESSAGE_FORMAT format;
+    union
+    {
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.1
+            // List of RAN parameter values
+            // RAN Parameter ID, RAN Parameter Value
+            std::vector<std::pair<RAN_PARAMETER_ID, RAN_PARAMETER_VALUE>> sequence_of_ran_parameters;
+        }format_1;
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.2
+            // List of RAN parameter values per UE/RNTI
+            // UE ID (RNTI), Sequence of RAN parameters
+            std::vector<std::pair<RNTI, std::vector<std::pair<RAN_PARAMETER_ID, RAN_PARAMETER_VALUE>>>> sequence_of_ue_identifiers;
+        }format_2;
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.3
+            // Cell Global ID, Cell Context Information, Cell Deleted, Neighbor Relation Table
+            std::vector<std::tuple<CELL_GLOBAL_ID, CELL_CONTEXT_INFORMATION, bool, uint16_t>> sequence_of_cell_information; //todo: replace uint16_t with NEIGHBOR RELATION TABLE
+        }format_3;
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.4
+            std::vector<std::tuple<RNTI, UE_CONTEXT_INFORMATION, CELL_GLOBAL_ID>> sequence_of_ue_information;
+            // Cell Global ID, Cell Context Information, Neighbor Relation Table
+            std::vector<std::tuple<CELL_GLOBAL_ID, CELL_CONTEXT_INFORMATION, uint16_t>> sequence_of_cell_information;//todo: replace uint16_t with NEIGHBOR RELATION TABLE
+        }format_4;
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.5
+            std::vector<std::pair<RAN_PARAMETER_ID, double>> list_of_ran_parameters_requested; //todo: replace double with RAN PARAMETER VALUE TYPE
+        }format_5;
+        struct
+        {
+            // O-RAN WG3 E2SM RC v01.02 9.2.1.4.6
+            // Cell Global ID, Cell Context Information, Cell Deleted, Neighbor Relation Table
+            // todo: very complicated std::vector<std::tuple<INDICATION_STYLE, uint16_t, bool, uint16_t>> sequence_of_insert_styles_for_multiple_actions;
+        }format_6;
+        uint8_t raw[1000]; // todo: workaround this arbitrary limit
+    } contents;
+}RIC_INDICATION_MESSAGE;
+
+void to_json(Json& j, const RIC_INDICATION_MESSAGE& p) {
+  j.update(Json{ {"format", p.format}, {"contents", p.contents.raw}});
+}
+void from_json(const Json& j, RIC_INDICATION_MESSAGE& p)
+{
+  j.at("format").get_to(p.format);
+  j.at("contents").get_to(p.contents.raw);
+}
+
 }
 #endif // NS3_ORAN_INDICATION_TYPES_H
