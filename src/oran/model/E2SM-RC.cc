@@ -9,7 +9,7 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
 {
   NS_LOG_FUNCTION(this);
 
-  RIC_INDICATION_HEADER indicationHeader;
+  E2SM_RC_RIC_INDICATION_HEADER indicationHeader;
   NS_ASSERT(payload["MESSAGE"].contains ("HEADER"));
   from_json (payload["MESSAGE"]["HEADER"], indicationHeader);
 
@@ -118,6 +118,18 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                     {
                       case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::HANDOVER_CONTROL_REQUEST::VALUE:
                         {
+                          //RAN parameters from 8.4.4.1
+                          if(!payload["MESSAGE"].contains("TargetPrimaryCellID"))
+                            {
+                              //todo: send RIC_CONTROL_FAILURE
+                              return;
+                            }
+                          // UE wants to switch to a different cell
+                          uint16_t ueToHandover = indicationHeader.contents.format_2.RNTI;
+                          uint16_t targetCell = payload["MESSAGE"].contains("TargetPrimaryCellID");
+
+                          // Set target cell
+                          //Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
 
                         }
                       break;

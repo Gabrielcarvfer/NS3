@@ -1,9 +1,9 @@
 //
-// Created by Gabriel Ferreira (@gabrielcarvfer) on 26/10/22.
+// Created by Gabriel Ferreira (@gabrielcarvfer) on 28/10/22.
 //
 
-#ifndef NS3_E2SM_RC_INDICATION_TYPES_H
-#define NS3_E2SM_RC_INDICATION_TYPES_H
+#ifndef NS3_E2SM_RC_CONTROL_TYPES_H
+#define NS3_E2SM_RC_CONTROL_TYPES_H
 
 #include "ns3/json.hpp"
 
@@ -205,60 +205,52 @@ namespace RIC_CONTROL_SERVICE_STYLES
     }
 }
 
-enum E2SM_RC_RIC_INDICATION_HEADER_FORMAT{
-    RIC_INDICATION_HEADER_FORMAT_1 = 1,
-    RIC_INDICATION_HEADER_FORMAT_2,
-    RIC_INDICATION_HEADER_FORMAT_3
+enum E2SM_RC_RIC_CONTROL_HEADER_FORMAT{
+    RC_CONTROL_HEADER_FORMAT_1 = 1,
+    RC_CONTROL_HEADER_FORMAT_2,
+    RC_CONTROL_HEADER_FORMAT_3
+};
+
+enum E2SM_RC_RIC_CONTROL_DECISION: uint8_t {
+    RC_ACCEPT = 1,
+    RC_REJECT
 };
 
 typedef struct
 {
-    enum E2SM_RC_RIC_INDICATION_HEADER_FORMAT format;
+    enum E2SM_RC_RIC_CONTROL_HEADER_FORMAT format;
     union
     {
         struct
         {
-            uint16_t eventTriggerConditionID;
-            uint16_t padding;
+            uint16_t RNTI;
+            uint8_t RICControlStyleType;
+            uint8_t ControlActionID;
+            // only used when responding to an Insert Indication
+            E2SM_RC_RIC_CONTROL_DECISION RicDecision;
         }format_1;
         struct
         {
             uint16_t RNTI;
-            // One of subspace VALUEs of RIC_REPORT_SERVICE_STYLES,
-            // RIC_INSERT_SERVICE_STYLES or RIC_CONTROL_SERVICE_STYLES
-            // todo: RIC_REPORT_SERVICE_STYLES
-            uint8_t RICInsertStyleType;
-            // One of subspace VALUEs within RIC_REPORT_SERVICE_STYLES,
-            // RIC_INSERT_SERVICE_STYLES or RIC_CONTROL_SERVICE_STYLES
-            // todo: RIC_REPORT_SERVICE_STYLES
-            uint8_t InsertIndicationID;
+            E2SM_RC_RIC_CONTROL_DECISION RicDecision;
         }format_2;
-        struct
-        {
-            uint16_t eventTriggerConditionID;
-            uint16_t RNTI;
-        }format_3;
-        uint32_t raw;
+        uint64_t raw;
     } contents;
-}E2SM_RC_RIC_INDICATION_HEADER;
+}E2SM_RC_RIC_CONTROL_HEADER;
 
-void to_json(Json& j, const E2SM_RC_RIC_INDICATION_HEADER& p) {
+void to_json(Json& j, const E2SM_RC_RIC_CONTROL_HEADER& p) {
     j.update(Json{ {"format", p.format}, {"contents", p.contents.raw}});
 }
-void from_json(const Json& j, E2SM_RC_RIC_INDICATION_HEADER& p)
+void from_json(const Json& j, E2SM_RC_RIC_CONTROL_HEADER& p)
 {
     j.at("format").get_to(p.format);
     j.at("contents").get_to(p.contents.raw);
 }
 
 
-enum RIC_INDICATION_MESSAGE_FORMAT{
-    RIC_INDICATION_MESSAGE_FORMAT_1 = 1,
-    RIC_INDICATION_MESSAGE_FORMAT_2,
-    RIC_INDICATION_MESSAGE_FORMAT_3,
-    RIC_INDICATION_MESSAGE_FORMAT_4,
-    RIC_INDICATION_MESSAGE_FORMAT_5,
-    RIC_INDICATION_MESSAGE_FORMAT_6
+enum E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT{
+    E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT_1 = 1,
+    E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT_2
 };
 
 typedef uint16_t RNTI;
@@ -271,7 +263,7 @@ typedef uint16_t CELL_GLOBAL_ID;
 
 typedef struct
 {
-    enum RIC_INDICATION_MESSAGE_FORMAT format;
+    enum E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT format;
     union
     {
         struct

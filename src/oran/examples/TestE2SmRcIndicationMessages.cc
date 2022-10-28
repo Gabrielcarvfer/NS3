@@ -4,7 +4,7 @@
 
 #include "ns3/core-module.h"
 #include "ns3/json.hpp"
-#include "ns3/ORAN-indication-types.h"
+#include "ns3/E2SM-RC-indication-types.h"
 
 NS_LOG_COMPONENT_DEFINE("TestE2SmRcIndicationMessages");
 
@@ -12,8 +12,8 @@ using namespace ns3;
 
 void indication_header_formats()
 {
-  RIC_INDICATION_HEADER msg;
-  RIC_INDICATION_HEADER msg_2;
+  E2SM_RC_RIC_INDICATION_HEADER msg;
+  E2SM_RC_RIC_INDICATION_HEADER msg_2;
   Json json_msg;
 
   // format 1
