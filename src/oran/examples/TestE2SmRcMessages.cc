@@ -4,9 +4,10 @@
 
 #include "ns3/core-module.h"
 #include "ns3/json.hpp"
+#include "ns3/E2SM-RC-control-types.h"
 #include "ns3/E2SM-RC-indication-types.h"
 
-NS_LOG_COMPONENT_DEFINE("TestE2SmRcIndicationMessages");
+NS_LOG_COMPONENT_DEFINE("TestE2SmRcMessages");
 
 using namespace ns3;
 
@@ -61,9 +62,50 @@ void indication_header_formats()
   NS_ASSERT(msg_2.contents.format_3.eventTriggerConditionID == 3);
 }
 
+void control_header_formats()
+{
+  E2SM_RC_RIC_CONTROL_HEADER msg;
+  E2SM_RC_RIC_CONTROL_HEADER msg_2;
+  Json json_msg;
+
+  // format 1
+  msg.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
+  msg.contents.format_1.RNTI = 2;
+  msg.contents.format_1.RICControlStyleType = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE;
+  msg.contents.format_1.ControlActionID = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE;
+  msg.contents.format_1.RicDecision = ns3::RC_ACCEPT;
+
+  to_json (json_msg, msg);
+  NS_ASSERT(json_msg["format"] == msg.format);
+  NS_ASSERT(json_msg["contents"] == msg.contents.raw);
+
+  from_json (json_msg, msg_2);
+  NS_ASSERT(msg_2.format == msg.format);
+  NS_ASSERT(msg_2.contents.format_1.RNTI == 2);
+  NS_ASSERT(msg_2.contents.format_1.RICControlStyleType
+            == RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE);
+  NS_ASSERT(msg_2.contents.format_1.ControlActionID
+            == RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE);
+  NS_ASSERT(msg_2.contents.format_1.RicDecision == ns3::RC_ACCEPT);
+
+  // format 2
+  msg.format = ns3::RC_CONTROL_HEADER_FORMAT_2;
+  msg.contents.format_2.RNTI = 12;
+  msg.contents.format_2.RicDecision = ns3::RC_REJECT;
+
+  to_json (json_msg, msg);
+  NS_ASSERT(json_msg["format"] == msg.format);
+  NS_ASSERT(json_msg["contents"] == msg.contents.raw);
+
+  from_json (json_msg, msg_2);
+  NS_ASSERT(msg_2.format == msg.format);
+  NS_ASSERT(msg_2.contents.format_2.RNTI == 12);
+  NS_ASSERT(msg_2.contents.format_2.RicDecision == ns3::RC_REJECT);
+}
+
 int main()
 {
     indication_header_formats();
-
+    control_header_formats();
     return 0;
 }

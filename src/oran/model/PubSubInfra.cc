@@ -68,7 +68,8 @@ PubSubInfra::Connect ()
                 + m_endpointRoot);
 
       Json REGISTER_CALL;
-      REGISTER_CALL["DEST_ENDPOINT"] = m_endpointRoot;
+      REGISTER_CALL["SRC_ENDPOINT"] = m_endpointRoot;
+      REGISTER_CALL["DEST_ENDPOINT"] = "/E2Node/0/";
       REGISTER_CALL["INTENT"] = "REGISTER";
       REGISTER_CALL["PAYLOAD"] = ""; // Empty payload
       Simulator::Schedule (Seconds (0.1), &PubSubInfra::Send, this,
@@ -138,11 +139,10 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
       // decode packet to json
       Json msg = decodePacketToJson (packet);
 
-      NS_ASSERT (msg.contains ("DEST_ENDPOINT"));
-      std::string endpoint = msg.find ("DEST_ENDPOINT")->get<std::string> ();
+      NS_ASSERT (msg.contains ("SRC_ENDPOINT"));
+      std::string endpoint = msg.find ("SRC_ENDPOINT")->get<std::string> ();
       if (m_endpointToAddressMap.find (endpoint) == m_endpointToAddressMap.end ())
         {
-
           m_endpointToAddressMap.emplace (endpoint, from);
         }
 

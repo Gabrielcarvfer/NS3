@@ -184,6 +184,16 @@ E2AP::HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json p
       // RIC initiated
       case RIC_CONTROL_REQUEST:
         {
+          NS_ASSERT(payload.contains("SERVICE_MODEL"));
+          E2_SERVICE_MODELS model = payload["SERVICE_MODEL"];
+          switch (model)
+            {
+              case E2_SERVICE_MODELS::E2SM_RC:
+                HandleE2SmRcControlRequest(src_endpoint, dest_endpoint, payload);
+                break;
+              default:
+                NS_ASSERT("Unknown service model for message type RIC Control Request.");
+            }
         }
       break;
       // O-RAN WG3 E2AP v2.02 8.2.4.2
@@ -534,7 +544,7 @@ E2AP::PublishToSubEndpointSubscribers (std::string endpoint, Json json)
 void
 E2AP::PublishToEndpointSubscribers (std::string complete_endpoint, Json json)
 {
-  NS_LOG_FUNCTION(this << complete_endpoint << to_string (json));
+  //NS_LOG_FUNCTION(this << complete_endpoint << to_string (json));
 
   // Do not push report if endpoint is not registered
   auto endpointIt = m_endpointToSubscribers.find (complete_endpoint);

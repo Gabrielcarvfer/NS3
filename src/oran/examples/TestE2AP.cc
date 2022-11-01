@@ -127,7 +127,7 @@ int main()
   uint16_t numBearersPerUe = 0;
   double distance = 500.0;                                        // m
   double yForUe = 500.0;                                          // m
-  double speed = 20;                                              // m/s
+  double speed = 1;//20;                                              // m/s
   double simTime = (double)(numberOfEnbs + 1) * distance / speed; // 1500 m / 20 m/s = 75 secs
   double enbTxPowerDbm = 46.0;
 
@@ -144,9 +144,9 @@ int main()
   lteHelper->SetEpcHelper(epcHelper);
   lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
 
-  lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
-  lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
-  lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+  //lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
+  //lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
+  //lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
 
   //  lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
   //  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
@@ -423,8 +423,9 @@ int main()
   Simulator::Schedule (Seconds(16.0), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
   Simulator::Schedule (Seconds(16.0), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
 
-  std::cout << simTime << std::endl;
-  Simulator::Stop(Seconds(17));
+  // Tentar iniciar um handover
+  lteHelper->HandoverRequest (Seconds (18.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
+  Simulator::Stop(Seconds(20.0));
   Simulator::Run();
   Simulator::Destroy();
   return 0;

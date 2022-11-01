@@ -3,6 +3,7 @@
 //
 
 #include "E2SM-RC-indication-types.h"
+#include "E2SM-RC-control-types.h"
 
 void
 E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& dest_endpoint, Json& payload)
@@ -10,8 +11,8 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
   NS_LOG_FUNCTION(this);
 
   E2SM_RC_RIC_INDICATION_HEADER indicationHeader;
-  NS_ASSERT(payload["MESSAGE"].contains ("HEADER"));
-  from_json (payload["MESSAGE"]["HEADER"], indicationHeader);
+  NS_ASSERT(payload.contains ("HEADER"));
+  from_json (payload["HEADER"], indicationHeader);
 
   switch (indicationHeader.format)
     {
@@ -119,18 +120,37 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                       case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::HANDOVER_CONTROL_REQUEST::VALUE:
                         {
                           //RAN parameters from 8.4.4.1
-                          if(!payload["MESSAGE"].contains("TargetPrimaryCellID"))
+                          if (!payload["MESSAGE"].contains ("Target Primary Cell ID"))
                             {
                               //todo: send RIC_CONTROL_FAILURE
                               return;
                             }
                           // UE wants to switch to a different cell
                           uint16_t ueToHandover = indicationHeader.contents.format_2.RNTI;
-                          uint16_t targetCell = payload["MESSAGE"].contains("TargetPrimaryCellID");
+                          uint16_t requestedTargetCell = payload["MESSAGE"]["Target Primary Cell ID"];
 
                           // Set target cell
-                          //Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
+                          uint16_t targetCell = RicCheckAcceptHandover (ueToHandover, requestedTargetCell);
 
+                          // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
+                          E2SM_RC_RIC_CONTROL_HEADER hdr;
+                          hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
+                          hdr.contents.format_1.RNTI = rnti;
+                          hdr.contents.format_1.RICControlStyleType = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE;
+                          hdr.contents.format_1.ControlActionID = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE;
+                          hdr.contents.format_1.RicDecision = targetCell != std::numeric_limits<uint16_t>::max() ? RC_ACCEPT : RC_REJECT;
+                          Json json_hdr;
+                          to_json (json_hdr, hdr);
+
+                          Json HANDOVER_CONTROL_MSG;
+                          HANDOVER_CONTROL_MSG["DEST_ENDPOINT"] = src_endpoint;
+                          HANDOVER_CONTROL_MSG["PAYLOAD"]["TYPE"] = RIC_CONTROL_REQUEST;
+                          HANDOVER_CONTROL_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
+                          HANDOVER_CONTROL_MSG["PAYLOAD"]["HEADER"] = json_hdr;
+                          HANDOVER_CONTROL_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = targetCell;
+
+                          // Send indication with control request
+                          SendPayload(HANDOVER_CONTROL_MSG);
                         }
                       break;
                       case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::CONDITIONAL_HANDOVER_CONTROL_REQUEST::VALUE:
@@ -262,4 +282,86 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
       default:
         NS_ABORT_MSG("Unknown RIC Indication Header Format");
     }
+}
+
+void
+E2AP::HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_endpoint, Json& payload)
+{
+  NS_LOG_FUNCTION(this);
+
+  E2SM_RC_RIC_CONTROL_HEADER controlHeader;
+  NS_ASSERT(payload.contains ("HEADER"));
+  from_json (payload["HEADER"], controlHeader);
+
+  switch (controlHeader.format)
+    {
+      case RC_CONTROL_HEADER_FORMAT_1:
+        switch (controlHeader.contents.format_1.RICControlStyleType)
+          {
+            case RIC_CONTROL_SERVICE_STYLES::RADIO_BEARER_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::RADIO_RESOURCE_ALLOCATION_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE:
+              switch (controlHeader.contents.format_1.ControlActionID)
+                {
+                  case RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE:
+                    {
+                      auto handoverRequestIt = m_pendingRequestsPerRnti.find ("HO");
+                      if (handoverRequestIt == m_pendingRequestsPerRnti.end ())
+                        {
+                          m_pendingRequestsPerRnti.emplace ("HO", std::map<uint16_t, Json>{});
+                          handoverRequestIt = m_pendingRequestsPerRnti.find ("HO");
+                        }
+                      auto UeRntiIt = handoverRequestIt->second.find (controlHeader.contents.format_1.RNTI);
+                      if (UeRntiIt == handoverRequestIt->second.end ())
+                        {
+                          //todo: send control failure: no pending handover
+                        }
+                      else
+                        {
+                          UeRntiIt->second = payload;
+                        }
+                    }
+                    break;
+                  case RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::CONDITIONAL_HANDOVER_CONTROL::VALUE:
+                  case RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::DUAL_ACTIVE_PROTOCOL_STACK_HANDOVER_CONTROL::VALUE:
+                  default:
+                    NS_ASSERT("Unimplemented controls");
+                    break;
+                }
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::RADIO_ACCESS_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::DUAL_CONNECTIVITY_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::CARRIER_AGGREGATION_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::IDLE_MODE_MOBILITY_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::UE_INFORMATION_AND_ASSIGNMENT::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::MEASUREMENT_REPORTING_CONFIGURATION_CONTROL::VALUE:
+              break;
+            case RIC_CONTROL_SERVICE_STYLES::MULTIPLE_ACTIONS_CONTROL::VALUE:
+              break;
+            default:
+              NS_ASSERT("Unknown RIC Control Style");
+              break;
+          }
+        break;
+      case RC_CONTROL_HEADER_FORMAT_2:
+      case RC_CONTROL_HEADER_FORMAT_3:
+      default:
+        NS_ASSERT("Unsupported RIC Control Request header format");
+        break;
+    }
+}
+
+uint16_t
+E2AP::RicCheckAcceptHandover(uint16_t rnti, uint16_t cellId)
+{
+  // by default, accept all handover requests
+  // overriding this method allows us to change the handover acceptance algorithm
+  return cellId;
 }
