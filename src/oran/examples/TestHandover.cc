@@ -1,5 +1,5 @@
 //
-// Created by Gabriel Ferreira(@gabrielcarvfer) on 2/10/22.
+// Created by Gabriel Ferreira(@gabrielcarvfer) on 1/11/22.
 //
 
 #include <map>
@@ -16,54 +16,59 @@
 #include "ns3/xApp.h"
 #include "ns3/E2AP.h"
 
-NS_LOG_COMPONENT_DEFINE("TestE2AP");
+NS_LOG_COMPONENT_DEFINE("TestHandover");
 
 using namespace ns3;
 
-
-void CheckConnected(E2AP * node)
+void
+NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
-  NS_ASSERT_MSG(node->m_socket, node->m_endpointRoot+" could not connect to E2T");
+  std::cout << context << " UE IMSI " << imsi << ": connected to CellId " << cellid
+            << " with RNTI " << rnti << std::endl;
 }
 
-void CheckEndpointRegistered(std::string endpoint)
+void
+NotifyHandoverStartUe(std::string context,
+                      uint64_t imsi,
+                      uint16_t cellid,
+                      uint16_t rnti,
+                      uint16_t targetCellId)
 {
-  NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) != E2AP::m_endpointToSubscribers.end());
+  std::cout << context << " UE IMSI " << imsi << ": previously connected to CellId " << cellid
+            << " with RNTI " << rnti << ", doing handover to CellId " << targetCellId
+            << std::endl;
 }
 
-void CheckEndpointNotRegistered(std::string endpoint)
+void
+NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
-  NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) == E2AP::m_endpointToSubscribers.end());
+  std::cout << context << " UE IMSI " << imsi << ": successful handover to CellId " << cellid
+            << " with RNTI " << rnti << std::endl;
 }
 
-void CheckEndpointSubscribed(std::string nodeRootEndpoint, std::string endpoint)
+void
+NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
-  auto subscribers = E2AP::m_endpointToSubscribers.find (endpoint)->second;
-  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) != subscribers.end ());
+  std::cout << context << " eNB CellId " << cellid << ": successful connection of UE with IMSI "
+            << imsi << " RNTI " << rnti << std::endl;
 }
 
-void CheckEndpointUnsubscribed(std::string nodeRootEndpoint, std::string endpoint)
+void
+NotifyHandoverStartEnb(std::string context,
+                       uint64_t imsi,
+                       uint16_t cellid,
+                       uint16_t rnti,
+                       uint16_t targetCellId)
 {
-  auto subscribers = E2AP::m_endpointToSubscribers.find (endpoint)->second;
-  NS_ASSERT (std::find (subscribers.begin (), subscribers.end (), nodeRootEndpoint) == subscribers.end ());
+  std::cout << context << " eNB CellId " << cellid << ": start handover of UE with IMSI " << imsi
+            << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
 }
 
-void CheckEndpointUnsubscribedRetainsData(E2AP* node, std::string endpoint)
+void
+NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
-    auto kpmIt = node->m_kpmToEndpointStorage.find(E2AP::getSubEndpoint(E2AP::getEndpointRoot(endpoint), endpoint));
-    NS_ASSERT(kpmIt != node->m_kpmToEndpointStorage.end());
-
-    auto subscriberIt = kpmIt->second.find(E2AP::getEndpointRoot(endpoint));
-    NS_ASSERT(subscriberIt != kpmIt->second.end());
-}
-
-void CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpointRoot)
-{
-  auto kpmIt = node->m_kpmToEndpointStorage.find(kpm);
-  NS_ASSERT_MSG (kpmIt != node->m_kpmToEndpointStorage.end(), "KPM periodic report was not received: " + kpm);
-  auto reportingE2NodeIt = kpmIt->second.find(endpointRoot);
-  NS_ASSERT_MSG(reportingE2NodeIt != kpmIt->second.end(), endpointRoot + " periodic report for KPM " + kpm + " was not received");
-  NS_ASSERT_MSG (!reportingE2NodeIt->second.empty(), endpointRoot + " periodic report history is empty");
+  std::cout << context << " eNB CellId " << cellid << ": completed handover of UE with IMSI "
+            << imsi << " RNTI " << rnti << std::endl;
 }
 
 int main()
@@ -155,10 +160,10 @@ int main()
   // Install Mobility Model in eNB
   Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
   for (uint16_t i = 1; i < numberOfEnbs+1; i++)// i = 1 => UE is in the middle of two eNBs
-  {
+    {
       Vector enbPosition(distance * (i + 1), distance, 0);
       enbPositionAlloc->Add(enbPosition);
-  }
+    }
   MobilityHelper enbMobility;
   enbMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   enbMobility.SetPositionAllocator(enbPositionAlloc);
@@ -183,9 +188,9 @@ int main()
 
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
-  {
+    {
       lteHelper->Attach(ueLteDevs.Get(i), enbLteDevs.Get(0));
-  }
+    }
 
   NS_LOG_LOGIC("setting up applications");
 
@@ -201,7 +206,7 @@ int main()
   startTimeSeconds->SetAttribute("Max", DoubleValue(0.010));
 
   for (uint32_t u = 0; u < numberOfUes; ++u)
-  {
+    {
       Ptr<Node> ue = ueNodes.Get(u);
       // Set the default gateway for the UE
       Ptr<Ipv4StaticRouting> ueStaticRouting =
@@ -209,7 +214,7 @@ int main()
       ueStaticRouting->SetDefaultRoute(epcHelper->GetUeDefaultGatewayAddress(), 1);
 
       for (uint32_t b = 0; b < numBearersPerUe; ++b)
-      {
+        {
           ++dlPort;
           ++ulPort;
 
@@ -246,8 +251,8 @@ int main()
           serverApps.Start(startTime);
           clientApps.Start(startTime);
 
-      } // end for b
-  }
+        } // end for b
+    }
 
   // Add X2 interface
   lteHelper->AddX2Interface(enbNodes);
@@ -260,6 +265,43 @@ int main()
           ipv4RoutingHelper.GetStaticRouting(enbNodes.Get (i)->GetObject<Ipv4>());
       remoteHostStaticRouting->AddNetworkRouteTo(Ipv4Address("10.0.0.6"), Ipv4Mask("255.255.255.252"), 1);
     }
+
+  // connect custom trace sinks for RRC connection establishment and handover notification
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
+                  MakeCallback(&NotifyConnectionEstablishedEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/ConnectionEstablished",
+                  MakeCallback(&NotifyConnectionEstablishedUe));
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverStart",
+                  MakeCallback(&NotifyHandoverStartEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverStart",
+                  MakeCallback(&NotifyHandoverStartUe));
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
+                  MakeCallback(&NotifyHandoverEndOkEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
+                  MakeCallback(&NotifyHandoverEndOkUe));
+  // end of x2-handover-measures example
+
+  // Print IPs, masks and interface offsets
+  /*
+  for(int in = 0; in < sgw->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < sgw->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+    {
+      std::cout << sgw->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+    }
+  std::cout << "-------------------------------------------------" << std::endl;
+  for(int in = 0; in < enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+      {
+        std::cout << enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+      }
+  std::cout << "-------------------------------------------------" << std::endl;
+  for(int in = 0; in < enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+      {
+        std::cout << enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+      }
+  exit(0);
+  */
 
   E2AP e2t;
   NS_ASSERT(e2t.m_instanceId == 0);
@@ -274,84 +316,40 @@ int main()
   // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
   // estabelecer os sockets TCP
   sgw->AddApplication(&e2t);
+
+  // Configurar eNodeBs/nós E2
   enbNodes.Get(0)->AddApplication(&e2n1);
 
-  /*
-   * E2T                        E2Node1
-   *  │                            │
-   *  │                            │
-   *  ├─────┐                      │
-   *  │     │ 0.5s Connect         │
-   *  │     │ (open socket         │
-   *  │◄────┘  and listen)         │
-   *  │                            │
-   *  │◄───────────────────────────┤
-   *  │        1s Connect          │
-   *  │        (register           │
-   *  │         to RIC)            │
-   *  │                            │
-   *  ├───────────────────────────►│
-   *  │    1.5s CheckConnected     │
-   *  │    (check if connection    │
-   *  │     was established)       │
-   *  ▼                            ▼
-   *  t                            t
-   */
   Simulator::Schedule(Seconds(0.5), &E2AP::Connect, &e2t);
-  Simulator::Schedule(Seconds(1), &E2AP::Connect, &e2n1);
-  Simulator::Schedule(Seconds(1.5), &CheckConnected, &e2n1);
+  Simulator::Schedule(Seconds(1.0), &E2AP::Connect, &e2n1);
+  Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, &e2n1);
+  Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n1);
 
-  // Testes de registros de endpoints bem-sucedidos
-  Simulator::Schedule (Seconds(2.0), &E2AP::RegisterEndpoint, &e2t, "//teste");
-  Simulator::Schedule (Seconds(2.0), &E2AP::RegisterEndpoint, &e2n1, "/teste2");
-  Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/0/teste");
-  Simulator::Schedule (Seconds(2.5), &CheckEndpointRegistered, "/E2Node/1/teste2");
+  E2AP e2n2;
+  enbNodes.Get(1)->AddApplication(&e2n2);
+  Simulator::Schedule(Seconds(1.0), &E2AP::Connect, &e2n2);
+  Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, &e2n2);
+  Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n2);
 
-  // Testes de registros de endpoints mal-sucedidos
-  Simulator::Schedule (Seconds(3.0), &E2AP::RegisterEndpoint, &e2t, "//teste");
-  Simulator::Schedule (Seconds(3.0), &E2AP::RegisterEndpoint, &e2n1, "/teste2");
+  E2AP e2n3;
+  enbNodes.Get(2)->AddApplication(&e2n3);
+  Simulator::Schedule(Seconds(1.0), &E2AP::Connect, &e2n3);
+  Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, &e2n3);
+  Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n3);
 
-  // Testes de atualizações de endpoints
-  Simulator::Schedule (Seconds(3.5), &E2AP::UpdateEndpoint, &e2n1, "/teste2", "/teste3");
-  Simulator::Schedule (Seconds(4.0), &CheckEndpointNotRegistered, "/E2Node/1/teste2");
-  Simulator::Schedule (Seconds(4.0), &CheckEndpointRegistered, "/E2Node/1/teste3");
+  // Executa um handover do primeiro eNB para o segundo
+  lteHelper->HandoverRequest (Seconds (4.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
 
-  // Testes de remoção de endpoints
-  Simulator::Schedule (Seconds(4.5), &E2AP::RemoveEndpoint, &e2n1, "/teste3");
-  Simulator::Schedule (Seconds(5.0), &CheckEndpointNotRegistered, "/E2Node/1/teste3");
+  // Executar handover de volta para primeiro eNB
+  lteHelper->HandoverRequest (Seconds (5.0), ueLteDevs.Get (0), enbLteDevs.Get (1), enbLteDevs.Get (0));
 
-  // Teste de subscrição em endpoints
-  Simulator::Schedule (Seconds(5.5), &E2AP::RegisterEndpoint, &e2n1, "/");
-  Simulator::Schedule (Seconds(6.0), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/");
-  Simulator::Schedule (Seconds(6.5), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/");
+  // Executar handover do primeiro eNB para terceiro
+  lteHelper->HandoverRequest (Seconds (6.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (2));
 
-  // Teste de recebimento de medições periódicas
-  Simulator::Schedule (Seconds(7.6), &CheckEndpointPeriodicReport, &e2t, "/", "/E2Node/1");
+  // Executar handover do terceiro eNB para o primeiro
+  lteHelper->HandoverRequest (Seconds (7.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
 
-  // Teste de cancelamento de subscrição em endpoints vindo do RIC
-  Simulator::Schedule (Seconds(8.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
-  Simulator::Schedule (Seconds(8.5), &CheckEndpointUnsubscribed, e2t.m_endpointRoot, "/E2Node/1/");
-
-  // Tentar cancelar subscrição já cancelada (cheque nos logs por SUBSCRIPTION_DELETE_FAILURE)
-  Simulator::Schedule (Seconds(9.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
-
-  // Publicar endpoints padrão
-  Simulator::Schedule(Seconds(10), &E2AP::RegisterDefaultEndpoints, &e2n1);
-
-  // Assinar endpoints padrão
-  Simulator::Schedule(Seconds(12), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n1);
-
-  // Teste de cancelamento de subscrição
-  Simulator::Schedule (Seconds(14.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-  Simulator::Schedule (Seconds(14.5), &CheckEndpointUnsubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-  Simulator::Schedule (Seconds(14.5), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-
-  // Teste reinscrever na mesma subscrição
-  Simulator::Schedule (Seconds(15.5), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-  Simulator::Schedule (Seconds(16.0), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-  Simulator::Schedule (Seconds(16.0), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
-
-  Simulator::Stop(Seconds(18.0));
+  Simulator::Stop(Seconds(8.0));
   Simulator::Run();
   Simulator::Destroy();
   return 0;
