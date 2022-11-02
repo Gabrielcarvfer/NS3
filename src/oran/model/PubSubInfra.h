@@ -19,7 +19,7 @@
 #include <vector>
 #include <functional>
 
-#include "json.hpp"
+#include "ns3/json.hpp"
 
 #include <ns3/network-module.h>
 #include <ns3/internet-module.h>
