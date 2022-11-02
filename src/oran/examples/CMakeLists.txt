@@ -1,4 +1,12 @@
 build_lib_example(
+        NAME TestE2SmRcIndicationMessages
+        SOURCE_FILES TestE2SmRcMessages.cc
+        LIBRARIES_TO_LINK
+        ${libcore}
+        ${liboran}
+)
+
+build_lib_example(
   NAME TestPubSubInfra
   SOURCE_FILES TestPubSubInfra.cc
   LIBRARIES_TO_LINK
@@ -22,9 +30,13 @@ build_lib_example(
 )
 
 build_lib_example(
-        NAME TestE2SmRcIndicationMessages
-        SOURCE_FILES TestE2SmRcMessages.cc
+        NAME TestHandover
+        SOURCE_FILES TestHandover.cc
         LIBRARIES_TO_LINK
         ${libcore}
+        ${libmobility}
+        ${libpoint-to-point}
+        ${liblte}
         ${liboran}
+        ${libapplications}
 )
