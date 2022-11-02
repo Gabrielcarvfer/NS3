@@ -14,6 +14,8 @@ std::map<const std::string, const PubSubInfra*>
     PubSubInfra::m_endpointRootToInstance{};
 std::map<const std::string, std::vector<std::string>>
     PubSubInfra::m_endpointToSubscribers{};
+std::map<const std::string, std::function<void(Json&)>>
+    PubSubInfra::m_endpointCallbacks{};
 
 bool
 PubSubInfra::Connect ()
@@ -320,6 +322,12 @@ bool PubSubInfra::sUpdateEndpoint (std::string rootEndpoint, std::string old_end
   return true;
 }
 
+void PubSubInfra::RemoveEndpoint (std::string endpoint)
+{
+  NS_LOG_FUNCTION(m_endpointRoot + " removing endpoint " + endpoint);
+  sRemoveEndpoint (m_endpointRoot, endpoint);
+}
+
 bool PubSubInfra::sRemoveEndpoint (std::string rootEndpoint, std::string endpoint)
 {
   NS_LOG_FUNCTION(rootEndpoint + " removing endpoint " + endpoint);
@@ -463,4 +471,31 @@ PubSubInfra::getInstanceFromEndpointRoot(std::string endpointRoot)
       NS_ABORT_MSG ("Inexisting instance with endpoint " + endpointRoot);
     }
   return it->second;
+}
+
+void
+PubSubInfra::RegisterEndpointCallback(std::string endpoint, std::function<void(Json&)> callback)
+{
+  m_endpointCallbacks[buildEndpoint (m_endpointRoot, endpoint)] = callback;
+}
+
+void
+PubSubInfra::RemoveEndpointCallback(std::string endpoint)
+{
+  std::string full_endpoint = buildEndpoint (m_endpointRoot, endpoint);
+  if (m_endpointCallbacks.find (full_endpoint) != m_endpointCallbacks.end())
+    {
+      m_endpointCallbacks.erase (full_endpoint);
+    }
+}
+
+std::function<void(Json&)>
+PubSubInfra::GetEndpointCallback(std::string endpoint)
+{
+  std::string full_endpoint = buildEndpoint (m_endpointRoot, endpoint);
+  if (m_endpointCallbacks.find (full_endpoint) == m_endpointCallbacks.end())
+    {
+      return nullptr;
+    }
+  return m_endpointCallbacks.at(full_endpoint);
 }
