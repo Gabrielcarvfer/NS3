@@ -19,15 +19,13 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
       case RIC_INDICATION_HEADER_FORMAT_1:
         {
           // REPORT services
-          uint16_t eventTriggerConditionId = indicationHeader.contents.format_1.eventTriggerConditionID;
-          std::cout << eventTriggerConditionId << std::endl;
+          //uint16_t eventTriggerConditionId = indicationHeader.contents.format_1.eventTriggerConditionID;
         }
       break;
       case RIC_INDICATION_HEADER_FORMAT_2:
         {
           // INSERT services
           uint16_t rnti = indicationHeader.contents.format_2.RNTI;
-          std::cout << rnti << std::endl;
           switch (indicationHeader.contents.format_2.RICInsertStyleType)
             {
               case RIC_INSERT_SERVICE_STYLES::RADIO_BEARER_CONTROL_REQUEST::VALUE:
@@ -129,9 +127,17 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                           uint16_t ueToHandover = indicationHeader.contents.format_2.RNTI;
                           uint16_t requestedTargetCell = payload["MESSAGE"]["Target Primary Cell ID"];
 
-                          // Set target cell
-                          uint16_t targetCell = RicCheckAcceptHandover (ueToHandover, requestedTargetCell);
-
+                          // Set target cell to the requested by default
+                          uint16_t targetCell = requestedTargetCell;
+                          std::function<void(Json&)> handoverHandler = GetEndpointCallback("/Action/HO");
+                          if (handoverHandler)
+                            {
+                              Json temp;
+                              temp["RNTI"] = ueToHandover;
+                              temp["Target Primary Cell ID"] = requestedTargetCell;
+                              handoverHandler(temp);
+                              targetCell = temp["Target Primary Cell ID"];
+                            }
                           // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
                           E2SM_RC_RIC_CONTROL_HEADER hdr;
                           hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
@@ -356,12 +362,4 @@ E2AP::HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_e
         NS_ASSERT("Unsupported RIC Control Request header format");
         break;
     }
-}
-
-uint16_t
-E2AP::RicCheckAcceptHandover(uint16_t rnti, uint16_t cellId)
-{
-  // by default, accept all handover requests
-  // overriding this method allows us to change the handover acceptance algorithm
-  return cellId;
 }

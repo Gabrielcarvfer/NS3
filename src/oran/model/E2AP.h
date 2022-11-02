@@ -34,7 +34,7 @@ public:
   void HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload) override;
   void RegisterEndpoint(std::string endpoint) override;
   void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
-  void RemoveEndpoint(std::string endpoint);
+  void RemoveEndpoint(std::string endpoint) override;
   void SubscribeToEndpoint (std::string endpoint) override;
   void SubscribeToEndpointPeriodic (std::string endpoint, uint32_t periodicity_ms);
   void UnsubscribeToEndpoint (std::string endpoint);
@@ -53,9 +53,6 @@ public:
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
   std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
   std::map<std::string, std::map<uint16_t, Json>> m_pendingRequestsPerRnti;
-//public:
-//E2SM RC
-  uint16_t RicCheckAcceptHandover(uint16_t rnti, uint16_t cellId); // returns target cellId
 };
 
 // O-RAN WG3 E2SM RC v01.02 7.3.1

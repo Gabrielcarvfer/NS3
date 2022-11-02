@@ -40,3 +40,15 @@ build_lib_example(
         ${liboran}
         ${libapplications}
 )
+
+build_lib_example(
+        NAME TestHandoverXapp
+        SOURCE_FILES TestHandoverXapp.cc
+        LIBRARIES_TO_LINK
+        ${libcore}
+        ${libmobility}
+        ${libpoint-to-point}
+        ${liblte}
+        ${liboran}
+        ${libapplications}
+)
