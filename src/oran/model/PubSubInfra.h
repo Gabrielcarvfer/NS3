@@ -67,12 +67,16 @@ public:
   bool Connect ();
   void Send (Ptr<Packet> packet);
   virtual void RegisterEndpoint (std::string endpoint);
+  virtual void RemoveEndpoint(std::string endpoint);
   virtual void SubscribeToEndpoint (std::string endpoint);
   virtual void PublishToEndpointSubscribers (std::string endpoint, Json json);
   void ReceivePacket (Ptr<Socket> socket);
   void ReceiveJsonPayload (Json msg);
   // To be implemented by each custom xApp and E2Node
   virtual void HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload){};
+  void RegisterEndpointCallback(std::string endpoint, std::function<void(Json&)>);
+  void RemoveEndpointCallback(std::string endpoint);
+  std::function<void(Json&)> GetEndpointCallback(std::string endpoint);
   //private:
   Ptr<Socket> m_socket;
   std::string m_endpointRoot; // set during initialization
@@ -83,6 +87,7 @@ public:
       m_instanceCountMap; // incremented during initialization
   static std::map<const std::string, const PubSubInfra *> m_endpointRootToInstance;
   static std::map<const std::string, std::vector<std::string>> m_endpointToSubscribers;
+  static std::map<const std::string, std::function<void(Json&)>> m_endpointCallbacks;
 //static methods
   Ipv4Address getNodeAddress (unsigned device = 3);
   static Ptr<Packet> encodeJsonToPacket (Json json_contents);
