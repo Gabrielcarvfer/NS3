@@ -123,9 +123,9 @@ int main()
   GlobalValue::Bind ("ChecksumEnabled", BooleanValue (true));
 
   uint16_t numberOfUes = 1;
-  uint16_t numberOfEnbs = 2;
+  uint16_t numberOfEnbs = 3;
   uint16_t numBearersPerUe = 0;
-  double distance = 500.0;                                        // m
+  double distance = 200.0;                                        // m
   double yForUe = 500.0;                                          // m
   double speed = 1;//20;                                              // m/s
   double simTime = (double)(numberOfEnbs + 1) * distance / speed; // 1500 m / 20 m/s = 75 secs
@@ -144,6 +144,7 @@ int main()
   lteHelper->SetEpcHelper(epcHelper);
   lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
 
+  lteHelper->SetHandoverAlgorithmType ("ns3::NoOpHandoverAlgorithm"); // select an algorithm that does nothing
   //lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
   //lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
   //lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
@@ -204,7 +205,7 @@ int main()
 
   // Install Mobility Model in eNB
   Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
-  for (uint16_t i = 0; i < numberOfEnbs; i++)
+  for (uint16_t i = 1; i < numberOfEnbs+1; i++)// i = 1 => UE is in the middle of two eNBs
   {
       Vector enbPosition(distance * (i + 1), distance, 0);
       enbPositionAlloc->Add(enbPosition);
@@ -302,21 +303,26 @@ int main()
   // Add X2 interface
   lteHelper->AddX2Interface(enbNodes);
 
-  // X2-based Handover
-  // lteHelper->HandoverRequest (Seconds (0.100), ueLteDevs.Get (0), enbLteDevs.Get (0),
-  // enbLteDevs.Get (1));
+  // Configura regra de encaminhamento para eNBs que não sejam o primeiro
+  for(unsigned i = 1; i < numberOfEnbs; i++)
+    {
+      Ipv4StaticRoutingHelper ipv4RoutingHelper;
+      Ptr<Ipv4StaticRouting> remoteHostStaticRouting =
+          ipv4RoutingHelper.GetStaticRouting(enbNodes.Get (i)->GetObject<Ipv4>());
+      remoteHostStaticRouting->AddNetworkRouteTo(Ipv4Address("10.0.0.6"), Ipv4Mask("255.255.255.252"), 1);
+    }
 
   // Uncomment to enable PCAP tracing
   // p2ph.EnablePcapAll("lena-x2-handover-measures");
 
-  lteHelper->EnablePhyTraces();
-  lteHelper->EnableMacTraces();
-  lteHelper->EnableRlcTraces();
-  lteHelper->EnablePdcpTraces();
-  Ptr<RadioBearerStatsCalculator> rlcStats = lteHelper->GetRlcStats();
-  rlcStats->SetAttribute("EpochDuration", TimeValue(Seconds(1.0)));
-  Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats();
-  pdcpStats->SetAttribute("EpochDuration", TimeValue(Seconds(1.0)));
+  //lteHelper->EnablePhyTraces();
+  //lteHelper->EnableMacTraces();
+  //lteHelper->EnableRlcTraces();
+  //lteHelper->EnablePdcpTraces();
+  //Ptr<RadioBearerStatsCalculator> rlcStats = lteHelper->GetRlcStats();
+  //rlcStats->SetAttribute("EpochDuration", TimeValue(Seconds(1.0)));
+  //Ptr<RadioBearerStatsCalculator> pdcpStats = lteHelper->GetPdcpStats();
+  //pdcpStats->SetAttribute("EpochDuration", TimeValue(Seconds(1.0)));
 
   // connect custom trace sinks for RRC connection establishment and handover notification
   Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
@@ -332,6 +338,28 @@ int main()
   Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
                   MakeCallback(&NotifyHandoverEndOkUe));
   // end of x2-handover-measures example
+
+  // Print IPs, masks and interface offsets
+  /*
+  for(int in = 0; in < sgw->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < sgw->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+    {
+      std::cout << sgw->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+    }
+  std::cout << "-------------------------------------------------" << std::endl;
+  for(int in = 0; in < enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+      {
+        std::cout << enbNodes.Get(0)->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+      }
+  std::cout << "-------------------------------------------------" << std::endl;
+  for(int in = 0; in < enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetNInterfaces(); in++)
+    for(int i = 0; i < enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetNAddresses(in); i++)
+      {
+        std::cout << enbNodes.Get(1)->GetObject<Ipv4L3Protocol>()->GetAddress (in, i) << std::endl;
+      }
+  exit(0);
+  */
 
   E2AP e2t;
   NS_ASSERT(e2t.m_instanceId == 0);
@@ -423,9 +451,32 @@ int main()
   Simulator::Schedule (Seconds(16.0), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
   Simulator::Schedule (Seconds(16.0), &CheckEndpointUnsubscribedRetainsData, &e2t, "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
 
-  // Tentar iniciar um handover
+  // Executa um handover do primeiro eNB para o segundo
   lteHelper->HandoverRequest (Seconds (18.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
-  Simulator::Stop(Seconds(20.0));
+
+  // Configurar o segundo e terceiro eNB
+  E2AP e2n2;
+  enbNodes.Get(1)->AddApplication(&e2n2);
+  Simulator::Schedule(Seconds(19), &E2AP::Connect, &e2n2);
+  Simulator::Schedule(Seconds(20), &E2AP::RegisterDefaultEndpoints, &e2n2);
+  Simulator::Schedule(Seconds(21), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n2);
+
+  E2AP e2n3;
+  enbNodes.Get(2)->AddApplication(&e2n3);
+  Simulator::Schedule(Seconds(19), &E2AP::Connect, &e2n3);
+  Simulator::Schedule(Seconds(20), &E2AP::RegisterDefaultEndpoints, &e2n3);
+  Simulator::Schedule(Seconds(21), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n3);
+
+  // Executar handover de volta para primeiro eNB
+  lteHelper->HandoverRequest (Seconds (23.0), ueLteDevs.Get (0), enbLteDevs.Get (1), enbLteDevs.Get (0));
+
+  // Executar handover do primeiro eNB para terceiro
+  lteHelper->HandoverRequest (Seconds (25.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (2));
+
+  // Executar handover do terceiro eNB para o primeiro
+  lteHelper->HandoverRequest (Seconds (27.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
+
+  Simulator::Stop(Seconds(28.0));
   Simulator::Run();
   Simulator::Destroy();
   return 0;

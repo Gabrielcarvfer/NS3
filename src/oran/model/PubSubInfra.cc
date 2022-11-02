@@ -27,7 +27,7 @@ PubSubInfra::Connect ()
   if (node && m_socket)
     return true;
 
-  // Estabeler socket com nó 0 do mesmo tipo de aplicação
+  // Estabelecer socket com nó 0 do mesmo tipo de aplicação
   TypeId tid = TypeId::LookupByName ("ns3::UdpSocketFactory");
   m_socket = Socket::CreateSocket (node, tid);
   if (m_endpointRoot == "/E2Node/0")

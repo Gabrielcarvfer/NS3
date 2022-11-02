@@ -550,7 +550,7 @@ E2AP::PublishToEndpointSubscribers (std::string complete_endpoint, Json json)
   auto endpointIt = m_endpointToSubscribers.find (complete_endpoint);
   if (endpointIt == m_endpointToSubscribers.end ())
     {
-      NS_LOG_FUNCTION(this << "Endpoint not subscribed:" << complete_endpoint);
+      //NS_LOG_FUNCTION(this << "Endpoint not subscribed:" << complete_endpoint);
       return;
     }
 
