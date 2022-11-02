@@ -7,7 +7,7 @@
 
 #include <string>
 #include <map>
-#include "json.hpp"
+#include "ns3/json.hpp"
 #include "ns3/event-id.h"
 #include "ns3/system-wall-clock-timestamp.h"
 
