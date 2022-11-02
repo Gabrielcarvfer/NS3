@@ -6,15 +6,14 @@ build_lib(
     #model/E2SM-KPM.cc  -- these are part of E2AP. separated only for readability.
     #model/E2SM-RC.cc   /
     model/E2SM-KPM-measurements.cc
-    model/xApp.cc
-    model/dynamicSpectrumAllocationxApp.cc
+    model/xApp_Handover.cc
     model/ORAN-message-types.cc
   HEADER_FILES
     model/json.hpp
     model/PubSubInfra.h
     model/E2AP.h
     model/xApp.h
-    model/dynamicSpectrumAllocationxApp.h
+    model/xApp_Handover.h
     model/E2SM-KPM-measurements.h
     model/E2SM-RC-control-types.h
     model/E2SM-RC-indication-types.h

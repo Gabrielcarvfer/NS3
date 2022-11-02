@@ -476,26 +476,24 @@ PubSubInfra::getInstanceFromEndpointRoot(std::string endpointRoot)
 void
 PubSubInfra::RegisterEndpointCallback(std::string endpoint, std::function<void(Json&)> callback)
 {
-  m_endpointCallbacks[buildEndpoint (m_endpointRoot, endpoint)] = callback;
+  m_endpointCallbacks[endpoint] = callback;
 }
 
 void
 PubSubInfra::RemoveEndpointCallback(std::string endpoint)
 {
-  std::string full_endpoint = buildEndpoint (m_endpointRoot, endpoint);
-  if (m_endpointCallbacks.find (full_endpoint) != m_endpointCallbacks.end())
+  if (m_endpointCallbacks.find (endpoint) != m_endpointCallbacks.end())
     {
-      m_endpointCallbacks.erase (full_endpoint);
+      m_endpointCallbacks.erase (endpoint);
     }
 }
 
 std::function<void(Json&)>
 PubSubInfra::GetEndpointCallback(std::string endpoint)
 {
-  std::string full_endpoint = buildEndpoint (m_endpointRoot, endpoint);
-  if (m_endpointCallbacks.find (full_endpoint) == m_endpointCallbacks.end())
+  if (m_endpointCallbacks.find (endpoint) == m_endpointCallbacks.end())
     {
       return nullptr;
     }
-  return m_endpointCallbacks.at(full_endpoint);
+  return m_endpointCallbacks.at(endpoint);
 }
