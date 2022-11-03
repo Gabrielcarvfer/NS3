@@ -1424,26 +1424,25 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
         if (e2ap)
         {
             Json json;
-            json["MEASUREMENTS"];
-            json["MEASUREMENTS"]["MEASID"] = msg.measResults.measId;
-            json["MEASUREMENTS"]["RNTI"] = m_rnti;
-            json["MEASUREMENTS"]["CELLID"] = m_sourceCellId; // starts counting from 1
-            json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrpResult;
+            json["MEASID"] = msg.measResults.measId;
+            json["RNTI"] = m_rnti;
+            json["CELLID"] = m_sourceCellId; // starts counting from 1
+            json["VALUE"] = msg.measResults.measResultPCell.rsrpResult;
             e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRP", json);
-            json["MEASUREMENTS"]["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
+            json["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
             e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
             for (auto& cell : msg.measResults.measResultListEutra)
             {
                 if (cell.haveRsrpResult)
                 {
-                    json["MEASUREMENTS"]["VALUE"] = cell.rsrpResult;
-                    json["MEASUREMENTS"]["TARGET"] = cell.physCellId; // starts counting from 1
+                    json["VALUE"] = cell.rsrpResult;
+                    json["TARGET"] = cell.physCellId; // starts counting from 1
                     e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRP", json);
                 }
                 if (cell.haveRsrqResult)
                 {
-                    json["MEASUREMENTS"]["VALUE"] = cell.rsrqResult;
-                    json["MEASUREMENTS"]["TARGET"] = cell.physCellId; // starts counting from 1
+                    json["VALUE"] = cell.rsrqResult;
+                    json["TARGET"] = cell.physCellId; // starts counting from 1
                     e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRQ", json);
                 }
             }

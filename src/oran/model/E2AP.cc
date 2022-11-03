@@ -77,7 +77,7 @@ E2AP::HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json p
 
           // Register event loop to send payload
           EventId event = Simulator::Schedule (MilliSeconds (period), &E2AP::PeriodicReport, this, src_endpoint, period, periodic_endpoint_to_report);
-          PeriodicReportStruct entry{period, event, src_endpoint, {}, {}};
+          PeriodicReportStruct entry{period, event, src_endpoint, SystemWallClockTimestamp ().ToString (), {}};
           m_endpointPeriodicityAndBuffer.emplace (periodic_endpoint_to_report, entry);
 
           //todo: handle actions
@@ -557,30 +557,14 @@ E2AP::PublishToEndpointSubscribers (std::string complete_endpoint, Json json)
   // Published content is sent by the periodic reporting in E2Nodes
   std::string kpm = getSubEndpoint (m_endpointRoot, complete_endpoint); // Remove endpointRoot from full KPM endpoint
 
-  if (!json.contains ("MEASUREMENTS"))
+  auto it = m_endpointPeriodicityAndBuffer.find (complete_endpoint);
+  if (it == m_endpointPeriodicityAndBuffer.end())
     {
-      NS_ABORT_MSG("No measurements saved in json: " + to_string (json));
+      NS_LOG_FUNCTION(this << "Endpoint " + complete_endpoint + " is not subscribed");
+      return;
     }
-
-  // If there is no entry for the KPM measurements, create an entry
-  auto kpmIt = m_kpmToEndpointStorage.find (kpm);
-  if (kpmIt == m_kpmToEndpointStorage.end ())
-    {
-      m_kpmToEndpointStorage.emplace (
-          kpm,
-          std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
-      kpmIt = m_kpmToEndpointStorage.find (kpm);
-    }
-
-  // Find the measuring E2Node. If it doesn't exist, create an entry for it.
-  auto measuringE2NodeIt = kpmIt->second.find (complete_endpoint);
-  if (measuringE2NodeIt == kpmIt->second.end ())
-    {
-      kpmIt->second.emplace (complete_endpoint, std::deque<PeriodicMeasurementStruct>{});
-      measuringE2NodeIt = kpmIt->second.find (complete_endpoint);
-    }
-  auto periodicMeasurement = PeriodicMeasurementStruct{SystemWallClockTimestamp ().ToString (), {json}};
-  measuringE2NodeIt->second.push_front (periodicMeasurement);
+  auto periodicMeasurement = PeriodicMeasurementStruct{SystemWallClockTimestamp ().ToString (), json};
+  it->second.measurements.push_back (periodicMeasurement);
 }
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2
