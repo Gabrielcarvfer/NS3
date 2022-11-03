@@ -226,7 +226,7 @@ PubSubInfra::encodeJsonToPacket (Json json_contents)
 
   std::string json_literal = json_contents.dump ();
   uint64_t size = json_literal.size () + 1;
-  uint8_t *data_block = new uint8_t[LEN64 + size];
+  uint8_t *data_block = new uint8_t[LEN64 + size]{0};
   memcpy (&data_block[0], &size, LEN64);
   memcpy (&data_block[LEN64], json_literal.data (), size);
   Ptr<Packet> p = Create<Packet> (data_block, LEN64 + size);

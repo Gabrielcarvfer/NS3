@@ -43,7 +43,7 @@ namespace ns3
 
     typedef struct PeriodicMeasurementStruct_t{
         std::string timestamp; // Timestamp from start of measurements
-        std::vector<Json> measurements; // Measured value
+        Json measurements; // Measured value
     }PeriodicMeasurementStruct;
     void to_json (Json &j, const PeriodicMeasurementStruct &p);
     void from_json (const Json &j, PeriodicMeasurementStruct &p);
@@ -52,7 +52,7 @@ namespace ns3
         uint32_t period_ms;
         EventId eventId;
         std::string subscriberEndpoint;
-        SystemWallClockTimestamp collectionStartTime;
+        std::string collectionStartTime;
         std::vector<PeriodicMeasurementStruct> measurements;
     }PeriodicReportStruct;
 
