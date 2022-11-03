@@ -13,7 +13,7 @@
 #include "ns3/applications-module.h"
 
 #include "ns3/E2AP.h"
-#include "ns3/xApp_Handover.h"
+#include "ns3/xAppHandover.h"
 
 NS_LOG_COMPONENT_DEFINE("TestHandoverXapp");
 
@@ -313,12 +313,12 @@ int main()
   NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second == static_cast<PubSubInfra*>(&e2t));
 
   // Create the handover xApp
-  xApp_Handover xAppHandover;
+  xAppHandover handoverxapp;
 
   // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
   // estabelecer os sockets TCP
   sgw->AddApplication(&e2t);
-  sgw->AddApplication(&xAppHandover);
+  sgw->AddApplication(&handoverxapp);
 
   // Configurar eNodeBs/nós E2
   enbNodes.Get(0)->AddApplication(&e2n1);
