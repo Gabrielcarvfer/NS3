@@ -52,3 +52,21 @@ build_lib_example(
         ${liboran}
         ${libapplications}
 )
+
+find_library(ARMADILLO armadillo)
+find_library(MLPACK mlpack)
+if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPACK-NOTFOUND))
+    build_lib_example(
+            NAME TestHandoverXappMLPACK
+            SOURCE_FILES TestHandoverXappMLPACK.cc
+            LIBRARIES_TO_LINK
+            ${libcore}
+            ${libmobility}
+            ${libpoint-to-point}
+            ${liblte}
+            ${liboran}
+            ${libapplications}
+            ${ARMADILLO}
+            ${MLPACK}
+    )
+endif()
