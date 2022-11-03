@@ -13,7 +13,7 @@ namespace ns3
      public:
       xAppHandover ();
       ~xAppHandover ();
-      void HandoverDecision (Json& payload);
+      virtual void HandoverDecision (Json& payload);
     };
 }
 #endif //NS3_XAPP_HANDOVER_H
