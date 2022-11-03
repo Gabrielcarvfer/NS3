@@ -2,28 +2,28 @@
 // Created by Gabriel Ferreira (@gabrielcarvfer) on 01/11/22.
 //
 
-#include "xApp_Handover.h"
+#include "xAppHandover.h"
 
-NS_LOG_COMPONENT_DEFINE ("xApp_Handover");
+NS_LOG_COMPONENT_DEFINE ("xAppHandover");
 
 using namespace ns3;
 
-xApp_Handover::xApp_Handover ()
+xAppHandover::xAppHandover ()
     : xApp ()
 {
   RegisterEndpointCallback ("/Action/HO",
-                            std::bind(&xApp_Handover::HandoverDecision,
+                            std::bind(&xAppHandover::HandoverDecision,
                                       this,
                                       std::placeholders::_1)
                                       );
 }
-xApp_Handover::~xApp_Handover ()
+xAppHandover::~xAppHandover ()
 {
   RemoveEndpointCallback("/Action/HO");
 }
 
 void
-xApp_Handover::HandoverDecision (Json& payload)
+xAppHandover::HandoverDecision (Json& payload)
 {
   NS_LOG_FUNCTION (this);
 
