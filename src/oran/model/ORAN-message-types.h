@@ -5,6 +5,9 @@
 #ifndef NS3_ORAN_MESSAGE_TYPES_H
 #define NS3_ORAN_MESSAGE_TYPES_H
 
+#include <map>
+#include <string>
+
 namespace ns3
 {
     enum ORAN_MESSAGE_TYPES
