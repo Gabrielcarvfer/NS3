@@ -22,6 +22,58 @@ def NotifyHandoverStartEnb(context : str, imsi : int, cellid : int, rnti : int, 
 def NotifyHandoverEndOkEnb(context : str, imsi : int, cellid : int, rnti : int) -> None:
   print(f"{context} eNB CellId {cellid} : completed handover of UE with IMSI {imsi} RNTI {rnti}")
 
+ns.cppyy.cppdef("""
+void
+NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+  std::cout << context << " UE IMSI " << imsi << ": connected to CellId " << cellid
+            << " with RNTI " << rnti << std::endl;
+}
+
+void
+NotifyHandoverStartUe(std::string context,
+                      uint64_t imsi,
+                      uint16_t cellid,
+                      uint16_t rnti,
+                      uint16_t targetCellId)
+{
+  std::cout << context << " UE IMSI " << imsi << ": previously connected to CellId " << cellid
+            << " with RNTI " << rnti << ", doing handover to CellId " << targetCellId
+            << std::endl;
+}
+
+void
+NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+  std::cout << context << " UE IMSI " << imsi << ": successful handover to CellId " << cellid
+            << " with RNTI " << rnti << std::endl;
+}
+
+void
+NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+  std::cout << context << " eNB CellId " << cellid << ": successful connection of UE with IMSI "
+            << imsi << " RNTI " << rnti << std::endl;
+}
+
+void
+NotifyHandoverStartEnb(std::string context,
+                       uint64_t imsi,
+                       uint16_t cellid,
+                       uint16_t rnti,
+                       uint16_t targetCellId)
+{
+  std::cout << context << " eNB CellId " << cellid << ": start handover of UE with IMSI " << imsi
+            << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
+}
+
+void
+NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+  std::cout << context << " eNB CellId " << cellid << ": completed handover of UE with IMSI "
+            << imsi << " RNTI " << rnti << std::endl;
+}
+""")
 # Testes de conexão de nós
 ns.GlobalValue.Bind ("ChecksumEnabled", ns.BooleanValue (True))
 
@@ -142,31 +194,39 @@ for i in range (1, numberOfEnbs):
     remoteHostStaticRouting = ipv4RoutingHelper.GetStaticRouting(enbNodes.Get (i).GetObject[ns.Ipv4]())
     remoteHostStaticRouting.AddNetworkRouteTo(ns.Ipv4Address("10.0.0.6"), ns.Ipv4Mask("255.255.255.252"), 1)
 
-# connect custom trace sinks for RRC connection establishment and handover notification
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
-###                  ns.MakeCallback(NotifyConnectionEstablishedEnb))
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteUeRrc/ConnectionEstablished",
-###                  ns.MakeCallback(NotifyConnectionEstablishedUe))
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverStart",
-###                  ns.MakeCallback(NotifyHandoverStartEnb))
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverStart",
-###                  ns.MakeCallback(NotifyHandoverStartUe))
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
-###                  ns.MakeCallback(NotifyHandoverEndOkEnb))
-###ns.Config.Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
-###                  ns.MakeCallback(NotifyHandoverEndOkUe))
-# end of x2-handover-measures example
+ns.cppyy.cppexec("""
+  // connect custom trace sinks for RRC connection establishment and handover notification
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
+                  MakeCallback(&NotifyConnectionEstablishedEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/ConnectionEstablished",
+                  MakeCallback(&NotifyConnectionEstablishedUe));
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverStart",
+                  MakeCallback(&NotifyHandoverStartEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverStart",
+                  MakeCallback(&NotifyHandoverStartUe));
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
+                  MakeCallback(&NotifyHandoverEndOkEnb));
+  Config::Connect("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
+                  MakeCallback(&NotifyHandoverEndOkUe));
+  Ptr<E2AP> e2t = CreateObject<E2AP>();
+  Ptr<E2AP> e2n1 = CreateObject<E2AP>();
+  Ptr<E2AP> e2n2 = CreateObject<E2AP>();
+  Ptr<E2AP> e2n3 = CreateObject<E2AP>();
+  Ptr<xAppHandover> handoverxapp = CreateObject<xAppHandover>();
+""")
 
-e2t = ns.CreateObject("E2AP")
-e2n1 = ns.CreateObject("E2AP")
+e2t = ns.cppyy.gbl.e2t
+e2n1 = ns.cppyy.gbl.e2n1
+e2n2 = ns.cppyy.gbl.e2n2
+e2n3 = ns.cppyy.gbl.e2n3
 
 # Create the handover xApp
-xAppHandover = ns.xApp_Handover()
+handoverxapp = ns.cppyy.gbl.handoverxapp
 
 # Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
 # estabelecer os sockets TCP
 sgw.AddApplication(e2t)
-sgw.AddApplication(xAppHandover)
+sgw.AddApplication(handoverxapp)
 
 # Configurar eNodeBs/nós E2
 enbNodes.Get(0).AddApplication(e2n1)
@@ -176,13 +236,11 @@ ns.Simulator.Schedule(ns.Seconds(1.0), ns.E2AP.Connect, e2n1)
 ns.Simulator.Schedule(ns.Seconds(2.0), ns.E2AP.RegisterDefaultEndpoints, e2n1)
 ns.Simulator.Schedule(ns.Seconds(2.5), ns.E2AP.SubscribeToDefaultEndpoints, e2t, e2n1)
 
-e2n2 = ns.cppyy.gbl.getE2AP()
 enbNodes.Get(1).AddApplication(e2n2)
 ns.Simulator.Schedule(ns.Seconds(1.0), ns.E2AP.Connect, e2n2)
 ns.Simulator.Schedule(ns.Seconds(2.0), ns.E2AP.RegisterDefaultEndpoints, e2n2)
 ns.Simulator.Schedule(ns.Seconds(2.5), ns.E2AP.SubscribeToDefaultEndpoints, e2t, e2n2)
 
-e2n3 = ns.cppyy.gbl.getE2AP()
 enbNodes.Get(2).AddApplication(e2n3)
 ns.Simulator.Schedule(ns.Seconds(1.0), ns.E2AP.Connect, e2n3)
 ns.Simulator.Schedule(ns.Seconds(2.0), ns.E2AP.RegisterDefaultEndpoints, e2n3)
