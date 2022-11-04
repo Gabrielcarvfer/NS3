@@ -119,6 +119,7 @@ PubSubInfra::PublishToEndpointSubscribers (std::string endpoint, Json json)
     {
       // Outros nós serializaram JSON e transmitem para o nó zero para retransmissão.
       Json RPC_CALL;
+      RPC_CALL["SRC_ENDPOINT"] = m_endpointRoot;
       RPC_CALL["DEST_ENDPOINT"] = endpoint;
       RPC_CALL["INTENT"] = "RPC";
       RPC_CALL["RPC"] = "GET"; // Forward from source endpoint to subscribed endpoints
@@ -140,7 +141,7 @@ PubSubInfra::ReceivePacket (Ptr<Socket> socket)
     {
       // decode packet to json
       Json msg = decodePacketToJson (packet);
-
+      //std::cout << to_string(msg) << std::endl;
       NS_ASSERT (msg.contains ("SRC_ENDPOINT"));
       std::string endpoint = msg.find ("SRC_ENDPOINT")->get<std::string> ();
       if (m_endpointToAddressMap.find (endpoint) == m_endpointToAddressMap.end ())
@@ -412,6 +413,7 @@ PubSubInfra::sPublishToEndpointSubscribers (std::string publisherEndpoint, std::
         {
           // Handle locally
           Json payload;
+          payload["SRC_ENDPOINT"] = m_endpointRoot;
           payload["DEST_ENDPOINT"] = endpoint;
           payload["INTENT"] = "SUBSCRIPTION";
           payload["PAYLOAD"] = json_literal;

@@ -63,7 +63,6 @@ void CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpoi
   NS_ASSERT_MSG (kpmIt != node->m_kpmToEndpointStorage.end(), "KPM periodic report was not received: " + kpm);
   auto reportingE2NodeIt = kpmIt->second.find(endpointRoot);
   NS_ASSERT_MSG(reportingE2NodeIt != kpmIt->second.end(), endpointRoot + " periodic report for KPM " + kpm + " was not received");
-  NS_ASSERT_MSG (!reportingE2NodeIt->second.empty(), endpointRoot + " periodic report history is empty");
 }
 
 int main()
