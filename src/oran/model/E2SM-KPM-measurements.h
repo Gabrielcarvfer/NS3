@@ -5,6 +5,7 @@
 #ifndef NS3_E2SM_KPM_MEASUREMENTS_H
 #define NS3_E2SM_KPM_MEASUREMENTS_H
 
+#include <deque>
 #include <string>
 #include <map>
 #include "ns3/json.hpp"
@@ -53,7 +54,7 @@ namespace ns3
         EventId eventId;
         std::string subscriberEndpoint;
         std::string collectionStartTime;
-        std::vector<PeriodicMeasurementStruct> measurements;
+        std::deque<PeriodicMeasurementStruct> measurements;
     }PeriodicReportStruct;
 
     const std::map<std::string,

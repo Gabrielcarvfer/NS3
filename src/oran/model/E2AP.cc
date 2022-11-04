@@ -564,7 +564,7 @@ E2AP::PublishToEndpointSubscribers (std::string complete_endpoint, Json json)
       return;
     }
   auto periodicMeasurement = PeriodicMeasurementStruct{SystemWallClockTimestamp ().ToString (), json};
-  it->second.measurements.push_back (periodicMeasurement);
+  it->second.measurements.push_front (periodicMeasurement);
 }
 
 // O-RAN WG3 E2SM KPM v2.00.03 7.3.2

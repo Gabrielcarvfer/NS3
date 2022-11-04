@@ -64,7 +64,7 @@ E2AP::HandleE2SmKpmIndicationPayload (std::string& src_endpoint, std::string& de
               kpmIt->second.emplace (src_endpoint, std::deque<PeriodicMeasurementStruct>{});
               measuringE2NodeIt = kpmIt->second.find (src_endpoint);
             }
-            std::move(begin(measurements), end(measurements), back_inserter(measuringE2NodeIt->second));
+            std::move(begin(measurements), end(measurements), front_inserter(measuringE2NodeIt->second));
           //for(auto& i: measuringE2NodeIt->second)
           //  std::cout << to_string(i.measurements) << std::endl;
           //todo: notify endpoint (e.g. xapps) that fresh data is available
