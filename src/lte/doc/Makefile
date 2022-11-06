@@ -33,6 +33,7 @@ IMAGES_DIA = \
 	$(FIGURES)/lte-epc-e2e-data-protocol-stack.dia \
 	$(FIGURES)/lte-epc-e2e-data-protocol-stack-with-split.dia \
 	$(FIGURES)/lte-epc-e2e-control-protocol-stack-with-split.dia \
+	$(FIGURES)/lte-epc-control-protocol-stack-with-split-with-ORAN-nearRT-RIC.dia \
 	$(FIGURES)/lte-interference-test-scenario.dia \
 	$(FIGURES)/lte-subframe-structure.dia \
 	$(FIGURES)/lte-epc-x2-interface.dia \
@@ -98,6 +99,7 @@ $(FIGURES)/epc-topology.pdf_width = 4in
 $(FIGURES)/epc-topology-x2-enhanced.pdf_width = 14cm
 $(FIGURES)/lte-arch-data-rrc-pdcp-rlc.pdf_width = 3in
 $(FIGURES)/lte-epc-e2e-data-protocol-stack.pdf_width = 15cm
+$(FIGURES)/lte-epc-control-protocol-stack-with-split-with-ORAN-nearRT-RIC.pdf_width =15cm \
 $(FIGURES)/ff-mac-saps.pdf_width = 5in
 $(FIGURES)/ff-example.pdf_width = 5in
 $(FIGURES)/lte-arch-enb-data.pdf_width = 6cm
