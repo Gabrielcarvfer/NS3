@@ -486,5 +486,45 @@ class TestSimulator(unittest.TestCase):
         ns.Simulator.Destroy()
 
 
+    def testConnect(self):
+        ns.Simulator.Destroy()
+
+        def CourseChanged(context: str, mobilityModelPtr: ns.MobilityModel) -> None:
+            pos = mobilityModelPtr.__deref__().GetPosition()
+            vel = mobilityModelPtr.__deref__().GetVelocity()
+            log = f"{ns.Simulator.Now()}, model={mobilityModelPtr.__deref__().__class__.__name__}, POS: x={pos.x}, y={pos.y}, z={pos.z}; VEL: x={vel.x}, y={vel.y}, z={vel.z}"
+            self.assertNotEqual("", log)
+
+        nodeContainer = ns.NodeContainer()
+        nodeContainer.Create(1)
+
+        mobilityHelper = ns.MobilityHelper()
+        mobilityHelper.SetPositionAllocator("ns3::RandomDiscPositionAllocator",
+                                            "X", ns.StringValue("100.0"),
+                                            "Y", ns.StringValue("100.0"),
+                                            "Rho", ns.StringValue("ns3::UniformRandomVariable[Min=0|Max=30]")
+                                            )
+        mobilityHelper.SetMobilityModel("ns3::RandomWalk2dMobilityModel",
+                                        "Mode", ns.StringValue("Time"),
+                                        "Time", ns.StringValue("2s"),
+                                        "Bounds", ns.StringValue("0|200|0|200")
+                                        )
+        mobilityHelper.Install(nodeContainer)
+
+        ns.cppyy.cppdef("""
+            using namespace ns3;
+            Callback<void,std::string,Ptr<const MobilityModel>>
+            make_course_changed_callback(void(*func)(std::string, Ptr<const MobilityModel>))
+            {
+                return MakeCallback(func);
+            }
+        """)
+
+        ns.Config.Connect("/NodeList/*/$ns3::MobilityModel/CourseChange", ns.cppyy.gbl.make_course_changed_callback(CourseChanged))
+        ns.Simulator.Stop(ns.Seconds(5))
+        ns.Simulator.Run()
+        ns.Simulator.Destroy()
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=1, failfast=True)
