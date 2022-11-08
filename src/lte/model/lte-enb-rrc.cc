@@ -2821,6 +2821,7 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
               if (!UeRntiIt->second.contains("HEADER"))
                 {
                   Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
+                  return;
                 }
               E2SM_RC_RIC_CONTROL_HEADER controlHeader;
               NS_ASSERT(UeRntiIt->second.contains ("HEADER"));
