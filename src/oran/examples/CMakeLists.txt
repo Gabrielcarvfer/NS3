@@ -76,6 +76,18 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liboran}
             ${libapplications}
     )
+    build_lib_example(
+            NAME HandoverXappsScenario
+            SOURCE_FILES HandoverXappsScenario.cc
+            LIBRARIES_TO_LINK
+            ${libcore}
+            ${libmobility}
+            ${libpoint-to-point}
+            ${liblte}
+            ${liboran}
+            ${libapplications}
+            ${libnetanim}
+    )
 endif()
 
 #find_package(Torch)
