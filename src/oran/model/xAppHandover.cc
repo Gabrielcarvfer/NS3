@@ -33,7 +33,7 @@ xAppHandover::HandoverDecision (Json& payload)
       NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
     }
   // Read inputs from the json
-  uint16_t rnti = payload["RNTI"];
+  //uint16_t rnti = payload["RNTI"];
   uint16_t targetCellId = payload["Target Primary Cell ID"];
 
   // Do the processing
