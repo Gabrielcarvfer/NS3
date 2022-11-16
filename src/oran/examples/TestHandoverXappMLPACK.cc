@@ -12,10 +12,7 @@
 #include "ns3/applications-module.h"
 
 #include "ns3/E2AP.h"
-#include "ns3/xAppHandover.h"
-#include <mlpack/prereqs.hpp>
-#include <mlpack/core.hpp>
-#include <mlpack/methods/kmeans/kmeans.hpp>
+#include "xAppHandoverMlpackKmeans.h"
 
 NS_LOG_COMPONENT_DEFINE("TestHandoverXappMLPACK");
 
@@ -72,187 +69,7 @@ NotifyHandoverEndOkEnb (std::string context, uint64_t imsi, uint16_t cellid, uin
             << imsi << " RNTI " << rnti << std::endl;
 }
 
-class xAppHandoverML : public xAppHandover {
- public:
-  xAppHandoverML () : xAppHandover ()
-  {
-    NS_LOG_FUNCTION (this);
-
-    Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
-                     MakeCallback (&xAppHandoverML::HandoverSucceeded, this));
-    Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndError",
-                     MakeCallback (&xAppHandoverML::HandoverFailed, this));
-    Simulator::Schedule (Seconds (1), &xAppHandoverML::PeriodicClustering, this);
-  };
-  void PeriodicClustering ()
-  {
-    NS_LOG_FUNCTION (this);
-
-    const E2AP *ric = static_cast<const E2AP *>(m_endpointRootToInstance.at ("/E2Node/0"));
-    std::map<uint16_t, uint16_t> rntis;
-    std::array<std::string, 4> kpmMetrics = {//"/KPM/HO.SrcCellQual.RSRP",
-        "/KPM/HO.SrcCellQual.RSRQ",
-        //"/KPM/HO.TrgtCellQual.RSRP",
-        "/KPM/HO.TrgtCellQual.RSRQ"
-    };
-    std::map<uint16_t, uint16_t> cells;
-    uint16_t i_rnti = 0;
-    uint16_t i_cell = 0;
-    // Count the number of eNodeBs/E2Nodes and the number of UEs/RNTIs
-    for (auto kpmMetric: kpmMetrics)
-      {
-        auto metricIt = ric->m_kpmToEndpointStorage.find (kpmMetric);
-
-        if (metricIt == ric->m_kpmToEndpointStorage.end ())
-          {
-            continue;
-          }
-
-        for (auto &e2nodeMeasurements: metricIt->second)
-          {
-
-            std::string cellIdStr (e2nodeMeasurements.first.begin () + e2nodeMeasurements.first.find_last_of ("/")
-                                   + 1, e2nodeMeasurements.first.end ());
-            uint16_t cellId = std::atoi (cellIdStr.c_str ());
-            if (cells.find (cellId) == cells.end ())
-              {
-                cells[cellId] = i_cell++;
-              }
-            for (auto &measurementDeque: e2nodeMeasurements.second)
-              {
-                uint16_t rnti = measurementDeque.measurements["RNTI"];
-                if (rntis.find (rnti) == rntis.end ())
-                  {
-                    rntis[rnti] = i_rnti++;
-                  }
-              }
-          }
-      }
-
-    // If there is nothing to cluster, end early
-    if (rntis.size () == 0 || cells.size () == 0)
-      {
-        Simulator::Schedule (Seconds (1), &xAppHandoverML::PeriodicClustering, this);
-        return;
-      }
-
-    // Rows are cells and columns are UEs
-    arma::mat dataset = arma::zeros (cells.size (), rntis.size ());
-    m_rntiToCurrentCellId.clear ();
-
-    // Collate data into an armadillo matrix for processing
-    for (auto kpmMetric: kpmMetrics)
-      {
-        auto metricIt = ric->m_kpmToEndpointStorage.find (kpmMetric);
-
-        if (metricIt == ric->m_kpmToEndpointStorage.end ())
-          {
-            continue;
-          }
-
-        for (auto &e2nodeMeasurements: metricIt->second)
-          {
-            for (auto &measurementDeque: e2nodeMeasurements.second)
-              {
-                uint16_t rnti = measurementDeque.measurements["RNTI"];
-                uint16_t rnti_offset = rntis.at (rnti);
-                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
-                  {
-                    uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    if(cells.find(cellId + 1) == cells.end())
-                      continue;
-                    m_rntiToCurrentCellId[rnti] = cellId + 1;
-                    uint16_t cellid_offset = cells.at (cellId + 1);
-                    dataset.at (cellid_offset, rnti_offset) = measurementDeque.measurements["VALUE"];
-                  }
-                else
-                  {
-                    uint16_t cellId = measurementDeque.measurements["TARGET"];
-                    uint16_t cellid_offset = cells.at (cellId);
-                    dataset.at (cellid_offset, rnti_offset) = measurementDeque.measurements["VALUE"];
-                  }
-              }
-          }
-      }
-    // Prepare to run K-means
-    arma::Row<size_t> assignments;
-    mlpack::kmeans::KMeans<> k;
-    arma::mat centroids;
-    k.Cluster (dataset, cells.size (), assignments, centroids);
-
-    // Print dataset with each column representing measurements from a UE
-    std::cout << dataset << std::endl;
-
-    // Print assigned clusters to each UE
-    std::cout << assignments << std::endl;
-    m_rntiToClusteredCellId.clear ();
-
-    // Translate assigned clusters into cellIds
-    int i = 0;
-    for (auto &rnti: rntis)
-      {
-        uint16_t cellId = -1;
-        for (auto &cell: cells)
-          {
-            if (cell.second == (uint16_t) assignments.at (i))
-              {
-                cellId = cell.first;
-                break;
-              }
-          }
-        m_rntiToClusteredCellId[rnti.first] = cellId;
-        i++;
-      }
-    Simulator::Schedule (Seconds (1), &xAppHandoverML::PeriodicClustering, this);
-  }
-  void HandoverDecision (Json &payload)
-  {
-    NS_LOG_FUNCTION (this);
-
-    // Check if we are not receiving invalid payloads
-    if (m_endpointRootToInstance.at (m_endpointRoot)->GetNode ()
-        != m_endpointRootToInstance.at ("/E2Node/0")->GetNode ())
-      {
-        NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
-      }
-    // Read inputs from the json
-    uint16_t requestingRnti = payload["RNTI"];
-    uint16_t requestedTargetCellId = payload["Target Primary Cell ID"];
-
-    // Do the processing
-    uint16_t decidedTargetCellId = requestedTargetCellId;
-
-    // Use K-means clustering results
-    if (m_rntiToClusteredCellId.find (requestingRnti) != m_rntiToClusteredCellId.end ())
-      decidedTargetCellId = m_rntiToClusteredCellId.at (requestingRnti);
-
-    // If the result is invalid (same as current cell or unknown), use 0xFFFF to reject the handover
-    if (m_rntiToCurrentCellId.find(requestingRnti) == m_rntiToCurrentCellId.end() || decidedTargetCellId == m_rntiToCurrentCellId.at (requestingRnti))
-      decidedTargetCellId = std::numeric_limits<uint16_t>::max ();
-
-    // Then write the outputs to the json
-    payload["Target Primary Cell ID"] = decidedTargetCellId;
-    m_decision_history.push_back ({requestingRnti, requestedTargetCellId, decidedTargetCellId});
-  }
-  void HandoverSucceeded (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
-  {
-    NS_LOG_FUNCTION (this);
-
-    std::cout << "yay" << std::endl; // reward predictor
-  }
-  void HandoverFailed (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
-  {
-    NS_LOG_FUNCTION (this);
-
-    std::cout << "nay" << std::endl; // punish predictor
-  }
- private:
-  std::deque<std::tuple<uint16_t, uint16_t, uint16_t>> m_decision_history;
-  std::map<uint16_t, uint16_t> m_rntiToClusteredCellId;
-  std::map<uint16_t, uint16_t> m_rntiToCurrentCellId;
-};
-
-int main ()
+int main (int argc, char**argv)
 {
   // Testes de conexão de nós
   GlobalValue::Bind ("ChecksumEnabled", BooleanValue (true));
@@ -265,6 +82,11 @@ int main ()
   double speed = 1;//20;                                              // m/s
   double simTime = (double) (numberOfEnbs + 1) * distance / speed; // 1500 m / 20 m/s = 75 secs
   double enbTxPowerDbm = 46.0;
+  bool kmeansKeepEmptyPolicy = false;
+
+  CommandLine cmd(__FILE__);
+  cmd.AddValue("kmeansKeepEmptyPolicy", "If set, empty k-means clusters will be allowed", kmeansKeepEmptyPolicy);
+  cmd.Parse(argc, argv);
 
   // change some default attributes so that they are reasonable for
   // this scenario, but do this before processing command line
@@ -478,7 +300,7 @@ int main ()
   NS_ASSERT(E2AP::m_endpointRootToInstance.find ("/E2Node/0")->second == static_cast<PubSubInfra *>(&e2t));
 
   // Create the handover xApp
-  xAppHandoverML handoverxapp;
+  xAppHandoverMlpackKmeans handoverxapp(kmeansKeepEmptyPolicy);
 
   // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
   // estabelecer os sockets TCP
@@ -505,19 +327,60 @@ int main ()
   Simulator::Schedule (Seconds (2.0), &E2AP::RegisterDefaultEndpoints, &e2n3);
   Simulator::Schedule (Seconds (2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n3);
 
-  // Executa um handover do primeiro eNB para o segundo
-  lteHelper->HandoverRequest (Seconds (4.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
+  if (!kmeansKeepEmptyPolicy)
+  {
+      // Executa um handover do primeiro eNB para o segundo
+      lteHelper->HandoverRequest(Seconds(4.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(0),
+                                 enbLteDevs.Get(1));
 
-  //K-means clustering will move node to Cell3/enbLteDevs.Get(2) instead of Cell2/enbLteDev.Get(1)
+      // K-means clustering will move node to Cell3/enbLteDevs.Get(2) instead of Cell2/enbLteDev.Get(1)
 
-  // Executar handover de volta para primeiro eNB
-  lteHelper->HandoverRequest (Seconds (5.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
+      // Executar handover de volta para primeiro eNB
+      lteHelper->HandoverRequest(Seconds(5.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(2),
+                                 enbLteDevs.Get(0));
 
-  // Executar handover do primeiro eNB para terceiro
-  lteHelper->HandoverRequest (Seconds (6.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (2));
+      // Executar handover do primeiro eNB para terceiro
+      lteHelper->HandoverRequest(Seconds(6.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(0),
+                                 enbLteDevs.Get(2));
 
-  // Executar handover do terceiro eNB para o primeiro
-  lteHelper->HandoverRequest (Seconds (7.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
+      // Executar handover do terceiro eNB para o primeiro
+      lteHelper->HandoverRequest(Seconds(7.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(2),
+                                 enbLteDevs.Get(0));
+  }
+  else
+  {
+      // Executa um handover do primeiro eNB para o segundo
+      lteHelper->HandoverRequest(Seconds(4.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(0),
+                                 enbLteDevs.Get(1));
+
+      // Executar handover de volta para primeiro eNB
+      lteHelper->HandoverRequest(Seconds(5.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(1),
+                                 enbLteDevs.Get(0));
+
+      // Executar handover do primeiro eNB para terceiro
+      lteHelper->HandoverRequest(Seconds(6.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(0),
+                                 enbLteDevs.Get(2));
+
+      // Executar handover do terceiro eNB para o primeiro
+      lteHelper->HandoverRequest(Seconds(7.0),
+                                 ueLteDevs.Get(0),
+                                 enbLteDevs.Get(2),
+                                 enbLteDevs.Get(0));
+  }
 
   Simulator::Stop (Seconds (8.0));
   Simulator::Run ();
