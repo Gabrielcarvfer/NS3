@@ -12,7 +12,7 @@
 #include "ns3/applications-module.h"
 
 #include "ns3/E2AP.h"
-#include "xAppHandoverMlpackKmeans.h"
+#include "ns3/xAppHandoverMlpackKmeans.h"
 
 NS_LOG_COMPONENT_DEFINE("TestHandoverXappMLPACK");
 
