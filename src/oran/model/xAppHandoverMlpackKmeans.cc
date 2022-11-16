@@ -60,8 +60,18 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
             {
                 cells[cellId] = i_cell++;
             }
+            std::string mostRecentTimestamp("");
             for (auto &measurementDeque: e2nodeMeasurements.second)
             {
+                if (mostRecentTimestamp == "")
+                {
+                    mostRecentTimestamp = measurementDeque.timestamp;
+                }
+                if (mostRecentTimestamp != measurementDeque.timestamp)
+                {
+                    // Skip old measurements
+                    continue;
+                }
                 uint16_t rnti = measurementDeque.measurements["RNTI"];
                 if (rntis.find (rnti) == rntis.end ())
                 {
@@ -94,8 +104,18 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
 
         for (auto &e2nodeMeasurements: metricIt->second)
         {
+            std::string mostRecentTimestamp("");
             for (auto &measurementDeque: e2nodeMeasurements.second)
             {
+                if (mostRecentTimestamp == "")
+                {
+                    mostRecentTimestamp = measurementDeque.timestamp;
+                }
+                if (mostRecentTimestamp != measurementDeque.timestamp)
+                {
+                    // Skip old measurements
+                    continue;
+                }
                 uint16_t rnti = measurementDeque.measurements["RNTI"];
                 uint16_t rnti_offset = rntis.at (rnti);
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
