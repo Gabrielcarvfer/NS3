@@ -58,7 +58,8 @@ find_library(MLPACK mlpack)
 if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPACK-NOTFOUND))
     build_lib_example(
             NAME TestHandoverXappMLPACK
-            SOURCE_FILES TestHandoverXappMLPACK.cc
+            SOURCE_FILES TestHandoverXappMLPACK.cc xAppHandoverMlpackKmeans.cc
+            HEADER_FILES xAppHandoverMlpackKmeans.h
             LIBRARIES_TO_LINK
             ${libcore}
             ${libmobility}
