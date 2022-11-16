@@ -53,13 +53,10 @@ build_lib_example(
         ${libapplications}
 )
 
-find_library(ARMADILLO armadillo)
-find_library(MLPACK mlpack)
 if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPACK-NOTFOUND))
     build_lib_example(
             NAME TestHandoverXappMLPACK
-            SOURCE_FILES TestHandoverXappMLPACK.cc xAppHandoverMlpackKmeans.cc
-            HEADER_FILES xAppHandoverMlpackKmeans.h
+            SOURCE_FILES TestHandoverXappMLPACK.cc
             LIBRARIES_TO_LINK
             ${libcore}
             ${libmobility}
@@ -67,8 +64,6 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liblte}
             ${liboran}
             ${libapplications}
-            ${ARMADILLO}
-            ${MLPACK}
     )
     build_lib_example(
             NAME TestHandoverXappMLPACKReinforcedLearning
@@ -80,8 +75,6 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liblte}
             ${liboran}
             ${libapplications}
-            ${ARMADILLO}
-            ${MLPACK}
     )
 endif()
 

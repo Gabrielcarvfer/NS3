@@ -8,6 +8,11 @@
 #
 # See test.py for more information.
 cpp_examples = [
+    ("TestPubSubInfra", "True", "True"),
+    ("TestE2AP", "True", "True"),
+    ("TestSmRcMessages", "True", "True"),
+    ("TestHandover", "True", "True"),
+    ("TestHandoverXapp", "True", "True"),
     ("TestHandoverXappMLPACK --kmeansKeepEmptyPolicy=false", "True", "True"),
     ("TestHandoverXappMLPACK --kmeansKeepEmptyPolicy=true", "True", "True"),
 ]
