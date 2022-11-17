@@ -5,15 +5,15 @@
 #include <map>
 #include <string>
 
+#include "ns3/applications-module.h"
 #include "ns3/core-module.h"
 #include "ns3/lte-module.h"
-#include "ns3/point-to-point-module.h"
 #include "ns3/mobility-module.h"
-#include "ns3/applications-module.h"
+#include "ns3/netanim-module.h"
+#include "ns3/point-to-point-module.h"
 
 #include "ns3/E2AP.h"
 #include "ns3/xAppHandoverMlpackKmeans.h"
-#include "ns3/netanim-module.h"
 #include <mlpack/prereqs.hpp>
 #include <mlpack/core.hpp>
 #include <mlpack/methods/kmeans/kmeans.hpp>
@@ -89,9 +89,7 @@ int main (int argc, char** argv)
 
   // change some default attributes so that they are reasonable for
   // this scenario, but do this before processing command line
-  // arguments, so that the user is allowed to override these settings
-  Config::SetDefault ("ns3::UdpClient::Interval", TimeValue (Seconds (1)));
-  Config::SetDefault ("ns3::UdpClient::MaxPackets", UintegerValue (1000000));
+  // arguments, so that the user is allowed to override these setting
   Config::SetDefault ("ns3::LteHelper::UseIdealRrc", BooleanValue (true));
 
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
@@ -262,51 +260,19 @@ int main (int argc, char** argv)
         }
     }
 
-  AnimationInterface anim("anim.xml");
-  anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
-  anim.EnablePacketMetadata(true);
-
-  anim.UpdateNodeDescription(remoteHost->GetId(), "Remote Internet Host");
-  anim.UpdateNodeColor(remoteHost->GetId(), 230, 230, 230);
-  anim.UpdateNodeSize(remoteHost->GetId(), 30, 30);
-
-  anim.UpdateNodeDescription(pgw->GetId(), "PGW");
-  anim.UpdateNodeColor(pgw->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(pgw->GetId(), 30, 30);
-
-  anim.UpdateNodeDescription(sgw->GetId(), "SGW/RIC");
-  anim.UpdateNodeColor(sgw->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(sgw->GetId(), 30, 30);
-
-  anim.UpdateNodeDescription(mme->GetId(), "MME");
-  anim.UpdateNodeColor(mme->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(mme->GetId(), 30, 30);
-
-  for (uint32_t i = 0; i < enbNodes.GetN(); i++)
-  {
-      int nodeId = enbNodes.Get(i)->GetId();
-      anim.UpdateNodeDescription(nodeId, "eNB" + std::to_string(i));
-      anim.UpdateNodeColor(nodeId, 255, 0, 0);
-      anim.UpdateNodeSize(nodeId, 30, 30);
-
-  }
-  for (uint32_t i = 0; i < ueNodes.GetN(); i++)
-  {
-      int nodeId = ueNodes.Get(i)->GetId();
-      anim.UpdateNodeDescription(nodeId, "UE" + std::to_string(i));
-      anim.UpdateNodeColor(nodeId, 0, 255, 0);
-      anim.UpdateNodeSize(nodeId, 30, 30);
-  }
-
   // Install LTE Devices in eNB and UEs
+  Config::SetDefault ("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue(2));
   Config::SetDefault ("ns3::LteEnbPhy::TxPower", DoubleValue (enbTxPowerDbm));
+  //Config::SetDefault("ns3::LteUePhy::TxPower", DoubleValue(50.0));
+  //lteHelper->SetEnbAntennaModelAttribute ("Gain",     DoubleValue (30));
+  //lteHelper->SetUeAntennaModelAttribute  ("Gain",     DoubleValue (30));
   NetDeviceContainer enbLteDevs = lteHelper->InstallEnbDevice (enbNodes);
   NetDeviceContainer ueLteDevs = lteHelper->InstallUeDevice (ueNodes);
 
   // Install the IP stack on the UEs
   internet.Install (ueNodes);
   Ipv4InterfaceContainer ueIpIfaces;
-  ueIpIfaces = epcHelper->AssignUeIpv4Address (ueLteDevs);
+  ueIpIfaces = epcHelper->AssignUeIpv4Address (NetDeviceContainer(ueLteDevs));
 
   // Attach all UEs to the first eNodeB
   for (uint16_t i = 0; i < numberOfUes; i++)
@@ -320,12 +286,15 @@ int main (int argc, char** argv)
   uint16_t dlPort = 10000;
   uint16_t ulPort = 20000;
 
+  Config::SetDefault ("ns3::UdpClient::Interval", TimeValue (Seconds (1)));
+  Config::SetDefault ("ns3::UdpClient::MaxPackets", UintegerValue (1000000));
+
   // randomize a bit start times to avoid simulation artifacts
   // (e.g., buffer overflows due to packet transmissions happening
   // exactly at the same time)
   Ptr<UniformRandomVariable> startTimeSeconds = CreateObject<UniformRandomVariable> ();
   startTimeSeconds->SetAttribute ("Min", DoubleValue (1));
-  startTimeSeconds->SetAttribute ("Max", DoubleValue (1.010));
+  startTimeSeconds->SetAttribute ("Max", DoubleValue (1.9));
 
   for (uint32_t u = 0; u < numberOfUes; ++u)
     {
@@ -434,8 +403,51 @@ int main (int argc, char** argv)
   // Executar handover do terceiro eNB para o primeiro
   //lteHelper->HandoverRequest (Seconds (7.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
 
+  AnimationInterface anim("anim.xml");
+  anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+  anim.EnablePacketMetadata(true);
+
+  anim.UpdateNodeDescription(remoteHost->GetId(), "Remote Internet Host");
+  anim.UpdateNodeColor(remoteHost->GetId(), 230, 230, 230);
+  anim.UpdateNodeSize(remoteHost->GetId(), 30, 30);
+
+  anim.UpdateNodeDescription(pgw->GetId(), "PGW");
+  anim.UpdateNodeColor(pgw->GetId(), 0, 0, 255);
+  anim.UpdateNodeSize(pgw->GetId(), 30, 30);
+
+  anim.UpdateNodeDescription(sgw->GetId(), "SGW/RIC");
+  anim.UpdateNodeColor(sgw->GetId(), 0, 0, 255);
+  anim.UpdateNodeSize(sgw->GetId(), 30, 30);
+
+  anim.UpdateNodeDescription(mme->GetId(), "MME");
+  anim.UpdateNodeColor(mme->GetId(), 0, 0, 255);
+  anim.UpdateNodeSize(mme->GetId(), 30, 30);
+
+  for (uint32_t i = 0; i < enbNodes.GetN(); i++)
+  {
+      int nodeId = enbNodes.Get(i)->GetId();
+      anim.UpdateNodeDescription(nodeId, "eNB" + std::to_string(i));
+      anim.UpdateNodeColor(nodeId, 255, 0, 0);
+      anim.UpdateNodeSize(nodeId, 30, 30);
+
+  }
+  for (uint32_t i = 0; i < ueNodes.GetN(); i++)
+  {
+      int nodeId = ueNodes.Get(i)->GetId();
+      anim.UpdateNodeDescription(nodeId, "UE" + std::to_string(i));
+      anim.UpdateNodeColor(nodeId, 0, 255, 0);
+      anim.UpdateNodeSize(nodeId, 30, 30);
+  }
+
+  //Ptr<FlowMonitor> flowMonitor;
+  //FlowMonitorHelper flowHelper;
+  //flowMonitor = flowHelper.InstallAll();
+
   Simulator::Stop (Seconds(simTime));
   Simulator::Run ();
+
+  //flowMonitor->SerializeToXmlFile("flow.xml", true, false);
+
   Simulator::Destroy ();
   return 0;
 }
