@@ -22,12 +22,78 @@ NS_LOG_COMPONENT_DEFINE("HandoverXappsScenario");
 
 using namespace ns3;
 
+class Registry
+{
+public:
+  enum registerType{
+      HANDOVER_CANCELLED_RIC = 0,
+      HANDOVER_START_ENB,
+      HANDOVER_OK_ENB,
+      HANDOVER_START_UE,
+      HANDOVER_OK_UE,
+      HANDOVER_ERROR_UE,
+      CONNECTION_RECONFIGURATION_ENB,
+      CONNECTION_ESTABLISHED_ENB,
+      CONNECTION_ERROR_ENB,
+      CONNECTION_START_UE,
+      CONNECTION_ESTABLISHED_UE,
+      CONNECTION_ERROR_UE,
+  };
+    static inline std::map<enum registerType, std::string> registerTypeStr = {
+        {HANDOVER_CANCELLED_RIC,"HANDOVER_CANCELLED_RIC"},
+        {HANDOVER_START_ENB,"HANDOVER_START_ENB"},
+        {HANDOVER_OK_ENB,"HANDOVER_OK_ENB"},
+        {HANDOVER_START_UE,"HANDOVER_START_UE"},
+        {HANDOVER_OK_UE,"HANDOVER_OK_UE"},
+        {HANDOVER_ERROR_UE,"HANDOVER_ERROR_UE"},
+        {CONNECTION_RECONFIGURATION_ENB,"CONNECTION_RECONFIGURATION_ENB"},
+        {CONNECTION_ESTABLISHED_ENB,"CONNECTION_ESTABLISHED_ENB"},
+        {CONNECTION_ERROR_ENB,"CONNECTION_ERROR_ENB"},
+        {CONNECTION_START_UE,"CONNECTION_START_UE"},
+        {CONNECTION_ESTABLISHED_UE,"CONNECTION_ESTABLISHED_UE"},
+        {CONNECTION_ERROR_UE,"CONNECTION_ERROR_UE"},
+    };
+  Registry(uint64_t imsi, uint16_t cellId, uint16_t rnti, uint16_t trgtCellId, enum registerType type):
+        m_timestamp(Simulator::Now()),
+        m_imsi(imsi),
+        m_srcCellId(cellId),
+        m_rnti(rnti),
+        m_trgtCellId(trgtCellId),
+        m_type(type)
+  {}
+  friend std::ostream& operator<<(std::ostream& os, const Registry& dt);
+
+  private:
+    Time m_timestamp;
+    uint64_t m_imsi;
+    uint16_t m_srcCellId;
+    uint16_t m_rnti;
+    uint16_t m_trgtCellId;
+    enum registerType m_type;
+};
+
+std::ostream& operator<<(std::ostream& os, const Registry& registry)
+{
+    os << registry.m_timestamp.GetNanoSeconds() << ","
+       << registry.m_imsi << ","
+       << registry.m_srcCellId << ","
+       << registry.m_rnti << ","
+       << registry.m_trgtCellId << ","
+       << Registry::registerTypeStr.at(registry.m_type) << ",";
+    return os;
+}
+
+std::vector<Registry> simulationRegistry;
+
+
 void
 NotifyConnectionEstablishedUe (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
   std::cout << context << " UE IMSI " << imsi << ": connected to CellId " << cellid
             << " with RNTI " << rnti << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::CONNECTION_ESTABLISHED_UE);
 }
+
 
 void
 NotifyHandoverStartUe (std::string context,
@@ -39,6 +105,7 @@ NotifyHandoverStartUe (std::string context,
   std::cout << context << " UE IMSI " << imsi << ": previously connected to CellId " << cellid
             << " with RNTI " << rnti << ", doing handover to CellId " << targetCellId
             << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_START_UE);
 }
 
 void
@@ -46,6 +113,8 @@ NotifyHandoverEndOkUe (std::string context, uint64_t imsi, uint16_t cellid, uint
 {
   std::cout << context << " UE IMSI " << imsi << ": successful handover to CellId " << cellid
             << " with RNTI " << rnti << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_OK_UE);
+
 }
 
 void
@@ -53,6 +122,15 @@ NotifyConnectionEstablishedEnb (std::string context, uint64_t imsi, uint16_t cel
 {
   std::cout << context << " eNB CellId " << cellid << ": successful connection of UE with IMSI "
             << imsi << " RNTI " << rnti << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::CONNECTION_ESTABLISHED_ENB);
+}
+
+void
+NotifyConnectionReconfigurationEnb (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+    std::cout << context << " UE IMSI " << imsi << ": requires a reconfiguration to CellId " << cellid
+              << " with RNTI " << rnti << std::endl;
+    simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::CONNECTION_RECONFIGURATION_ENB);
 }
 
 void
@@ -64,6 +142,22 @@ NotifyHandoverStartEnb (std::string context,
 {
   std::cout << context << " eNB CellId " << cellid << ": start handover of UE with IMSI " << imsi
             << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_START_ENB);
+
+}
+
+
+void
+NotifyHandoverCancelledEnb (std::string context,
+                            uint64_t imsi,
+                            uint16_t cellid,
+                            uint16_t rnti,
+                            uint16_t targetCellId)
+{
+    std::cout << context << " eNB CellId " << cellid << ": RIC cancelled handover of UE with IMSI " << imsi
+              << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
+    simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_CANCELLED_RIC);
+
 }
 
 void
@@ -71,6 +165,15 @@ NotifyHandoverEndOkEnb (std::string context, uint64_t imsi, uint16_t cellid, uin
 {
   std::cout << context << " eNB CellId " << cellid << ": completed handover of UE with IMSI "
             << imsi << " RNTI " << rnti << std::endl;
+  simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_OK_ENB);
+}
+
+void
+NotifyHandoverEndErrorUe (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+    std::cout << context << " eNB CellId " << cellid << ": completed handover of UE with IMSI "
+              << imsi << " RNTI " << rnti << std::endl;
+    simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_ERROR_UE);
 }
 
 int main (int argc, char** argv)
@@ -82,9 +185,14 @@ int main (int argc, char** argv)
   uint16_t numberOfEnbs = 3;
   uint16_t numBearersPerUe = 1;
   double simTime = 10*60;
-  double enbTxPowerDbm = 46.0;
+  double enbTxPowerDbm = 40.0;
+
+  bool oranSetup = true;
+  bool distributedHandover = false;
 
   CommandLine cmd(__FILE__);
+  cmd.AddValue("oranSetup", "Install RIC and E2Node applications", oranSetup);
+  cmd.AddValue("distributedHandover", "Use distributed handover (if using oranSetup, RIC will simply accept the eNB suggestion)", distributedHandover);
   cmd.Parse(argc, argv);
 
   // change some default attributes so that they are reasonable for
@@ -147,10 +255,10 @@ int main (int argc, char** argv)
   backHaulNodes.Add(mme);
 
   Ptr<ListPositionAllocator> backHaulPositionAlloc = CreateObject<ListPositionAllocator> ();
-  backHaulPositionAlloc->Add (Vector(200, 2000, 0));
-  backHaulPositionAlloc->Add (Vector(200, 1500, 0));
   backHaulPositionAlloc->Add (Vector(200, 1000, 0));
+  backHaulPositionAlloc->Add (Vector(200, 750, 0));
   backHaulPositionAlloc->Add (Vector(200, 500, 0));
+  backHaulPositionAlloc->Add (Vector(200, 250, 0));
 
   MobilityHelper backHaulMobility;
   backHaulMobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
@@ -358,37 +466,42 @@ int main (int argc, char** argv)
                    MakeCallback (&NotifyHandoverEndOkEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
                    MakeCallback (&NotifyHandoverEndOkUe));
+  Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndError",
+                  MakeCallback (&NotifyHandoverEndErrorUe));
+  Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverCancelled",
+                  MakeCallback (&NotifyHandoverCancelledEnb));
+  if (oranSetup)
+  {
+      Ptr<E2AP> e2t = CreateObject<E2AP>();
+      sgw->AddApplication(e2t);
 
-  E2AP e2t;
-  E2AP e2n1;
+      // Create the handover xApp
+      if (!distributedHandover)
+      {
+          Ptr<xAppHandoverMlpackKmeans> handoverxapp = CreateObject<xAppHandoverMlpackKmeans>();
+          sgw->AddApplication(handoverxapp);
+      }
 
-  // Create the handover xApp
-  xAppHandoverMlpackKmeans handoverxapp;
+      // Configurar eNodeBs/nós E2
+      Ptr<E2AP> e2n1 = CreateObject<E2AP>();
+      enbNodes.Get(0)->AddApplication(e2n1);
+      Simulator::Schedule(Seconds(0.5), &E2AP::Connect, e2t);
+      Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n1);
+      Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n1);
+      Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n1);
 
-  // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
-  // estabelecer os sockets TCP
-  sgw->AddApplication (&e2t);
-  sgw->AddApplication (&handoverxapp);
+      Ptr<E2AP> e2n2 = CreateObject<E2AP>();
+      enbNodes.Get(1)->AddApplication(e2n2);
+      Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n2);
+      Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n2);
+      Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n2);
 
-  // Configurar eNodeBs/nós E2
-  enbNodes.Get (0)->AddApplication (&e2n1);
-  Simulator::Schedule (Seconds (0.5), &E2AP::Connect, &e2t);
-  Simulator::Schedule (Seconds (1.0), &E2AP::Connect, &e2n1);
-  Simulator::Schedule (Seconds (2.0), &E2AP::RegisterDefaultEndpoints, &e2n1);
-  Simulator::Schedule (Seconds (2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n1);
-
-  E2AP e2n2;
-  enbNodes.Get (1)->AddApplication (&e2n2);
-  Simulator::Schedule (Seconds (1.0), &E2AP::Connect, &e2n2);
-  Simulator::Schedule (Seconds (2.0), &E2AP::RegisterDefaultEndpoints, &e2n2);
-  Simulator::Schedule (Seconds (2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n2);
-
-  E2AP e2n3;
-  enbNodes.Get (2)->AddApplication (&e2n3);
-  Simulator::Schedule (Seconds (1.0), &E2AP::Connect, &e2n3);
-  Simulator::Schedule (Seconds (2.0), &E2AP::RegisterDefaultEndpoints, &e2n3);
-  Simulator::Schedule (Seconds (2.5), &E2AP::SubscribeToDefaultEndpoints, &e2t, e2n3);
-
+      Ptr<E2AP> e2n3 = CreateObject<E2AP>();
+      enbNodes.Get(2)->AddApplication(e2n3);
+      Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n3);
+      Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n3);
+      Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
+  }
   // Executa um handover do primeiro eNB para o segundo
   //lteHelper->HandoverRequest (Seconds (4.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
 
@@ -447,7 +560,13 @@ int main (int argc, char** argv)
   Simulator::Run ();
 
   //flowMonitor->SerializeToXmlFile("flow.xml", true, false);
-
+  std::ofstream csvOutput("output.csv");
+  csvOutput << "Time (ns),IMSI,SrcCellId,RNTI,TrgtCellId,Type," << std::endl;
+  for (auto& entry: simulationRegistry)
+  {
+      csvOutput << entry << std::endl;
+  }
+  csvOutput.close();
   Simulator::Destroy ();
   return 0;
 }
