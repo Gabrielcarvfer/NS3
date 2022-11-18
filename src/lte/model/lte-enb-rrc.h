@@ -1103,6 +1103,18 @@ class LteEnbRrc : public Object
                                                 const uint16_t cellId,
                                                 const uint16_t rnti,
                                                 const uint16_t targetCid);
+    /**
+     * TracedCallback signature for handover cancelled events.
+     *
+     * \param [in] imsi
+     * \param [in] cellId
+     * \param [in] rnti
+     * \param [in] targetCid
+     */
+    typedef void (*HandoverCancelledTracedCallback)(const uint64_t imsi,
+                                                    const uint16_t cellId,
+                                                    const uint16_t rnti,
+                                                    const uint16_t targetCid);
 
     /**
      * TracedCallback signature for receive measurement report events.
@@ -1729,6 +1741,11 @@ class LteEnbRrc : public Object
      * procedure. Exporting IMSI, cell ID, RNTI, and target cell ID.
      */
     TracedCallback<uint64_t, uint16_t, uint16_t, uint16_t> m_handoverStartTrace;
+    /**
+     * The `HandoverCancelled` trace source. Fired upon cancellation of a handover
+     * procedure. Exporting IMSI, cell ID, RNTI, and target cell ID.
+     */
+    TracedCallback<uint64_t, uint16_t, uint16_t, uint16_t> m_handoverCancelledTrace;
     /**
      * The `HandoverEndOk` trace source. Fired upon successful termination of a
      * handover procedure. Exporting IMSI, cell ID, and RNTI.

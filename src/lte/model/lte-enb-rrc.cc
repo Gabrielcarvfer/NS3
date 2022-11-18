@@ -2123,6 +2123,10 @@ LteEnbRrc::GetTypeId()
                             "trace fired upon RRC connection reconfiguration",
                             MakeTraceSourceAccessor(&LteEnbRrc::m_connectionReconfigurationTrace),
                             "ns3::LteEnbRrc::ConnectionHandoverTracedCallback")
+            .AddTraceSource("HandoverCancelled",
+                            "trace fired upon failure of a handover procedure",
+                            MakeTraceSourceAccessor(&LteEnbRrc::m_handoverCancelledTrace),
+                            "ns3::LteUeRrc::HandoverCancelled")
             .AddTraceSource("HandoverStart",
                             "trace fired upon start of a handover procedure",
                             MakeTraceSourceAccessor(&LteEnbRrc::m_handoverStartTrace),
@@ -2835,6 +2839,24 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
                     if (controlHeader.contents.format_1.RicDecision == RC_REJECT)
                       {
                         NS_LOG_FUNCTION ("RIC Rejected Handover Request from UE " + std::to_string(rnti) + " to Cell " + std::to_string(cellId));
+                        if(m_ueMap.find(rnti) != m_ueMap.end())
+                        {
+                            Ptr<UeManager> ueManager = GetUeManager(rnti);
+                            // try to find the current cell ID based on th
+                            auto sourceComponentCarrier = DynamicCast<ComponentCarrierEnb>(
+                                m_componentCarrierPhyConf.at(ueManager->GetComponentCarrierId()));
+                            m_handoverCancelledTrace(ueManager->GetImsi(),
+                                                     sourceComponentCarrier->GetCellId(),
+                                                     rnti,
+                                                     cellId);
+                        }
+                        else
+                        {
+                            m_handoverCancelledTrace(std::numeric_limits<uint64_t>::max(),
+                                                     m_componentCarrierPhyConf.begin()->second->GetCellId(),
+                                                     rnti,
+                                                     cellId);
+                        }
                         return;
                       }
                     if (controlHeader.contents.format_1.RICControlStyleType != RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE)
