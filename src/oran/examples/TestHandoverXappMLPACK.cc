@@ -26,6 +26,13 @@ NotifyConnectionEstablishedUe (std::string context, uint64_t imsi, uint16_t cell
 }
 
 void
+NotifyConnectionReconfigurationEnb (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+  std::cout << context << " UE IMSI " << imsi << ": requires a reconfiguration to CellId " << cellid
+            << " with RNTI " << rnti << std::endl;
+}
+
+void
 NotifyHandoverStartUe (std::string context,
                        uint64_t imsi,
                        uint16_t cellid,
@@ -67,6 +74,18 @@ NotifyHandoverEndOkEnb (std::string context, uint64_t imsi, uint16_t cellid, uin
 {
   std::cout << context << " eNB CellId " << cellid << ": completed handover of UE with IMSI "
             << imsi << " RNTI " << rnti << std::endl;
+}
+
+void
+NotifyHandoverCancelledEnb (std::string context,
+                           uint64_t imsi,
+                           uint16_t cellid,
+                           uint16_t rnti,
+                           uint16_t targetCellId)
+{
+    std::cout << context << " eNB CellId " << cellid << ": RIC cancelled handover of UE with IMSI " << imsi
+              << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
+
 }
 
 int main (int argc, char**argv)
@@ -280,6 +299,8 @@ int main (int argc, char**argv)
                    MakeCallback (&NotifyConnectionEstablishedEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/ConnectionEstablished",
                    MakeCallback (&NotifyConnectionEstablishedUe));
+  Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionReconfiguration",
+                  MakeCallback(&NotifyConnectionReconfigurationEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverStart",
                    MakeCallback (&NotifyHandoverStartEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverStart",
@@ -288,7 +309,8 @@ int main (int argc, char**argv)
                    MakeCallback (&NotifyHandoverEndOkEnb));
   Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndOk",
                    MakeCallback (&NotifyHandoverEndOkUe));
-
+  Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverCancelled",
+                   MakeCallback (&NotifyHandoverCancelledEnb));
   E2AP e2t;
   NS_ASSERT(e2t.m_instanceId == 0);
   NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
