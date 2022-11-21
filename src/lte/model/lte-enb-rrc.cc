@@ -3283,6 +3283,34 @@ LteEnbRrc::DoTriggerHandover(uint16_t rnti, uint16_t targetCellId)
 
     if (isHandoverAllowed)
     {
+        auto node = GetNode();
+        if (node->GetNApplications() > 1)
+        {
+            auto app = node->GetApplication(1);
+            Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
+            if (e2ap)
+            {
+                // Control returns empty optional if unanswered, or a response
+                std::optional<uint16_t> ricTargetCellId = e2ap->E2SmRcHandoverControl(rnti, targetCellId, *this);
+                if (!ricTargetCellId.has_value())
+                {
+                    // Reschedule function to wait for the response
+                    Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::DoTriggerHandover, this, rnti, targetCellId);
+                    return;
+                }
+                else
+                {
+                    // Get the response value
+                    targetCellId = ricTargetCellId.value();
+
+                    // Check if the request was cancelled by the RIC (max value)
+                    if (targetCellId == std::numeric_limits<uint16_t>::max())
+                    {
+                        return;
+                    }
+                }
+            }
+        }
         // initiate handover execution
         ueManager->PrepareHandover(targetCellId);
     }
