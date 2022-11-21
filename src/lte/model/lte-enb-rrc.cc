@@ -2651,6 +2651,16 @@ LteEnbRrc::HasCellId(uint16_t cellId) const
     return false;
 }
 
+std::optional<uint16_t>
+LteEnbRrc::GetFirstCellId() const
+{
+    for (auto& it : m_componentCarrierPhyConf)
+    {
+        return it.second->GetCellId();
+    }
+    return {};
+}
+
 bool
 LteEnbRrc::SendData(Ptr<Packet> packet)
 {
@@ -2781,124 +2791,24 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
       Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
       if (e2ap)
         {
-          auto handoverRequestIt = e2ap->m_pendingRequestsPerRnti.find ("HO");
-          if (handoverRequestIt == e2ap->m_pendingRequestsPerRnti.end ())
+            // Control returns empty optional if unanswered, or a response
+            std::optional<uint16_t> targetCellId = e2ap->E2SmRcHandoverControl(rnti, cellId, *this);
+            if (!targetCellId.has_value())
             {
-              e2ap->m_pendingRequestsPerRnti.emplace ("HO", std::map<uint16_t, Json>{});
-              handoverRequestIt = e2ap->m_pendingRequestsPerRnti.find ("HO");
+                // Reschedule function to wait for the response
+                Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
+                return;
             }
-          auto UeRntiIt = handoverRequestIt->second.find (rnti);
-          if (UeRntiIt == handoverRequestIt->second.end ())
+            else
             {
-              // In case there is no pending request, we need to send a control indication,
-              // then wait for a response
-              E2SM_RC_RIC_INDICATION_HEADER hdr;
-              hdr.format = ns3::RIC_INDICATION_HEADER_FORMAT_2;
-              hdr.contents.format_2.RNTI = rnti;
-              hdr.contents.format_2.RICInsertStyleType = RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::VALUE;
-              hdr.contents.format_2.InsertIndicationID = RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::HANDOVER_CONTROL_REQUEST::VALUE;
-              Json json_hdr;
-              to_json (json_hdr, hdr);
+                // Get the response value
+                cellId = targetCellId.value();
 
-              Json HANDOVER_CONTROL_REQUEST_MSG;
-              HANDOVER_CONTROL_REQUEST_MSG["DEST_ENDPOINT"] = "/E2Node/0";
-              HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["TYPE"] = RIC_INDICATION;
-              HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
-              HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["HEADER"] = json_hdr;
-              HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = cellId;//starts counting from 1
-
-              // Create a pending request entry for the current rnti
-              handoverRequestIt->second.emplace (rnti, Json{});
-
-              // Send indication with control request
-              e2ap->SendPayload(HANDOVER_CONTROL_REQUEST_MSG);
-    
-              // Re-schedule this event for 100 milliseconds into the future, 
-              // while we wait for the confirmation from the RIC
-              Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
-
-              // Skip the end of this function
-              return;
-            }
-          else
-            {
-              if (!UeRntiIt->second.contains("HEADER"))
+                // Check if the request was cancelled by the RIC (max value)
+                if (cellId == std::numeric_limits<uint16_t>::max())
                 {
-                  Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
-                  return;
+                    return;
                 }
-              E2SM_RC_RIC_CONTROL_HEADER controlHeader;
-              NS_ASSERT(UeRntiIt->second.contains ("HEADER"));
-              from_json (UeRntiIt->second["HEADER"], controlHeader);
-
-              switch (controlHeader.format)
-                {
-                  case RC_CONTROL_HEADER_FORMAT_1:
-                    if (controlHeader.contents.format_1.RicDecision == RC_REJECT)
-                      {
-                        NS_LOG_FUNCTION ("RIC Rejected Handover Request from UE " + std::to_string(rnti) + " to Cell " + std::to_string(cellId));
-                        if(m_ueMap.find(rnti) != m_ueMap.end())
-                        {
-                            Ptr<UeManager> ueManager = GetUeManager(rnti);
-                            // try to find the current cell ID based on th
-                            auto sourceComponentCarrier = DynamicCast<ComponentCarrierEnb>(
-                                m_componentCarrierPhyConf.at(ueManager->GetComponentCarrierId()));
-                            m_handoverCancelledTrace(ueManager->GetImsi(),
-                                                     sourceComponentCarrier->GetCellId(),
-                                                     rnti,
-                                                     cellId);
-                        }
-                        else
-                        {
-                            m_handoverCancelledTrace(std::numeric_limits<uint64_t>::max(),
-                                                     m_componentCarrierPhyConf.begin()->second->GetCellId(),
-                                                     rnti,
-                                                     cellId);
-                        }
-                        return;
-                      }
-                    if (controlHeader.contents.format_1.RICControlStyleType != RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE)
-                      {
-                        NS_ASSERT("Incorrect RIC Control Style");
-                        //todo: control failure
-                      }
-                    if (controlHeader.contents.format_1.ControlActionID != RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE)
-                      {
-                        NS_ASSERT("Incorrect RIC Control Action ID");
-                        //todo: control failure
-                      }
-                    break;
-                  case RC_CONTROL_HEADER_FORMAT_2:
-                    if (controlHeader.contents.format_2.RicDecision == RC_REJECT)
-                      {
-                        NS_LOG_FUNCTION ("RIC Rejected Handover Request from UE " + std::to_string(rnti) + " to Cell " + std::to_string(cellId));
-                        return;
-                      }
-                      // connect to the current CellId
-                    break;
-                  default:
-                    NS_ASSERT("Unknown RC Control Header format");
-                }
-
-              // todo: implement the proper way
-              // If we succeeded, check if the target cell still is the same
-              //E2SM_RC_RIC_CONTROL_MESSAGE controlMessage;
-              //NS_ASSERT(UeRntiIt->second["MESSAGE"]);
-              //from_json (UeRntiIt->second["MESSAGE"], controlMessage);
-              //if (controlMessage.format != E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT_1)
-              //  {
-              //    NS_ASSERT("Incorrect Control Message format for Handover");
-              //  }
-              //else
-              //  {
-              //    cellId = controlMessage.contents.format_1.sequence_of_ran_parameters.find(RAN_PARAMETER_ID)
-              //  }
-              //
-              // temporary hack
-              cellId = UeRntiIt->second["MESSAGE"]["Target Primary Cell ID"];
-
-              // Clear pending requests contents
-              handoverRequestIt->second.erase(UeRntiIt->first);
             }
         }
     }
