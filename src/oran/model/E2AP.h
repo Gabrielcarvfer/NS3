@@ -5,8 +5,12 @@
 #ifndef NS3_E2AP_H
 #define NS3_E2AP_H
 
-#include "PubSubInfra.h"
+#include <optional>
+
 #include "ns3/system-wall-clock-timestamp.h"
+#include "ns3/lte-enb-rrc.h"
+
+#include "PubSubInfra.h"
 #include "E2SM-KPM-measurements.h"
 #include "ORAN-message-types.h"
 
@@ -53,6 +57,8 @@ public:
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
   std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
   std::map<std::string, std::map<uint16_t, Json>> m_pendingRequestsPerRnti;
+public:
+  std::optional<uint16_t> E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc);
 };
 
 // O-RAN WG3 E2SM RC v01.02 7.3.1

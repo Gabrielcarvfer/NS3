@@ -46,6 +46,7 @@
 #include <ns3/traced-callback.h>
 
 #include <map>
+#include <optional>
 #include <set>
 #include <vector>
 
@@ -973,6 +974,12 @@ class LteEnbRrc : public Object
     bool HasCellId(uint16_t cellId) const;
 
     /**
+     * \param cellId cell ID
+     * \return has_value() is true if there is a cellId associated with this Rrc
+     */
+    std::optional<uint16_t> GetFirstCellId() const;
+
+    /**
      * Enqueue an IP data packet on the proper bearer for downlink
      * transmission. Normally expected to be called by the NetDevice
      * forwarding a packet coming from the EpcEnbApplication
@@ -1741,11 +1748,13 @@ class LteEnbRrc : public Object
      * procedure. Exporting IMSI, cell ID, RNTI, and target cell ID.
      */
     TracedCallback<uint64_t, uint16_t, uint16_t, uint16_t> m_handoverStartTrace;
+  public:
     /**
      * The `HandoverCancelled` trace source. Fired upon cancellation of a handover
      * procedure. Exporting IMSI, cell ID, RNTI, and target cell ID.
      */
     TracedCallback<uint64_t, uint16_t, uint16_t, uint16_t> m_handoverCancelledTrace;
+  private:
     /**
      * The `HandoverEndOk` trace source. Fired upon successful termination of a
      * handover procedure. Exporting IMSI, cell ID, and RNTI.
