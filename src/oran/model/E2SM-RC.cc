@@ -400,6 +400,25 @@ E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
         // Send indication with control request
         SendPayload(HANDOVER_CONTROL_REQUEST_MSG);
 
+        // Record start time for handover control request
+        Ptr<UeManager> ueManager = rrc.GetUeManager(rnti);
+
+        if(rrc.HasUeManager(rnti))
+        {
+            Ptr<UeManager> ueManager = rrc.GetUeManager(rnti);
+            rrc.m_handoverTriggeredTrace(ueManager->GetImsi(),
+                                     rrc.ComponentCarrierToCellId(ueManager->GetComponentCarrierId()),
+                                     rnti,
+                                     cellId);
+        }
+        else
+        {
+            rrc.m_handoverTriggeredTrace(std::numeric_limits<uint64_t>::max(),
+                                     rrc.GetFirstCellId().value(),
+                                     rnti,
+                                     cellId);
+        }
+
         // Skip the end of this function
         return {};
     }
