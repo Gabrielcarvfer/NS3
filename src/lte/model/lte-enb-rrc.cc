@@ -2127,6 +2127,10 @@ LteEnbRrc::GetTypeId()
                             "trace fired upon failure of a handover procedure",
                             MakeTraceSourceAccessor(&LteEnbRrc::m_handoverCancelledTrace),
                             "ns3::LteUeRrc::HandoverCancelled")
+            .AddTraceSource("HandoverTriggered",
+                            "trace fired upon a handover procedure trigger",
+                            MakeTraceSourceAccessor(&LteEnbRrc::m_handoverTriggeredTrace),
+                            "ns3::LteUeRrc::HandoverTriggered")
             .AddTraceSource("HandoverStart",
                             "trace fired upon start of a handover procedure",
                             MakeTraceSourceAccessor(&LteEnbRrc::m_handoverStartTrace),
@@ -2798,7 +2802,7 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
             if (!targetCellId.has_value())
             {
                 // Reschedule function to wait for the response
-                Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
+                Simulator::Schedule (MilliSeconds (1), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
                 return;
             }
             else
@@ -3295,7 +3299,7 @@ LteEnbRrc::DoTriggerHandover(uint16_t rnti, uint16_t targetCellId)
                 if (!ricTargetCellId.has_value())
                 {
                     // Reschedule function to wait for the response
-                    Simulator::Schedule (MilliSeconds (100), &LteEnbRrc::DoTriggerHandover, this, rnti, targetCellId);
+                    Simulator::Schedule (MilliSeconds (10), &LteEnbRrc::DoTriggerHandover, this, rnti, targetCellId);
                     return;
                 }
                 else
