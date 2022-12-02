@@ -27,6 +27,7 @@ class Registry
 public:
   enum registerType{
       HANDOVER_CANCELLED_RIC = 0,
+      HANDOVER_TRIGGERED_ENB,
       HANDOVER_START_ENB,
       HANDOVER_OK_ENB,
       HANDOVER_START_UE,
@@ -41,6 +42,7 @@ public:
   };
     static inline std::map<enum registerType, std::string> registerTypeStr = {
         {HANDOVER_CANCELLED_RIC,"HANDOVER_CANCELLED_RIC"},
+        {HANDOVER_TRIGGERED_ENB, "HANDOVER_TRIGGERED_ENB"},
         {HANDOVER_START_ENB,"HANDOVER_START_ENB"},
         {HANDOVER_OK_ENB,"HANDOVER_OK_ENB"},
         {HANDOVER_START_UE,"HANDOVER_START_UE"},
@@ -157,6 +159,18 @@ NotifyHandoverCancelledEnb (std::string context,
     std::cout << context << " eNB CellId " << cellid << ": RIC cancelled handover of UE with IMSI " << imsi
               << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
     simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_CANCELLED_RIC);
+}
+
+void
+NotifyHandoverTriggeredEnb (std::string context,
+                            uint64_t imsi,
+                            uint16_t cellid,
+                            uint16_t rnti,
+                            uint16_t targetCellId)
+{
+    std::cout << context << " eNB CellId " << cellid << ": handover triggered RIC handover control of UE with IMSI " << imsi
+              << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
+    simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_TRIGGERED_ENB);
 
 }
 
@@ -470,6 +484,9 @@ int main (int argc, char** argv)
                   MakeCallback (&NotifyHandoverEndErrorUe));
   Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverCancelled",
                   MakeCallback (&NotifyHandoverCancelledEnb));
+  Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverTriggered",
+                    MakeCallback (&NotifyHandoverTriggeredEnb));
+
   if (oranSetup)
   {
       Ptr<E2AP> e2t = CreateObject<E2AP>();
