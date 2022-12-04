@@ -144,7 +144,7 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                             }
                           // Measure time spent on xApp
                           auto endTimeXapp = std::chrono::high_resolution_clock::now();
-                          int nsDelayXapp = std::chrono::duration_cast<std::chrono::nanoseconds>(endTimeXapp - startTimeXapp).count();
+                          uint64_t nsDelayXapp = std::chrono::duration_cast<std::chrono::nanoseconds>(endTimeXapp - startTimeXapp).count();
 
                           // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
                           E2SM_RC_RIC_CONTROL_HEADER hdr;
