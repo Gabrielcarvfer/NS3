@@ -428,9 +428,15 @@ E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
         return {};
     }
 
+    // Retrieve RIC Control Request message payload
+    Json ricControlRequest = UeRntiIt->second;
+
+    // Remove pending message entry
+    handoverRequestIt->second.erase(UeRntiIt->first);
+
     E2SM_RC_RIC_CONTROL_HEADER controlHeader;
-    NS_ASSERT(UeRntiIt->second.contains ("HEADER"));
-    from_json (UeRntiIt->second["HEADER"], controlHeader);
+    NS_ASSERT(ricControlRequest.contains ("HEADER"));
+    from_json (ricControlRequest["HEADER"], controlHeader);
 
     switch (controlHeader.format)
     {
@@ -493,9 +499,6 @@ E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
     //  }
     //
     // temporary hack
-    cellId = UeRntiIt->second["MESSAGE"]["Target Primary Cell ID"];
-
-    // Clear pending requests contents
-    handoverRequestIt->second.erase(UeRntiIt->first);
+    cellId = ricControlRequest["MESSAGE"]["Target Primary Cell ID"];
     return cellId;
 }
