@@ -128,6 +128,9 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                           uint16_t ueToHandover = indicationHeader.contents.format_2.RNTI;
                           uint16_t requestedTargetCell = payload["MESSAGE"]["Target Primary Cell ID"];
 
+                          // Measure time spent on xApp
+                          auto startTimeXapp = std::chrono::high_resolution_clock::now();
+
                           // Set target cell to the requested by default
                           uint16_t targetCell = requestedTargetCell;
                           std::function<void(Json&)> handoverHandler = GetEndpointCallback("/Action/HO");
@@ -139,6 +142,10 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                               handoverHandler(temp);
                               targetCell = temp["Target Primary Cell ID"];
                             }
+                          // Measure time spent on xApp
+                          auto endTimeXapp = std::chrono::high_resolution_clock::now();
+                          int nsDelayXapp = std::chrono::duration_cast<std::chrono::nanoseconds>(endTimeXapp - startTimeXapp).count();
+
                           // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
                           E2SM_RC_RIC_CONTROL_HEADER hdr;
                           hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
@@ -156,8 +163,8 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                           HANDOVER_CONTROL_MSG["PAYLOAD"]["HEADER"] = json_hdr;
                           HANDOVER_CONTROL_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = targetCell;
 
-                          // Send indication with control request
-                          SendPayload(HANDOVER_CONTROL_MSG);
+                          // Send indication with control request with delay to account for the xApp processing time
+                          Simulator::Schedule(NanoSeconds(nsDelayXapp), &E2AP::SendPayload, this, HANDOVER_CONTROL_MSG);
                         }
                       break;
                       case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::CONDITIONAL_HANDOVER_CONTROL_REQUEST::VALUE:
