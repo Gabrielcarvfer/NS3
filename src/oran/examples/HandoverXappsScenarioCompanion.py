@@ -180,7 +180,8 @@ for outputFile in output_and_args.keys():
                 cancelledHandoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
     if len(cancelledHandoversLatency) == 0:
         cancelledHandoversLatency.extend([0, 0])
-    consolidatedResults.append([output_and_type[outputFile], f"{handoversTriggered}", f"{handoversCancelled}", f"{statistics.mean(cancelledHandoversLatency)}+-{statistics.stdev(cancelledHandoversLatency)}", f"{handoversInitiated}", f"{handoversOK}", f"{handoversError}", f"{statistics.mean(handoversLatency)}+-{statistics.stdev(handoversLatency)}", f"{statistics.mean([len(x) for x in handoversPerUE.values()])}", f"{connectionReconfiguration}"])
+    meanHandovers = handoversInitiated / len(handoversPerUE.keys())
+    consolidatedResults.append([output_and_type[outputFile], f"{handoversTriggered}", f"{handoversCancelled}", f"{statistics.mean(cancelledHandoversLatency)}+-{statistics.stdev(cancelledHandoversLatency)}", f"{handoversInitiated}", f"{handoversOK}", f"{handoversError}", f"{statistics.mean(handoversLatency)}+-{statistics.stdev(handoversLatency)}", f"{meanHandovers}", f"{connectionReconfiguration}"])
 
     pass
 
