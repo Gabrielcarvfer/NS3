@@ -8,6 +8,19 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("E2AP");
 
+Ptr<LteEnbRrc>
+E2AP::GetRrc()
+{
+    if (m_rrc == nullptr)
+    {
+        Ptr<Node> currentNode = GetNode();
+        auto val = PointerValue();
+        currentNode->GetDevice(0)->GetAttribute("LteEnbRrc", val);
+        m_rrc = val.Get<LteEnbRrc>();
+    }
+    return m_rrc;
+}
+
 void
 E2AP::HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload)
 {

@@ -33,7 +33,7 @@ enum E2_SERVICE_MODELS
 class E2AP : public PubSubInfra
 {
 public:
-  E2AP () : PubSubInfra ("E2Node"){};
+  E2AP () : PubSubInfra ("E2Node"), m_rrc(nullptr){};
   ~E2AP () override{};
   void HandlePayload (std::string src_endpoint, std::string dest_endpoint, Json payload) override;
   void RegisterEndpoint(std::string endpoint) override;
@@ -47,6 +47,7 @@ public:
   // Default endpoints for KPM measurement and control
   void RegisterDefaultEndpoints();
   void SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo);
+  Ptr<LteEnbRrc> GetRrc();
 //private:
   void SendPayload(Json payload);
   void PeriodicReport(std::string subscriber_endpoint, uint32_t period_ms, std::string subscribed_endpoint);
@@ -57,6 +58,7 @@ public:
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
   std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
   std::map<std::string, std::map<uint16_t, Json>> m_pendingRequestsPerRnti;
+  Ptr<LteEnbRrc> m_rrc;
 public:
   std::optional<uint16_t> E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc);
 };
