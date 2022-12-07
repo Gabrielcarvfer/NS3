@@ -55,6 +55,8 @@ public:
   void HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& dest_endpoint, Json& payload);
   void HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_endpoint, Json& payload);
   void HandleE2SmKpmIndicationPayload (std::string& src_endpoint, std::string& dest_endpoint, Json& payload);
+  void E2SmRcSendHandoverControl(uint16_t rnti, uint16_t targetCell, std::string& destination_endpoint, double xAppDelayNs);
+  void E2SmRcSendHandoverControlRequest(uint16_t rnti, uint16_t targetCell, std::string src_endpoint="");
   std::map<std::string, PeriodicReportStruct> m_endpointPeriodicityAndBuffer;
   std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>> m_kpmToEndpointStorage;
   std::map<std::string, std::map<uint16_t, Json>> m_pendingRequestsPerRnti;
