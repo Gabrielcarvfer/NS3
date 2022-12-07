@@ -12,17 +12,23 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("xAppHandoverMlpackKmeans");
 
-xAppHandoverMlpackKmeans::xAppHandoverMlpackKmeans(bool kmeansEmptyPolicy)
+xAppHandoverMlpackKmeans::xAppHandoverMlpackKmeans(bool kmeansEmptyPolicy,
+                                                   float clusteringPeriodicitySec,
+                                                   bool initiateHandovers)
     : xAppHandover(),
-      m_kmeansKeepEmptyPolicy(kmeansEmptyPolicy)
+      m_kmeansKeepEmptyPolicy(kmeansEmptyPolicy),
+      m_clusteringPeriodicitySec(clusteringPeriodicitySec),
+      m_initiateHandovers(initiateHandovers)
 {
     NS_LOG_FUNCTION (this);
         
         Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
                         MakeCallback (&xAppHandoverMlpackKmeans::HandoverSucceeded, this));
+        Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverStart",
+                        MakeCallback (&xAppHandoverMlpackKmeans::HandoverStarted, this));
         Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndError",
                         MakeCallback (&xAppHandoverMlpackKmeans::HandoverFailed, this));
-        Simulator::Schedule (Seconds (1), &xAppHandoverMlpackKmeans::PeriodicClustering, this);
+        Simulator::Schedule (Seconds (m_clusteringPeriodicitySec), &xAppHandoverMlpackKmeans::PeriodicClustering, this);
 };
 
 void 
@@ -30,7 +36,7 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
 {
     NS_LOG_FUNCTION (this);
 
-    const E2AP *ric = static_cast<const E2AP *>(m_endpointRootToInstance.at ("/E2Node/0"));
+    E2AP *ric = (E2AP*)static_cast<const E2AP *>(m_endpointRootToInstance.at ("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
     std::array<std::string, 4> kpmMetrics = {//"/KPM/HO.SrcCellQual.RSRP",
                                              "/KPM/HO.SrcCellQual.RSRQ",
@@ -179,7 +185,29 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
         m_rntiToClusteredCellId[rnti.first] = cellId;
         i++;
     }
-    Simulator::Schedule (Seconds (1), &xAppHandoverMlpackKmeans::PeriodicClustering, this);
+
+    if (m_initiateHandovers)
+    {
+        // Command handovers
+        for (auto[rnti, connectedCell] : m_rntiToCurrentCellId)
+        {
+            // Skip rntis that are already in the target cluster cell id
+            auto rntiToCluster = m_rntiToClusteredCellId.find(rnti);
+            if (rntiToCluster == m_rntiToClusteredCellId.end())
+                continue ;
+
+            // Skip rntis already in handover
+            if(m_imsiInHandover.find(rnti) != m_imsiInHandover.end())
+            {
+                continue;
+            }
+
+            // Spoof RIC CONTROL REQUEST with source eNB endpoint (where the UE is currently connected)
+            std::string spoofed_src_endpoint = "/E2Node/" + std::to_string(connectedCell) + "/";
+            ric->E2SmRcSendHandoverControlRequest(rnti, rntiToCluster->second, spoofed_src_endpoint);
+        }
+    }
+    Simulator::Schedule (Seconds (m_clusteringPeriodicitySec), &xAppHandoverMlpackKmeans::PeriodicClustering, this);
 }
 void 
 xAppHandoverMlpackKmeans::HandoverDecision (Json &payload)
@@ -211,17 +239,46 @@ xAppHandoverMlpackKmeans::HandoverDecision (Json &payload)
     payload["Target Primary Cell ID"] = decidedTargetCellId;
     m_decision_history.push_back ({requestingRnti, requestedTargetCellId, decidedTargetCellId});
 }
+
+void
+xAppHandoverMlpackKmeans::HandoverStarted (std::string context,
+                       uint64_t imsi,
+                       uint16_t cellid,
+                       uint16_t rnti,
+                       uint16_t targetCellId)
+{
+    std::cout << "dun dun dun" << std::endl;
+    m_imsiInHandover.emplace(rnti, imsi);
+}
+
 void 
 xAppHandoverMlpackKmeans::HandoverSucceeded (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
     NS_LOG_FUNCTION (this);
-
     std::cout << "yay" << std::endl; // reward predictor
+    for(auto[key, value]: m_imsiInHandover)
+    {
+        if (value == imsi)
+        {
+            m_imsiInHandover.erase(m_imsiInHandover.find(key));
+            break;
+        }
+    }
+    std::cout << "barbada" << std::endl;
 }
 void 
 xAppHandoverMlpackKmeans::HandoverFailed (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
     NS_LOG_FUNCTION (this);
-
     std::cout << "nay" << std::endl; // punish predictor
+    for(auto[key, value]: m_imsiInHandover)
+    {
+        if (value == imsi)
+        {
+            m_imsiInHandover.erase(m_imsiInHandover.find(key));
+            break;
+        }
+    }
+    std::cout << "barbada1" << std::endl;
+
 }
