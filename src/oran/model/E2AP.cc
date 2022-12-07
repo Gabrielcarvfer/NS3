@@ -444,7 +444,10 @@ void
 E2AP::SendPayload (Json payload)
 {
   // Add source endpoint
-  payload["SRC_ENDPOINT"] = m_endpointRoot;
+  if (!payload.contains("SRC_ENDPOINT"))
+  {
+        payload["SRC_ENDPOINT"] = m_endpointRoot;
+  }
 
   // Replace destination endpoint with the corresponding root endpoint
   if (payload.contains ("DEST_ENDPOINT"))
