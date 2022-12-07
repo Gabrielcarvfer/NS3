@@ -201,13 +201,34 @@ int main (int argc, char** argv)
   double simTime = 10*60;
   double enbTxPowerDbm = 40.0;
 
-  bool oranSetup = true;
-  bool distributedHandover = false;
 
+  std::stringstream ss;
+  ss << "\n\t\tChoose one:\n"
+     << "\t 0: Standard 3GPP handover (HO)\n"
+     << "\t 1: ORAN HO returns the decision taken by the eNB. HO initiated by the eNB.\n"
+     << "\t 2: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the eNB.\n"
+     << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n";
+
+  unsigned scenarioi = 0;
   CommandLine cmd(__FILE__);
-  cmd.AddValue("oranSetup", "Install RIC and E2Node applications", oranSetup);
-  cmd.AddValue("distributedHandover", "Use distributed handover (if using oranSetup, RIC will simply accept the eNB suggestion)", distributedHandover);
+  cmd.AddValue("scenario",
+               ss.str(),
+               scenarioi);
   cmd.Parse(argc, argv);
+
+  typedef enum handoverScenarios{
+      STANDARD_3GPP=0,
+      ORAN_BYPASS, // RIC just forwards back decision taken by the eNB
+      ORAN_RIC_XAPP_KMEANS, // RIC calls the xAPP to decide whether to follow the eNB suggestion or not
+      ORAN_RIC_XAPP_KMEANS_INITIATED, // eNB stops triggering handovers and just follows RIC handover commands
+  }HandoverScenarios;
+
+  if (scenarioi > HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
+  {
+      std::cerr << "Invalid handover scenario id: " << scenarioi << std::endl;
+      return -1;
+  }
+  HandoverScenarios scenario = static_cast<HandoverScenarios>(scenarioi);
 
   // change some default attributes so that they are reasonable for
   // this scenario, but do this before processing command line
@@ -220,10 +241,19 @@ int main (int argc, char** argv)
   lteHelper->SetEpcHelper (epcHelper);
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
 
-  //lteHelper->SetHandoverAlgorithmType ("ns3::NoOpHandoverAlgorithm"); // algorithm needs to manually trigger handovers
-  lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
-  lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
-  lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+  switch (scenario)
+  {
+      // all _INITIATED scenarios should be addded here
+      case HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED:
+          lteHelper->SetHandoverAlgorithmType(
+              "ns3::NoOpHandoverAlgorithm"); // algorithm needs to manually trigger handovers
+          break;
+      default:
+          lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
+          lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
+          lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+          break;
+  }
 
   //  lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
   //  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
@@ -487,15 +517,18 @@ int main (int argc, char** argv)
   Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverTriggered",
                     MakeCallback (&NotifyHandoverTriggeredEnb));
 
-  if (oranSetup)
+  if (scenario == HandoverScenarios::ORAN_BYPASS
+      || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS
+      || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
   {
       Ptr<E2AP> e2t = CreateObject<E2AP>();
       sgw->AddApplication(e2t);
 
       // Create the handover xApp
-      if (!distributedHandover)
+      if (scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS
+          || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
       {
-          Ptr<xAppHandoverMlpackKmeans> handoverxapp = CreateObject<xAppHandoverMlpackKmeans>();
+          Ptr<xAppHandoverMlpackKmeans> handoverxapp = CreateObject<xAppHandoverMlpackKmeans>(false, 1, scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED);
           sgw->AddApplication(handoverxapp);
       }
 

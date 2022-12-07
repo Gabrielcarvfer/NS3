@@ -77,20 +77,32 @@ def run_program(program, args, python=False, cwd=ns3_path, env=None):
 
 
 output_and_args = {
-    "output3GPPHandover.csv": "--oranSetup=false",
-    "outputDistributedHandover.csv": "--distributedHandover",
-    "outputKMeansHandover.csv": "",
+    "output3GPPHandover.csv": "--scenario=0",
+    "outputDistributedHandover.csv": "--scenario=1",
+    "outputKMeansHandover.csv": "--scenario=2",
+    "outputKMeansHandoverRicInitiated.csv": "--scenario=3"
     }
 
 output_and_type = {
-    "output3GPPHandover.csv": "Distribuído",
-    "outputDistributedHandover.csv": "Distribuído com O-RAN",
-    "outputKMeansHandover.csv": "Centralizado com O-RAN+xApp K-Means",
+    "output3GPPHandover.csv": "Iniciado por eNB",
+    "outputDistributedHandover.csv": "Iniciado por eNB e confirmado por O-RAN",
+    "outputKMeansHandover.csv": "Iniciado por eNB e confirmado por O-RAN+xApp K-Means",
+    "outputKMeansHandoverRicInitiated.csv": "Iniciado por O-RAN+xApp K-Means",
 }
 
 resultingCsv = {}
 consolidatedResults = [["", "Handovers", "", "", "", "", "", "", "", "Conexão"],
-                       ["", "Disparados", "Cancelados pelo RIC", "Latência para início do handover (ns)", "Iniciados", "Bem sucedidos", "Mal sucedidos", "Duração do handover (ns)", "Média de handovers por UE", "Reconfigurações"]
+                       ["",
+                        "Disparados",
+                        "Cancelados pelo RIC",
+                        "Latência para início do handover (ns)",
+                        "Iniciados",
+                        "Bem sucedidos",
+                        "Mal sucedidos",
+                        "Duração do handover (ns)",
+                        "Média de handovers por UE",
+                        "Conexões estabelecidas",
+                        "Conexões Reestabelecidas"]
                        ]
 for outputFile in output_and_args.keys():
     if not os.path.exists(os.path.join(curr_dir, outputFile)):
@@ -114,6 +126,8 @@ for outputFile in output_and_args.keys():
     cancelledHandoversLatency = []
     handoversPerUE = {}
     handoversTriggeredPerUE = {}
+    connectionEstablished = 0
+    connectionEstablishedPerUE = {}
     connectionReconfiguration = 0
     connectionReconfigurationPerUE = {}
 
@@ -122,6 +136,8 @@ for outputFile in output_and_args.keys():
         if imsi not in handoversPerUE:
             handoversPerUE[imsi] = [[], []]  # start, ok/fail
             handoversTriggeredPerUE[imsi] = [[], []]  # trigger, cancelled/startenb
+        if imsi not in connectionEstablishedPerUE:
+            connectionEstablishedPerUE[imsi] = []
         if imsi not in connectionReconfigurationPerUE:
             connectionReconfigurationPerUE[imsi] = []
         if line["Type"] == "HANDOVER_TRIGGERED_ENB":
@@ -156,6 +172,8 @@ for outputFile in output_and_args.keys():
             connectionReconfigurationPerUE[imsi].append(line)
             continue
         if line["Type"] == "CONNECTION_ESTABLISHED_ENB":
+            connectionEstablished += 1
+            connectionEstablishedPerUE[imsi].append(line)
             continue
         if line["Type"] == "CONNECTION_ERROR_ENB":
             continue
@@ -181,7 +199,17 @@ for outputFile in output_and_args.keys():
     if len(cancelledHandoversLatency) == 0:
         cancelledHandoversLatency.extend([0, 0])
     meanHandovers = handoversInitiated / len(handoversPerUE.keys())
-    consolidatedResults.append([output_and_type[outputFile], f"{handoversTriggered}", f"{handoversCancelled}", f"{statistics.mean(cancelledHandoversLatency)}+-{statistics.stdev(cancelledHandoversLatency)}", f"{handoversInitiated}", f"{handoversOK}", f"{handoversError}", f"{statistics.mean(handoversLatency)}+-{statistics.stdev(handoversLatency)}", f"{meanHandovers}", f"{connectionReconfiguration}"])
+    consolidatedResults.append([output_and_type[outputFile],
+                                f"{handoversTriggered}",
+                                f"{handoversCancelled}",
+                                f"{statistics.mean(cancelledHandoversLatency)}+-{statistics.stdev(cancelledHandoversLatency)}",
+                                f"{handoversInitiated}",
+                                f"{handoversOK}",
+                                f"{handoversError}",
+                                f"{statistics.mean(handoversLatency)}+-{statistics.stdev(handoversLatency)}",
+                                f"{meanHandovers}",
+                                f"{connectionEstablished}",
+                                f"{connectionReconfiguration}"])
 
     pass
 
