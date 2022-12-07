@@ -691,6 +691,14 @@ class LteEnbRrc : public Object
     ~LteEnbRrc() override;
 
     // inherited from Object
+    /**
+     * Trigger handover function
+     *
+     * \param rnti RNTI
+     * \param targetCellId target cell ID
+     */
+    void DoTriggerHandover(uint16_t rnti, uint16_t targetCellId);
+
   protected:
     void DoDispose() override;
 
@@ -1388,14 +1396,6 @@ class LteEnbRrc : public Object
      * \param numberOfComponentCarriers the number of component carriers
      */
     void DoSetNumberOfComponentCarriers(uint16_t numberOfComponentCarriers);
-
-    /**
-     * Trigger handover function
-     *
-     * \param rnti RNTI
-     * \param targetCellId target cell ID
-     */
-    void DoTriggerHandover(uint16_t rnti, uint16_t targetCellId);
 
     // ANR SAP methods
 
