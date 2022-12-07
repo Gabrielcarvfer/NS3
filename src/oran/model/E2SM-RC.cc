@@ -147,24 +147,7 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
                           uint64_t nsDelayXapp = std::chrono::duration_cast<std::chrono::nanoseconds>(endTimeXapp - startTimeXapp).count();
 
                           // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
-                          E2SM_RC_RIC_CONTROL_HEADER hdr;
-                          hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
-                          hdr.contents.format_1.RNTI = rnti;
-                          hdr.contents.format_1.RICControlStyleType = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE;
-                          hdr.contents.format_1.ControlActionID = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE;
-                          hdr.contents.format_1.RicDecision = targetCell != std::numeric_limits<uint16_t>::max() ? RC_ACCEPT : RC_REJECT;
-                          Json json_hdr;
-                          to_json (json_hdr, hdr);
-
-                          Json HANDOVER_CONTROL_MSG;
-                          HANDOVER_CONTROL_MSG["DEST_ENDPOINT"] = src_endpoint;
-                          HANDOVER_CONTROL_MSG["PAYLOAD"]["TYPE"] = RIC_CONTROL_REQUEST;
-                          HANDOVER_CONTROL_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
-                          HANDOVER_CONTROL_MSG["PAYLOAD"]["HEADER"] = json_hdr;
-                          HANDOVER_CONTROL_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = targetCell;
-
-                          // Send indication with control request with delay to account for the xApp processing time
-                          Simulator::Schedule(NanoSeconds(nsDelayXapp), &E2AP::SendPayload, this, HANDOVER_CONTROL_MSG);
+                          E2SmRcSendHandoverControl(rnti, targetCell,  src_endpoint, nsDelayXapp);
                         }
                       break;
                       case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::CONDITIONAL_HANDOVER_CONTROL_REQUEST::VALUE:
@@ -298,6 +281,46 @@ E2AP::HandleE2SmRcIndicationPayload (std::string& src_endpoint, std::string& des
     }
 }
 
+void handoverTriggeringTrace(Ptr<LteEnbRrc> rrc, uint16_t rnti, uint16_t cellId)
+{
+    if(rrc->HasUeManager(rnti))
+    {
+        Ptr<UeManager> ueManager = rrc->GetUeManager(rnti);
+        rrc->m_handoverTriggeredTrace(ueManager->GetImsi(),
+                                      rrc->ComponentCarrierToCellId(ueManager->GetComponentCarrierId()),
+                                      rnti,
+                                      cellId);
+    }
+    else
+    {
+        rrc->m_handoverTriggeredTrace(std::numeric_limits<uint64_t>::max(),
+                                      rrc->GetFirstCellId().value(),
+                                      rnti,
+                                      cellId);
+    }
+}
+
+void handoverCancelledTrace(Ptr<LteEnbRrc> rrc, uint16_t rnti, uint16_t cellId)
+{
+    if(rrc->HasUeManager(rnti))
+    {
+        // try to find the current cell ID based on the UeManager
+        Ptr<UeManager> ueManager = rrc->GetUeManager(rnti);
+        // try to find the current cell ID based on the UeManager
+        rrc->m_handoverCancelledTrace(ueManager->GetImsi(),
+                                     rrc->ComponentCarrierToCellId(ueManager->GetComponentCarrierId()),
+                                     rnti,
+                                     cellId);
+    }
+    else
+    {
+        rrc->m_handoverCancelledTrace(std::numeric_limits<uint64_t>::max(),
+                                     rrc->GetFirstCellId().value(),
+                                     rnti,
+                                     cellId);
+    }
+}
+
 void
 E2AP::HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_endpoint, Json& payload)
 {
@@ -327,10 +350,27 @@ E2AP::HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_e
                           m_pendingRequestsPerRnti.emplace ("HO", std::map<uint16_t, Json>{});
                           handoverRequestIt = m_pendingRequestsPerRnti.find ("HO");
                         }
-                      auto UeRntiIt = handoverRequestIt->second.find (controlHeader.contents.format_1.RNTI);
+                      uint16_t rnti = controlHeader.contents.format_1.RNTI;
+                      auto UeRntiIt = handoverRequestIt->second.find (rnti);
                       if (UeRntiIt == handoverRequestIt->second.end ())
                         {
-                          //todo: send control failure: no pending handover
+                          // Received handover control request directly from the RIC
+                          handoverRequestIt->second.emplace(rnti, payload);
+                          uint16_t cellId = payload["MESSAGE"]["Target Primary Cell ID"];
+
+                          // Trace the handover triggering just to compare with the eNB initiated version
+                          Ptr<LteEnbRrc> rrc = GetRrc();
+                          handoverTriggeringTrace(rrc, rnti, cellId);
+
+                          if (cellId != std::numeric_limits<uint16_t>::max())
+                          {
+                              GetRrc()->DoTriggerHandover(controlHeader.contents.format_1.RNTI, cellId);
+                          }
+                          else
+                          {
+                              // Trace the handover cancelling
+                              handoverCancelledTrace(rrc, rnti, cellId);
+                          }
                         }
                       else
                         {
@@ -372,6 +412,65 @@ E2AP::HandleE2SmRcControlRequest (std::string& src_endpoint, std::string& dest_e
     }
 }
 
+void
+E2AP::E2SmRcSendHandoverControlRequest(uint16_t rnti, uint16_t targetCell, std::string src_endpoint)
+{
+    E2SM_RC_RIC_INDICATION_HEADER hdr;
+    hdr.format = ns3::RIC_INDICATION_HEADER_FORMAT_2;
+    hdr.contents.format_2.RNTI = rnti;
+    hdr.contents.format_2.RICInsertStyleType =
+        RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::VALUE;
+    hdr.contents.format_2.InsertIndicationID = RIC_INSERT_SERVICE_STYLES::
+        CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::HANDOVER_CONTROL_REQUEST::VALUE;
+    Json json_hdr;
+    to_json(json_hdr, hdr);
+
+    Json HANDOVER_CONTROL_REQUEST_MSG;
+    HANDOVER_CONTROL_REQUEST_MSG["DEST_ENDPOINT"] = "/E2Node/0";
+    HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["TYPE"] = RIC_INDICATION;
+    HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
+    HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["HEADER"] = json_hdr;
+    HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] =
+        targetCell; // starts counting from 1
+
+    // We can spoof the SRC_ENDPOINT in case this request
+    // is sent by the xApp in the name of an eNB
+    if (src_endpoint.size() > 0)
+    {
+        HANDOVER_CONTROL_REQUEST_MSG["SRC_ENDPOINT"] = src_endpoint;
+    }
+
+    // Send indication with control request
+    SendPayload(HANDOVER_CONTROL_REQUEST_MSG);
+}
+
+void
+E2AP::E2SmRcSendHandoverControl(uint16_t rnti,
+                                uint16_t targetCell,
+                                std::string& destination_endpoint,
+                                double xAppDelayNs)
+{
+    // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
+    E2SM_RC_RIC_CONTROL_HEADER hdr;
+    hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
+    hdr.contents.format_1.RNTI = rnti;
+    hdr.contents.format_1.RICControlStyleType = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE;
+    hdr.contents.format_1.ControlActionID = RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL::VALUE;
+    hdr.contents.format_1.RicDecision = targetCell != std::numeric_limits<uint16_t>::max() ? RC_ACCEPT : RC_REJECT;
+    Json json_hdr;
+    to_json (json_hdr, hdr);
+
+    Json HANDOVER_CONTROL_MSG;
+    HANDOVER_CONTROL_MSG["DEST_ENDPOINT"] = destination_endpoint;
+    HANDOVER_CONTROL_MSG["PAYLOAD"]["TYPE"] = RIC_CONTROL_REQUEST;
+    HANDOVER_CONTROL_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
+    HANDOVER_CONTROL_MSG["PAYLOAD"]["HEADER"] = json_hdr;
+    HANDOVER_CONTROL_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = targetCell;
+
+    // Send indication with control request with delay to account for the xApp processing time
+    Simulator::Schedule(NanoSeconds(xAppDelayNs), &E2AP::SendPayload, this, HANDOVER_CONTROL_MSG);
+}
+
 std::optional<uint16_t>
 E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
 {
@@ -386,45 +485,13 @@ E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
     {
         // In case there is no pending request, we need to send a control indication,
         // then wait for a response
-        E2SM_RC_RIC_INDICATION_HEADER hdr;
-        hdr.format = ns3::RIC_INDICATION_HEADER_FORMAT_2;
-        hdr.contents.format_2.RNTI = rnti;
-        hdr.contents.format_2.RICInsertStyleType = RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::VALUE;
-        hdr.contents.format_2.InsertIndicationID = RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::HANDOVER_CONTROL_REQUEST::VALUE;
-        Json json_hdr;
-        to_json (json_hdr, hdr);
-
-        Json HANDOVER_CONTROL_REQUEST_MSG;
-        HANDOVER_CONTROL_REQUEST_MSG["DEST_ENDPOINT"] = "/E2Node/0";
-        HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["TYPE"] = RIC_INDICATION;
-        HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["SERVICE_MODEL"] = E2SM_RC;
-        HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["HEADER"] = json_hdr;
-        HANDOVER_CONTROL_REQUEST_MSG["PAYLOAD"]["MESSAGE"]["Target Primary Cell ID"] = cellId;//starts counting from 1
+        E2SmRcSendHandoverControlRequest(rnti, cellId);
 
         // Create a pending request entry for the current rnti
         handoverRequestIt->second.emplace (rnti, Json{});
 
-        // Send indication with control request
-        SendPayload(HANDOVER_CONTROL_REQUEST_MSG);
-
         // Record start time for handover control request
-        Ptr<UeManager> ueManager = rrc.GetUeManager(rnti);
-
-        if(rrc.HasUeManager(rnti))
-        {
-            Ptr<UeManager> ueManager = rrc.GetUeManager(rnti);
-            rrc.m_handoverTriggeredTrace(ueManager->GetImsi(),
-                                     rrc.ComponentCarrierToCellId(ueManager->GetComponentCarrierId()),
-                                     rnti,
-                                     cellId);
-        }
-        else
-        {
-            rrc.m_handoverTriggeredTrace(std::numeric_limits<uint64_t>::max(),
-                                     rrc.GetFirstCellId().value(),
-                                     rnti,
-                                     cellId);
-        }
+        handoverTriggeringTrace(&rrc, rnti, cellId);
 
         // Skip the end of this function
         return {};
@@ -451,22 +518,7 @@ E2AP::E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc)
         if (controlHeader.contents.format_1.RicDecision == RC_REJECT)
         {
             NS_LOG_FUNCTION ("RIC Rejected Handover Request from UE " + std::to_string(rnti) + " to Cell " + std::to_string(cellId));
-            if(rrc.HasUeManager(rnti))
-            {
-                Ptr<UeManager> ueManager = rrc.GetUeManager(rnti);
-                // try to find the current cell ID based on the UeManager
-                rrc.m_handoverCancelledTrace(ueManager->GetImsi(),
-                                         rrc.ComponentCarrierToCellId(ueManager->GetComponentCarrierId()),
-                                         rnti,
-                                         cellId);
-            }
-            else
-            {
-                rrc.m_handoverCancelledTrace(std::numeric_limits<uint64_t>::max(),
-                                         rrc.GetFirstCellId().value(),
-                                         rnti,
-                                         cellId);
-            }
+            handoverCancelledTrace(&rrc, rnti, cellId);
             return std::numeric_limits<uint16_t>::max();
         }
         if (controlHeader.contents.format_1.RICControlStyleType != RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE)
