@@ -263,7 +263,6 @@ int main ()
   double distance = 200.0;                                        // m
   double yForUe = 500.0;                                          // m
   double speed = 1;//20;                                              // m/s
-  double simTime = (double) (numberOfEnbs + 1) * distance / speed; // 1500 m / 20 m/s = 75 secs
   double enbTxPowerDbm = 46.0;
 
   // change some default attributes so that they are reasonable for
