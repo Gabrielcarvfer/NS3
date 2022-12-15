@@ -19,6 +19,10 @@ namespace ns3
                               uint16_t cellid,
                               uint16_t rnti,
                               uint16_t targetCellId);
+        void ConnectionEstablished (std::string context,
+                                    uint64_t imsi,
+                                    uint16_t cellid,
+                                    uint16_t rnti);
         void PeriodicClustering ();
       private:
         std::deque<std::tuple<uint16_t, uint16_t, uint16_t>> m_decision_history;

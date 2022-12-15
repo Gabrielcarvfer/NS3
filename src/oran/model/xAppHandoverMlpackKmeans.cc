@@ -28,6 +28,8 @@ xAppHandoverMlpackKmeans::xAppHandoverMlpackKmeans(bool kmeansEmptyPolicy,
                         MakeCallback (&xAppHandoverMlpackKmeans::HandoverStarted, this));
         Config::Connect ("/NodeList/*/DeviceList/*/LteUeRrc/HandoverEndError",
                         MakeCallback (&xAppHandoverMlpackKmeans::HandoverFailed, this));
+        Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
+                        MakeCallback (&xAppHandoverMlpackKmeans::ConnectionEstablished, this));
         Simulator::Schedule (Seconds (m_clusteringPeriodicitySec), &xAppHandoverMlpackKmeans::PeriodicClustering, this);
 };
 
@@ -247,7 +249,6 @@ xAppHandoverMlpackKmeans::HandoverStarted (std::string context,
                        uint16_t rnti,
                        uint16_t targetCellId)
 {
-    std::cout << "dun dun dun" << std::endl;
     m_imsiInHandover.emplace(rnti, imsi);
 }
 
@@ -264,8 +265,8 @@ xAppHandoverMlpackKmeans::HandoverSucceeded (std::string context, uint64_t imsi,
             break;
         }
     }
-    std::cout << "barbada" << std::endl;
 }
+
 void 
 xAppHandoverMlpackKmeans::HandoverFailed (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -279,6 +280,17 @@ xAppHandoverMlpackKmeans::HandoverFailed (std::string context, uint64_t imsi, ui
             break;
         }
     }
-    std::cout << "barbada1" << std::endl;
+}
 
+void
+xAppHandoverMlpackKmeans::ConnectionEstablished (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+{
+    for(auto[key, value]: m_imsiInHandover)
+    {
+        if (value == imsi)
+        {
+            m_imsiInHandover.erase(m_imsiInHandover.find(key));
+            break;
+        }
+    }
 }
