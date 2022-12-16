@@ -193,10 +193,14 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
         // Command handovers
         for (auto[rnti, connectedCell] : m_rntiToCurrentCellId)
         {
-            // Skip rntis that are already in the target cluster cell id
+            // Skip rntis that were not assigned to cluster
             auto rntiToCluster = m_rntiToClusteredCellId.find(rnti);
             if (rntiToCluster == m_rntiToClusteredCellId.end())
-                continue ;
+                continue;
+
+            // Skip rntis that are already in the target cluster cell id
+            if(rntiToCluster->second == connectedCell)
+                continue;
 
             // Skip rntis already in handover
             if(m_imsiInHandover.find(rnti) != m_imsiInHandover.end())
