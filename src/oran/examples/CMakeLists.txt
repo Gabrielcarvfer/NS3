@@ -4,6 +4,7 @@ build_lib_example(
         LIBRARIES_TO_LINK
         ${libcore}
         ${liboran}
+        ${liblte}
 )
 
 build_lib_example(
