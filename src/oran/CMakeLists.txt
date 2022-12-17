@@ -16,6 +16,7 @@ build_lib(
     model/ORAN-message-types.cc
     model/xAppHandover.cc
     model/xAppHandoverMlpackKmeans.cc
+    model/xAppHandoverMaxRsrq.cc
   HEADER_FILES
     model/json.hpp
     model/PubSubInfra.h
@@ -27,6 +28,7 @@ build_lib(
     model/ORAN-message-types.h
     model/xAppHandover.h
     model/xAppHandoverMlpackKmeans.h
+    model/xAppHandoverMaxRsrq.h
   LIBRARIES_TO_LINK
     ${libcore}
     ${libnetwork}

@@ -13,6 +13,8 @@
 #include "ns3/point-to-point-module.h"
 
 #include "ns3/E2AP.h"
+#include "ns3/xAppHandoverMaxRsrq.h"
+
 #include "ns3/xAppHandoverMlpackKmeans.h"
 #include <mlpack/prereqs.hpp>
 #include <mlpack/core.hpp>
@@ -221,9 +223,11 @@ int main (int argc, char** argv)
       ORAN_BYPASS, // RIC just forwards back decision taken by the eNB
       ORAN_RIC_XAPP_KMEANS, // RIC calls the xAPP to decide whether to follow the eNB suggestion or not
       ORAN_RIC_XAPP_KMEANS_INITIATED, // eNB stops triggering handovers and just follows RIC handover commands
+      ORAN_RIC_XAPP_MAXRSRQ, // RIC calls the xAPP to decide whether to follow the eNB suggestion or not
+      ORAN_RIC_XAPP_MAXRSRQ_INITIATED,
   }HandoverScenarios;
 
-  if (scenarioi > HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
+  if (scenarioi > HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
   {
       std::cerr << "Invalid handover scenario id: " << scenarioi << std::endl;
       return -1;
@@ -245,21 +249,24 @@ int main (int argc, char** argv)
   {
       // all _INITIATED scenarios should be addded here
       case HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED:
+      case HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED:
           lteHelper->SetHandoverAlgorithmType(
               "ns3::NoOpHandoverAlgorithm"); // algorithm needs to manually trigger handovers
           break;
       default:
-          lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
-          lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
-          lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+          // Generates too many requests when cancelled by the RIC
+          //lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
+          //lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
+          //lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+
+          // The other alternative
+          lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
+          lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
+                                                    DoubleValue (3.0));
+          lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
+                                                    TimeValue (MilliSeconds (256)));
           break;
   }
-
-  //  lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
-  //  lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
-  //                                            DoubleValue (3.0));
-  //  lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
-  //                                            TimeValue (MilliSeconds (256)));
 
   Ptr<Node> pgw = epcHelper->GetPgwNode ();
   Ptr<Node> sgw = epcHelper->GetSgwNode ();
@@ -519,7 +526,10 @@ int main (int argc, char** argv)
 
   if (scenario == HandoverScenarios::ORAN_BYPASS
       || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS
-      || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
+      || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED
+      || scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ
+      || scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED
+     )
   {
       Ptr<E2AP> e2t = CreateObject<E2AP>();
       sgw->AddApplication(e2t);
@@ -529,6 +539,13 @@ int main (int argc, char** argv)
           || scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
       {
           Ptr<xAppHandoverMlpackKmeans> handoverxapp = CreateObject<xAppHandoverMlpackKmeans>(false, 1, scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED);
+          sgw->AddApplication(handoverxapp);
+      }
+
+      if (scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ
+          || scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
+      {
+          Ptr<xAppHandoverMaxRsrq> handoverxapp = CreateObject<xAppHandoverMaxRsrq>(scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
           sgw->AddApplication(handoverxapp);
       }
 
@@ -552,19 +569,6 @@ int main (int argc, char** argv)
       Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n3);
       Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
   }
-  // Executa um handover do primeiro eNB para o segundo
-  //lteHelper->HandoverRequest (Seconds (4.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (1));
-
-  //K-means clustering will move node to Cell3/enbLteDevs.Get(2) instead of Cell2/enbLteDev.Get(1)
-
-  // Executar handover de volta para primeiro eNB
-  //lteHelper->HandoverRequest (Seconds (5.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
-
-  // Executar handover do primeiro eNB para terceiro
-  //lteHelper->HandoverRequest (Seconds (6.0), ueLteDevs.Get (0), enbLteDevs.Get (0), enbLteDevs.Get (2));
-
-  // Executar handover do terceiro eNB para o primeiro
-  //lteHelper->HandoverRequest (Seconds (7.0), ueLteDevs.Get (0), enbLteDevs.Get (2), enbLteDevs.Get (0));
 
   AnimationInterface anim("anim.xml");
   anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);

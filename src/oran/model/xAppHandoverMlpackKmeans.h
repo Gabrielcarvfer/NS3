@@ -31,7 +31,7 @@ namespace ns3
         bool m_kmeansKeepEmptyPolicy;
         float m_clusteringPeriodicitySec;
         bool m_initiateHandovers;
-        std::map<uint16_t, uint16_t> m_imsiInHandover;
+        std::map<uint16_t, uint64_t> m_imsiInHandover;
 
     };
 }

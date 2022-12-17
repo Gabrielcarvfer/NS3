@@ -80,14 +80,18 @@ output_and_args = {
     "output3GPPHandover.csv": "--scenario=0",
     "outputDistributedHandover.csv": "--scenario=1",
     "outputKMeansHandover.csv": "--scenario=2",
-    "outputKMeansHandoverRicInitiated.csv": "--scenario=3"
-    }
+    "outputKMeansHandoverRicInitiated.csv": "--scenario=3",
+    "outputMaxRsRp.csv": "--scenario=4",
+    "outputMaxRsRpRicInitiated.csv": "--scenario=5"
+}
 
 output_and_type = {
     "output3GPPHandover.csv": "Iniciado por eNB",
     "outputDistributedHandover.csv": "Iniciado por eNB e confirmado por O-RAN",
     "outputKMeansHandover.csv": "Iniciado por eNB e confirmado por O-RAN+xApp K-Means",
     "outputKMeansHandoverRicInitiated.csv": "Iniciado por O-RAN+xApp K-Means",
+    "outputMaxRsRp.csv": "Iniciado por eNB e confirmado por O-RAN+xApp MaxRsrp",
+    "outputMaxRsRpRicInitiated.csv": "Iniciado por O-RAN+xApp MaxRsrp",
 }
 
 resultingCsv = {}
