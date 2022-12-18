@@ -241,7 +241,7 @@ int main (int argc, char** argv)
 
   Ptr<LteHelper> lteHelper = CreateObject<LteHelper> ();
   Ptr<PointToPointEpcHelper> epcHelper = CreateObject<PointToPointEpcHelper> ();
-  epcHelper->SetAttribute ("S1uLinkEnablePcap", BooleanValue (true));
+  epcHelper->SetAttribute ("S1uLinkEnablePcap", BooleanValue (false));
   lteHelper->SetEpcHelper (epcHelper);
   lteHelper->SetSchedulerType ("ns3::RrFfMacScheduler");
 
@@ -569,7 +569,7 @@ int main (int argc, char** argv)
       Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n3);
       Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
   }
-
+  /*
   AnimationInterface anim("anim.xml");
   anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
   anim.EnablePacketMetadata(true);
@@ -605,7 +605,7 @@ int main (int argc, char** argv)
       anim.UpdateNodeColor(nodeId, 0, 255, 0);
       anim.UpdateNodeSize(nodeId, 30, 30);
   }
-
+  */
   //Ptr<FlowMonitor> flowMonitor;
   //FlowMonitorHelper flowHelper;
   //flowMonitor = flowHelper.InstallAll();
