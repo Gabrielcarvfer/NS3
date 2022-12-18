@@ -115,8 +115,8 @@ for outputFile in output_and_args.keys():
             exit(return_code)
         shutil.move(os.path.join(ns3_path, "output.csv"),
                     os.path.join(curr_dir, outputFile))
-        shutil.move(os.path.join(ns3_path, "anim.xml"),
-                    os.path.join(curr_dir, outputFile.replace("output", "anim").replace(".csv", ".xml")) )
+        #shutil.move(os.path.join(ns3_path, "anim.xml"),
+        #            os.path.join(curr_dir, outputFile.replace("output", "anim").replace(".csv", ".xml")) )
 
     with open(os.path.join(curr_dir, outputFile), "r") as f:
         resultingCsv[outputFile] = DictReader(f.readlines())
