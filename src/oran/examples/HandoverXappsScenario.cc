@@ -255,16 +255,16 @@ int main (int argc, char** argv)
           break;
       default:
           // Generates too many requests when cancelled by the RIC
-          //lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
-          //lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
-          //lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
+          lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
+          lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
+          lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
 
           // The other alternative
-          lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
-          lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
-                                                    DoubleValue (3.0));
-          lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
-                                                    TimeValue (MilliSeconds (256)));
+          //lteHelper->SetHandoverAlgorithmType ("ns3::A3RsrpHandoverAlgorithm");
+          //lteHelper->SetHandoverAlgorithmAttribute ("Hysteresis",
+          //                                          DoubleValue (3.0));
+          //lteHelper->SetHandoverAlgorithmAttribute ("TimeToTrigger",
+          //                                          TimeValue (MilliSeconds (256)));
           break;
   }
 
