@@ -129,10 +129,11 @@ xAppHandoverMlpackKmeans::PeriodicClustering ()
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    if(cells.find(cellId + 1) == cells.end())
+                    cellId++;
+                    if(cells.find(cellId) == cells.end())
                         continue;
-                    m_rntiToCurrentCellId[rnti] = cellId + 1;
-                    uint16_t cellid_offset = cells.at (cellId + 1);
+                    m_rntiToCurrentCellId[rnti] = cellId;
+                    uint16_t cellid_offset = cells.at (cellId);
                     dataset.at (cellid_offset, rnti_offset) = measurementDeque.measurements["VALUE"];
                 }
                 else
@@ -241,6 +242,14 @@ xAppHandoverMlpackKmeans::HandoverDecision (Json &payload)
     if (m_rntiToCurrentCellId.find(requestingRnti) == m_rntiToCurrentCellId.end() || decidedTargetCellId == m_rntiToCurrentCellId.at (requestingRnti))
         decidedTargetCellId = std::numeric_limits<uint16_t>::max ();
 
+    // Check if it is already in handover
+    if (m_imsiInHandover.find(requestingRnti) != m_imsiInHandover.end())
+        decidedTargetCellId = std::numeric_limits<uint16_t>::max ();
+
+    // If not in handover, mark it with an empty IMSI field
+    if (decidedTargetCellId != std::numeric_limits<uint16_t>::max())
+        m_imsiInHandover.emplace(requestingRnti, 0);
+
     // Then write the outputs to the json
     payload["Target Primary Cell ID"] = decidedTargetCellId;
     m_decision_history.push_back ({requestingRnti, requestedTargetCellId, decidedTargetCellId});
@@ -253,6 +262,7 @@ xAppHandoverMlpackKmeans::HandoverStarted (std::string context,
                        uint16_t rnti,
                        uint16_t targetCellId)
 {
+    // Fix up imsi field set by HandoverDecision
     m_imsiInHandover.emplace(rnti, imsi);
 }
 
