@@ -192,8 +192,35 @@ NotifyHandoverEndErrorUe (std::string context, uint64_t imsi, uint16_t cellid, u
     simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_ERROR_UE);
 }
 
+unsigned int good_seed()
+{
+    unsigned int random_seed, random_seed_a, random_seed_b;
+    std::ifstream file ("/dev/urandom", std::ios::binary);
+    if (file.is_open())
+    {
+      char * memblock;
+      int size = sizeof(int);
+      memblock = new char [size];
+      file.read (memblock, size);
+      file.close();
+      random_seed_a = *reinterpret_cast<int*>(memblock);
+      delete[] memblock;
+    }// end if
+    else
+    {
+      random_seed_a = 0;
+    }
+    random_seed_b = std::time(0);
+    random_seed = random_seed_a xor random_seed_b;
+    return random_seed;
+} // end good_seed()
+
 int main (int argc, char** argv)
 {
+
+  ns3::RngSeedManager::SetSeed(good_seed());
+  std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
+
   // Testes de conexão de nós
   GlobalValue::Bind ("ChecksumEnabled", BooleanValue (true));
 
@@ -212,10 +239,12 @@ int main (int argc, char** argv)
      << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n";
 
   unsigned scenarioi = 0;
+  std::string output_csv_filename="output.csv";
   CommandLine cmd(__FILE__);
   cmd.AddValue("scenario",
                ss.str(),
                scenarioi);
+  cmd.AddValue("outputFile", "Output csv file name", output_csv_filename);
   cmd.Parse(argc, argv);
 
   typedef enum handoverScenarios{
@@ -614,7 +643,7 @@ int main (int argc, char** argv)
   Simulator::Run ();
 
   //flowMonitor->SerializeToXmlFile("flow.xml", true, false);
-  std::ofstream csvOutput("output.csv");
+  std::ofstream csvOutput(output_csv_filename);
   csvOutput << "Time (ns),IMSI,SrcCellId,RNTI,TrgtCellId,Type," << std::endl;
   for (auto& entry: simulationRegistry)
   {

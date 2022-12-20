@@ -1,3 +1,4 @@
+import itertools
 from csv import DictReader
 import re
 import shutil
@@ -5,6 +6,8 @@ import statistics
 import subprocess
 import sys
 import os
+import numpy as np
+import scipy.stats as st
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 ns3_path = curr_dir
@@ -108,113 +111,164 @@ consolidatedResults = [["", "Handovers", "", "", "", "", "", "", "", "Conexão"]
                         "Conexões estabelecidas",
                         "Conexões Reestabelecidas"]
                        ]
-for outputFile in output_and_args.keys():
+
+def run_simulation(arguments, outputFile):
     if not os.path.exists(os.path.join(curr_dir, outputFile)):
-        return_code, stdout, stderr = run_ns3("run HandoverXappsScenario -- %s" % output_and_args[outputFile])
+        return_code, stdout, stderr = run_ns3(f"run HandoverXappsScenario -- {arguments} --outputFile={outputFile}")
         if return_code != 0:
             exit(return_code)
-        shutil.move(os.path.join(ns3_path, "output.csv"),
+        shutil.move(os.path.join(ns3_path, outputFile),
                     os.path.join(curr_dir, outputFile))
         #shutil.move(os.path.join(ns3_path, "anim.xml"),
         #            os.path.join(curr_dir, outputFile.replace("output", "anim").replace(".csv", ".xml")) )
 
-    with open(os.path.join(curr_dir, outputFile), "r") as f:
-        resultingCsv[outputFile] = DictReader(f.readlines())
+from concurrent.futures import ThreadPoolExecutor
 
-    handoversTriggered = 0
-    handoversInitiated = 0
-    handoversOK = 0
-    handoversError = 0
-    handoversCancelled = 0
+for outputFile in output_and_args.keys():
+    # Run simulations
+    num_runs = 20
+    with ThreadPoolExecutor(max_workers=os.cpu_count()-1) as pool:
+        res = pool.map(run_simulation,
+                       [output_and_args[outputFile]]*num_runs,
+                       [f"{run}_{outputFile}" for run in range(num_runs)]
+                       )
+        for resp in res:
+            pass
+    del pool, res, resp
+
+    # Create containers to collect run results
     handoversLatency = []
     cancelledHandoversLatency = []
-    handoversPerUE = {}
-    handoversTriggeredPerUE = {}
-    connectionEstablished = 0
-    connectionEstablishedPerUE = {}
-    connectionReconfiguration = 0
-    connectionReconfigurationPerUE = {}
+    handoversTriggeredList = []
+    handoversInitiatedList = []
+    handoversOKList = []
+    handoversErrorList = []
+    handoversCancelledList = []
+    connectionEstablishedList = []
+    connectionReconfigurationList = []
+    meanHandoversList = []
 
-    for line in resultingCsv[outputFile]:
-        imsi = line["IMSI"]
-        if imsi not in handoversPerUE:
-            handoversPerUE[imsi] = [[], []]  # start, ok/fail
-            handoversTriggeredPerUE[imsi] = [[], []]  # trigger, cancelled/startenb
-        if imsi not in connectionEstablishedPerUE:
-            connectionEstablishedPerUE[imsi] = []
-        if imsi not in connectionReconfigurationPerUE:
-            connectionReconfigurationPerUE[imsi] = []
-        if line["Type"] == "HANDOVER_TRIGGERED_ENB":
-            handoversTriggered += 1
-            handoversTriggeredPerUE[imsi][0].append(line)
-            continue
-        if line["Type"] == "HANDOVER_CANCELLED_RIC":
-            handoversCancelled += 1
-            handoversTriggeredPerUE[imsi][1].append(line)
-            continue
-        if line["Type"] == "HANDOVER_START_ENB":
-            handoversInitiated += 1
-            handoversPerUE[imsi][0].append(line)
-            handoversTriggeredPerUE[imsi][1].append(line)
-            continue
-        if line["Type"] == "HANDOVER_OK_ENB":
-            continue
-        if line["Type"] == "HANDOVER_START_UE":
-            #handoversInitiated += 1
-            #handoversPerUE[imsi][0].append(line)
-            continue
-        if line["Type"] == "HANDOVER_OK_UE":
-            handoversOK += 1
-            handoversPerUE[imsi][1].append(line)
-            continue
-        if line["Type"] == "HANDOVER_ERROR_UE":
-            handoversError += 1
-            handoversPerUE[imsi][1].append(line)
-            continue
-        if line["Type"] == "CONNECTION_RECONFIGURATION_ENB":
-            connectionReconfiguration += 1
-            connectionReconfigurationPerUE[imsi].append(line)
-            continue
-        if line["Type"] == "CONNECTION_ESTABLISHED_ENB":
-            connectionEstablished += 1
-            connectionEstablishedPerUE[imsi].append(line)
-            continue
-        if line["Type"] == "CONNECTION_ERROR_ENB":
-            continue
-        if line["Type"] == "CONNECTION_START_UE":
-            continue
-        if line["Type"] == "CONNECTION_ESTABLISHED_UE":
-            continue
-        if line["Type"] == "CONNECTION_ERROR_UE":
-            continue
-    def zip_to_nearest(list1, list2):
-        zipped_list = []
-        for list1_item in list1:
-            filtered = list(filter(lambda x: int(x["Time (ns)"])-int(list1_item["Time (ns)"]) >= 0, list2))
-            if filtered:
-                zipped_list.append((list1_item, filtered[0]))
-        return zipped_list
-    for imsi in handoversPerUE:
-        for (handoverStart, handoverEnd) in zip_to_nearest(*handoversPerUE[imsi]):
-            if handoverEnd["Type"] != "HANDOVER_CANCELLED_RIC":
-                handoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
-        for (handoverStart, handoverEnd) in zip_to_nearest(*handoversTriggeredPerUE[imsi]):
-                cancelledHandoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
-    if len(cancelledHandoversLatency) == 0:
-        cancelledHandoversLatency.extend([0, 0])
-    meanHandovers = handoversInitiated / len(handoversPerUE.keys())
+    # Process each run
+    for run in range(num_runs):
+        with open(os.path.join(curr_dir, f"{run}_{outputFile}"), "r") as f:
+            resultingCsv = DictReader(f.readlines())
+        del f
+
+        handoversTriggered = 0
+        handoversInitiated = 0
+        handoversOK = 0
+        handoversError = 0
+        handoversCancelled = 0
+        handoversPerUE = {}
+        handoversTriggeredPerUE = {}
+        connectionEstablished = 0
+        connectionEstablishedPerUE = {}
+        connectionReconfiguration = 0
+        connectionReconfigurationPerUE = {}
+
+        for line in resultingCsv:
+            imsi = line["IMSI"]
+            if imsi not in handoversPerUE:
+                handoversPerUE[imsi] = [[], []]  # start, ok/fail
+                handoversTriggeredPerUE[imsi] = [[], []]  # trigger, cancelled/startenb
+            if imsi not in connectionEstablishedPerUE:
+                connectionEstablishedPerUE[imsi] = []
+            if imsi not in connectionReconfigurationPerUE:
+                connectionReconfigurationPerUE[imsi] = []
+            if line["Type"] == "HANDOVER_TRIGGERED_ENB":
+                handoversTriggered += 1
+                handoversTriggeredPerUE[imsi][0].append(line)
+                continue
+            if line["Type"] == "HANDOVER_CANCELLED_RIC":
+                handoversCancelled += 1
+                handoversTriggeredPerUE[imsi][1].append(line)
+                continue
+            if line["Type"] == "HANDOVER_START_ENB":
+                handoversInitiated += 1
+                handoversPerUE[imsi][0].append(line)
+                handoversTriggeredPerUE[imsi][1].append(line)
+                continue
+            if line["Type"] == "HANDOVER_OK_ENB":
+                continue
+            if line["Type"] == "HANDOVER_START_UE":
+                #handoversInitiated += 1
+                #handoversPerUE[imsi][0].append(line)
+                continue
+            if line["Type"] == "HANDOVER_OK_UE":
+                handoversOK += 1
+                handoversPerUE[imsi][1].append(line)
+                continue
+            if line["Type"] == "HANDOVER_ERROR_UE":
+                handoversError += 1
+                handoversPerUE[imsi][1].append(line)
+                continue
+            if line["Type"] == "CONNECTION_RECONFIGURATION_ENB":
+                connectionReconfiguration += 1
+                connectionReconfigurationPerUE[imsi].append(line)
+                continue
+            if line["Type"] == "CONNECTION_ESTABLISHED_ENB":
+                connectionEstablished += 1
+                connectionEstablishedPerUE[imsi].append(line)
+                continue
+            if line["Type"] == "CONNECTION_ERROR_ENB":
+                continue
+            if line["Type"] == "CONNECTION_START_UE":
+                continue
+            if line["Type"] == "CONNECTION_ESTABLISHED_UE":
+                continue
+            if line["Type"] == "CONNECTION_ERROR_UE":
+                continue
+
+        del line, imsi, resultingCsv
+
+        def zip_to_nearest(list1, list2):
+            zipped_list = []
+            for list1_item in list1:
+                filtered = list(filter(lambda x: int(x["Time (ns)"])-int(list1_item["Time (ns)"]) >= 0, list2))
+                if filtered:
+                    zipped_list.append((list1_item, filtered[0]))
+            return zipped_list
+        for imsi in handoversPerUE:
+            for (handoverStart, handoverEnd) in zip_to_nearest(*handoversPerUE[imsi]):
+                if handoverEnd["Type"] != "HANDOVER_CANCELLED_RIC":
+                    handoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
+            for (handoverStart, handoverEnd) in zip_to_nearest(*handoversTriggeredPerUE[imsi]):
+                    cancelledHandoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
+        del imsi, handoverStart, handoverEnd
+        if len(cancelledHandoversLatency) == 0:
+            cancelledHandoversLatency.extend([0, 0])
+        meanHandovers = handoversInitiated / len(handoversPerUE.keys())
+
+        handoversTriggeredList.append(handoversTriggered)
+        handoversInitiatedList.append(handoversInitiated)
+        handoversOKList.append(handoversOK)
+        handoversErrorList.append(handoversError)
+        handoversCancelledList.append(handoversCancelled)
+        connectionEstablishedList.append(connectionEstablished)
+        connectionReconfigurationList.append(connectionReconfiguration)
+        meanHandoversList.append(meanHandovers)
+        del handoversTriggered, handoversInitiated, handoversOK, handoversError, handoversCancelled, meanHandovers
+        del connectionEstablished, connectionReconfiguration, run
+    def calcMeanPlusMargin(data):
+        lower_bound, upper_bound = st.t.interval(alpha=0.95, df=len(data)-1, loc=np.mean(data), scale=st.sem(data, nan_policy='omit'))
+        mean = np.mean(data)
+        margin = (upper_bound-lower_bound)/2
+        if np.isnan(margin):
+            margin = 0
+        return f"{mean:.0f}+-{margin:.0f}"
+
     consolidatedResults.append([output_and_type[outputFile],
-                                f"{handoversTriggered}",
-                                f"{handoversCancelled}",
-                                f"{statistics.mean(cancelledHandoversLatency)}+-{statistics.stdev(cancelledHandoversLatency)}",
-                                f"{handoversInitiated}",
-                                f"{handoversOK}",
-                                f"{handoversError}",
-                                f"{statistics.mean(handoversLatency)}+-{statistics.stdev(handoversLatency)}",
-                                f"{meanHandovers}",
-                                f"{connectionEstablished}",
-                                f"{connectionReconfiguration}"])
-
+                                calcMeanPlusMargin(handoversTriggeredList),
+                                calcMeanPlusMargin(handoversCancelledList),
+                                calcMeanPlusMargin(cancelledHandoversLatency),
+                                calcMeanPlusMargin(handoversInitiatedList),
+                                calcMeanPlusMargin(handoversOKList),
+                                calcMeanPlusMargin(handoversErrorList),
+                                calcMeanPlusMargin(handoversLatency),
+                                calcMeanPlusMargin(meanHandoversList),
+                                calcMeanPlusMargin(connectionEstablishedList),
+                                calcMeanPlusMargin(connectionReconfigurationList)
+                                ])
     pass
 
 with open(os.path.join(curr_dir, "consolidated.csv"), "w") as f:
