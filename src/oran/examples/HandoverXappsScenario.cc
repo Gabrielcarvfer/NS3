@@ -600,31 +600,31 @@ int main (int argc, char** argv)
   }
   /*
   AnimationInterface anim("anim.xml");
-  anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
-  anim.EnablePacketMetadata(true);
+  //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+  anim.EnablePacketMetadata(false);
 
   anim.UpdateNodeDescription(remoteHost->GetId(), "Remote Internet Host");
   anim.UpdateNodeColor(remoteHost->GetId(), 230, 230, 230);
-  anim.UpdateNodeSize(remoteHost->GetId(), 30, 30);
+  anim.UpdateNodeSize(remoteHost->GetId(), 80, 80);
 
   anim.UpdateNodeDescription(pgw->GetId(), "PGW");
   anim.UpdateNodeColor(pgw->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(pgw->GetId(), 30, 30);
+  anim.UpdateNodeSize(pgw->GetId(), 80, 80);
 
   anim.UpdateNodeDescription(sgw->GetId(), "SGW/RIC");
   anim.UpdateNodeColor(sgw->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(sgw->GetId(), 30, 30);
+  anim.UpdateNodeSize(sgw->GetId(), 80, 80);
 
   anim.UpdateNodeDescription(mme->GetId(), "MME");
   anim.UpdateNodeColor(mme->GetId(), 0, 0, 255);
-  anim.UpdateNodeSize(mme->GetId(), 30, 30);
+  anim.UpdateNodeSize(mme->GetId(), 80, 80);
 
   for (uint32_t i = 0; i < enbNodes.GetN(); i++)
   {
       int nodeId = enbNodes.Get(i)->GetId();
       anim.UpdateNodeDescription(nodeId, "eNB" + std::to_string(i));
       anim.UpdateNodeColor(nodeId, 255, 0, 0);
-      anim.UpdateNodeSize(nodeId, 30, 30);
+      anim.UpdateNodeSize(nodeId, 80, 80);
 
   }
   for (uint32_t i = 0; i < ueNodes.GetN(); i++)
@@ -632,7 +632,7 @@ int main (int argc, char** argv)
       int nodeId = ueNodes.Get(i)->GetId();
       anim.UpdateNodeDescription(nodeId, "UE" + std::to_string(i));
       anim.UpdateNodeColor(nodeId, 0, 255, 0);
-      anim.UpdateNodeSize(nodeId, 30, 30);
+      anim.UpdateNodeSize(nodeId, 80, 80);
   }
   */
   //Ptr<FlowMonitor> flowMonitor;
