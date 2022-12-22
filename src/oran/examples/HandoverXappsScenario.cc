@@ -222,7 +222,7 @@ int main (int argc, char** argv)
   std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
   // Testes de conexão de nós
-  GlobalValue::Bind ("ChecksumEnabled", BooleanValue (true));
+  GlobalValue::Bind ("ChecksumEnabled", BooleanValue (false));
 
   uint16_t numberOfUes = 6;
   uint16_t numberOfEnbs = 3;
