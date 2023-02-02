@@ -1433,22 +1433,22 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
             json["RNTI"] = m_rnti;
             json["CELLID"] = m_sourceCellId; // starts counting from 1
             json["VALUE"] = msg.measResults.measResultPCell.rsrpResult;
-            e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRP", json);
+            e2ap->PublishToEndpointSubscribers("/KPM/HO.SrcCellQual.RSRP", json);
             json["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
-            e2ap->PublishToSubEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
+            e2ap->PublishToEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
             for (auto& cell : msg.measResults.measResultListEutra)
             {
                 if (cell.haveRsrpResult)
                 {
                     json["VALUE"] = cell.rsrpResult;
                     json["TARGET"] = cell.physCellId; // starts counting from 1
-                    e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRP", json);
+                    e2ap->PublishToEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRP", json);
                 }
                 if (cell.haveRsrqResult)
                 {
                     json["VALUE"] = cell.rsrqResult;
                     json["TARGET"] = cell.physCellId; // starts counting from 1
-                    e2ap->PublishToSubEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRQ", json);
+                    e2ap->PublishToEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRQ", json);
                 }
             }
         }
