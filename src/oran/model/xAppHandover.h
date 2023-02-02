@@ -7,6 +7,12 @@
 
 #include "xApp.h"
 
+/**
+ * \file
+ * \ingroup oran
+ * ns3::xAppHandover declaration.
+ */
+
 namespace ns3
 {
 class xAppHandover : public xApp
@@ -14,6 +20,11 @@ class xAppHandover : public xApp
   public:
     xAppHandover();
     ~xAppHandover();
+    /**
+     * \brief Decides whether to reject the requested handover or reform the decision
+     * \param [in, out] json Json payload with the UE to handover (RNTI)
+     *                  and target cell to handover (Target Primary Cell ID).
+     */
     virtual void HandoverDecision(Json& payload);
 };
 } // namespace ns3
