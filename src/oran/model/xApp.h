@@ -7,17 +7,19 @@
 
 #include "PubSubInfra.h"
 
-namespace ns3 {
+namespace ns3
+{
 
 /**
  * Base xApp infrastructure
  */
 class xApp : public PubSubInfra
 {
-public:
-  xApp () : PubSubInfra ("xApp"){};
-  ~xApp (){};
+  public:
+    xApp()
+        : PubSubInfra("xApp"){};
+    ~xApp(){};
 };
 
-}
-#endif //NS3_XAPP_H
+} // namespace ns3
+#endif // NS3_XAPP_H
