@@ -342,20 +342,20 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
             if (payload.contains("COMPONENT_CONFIGURATION_ADDITION_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] =
-                        payload.find("COMPONENT_CONFIGURATION_ADDITION_LIST").value();
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] =
+                    payload.find("COMPONENT_CONFIGURATION_ADDITION_LIST").value();
             }
             if (payload.contains("COMPONENT_CONFIGURATION_UPDATE_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] =
-                        payload.find("COMPONENT_CONFIGURATION_UPDATE_LIST").value();
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] =
+                    payload.find("COMPONENT_CONFIGURATION_UPDATE_LIST").value();
             }
             if (payload.contains("COMPONENT_CONFIGURATION_REMOVAL_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] =
-                        payload.find("COMPONENT_CONFIGURATION_REMOVAL_LIST").value();
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] =
+                    payload.find("COMPONENT_CONFIGURATION_REMOVAL_LIST").value();
             }
             SendPayload(E2_NODE_CONFIGURATION_UPDATE_ACKNOWLEDGE_MESSAGE);
         }
@@ -368,17 +368,17 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
             if (payload.contains("COMPONENT_CONFIGURATION_ADDITION_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = failed_addition_list;
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_ADDITION_LIST"] = failed_addition_list;
             }
             if (payload.contains("COMPONENT_CONFIGURATION_UPDATE_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = failed_update_list;
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_UPDATE_LIST"] = failed_update_list;
             }
             if (payload.contains("COMPONENT_CONFIGURATION_REMOVAL_LIST"))
             {
                 E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE
-                    ["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = failed_removal_list;
+                ["PAYLOAD"]["COMPONENT_CONFIGURATION_REMOVAL_LIST"] = failed_removal_list;
             }
             SendPayload(E2_NODE_CONFIGURATION_UPDATE_FAILURE_MESSAGE);
         }
@@ -553,18 +553,16 @@ E2AP::UnsubscribeToEndpoint(std::string endpoint)
 }
 
 void
-E2AP::PublishToSubEndpointSubscribers(std::string endpoint, Json json)
-{
-    PublishToEndpointSubscribers(m_endpointRoot + endpoint, json);
-}
-
-void
-E2AP::PublishToEndpointSubscribers(std::string complete_endpoint, Json json)
+E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
 {
     // NS_LOG_FUNCTION(this << complete_endpoint << to_string (json));
+    if (endpoint.find(m_endpointRoot) == std::string::npos)
+    {
+        endpoint = buildEndpoint(m_endpointRoot, endpoint);
+    }
 
     // Do not push report if endpoint is not registered
-    auto endpointIt = m_endpointToSubscribers.find(complete_endpoint);
+    auto endpointIt = m_endpointToSubscribers.find(endpoint);
     if (endpointIt == m_endpointToSubscribers.end())
     {
         // NS_LOG_FUNCTION(this << "Endpoint not subscribed:" << complete_endpoint);
@@ -572,14 +570,13 @@ E2AP::PublishToEndpointSubscribers(std::string complete_endpoint, Json json)
     }
 
     // Published content is sent by the periodic reporting in E2Nodes
-    std::string kpm =
-        getSubEndpoint(m_endpointRoot,
-                       complete_endpoint); // Remove endpointRoot from full KPM endpoint
+    std::string kpm = getSubEndpoint(m_endpointRoot,
+                                     endpoint); // Remove endpointRoot from full KPM endpoint
 
-    auto it = m_endpointPeriodicityAndBuffer.find(complete_endpoint);
+    auto it = m_endpointPeriodicityAndBuffer.find(endpoint);
     if (it == m_endpointPeriodicityAndBuffer.end())
     {
-        NS_LOG_FUNCTION(this << "Endpoint " + complete_endpoint + " is not subscribed");
+        NS_LOG_FUNCTION(this << "Endpoint " + endpoint + " is not subscribed");
         return;
     }
     auto periodicMeasurement =
