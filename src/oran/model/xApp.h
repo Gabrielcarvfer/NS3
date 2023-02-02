@@ -7,6 +7,12 @@
 
 #include "PubSubInfra.h"
 
+/**
+ * \file
+ * \ingroup oran
+ * ns3::xApp declaration.
+ */
+
 namespace ns3
 {
 
