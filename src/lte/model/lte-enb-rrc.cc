@@ -25,6 +25,9 @@
 
 #include "lte-enb-rrc.h"
 
+#include <ns3/E2AP.h>
+#include <ns3/E2SM-RC-control-types.h>
+#include <ns3/E2SM-RC-indication-types.h>
 #include <ns3/abort.h>
 #include <ns3/eps-bearer-tag.h>
 #include <ns3/fatal-error.h>
@@ -40,9 +43,6 @@
 #include <ns3/packet.h>
 #include <ns3/pointer.h>
 #include <ns3/simulator.h>
-#include <ns3/E2AP.h>
-#include <ns3/E2SM-RC-control-types.h>
-#include <ns3/E2SM-RC-indication-types.h>
 
 namespace ns3
 {
@@ -2788,19 +2788,23 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
     NS_LOG_LOGIC("Request to send HANDOVER REQUEST");
     NS_ASSERT(m_configured);
 
-  auto node = GetNode();
-  if (node->GetNApplications() > 1)
+    auto node = GetNode();
+    if (node->GetNApplications() > 1)
     {
-      auto app = node->GetApplication(1);
-      Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
-      if (e2ap)
+        auto app = node->GetApplication(1);
+        Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
+        if (e2ap)
         {
             // Control returns empty optional if unanswered, or a response
             std::optional<uint16_t> targetCellId = e2ap->E2SmRcHandoverControl(rnti, cellId, *this);
             if (!targetCellId.has_value())
             {
                 // Reschedule function to wait for the response
-                Simulator::Schedule (MilliSeconds (1), &LteEnbRrc::SendHandoverRequest, this, rnti, cellId);
+                Simulator::Schedule(MilliSeconds(1),
+                                    &LteEnbRrc::SendHandoverRequest,
+                                    this,
+                                    rnti,
+                                    cellId);
                 return;
             }
             else
@@ -3292,11 +3296,16 @@ LteEnbRrc::DoTriggerHandover(uint16_t rnti, uint16_t targetCellId)
             if (e2ap)
             {
                 // Control returns empty optional if unanswered, or a response
-                std::optional<uint16_t> ricTargetCellId = e2ap->E2SmRcHandoverControl(rnti, targetCellId, *this);
+                std::optional<uint16_t> ricTargetCellId =
+                    e2ap->E2SmRcHandoverControl(rnti, targetCellId, *this);
                 if (!ricTargetCellId.has_value())
                 {
                     // Reschedule function to wait for the response
-                    Simulator::Schedule (MilliSeconds (10), &LteEnbRrc::DoTriggerHandover, this, rnti, targetCellId);
+                    Simulator::Schedule(MilliSeconds(10),
+                                        &LteEnbRrc::DoTriggerHandover,
+                                        this,
+                                        rnti,
+                                        targetCellId);
                     return;
                 }
                 else

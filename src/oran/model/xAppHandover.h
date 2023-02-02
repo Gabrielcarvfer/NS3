@@ -9,11 +9,12 @@
 
 namespace ns3
 {
-    class xAppHandover : public xApp {
-     public:
-      xAppHandover ();
-      ~xAppHandover ();
-      virtual void HandoverDecision (Json& payload);
-    };
-}
-#endif //NS3_XAPP_HANDOVER_H
+class xAppHandover : public xApp
+{
+  public:
+    xAppHandover();
+    ~xAppHandover();
+    virtual void HandoverDecision(Json& payload);
+};
+} // namespace ns3
+#endif // NS3_XAPP_HANDOVER_H

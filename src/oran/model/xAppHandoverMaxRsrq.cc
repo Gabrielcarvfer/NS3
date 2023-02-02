@@ -2,6 +2,7 @@
 
 #include "ns3/E2AP.h"
 #include "ns3/core-module.h"
+
 #include <algorithm>
 
 using namespace ns3;
@@ -12,46 +13,45 @@ xAppHandoverMaxRsrq::xAppHandoverMaxRsrq(bool initiateHandovers)
     : xAppHandover(),
       m_initiateHandovers(initiateHandovers)
 {
-    NS_LOG_FUNCTION (this);
-    Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
-                    MakeCallback (&xAppHandoverMaxRsrq::HandoverSucceeded, this));
-    Config::Connect ("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
-                    MakeCallback (&xAppHandoverMaxRsrq::ConnectionEstablished, this));
+    NS_LOG_FUNCTION(this);
+    Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
+                    MakeCallback(&xAppHandoverMaxRsrq::HandoverSucceeded, this));
+    Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
+                    MakeCallback(&xAppHandoverMaxRsrq::ConnectionEstablished, this));
     if (m_initiateHandovers)
     {
-        Simulator::Schedule (Seconds (1), &xAppHandoverMaxRsrq::PeriodicHandoverCheck, this);
+        Simulator::Schedule(Seconds(1), &xAppHandoverMaxRsrq::PeriodicHandoverCheck, this);
     }
 };
 
 uint16_t
-xAppHandoverMaxRsrq::ChooseTargetCellId (uint16_t rnti)
+xAppHandoverMaxRsrq::ChooseTargetCellId(uint16_t rnti)
 {
-    NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION(this);
 
-    E2AP *ric = (E2AP*)static_cast<const E2AP *>(m_endpointRootToInstance.at ("/E2Node/0"));
+    E2AP* ric = (E2AP*)static_cast<const E2AP*>(m_endpointRootToInstance.at("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
     std::array<std::string, 4> kpmMetrics = {//"/KPM/HO.SrcCellQual.RSRP",
                                              "/KPM/HO.SrcCellQual.RSRQ",
                                              //"/KPM/HO.TrgtCellQual.RSRP",
-                                             "/KPM/HO.TrgtCellQual.RSRQ"
-    };
+                                             "/KPM/HO.TrgtCellQual.RSRQ"};
 
     std::map<uint16_t, double> rsrq_measurements;
 
     // Collate data into an armadillo matrix for processing
-    for (auto kpmMetric: kpmMetrics)
+    for (auto kpmMetric : kpmMetrics)
     {
-        auto metricIt = ric->m_kpmToEndpointStorage.find (kpmMetric);
+        auto metricIt = ric->m_kpmToEndpointStorage.find(kpmMetric);
 
-        if (metricIt == ric->m_kpmToEndpointStorage.end ())
+        if (metricIt == ric->m_kpmToEndpointStorage.end())
         {
             continue;
         }
 
-        for (auto &e2nodeMeasurements: metricIt->second)
+        for (auto& e2nodeMeasurements : metricIt->second)
         {
             std::string mostRecentTimestamp("");
-            for (auto &measurementDeque: e2nodeMeasurements.second)
+            for (auto& measurementDeque : e2nodeMeasurements.second)
             {
                 if (mostRecentTimestamp == "")
                 {
@@ -97,15 +97,11 @@ xAppHandoverMaxRsrq::ChooseTargetCellId (uint16_t rnti)
     auto pos_maxrsrp = std::max_element(
         rsrq_measurements.begin(),
         rsrq_measurements.end(),
-        [](const std::pair<uint16_t, double>& p1,
-           const std::pair<uint16_t, double>& p2)
-            {
-                return p1.second < p2.second;
-            }
-        );
+        [](const std::pair<uint16_t, double>& p1, const std::pair<uint16_t, double>& p2) {
+            return p1.second < p2.second;
+        });
 
-    std::cout << "rnti: " << rnti
-              <<", max: " << pos_maxrsrp->second
+    std::cout << "rnti: " << rnti << ", max: " << pos_maxrsrp->second
               << ", cellId: " << pos_maxrsrp->first << std::endl;
     return pos_maxrsrp->first;
 }
@@ -113,12 +109,12 @@ xAppHandoverMaxRsrq::ChooseTargetCellId (uint16_t rnti)
 void
 xAppHandoverMaxRsrq::PeriodicHandoverCheck()
 {
-    NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION(this);
 
-    E2AP *ric = (E2AP*)static_cast<const E2AP *>(m_endpointRootToInstance.at ("/E2Node/0"));
+    E2AP* ric = (E2AP*)static_cast<const E2AP*>(m_endpointRootToInstance.at("/E2Node/0"));
 
     // Command handovers
-    for (auto[rnti, imsiAndConnectedCell] : m_rntiToImsiAndCellid)
+    for (auto [rnti, imsiAndConnectedCell] : m_rntiToImsiAndCellid)
     {
         // Skip UEs in handover
         if (m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
@@ -128,24 +124,26 @@ xAppHandoverMaxRsrq::PeriodicHandoverCheck()
         uint16_t newCellId = ChooseTargetCellId(rnti);
 
         // Skip rntis that are already in the target cell id
-        if(newCellId == imsiAndConnectedCell.second || newCellId == std::numeric_limits<uint16_t>::max())
+        if (newCellId == imsiAndConnectedCell.second ||
+            newCellId == std::numeric_limits<uint16_t>::max())
             continue;
 
         // Spoof RIC CONTROL REQUEST with source eNB endpoint (where the UE is currently connected)
-        std::string spoofed_src_endpoint = "/E2Node/" + std::to_string(imsiAndConnectedCell.second) + "/";
+        std::string spoofed_src_endpoint =
+            "/E2Node/" + std::to_string(imsiAndConnectedCell.second) + "/";
         ric->E2SmRcSendHandoverControlRequest(rnti, newCellId, spoofed_src_endpoint);
     }
-    Simulator::Schedule (Seconds (1), &xAppHandoverMaxRsrq::PeriodicHandoverCheck, this);
+    Simulator::Schedule(Seconds(1), &xAppHandoverMaxRsrq::PeriodicHandoverCheck, this);
 }
 
 void
-xAppHandoverMaxRsrq::HandoverDecision (Json &payload)
+xAppHandoverMaxRsrq::HandoverDecision(Json& payload)
 {
-    NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION(this);
 
     // Check if we are not receiving invalid payloads
-    if (m_endpointRootToInstance.at (m_endpointRoot)->GetNode ()
-        != m_endpointRootToInstance.at ("/E2Node/0")->GetNode ())
+    if (m_endpointRootToInstance.at(m_endpointRoot)->GetNode() !=
+        m_endpointRootToInstance.at("/E2Node/0")->GetNode())
     {
         NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
     }
@@ -160,11 +158,11 @@ xAppHandoverMaxRsrq::HandoverDecision (Json &payload)
     decidedTargetCellId = ChooseTargetCellId(requestingRnti);
 
     // Check if cell is the one already connected
-    for (auto& [rnti, imsiAndCellId]: m_rntiToImsiAndCellid)
+    for (auto& [rnti, imsiAndCellId] : m_rntiToImsiAndCellid)
     {
         if (rnti == requestingRnti)
         {
-            if(imsiAndCellId.second == decidedTargetCellId)
+            if (imsiAndCellId.second == decidedTargetCellId)
             {
                 decidedTargetCellId = std::numeric_limits<uint16_t>::max();
             }
@@ -184,9 +182,8 @@ xAppHandoverMaxRsrq::HandoverDecision (Json &payload)
     payload["Target Primary Cell ID"] = decidedTargetCellId;
 }
 
-
 void
-xAppHandoverMaxRsrq::HandoverStarted (std::string context,
+xAppHandoverMaxRsrq::HandoverStarted(std::string context,
                                      uint64_t imsi,
                                      uint16_t cellid,
                                      uint16_t rnti,
@@ -196,10 +193,13 @@ xAppHandoverMaxRsrq::HandoverStarted (std::string context,
 }
 
 void
-xAppHandoverMaxRsrq::HandoverSucceeded (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+xAppHandoverMaxRsrq::HandoverSucceeded(std::string context,
+                                       uint64_t imsi,
+                                       uint16_t cellid,
+                                       uint16_t rnti)
 {
     m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
-    for(auto[key, value]: m_rntiInHandover)
+    for (auto [key, value] : m_rntiInHandover)
     {
         if (value == imsi)
         {
@@ -209,12 +209,14 @@ xAppHandoverMaxRsrq::HandoverSucceeded (std::string context, uint64_t imsi, uint
     }
 }
 
-
 void
-xAppHandoverMaxRsrq::ConnectionEstablished (std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
+xAppHandoverMaxRsrq::ConnectionEstablished(std::string context,
+                                           uint64_t imsi,
+                                           uint16_t cellid,
+                                           uint16_t rnti)
 {
     m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
-    for(auto[key, value]: m_rntiInHandover)
+    for (auto [key, value] : m_rntiInHandover)
     {
         if (value == imsi)
         {
