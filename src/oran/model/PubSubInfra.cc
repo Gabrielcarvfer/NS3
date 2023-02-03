@@ -207,6 +207,49 @@ PubSubInfra::ReceiveJsonPayload(Json msg)
     }
 }
 
+std::string
+PubSubInfra::GetRootEndpoint() const
+{
+    return m_endpointRoot;
+}
+
+uint64_t
+PubSubInfra::GetInstanceID() const
+{
+    return m_instanceId;
+}
+
+const Ptr<const Socket>
+PubSubInfra::GetInstanceSocket() const
+{
+    return m_socket;
+}
+
+const PubSubInfra*
+PubSubInfra::RetrieveInstanceWithEndpoint(std::string endpoint)
+{
+    auto it = m_endpointRootToInstance.find(endpoint);
+    if (it == m_endpointRootToInstance.end())
+    {
+        return nullptr;
+    }
+    else
+    {
+        return it->second;
+    }
+}
+
+std::optional<std::vector<std::string>>
+PubSubInfra::RetrieveSubscribersOfEndpoint(std::string endpoint)
+{
+    auto it = m_endpointToSubscribers.find(endpoint);
+    if (it != m_endpointToSubscribers.end())
+    {
+        return it->second;
+    }
+    return std::nullopt;
+}
+
 // private methods
 Ipv4Address
 PubSubInfra::getNodeAddress(unsigned device)

@@ -11,6 +11,12 @@
 
 namespace ns3
 {
+/**
+ * \ingroup oran
+ *
+ * \brief An implementation of a Handover xApp using
+ * MlPack's implementation of K-Means clustering
+ */
 class xAppHandoverMlpackKmeans : public xAppHandover
 {
   public:
@@ -25,7 +31,7 @@ class xAppHandoverMlpackKmeans : public xAppHandover
                              bool initiateHandovers = false);
     /**
      * \brief Decides whether to reject the requested handover or reform the decision
-     * \param [in, out] json Json payload with the UE to handover (RNTI)
+     * \param [in, out] payload Json payload with the UE to handover (RNTI)
      *                  and target cell to handover (Target Primary Cell ID).
      */
     void HandoverDecision(Json& payload);
@@ -34,7 +40,7 @@ class xAppHandoverMlpackKmeans : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The new temporary ID from an UE
+     * \param [in] rnti The new temporary ID from the UE
      */
     void HandoverSucceeded(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
     /**
@@ -42,7 +48,7 @@ class xAppHandoverMlpackKmeans : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The temporary ID from an UE that failed to handover
+     * \param [in] rnti The temporary ID from the UE that failed to handover
      */
     void HandoverFailed(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
     /**
@@ -50,7 +56,7 @@ class xAppHandoverMlpackKmeans : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The temporary ID from an UE that failed to handover
+     * \param [in] rnti The temporary ID from the UE that failed to handover
      * \param [in] targetCellId The cell ID of the target cell to hand the UE over
      */
     void HandoverStarted(std::string context,
@@ -63,7 +69,7 @@ class xAppHandoverMlpackKmeans : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The temporary ID from an UE that failed to handover
+     * \param [in] rnti The temporary ID from the UE that failed to handover
      */
     void ConnectionEstablished(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
     /**

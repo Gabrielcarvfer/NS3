@@ -24,11 +24,21 @@ namespace ns3
 {
 
 // O-RAN WG3 E2SM KPM v02.00.03
+/**
+ * \ingroup oran
+ *
+ * \brief Enumeration of event trigger formats
+ */
 enum RIC_EVENT_TRIGGER_FORMATS
 {
     EVENT_TRIGGER_PERIODIC = 1 // Period field is given in milliseconds
 };
 
+/**
+ * \ingroup oran
+ *
+ * \brief Enumeration of E2 Service Models (E2SM)
+ */
 enum E2_SERVICE_MODELS
 {
     E2SM_RC = 1,
@@ -65,18 +75,18 @@ class E2AP : public PubSubInfra
     void HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json payload) override;
     /**
      * \brief Register a service endpoint to the E2AP object.
-     * \param [in] endpoint The service endpoint (e.g. /E2Node/<id>/service).
+     * \param [in] endpoint The service endpoint (e.g. /E2Node/id/service).
      */
     void RegisterEndpoint(std::string endpoint) override;
     /**
      * \brief Update a service endpoint to the E2AP object.
-     * \param [in] old_endpoint The service endpoint (e.g. /E2Node/<id>/old_service_endpoint).
-     * \param [in] new_endpoint The service endpoint (e.g. /E2Node/<id>/new_service_endpoint).
+     * \param [in] old_endpoint The service endpoint (e.g. /E2Node/id/old_service_endpoint).
+     * \param [in] new_endpoint The service endpoint (e.g. /E2Node/id/new_service_endpoint).
      */
     void UpdateEndpoint(std::string old_endpoint, std::string new_endpoint);
     /**
      * \brief Remove a service endpoint of the E2AP object.
-     * \param [in] endpoint The service endpoint (e.g. /E2Node/<id>/service_endpoint_to_remove).
+     * \param [in] endpoint The service endpoint (e.g. /E2Node/id/service_endpoint_to_remove).
      */
     void RemoveEndpoint(std::string endpoint) override;
     /**
@@ -125,12 +135,13 @@ class E2AP : public PubSubInfra
      * \param metric KPM metric to retrieve
      * \return map addressed by E2 Node endpoints with a measurements deque as value
      */
-    const std::map<std::string, std::deque<PeriodicMeasurementStruct>>
-        QueryKpmMetric(std::string metric) const;
+    const std::map<std::string, std::deque<PeriodicMeasurementStruct>> QueryKpmMetric(
+        std::string metric) const;
+
   private:
     /**
      * \brief Send a Json payload.
-     * \param [in] json Json payload with a destination address in DEST_ENDPOINT.
+     * \param [in] payload Json payload with a destination address in DEST_ENDPOINT.
      */
     void SendPayload(Json payload);
     /**
@@ -181,7 +192,7 @@ class E2AP : public PubSubInfra
     void HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
                                         std::string& dest_endpoint,
                                         Json& payload);
-  //temporarily
+    // temporarily
   public:
     /**
      * \brief Send handover order to the target E2Node
@@ -205,6 +216,7 @@ class E2AP : public PubSubInfra
     void E2SmRcSendHandoverControlRequest(uint16_t rnti,
                                           uint16_t targetCell,
                                           std::string src_endpoint = "");
+
   private:
     /**
      * \brief Short-term storage of subscribed messages sent after
@@ -229,13 +241,22 @@ class E2AP : public PubSubInfra
 
   public:
     /**
-     * \brief Creates the E2AP object, which is an specialization of the PubSubInfra object
-     * \param [in] fileName The input file name.
+     * \brief Send a E2SM RC Handover Control order
+     * \param [in] rnti UE to handover.
+     * \param [in] cellId destination cell ID.
+     * \param [in] rrc RRC of the source cell ID.
+     * \return optional return (empty means no response, value indicates the target cell ID decided
+     * by the RIC)
      */
     std::optional<uint16_t> E2SmRcHandoverControl(uint16_t rnti, uint16_t cellId, LteEnbRrc& rrc);
 };
 
 // O-RAN WG3 E2SM RC v01.02 7.3.1
+/**
+ * \ingroup oran
+ *
+ * \brief Enumeration of event trigger definition styles
+ */
 enum RIC_EVENT_TRIGGER_DEFINITION_STYLES
 {
     MESSAGE_EVENT = 1,

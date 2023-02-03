@@ -305,15 +305,14 @@ main()
     */
 
     E2AP e2t;
-    NS_ASSERT(e2t.m_instanceId == 0);
-    NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
+    NS_ASSERT(e2t.GetInstanceID() == 0);
+    NS_ASSERT(e2t.GetRootEndpoint() == "/E2Node/0");
 
     E2AP e2n1;
-    NS_ASSERT(e2n1.m_instanceId == 1);
-    NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
+    NS_ASSERT(e2n1.GetInstanceID() == 1);
+    NS_ASSERT(e2n1.GetRootEndpoint() == "/E2Node/1");
 
-    NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second ==
-              static_cast<PubSubInfra*>(&e2t));
+    NS_ASSERT(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0") == static_cast<PubSubInfra*>(&e2t));
 
     // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
     // estabelecer os sockets TCP

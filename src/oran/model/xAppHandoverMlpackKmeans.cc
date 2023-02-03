@@ -40,7 +40,7 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
 {
     NS_LOG_FUNCTION(this);
 
-    E2AP* ric = (E2AP*)static_cast<const E2AP*>(m_endpointRootToInstance.at("/E2Node/0"));
+    E2AP* ric = (E2AP*)static_cast<const E2AP*>(xApp::RetrieveInstanceWithEndpoint("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
     std::array<std::string, 4> kpmMetrics = {//"/KPM/HO.SrcCellQual.RSRP",
                                              "/KPM/HO.SrcCellQual.RSRQ",
@@ -229,8 +229,8 @@ xAppHandoverMlpackKmeans::HandoverDecision(Json& payload)
     NS_LOG_FUNCTION(this);
 
     // Check if we are not receiving invalid payloads
-    if (m_endpointRootToInstance.at(m_endpointRoot)->GetNode() !=
-        m_endpointRootToInstance.at("/E2Node/0")->GetNode())
+    if (E2AP::RetrieveInstanceWithEndpoint(GetRootEndpoint())->GetNode() !=
+        E2AP::RetrieveInstanceWithEndpoint("/E2Node/0")->GetNode())
     {
         NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
     }

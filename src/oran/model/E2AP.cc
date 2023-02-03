@@ -32,7 +32,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
     ORAN_MESSAGE_TYPES msg_type = payload.find("TYPE").value();
 
     // Check if we are not receiving invalid payloads
-    if (m_endpointRoot == "/E2Node/0")
+    if (GetRootEndpoint() == "/E2Node/0")
     {
         // E2T can't receive messages that should have originated on the RIC (himself)
         if (msg_type < RIC_SUBSCRIPTION_RESPONSE)
@@ -48,7 +48,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
         if (RIC_SUBSCRIPTION_RESPONSE <= msg_type && msg_type <= E2_NODE_CONFIGURATION_UPDATE)
         {
             std::stringstream ss;
-            ss << m_endpointRoot
+            ss << GetRootEndpoint()
                << " received message addressed to himself. Type=" << oran_msg_str[msg_type];
             NS_ASSERT(ss.str().c_str());
         }
@@ -63,7 +63,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
     // O-RAN WG3 E2AP v2.02 8.2.1.2
     // RIC initiated
     case RIC_SUBSCRIPTION_REQUEST: {
-        NS_LOG_FUNCTION(m_endpointRoot + " subscribing " + src_endpoint + " to " +
+        NS_LOG_FUNCTION(GetRootEndpoint() + " subscribing " + src_endpoint + " to " +
                         to_string(payload["RAN Function"]));
 
         if (payload["RIC Subscription Details"]["RIC Event Trigger Format"] !=
@@ -82,7 +82,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
         // Setup event loop
         if (it != m_endpointPeriodicityAndBuffer.end())
         {
-            NS_LOG_FUNCTION(m_endpointRoot + " failed to subscribe " + src_endpoint + " to " +
+            NS_LOG_FUNCTION(GetRootEndpoint() + " failed to subscribe " + src_endpoint + " to " +
                             to_string(payload["RAN Function"]));
             Json RIC_SUBSCRIPTION_FAILURE_MESSAGE;
             RIC_SUBSCRIPTION_FAILURE_MESSAGE["DEST_ENDPOINT"] = src_endpoint;
@@ -110,7 +110,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
         // todo: handle actions
         //  payload["RIC Subscription Details"]["Sequence of Actions"];
 
-        NS_LOG_FUNCTION(m_endpointRoot + " subscribed " + src_endpoint + " to " +
+        NS_LOG_FUNCTION(GetRootEndpoint() + " subscribed " + src_endpoint + " to " +
                         to_string(payload["RAN Function"]));
         Json RIC_SUBSCRIPTION_RESPONSE_MESSAGE;
         RIC_SUBSCRIPTION_RESPONSE_MESSAGE["DEST_ENDPOINT"] = src_endpoint;
@@ -140,13 +140,13 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
     // RIC initiated
     case RIC_SUBSCRIPTION_DELETE_REQUEST: {
         std::string endpointToUnsubscribe = payload["RAN Function"];
-        NS_LOG_FUNCTION(m_endpointRoot + " unsubscribing " + src_endpoint + " from " +
+        NS_LOG_FUNCTION(GetRootEndpoint() + " unsubscribing " + src_endpoint + " from " +
                         endpointToUnsubscribe);
         auto endpointIt = m_endpointPeriodicityAndBuffer.find(endpointToUnsubscribe);
         if (endpointIt == m_endpointPeriodicityAndBuffer.end())
         {
             // Failure, send failure message
-            NS_LOG_FUNCTION(m_endpointRoot + " doesn't have a subscription to " +
+            NS_LOG_FUNCTION(GetRootEndpoint() + " doesn't have a subscription to " +
                             endpointToUnsubscribe);
             Json RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE;
             RIC_SUBSCRIPTION_DELETE_FAILURE_MESSAGE["DEST_ENDPOINT"] = src_endpoint;
@@ -158,7 +158,8 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
         }
         else
         {
-            NS_LOG_FUNCTION(m_endpointRoot + " have the subscription to " + endpointToUnsubscribe);
+            NS_LOG_FUNCTION(GetRootEndpoint() + " have the subscription to " +
+                            endpointToUnsubscribe);
 
             // Cancel periodic event
             Simulator::Cancel(endpointIt->second.eventId);
@@ -166,7 +167,7 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
             // Remove entry
             m_endpointPeriodicityAndBuffer.erase(endpointIt);
 
-            NS_LOG_FUNCTION(m_endpointRoot + " removed the subscription to " +
+            NS_LOG_FUNCTION(GetRootEndpoint() + " removed the subscription to " +
                             endpointToUnsubscribe);
 
             // Successful, send response message
@@ -205,7 +206,8 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
     // O-RAN WG3 E2AP v2.02 8.2.3.2
     // E2 initiated
     case RIC_INDICATION: {
-        NS_LOG_FUNCTION(m_endpointRoot + " parsing RIC INDICATION message: " + to_string(payload));
+        NS_LOG_FUNCTION(GetRootEndpoint() +
+                        " parsing RIC INDICATION message: " + to_string(payload));
         // Indications are complicated, handle them in a dedicated function
         HandleIndicationPayload(src_endpoint, dest_endpoint, payload);
     }
@@ -431,8 +433,8 @@ E2AP::HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json pa
     }
     break;
     default:
-        std::cout << this->m_endpointRoot << " failed to handle payload with RPC=" << payload["RPC"]
-                  << std::endl;
+        std::cout << this->GetRootEndpoint()
+                  << " failed to handle payload with RPC=" << payload["RPC"] << std::endl;
     }
 }
 
@@ -442,7 +444,7 @@ E2AP::SendPayload(Json payload)
     // Add source endpoint
     if (!payload.contains("SRC_ENDPOINT"))
     {
-        payload["SRC_ENDPOINT"] = m_endpointRoot;
+        payload["SRC_ENDPOINT"] = GetRootEndpoint();
     }
 
     // Replace destination endpoint with the corresponding root endpoint
@@ -451,7 +453,7 @@ E2AP::SendPayload(Json payload)
         payload["DEST_ENDPOINT"] = getEndpointRoot(payload["DEST_ENDPOINT"]);
     }
 
-    if (m_endpointRoot != "/E2Node/0")
+    if (GetRootEndpoint() != "/E2Node/0")
     {
         NS_LOG_FUNCTION("Sending the payload of type " +
                         oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) +
@@ -466,7 +468,7 @@ E2AP::SendPayload(Json payload)
             NS_LOG_FUNCTION("RIC handling the payload of type " +
                             oran_msg_str.at(payload.at("PAYLOAD").at("TYPE")) +
                             " locally: " + to_string(payload));
-            HandlePayload(payload["SRC_ENDPOINT"], m_endpointRoot, payload.at("PAYLOAD"));
+            HandlePayload(payload["SRC_ENDPOINT"], GetRootEndpoint(), payload.at("PAYLOAD"));
         }
         // Or we need to forward to the correct node
         else
@@ -526,7 +528,7 @@ E2AP::SubscribeToEndpoint(std::string endpoint)
 void
 E2AP::SubscribeToEndpointPeriodic(std::string endpoint, uint32_t periodicity_ms)
 {
-    NS_LOG_FUNCTION(m_endpointRoot + " subscribing to endpoint " + endpoint);
+    NS_LOG_FUNCTION(GetRootEndpoint() + " subscribing to endpoint " + endpoint);
     Json RIC_SUBSCRIPTION_REQUEST_MESSAGE;
     RIC_SUBSCRIPTION_REQUEST_MESSAGE["DEST_ENDPOINT"] = endpoint;
     RIC_SUBSCRIPTION_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_REQUEST;
@@ -544,7 +546,7 @@ E2AP::SubscribeToEndpointPeriodic(std::string endpoint, uint32_t periodicity_ms)
 void
 E2AP::UnsubscribeToEndpoint(std::string endpoint)
 {
-    NS_LOG_FUNCTION(m_endpointRoot + " unsubscribing to endpoint " + endpoint);
+    NS_LOG_FUNCTION(GetRootEndpoint() + " unsubscribing to endpoint " + endpoint);
     Json RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE;
     RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["DEST_ENDPOINT"] = endpoint;
     RIC_SUBSCRIPTION_DELETE_REQUEST_MESSAGE["PAYLOAD"]["TYPE"] = RIC_SUBSCRIPTION_DELETE_REQUEST;
@@ -556,21 +558,21 @@ void
 E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
 {
     // NS_LOG_FUNCTION(this << complete_endpoint << to_string (json));
-    if (endpoint.find(m_endpointRoot) == std::string::npos)
+    if (endpoint.find(GetRootEndpoint()) == std::string::npos)
     {
-        endpoint = buildEndpoint(m_endpointRoot, endpoint);
+        endpoint = buildEndpoint(GetRootEndpoint(), endpoint);
     }
 
     // Do not push report if endpoint is not registered
-    auto endpointIt = m_endpointToSubscribers.find(endpoint);
-    if (endpointIt == m_endpointToSubscribers.end())
+    auto endpointIt = RetrieveSubscribersOfEndpoint(endpoint);
+    if (!endpointIt.has_value())
     {
         // NS_LOG_FUNCTION(this << "Endpoint not subscribed:" << complete_endpoint);
         return;
     }
 
     // Published content is sent by the periodic reporting in E2Nodes
-    std::string kpm = getSubEndpoint(m_endpointRoot,
+    std::string kpm = getSubEndpoint(GetRootEndpoint(),
                                      endpoint); // Remove endpointRoot from full KPM endpoint
 
     auto it = m_endpointPeriodicityAndBuffer.find(endpoint);
@@ -638,7 +640,8 @@ E2AP::SubscribeToDefaultEndpoints(const E2AP& e2NodeToSubscribeTo)
     {
         if (std::get<2>(kpmEndpoints.second) == IMPLEMENTED)
         {
-            SubscribeToEndpoint(e2NodeToSubscribeTo.m_endpointRoot + "/KPM/" + kpmEndpoints.first);
+            SubscribeToEndpoint(e2NodeToSubscribeTo.GetRootEndpoint() + "/KPM/" +
+                                kpmEndpoints.first);
         }
     }
 }

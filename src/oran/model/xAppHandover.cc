@@ -27,8 +27,8 @@ xAppHandover::HandoverDecision(Json& payload)
     NS_LOG_FUNCTION(this);
 
     // Check if we are not receiving invalid payloads
-    if (m_endpointRootToInstance.at(m_endpointRoot)->GetNode() !=
-        m_endpointRootToInstance.at("/E2Node/0")->GetNode())
+    if (xApp::RetrieveInstanceWithEndpoint(GetRootEndpoint())->GetNode() !=
+        xApp::RetrieveInstanceWithEndpoint("/E2Node/0")->GetNode())
     {
         NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
     }

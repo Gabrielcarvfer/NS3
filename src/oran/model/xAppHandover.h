@@ -15,6 +15,11 @@
 
 namespace ns3
 {
+/**
+ * \ingroup oran
+ *
+ * \brief The base class of a Handover xApp
+ */
 class xAppHandover : public xApp
 {
   public:
@@ -22,7 +27,7 @@ class xAppHandover : public xApp
     ~xAppHandover();
     /**
      * \brief Decides whether to reject the requested handover or reform the decision
-     * \param [in, out] json Json payload with the UE to handover (RNTI)
+     * \param [in, out] payload Json payload with the UE to handover (RNTI)
      *                  and target cell to handover (Target Primary Cell ID).
      */
     virtual void HandoverDecision(Json& payload);

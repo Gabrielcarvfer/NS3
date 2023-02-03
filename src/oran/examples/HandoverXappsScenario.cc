@@ -22,9 +22,17 @@ NS_LOG_COMPONENT_DEFINE("HandoverXappsScenario");
 
 using namespace ns3;
 
+/**
+ * \ingroup oran
+ *
+ * \brief A registry entry to evaluate the performance of different handover algorithms
+ */
 class Registry
 {
   public:
+    /**
+     *  \brief Type of registry entry
+     */
     enum registerType
     {
         HANDOVER_CANCELLED_RIC = 0,
@@ -42,6 +50,9 @@ class Registry
         CONNECTION_ERROR_UE,
     };
 
+    /**
+     *  \brief Map between registry type to string
+     */
     static inline std::map<enum registerType, std::string> registerTypeStr = {
         {HANDOVER_CANCELLED_RIC, "HANDOVER_CANCELLED_RIC"},
         {HANDOVER_TRIGGERED_ENB, "HANDOVER_TRIGGERED_ENB"},
@@ -58,6 +69,14 @@ class Registry
         {CONNECTION_ERROR_UE, "CONNECTION_ERROR_UE"},
     };
 
+    /**
+     *  \brief Type of registry entry
+     *  \param [in] imsi Network subscriber identifier
+     *  \param [in] cellId Cell ID of E2Node/eNB
+     *  \param [in] rnti UE temporary identifier
+     *  \param [in] trgtCellId Target cell ID
+     *  \param [in] type Register type
+     */
     Registry(uint64_t imsi,
              uint16_t cellId,
              uint16_t rnti,
@@ -72,17 +91,23 @@ class Registry
     {
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Registry& dt);
+    friend std::ostream& operator<<(std::ostream& os, const Registry& registry);
 
   private:
-    Time m_timestamp;
-    uint64_t m_imsi;
-    uint16_t m_srcCellId;
-    uint16_t m_rnti;
-    uint16_t m_trgtCellId;
-    enum registerType m_type;
+    Time m_timestamp;         ///< Time of event
+    uint64_t m_imsi;          ///< Unique identifier of subscriber
+    uint16_t m_srcCellId;     ///< Source cell ID
+    uint16_t m_rnti;          ///< UE temporary identifier
+    uint16_t m_trgtCellId;    ///< Target cell ID
+    enum registerType m_type; ///< Type of register
 };
 
+/**
+ *  \brief Type of registry entry
+ *  \param [in, out] os Output stream
+ *  \param [in] registry Registry to serialize
+ *  \return output stream
+ */
 std::ostream&
 operator<<(std::ostream& os, const Registry& registry)
 {
@@ -92,8 +117,16 @@ operator<<(std::ostream& os, const Registry& registry)
     return os;
 }
 
-std::vector<Registry> simulationRegistry;
+std::vector<Registry>
+    simulationRegistry; ///< Vector containing registries collected through the simulation
 
+/**
+ * \brief Callback function when a connection is established in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -106,6 +139,14 @@ NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t celli
                                     Registry::CONNECTION_ESTABLISHED_UE);
 }
 
+/**
+ * \brief Callback function when a handover is started in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverStartUe(std::string context,
                       uint64_t imsi,
@@ -119,6 +160,13 @@ NotifyHandoverStartUe(std::string context,
     simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_START_UE);
 }
 
+/**
+ * \brief Callback function when a handover is successful in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -127,6 +175,13 @@ NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint1
     simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_OK_UE);
 }
 
+/**
+ * \brief Callback function when a connection is established in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -139,6 +194,13 @@ NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cell
                                     Registry::CONNECTION_ESTABLISHED_ENB);
 }
 
+/**
+ * \brief Callback function when a connectionis reconfigured in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionReconfigurationEnb(std::string context,
                                    uint64_t imsi,
@@ -154,6 +216,14 @@ NotifyConnectionReconfigurationEnb(std::string context,
                                     Registry::CONNECTION_RECONFIGURATION_ENB);
 }
 
+/**
+ * \brief Callback function when a handover is started in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverStartEnb(std::string context,
                        uint64_t imsi,
@@ -166,6 +236,14 @@ NotifyHandoverStartEnb(std::string context,
     simulationRegistry.emplace_back(imsi, cellid, rnti, targetCellId, Registry::HANDOVER_START_ENB);
 }
 
+/**
+ * \brief Callback function when a handover is cancelled in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverCancelledEnb(std::string context,
                            uint64_t imsi,
@@ -182,6 +260,14 @@ NotifyHandoverCancelledEnb(std::string context,
                                     Registry::HANDOVER_CANCELLED_RIC);
 }
 
+/**
+ * \brief Callback function when a handover is triggered in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverTriggeredEnb(std::string context,
                            uint64_t imsi,
@@ -199,6 +285,13 @@ NotifyHandoverTriggeredEnb(std::string context,
                                     Registry::HANDOVER_TRIGGERED_ENB);
 }
 
+/**
+ * \brief Callback function when a handover is finalized in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -207,6 +300,13 @@ NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint
     simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_OK_ENB);
 }
 
+/**
+ * \brief Callback function when a handover fails in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyHandoverEndErrorUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -215,6 +315,10 @@ NotifyHandoverEndErrorUe(std::string context, uint64_t imsi, uint16_t cellid, ui
     simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_ERROR_UE);
 }
 
+/**
+ * \brief Generate a reasonably good seed
+ * \return a good seed
+ */
 unsigned int
 good_seed()
 {

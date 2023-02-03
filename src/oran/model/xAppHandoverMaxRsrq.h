@@ -11,14 +11,29 @@
 
 namespace ns3
 {
+/**
+ * \ingroup oran
+ *
+ * \brief An implementation of a Handover xApp using
+ * the MaxRsrq strategy
+ */
 class xAppHandoverMaxRsrq : public xAppHandover
 {
   public:
+    /**
+     * \brief Constructor of xAppHandoverMaxRsrq.
+     * \param [in] initiateHandovers Set flag to make the xApp initiate the handovers of E2 Nodes.
+     */
     xAppHandoverMaxRsrq(bool initiateHandovers = false);
+    /**
+     * \brief Constructor of xAppHandoverMaxRsrq.
+     * \param [in] rnti RNTI of the UE to handover.
+     * \return cellId of the E2 Node to hand the RNTI over.
+     */
     uint16_t ChooseTargetCellId(uint16_t rnti);
     /**
-     * \brief Decides whether to reject the requested handover or reform the decision
-     * \param [in, out] json Json payload with the UE to handover (RNTI)
+     * \brief Decides whether to reject the requested handover or reform the decision.
+     * \param [in, out] payload Json payload with the UE to handover (RNTI)
      *                  and target cell to handover (Target Primary Cell ID).
      */
     void HandoverDecision(Json& payload);
@@ -32,7 +47,7 @@ class xAppHandoverMaxRsrq : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The temporary ID from an UE that failed to handover
+     * \param [in] rnti The temporary ID from the UE that failed to handover
      * \param [in] targetCellId The cell ID of the target cell to hand the UE over
      */
     void HandoverStarted(std::string context,
@@ -45,7 +60,7 @@ class xAppHandoverMaxRsrq : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The new temporary ID from an UE
+     * \param [in] rnti The new temporary ID from the UE
      */
     void HandoverSucceeded(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
     /**
@@ -53,7 +68,7 @@ class xAppHandoverMaxRsrq : public xAppHandover
      * \param [in] context The context from the call
      * \param [in] imsi The subscriber permanent ID associated to the UE
      * \param [in] cellid The cell ID
-     * \param [in] rnti The temporary ID from an UE that failed to handover
+     * \param [in] rnti The temporary ID from the UE that failed to handover
      */
     void ConnectionEstablished(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti);
 

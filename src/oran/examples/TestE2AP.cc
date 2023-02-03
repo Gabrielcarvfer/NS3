@@ -21,42 +21,42 @@ using namespace ns3;
 void
 CheckConnected(E2AP* node)
 {
-    NS_ASSERT_MSG(node->m_socket, node->m_endpointRoot + " could not connect to E2T");
+    NS_ASSERT_MSG(node->GetInstanceSocket(), node->GetRootEndpoint() + " could not connect to E2T");
 }
 
 void
 CheckEndpointRegistered(std::string endpoint)
 {
-    NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) != E2AP::m_endpointToSubscribers.end());
+    NS_ASSERT(E2AP::RetrieveSubscribersOfEndpoint(endpoint).has_value());
 }
 
 void
 CheckEndpointNotRegistered(std::string endpoint)
 {
-    NS_ASSERT(E2AP::m_endpointToSubscribers.find(endpoint) == E2AP::m_endpointToSubscribers.end());
+    NS_ASSERT(!E2AP::RetrieveSubscribersOfEndpoint(endpoint).has_value());
 }
 
 void
 CheckEndpointSubscribed(std::string nodeRootEndpoint, std::string endpoint)
 {
-    auto subscribers = E2AP::m_endpointToSubscribers.find(endpoint)->second;
-    NS_ASSERT(std::find(subscribers.begin(), subscribers.end(), nodeRootEndpoint) !=
-              subscribers.end());
+    auto subscribers = E2AP::RetrieveSubscribersOfEndpoint(endpoint);
+    NS_ASSERT(std::find(subscribers->begin(), subscribers->end(), nodeRootEndpoint) !=
+              subscribers->end());
 }
 
 void
 CheckEndpointUnsubscribed(std::string nodeRootEndpoint, std::string endpoint)
 {
-    auto subscribers = E2AP::m_endpointToSubscribers.find(endpoint)->second;
-    NS_ASSERT(std::find(subscribers.begin(), subscribers.end(), nodeRootEndpoint) ==
-              subscribers.end());
+    auto subscribers = E2AP::RetrieveSubscribersOfEndpoint(endpoint);
+    NS_ASSERT(std::find(subscribers->begin(), subscribers->end(), nodeRootEndpoint) ==
+              subscribers->end());
 }
 
 void
 CheckEndpointUnsubscribedRetainsData(E2AP* node, std::string endpoint)
 {
-    auto kpmMap = node->QueryKpmMetric(
-        E2AP::getSubEndpoint(E2AP::getEndpointRoot(endpoint), endpoint));
+    auto kpmMap =
+        node->QueryKpmMetric(E2AP::getSubEndpoint(E2AP::getEndpointRoot(endpoint), endpoint));
     NS_ASSERT(!kpmMap.empty());
 
     auto subscriberIt = kpmMap.find(E2AP::getEndpointRoot(endpoint));
@@ -67,8 +67,7 @@ void
 CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpointRoot)
 {
     auto kpmMap = node->QueryKpmMetric(kpm);
-    NS_ASSERT_MSG(!kpmMap.empty(),
-                  "KPM periodic report was not received: " + kpm);
+    NS_ASSERT_MSG(!kpmMap.empty(), "KPM periodic report was not received: " + kpm);
     auto reportingE2NodeIt = kpmMap.find(endpointRoot);
     NS_ASSERT_MSG(reportingE2NodeIt != kpmMap.end(),
                   endpointRoot + " periodic report for KPM " + kpm + " was not received");
@@ -273,15 +272,14 @@ main()
     }
 
     E2AP e2t;
-    NS_ASSERT(e2t.m_instanceId == 0);
-    NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
+    NS_ASSERT(e2t.GetInstanceID() == 0);
+    NS_ASSERT(e2t.GetRootEndpoint() == "/E2Node/0");
 
     E2AP e2n1;
-    NS_ASSERT(e2n1.m_instanceId == 1);
-    NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
+    NS_ASSERT(e2n1.GetInstanceID() == 1);
+    NS_ASSERT(e2n1.GetRootEndpoint() == "/E2Node/1");
 
-    NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second ==
-              static_cast<PubSubInfra*>(&e2t));
+    NS_ASSERT(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0") == static_cast<PubSubInfra*>(&e2t));
 
     // Depois de instalar aplicações, conseguiremos obter seus endereços de IP para
     // estabelecer os sockets TCP
@@ -335,14 +333,20 @@ main()
     // Teste de subscrição em endpoints
     Simulator::Schedule(Seconds(5.5), &E2AP::RegisterEndpoint, &e2n1, "/");
     Simulator::Schedule(Seconds(6.0), &E2AP::SubscribeToEndpoint, &e2t, "/E2Node/1/");
-    Simulator::Schedule(Seconds(6.5), &CheckEndpointSubscribed, e2t.m_endpointRoot, "/E2Node/1/");
+    Simulator::Schedule(Seconds(6.5),
+                        &CheckEndpointSubscribed,
+                        e2t.GetRootEndpoint(),
+                        "/E2Node/1/");
 
     // Teste de recebimento de medições periódicas
     Simulator::Schedule(Seconds(7.6), &CheckEndpointPeriodicReport, &e2t, "/", "/E2Node/1");
 
     // Teste de cancelamento de subscrição em endpoints vindo do RIC
     Simulator::Schedule(Seconds(8.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
-    Simulator::Schedule(Seconds(8.5), &CheckEndpointUnsubscribed, e2t.m_endpointRoot, "/E2Node/1/");
+    Simulator::Schedule(Seconds(8.5),
+                        &CheckEndpointUnsubscribed,
+                        e2t.GetRootEndpoint(),
+                        "/E2Node/1/");
 
     // Tentar cancelar subscrição já cancelada (cheque nos logs por SUBSCRIPTION_DELETE_FAILURE)
     Simulator::Schedule(Seconds(9.0), &E2AP::UnsubscribeToEndpoint, &e2t, "/E2Node/1/");
@@ -360,7 +364,7 @@ main()
                         "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
     Simulator::Schedule(Seconds(14.5),
                         &CheckEndpointUnsubscribed,
-                        e2t.m_endpointRoot,
+                        e2t.GetRootEndpoint(),
                         "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
     Simulator::Schedule(Seconds(14.5),
                         &CheckEndpointUnsubscribedRetainsData,
@@ -374,7 +378,7 @@ main()
                         "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
     Simulator::Schedule(Seconds(16.0),
                         &CheckEndpointSubscribed,
-                        e2t.m_endpointRoot,
+                        e2t.GetRootEndpoint(),
                         "/E2Node/1/KPM/HO.SrcCellQual.RSRQ");
     Simulator::Schedule(Seconds(16.0),
                         &CheckEndpointUnsubscribedRetainsData,
