@@ -55,22 +55,22 @@ CheckEndpointUnsubscribed(std::string nodeRootEndpoint, std::string endpoint)
 void
 CheckEndpointUnsubscribedRetainsData(E2AP* node, std::string endpoint)
 {
-    auto kpmIt = node->m_kpmToEndpointStorage.find(
+    auto kpmMap = node->QueryKpmMetric(
         E2AP::getSubEndpoint(E2AP::getEndpointRoot(endpoint), endpoint));
-    NS_ASSERT(kpmIt != node->m_kpmToEndpointStorage.end());
+    NS_ASSERT(!kpmMap.empty());
 
-    auto subscriberIt = kpmIt->second.find(E2AP::getEndpointRoot(endpoint));
-    NS_ASSERT(subscriberIt != kpmIt->second.end());
+    auto subscriberIt = kpmMap.find(E2AP::getEndpointRoot(endpoint));
+    NS_ASSERT(subscriberIt != kpmMap.end());
 }
 
 void
 CheckEndpointPeriodicReport(E2AP* node, std::string kpm, std::string endpointRoot)
 {
-    auto kpmIt = node->m_kpmToEndpointStorage.find(kpm);
-    NS_ASSERT_MSG(kpmIt != node->m_kpmToEndpointStorage.end(),
+    auto kpmMap = node->QueryKpmMetric(kpm);
+    NS_ASSERT_MSG(!kpmMap.empty(),
                   "KPM periodic report was not received: " + kpm);
-    auto reportingE2NodeIt = kpmIt->second.find(endpointRoot);
-    NS_ASSERT_MSG(reportingE2NodeIt != kpmIt->second.end(),
+    auto reportingE2NodeIt = kpmMap.find(endpointRoot);
+    NS_ASSERT_MSG(reportingE2NodeIt != kpmMap.end(),
                   endpointRoot + " periodic report for KPM " + kpm + " was not received");
 }
 

@@ -120,6 +120,13 @@ class E2AP : public PubSubInfra
      */
     Ptr<LteEnbRrc> GetRrc();
 
+    /**
+     * \brief Query KPM storage for metric
+     * \param metric KPM metric to retrieve
+     * \return map addressed by E2 Node endpoints with a measurements deque as value
+     */
+    const std::map<std::string, std::deque<PeriodicMeasurementStruct>>
+        QueryKpmMetric(std::string metric) const;
   private:
     /**
      * \brief Send a Json payload.
@@ -174,6 +181,8 @@ class E2AP : public PubSubInfra
     void HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
                                         std::string& dest_endpoint,
                                         Json& payload);
+  //temporarily
+  public:
     /**
      * \brief Send handover order to the target E2Node
      * \param [in] rnti The UE identifier.
@@ -196,6 +205,7 @@ class E2AP : public PubSubInfra
     void E2SmRcSendHandoverControlRequest(uint16_t rnti,
                                           uint16_t targetCell,
                                           std::string src_endpoint = "");
+  private:
     /**
      * \brief Short-term storage of subscribed messages sent after
      * their specified periodicity has passed
