@@ -65,6 +65,7 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liblte}
             ${liboran}
             ${libapplications}
+            IGNORE_PCH TRUE
     )
     build_lib_example(
             NAME TestHandoverXappMLPACKReinforcedLearning
@@ -76,6 +77,7 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liblte}
             ${liboran}
             ${libapplications}
+            IGNORE_PCH TRUE
     )
     build_lib_example(
             NAME HandoverXappsScenario
@@ -88,7 +90,15 @@ if(NOT(${ARMADILLO} STREQUAL ARMADILLO-NOTFOUND) AND NOT(${MLPACK} STREQUAL MLPA
             ${liboran}
             ${libapplications}
             ${libnetanim}
+            IGNORE_PCH TRUE
     )
+    target_compile_options(TestHandoverXappMLPACK PUBLIC -fopenmp)
+    target_compile_options(TestHandoverXappMLPACKReinforcedLearning PUBLIC -fopenmp)
+    target_compile_options(HandoverXappsScenario PUBLIC -fopenmp)
+    target_link_options(TestHandoverXappMLPACK PUBLIC -fopenmp)
+    target_link_options(TestHandoverXappMLPACKReinforcedLearning PUBLIC -fopenmp)
+    target_link_options(HandoverXappsScenario PUBLIC -fopenmp)
+
 endif()
 
 #find_package(Torch)
