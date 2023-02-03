@@ -19,14 +19,24 @@ NS_LOG_COMPONENT_DEFINE("TestPubSubInfra");
 
 namespace ns3
 {
-// Local definition of E2AP just for PubSub testing
+/**
+ * \ingroup oran
+ *
+ * \brief Local definition of E2AP just for PubSub testing
+ */
 class E2AP : public PubSubInfra
 {
   public:
     E2AP()
         : PubSubInfra("E2Node"){};
     ~E2AP(){};
-    void HandlePayload(std::string endpoint, Json payload);
+    /**
+     * \brief Handle an incoming json payload sent from src_endpoint to dest_endpoint.
+     * \param [in] src_endpoint The source endpoint.
+     * \param [in] dest_endpoint The destination endpoint.
+     * \param [in] payload Json object with the payload to be handled.
+     */
+    void HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json payload);
 };
 } // namespace ns3
 
@@ -37,46 +47,42 @@ main()
 {
     // Testes básicos
     xApp xapp0;
-    NS_ASSERT(xapp0.m_instanceId == 0);
-    NS_ASSERT(xapp0.m_endpointRoot == "/xApp/0");
+    NS_ASSERT(xapp0.GetInstanceID() == 0);
+    NS_ASSERT(xapp0.GetRootEndpoint() == "/xApp/0");
 
     xApp xapp1;
-    NS_ASSERT(xapp1.m_instanceId == 1);
-    NS_ASSERT(xapp1.m_endpointRoot == "/xApp/1");
+    NS_ASSERT(xapp1.GetInstanceID() == 1);
+    NS_ASSERT(xapp1.GetRootEndpoint() == "/xApp/1");
 
-    NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second ==
-              static_cast<PubSubInfra*>(&xapp0));
+    NS_ASSERT(xApp::RetrieveInstanceWithEndpoint("/xApp/0") == static_cast<PubSubInfra*>(&xapp0));
 
     // todo: Testando operator==
-    //  NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == xapp0);
-    //  NS_ASSERT(xApp::m_endpointRootToInstance.find("/xApp/0")->second == &xapp0);
+    //  NS_ASSERT(xApp::RetrieveInstanceWithEndpoint("/xApp/0") == xapp0);
+    //  NS_ASSERT(xApp::RetrieveInstanceWithEndpoint("/xApp/0") == &xapp0);
 
     E2AP e2t;
-    NS_ASSERT(e2t.m_instanceId == 0);
-    NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
+    NS_ASSERT(e2t.GetInstanceID() == 0);
+    NS_ASSERT(e2t.GetRootEndpoint() == "/E2Node/0");
 
     E2AP e2n1;
-    NS_ASSERT(e2n1.m_instanceId == 1);
-    NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
+    NS_ASSERT(e2n1.GetInstanceID() == 1);
+    NS_ASSERT(e2n1.GetRootEndpoint() == "/E2Node/1");
 
-    NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second ==
-              static_cast<PubSubInfra*>(&e2t));
+    NS_ASSERT(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0") == static_cast<PubSubInfra*>(&e2t));
 
     // Testes de registros de endpoint
     e2t.RegisterEndpoint("//teste");
-    NS_ASSERT(E2AP::m_endpointToSubscribers.find("/E2Node/0/teste") !=
-              E2AP::m_endpointToSubscribers.end());
+    NS_ASSERT(E2AP::RetrieveSubscribersOfEndpoint("/E2Node/0/teste").has_value());
 
     e2n1.RegisterEndpoint("/teste2");
-    NS_ASSERT(E2AP::m_endpointToSubscribers.find("/E2Node/1/teste2") !=
-              E2AP::m_endpointToSubscribers.end());
+    NS_ASSERT(E2AP::RetrieveSubscribersOfEndpoint("/E2Node/1/teste2").has_value());
 
     // Teste de subscrição em endpoints
     e2t.SubscribeToEndpoint("/E2Node/1/teste2");
     {
-        auto subscribers = E2AP::m_endpointToSubscribers.find("/E2Node/1/teste2")->second;
-        NS_ASSERT(std::find(subscribers.begin(), subscribers.end(), e2t.m_endpointRoot) !=
-                  subscribers.end());
+        auto subscribers = E2AP::RetrieveSubscribersOfEndpoint("/E2Node/1/teste2");
+        NS_ASSERT(std::find(subscribers->begin(), subscribers->end(), e2t.GetRootEndpoint()) !=
+                  subscribers->end());
     }
 
     // Testes de serialização e deserialização JSON

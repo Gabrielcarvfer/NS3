@@ -13,17 +13,33 @@
 #include <map>
 #include <string>
 
-using Json = nlohmann::json;
+using Json = nlohmann::json; ///< nlohmann's Json type
+
+/**
+ * \file
+ * \ingroup oran
+ * E2SM KPM measurement types and format declarations.
+ */
 
 namespace ns3
 {
 
+/**
+ * \ingroup oran
+ *
+ * \brief Enumeration to indicate implemented KPMs
+ */
 enum FeatureImplemented
 {
     NOTIMPLEMENTED = 0,
     IMPLEMENTED
 };
 
+/**
+ * \ingroup oran
+ *
+ * \brief Enumeration of measurement types
+ */
 enum MeasurementType
 {
     INTEGER,
@@ -31,41 +47,66 @@ enum MeasurementType
     NONE
 };
 
+/**
+ * \ingroup oran
+ *
+ * \brief Measurement union
+ */
 typedef union MeasurementUnion_t {
-    int64_t integer;
-    double real;
-    uint64_t uinteger;
-    void* none;
+    int64_t integer;   ///< Integer member
+    double real;       ///< Real member
+    uint64_t uinteger; ///< Unsigned member
+    void* none;        ///< No type member
 } MeasurementUnion;
 
+/**
+ * \ingroup oran
+ *
+ * \brief Measurement struct (type, time offset and measurement value)
+ */
 typedef struct MeasurementStruct_t
 {
-    enum MeasurementType type;
-    uint32_t measurementTimeOffset;
-    MeasurementUnion measurement;
+    enum MeasurementType type;      ///< Type of measurement
+    uint32_t measurementTimeOffset; ///< Offset since the start of the period
+    MeasurementUnion measurement;   ///< Union with measurement value
 } MeasurementStruct;
 
 void to_json(Json& j, const MeasurementStruct& p);
 void from_json(const Json& j, MeasurementStruct& p);
 
+/**
+ * \ingroup oran
+ *
+ * \brief Measurement structure with timestamp when the measurement was taken
+ */
 typedef struct PeriodicMeasurementStruct_t
 {
-    std::string timestamp; // Timestamp from start of measurements
-    Json measurements;     // Measured value
+    std::string timestamp; ///< Timestamp from start of measurements
+    Json measurements;     ///< Measured value
 } PeriodicMeasurementStruct;
 
 void to_json(Json& j, const PeriodicMeasurementStruct& p);
 void from_json(const Json& j, PeriodicMeasurementStruct& p);
 
+/**
+ * \ingroup oran
+ *
+ * \brief Periodic report structure with multiple measurements
+ */
 typedef struct PeriodicReportStruct_t
 {
-    uint32_t period_ms;
-    EventId eventId;
-    std::string subscriberEndpoint;
-    std::string collectionStartTime;
-    std::deque<PeriodicMeasurementStruct> measurements;
+    uint32_t period_ms;              ///< Report period
+    EventId eventId;                 ///< Event ID
+    std::string subscriberEndpoint;  ///< Subscriber endpoint
+    std::string collectionStartTime; ///< Timestamp from the start of the reported period
+    std::deque<PeriodicMeasurementStruct> measurements; ///< List of measurements in the report
 } PeriodicReportStruct;
 
+/**
+ * \ingroup oran
+ *
+ * \brief List of 3GPP and O-RAN KPM's, with type, unit and flag indicating if they are implemented
+ */
 const std::map<std::string, std::tuple<enum MeasurementType, std::string, enum FeatureImplemented>>
     m_defaultEndpointsKpmTypeAndUnit = {
         // Measurements defined in ORAN WG3 E2SM KPM v02.02
@@ -236,7 +277,7 @@ const std::map<std::string, std::tuple<enum MeasurementType, std::string, enum F
         {"DRB.PdcpSduBitrateUlMax.QCI", {INTEGER, "", NOTIMPLEMENTED}}, // user plane
         {"SRB.PdcpSduBitrateDl.QCI", {INTEGER, "", NOTIMPLEMENTED}},    // control plane
         {"SRB.PdcpSduBitrateUl.QCI", {INTEGER, "", NOTIMPLEMENTED}},    // control plane
-                                                                     // 4.4.2 Active UEs
+                                                                        // 4.4.2 Active UEs
         {"DRB.UEActiveDl.QCI", {INTEGER, "", NOTIMPLEMENTED}},
         {"DRB.UEActiveUl.QCI", {INTEGER, "", NOTIMPLEMENTED}},
         // 4.4.3 Packet Delay And Drop Rate
@@ -294,26 +335,22 @@ const std::map<std::string, std::tuple<enum MeasurementType, std::string, enum F
         // 4.8 Measurements Related To Equipment Resources
         // 4.8.1 eNodeB/RN processor usage
         // 4.9 Common LAs of overlapping RATs Coverag
-        {
-            "RRC.IratIncMobility.LAI",
-            {INTEGER, "", NOTIMPLEMENTED}}, // LAI = LA Identifier of RAT serving UE from
-                                            // RRCConnectionSetupComplete 4.10 RF Measurements
-                                            // 4.10.1 CQI Distribution
-        {"CARR.WBCQIDist.Bin", {INTEGER, "", NOTIMPLEMENTED}}, // Bin = CQI value 0-15
-        {"CARR.AvgSubCQI.SubbandX",
-         {REAL,
-          "",
-          NOTIMPLEMENTED}}, // X = subband index
-                            // 4.10.2 Timing Advance Distribution
-                            // SKIPPING DUE TO IT BEING CONFUSING
-                            // https://www.sharetechnote.com/html/Handbook_LTE_ServCellID_SCellID.html
-                            // 4.11 SCell Scheduling Related Measurements in CA
-                            // 4.11.1 Attempted PUCCH Allocations For SCell Scheduling In Carrier
-                            // Aggregation 4.11.2 Successful PUCCH Allocations For SCell Scheduling
-                            // In Carrier Aggregation 4.11.3 Failed PUCCH Allocations for SCell
-                            // Scheduling In Carrier Aggregation 5 Measurements Related To Relay
-                            // Node UNINTERESTING 6 Measurements Related To Measurement Report 6.1
-                            // RSRP Related Measurements
+        {"RRC.IratIncMobility.LAI",
+         {INTEGER, "", NOTIMPLEMENTED}}, // LAI = LA Identifier of RAT serving UE from
+                                         // RRCConnectionSetupComplete 4.10 RF Measurements
+                                         // 4.10.1 CQI Distribution
+        {"CARR.WBCQIDist.Bin", {INTEGER, "", NOTIMPLEMENTED}},   // Bin = CQI value 0-15
+        {"CARR.AvgSubCQI.SubbandX", {REAL, "", NOTIMPLEMENTED}}, // X = subband index
+        // 4.10.2 Timing Advance Distribution
+        // SKIPPING DUE TO IT BEING CONFUSING
+        // https://www.sharetechnote.com/html/Handbook_LTE_ServCellID_SCellID.html
+        // 4.11 SCell Scheduling Related Measurements in CA
+        // 4.11.1 Attempted PUCCH Allocations For SCell Scheduling In Carrier
+        // Aggregation 4.11.2 Successful PUCCH Allocations For SCell Scheduling
+        // In Carrier Aggregation 4.11.3 Failed PUCCH Allocations for SCell
+        // Scheduling In Carrier Aggregation 5 Measurements Related To Relay
+        // Node UNINTERESTING 6 Measurements Related To Measurement Report 6.1
+        // RSRP Related Measurements
         /**
          * c) Receipt by the eNodeB from the UE of MeasurementReport message indicating a periodical
          * UE measurement report where IE MeasResults field includes rsrpResult. The event triggered

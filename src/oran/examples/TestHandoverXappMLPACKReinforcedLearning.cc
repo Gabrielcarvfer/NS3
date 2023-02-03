@@ -71,6 +71,12 @@ NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint
               << imsi << " RNTI " << rnti << std::endl;
 }
 
+/**
+ * \ingroup oran
+ *
+ * \brief An implementation of a Handover xApp using
+ * ML and reinforced learning
+ */
 class xAppHandoverML : public xAppHandover
 {
   public:
@@ -86,11 +92,14 @@ class xAppHandoverML : public xAppHandover
         Simulator::Schedule(Seconds(1), &xAppHandoverML::PeriodicClustering, this);
     };
 
+    /**
+     * \brief Periodically clusters RNTIs into different cells
+     */
     void PeriodicClustering()
     {
         NS_LOG_FUNCTION(this);
 
-        const E2AP* ric = static_cast<const E2AP*>(m_endpointRootToInstance.at("/E2Node/0"));
+        const E2AP* ric = static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
         std::map<uint16_t, uint16_t> rntis;
         std::array<std::string, 4> kpmMetrics = {//"/KPM/HO.SrcCellQual.RSRP",
                                                  "/KPM/HO.SrcCellQual.RSRQ",
@@ -209,13 +218,18 @@ class xAppHandoverML : public xAppHandover
         Simulator::Schedule(Seconds(1), &xAppHandoverML::PeriodicClustering, this);
     }
 
+    /**
+     * \brief Decides whether to reject the requested handover or reform the decision
+     * \param [in, out] payload Json payload with the UE to handover (RNTI)
+     *                  and target cell to handover (Target Primary Cell ID).
+     */
     void HandoverDecision(Json& payload)
     {
         NS_LOG_FUNCTION(this);
 
         // Check if we are not receiving invalid payloads
-        if (m_endpointRootToInstance.at(m_endpointRoot)->GetNode() !=
-            m_endpointRootToInstance.at("/E2Node/0")->GetNode())
+        if (E2AP::RetrieveInstanceWithEndpoint(GetRootEndpoint())->GetNode() !=
+            E2AP::RetrieveInstanceWithEndpoint("/E2Node/0")->GetNode())
         {
             NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
         }
@@ -241,6 +255,13 @@ class xAppHandoverML : public xAppHandover
         m_decision_history.push_back({requestingRnti, requestedTargetCellId, decidedTargetCellId});
     }
 
+    /**
+     * \brief Callback function when the handover succeeds
+     * \param [in] context The context from the call
+     * \param [in] imsi The subscriber permanent ID associated to the UE
+     * \param [in] cellid The cell ID
+     * \param [in] rnti The new temporary ID from the UE
+     */
     void HandoverSucceeded(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
     {
         NS_LOG_FUNCTION(this);
@@ -248,6 +269,13 @@ class xAppHandoverML : public xAppHandover
         std::cout << "yay" << std::endl; // reward predictor
     }
 
+    /**
+     * \brief Callback function when the handover failed
+     * \param [in] context The context from the call
+     * \param [in] imsi The subscriber permanent ID associated to the UE
+     * \param [in] cellid The cell ID
+     * \param [in] rnti The old temporary ID from the UE
+     */
     void HandoverFailed(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
     {
         NS_LOG_FUNCTION(this);
@@ -256,9 +284,12 @@ class xAppHandoverML : public xAppHandover
     }
 
   private:
-    std::deque<std::tuple<uint16_t, uint16_t, uint16_t>> m_decision_history;
-    std::map<uint16_t, uint16_t> m_rntiToClusteredCellId;
-    std::map<uint16_t, uint16_t> m_rntiToCurrentCellId;
+    std::deque<std::tuple<uint16_t, uint16_t, uint16_t>>
+        m_decision_history; ///< Keeps track of previous decisions
+    std::map<uint16_t, uint16_t>
+        m_rntiToClusteredCellId; ///< Map of RNTIs to their clustered cell ID
+    std::map<uint16_t, uint16_t>
+        m_rntiToCurrentCellId; ///< Map of RNTIs to their currently connected cell ID
 };
 
 int
@@ -480,15 +511,14 @@ main()
                     MakeCallback(&NotifyHandoverEndOkUe));
 
     E2AP e2t;
-    NS_ASSERT(e2t.m_instanceId == 0);
-    NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
+    NS_ASSERT(e2t.GetInstanceID() == 0);
+    NS_ASSERT(e2t.GetRootEndpoint() == "/E2Node/0");
 
     E2AP e2n1;
-    NS_ASSERT(e2n1.m_instanceId == 1);
-    NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
+    NS_ASSERT(e2n1.GetInstanceID() == 1);
+    NS_ASSERT(e2n1.GetRootEndpoint() == "/E2Node/1");
 
-    NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second ==
-              static_cast<PubSubInfra*>(&e2t));
+    NS_ASSERT(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0") == static_cast<PubSubInfra*>(&e2t));
 
     // Create the handover xApp
     xAppHandoverML handoverxapp;

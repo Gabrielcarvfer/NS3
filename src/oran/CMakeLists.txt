@@ -24,7 +24,7 @@ build_lib(
     model/xApp.h
     model/E2SM-KPM-measurements.h
     model/E2SM-RC-control-types.h
-    model/E2SM-RC-indication-types.h
+        model/E2SM-RC-indication-types.h
     model/ORAN-message-types.h
     model/xAppHandover.h
     model/xAppHandoverMlpackKmeans.h

@@ -8,8 +8,17 @@
 #include <map>
 #include <string>
 
+/**
+ * \file
+ * \ingroup oran
+ * ns3::ORAN_MESSAGE_TYPES declaration.
+ */
+
 namespace ns3
 {
+/**
+ * \brief E2AP message types
+ */
 enum ORAN_MESSAGE_TYPES
 {
     // RIC initiated
@@ -47,7 +56,10 @@ enum ORAN_MESSAGE_TYPES
     E2_REMOVAL_FAILURE,
 };
 
-// Prevents from linking multiple times
+/**
+ * \brief Map of enum to the corresponding string
+ */
+// Prevents from linking multiple time
 extern std::map<ORAN_MESSAGE_TYPES, std::string> oran_msg_str;
 } // namespace ns3
 #endif // NS3_ORAN_MESSAGE_TYPES_H

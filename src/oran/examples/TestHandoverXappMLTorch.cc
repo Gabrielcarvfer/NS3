@@ -69,6 +69,12 @@ NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint
               << imsi << " RNTI " << rnti << std::endl;
 }
 
+/**
+ * \ingroup oran
+ *
+ * \brief An implementation of a Handover xApp using
+ * ML with LibTorch
+ */
 class xAppHandoverML : public xAppHandover
 {
   public:
@@ -81,13 +87,18 @@ class xAppHandoverML : public xAppHandover
                         MakeCallback(&xAppHandoverML::HandoverFailed, this));
     };
 
+    /**
+     * \brief Decides whether to reject the requested handover or reform the decision
+     * \param [in, out] payload Json payload with the UE to handover (RNTI)
+     *                  and target cell to handover (Target Primary Cell ID).
+     */
     void HandoverDecision(Json& payload)
     {
         NS_LOG_FUNCTION(this);
 
         // Check if we are not receiving invalid payloads
-        if (m_endpointRootToInstance.at(m_endpointRoot)->GetNode() !=
-            m_endpointRootToInstance.at("/E2Node/0")->GetNode())
+        if (E2AP::RetrieveInstanceWithEndpoint(GetRootEndpoint())->GetNode() !=
+            E2AP::RetrieveInstanceWithEndpoint("/E2Node/0")->GetNode())
         {
             NS_ABORT_MSG("Trying to run a xApp on a E2Node is a no-no");
         }
@@ -102,11 +113,25 @@ class xAppHandoverML : public xAppHandover
         payload["Target Primary Cell ID"] = targetCellId;
     }
 
+    /**
+     * \brief Callback function when the handover succeeds
+     * \param [in] context The context from the call
+     * \param [in] imsi The subscriber permanent ID associated to the UE
+     * \param [in] cellid The cell ID
+     * \param [in] rnti The new temporary ID from the UE
+     */
     void HandoverSucceeded(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
     {
         std::cout << "yay" << std::endl; // incentivize predictor
     }
 
+    /**
+     * \brief Callback function when the handover failed
+     * \param [in] context The context from the call
+     * \param [in] imsi The subscriber permanent ID associated to the UE
+     * \param [in] cellid The cell ID
+     * \param [in] rnti The old temporary ID from the UE
+     */
     void HandoverFailed(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
     {
         std::cout << "nay" << std::endl; // punish predictor
@@ -327,15 +352,14 @@ main()
                     MakeCallback(&NotifyHandoverEndOkUe));
 
     E2AP e2t;
-    NS_ASSERT(e2t.m_instanceId == 0);
-    NS_ASSERT(e2t.m_endpointRoot == "/E2Node/0");
+    NS_ASSERT(e2t.GetInstanceID() == 0);
+    NS_ASSERT(e2t.GetRootEndpoint() == "/E2Node/0");
 
     E2AP e2n1;
-    NS_ASSERT(e2n1.m_instanceId == 1);
-    NS_ASSERT(e2n1.m_endpointRoot == "/E2Node/1");
+    NS_ASSERT(e2n1.GetInstanceID() == 1);
+    NS_ASSERT(e2n1.GetRootEndpoint() == "/E2Node/1");
 
-    NS_ASSERT(E2AP::m_endpointRootToInstance.find("/E2Node/0")->second ==
-              static_cast<PubSubInfra*>(&e2t));
+    NS_ASSERT(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0") == static_cast<PubSubInfra*>(&e2t));
 
     // Create the handover xApp
     xAppHandoverML handoverxapp;
