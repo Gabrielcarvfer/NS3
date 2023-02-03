@@ -41,14 +41,14 @@ xAppHandoverMaxRsrq::ChooseTargetCellId(uint16_t rnti)
     // Collate data into an armadillo matrix for processing
     for (auto kpmMetric : kpmMetrics)
     {
-        auto metricIt = ric->m_kpmToEndpointStorage.find(kpmMetric);
+        auto metricMap = ric->QueryKpmMetric(kpmMetric);
 
-        if (metricIt == ric->m_kpmToEndpointStorage.end())
+        if (metricMap.size() == 0)
         {
             continue;
         }
 
-        for (auto& e2nodeMeasurements : metricIt->second)
+        for (auto& e2nodeMeasurements : metricMap)
         {
             std::string mostRecentTimestamp("");
             for (auto& measurementDeque : e2nodeMeasurements.second)

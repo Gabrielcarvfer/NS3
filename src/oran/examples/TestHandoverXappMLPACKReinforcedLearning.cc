@@ -102,14 +102,13 @@ class xAppHandoverML : public xAppHandover
         // Count the number of eNodeBs/E2Nodes and the number of UEs/RNTIs
         for (auto kpmMetric : kpmMetrics)
         {
-            auto metricIt = ric->m_kpmToEndpointStorage.find(kpmMetric);
-
-            if (metricIt == ric->m_kpmToEndpointStorage.end())
+            auto metricMap = ric->QueryKpmMetric(kpmMetric);
+            if (metricMap.size() == 0)
             {
                 continue;
             }
 
-            for (auto& e2nodeMeasurements : metricIt->second)
+            for (auto& e2nodeMeasurements : metricMap)
             {
                 std::string cellIdStr(e2nodeMeasurements.first.begin() +
                                           e2nodeMeasurements.first.find_last_of("/") + 1,
@@ -144,14 +143,15 @@ class xAppHandoverML : public xAppHandover
         // Collate data into an armadillo matrix for processing
         for (auto kpmMetric : kpmMetrics)
         {
-            auto metricIt = ric->m_kpmToEndpointStorage.find(kpmMetric);
+            auto metricMap = ric->QueryKpmMetric(kpmMetric);
 
-            if (metricIt == ric->m_kpmToEndpointStorage.end())
+            if (metricMap.size() == 0)
             {
                 continue;
             }
 
-            for (auto& e2nodeMeasurements : metricIt->second)
+            for (auto& e2nodeMeasurements : metricMap)
+
             {
                 for (auto& measurementDeque : e2nodeMeasurements.second)
                 {
