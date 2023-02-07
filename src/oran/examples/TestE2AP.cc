@@ -17,6 +17,7 @@
 NS_LOG_COMPONENT_DEFINE("TestE2AP");
 
 using namespace ns3;
+using namespace oran;
 
 void
 CheckConnected(E2AP* node)

@@ -29,16 +29,18 @@
 using Json = nlohmann::json; ///< nlohmann's Json type
 
 /**
- * \file
  * \ingroup oran
- * ns3::PubSubInfra declaration.
+ * ns3::oran::PubSubInfra declaration.
  */
 
 namespace ns3
 {
+namespace oran
+{
 /**
  * \ingroup oran
- * Base Publisher-Subscriber infrastructure
+ * \class PubSubInfra
+ * \brief Base Publisher-Subscriber infrastructure
  */
 class PubSubInfra : public Application
 {
@@ -294,5 +296,6 @@ class PubSubInfra : public Application
      */
     const PubSubInfra* getInstanceFromEndpointRoot(std::string endpointRoot);
 };
+} // namespace oran
 } // namespace ns3
 #endif // NS3_PUBSUBINFRA_H

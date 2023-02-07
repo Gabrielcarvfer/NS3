@@ -16,7 +16,15 @@
 NS_LOG_COMPONENT_DEFINE("TestHandoverXappMLPACK");
 
 using namespace ns3;
+using namespace oran;
 
+/**
+ * \brief Callback function when a connection is established in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -24,6 +32,13 @@ NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t celli
               << " with RNTI " << rnti << std::endl;
 }
 
+/**
+ * \brief Callback function when a connectionis reconfigured in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionReconfigurationEnb(std::string context,
                                    uint64_t imsi,
@@ -34,6 +49,14 @@ NotifyConnectionReconfigurationEnb(std::string context,
               << cellid << " with RNTI " << rnti << std::endl;
 }
 
+/**
+ * \brief Callback function when a handover is started in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverStartUe(std::string context,
                       uint64_t imsi,
@@ -46,6 +69,13 @@ NotifyHandoverStartUe(std::string context,
               << std::endl;
 }
 
+/**
+ * \brief Callback function when a handover is successful in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -53,6 +83,13 @@ NotifyHandoverEndOkUe(std::string context, uint64_t imsi, uint16_t cellid, uint1
               << " with RNTI " << rnti << std::endl;
 }
 
+/**
+ * \brief Callback function when a connection is established in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -60,6 +97,14 @@ NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cell
               << imsi << " RNTI " << rnti << std::endl;
 }
 
+/**
+ * \brief Callback function when a handover is started in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverStartEnb(std::string context,
                        uint64_t imsi,
@@ -71,6 +116,13 @@ NotifyHandoverStartEnb(std::string context,
               << " RNTI " << rnti << " to CellId " << targetCellId << std::endl;
 }
 
+/**
+ * \brief Callback function when a handover is finalized in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {
@@ -78,6 +130,14 @@ NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint
               << imsi << " RNTI " << rnti << std::endl;
 }
 
+/**
+ * \brief Callback function when a handover is cancelled in the eNB
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ * \param [in] targetCellId The destination cell ID
+ */
 void
 NotifyHandoverCancelledEnb(std::string context,
                            uint64_t imsi,

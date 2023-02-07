@@ -9,12 +9,13 @@
 #include <string>
 
 /**
- * \file
  * \ingroup oran
- * ns3::ORAN_MESSAGE_TYPES declaration.
+ * ns3::oran::ORAN_MESSAGE_TYPES declaration.
  */
 
 namespace ns3
+{
+namespace oran
 {
 /**
  * \brief E2AP message types
@@ -61,5 +62,6 @@ enum ORAN_MESSAGE_TYPES
  */
 // Prevents from linking multiple time
 extern std::map<ORAN_MESSAGE_TYPES, std::string> oran_msg_str;
+} // namespace oran
 } // namespace ns3
 #endif // NS3_ORAN_MESSAGE_TYPES_H

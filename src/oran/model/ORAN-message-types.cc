@@ -6,6 +6,8 @@
 
 namespace ns3
 {
+namespace oran
+{
 
 std::map<ORAN_MESSAGE_TYPES, std::string> oran_msg_str{
     {RIC_SUBSCRIPTION_REQUEST, "RIC_SUBSCRIPTION_REQUEST"},
@@ -39,4 +41,5 @@ std::map<ORAN_MESSAGE_TYPES, std::string> oran_msg_str{
     {E2_REMOVAL_RESPONSE, "E2_REMOVAL_RESPONSE"},
     {E2_REMOVAL_FAILURE, "E2_REMOVAL_FAILURE"},
 };
-}
+} // namespace oran
+} // namespace ns3

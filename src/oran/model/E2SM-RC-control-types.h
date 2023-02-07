@@ -10,12 +10,13 @@
 using Json = nlohmann::json; ///< nlohmann's Json type
 
 /**
- * \file
  * \ingroup oran
  * E2SM RC control types and format declarations.
  */
 
 namespace ns3
+{
+namespace oran
 {
 
 // O-RAN WG3 E2SM RC v01.02 7.6.1
@@ -456,5 +457,6 @@ from_json(const Json& j, E2SM_RC_RIC_CONTROL_MESSAGE& p)
     j.at("contents").get_to(p.contents.raw);
 }
 
+} // namespace oran
 } // namespace ns3
 #endif // NS3_E2SM_RC_CONTROL_TYPES_H

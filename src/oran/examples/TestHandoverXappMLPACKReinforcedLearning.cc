@@ -19,7 +19,15 @@
 NS_LOG_COMPONENT_DEFINE("TestHandoverXappMLPACK");
 
 using namespace ns3;
+using namespace oran;
 
+/**
+ * \brief Callback function when a connection is established in the UE
+ * \param [in] context The context from the call
+ * \param [in] imsi The subscriber permanent ID associated to the UE
+ * \param [in] cellid The cell ID
+ * \param [in] rnti The temporary ID from the UE that failed to handover
+ */
 void
 NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)
 {

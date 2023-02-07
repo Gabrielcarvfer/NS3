@@ -6,6 +6,8 @@
 
 namespace ns3
 {
+namespace oran
+{
 
 /**
  * \ingroup oran
@@ -63,4 +65,5 @@ from_json(const Json& j, PeriodicMeasurementStruct& p)
     j.at("timestamp").get_to(p.timestamp);
     j.at("measurements").get_to(p.measurements);
 }
+} // namespace oran
 } // namespace ns3

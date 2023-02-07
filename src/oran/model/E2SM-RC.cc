@@ -392,7 +392,7 @@ void
 E2AP::E2SmRcSendHandoverControlRequest(uint16_t rnti, uint16_t targetCell, std::string src_endpoint)
 {
     E2SM_RC_RIC_INDICATION_HEADER hdr;
-    hdr.format = ns3::RIC_INDICATION_HEADER_FORMAT_2;
+    hdr.format = ns3::oran::RIC_INDICATION_HEADER_FORMAT_2;
     hdr.contents.format_2.RNTI = rnti;
     hdr.contents.format_2.RICInsertStyleType =
         RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::VALUE;
@@ -428,7 +428,7 @@ E2AP::E2SmRcSendHandoverControl(uint16_t rnti,
 {
     // Send CONNECTED_MODE_MOBILITY_CONTROL::HANDOVER_CONTROL
     E2SM_RC_RIC_CONTROL_HEADER hdr;
-    hdr.format = ns3::RC_CONTROL_HEADER_FORMAT_1;
+    hdr.format = ns3::oran::RC_CONTROL_HEADER_FORMAT_1;
     hdr.contents.format_1.RNTI = rnti;
     hdr.contents.format_1.RICControlStyleType =
         RIC_CONTROL_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL::VALUE;

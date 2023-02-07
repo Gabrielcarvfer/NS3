@@ -1420,7 +1420,7 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
     if (node->GetNApplications() > 1)
     {
         auto app = node->GetApplication(1);
-        Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
+        Ptr<oran::E2AP> e2ap = DynamicCast<oran::E2AP>(app);
         if (e2ap)
         {
             Json json;
@@ -2792,7 +2792,7 @@ LteEnbRrc::SendHandoverRequest(uint16_t rnti, uint16_t cellId)
     if (node->GetNApplications() > 1)
     {
         auto app = node->GetApplication(1);
-        Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
+        Ptr<oran::E2AP> e2ap = DynamicCast<oran::E2AP>(app);
         if (e2ap)
         {
             // Control returns empty optional if unanswered, or a response
@@ -3292,7 +3292,7 @@ LteEnbRrc::DoTriggerHandover(uint16_t rnti, uint16_t targetCellId)
         if (node->GetNApplications() > 1)
         {
             auto app = node->GetApplication(1);
-            Ptr<E2AP> e2ap = DynamicCast<E2AP>(app);
+            Ptr<oran::E2AP> e2ap = DynamicCast<oran::E2AP>(app);
             if (e2ap)
             {
                 // Control returns empty optional if unanswered, or a response

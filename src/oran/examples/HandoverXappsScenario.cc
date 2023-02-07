@@ -21,6 +21,7 @@
 NS_LOG_COMPONENT_DEFINE("HandoverXappsScenario");
 
 using namespace ns3;
+using namespace oran;
 
 /**
  * \ingroup oran
