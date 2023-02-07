@@ -4,16 +4,17 @@
 #include "ns3/xAppHandover.h"
 
 /**
- * \file
  * \ingroup oran
- * ns3::xAppHandoverMlpackKmeans declaration.
+ * ns3::oran::xAppHandoverMlpackKmeans declaration.
  */
 
 namespace ns3
 {
+namespace oran
+{
 /**
  * \ingroup oran
- *
+ * \class xAppHandoverMlpackKmeans
  * \brief An implementation of a Handover xApp using
  * MlPack's implementation of K-Means clustering
  */
@@ -90,5 +91,6 @@ class xAppHandoverMlpackKmeans : public xAppHandover
     bool m_initiateHandovers;         ///< Flag indicates if the xApp initiates the handovers
     std::map<uint16_t, uint64_t> m_imsiInHandover; ///< Map of RNTIs in handover and their IMSIs
 };
+} // namespace oran
 } // namespace ns3
 #endif // NS3_XAPP_HANDOVER_MLPACK_KMEANS_H

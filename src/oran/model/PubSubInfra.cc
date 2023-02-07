@@ -5,6 +5,7 @@
 #include "PubSubInfra.h"
 
 using namespace ns3;
+using namespace oran;
 
 NS_LOG_COMPONENT_DEFINE("PubSubInfra");
 

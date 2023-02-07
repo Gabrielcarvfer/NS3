@@ -19,28 +19,21 @@ NS_LOG_COMPONENT_DEFINE("TestPubSubInfra");
 
 namespace ns3
 {
-/**
- * \ingroup oran
- *
- * \brief Local definition of E2AP just for PubSub testing
- */
+namespace oran
+{
 class E2AP : public PubSubInfra
 {
   public:
     E2AP()
         : PubSubInfra("E2Node"){};
     ~E2AP(){};
-    /**
-     * \brief Handle an incoming json payload sent from src_endpoint to dest_endpoint.
-     * \param [in] src_endpoint The source endpoint.
-     * \param [in] dest_endpoint The destination endpoint.
-     * \param [in] payload Json object with the payload to be handled.
-     */
     void HandlePayload(std::string src_endpoint, std::string dest_endpoint, Json payload);
 };
+} // namespace oran
 } // namespace ns3
 
 using namespace ns3;
+using namespace oran;
 
 int
 main()

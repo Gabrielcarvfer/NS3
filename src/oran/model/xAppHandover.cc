@@ -7,6 +7,7 @@
 NS_LOG_COMPONENT_DEFINE("xAppHandover");
 
 using namespace ns3;
+using namespace oran;
 
 xAppHandover::xAppHandover()
     : xApp()

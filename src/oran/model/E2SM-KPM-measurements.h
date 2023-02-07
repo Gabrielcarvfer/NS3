@@ -16,12 +16,13 @@
 using Json = nlohmann::json; ///< nlohmann's Json type
 
 /**
- * \file
  * \ingroup oran
  * E2SM KPM measurement types and format declarations.
  */
 
 namespace ns3
+{
+namespace oran
 {
 
 /**
@@ -431,5 +432,6 @@ const std::map<std::string, std::tuple<enum MeasurementType, std::string, enum F
          * degree. (See in 3GPP TS36.133 [19])
          */
 };
+} // namespace oran
 } // namespace ns3
 #endif // NS3_E2SM_KPM_MEASUREMENTS_H

@@ -16,6 +16,7 @@
 NS_LOG_COMPONENT_DEFINE("TestHandoverXapp");
 
 using namespace ns3;
+using namespace oran;
 
 void
 NotifyConnectionEstablishedUe(std::string context, uint64_t imsi, uint16_t cellid, uint16_t rnti)

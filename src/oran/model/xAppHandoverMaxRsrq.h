@@ -4,16 +4,17 @@
 #include "ns3/xAppHandover.h"
 
 /**
- * \file
  * \ingroup oran
- * ns3::xAppHandoverMaxRsrq declaration.
+ * ns3::oran::xAppHandoverMaxRsrq declaration.
  */
 
 namespace ns3
 {
+namespace oran
+{
 /**
  * \ingroup oran
- *
+ * \class xAppHandoverMaxRsrq
  * \brief An implementation of a Handover xApp using
  * the MaxRsrq strategy
  */
@@ -78,5 +79,6 @@ class xAppHandoverMaxRsrq : public xAppHandover
         m_rntiToImsiAndCellid; ///< Map of RNTIs to IMSIs and currently corrected cells
     std::map<uint16_t, uint64_t> m_rntiInHandover; ///< Map of RNTIs in handover and their IMSIs
 };
+} // namespace oran
 } // namespace ns3
 #endif // NS3_XAPP_HANDOVER_MAX_RSRP_H

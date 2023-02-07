@@ -8,16 +8,17 @@
 #include "xApp.h"
 
 /**
- * \file
  * \ingroup oran
- * ns3::xAppHandover declaration.
+ * ns3::oran::xAppHandover declaration.
  */
 
 namespace ns3
 {
+namespace oran
+{
 /**
  * \ingroup oran
- *
+ * \class xAppHandover
  * \brief The base class of a Handover xApp
  */
 class xAppHandover : public xApp
@@ -32,5 +33,6 @@ class xAppHandover : public xApp
      */
     virtual void HandoverDecision(Json& payload);
 };
+} // namespace oran
 } // namespace ns3
 #endif // NS3_XAPP_HANDOVER_H

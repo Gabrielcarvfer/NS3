@@ -15,14 +15,14 @@
 #include <optional>
 
 /**
- * \file
  * \ingroup oran
  * ns3:E2AP declaration.
  */
 
 namespace ns3
 {
-
+namespace oran
+{
 // O-RAN WG3 E2SM KPM v02.00.03
 /**
  * \ingroup oran
@@ -49,6 +49,7 @@ enum E2_SERVICE_MODELS
 /**
  * \ingroup oran
  *
+ * \class E2AP
  * \brief Implementation of the E2AP (E2 Node Application Protocol).
  *
  * This class implements the packaging/unpackaging of E2SM (E2 Node Service Models),
@@ -265,6 +266,6 @@ enum RIC_EVENT_TRIGGER_DEFINITION_STYLES
     UE_INFORMATION_CHANGE,
     ON_DEMAND
 };
-
+} // namespace oran
 } // namespace ns3
 #endif // NS3_E2AP_H

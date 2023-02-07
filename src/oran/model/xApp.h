@@ -8,16 +8,19 @@
 #include "PubSubInfra.h"
 
 /**
- * \file
  * \ingroup oran
- * ns3::xApp declaration.
+ * ns3::oran::xApp declaration.
  */
 
 namespace ns3
 {
+namespace oran
+{
 
 /**
- * Base xApp infrastructure
+ * \ingroup oran
+ * \class xApp
+ * \brief Base xApp infrastructure
  */
 class xApp : public PubSubInfra
 {
@@ -27,5 +30,6 @@ class xApp : public PubSubInfra
     ~xApp(){};
 };
 
+} // namespace oran
 } // namespace ns3
 #endif // NS3_XAPP_H
