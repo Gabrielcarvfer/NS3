@@ -103,11 +103,11 @@ The PHY and MAC were validated comparing to the proof-of-concept measurements ma
 
 The simulated performance matched the real-life results from the trials.
 
-![](/NS3/img/5g-rcolab-validation-part1.png)
+![](/NS3/img/5g-range/5g-rcolab-validation-part1.png)
 
 The results for TBLER on the other hand, were a lot higher on the field trial measurements for NLOS at 40km.
 
-![](/NS3/img/5g-rcolab-validation-part2.png)
+![](/NS3/img/5g-range/5g-rcolab-validation-part2.png)
 
 
 ### Dynamic Spectrum Access with Collaborative Spectrum Sensing
