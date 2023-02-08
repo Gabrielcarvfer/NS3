@@ -74,10 +74,13 @@ Sure. Here are some of them.
 
 The field trial was executed by the Inatel and the Federal University of Ceará (UFC) teams, and findings were published in 
 [5G-RANGE Project Field Trial](https://ieeexplore.ieee.org/document/8802021)
+
 ![](/NS3/img/5g-range/area-medidas.png)
 
 The following images are from the field trial paper mentioned above.
+
 ![](/NS3/img/5g-range/medidas.png)
+
 ![](/NS3/img/5g-range/medidas_2.png)
 
 
@@ -89,7 +92,9 @@ The models were proposed by the UFC team and published
 in [CDL-based Channel Model for 5G MIMO Systems in Remote Rural Areas](https://ieeexplore.ieee.org/document/8877334).
 
 Our implementation (5G-RANGE in the figures below) matches the expected results for both CDL D and CDL A.
+
 ![](/NS3/img/5g-range/cdl-d-validation.png)
+
 ![](/NS3/img/5g-range/cdl-a-validation.png)
 
 ### PHY and MAC validation
@@ -101,6 +106,7 @@ The simulated performance matched the real-life results from the trials.
 ![](/NS3/img/5g-rcolab-validation-part1.png)
 
 The results for TBLER on the other hand, were a lot higher on the field trial measurements for NLOS at 40km.
+
 ![](/NS3/img/5g-rcolab-validation-part2.png)
 
 
@@ -148,13 +154,23 @@ The images below show how false positives (a.k.a. unused spectrum),
 false negatives (a.k.a. interference with the primary user PU)
 and reported frames per UE (a.k.a. control channel overhead) 
 scale with the number of UEs during different simulations.
+
+#### With 20 UEs
 ![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
-![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
-![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
+
+#### With 50 UEs
+![](/NS3/img/5g-range/sensing_per_scenario_ues_50_simulationCase_11.png)
+
+#### With 100 UEs
+![](/NS3/img/5g-range/sensing_per_scenario_ues_100_simulationCase_11.png)
 
 Of course, we simulated all of these in both scenarios with randomly dispersed UEs (less realistic)
 and scenarios with randomly dispersed clusters of UEs (e.g. rural businesses, small city, rural school, etc).
+
+#### Randomly dispersed UEs
 ![](/NS3/img/5g-range/mac-ver-sce1.png)
+
+#### Randomly dispersed clusters of UEs
 ![](/NS3/img/5g-range/mac-ver-sce2.png)
 
 ## Acknowledgments
