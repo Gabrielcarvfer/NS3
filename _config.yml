@@ -9,6 +9,7 @@ github_username:  gabrielcarvfer
 header_pages:
   - index.md
   - installation.md
+  - oran.md
   - 5g-range.md
   - colab-5g.md
   - collab.md
