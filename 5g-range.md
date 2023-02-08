@@ -12,6 +12,7 @@ In terms of simulations, our goal was to implement the channel model of the 5G-R
 validate the results based on the field trials measurements, provide dynamic spectrum access capabilities
 that enable opportunistic use of the spectrum underutilized by TV white spaces.
 
+![](/NS3/img/5g-range/scenario.jpg)
 
 ## How do you get it?
 Following instructions in [COLAB-5G](https://gabrielcarvfer.github.io/NS3/COLAB_5G/).
@@ -33,6 +34,8 @@ providing a solid foundation for mobile networks development.
  following the path loss equation described in 
  [D3.1](http://5g-range.eu/wp-content/uploads/2018/04/D3.1-Physical-layer-of-the-5G-RANGE-Part-I.zip))
 - [x] Implement the detailed propagation model with fast fading for large and small scale path loss (CDL D/LOS and CDL A/NLOS)
+- [x] Implementation of spatially correlated shadowing for the 5G-RANGE channel models
+- [x] Validation of the channel model implementation
 
 ### List of changes associated with the physical layer
 - [x] Implement spectrum sensing on the UEs (using probability of detection tables)
@@ -43,6 +46,7 @@ providing a solid foundation for mobile networks development.
 - [x] - Load and interpolate new BLER curves according to the channel type (CDL D/LOS or A/NLOS)
 - [x] - Take into account CBs SINR to fetch the proper error rates and assemble the correct TBLER
 - [x] Load and interpolate new MCS scheme and spectral efficiency curves
+- [x] Validation of the physical layer implementation
 
 ### List of changes associated with the MAC layer
 - [x] Adapt the existing code to behave properly with new MCS values
@@ -63,24 +67,95 @@ providing a solid foundation for mobile networks development.
 - [x] Custom application to inject traffic with known distributions to analyze the impact of changes to lower layers
 - [x] Custom traffic generator [EROS](https://github.com/notopoloko/Eros) 
 
-## What is in progress?
-[x] = testing
-[ ] = actively working
-
-- [x] Implementation of spatially correlated shadowing for the 5G-RANGE channel models
-- [ ] Validation of channel model and physical layer implementations
-
-## Remanining tasks
-[x] = started
-[ ] = not started
-- [ ] Reproduce proof-of-concept field trial results
-- [ ] Prepare realistic simulation scenarios
-- [ ] Prepare stress-testing simulation scenarios
-- [ ] Analytical model extrapolating the simulation results
-- [ ] Split up the 5G-RANGE modified components from the LTE model and contribute back to the upstream project
-
 ## How about some results and nice pictures?
-Working on it. We should have more to share by the end of October/2020.
+Sure. Here are some of them.
+
+### Field trial measurements
+
+The field trial was executed by the Inatel and the Federal University of Ceará (UFC) teams, and findings were published in 
+[5G-RANGE Project Field Trial](https://ieeexplore.ieee.org/document/8802021)
+![](/NS3/img/5g-range/area-medidas.png)
+
+The following images are from the field trial paper mentioned above.
+![](/NS3/img/5g-range/medidas.png)
+![](/NS3/img/5g-range/medidas_2.png)
+
+
+### Channel validation
+
+There were two channel models proposed based on CDL D and A, for LOS and NLOS scenarios, respectively.
+
+The models were proposed by the UFC team and published 
+in [CDL-based Channel Model for 5G MIMO Systems in Remote Rural Areas](https://ieeexplore.ieee.org/document/8877334).
+
+Our implementation (5G-RANGE in the figures below) matches the expected results for both CDL D and CDL A.
+![](/NS3/img/5g-range/cdl-d-validation.png)
+![](/NS3/img/5g-range/cdl-a-validation.png)
+
+### PHY and MAC validation
+
+The PHY and MAC were validated comparing to the proof-of-concept measurements made in the field trials.
+
+The simulated performance matched the real-life results from the trials.
+
+![](/NS3/img/5g-rcolab-validation-part1.png)
+
+The results for TBLER on the other hand, were a lot higher on the field trial measurements for NLOS at 40km.
+![](/NS3/img/5g-rcolab-validation-part2.png)
+
+
+### Dynamic Spectrum Access with Collaborative Spectrum Sensing
+
+This is my main contribution, and it was done in collaboration from our friends from the University of Oulu.
+
+How can we detect a primary user (channel licensee)? There are many ways, but the one that doesn't have to rely on
+a central entity giving out temporary licenses is basically some form of spectrum sensing.
+
+Since a single point sensing the spectrum in a 50km-wide cell isn't very effective since the sensing
+element can be far enough of the licensee to perceive it is transmitting. If both transmit simultaneously,
+we cause interference, which is not desirable nor allowed. 
+
+Using collaborative spectrum sensing (CSS) is a lot more logical in this case.
+CSS allow multiple sensing elements to perform their sensing independently
+and merge/fuse their sensing results later.
+
+![](/NS3/img/5g-range/spectrum-sensing.png)
+
+In our case, the individual sensing technique used is based on the technique proposed on 
+[Spectrum window based signal detection at low SNR](https://ieeexplore.ieee.org/document/8398726),
+known as WIBA.
+
+The sensing results are then fused according to a fusion scheme/policy on the LTE's eNodeB
+(which is very logical, since we are using a centralized network as the base for 5G-RANGE).
+
+We have shown in [MHM: A Novel Collaborative Spectrum Sensing Method based on Markov-chains and Harmonic Mean for 5G Networks](https://ieeexplore.ieee.org/document/9142763),
+a particular combination of techniques to have an effective fusion scheme.
+
+We used the BLER as a source of trust of the reported CQI by the UEs.
+
+The trusted CQI can then be correlated with the sensing data: when a primary user starts transmitting, 
+it is expected that nearby UEs have a drop in CQI. We can filter the others out by filtering by the
+harmonic mean of reported CQIs.
+
+Building that trust makes us less exposed to Byzantine attackers (either malicious sensing reports or faulty ones).
+
+We also employed a Markov Chain to make the individual sensing reports (sent on channel condition change) 
+more stable temporally, saving up some control channel bandwidth at the cost of detection range.
+
+![](/NS3/img/5g-range/MHM_topology_random_attackers_05_fusion_12.png)
+
+The images below show how false positives (a.k.a. unused spectrum), 
+false negatives (a.k.a. interference with the primary user PU)
+and reported frames per UE (a.k.a. control channel overhead) 
+scale with the number of UEs during different simulations.
+![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
+![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
+![](/NS3/img/5g-range/sensing_per_scenario_ues_20_simulationCase_11.png)
+
+Of course, we simulated all of these in both scenarios with randomly dispersed UEs (less realistic)
+and scenarios with randomly dispersed clusters of UEs (e.g. rural businesses, small city, rural school, etc).
+![](/NS3/img/5g-range/mac-ver-sce1.png)
+![](/NS3/img/5g-range/mac-ver-sce2.png)
 
 ## Acknowledgments
 I want to thank every ns-3 developer, especially the CTTC people for the LTE/LENA model. 
