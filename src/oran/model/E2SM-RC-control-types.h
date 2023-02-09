@@ -137,32 +137,32 @@ const uint8_t VALUE = 3; ///< E2SM RC Connected Mobility Control's Dual Active P
  */
 namespace RADIO_ACCESS_CONTROL
 {
-const uint8_t VALUE = 4; ///< E2SM RC Radio Access Allocation Control style
+const uint8_t VALUE = 4; ///< E2SM RC Radio Access Control style
 
 // O-RAN WG3 E2SM RC v01.02 7.6.5.1
 namespace UE_ADMISSION_CONTROL
 {
-const uint8_t VALUE = 1; ///< E2SM RC Radio Access Allocation Control's UE Admission Control service
+const uint8_t VALUE = 1; ///< E2SM RC Radio Access Control's UE Admission Control service
 }
 
 namespace RACH_BACKOFF_CONTROL
 {
-const uint8_t VALUE = 2; ///< E2SM RC Radio Access Allocation Control's RACH Backoff Control service
+const uint8_t VALUE = 2; ///< E2SM RC Radio Access Control's RACH Backoff Control service
 }
 
 namespace ACCESS_BARRING_CONTROL
 {
-const uint8_t VALUE = 3; ///< E2SM RC Radio Access Allocation Control's Access Barring Control service
+const uint8_t VALUE = 3; ///< E2SM RC Radio Access Control's Access Barring Control service
 }
 
 namespace RRC_CONNECTION_RELEASE_CONTROL
 {
-const uint8_t VALUE = 4; ///< E2SM RC Radio Access Allocation Control's RRC Connection Release Control service
+const uint8_t VALUE = 4; ///< E2SM RC Radio Access Control's RRC Connection Release Control service
 }
 
 namespace RRC_CONNECTION_REJECT_CONTROL
 {
-const uint8_t VALUE = 5; ///< E2SM RC Radio Access Allocation Control's RRC Connection Reject Control service
+const uint8_t VALUE = 5; ///< E2SM RC Radio Access Control's RRC Connection Reject Control service
 }
 } // namespace RADIO_ACCESS_CONTROL
 
