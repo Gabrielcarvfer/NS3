@@ -177,9 +177,10 @@ for (auto& e2nodeMeasurements : metricMap)
    for (auto& entry : e2nodeMeasurements.second)
    {
      // Individual measurements 
-     entry.timestamp is a wallclock timestamp
-     entry.entry is a Json object containing the measurements
-     // The parameters of said measurements are defined by 3GPP
+     // entry.timestamp is a wallclock timestamp
+     // entry.measurements is a Json object containing the measurements
+     
+     // The fields of said measurements are defined by 3GPP
      // for the /KPM/Ho.SrcCellQual.RSRQ we have
      auto rnti = entry.measurements["RNTI"];
      auto primaryCellID = entry.measurements["CELLID"];
@@ -302,7 +303,7 @@ case RIC_INSERT_SERVICE_STYLES::CONNECTED_MODE_MOBILITY_CONTROL_REQUEST::
             // todo: send RIC_CONTROL_FAILURE
             return;
         }
-        // UE wants to switch to a different cell
+        // Primary cell wants to hand an UE over to a different cell
         uint16_t ueToHandover = indicationHeader.contents.format_2.RNTI;
         uint16_t requestedTargetCell = payload["MESSAGE"]["Target Primary Cell ID"];
     
