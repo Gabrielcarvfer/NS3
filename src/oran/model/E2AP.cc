@@ -582,8 +582,10 @@ E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
         NS_LOG_FUNCTION(this << "Endpoint " + endpoint + " is not subscribed");
         return;
     }
+    std::stringstream ss;
+    ss << Simulator::Now().GetNanoSeconds();
     auto periodicMeasurement =
-        PeriodicMeasurementStruct{SystemWallClockTimestamp().ToString(), json};
+        PeriodicMeasurementStruct{ss.str(), json};//SystemWallClockTimestamp().ToString()
     it->second.measurements.push_front(periodicMeasurement);
 }
 

@@ -283,6 +283,7 @@ xAppHandoverMlpackKmeans::HandoverSucceeded(std::string context,
 {
     NS_LOG_FUNCTION(this);
     std::cout << "yay" << std::endl; // reward predictor
+    exit(0);
     for (auto [key, value] : m_imsiInHandover)
     {
         if (value == imsi)
