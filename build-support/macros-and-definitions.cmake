@@ -150,6 +150,7 @@ set(CMAKE_HEADER_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY}/include/ns3)
 set(THIRD_PARTY_DIRECTORY ${PROJECT_SOURCE_DIR}/3rd-party)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 link_directories(${CMAKE_OUTPUT_DIRECTORY}/lib)
+file(MAKE_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
 
 # Get installation folder default values for each platform and include package
 # configuration macro
@@ -750,6 +751,19 @@ macro(process_options)
        "${PROJECT_SOURCE_DIR}/build-support/custom-modules"
   )
   list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/build-support/3rd-party")
+
+  # Include our package managers
+
+  # Starting with a custom cmake file that provides a Hunter-like interface to
+  # VcPkg Use add_package(package) to install a package Then
+  # find_package(package) to use it
+  include(ns3-vcpkg-hunter)
+
+  # Then the beautiful CPM manager (too bad it doesn't work with everything)
+  # https://github.com/cpm-cmake/CPM.cmake
+  include(CPM)
+  set(CPM_USE_LOCAL_PACKAGES ON)
+  # End of package managers
 
   set(ENABLE_EIGEN False)
   if(${NS3_EIGEN})

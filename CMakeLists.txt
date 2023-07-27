@@ -82,6 +82,7 @@ option(NS3_EIGEN "Build with Eigen support" ON)
 option(NS3_STATIC "Build a static ns-3 library and link it against executables"
        OFF
 )
+option(NS3_VCPKG "Enable the Vcpkg C++ library manager support" OFF)
 option(NS3_VERBOSE "Print additional build system messages" OFF)
 option(NS3_VISUALIZER "Build visualizer module" ON)
 option(NS3_WARNINGS "Enable compiler warnings" ON)
