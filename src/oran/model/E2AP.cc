@@ -3,6 +3,7 @@
 //
 
 #include "E2AP.h"
+#include "ns3/pointer.h"
 
 using namespace ns3;
 using namespace oran;

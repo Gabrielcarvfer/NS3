@@ -17,7 +17,10 @@
 
 if(NOT ${NS3_VCPKG})
   function(add_package package_name)
-    message(STATUS "Vcpkg support is not enabled. Skipping the installation of ${package_name}")
+    message(
+            STATUS
+            "Vcpkg support is not enabled. Skipping the installation of ${package_name}"
+    )
   endfunction()
   return()
 endif()
@@ -59,9 +62,9 @@ function(setup_vcpkg)
     endif()
     get_filename_component(VCPKG_PARENT_DIR ${VCPKG_DIR} DIRECTORY)
     execute_process(
-      COMMAND ${GIT_EXECUTABLE} clone --depth 1
-              https://github.com/microsoft/vcpkg.git
-      WORKING_DIRECTORY "${VCPKG_PARENT_DIR}/"
+            COMMAND ${GIT_EXECUTABLE} clone --depth 1
+            https://github.com/microsoft/vcpkg.git
+            WORKING_DIRECTORY "${VCPKG_PARENT_DIR}/"
     )
   endif()
 
@@ -70,13 +73,19 @@ function(setup_vcpkg)
   else()
     # Check if required packages are installed (unzip curl tar)
     if(WIN32)
+      find_program(ZIP_PRESENT zip.exe)
       find_program(UNZIP_PRESENT unzip.exe)
       find_program(CURL_PRESENT curl.exe)
       find_program(TAR_PRESENT tar.exe)
     else()
+      find_program(ZIP_PRESENT zip)
       find_program(UNZIP_PRESENT unzip)
       find_program(CURL_PRESENT curl)
       find_program(TAR_PRESENT tar)
+    endif()
+
+    if(${ZIP_PRESENT} STREQUAL ZIP_PRESENT-NOTFOUND)
+      message(FATAL_ERROR "Zip is required for VcPkg, but is not installed")
     endif()
 
     if(${UNZIP_PRESENT} STREQUAL UNZIP_PRESENT-NOTFOUND)
@@ -109,8 +118,8 @@ function(setup_vcpkg)
     endif()
 
     execute_process(
-      COMMAND ${COMPILER_ENFORCING} ${VCPKG_DIR}/${command}
-      WORKING_DIRECTORY ${VCPKG_DIR}
+            COMMAND ${COMPILER_ENFORCING} ${VCPKG_DIR}/${command}
+            WORKING_DIRECTORY ${VCPKG_DIR}
     )
     # message(STATUS "VCPKG bootstrapped") include_directories(${VCPKG_DIR})
     set(ENV{VCPKG_ROOT} ${VCPKG_DIR})
@@ -120,15 +129,10 @@ function(setup_vcpkg)
     execute_process(COMMAND chmod +x ${VCPKG_DIR}/${VCPKG_EXEC})
   endif()
 
-  set(vcpkg_toolchain ${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
-  if(NOT CMAKE_TOOLCHAIN_FILE OR NOT ("${CMAKE_TOOLCHAIN_FILE}" STREQUAL
-                                      "${vcpkg_toolchain}")
+  set(CMAKE_PREFIX_PATH
+          "${VCPKG_DIR}/installed/${VCPKG_TRIPLET}/;${CMAKE_PREFIX_PATH}"
+          PARENT_SCOPE
   )
-    message(
-      FATAL_ERROR
-        "To use Vcpkg, reconfigure with -DCMAKE_TOOLCHAIN_FILE=${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake"
-    )
-  endif()
 endfunction()
 
 function(add_package package_name)
@@ -140,8 +144,8 @@ function(add_package package_name)
   endif()
   message(STATUS "${package_name} will be installed")
   execute_process(
-    COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet
-            ${VCPKG_TRIPLET} OUTPUT_QUIET # comment for easier debugging
+          COMMAND ${VCPKG_DIR}/${VCPKG_EXEC} install ${package_name} --triplet
+          ${VCPKG_TRIPLET} # comment for easier debugging
   )
   message(STATUS "${package_name} was installed")
 endfunction()

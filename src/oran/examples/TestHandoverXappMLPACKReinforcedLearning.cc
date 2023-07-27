@@ -196,7 +196,7 @@ class xAppHandoverML : public xAppHandover
         }
         // Prepare to run K-means
         arma::Row<size_t> assignments;
-        mlpack::kmeans::KMeans<> k;
+        mlpack::KMeans<> k;
         arma::mat centroids;
         k.Cluster(dataset, cells.size(), assignments, centroids);
 
