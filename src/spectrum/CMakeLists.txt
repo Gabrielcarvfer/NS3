@@ -84,7 +84,7 @@ set(libraries_to_link
         ${libpropagation}
         ${libantenna}
         ${ARMADILLO_LIBRARIES}
-        OpenBLAS::OpenBLAS
+        ${OPENBLAS_LIBRARIES}
         )
 
 set(test_sources

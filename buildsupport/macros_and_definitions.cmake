@@ -155,7 +155,9 @@ macro(process_options)
     #process debug switch
     if (${AUTOINSTALL_DEPENDENCIES})
         setup_vcpkg()
-        include(${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
+        set(CMAKE_PREFIX_PATH
+                "${VCPKG_DIR}/installed/${VCPKG_TRIPLET}/;${CMAKE_PREFIX_PATH}"
+        )
     endif()
 
     #PyTorch still need some fixes on Windows
@@ -204,14 +206,18 @@ macro(process_options)
     endif()
 
     #RANGE-5G uses Armadillo for CDL A and D channels
+    add_package(superlu)
     add_package(openblas)
     add_package(Armadillo)
     find_package(Armadillo REQUIRED)
+
     if (NOT ${ARMADILLO_FOUND})
         message(FATAL_ERROR "Armadillo not found")
     else()
         include_directories(${ARMADILLO_INCLUDE_DIRS})
-        find_package(OpenBLAS CONFIG REQUIRED)
+        include_directories(${SUPERLU_INCLUDE_DIRS})
+
+        find_package(OpenBLAS REQUIRED)
     endif()
 
     set(OPENFLOW_REQUIRED_BOOST_LIBRARIES)

@@ -306,7 +306,7 @@ set(libraries_to_link
         #kalman
         json-loader
         ${ARMADILLO_LIBRARIES}
-        OpenBLAS::OpenBLAS
+        ${OPENBLAS_LIBRARIES}
         )
 
 set(test_sources

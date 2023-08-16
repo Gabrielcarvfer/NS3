@@ -29,8 +29,7 @@ function(setup_vcpkg)
 
         git_clone(
                 PROJECT_NAME    vcpkg
-                GIT_URL         https://github.com/Gabrielcarvfer/vcpkg.git
-                GIT_TAG         NS3
+                GIT_URL         https://github.com/microsoft/vcpkg.git
                 DIRECTORY       ${PROJECT_SOURCE_DIR}/3rd-party/
         )
     endif()
