@@ -10,6 +10,8 @@ project(NS3 CXX C)
 
 file(STRINGS VERSION NS3_VER)
 
+add_definitions(-fopenmp)
+
 # minimum compiler versions
 set(AppleClang_MinVersion 11.0.0)
 set(Clang_MinVersion 6.0.0)

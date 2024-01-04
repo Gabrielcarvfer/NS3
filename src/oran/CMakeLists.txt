@@ -23,6 +23,8 @@ endif()
 
 include_directories(${MLPACK_INCLUDE_DIRS})
 
+add_link_options(-fopenmp)
+
 build_lib(
   LIBNAME oran
   SOURCE_FILES
