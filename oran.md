@@ -16,7 +16,8 @@ The currently included KPMs are the ones specified by the 3GPP as the necessary 
 which is also implemented as a E2SM RC service.
 
 ## How to cite?
-Paper under peer review.
+
+Check the paper in the [link](http://dx.doi.org/10.5753/sbrc_estendido.2023.715).
 
 ## How to install?
 The first step is cloning the [NS3.37-oran](https://github.com/Gabrielcarvfer/NS3/tree/NS3.37-oran).
