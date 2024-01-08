@@ -3,6 +3,7 @@
 //
 
 #include "E2AP.h"
+
 #include "ns3/pointer.h"
 
 using namespace ns3;
@@ -586,7 +587,7 @@ E2AP::PublishToEndpointSubscribers(std::string endpoint, Json json)
     std::stringstream ss;
     ss << Simulator::Now().GetNanoSeconds();
     auto periodicMeasurement =
-        PeriodicMeasurementStruct{ss.str(), json};//SystemWallClockTimestamp().ToString()
+        PeriodicMeasurementStruct{ss.str(), json}; // SystemWallClockTimestamp().ToString()
     it->second.measurements.push_front(periodicMeasurement);
 }
 

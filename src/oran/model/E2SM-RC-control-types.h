@@ -40,7 +40,8 @@ const uint8_t VALUE = 1; ///< E2SM RC Radio Bearer Control's DRB QoS Configurati
 
 namespace QOS_FLOW_MAPPING_CONFIGURATION
 {
-const uint8_t VALUE = 2; ///< E2SM RC Radio Bearer Control's DRB QoS Flow Mapping Configuration service
+const uint8_t VALUE =
+    2; ///< E2SM RC Radio Bearer Control's DRB QoS Flow Mapping Configuration service
 }
 
 namespace LOGICAL_CHANNEL_CONFIGURATION
@@ -79,32 +80,38 @@ const uint8_t VALUE = 2; ///< E2SM RC Radio Resource Allocation Control style
 // O-RAN WG3 E2SM RC v01.02 7.6.3.1
 namespace DRX_PARAMETER_CONFIGURATION
 {
-const uint8_t VALUE = 1; ///< E2SM RC Radio Resource Allocation Control's DRX Parameter Configuration service
+const uint8_t VALUE =
+    1; ///< E2SM RC Radio Resource Allocation Control's DRX Parameter Configuration service
 }
 
 namespace SR_PERIODICITY_CONFIGURATION
 {
-const uint8_t VALUE = 2; ///< E2SM RC Radio Resource Allocation Control's SR Periodicity Configuration service
+const uint8_t VALUE =
+    2; ///< E2SM RC Radio Resource Allocation Control's SR Periodicity Configuration service
 }
 
 namespace SPS_PARAMETERS_CONFIGURATION
 {
-const uint8_t VALUE = 3; ///< E2SM RC Radio Resource Allocation Control's SPS Parameters Configuration service
+const uint8_t VALUE =
+    3; ///< E2SM RC Radio Resource Allocation Control's SPS Parameters Configuration service
 }
 
 namespace CONFIGURED_GRANT_CONTROL
 {
-const uint8_t VALUE = 4; ///< E2SM RC Radio Resource Allocation Control's Configured Grant Control service
+const uint8_t VALUE =
+    4; ///< E2SM RC Radio Resource Allocation Control's Configured Grant Control service
 }
 
 namespace CQI_TABLE_CONFIGURATION
 {
-const uint8_t VALUE = 5; ///< E2SM RC Radio Resource Allocation Control's CQI Table Configuration service
+const uint8_t VALUE =
+    5; ///< E2SM RC Radio Resource Allocation Control's CQI Table Configuration service
 }
 
 namespace SLICE_LEVEL_PRB_QUOTA
 {
-const uint8_t VALUE = 6; ///< E2SM RC Radio Resource Allocation Control's Slice Level PRB Quota service
+const uint8_t VALUE =
+    6; ///< E2SM RC Radio Resource Allocation Control's Slice Level PRB Quota service
 }
 } // namespace RADIO_RESOURCE_ALLOCATION_CONTROL
 
@@ -123,12 +130,14 @@ const uint8_t VALUE = 1; ///< E2SM RC Connected Mobility Control's Handover Cont
 
 namespace CONDITIONAL_HANDOVER_CONTROL
 {
-const uint8_t VALUE = 2; ///< E2SM RC Connected Mobility Control's Conditional Handover Control service
+const uint8_t VALUE =
+    2; ///< E2SM RC Connected Mobility Control's Conditional Handover Control service
 }
 
 namespace DUAL_ACTIVE_PROTOCOL_STACK_HANDOVER_CONTROL
 {
-const uint8_t VALUE = 3; ///< E2SM RC Connected Mobility Control's Dual Active Protocol Stack Handover Control service
+const uint8_t VALUE =
+    3; ///< E2SM RC Connected Mobility Control's Dual Active Protocol Stack Handover Control service
 }
 } // namespace CONNECTED_MODE_MOBILITY_CONTROL
 
@@ -176,12 +185,14 @@ const uint8_t VALUE = 5; ///< E2SM RC Dual Connectivity Control style
 // O-RAN WG3 E2SM RC v01.02 7.6.6.1 +
 namespace DC_SECONDARY_NODE_ADDITION_CONTROL
 {
-const uint8_t VALUE = 1; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Addition Control service
+const uint8_t VALUE =
+    1; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Addition Control service
 }
 
 namespace DC_SECONDARY_NODE_MODIFICATION_AND_RELEASE_CONTROL
 {
-const uint8_t VALUE = 2; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Modification and Release Control service
+const uint8_t VALUE = 2; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Modification and
+                         ///< Release Control service
 }
 
 namespace DC_PSCELL_CHANGE_CONTROL
@@ -191,7 +202,8 @@ const uint8_t VALUE = 3; ///< E2SM RC Dual Connectivity Control's DC PSCell Chan
 
 namespace DC_SECONDARY_NODE_CHANGE_CONTROL
 {
-const uint8_t VALUE = 4; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Change Control service
+const uint8_t VALUE =
+    4; ///< E2SM RC Dual Connectivity Control's DC Secondary Node Change Control service
 }
 
 namespace DC_DRB_TERMINATION_CONTROL
@@ -210,12 +222,14 @@ const uint8_t VALUE = 6; ///< E2SM RC Carrier Aggregation Control style
 // O-RAN WG3 E2SM RC v01.02 7.6.7.1
 namespace CA_SECONDARY_CELL_ADDITION_CONTROL
 {
-const uint8_t VALUE = 1; ///< E2SM RC Carrier Aggregation Control's CA Secondary Cell Addition Control service
+const uint8_t VALUE =
+    1; ///< E2SM RC Carrier Aggregation Control's CA Secondary Cell Addition Control service
 }
 
 namespace CA_SECONDARY_CELL_MODIFICATION_AND_RELEASE_CONTROL
 {
-const uint8_t VALUE = 2; ///< E2SM RC Carrier Aggregation Control's CA Secondary Cell Modification and Release Control service
+const uint8_t VALUE = 2; ///< E2SM RC Carrier Aggregation Control's CA Secondary Cell Modification
+                         ///< and Release Control service
 }
 } // namespace CARRIER_AGGREGATION_CONTROL
 
@@ -229,7 +243,8 @@ const uint8_t VALUE = 7; ///< E2SM RC Idle Mode Mobility Control style
 // O-RAN WG3 E2SM RC v01.02 7.6.8.1
 namespace CELL_RESELECTION_PRIORITY_CONTROL
 {
-const uint8_t VALUE = 1; ///< E2SM RC Idle Mode Mobility Control's Cell Reselection Priority Control service
+const uint8_t VALUE =
+    1; ///< E2SM RC Idle Mode Mobility Control's Cell Reselection Priority Control service
 }
 } // namespace IDLE_MODE_MOBILITY_CONTROL
 
@@ -243,7 +258,8 @@ const uint8_t VALUE = 8; ///< E2SM RC UE Information and Assignment Control styl
 // O-RAN WG3 E2SM RC v01.02 7.6.9.1
 namespace UE_TO_EXPLICIT_UE_LIST_ASSIGNMENT_COMMAND
 {
-const uint8_t VALUE = 1; ///< E2SM RC UE Information and Assistant Control's UE-to-UE Explicit List Assignment Control service
+const uint8_t VALUE = 1; ///< E2SM RC UE Information and Assistant Control's UE-to-UE Explicit List
+                         ///< Assignment Control service
 }
 } // namespace UE_INFORMATION_AND_ASSIGNMENT
 
@@ -257,17 +273,20 @@ const uint8_t VALUE = 9; ///< E2SM RC Measurement Reporting Configuration Contro
 // O-RAN WG3 E2SM RC v01.02 7.6.11.1
 namespace ADD_MR_CONFIGURATION
 {
-const uint8_t VALUE = 1; ///< E2SM RC Measurement Reporting Configuration Control's Add MR Configuration service
+const uint8_t VALUE =
+    1; ///< E2SM RC Measurement Reporting Configuration Control's Add MR Configuration service
 }
 
 namespace MODIFY_MR_CONFIGURATION
 {
-const uint8_t VALUE = 2; ///< E2SM RC Measurement Reporting Configuration Control's Modify MR Configuration service
+const uint8_t VALUE =
+    2; ///< E2SM RC Measurement Reporting Configuration Control's Modify MR Configuration service
 }
 
 namespace DELETE_MR_CONFIGURATION
 {
-const uint8_t VALUE = 3; ///< E2SM RC Measurement Reporting Configuration Control's Delete MR Configuration service
+const uint8_t VALUE =
+    3; ///< E2SM RC Measurement Reporting Configuration Control's Delete MR Configuration service
 }
 } // namespace MEASUREMENT_REPORTING_CONFIGURATION_CONTROL
 
@@ -311,21 +330,23 @@ typedef struct
     union {
         struct
         {
-            uint16_t RNTI; ///< UE's RNTI identifier
-            uint8_t RICControlStyleType;  ///< E2SM Control style
-            uint8_t ControlActionID; ///< E2SM Control style's service
+            uint16_t RNTI;               ///< UE's RNTI identifier
+            uint8_t RICControlStyleType; ///< E2SM Control style
+            uint8_t ControlActionID;     ///< E2SM Control style's service
             // only used when responding to an Insert Indication
-            E2SM_RC_RIC_CONTROL_DECISION RicDecision; ///< RIC Decision for a Control Indication received
-        } format_1; ///< Control Request Header format 1 contents
+            E2SM_RC_RIC_CONTROL_DECISION
+            RicDecision; ///< RIC Decision for a Control Indication received
+        } format_1;      ///< Control Request Header format 1 contents
 
         struct
         {
             uint16_t RNTI; ///< UE's RNTI identifier
-            E2SM_RC_RIC_CONTROL_DECISION RicDecision; ///< RIC Decision for a Control Indication received
-        } format_2; ///< Control Request Header format 2 contents
+            E2SM_RC_RIC_CONTROL_DECISION
+            RicDecision; ///< RIC Decision for a Control Indication received
+        } format_2;      ///< Control Request Header format 2 contents
 
         uint64_t raw; ///< Control Request Header raw data
-    } contents; ///< Control Request Header contents
+    } contents;       ///< Control Request Header contents
 } E2SM_RC_RIC_CONTROL_HEADER;
 
 /**
@@ -360,13 +381,14 @@ enum E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT
     E2SM_RC_RIC_CONTROL_MESSAGE_FORMAT_2
 };
 
-typedef uint16_t RNTI; ///< Define RNTI as uint16_t
-typedef uint32_t RAN_PARAMETER_ID; ///< Define RAN_PARAMETER_ID as uint32_t
-typedef double RAN_PARAMETER_VALUE; ///< Define RAN_PARAMETER_VALUE as double. todo: implement ELEMENT, STRUCT and LIST formats
-typedef std::string UE_CONTEXT_INFORMATION; ///< Define UE_CONTEXT_INFORMATION as a std::string
+typedef uint16_t RNTI;              ///< Define RNTI as uint16_t
+typedef uint32_t RAN_PARAMETER_ID;  ///< Define RAN_PARAMETER_ID as uint32_t
+typedef double RAN_PARAMETER_VALUE; ///< Define RAN_PARAMETER_VALUE as double. todo: implement
+                                    ///< ELEMENT, STRUCT and LIST formats
+typedef std::string UE_CONTEXT_INFORMATION;   ///< Define UE_CONTEXT_INFORMATION as a std::string
 typedef std::string CELL_CONTEXT_INFORMATION; ///< Define CELL_CONTEXT_INFORMATION as a std::string
-typedef uint8_t INDICATION_STYLE; ///< Define INDICATION_STYLE as uint8_t
-typedef uint16_t CELL_GLOBAL_ID; ///< Define CELL_GLOBAL_ID as uint16_t
+typedef uint8_t INDICATION_STYLE;             ///< Define INDICATION_STYLE as uint8_t
+typedef uint16_t CELL_GLOBAL_ID;              ///< Define CELL_GLOBAL_ID as uint16_t
 
 /**
  * \brief E2SM RC Control Message structure
@@ -383,7 +405,7 @@ typedef struct
             // RAN Parameter ID, RAN Parameter Value
             std::vector<std::pair<RAN_PARAMETER_ID, RAN_PARAMETER_VALUE>>
                 sequence_of_ran_parameters; ///< List of parameters
-        } format_1; ///< Control Message format 1 contents
+        } format_1;                         ///< Control Message format 1 contents
 
         struct
         {
@@ -393,15 +415,16 @@ typedef struct
             std::vector<
                 std::pair<RNTI, std::vector<std::pair<RAN_PARAMETER_ID, RAN_PARAMETER_VALUE>>>>
                 sequence_of_ue_identifiers; ///< List of parameters per RNTI
-        } format_2; ///< Control Message format 2 contents
+        } format_2;                         ///< Control Message format 2 contents
 
         struct
         {
             // O-RAN WG3 E2SM RC v01.02 9.2.1.4.3
             // Cell Global ID, Cell Context Information, Cell Deleted, Neighbor Relation Table
             std::vector<std::tuple<CELL_GLOBAL_ID, CELL_CONTEXT_INFORMATION, bool, uint16_t>>
-                sequence_of_cell_information; ///< Sequence of cell information todo: replace uint16_t with NEIGHBOR RELATION TABLE
-        } format_3; ///< Control Message format 3 contents
+                sequence_of_cell_information; ///< Sequence of cell information todo: replace
+                                              ///< uint16_t with NEIGHBOR RELATION TABLE
+        } format_3;                           ///< Control Message format 3 contents
 
         struct
         {
@@ -410,17 +433,18 @@ typedef struct
                 sequence_of_ue_information; ///< Sequence of UE information
             // Cell Global ID, Cell Context Information, Neighbor Relation Table
             std::vector<std::tuple<CELL_GLOBAL_ID, CELL_CONTEXT_INFORMATION, uint16_t>>
-                sequence_of_cell_information; ///< Sequence of cell information todo: replace uint16_t with NEIGHBOR RELATION TABLE
-        } format_4; ///< Control Message format 4 contents
+                sequence_of_cell_information; ///< Sequence of cell information todo: replace
+                                              ///< uint16_t with NEIGHBOR RELATION TABLE
+        } format_4;                           ///< Control Message format 4 contents
 
         struct
         {
             // O-RAN WG3 E2SM RC v01.02 9.2.1.4.5
             std::vector<std::pair<RAN_PARAMETER_ID, double>>
                 list_of_ran_parameters_requested; ///< List of requested parameters
-                                                   // todo: replace double with RAN PARAMETER VALUE
+                                                  // todo: replace double with RAN PARAMETER VALUE
                                                   // TYPE
-        } format_5; ///< Control Message format 5 contents
+        } format_5;                               ///< Control Message format 5 contents
 
         struct
         {
@@ -430,8 +454,8 @@ typedef struct
             // uint16_t>> sequence_of_insert_styles_for_multiple_actions;
         } format_6; ///< Control Message format 6 contents
 
-        uint8_t raw[1000];  ///< Control Message raw data todo: workaround this arbitrary limit
-    } contents; ///< Control Message contents
+        uint8_t raw[1000]; ///< Control Message raw data todo: workaround this arbitrary limit
+    } contents;            ///< Control Message contents
 } E2SM_RC_RIC_CONTROL_MESSAGE;
 
 /**

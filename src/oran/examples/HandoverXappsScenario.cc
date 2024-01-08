@@ -121,6 +121,7 @@ operator<<(std::ostream& os, const Registry& registry)
 std::vector<Registry>
     simulationRegistry; ///< Vector containing registries collected through the simulation
 std::map<uint16_t, uint64_t> rnti_to_imsi;
+
 /**
  * \brief Callback function when a connection is established in the UE
  * \param [in] context The context from the call
@@ -195,7 +196,6 @@ NotifyConnectionEstablishedEnb(std::string context, uint64_t imsi, uint16_t cell
                                     cellid,
                                     Registry::CONNECTION_ESTABLISHED_ENB);
     rnti_to_imsi.emplace(rnti, imsi);
-
 }
 
 /**
@@ -219,7 +219,6 @@ NotifyConnectionReconfigurationEnb(std::string context,
                                     cellid,
                                     Registry::CONNECTION_RECONFIGURATION_ENB);
     rnti_to_imsi.emplace(rnti, imsi);
-
 }
 
 /**
@@ -305,7 +304,6 @@ NotifyHandoverEndOkEnb(std::string context, uint64_t imsi, uint16_t cellid, uint
               << imsi << " RNTI " << rnti << std::endl;
     simulationRegistry.emplace_back(imsi, cellid, rnti, cellid, Registry::HANDOVER_OK_ENB);
     rnti_to_imsi.emplace(rnti, imsi);
-
 }
 
 /**
@@ -813,11 +811,11 @@ main(int argc, char** argv)
                 std::ofstream outputFile;
                 std::stringstream outputFileName;
                 std::string crudeMetric (metric.substr(metric.rfind("/")+1));
-                std::string crudeE2 (e2nodeMeasurements.first.substr(e2nodeMeasurements.first.rfind("/")+1));
-                outputFileName << crudeMetric << "_e2Node_" << crudeE2 << ".csv";
-                outputFile.open (outputFileName.str(), std::ofstream::out);
-                outputFile << "Timestamp,CellID,TargetCell,IMSI,RNTI,Value,\n";
-                for (auto& measurementDeque : e2nodeMeasurements.second)
+                std::string crudeE2
+    (e2nodeMeasurements.first.substr(e2nodeMeasurements.first.rfind("/")+1)); outputFileName <<
+    crudeMetric << "_e2Node_" << crudeE2 << ".csv"; outputFile.open (outputFileName.str(),
+    std::ofstream::out); outputFile << "Timestamp,CellID,TargetCell,IMSI,RNTI,Value,\n"; for (auto&
+    measurementDeque : e2nodeMeasurements.second)
                 {
                     outputFile << measurementDeque.timestamp << ",";
                     if (metric == "/KPM/HO.SrcCellQual.RSRQ")
