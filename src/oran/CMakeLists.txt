@@ -37,6 +37,7 @@ build_lib(
     model/xAppHandover.cc
     model/xAppHandoverMlpackKmeans.cc
     model/xAppHandoverMaxRsrq.cc
+    model/xAppHandoverMaliciousPositioning.cc
   HEADER_FILES
     model/json.hpp
     model/PubSubInfra.h
@@ -49,6 +50,7 @@ build_lib(
     model/xAppHandover.h
     model/xAppHandoverMlpackKmeans.h
     model/xAppHandoverMaxRsrq.h
+    model/xAppHandoverMaliciousPositioning.h
   LIBRARIES_TO_LINK
     ${libcore}
     ${libnetwork}
