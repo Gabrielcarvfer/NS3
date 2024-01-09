@@ -40,6 +40,7 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
 
     std::map<uint16_t, double> GetRntiRsrqMeasurements(uint16_t rnti);
     Vector3D Multilateration(std::map<uint16_t, double>&);
+    Vector3D GradientDescent(std::map<uint16_t, double>& measurements);
 
 
   private:

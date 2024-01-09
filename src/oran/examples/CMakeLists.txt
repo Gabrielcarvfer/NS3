@@ -119,23 +119,25 @@ endif()
 # endif()
 
 build_lib_example(
-        NAME TestMobilityPatterns
-        SOURCE_FILES TestMobilityPatterns.cc MobilityPatterns.cc
-        LIBRARIES_TO_LINK
-        ${libcore}
-        ${liblte}
-        ${liboran}
+  NAME TestMobilityPatterns
+  SOURCE_FILES TestMobilityPatterns.cc
+               MobilityPatterns.cc
+  LIBRARIES_TO_LINK
+    ${libcore}
+    ${liblte}
+    ${liboran}
 )
 
 build_lib_example(
-        NAME PrivacySafeguardingScenario
-        SOURCE_FILES PrivacySafeguardingScenario.cc MobilityPatterns.cc
-        LIBRARIES_TO_LINK
-        ${libcore}
-        ${libmobility}
-        ${libpoint-to-point}
-        ${liblte}
-        ${liboran}
-        ${libapplications}
-        ${libnetanim}
+  NAME PrivacySafeguardingScenario
+  SOURCE_FILES PrivacySafeguardingScenario.cc
+               MobilityPatterns.cc
+  LIBRARIES_TO_LINK
+    ${libcore}
+    ${libmobility}
+    ${libpoint-to-point}
+    ${liblte}
+    ${liboran}
+    ${libapplications}
+    ${libnetanim}
 )

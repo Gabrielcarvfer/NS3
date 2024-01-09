@@ -150,6 +150,66 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
     return position;
 }
 
+Vector3D
+xAppHandoverMaliciousPositioning::GradientDescent(std::map<uint16_t, double>& measurements)
+{
+    // Guess a random initial position for the UE
+    Vector3D position = {(float)rand()*10000/(float)(RAND_MAX), (float)rand()*10000/(float)(RAND_MAX), 0};
+
+    auto iteration_error = [&measurements, &position, this]() {
+        double error = 0;
+        for (auto&& [cellId, power] : measurements)
+        {
+            if (measurements.find(cellId) == measurements.end())
+            {
+                continue;
+            }
+
+            // We don't actually know the distance between it and the eNBs, but
+            // we do know the measurement values are proportional to the distance,
+            // assuming the same radio configuration (antenna type, elevation,
+            // topology, sensitivity) and parameters of transmission (power, frequency)
+
+            double distance = CalculateDistance(position, m_eNbPositions[cellId]);
+            error += measurements[cellId] / distance;
+        }
+        return error;
+    };
+
+    double learning_rate = 0.2;
+    unsigned ok_it = 0;
+    for(int i = 0; i < 10000; i++)
+    {
+        auto errorOld = iteration_error();
+        Vector3D oldPos = position;
+        position.x += (i%2==0? -1 : 1)*errorOld*learning_rate;
+        position.y += ((i+1%2)==0? -1 : 1)*errorOld*learning_rate;
+        auto errorNew = iteration_error();
+
+        if (errorNew < errorOld)
+        {
+            ok_it++;
+            if (ok_it % 20 == 0)
+                learning_rate *= 0.99;
+            continue;
+        }
+        else
+        {
+            // Restore old good position
+            position = oldPos;
+
+            // Make learning coarser when we don't get a good result
+            learning_rate *= 1.01;
+            // Clip coarseness so that we don't diverge
+            if (learning_rate >= 0.2)
+                learning_rate = 0.2;
+
+        }
+    }
+
+    return position;
+}
+
 void
 xAppHandoverMaliciousPositioning::PeriodicPositioning()
 {
@@ -160,8 +220,11 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
     for (auto rnti: m_rntiList)
     {
         auto measurements = GetRntiRsrqMeasurements(rnti);
-        auto estimated_position = Multilateration(measurements);
-        //std::cout << estimated_position << std::endl;
+        if (measurements.empty())
+            continue;
+        //auto estimated_position = Multilateration(measurements);
+        auto estimated_position = GradientDescent(measurements);
+        std::cout << estimated_position << std::endl;
     }
 
     // Re-schedule this function
