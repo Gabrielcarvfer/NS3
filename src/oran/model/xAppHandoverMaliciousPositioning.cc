@@ -133,16 +133,20 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
         auto Pc = it->second;
         Vector3D C = m_eNbPositions.at((it++)->first);
 
-        // Use FSPL to estimate the distance to the cells
-        // based on the received power in dbm
+        // Use Positioning of Wireless Base Station using Location-Based RSRP
+        // Measurement equation to estimate the distance from the RSRP
+        double n = 1.4; // pathloss coefficient
+        auto dA = pow(10, (100-Pa)/(10*n));
+        auto dB = pow(10, (100-Pb)/(10*n));
+        auto dC = pow(10, (100-Pc)/(10*n));
 
         // Calculate intermediate steps
         auto E = 2*(-A.x+B.x);
         auto F = 2*(-A.y+B.y);
-        auto G = pow(Pa,2)-pow(Pb,2)+pow(A.y, 2)-pow(B.y, 2);
+        auto G = pow(dA,2)-pow(dB,2)+pow(A.y, 2)-pow(B.y, 2);
         auto H = 2*(-B.x+C.x);
         auto I = 2*(-B.y+C.y);
-        auto J = pow(Pb,2)-pow(Pc,2)+pow(B.y, 2)-pow(C.y, 2);
+        auto J = pow(dB,2)-pow(dC,2)+pow(B.y, 2)-pow(C.y, 2);
 
         position.x = (G*I-J*F)/(I*E-F*H);
         position.y = (G*H-E*J)/(F*H-E*I);
@@ -171,39 +175,26 @@ xAppHandoverMaliciousPositioning::GradientDescent(std::map<uint16_t, double>& me
             // topology, sensitivity) and parameters of transmission (power, frequency)
 
             double distance = CalculateDistance(position, m_eNbPositions[cellId]);
-            error += measurements[cellId] / distance;
+            error += distance / measurements[cellId];
         }
         return error;
     };
 
     double learning_rate = 0.2;
-    unsigned ok_it = 0;
-    for(int i = 0; i < 10000; i++)
+    auto errorOld = iteration_error();
+    int maxTries = 100000;
+    while(--maxTries)
     {
-        auto errorOld = iteration_error();
-        Vector3D oldPos = position;
-        position.x += (i%2==0? -1 : 1)*errorOld*learning_rate;
-        position.y += ((i+1%2)==0? -1 : 1)*errorOld*learning_rate;
+        errorOld = iteration_error();
+        position.x += errorOld*learning_rate;
+        position.y += errorOld*learning_rate;
         auto errorNew = iteration_error();
-
-        if (errorNew < errorOld)
+        if (abs(errorOld - errorNew) < abs(0.001*errorOld))
+            break;
+        if (errorNew > errorOld)
         {
-            ok_it++;
-            if (ok_it % 20 == 0)
-                learning_rate *= 0.99;
-            continue;
-        }
-        else
-        {
-            // Restore old good position
-            position = oldPos;
-
-            // Make learning coarser when we don't get a good result
-            learning_rate *= 1.01;
-            // Clip coarseness so that we don't diverge
-            if (learning_rate >= 0.2)
-                learning_rate = 0.2;
-
+            position.x -= 2*errorOld*learning_rate;
+            position.y -= 2*errorOld*learning_rate;
         }
     }
 
@@ -222,8 +213,8 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
         auto measurements = GetRntiRsrqMeasurements(rnti);
         if (measurements.empty())
             continue;
-        //auto estimated_position = Multilateration(measurements);
-        auto estimated_position = GradientDescent(measurements);
+        auto estimated_position = Multilateration(measurements);
+        //auto estimated_position = GradientDescent(measurements);
         std::cout << estimated_position << std::endl;
     }
 
