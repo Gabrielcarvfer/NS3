@@ -2890,7 +2890,7 @@ class NS3QualityControlTestCase(unittest.TestCase):
         # Scan for all URLs in all files we can parse
         files_and_urls = set()
         unique_urls = set()
-        for topdir in ["bindings", "doc", "examples", "src", "utils"]:
+        for topdir in ["bindings", "doc", "examples", "src", "contrib", "utils"]:
             for root, dirs, files in os.walk(topdir):
                 # do not parse files in build directories
                 if "build" in root or "_static" in root or "source-temp" in root or 'html' in root:
