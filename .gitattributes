@@ -1,2 +1,10 @@
 src/*/bindings/* linguist-generated=true
-
+* text eol=lf
+*.dia text=auto
+*.eps text=auto
+*.fad text=auto
+*.jpeg text=auto
+*.jpg text=auto
+*.pdf text=auto
+*.png text=auto
+*.svg text=auto
