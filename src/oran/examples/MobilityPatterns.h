@@ -42,9 +42,9 @@ using PatternCoordinates = std::vector<std::pair<double, double>>;
 class MobilityPatterns
 {
   public:
-    enum PATTERN_ENUM
+    enum PATTERN_ENUM: uint16_t
     {
-        UPWARDS_TRIANGLE,
+        UPWARDS_TRIANGLE=0,
         DOWNWARDS_TRIANGLE,
         HOURGLASS,
         SQUARE,
@@ -52,6 +52,7 @@ class MobilityPatterns
         X1PERIOD,
         X2PERIOD,
         X3PERIOD,
+        NUM_PATTERNS
     };
 
     static PatternCoordinates GetMobilityPatternCoordinates(uint32_t steps,

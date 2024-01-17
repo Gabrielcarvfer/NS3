@@ -6,6 +6,8 @@
 // Created by Gabriel Ferreira(@gabrielcarvfer) on 1/11/22.
 //
 
+#include "MobilityPatterns.h"
+
 #include "ns3/E2AP.h"
 #include "ns3/applications-module.h"
 #include "ns3/core-module.h"
@@ -62,7 +64,7 @@ main(int argc, char** argv)
     uint16_t numberOfUes = 6;
     uint16_t numberOfEnbs = 3;
     uint16_t numBearersPerUe = 1;
-    double simTime = 10 * 60;
+    double simTime = 2 * 60;
     double enbTxPowerDbm = 40.0;
 
     std::stringstream ss;
@@ -177,86 +179,27 @@ main(int argc, char** argv)
     ueMobility.SetMobilityModel("ns3::WaypointMobilityModel");
     ueMobility.Install(ueNodes);
 
-    double sin60 = std::sin(3.1415 * 60 / 180);
-    double cos60 = std::cos(3.1415 * 60 / 180);
-
-    std::vector<double> speedUes{0.2, 1, 5, 10, 5, 30};
-    for (int i = 0; i < numberOfUes; i++)
+    int steps = 120;
+    int cycles = 5;
+    Time timePerStep = Seconds(simTime)/(steps*cycles);
+    Time timePerCycle = Seconds(simTime)/cycles;
+    auto boundaries = BoundingBox(800, 2400, 800, 2400);
+    for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
-        // UEs in the intersection of the 2/3 cells
-        /*
-         * 1000,1250 ► 1750,1250
-         *     UE ______
-         *        \    /
-         *    ▲    \  /   ▼
-         *          \/
-         *     1500, 1683
-         */
-        double InitPosX = 1250;
-        double InitPosY = 1250;
-        double PosX = InitPosX;
-        double PosY = InitPosY;
-        double MidX = 1500;
-        double LimX = 1750;               // walks 500 from the starting point
-        double LimY = 1250 + 500 * sin60; // initPosY+triangleSide*sin(angle) = 1683;
+        auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,
+                                                                           boundaries,
+                                                                           static_cast<MobilityPatterns::PATTERN_ENUM>(i));
+        auto itCoordRev = coordinates.rbegin();
+        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(itCoordRev->first, itCoordRev->second, 0));
 
-        if (i >= 4)
+        for(auto k = 0; k < cycles; k++)
         {
-            // These UEs fly outside the cells
-            InitPosX = 500;
-            InitPosY = 750;
-            PosX = InitPosX;
-            PosY = InitPosY;
-            LimX = 2500;
-            LimY = 750 + 2000 * sin60;
-        }
-
-        enum direction
-        {
-            TOP_RIGHT = 0,
-            BOTTOM_MID,
-            TOP_LEFT
-        };
-        enum direction initialDirection = TOP_RIGHT;
-        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(PosX, PosY, 0));
-        double speedUe = speedUes.at(i);
-        double speedCos60 = speedUe * cos60;
-        double speedSin60 = speedUe * sin60;
-        for (int j = 0; j < int(simTime); j++)
-        {
-            if (initialDirection == TOP_RIGHT)
+            auto itCoord = coordinates.begin();
+            for(int j = 0; j < steps; j++, itCoord++)
             {
-                PosX += speedUe;
-                if (PosX > LimX)
-                {
-                    PosX = LimX;
-                    initialDirection = BOTTOM_MID;
-                }
+                Waypoint wpt(timePerCycle*k+timePerStep*j, Vector(itCoord->first, itCoord->second, 0.0));
+                ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
             }
-            if (initialDirection == BOTTOM_MID)
-            {
-                PosX -= speedCos60;
-                PosY += speedSin60;
-                if (PosY > LimY)
-                {
-                    PosX = MidX;
-                    PosY = LimY;
-                    initialDirection = TOP_LEFT;
-                }
-            }
-            if (initialDirection == TOP_LEFT)
-            {
-                PosX -= speedCos60;
-                PosY -= speedSin60;
-                if (PosX < InitPosX)
-                {
-                    PosX = InitPosX;
-                    PosY = InitPosY;
-                    initialDirection = TOP_RIGHT;
-                }
-            }
-            Waypoint wpt(Seconds(j), Vector(PosX, PosY, 0.0));
-            ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
         }
     }
 
@@ -378,7 +321,7 @@ main(int argc, char** argv)
             scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
         sgw->AddApplication(handoverxapp);
     }
-    /*
+
     AnimationInterface anim("anim.xml");
     //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(false);
@@ -414,7 +357,7 @@ main(int argc, char** argv)
         anim.UpdateNodeColor(nodeId, 0, 255, 0);
         anim.UpdateNodeSize(nodeId, 80, 80);
     }
-    */
+
     // Ptr<FlowMonitor> flowMonitor;
     // FlowMonitorHelper flowHelper;
     // flowMonitor = flowHelper.InstallAll();
