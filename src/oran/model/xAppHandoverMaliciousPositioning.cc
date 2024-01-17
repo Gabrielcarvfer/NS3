@@ -94,7 +94,6 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    cellId++;
                     if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
                     {
                         rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
