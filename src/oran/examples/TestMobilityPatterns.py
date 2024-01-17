@@ -60,7 +60,7 @@ def pattern2_downwards_triangle(steps, boundaries: BoundingBox):
     #   \  /
     #    \/
     x = list(reversed(x))
-    y = list(map(lambda z: boundaries.yMax - z, reversed(y)))
+    y = list(map(lambda z: boundaries.yMax + boundaries.yMin - z, reversed(y)))
     return x, y
 
 
@@ -131,8 +131,8 @@ def pattern5_diamond(steps, boundaries: BoundingBox):
     sin = math.sin(math.pi / 3)
     side = boundaries.shortest_length() * (1/sin) / 2
 
-    x = [(boundaries.xMax - boundaries.xMin) / 2]
-    y = [0]
+    x = [(boundaries.xMax + boundaries.xMin) / 2]
+    y = [boundaries.yMin]
     step_size = 4 * side / steps
     steps_per_side = steps / 4
     # 1  /\  2
@@ -172,11 +172,20 @@ def pattern_n_periods(steps, boundaries: BoundingBox, periods=2):
         y.append(y[-1] + math.cos(step * angle_per_step))
 
     # Figure out maximum dimensions of the figure and rescale to fit the bounding box
+    xMax = max(x)
+    xMin = min(x)
+    if xMin < 0:
+        xMax -= xMin
+        x = list(map(lambda z: z - xMin, x))
+        xMin = 0
     yMax = max(y)
     yMin = min(y)
-    xMax = max(x)
-    x = list(map(lambda z: z*boundaries.xMax/xMax, x))
-    y = list(map(lambda z: (z-yMin)*boundaries.yMax/(yMax-yMin), y))
+    if yMin < 0:
+        yMax -= yMin
+        y = list(map(lambda z: z-yMin, y))
+        yMin = 0
+    x = list(map(lambda z: boundaries.xMin+z*(boundaries.xMax-boundaries.xMin)/(xMax-xMin), x))
+    y = list(map(lambda z: boundaries.yMin+z*(boundaries.yMax-boundaries.yMin)/(yMax-yMin), y))
     return x, y
 
 
@@ -208,10 +217,10 @@ matplotlib.use('TkAgg')
 
 import matplotlib.pyplot as plt
 steps = 120
-boundaries = BoundingBox(0, 100, 0, 100)
+boundaries = BoundingBox(800, 2400, 800, 2400)#0, 100, 0, 100)
 fig, axes = plt.subplots(nrows=2, ncols=4, squeeze=False, sharex=True, sharey=True)
-axes[0][0].set_xticks([0, 10])
-axes[0][0].set_yticks([0, 10])
+#axes[0][0].set_xticks([0, 10])
+#axes[0][0].set_yticks([0, 10])
 for i, pattern in enumerate(movement_patterns):
     axes[i//4][i%4].plot(*pattern(steps, boundaries), label="Python")
 

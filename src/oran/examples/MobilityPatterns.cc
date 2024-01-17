@@ -124,7 +124,7 @@ MobilityPatterns::GetMobilityPatternDownwardsTriangle(uint32_t steps, BoundingBo
      * 1 \/ 0
      */
     std::transform(coordinates.begin(), coordinates.end(), coordinates.begin(), [box](auto a) {
-        a.second = box.yMax - a.second;
+        a.second = box.yMax + box.yMin - a.second;
         return a;
     });
     return coordinates;
@@ -224,8 +224,8 @@ MobilityPatterns::GetMobilityPatternDiamond(uint32_t steps, BoundingBox box)
     double sin60 = sin(M_PI / 3);
     double side = box.GetShortestLength() * (1 / sin60) / 2;
 
-    coordinates[0].first = (box.xMax - box.xMin) / 2;
-    coordinates[0].second = 0;
+    coordinates[0].first = (box.xMax + box.xMin) / 2;
+    coordinates[0].second = box.yMin;
     double step_size = 4 * side / steps;
     int steps_per_side = steps / 4;
     for (uint32_t step = 1; step < steps; step++)
@@ -277,21 +277,48 @@ GetMobilityPatternNPeriods(uint32_t steps, BoundingBox box, uint16_t periods = 2
         coordinates[step].second = coordinates[step - 1].second + cos(step * angle_per_step);
     }
     // Figure out maximum dimensions of the figure and rescale to fit the bounding box
+    double xMax = GetCoordValue(coordinates, false, true);
+    double xMin = GetCoordValue(coordinates, true, true);
+    if (xMin < 0)
+    {
+        xMax -= xMin;
+        std::transform(coordinates.begin(),
+                       coordinates.end(),
+                       coordinates.begin(),
+                       [xMin](auto a) {
+                           a.first = a.first - xMin;
+                           return a;
+                       });
+        xMin = 0;
+    }
+
     double yMax = GetCoordValue(coordinates, false, false);
     double yMin = GetCoordValue(coordinates, true, false);
-    double xMax = GetCoordValue(coordinates, false, true);
+    if (yMin < 0)
+    {
+        yMax -= yMin;
+        std::transform(coordinates.begin(),
+                       coordinates.end(),
+                       coordinates.begin(),
+                       [yMin](auto a) {
+                           a.second = a.second - yMin;
+                           return a;
+                       });
+        yMin = 0;
+    }
+
     std::transform(coordinates.begin(),
                    coordinates.end(),
                    coordinates.begin(),
-                   [box, xMax](auto a) {
-                       a.first = a.first * box.xMax / xMax;
+                   [box, xMin, xMax](auto a) {
+                       a.first = box.xMin + a.first * (box.xMax-box.xMin)/(xMax - xMin);
                        return a;
                    });
     std::transform(coordinates.begin(),
                    coordinates.end(),
                    coordinates.begin(),
                    [box, yMin, yMax](auto a) {
-                       a.second = (a.second - yMin) * box.xMax / (yMax - yMin);
+                       a.second = box.yMin + a.second * (box.yMax-box.yMin)/(yMax - yMin);
                        return a;
                    });
     return coordinates;
@@ -319,7 +346,7 @@ void
 MobilityPatterns::Test()
 {
     int steps = 120;
-    auto boundaries = BoundingBox(0, 100, 0, 100);
+    auto boundaries = BoundingBox(800, 2400, 800, 2400);//0, 100, 0, 100);
     auto filename = "mobility_patterns.json";
     auto os = std::ofstream(filename);
     while (!os.is_open())
