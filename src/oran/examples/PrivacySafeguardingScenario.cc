@@ -300,22 +300,22 @@ main(int argc, char** argv)
         // Configurar eNodeBs/nós E2
         Ptr<E2AP> e2n1 = CreateObject<E2AP>();
         enbNodes.Get(0)->AddApplication(e2n1);
-        Simulator::Schedule(Seconds(0.5), &E2AP::Connect, e2t);
-        Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n1);
-        Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n1);
-        Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n1);
+        Simulator::Schedule(Seconds(0.1), &E2AP::Connect, e2t);
+        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n1);
+        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n1);
+        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n1);
 
         Ptr<E2AP> e2n2 = CreateObject<E2AP>();
         enbNodes.Get(1)->AddApplication(e2n2);
-        Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n2);
-        Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n2);
-        Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n2);
+        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n2);
+        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n2);
+        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n2);
 
         Ptr<E2AP> e2n3 = CreateObject<E2AP>();
         enbNodes.Get(2)->AddApplication(e2n3);
-        Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n3);
-        Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n3);
-        Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
+        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n3);
+        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n3);
+        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
 
         Ptr<xAppHandoverMaliciousPositioning> handoverxapp = CreateObject<xAppHandoverMaliciousPositioning>(
             scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
