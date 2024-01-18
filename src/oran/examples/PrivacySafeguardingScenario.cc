@@ -65,7 +65,7 @@ main(int argc, char** argv)
     uint16_t numberOfEnbs = 3;
     uint16_t numBearersPerUe = 1;
     double simTime = 2 * 60;
-    double enbTxPowerDbm = 40.0;
+    double enbTxPowerDbm = 30.0;
 
     std::stringstream ss;
     ss << "\n\t\tChoose one:\n"
