@@ -61,7 +61,7 @@ main(int argc, char** argv)
 
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
-    uint16_t numberOfUes = 6;
+    uint16_t numberOfUes = 8;
     uint16_t numberOfEnbs = 3;
     uint16_t numBearersPerUe = 1;
     double simTime = 2 * 60;
@@ -183,7 +183,7 @@ main(int argc, char** argv)
     int cycles = 5;
     Time timePerStep = Seconds(simTime)/(steps*cycles);
     Time timePerCycle = Seconds(simTime)/cycles;
-    auto boundaries = BoundingBox(800, 2400, 800, 2400);
+    auto boundaries = BoundingBox(750, 2300, 650, 2000);
     for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
         auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,
