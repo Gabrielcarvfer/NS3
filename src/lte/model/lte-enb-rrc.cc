@@ -33,6 +33,8 @@
 #include "lte-rlc-tm.h"
 #include "lte-rlc-um.h"
 #include "lte-rlc.h"
+#include "lte-ue-net-device.h"
+#include "lte-enb-net-device.h"
 
 #include <ns3/E2AP.h>
 #include <ns3/E2SM-RC-control-types.h>
@@ -1436,6 +1438,77 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
             e2ap->PublishToEndpointSubscribers("/KPM/HO.SrcCellQual.RSRP", json);
             json["VALUE"] = msg.measResults.measResultPCell.rsrqResult;
             e2ap->PublishToEndpointSubscribers("/KPM/HO.SrcCellQual.RSRQ", json);
+
+            // This is meant to collect information regarding distances and received power levels.
+            // Using its output anywhere else is cheating.
+
+            // It is totally reasonable to have some knowledge like this, because in real life you can pick up
+            // your phone and go measure these by yourself.
+
+            // Find UE with matching IMSI
+            auto find_rnti_with_imsi [[maybe_unused]] = [this]() {
+                Ptr <Node> rntiNode;
+                for (unsigned nodeId = 0; nodeId < NodeList::GetNNodes(); nodeId++) {
+                    Ptr <Node> n = NodeList::GetNode(nodeId);
+                    for (unsigned deviceId = 0; deviceId < n->GetNDevices(); deviceId++) {
+                        auto lteUeNetDevice = n->GetDevice(deviceId)->GetObject<LteUeNetDevice>();
+                        if (!lteUeNetDevice)
+                            continue;
+                        if (lteUeNetDevice->GetImsi() != this->GetImsi())
+                            continue;
+                        auto mobilityModel = n->GetObject<MobilityModel>();
+                        if (!mobilityModel)
+                            NS_FATAL_ERROR("And it was at this moment, that he knew he f**kd up...");
+                        return n;
+                    }
+                }
+                return rntiNode;
+            };
+
+            auto find_enb_with_cellid [[maybe_unused]] = [](uint16_t cellId){
+                Ptr<Node> n;
+                for (unsigned nodeId = 0; nodeId < NodeList::GetNNodes(); nodeId++)
+                {
+                    auto temp = NodeList::GetNode(nodeId);
+                    for (unsigned deviceId = 0; deviceId < temp->GetNDevices(); deviceId++)
+                    {
+                        auto lteEnbNetDevice = temp->GetDevice(deviceId)->GetObject<LteEnbNetDevice>();
+                        if (!lteEnbNetDevice)
+                            continue;
+                        bool found = false;
+                        for (auto id: lteEnbNetDevice->GetCellIds())
+                            if (id == cellId)
+                            {
+                                found = true;
+                                break;
+                            }
+                        if (!found)
+                            continue;
+                        auto mobilityModel = temp->GetObject<MobilityModel>();
+                        if (!mobilityModel)
+                            NS_FATAL_ERROR("And it was at this moment, that he knew he f**kd up...");
+                        n = temp;
+                        return n;
+                    }
+                }
+                if (!n)
+                    NS_FATAL_ERROR("Enb with cellId not found");
+                return n;
+            };
+
+            auto print_distance_and_rsrp_for_rnti [[maybe_unused]] = [this, node, find_enb_with_cellid](Ptr<Node> rntiNode, uint16_t cellId, uint8_t cellRsrp){
+                std::cout << "IMSI " << m_imsi
+                          << ",RNTI " << m_rnti
+                          << ",CELLID " << cellId
+                          << ",DISTANCE " << CalculateDistance(find_enb_with_cellid(cellId)->GetObject<MobilityModel>()->GetPosition(),
+                                                               rntiNode->GetObject<MobilityModel>()->GetPosition())
+                          << ",RSRP " << (uint16_t)cellRsrp << std::endl;
+
+            };
+            //print_distance_and_rsrp_for_rnti(find_rnti_with_imsi(),
+            //                                 m_rrc->ComponentCarrierToCellId(m_componentCarrierId),
+            //                                 msg.measResults.measResultPCell.rsrpResult);
+            // End of distances and power measurements
             for (auto& cell : msg.measResults.measResultListEutra)
             {
                 if (cell.haveRsrpResult)
@@ -1443,6 +1516,9 @@ UeManager::RecvMeasurementReport(LteRrcSap::MeasurementReport msg)
                     json["VALUE"] = cell.rsrpResult;
                     json["TARGET"] = cell.physCellId; // starts counting from 1
                     e2ap->PublishToEndpointSubscribers("/KPM/HO.TrgtCellQual.RSRP", json);
+                    //print_distance_and_rsrp_for_rnti(find_rnti_with_imsi(),
+                    //                                 cell.physCellId,
+                    //                                 cell.rsrpResult);
                 }
                 if (cell.haveRsrqResult)
                 {
