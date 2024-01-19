@@ -119,36 +119,49 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
 {
     Vector3D position;
 
-    if (measurements.size()>=3)
+    switch(measurements.size())
     {
-        auto it = measurements.begin();
-        // Collect measured power (dBm) and position of respective cells
-        auto Pa = it->second;
-        Vector3D A = m_eNbPositions.at((it++)->first);
+        case 3:
+        {
+            // Trilateration
+            auto it = measurements.begin();
+            // Collect measured power (dBm) and position of respective cells
+            auto Pa = it->second;
+            Vector3D A = m_eNbPositions.at((it++)->first);
 
-        auto Pb = it->second;
-        Vector3D B = m_eNbPositions.at((it++)->first);
+            auto Pb = it->second;
+            Vector3D B = m_eNbPositions.at((it++)->first);
 
-        auto Pc = it->second;
-        Vector3D C = m_eNbPositions.at((it++)->first);
+            auto Pc = it->second;
+            Vector3D C = m_eNbPositions.at((it++)->first);
 
-        // Use Positioning of Wireless Base Station using Location-Based RSRP
-        // Measurement equation to estimate the distance from the RSRP
-        double n = 1.4; // pathloss coefficient
-        auto dA = pow(10, (100-Pa)/(10*n));
-        auto dB = pow(10, (100-Pb)/(10*n));
-        auto dC = pow(10, (100-Pc)/(10*n));
+            // Estimate distance based on RSRP<->distance measurements
+            // Look at distance.xlsx file, which contains post-processed results
+            // from logging added to lte-enb-rrc.cc in the same commit
+            auto dA = 205023*exp(-0.114 * Pa);
+            auto dB = 205023*exp(-0.114 * Pb);
+            auto dC = 205023*exp(-0.114 * Pc);
 
-        // Calculate intermediate steps
-        auto E = 2*(-A.x+B.x);
-        auto F = 2*(-A.y+B.y);
-        auto G = pow(dA,2)-pow(dB,2)+pow(A.y, 2)-pow(B.y, 2);
-        auto H = 2*(-B.x+C.x);
-        auto I = 2*(-B.y+C.y);
-        auto J = pow(dB,2)-pow(dC,2)+pow(B.y, 2)-pow(C.y, 2);
+            // Calculate intermediate steps
+            auto E = 2 * (-A.x + B.x);
+            auto F = 2 * (-A.y + B.y);
+            auto G = pow(dA, 2) - pow(dB, 2) - pow(A.x, 2) + pow(B.x, 2) - pow(A.y, 2) + pow(B.y, 2);
+            auto H = 2 * (-B.x + C.x);
+            auto I = 2 * (-B.y + C.y);
+            auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
 
-        position.x = (G*I-J*F)/(I*E-F*H);
-        position.y = (G*H-E*J)/(F*H-E*I);
+            position.x = (G * I - J * F) / (I * E - F * H);
+            position.y = (G * H - E * J) / (F * H - E * I);
+        }
+        break;
+        case 2:
+        {
+            // Bilateration
+
+
+        }
+        default:
+            NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
     }
     return position;
 }
@@ -214,6 +227,8 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
             continue;
         auto estimated_position = Multilateration(measurements);
         //auto estimated_position = GradientDescent(measurements);
+        //if (estimated_position.GetLength())
+        //    continue;
         std::cout << estimated_position << std::endl;
     }
 
