@@ -122,46 +122,77 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
     switch(measurements.size())
     {
         case 3:
-        {
-            // Trilateration
-            auto it = measurements.begin();
-            // Collect measured power (dBm) and position of respective cells
-            auto Pa = it->second;
-            Vector3D A = m_eNbPositions.at((it++)->first);
+            {
+                // Trilateration
+                auto it = measurements.begin();
+                // Collect measured power (dBm) and position of respective cells
+                auto Pa = it->second;
+                Vector3D A = m_eNbPositions.at((it++)->first);
 
-            auto Pb = it->second;
-            Vector3D B = m_eNbPositions.at((it++)->first);
+                auto Pb = it->second;
+                Vector3D B = m_eNbPositions.at((it++)->first);
 
-            auto Pc = it->second;
-            Vector3D C = m_eNbPositions.at((it++)->first);
+                auto Pc = it->second;
+                Vector3D C = m_eNbPositions.at((it++)->first);
 
-            // Estimate distance based on RSRP<->distance measurements
-            // Look at distance.xlsx file, which contains post-processed results
-            // from logging added to lte-enb-rrc.cc in the same commit
-            auto dA = 205023*exp(-0.114 * Pa);
-            auto dB = 205023*exp(-0.114 * Pb);
-            auto dC = 205023*exp(-0.114 * Pc);
+                // Estimate distance based on RSRP<->distance measurements
+                // Look at distance.xlsx file, which contains post-processed results
+                // from logging added to lte-enb-rrc.cc in the same commit
+                auto dA = 205023*exp(-0.114 * Pa);
+                auto dB = 205023*exp(-0.114 * Pb);
+                auto dC = 205023*exp(-0.114 * Pc);
 
-            // Calculate intermediate steps
-            auto E = 2 * (-A.x + B.x);
-            auto F = 2 * (-A.y + B.y);
-            auto G = pow(dA, 2) - pow(dB, 2) - pow(A.x, 2) + pow(B.x, 2) - pow(A.y, 2) + pow(B.y, 2);
-            auto H = 2 * (-B.x + C.x);
-            auto I = 2 * (-B.y + C.y);
-            auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
+                // Calculate intermediate steps
+                auto E = 2 * (-A.x + B.x);
+                auto F = 2 * (-A.y + B.y);
+                auto G = pow(dA, 2) - pow(dB, 2) - pow(A.x, 2) + pow(B.x, 2) - pow(A.y, 2) + pow(B.y, 2);
+                auto H = 2 * (-B.x + C.x);
+                auto I = 2 * (-B.y + C.y);
+                auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
 
-            position.x = (G * I - J * F) / (I * E - F * H);
-            position.y = (G * H - E * J) / (F * H - E * I);
-        }
-        break;
+                position.x = (G * I - J * F) / (I * E - F * H);
+                position.y = (G * H - E * J) / (F * H - E * I);
+            }
+            break;
         case 2:
-        {
-            // Bilateration
+            {
+                // Bilateration
+                auto it = measurements.begin();
+                // Collect measured power (dBm) and position of respective cells
+                auto Pa = it->second;
+                Vector3D A = m_eNbPositions.at((it++)->first);
 
+                auto Pb = it->second;
+                Vector3D B = m_eNbPositions.at((it++)->first);
 
-        }
+                // Estimate distance based on RSRP<->distance measurements
+                // Look at distance.xlsx file, which contains post-processed results
+                // from logging added to lte-enb-rrc.cc in the same commit
+                auto dA = 205023*exp(-0.114 * Pa);
+                auto dB = 205023*exp(-0.114 * Pb);
+
+                // Equations from Bilateration: An Attack-Resistant Localization
+                // Algorithm of Wireless Sensor Network
+                auto m = 0.5*((pow(A.x,2)-pow(B.x,2))+(pow(A.y,2)-pow(B.y,2))-(pow(dA,2)-pow(dB,2)))/(A.y-B.y);
+                auto n = -(A.x-B.x)/(A.y-B.y);
+
+                // We can have two candidate solutions, but they can be complex, which we need to discard
+                position.x = -(m*n-n*A.y-A.x)/(1+pow(n, 2));
+                auto plusminus = 2*(n*A.x+m)*A.y-pow(A.y,2)-pow(n,2)*pow(A.x,2)-2*m*n*A.x-pow(m,2)+(1+pow(n,2))*pow(dA,2);
+                if (plusminus < 0)
+                    plusminus = -plusminus;
+                plusminus = sqrt(plusminus)/(1+pow(n, 2));
+
+                position.x += plusminus;
+                position.y = m+n*position.x;
+                // Discard candidate coordinate if it is bogus
+                if (isnan(position.x) || isnan(position.y))
+                    position = Vector3D();
+            }
+            break;
         default:
-            NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
+            //NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
+            break;
     }
     return position;
 }
