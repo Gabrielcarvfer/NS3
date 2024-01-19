@@ -4,6 +4,8 @@
 #include "ns3/core-module.h"
 #include "ns3/lte-enb-net-device.h"
 #include "ns3/mobility-model.h"
+#include "ns3/lte-ue-rrc.h"
+#include "ns3/lte-ue-net-device.h"
 
 #include <algorithm>
 
@@ -46,6 +48,25 @@ xAppHandoverMaliciousPositioning::xAppHandoverMaliciousPositioning(bool useRnti)
     }
     Simulator::Schedule(Seconds(1), &xAppHandoverMaliciousPositioning::PeriodicPositioning, this);
 };
+
+xAppHandoverMaliciousPositioning::~xAppHandoverMaliciousPositioning()
+{
+    // Dump file with tracking output (nodeId can only be used in results analysis,
+    // not during the simulation, otherwise it would be cheating)
+    std::ofstream ofs("malicious-tracking.csv");
+    ofs << "Time (ms),rnti,nodeId,x,y,z\n";
+    for(auto& [time, rnti, nodeId, coord]: m_rntiNodeTracking)
+    {
+        ofs << time.GetMilliSeconds() << ","
+            << rnti << ","
+            << nodeId << ","
+            << coord.x << ","
+            << coord.y << ","
+            << coord.z << "\n";
+    }
+    ofs << std::endl;
+    ofs.close();
+}
 
 std::map<uint16_t, double>
 xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
@@ -154,7 +175,7 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
                 position.y = (G * H - E * J) / (F * H - E * I);
             }
             break;
-        case 2:
+        /*case 2:
             {
                 // Bilateration
                 auto it = measurements.begin();
@@ -189,7 +210,7 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
                 if (isnan(position.x) || isnan(position.y))
                     position = Vector3D();
             }
-            break;
+            break;*/
         default:
             //NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
             break;
@@ -249,6 +270,24 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
 {
     NS_LOG_FUNCTION(this);
 
+    auto find_nodeid_with_rnti [[maybe_unused]] = [](uint16_t rnti) {
+        Ptr <Node> rntiNode;
+        for (unsigned nodeId = 0; nodeId < NodeList::GetNNodes(); nodeId++) {
+            Ptr <Node> n = NodeList::GetNode(nodeId);
+            for (unsigned deviceId = 0; deviceId < n->GetNDevices(); deviceId++) {
+                auto lteUeNetDevice = n->GetDevice(deviceId)->GetObject<LteUeNetDevice>();
+                if (!lteUeNetDevice)
+                    continue;
+                if (lteUeNetDevice->GetRrc()->GetRnti() != rnti)
+                    continue;
+                auto mobilityModel = n->GetObject<MobilityModel>();
+                if (!mobilityModel)
+                    NS_FATAL_ERROR("And it was at this moment, that he knew he f**kd up...");
+                return n;
+            }
+        }
+        return rntiNode;
+    };
     // Use positioning techniques to locate UEs
     // Notice: rnti can be legitimate or random
     for (auto rnti: m_rntiList)
@@ -260,7 +299,17 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
         //auto estimated_position = GradientDescent(measurements);
         //if (estimated_position.GetLength())
         //    continue;
-        std::cout << estimated_position << std::endl;
+        if (estimated_position != Vector3D())
+        {
+            auto node = find_nodeid_with_rnti(rnti);
+            if (!node)
+            {
+                // RNTI changed
+                continue;
+            }
+            m_rntiNodeTracking.push_back({Simulator::Now(), rnti, node->GetId(), estimated_position});
+            //std::cout << rnti << "," <<estimated_position << std::endl;
+        }
     }
 
     // Re-schedule this function

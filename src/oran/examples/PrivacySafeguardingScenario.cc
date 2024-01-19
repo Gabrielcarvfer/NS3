@@ -84,7 +84,7 @@ main(int argc, char** argv)
     {
         STANDARD_3GPP = 0,
         ORAN_BYPASS,
-        ORAN_MALICIOUS_XAPP_WITH_RNTI, 
+        ORAN_MALICIOUS_XAPP_WITH_RNTI,
         ORAN_MALICIOUS_XAPP_WITHOUT_RNTI,
     } SimulationScenarios;
 
@@ -105,7 +105,7 @@ main(int argc, char** argv)
     epcHelper->SetAttribute("S1uLinkEnablePcap", BooleanValue(false));
     lteHelper->SetEpcHelper(epcHelper);
     lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
-    
+
     // Our malicious xApp isn't going to handover, even though it could. So we leave the default HO algorithm.
     lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
     lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
@@ -322,7 +322,7 @@ main(int argc, char** argv)
         sgw->AddApplication(handoverxapp);
     }
 
-    AnimationInterface anim("anim.xml");
+    AnimationInterface anim("tracking.xml");
     //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(false);
 

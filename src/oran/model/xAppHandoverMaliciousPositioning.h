@@ -26,6 +26,12 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
      * \brief Constructor of xAppHandoverMaliciousPositioning.
      */
     xAppHandoverMaliciousPositioning(bool useRnti = false);
+
+    /**
+     * \brief Destructor of xAppHandoverMaliciousPositioning.
+     */
+    ~xAppHandoverMaliciousPositioning();
+
     /**
      * \brief Decides whether to reject the requested handover or reform the decision.
      * \param [in, out] payload Json payload with the UE to handover (RNTI)
@@ -47,6 +53,7 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
     std::vector<uint16_t> m_rntiList;
     std::map<uint16_t, ns3::Vector3D> m_eNbPositions;
     bool m_useRnti = false;
+    std::vector<std::tuple<Time, uint16_t, uint32_t, Vector3D>> m_rntiNodeTracking;
 };
 } // namespace oran
 } // namespace ns3
