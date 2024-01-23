@@ -59,8 +59,15 @@ E2AP::HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
         std::string kpm =
             getSubEndpoint(src_endpoint,
                            subscribed_endpoint); // Remove endpointRoot from full KPM endpoint
+
+        // Retrieve measurements from message
+        NS_ASSERT(payload["MESSAGE"].contains("MEASUREMENTS"));
         std::vector<PeriodicMeasurementStruct> measurements = payload["MESSAGE"]["MEASUREMENTS"];
 
+        // Exit early if the message contains no measurements from the previous period
+        if (measurements.empty())
+            return;
+        // Retrieve database storage location (and create it if it doesn't exist)
         auto kpmIt = m_kpmToEndpointStorage.find(kpm);
         if (kpmIt == m_kpmToEndpointStorage.end())
         {
@@ -75,12 +82,40 @@ E2AP::HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
             kpmIt->second.emplace(src_endpoint, std::deque<PeriodicMeasurementStruct>{});
             measuringE2NodeIt = kpmIt->second.find(src_endpoint);
         }
-        std::move(begin(measurements),
-                  end(measurements),
-                  front_inserter(measuringE2NodeIt->second));
+
+        // Insert new measurements in age order (newest to oldest)
+        auto existingMeasurementsIt = measuringE2NodeIt->second.begin();
+        for (auto newMeasurementIt = measurements.begin(); newMeasurementIt != measurements.end();
+             newMeasurementIt++)
+        {
+            // If this is the end of the list of existing measurements,
+            // there is nothing for us to do in this loop
+            if (existingMeasurementsIt == measuringE2NodeIt->second.end())
+                break;
+
+            // If this isn't the end, we check if the new timestamp is bigger than
+            // the existing one, if it is, insert the new measurement and remove it
+            // from the list of the new measurements
+            std::cout << newMeasurementIt->timestamp << ' ' << existingMeasurementsIt->timestamp
+                      << std::endl;
+            if (newMeasurementIt->timestamp >= existingMeasurementsIt->timestamp)
+            {
+                measuringE2NodeIt->second.insert(existingMeasurementsIt, *newMeasurementIt);
+                measurements.erase(newMeasurementIt);
+                // Instead of jumping to the next existing measurement,
+                // we try again in case of duplicate timestamps
+                continue;
+            }
+            existingMeasurementsIt++;
+        }
+
+        // If there is still a measurement that hasn't been copied, copy them one in one move
+        std::move(begin(measurements), end(measurements), back_inserter(measuringE2NodeIt->second));
+
         // for(auto& i: measuringE2NodeIt->second)
-        //   std::cout << to_string(i.measurements) << std::endl;
-        // todo: notify endpoint (e.g. xapps) that fresh data is available
+        //   std::cout << i.timestamp << std::endl;
+        // std::cout << "=============" << std::endl;
+        //  todo: notify endpoint (e.g. xapps) that fresh data is available
     }
     break;
     case KPM_INDICATION_FORMAT_2:
