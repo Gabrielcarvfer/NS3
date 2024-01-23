@@ -42,9 +42,9 @@ using PatternCoordinates = std::vector<std::pair<double, double>>;
 class MobilityPatterns
 {
   public:
-    enum PATTERN_ENUM: uint16_t
+    enum PATTERN_ENUM : uint16_t
     {
-        UPWARDS_TRIANGLE=0,
+        UPWARDS_TRIANGLE = 0,
         DOWNWARDS_TRIANGLE,
         HOURGLASS,
         SQUARE,

@@ -3,9 +3,9 @@
 #include "ns3/E2AP.h"
 #include "ns3/core-module.h"
 #include "ns3/lte-enb-net-device.h"
-#include "ns3/mobility-model.h"
-#include "ns3/lte-ue-rrc.h"
 #include "ns3/lte-ue-net-device.h"
+#include "ns3/lte-ue-rrc.h"
+#include "ns3/mobility-model.h"
 
 #include <algorithm>
 
@@ -44,7 +44,6 @@ xAppHandoverMaliciousPositioning::xAppHandoverMaliciousPositioning(bool useRnti)
                 NS_FATAL_ERROR("And it was at this moment, that he knew he f**kd up...");
             m_eNbPositions[lteEnbNetDevice->GetCellId()] = mobilityModel->GetPosition();
         }
-
     }
     Simulator::Schedule(Seconds(1), &xAppHandoverMaliciousPositioning::PeriodicPositioning, this);
 };
@@ -55,14 +54,10 @@ xAppHandoverMaliciousPositioning::~xAppHandoverMaliciousPositioning()
     // not during the simulation, otherwise it would be cheating)
     std::ofstream ofs("malicious-tracking.csv");
     ofs << "Time (ms),rnti,nodeId,x,y,z\n";
-    for(auto& [time, rnti, nodeId, coord]: m_rntiNodeTracking)
+    for (auto& [time, rnti, nodeId, coord] : m_rntiNodeTracking)
     {
-        ofs << time.GetMilliSeconds() << ","
-            << rnti << ","
-            << nodeId << ","
-            << coord.x << ","
-            << coord.y << ","
-            << coord.z << "\n";
+        ofs << time.GetMilliSeconds() << "," << rnti << "," << nodeId << "," << coord.x << ","
+            << coord.y << "," << coord.z << "\n";
     }
     ofs << std::endl;
     ofs.close();
@@ -75,11 +70,12 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
 
     E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
-    std::array<std::string, 4> kpmMetrics = {"/KPM/HO.SrcCellQual.RSRP",
-                                             //"/KPM/HO.SrcCellQual.RSRQ",
-                                             "/KPM/HO.TrgtCellQual.RSRP",
-                                             //"/KPM/HO.TrgtCellQual.RSRQ"
-                                            };
+    std::array<std::string, 4> kpmMetrics = {
+        "/KPM/HO.SrcCellQual.RSRP",
+        //"/KPM/HO.SrcCellQual.RSRQ",
+        "/KPM/HO.TrgtCellQual.RSRP",
+        //"/KPM/HO.TrgtCellQual.RSRQ"
+    };
 
     std::map<uint16_t, double> rsrq_measurements;
 
@@ -140,80 +136,78 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
 {
     Vector3D position;
 
-    switch(measurements.size())
+    switch (measurements.size())
     {
-        case 3:
-            {
-                // Trilateration
-                auto it = measurements.begin();
-                // Collect measured power (dBm) and position of respective cells
-                auto Pa = it->second;
-                Vector3D A = m_eNbPositions.at((it++)->first);
+    case 3: {
+        // Trilateration
+        auto it = measurements.begin();
+        // Collect measured power (dBm) and position of respective cells
+        auto Pa = it->second;
+        Vector3D A = m_eNbPositions.at((it++)->first);
 
-                auto Pb = it->second;
-                Vector3D B = m_eNbPositions.at((it++)->first);
+        auto Pb = it->second;
+        Vector3D B = m_eNbPositions.at((it++)->first);
 
-                auto Pc = it->second;
-                Vector3D C = m_eNbPositions.at((it++)->first);
+        auto Pc = it->second;
+        Vector3D C = m_eNbPositions.at((it++)->first);
 
-                // Estimate distance based on RSRP<->distance measurements
-                // Look at distance.xlsx file, which contains post-processed results
-                // from logging added to lte-enb-rrc.cc in the same commit
-                auto dA = 205023*exp(-0.114 * Pa);
-                auto dB = 205023*exp(-0.114 * Pb);
-                auto dC = 205023*exp(-0.114 * Pc);
+        // Estimate distance based on RSRP<->distance measurements
+        // Look at distance.xlsx file, which contains post-processed results
+        // from logging added to lte-enb-rrc.cc in the same commit
+        auto dA = 205023 * exp(-0.114 * Pa);
+        auto dB = 205023 * exp(-0.114 * Pb);
+        auto dC = 205023 * exp(-0.114 * Pc);
 
-                // Calculate intermediate steps
-                auto E = 2 * (-A.x + B.x);
-                auto F = 2 * (-A.y + B.y);
-                auto G = pow(dA, 2) - pow(dB, 2) - pow(A.x, 2) + pow(B.x, 2) - pow(A.y, 2) + pow(B.y, 2);
-                auto H = 2 * (-B.x + C.x);
-                auto I = 2 * (-B.y + C.y);
-                auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
+        // Calculate intermediate steps
+        auto E = 2 * (-A.x + B.x);
+        auto F = 2 * (-A.y + B.y);
+        auto G = pow(dA, 2) - pow(dB, 2) - pow(A.x, 2) + pow(B.x, 2) - pow(A.y, 2) + pow(B.y, 2);
+        auto H = 2 * (-B.x + C.x);
+        auto I = 2 * (-B.y + C.y);
+        auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
 
-                position.x = (G * I - J * F) / (I * E - F * H);
-                position.y = (G * H - E * J) / (F * H - E * I);
-            }
-            break;
-        /*case 2:
-            {
-                // Bilateration
-                auto it = measurements.begin();
-                // Collect measured power (dBm) and position of respective cells
-                auto Pa = it->second;
-                Vector3D A = m_eNbPositions.at((it++)->first);
+        position.x = (G * I - J * F) / (I * E - F * H);
+        position.y = (G * H - E * J) / (F * H - E * I);
+    }
+    break;
+    /*case 2:
+        {
+            // Bilateration
+            auto it = measurements.begin();
+            // Collect measured power (dBm) and position of respective cells
+            auto Pa = it->second;
+            Vector3D A = m_eNbPositions.at((it++)->first);
 
-                auto Pb = it->second;
-                Vector3D B = m_eNbPositions.at((it++)->first);
+            auto Pb = it->second;
+            Vector3D B = m_eNbPositions.at((it++)->first);
 
-                // Estimate distance based on RSRP<->distance measurements
-                // Look at distance.xlsx file, which contains post-processed results
-                // from logging added to lte-enb-rrc.cc in the same commit
-                auto dA = 205023*exp(-0.114 * Pa);
-                auto dB = 205023*exp(-0.114 * Pb);
+            // Estimate distance based on RSRP<->distance measurements
+            // Look at distance.xlsx file, which contains post-processed results
+            // from logging added to lte-enb-rrc.cc in the same commit
+            auto dA = 205023*exp(-0.114 * Pa);
+            auto dB = 205023*exp(-0.114 * Pb);
 
-                // Equations from Bilateration: An Attack-Resistant Localization
-                // Algorithm of Wireless Sensor Network
-                auto m = 0.5*((pow(A.x,2)-pow(B.x,2))+(pow(A.y,2)-pow(B.y,2))-(pow(dA,2)-pow(dB,2)))/(A.y-B.y);
-                auto n = -(A.x-B.x)/(A.y-B.y);
+            // Equations from Bilateration: An Attack-Resistant Localization
+            // Algorithm of Wireless Sensor Network
+            auto m =
+       0.5*((pow(A.x,2)-pow(B.x,2))+(pow(A.y,2)-pow(B.y,2))-(pow(dA,2)-pow(dB,2)))/(A.y-B.y); auto n
+       = -(A.x-B.x)/(A.y-B.y);
 
-                // We can have two candidate solutions, but they can be complex, which we need to discard
-                position.x = -(m*n-n*A.y-A.x)/(1+pow(n, 2));
-                auto plusminus = 2*(n*A.x+m)*A.y-pow(A.y,2)-pow(n,2)*pow(A.x,2)-2*m*n*A.x-pow(m,2)+(1+pow(n,2))*pow(dA,2);
-                if (plusminus < 0)
-                    plusminus = -plusminus;
-                plusminus = sqrt(plusminus)/(1+pow(n, 2));
+            // We can have two candidate solutions, but they can be complex, which we need to
+       discard position.x = -(m*n-n*A.y-A.x)/(1+pow(n, 2)); auto plusminus =
+       2*(n*A.x+m)*A.y-pow(A.y,2)-pow(n,2)*pow(A.x,2)-2*m*n*A.x-pow(m,2)+(1+pow(n,2))*pow(dA,2); if
+       (plusminus < 0) plusminus = -plusminus; plusminus = sqrt(plusminus)/(1+pow(n, 2));
 
-                position.x += plusminus;
-                position.y = m+n*position.x;
-                // Discard candidate coordinate if it is bogus
-                if (isnan(position.x) || isnan(position.y))
-                    position = Vector3D();
-            }
-            break;*/
-        default:
-            //NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
-            break;
+            position.x += plusminus;
+            position.y = m+n*position.x;
+            // Discard candidate coordinate if it is bogus
+            if (isnan(position.x) || isnan(position.y))
+                position = Vector3D();
+        }
+        break;*/
+    default:
+        // NS_FATAL_ERROR("Not enought RSRP measurements for multilateration");
+        break;
     }
     return position;
 }
@@ -222,7 +216,9 @@ Vector3D
 xAppHandoverMaliciousPositioning::GradientDescent(std::map<uint16_t, double>& measurements)
 {
     // Guess a random initial position for the UE
-    Vector3D position = {(float)rand()*10000/(float)(RAND_MAX), (float)rand()*10000/(float)(RAND_MAX), 0};
+    Vector3D position = {(float)rand() * 10000 / (float)(RAND_MAX),
+                         (float)rand() * 10000 / (float)(RAND_MAX),
+                         0};
 
     auto iteration_error = [&measurements, &position, this]() {
         double error = 0;
@@ -247,18 +243,18 @@ xAppHandoverMaliciousPositioning::GradientDescent(std::map<uint16_t, double>& me
     double learning_rate = 0.2;
     auto errorOld = iteration_error();
     int maxTries = 100000;
-    while(--maxTries)
+    while (--maxTries)
     {
         errorOld = iteration_error();
-        position.x += errorOld*learning_rate;
-        position.y += errorOld*learning_rate;
+        position.x += errorOld * learning_rate;
+        position.y += errorOld * learning_rate;
         auto errorNew = iteration_error();
-        if (abs(errorOld - errorNew) < abs(0.001*errorOld))
+        if (abs(errorOld - errorNew) < abs(0.001 * errorOld))
             break;
         if (errorNew > errorOld)
         {
-            position.x -= 2*errorOld*learning_rate;
-            position.y -= 2*errorOld*learning_rate;
+            position.x -= 2 * errorOld * learning_rate;
+            position.y -= 2 * errorOld * learning_rate;
         }
     }
 
@@ -271,10 +267,12 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
     NS_LOG_FUNCTION(this);
 
     auto find_nodeid_with_rnti [[maybe_unused]] = [](uint16_t rnti) {
-        Ptr <Node> rntiNode;
-        for (unsigned nodeId = 0; nodeId < NodeList::GetNNodes(); nodeId++) {
-            Ptr <Node> n = NodeList::GetNode(nodeId);
-            for (unsigned deviceId = 0; deviceId < n->GetNDevices(); deviceId++) {
+        Ptr<Node> rntiNode;
+        for (unsigned nodeId = 0; nodeId < NodeList::GetNNodes(); nodeId++)
+        {
+            Ptr<Node> n = NodeList::GetNode(nodeId);
+            for (unsigned deviceId = 0; deviceId < n->GetNDevices(); deviceId++)
+            {
                 auto lteUeNetDevice = n->GetDevice(deviceId)->GetObject<LteUeNetDevice>();
                 if (!lteUeNetDevice)
                     continue;
@@ -290,15 +288,15 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
     };
     // Use positioning techniques to locate UEs
     // Notice: rnti can be legitimate or random
-    for (auto rnti: m_rntiList)
+    for (auto rnti : m_rntiList)
     {
         auto measurements = GetRntiRsrqMeasurements(rnti);
         if (measurements.empty())
             continue;
         auto estimated_position = Multilateration(measurements);
-        //auto estimated_position = GradientDescent(measurements);
-        //if (estimated_position.GetLength())
-        //    continue;
+        // auto estimated_position = GradientDescent(measurements);
+        // if (estimated_position.GetLength())
+        //     continue;
         if (estimated_position != Vector3D())
         {
             auto node = find_nodeid_with_rnti(rnti);
@@ -307,8 +305,9 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
                 // RNTI changed
                 continue;
             }
-            m_rntiNodeTracking.push_back({Simulator::Now(), rnti, node->GetId(), estimated_position});
-            //std::cout << rnti << "," <<estimated_position << std::endl;
+            m_rntiNodeTracking.push_back(
+                {Simulator::Now(), rnti, node->GetId(), estimated_position});
+            // std::cout << rnti << "," <<estimated_position << std::endl;
         }
     }
 

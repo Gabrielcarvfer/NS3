@@ -1,8 +1,8 @@
 #ifndef NS3_XAPP_HANDOVER_MALICIOUS_POSITIONING_H
 #define NS3_XAPP_HANDOVER_MALICIOUS_POSITIONING_H
 
-#include "ns3/xAppHandover.h"
 #include "ns3/vector.h"
+#include "ns3/xAppHandover.h"
 
 /**
  * \ingroup oran
@@ -47,7 +47,6 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
     std::map<uint16_t, double> GetRntiRsrqMeasurements(uint16_t rnti);
     Vector3D Multilateration(std::map<uint16_t, double>&);
     Vector3D GradientDescent(std::map<uint16_t, double>& measurements);
-
 
   private:
     std::vector<uint16_t> m_rntiList;

@@ -282,13 +282,10 @@ GetMobilityPatternNPeriods(uint32_t steps, BoundingBox box, uint16_t periods = 2
     if (xMin < 0)
     {
         xMax -= xMin;
-        std::transform(coordinates.begin(),
-                       coordinates.end(),
-                       coordinates.begin(),
-                       [xMin](auto a) {
-                           a.first = a.first - xMin;
-                           return a;
-                       });
+        std::transform(coordinates.begin(), coordinates.end(), coordinates.begin(), [xMin](auto a) {
+            a.first = a.first - xMin;
+            return a;
+        });
         xMin = 0;
     }
 
@@ -297,13 +294,10 @@ GetMobilityPatternNPeriods(uint32_t steps, BoundingBox box, uint16_t periods = 2
     if (yMin < 0)
     {
         yMax -= yMin;
-        std::transform(coordinates.begin(),
-                       coordinates.end(),
-                       coordinates.begin(),
-                       [yMin](auto a) {
-                           a.second = a.second - yMin;
-                           return a;
-                       });
+        std::transform(coordinates.begin(), coordinates.end(), coordinates.begin(), [yMin](auto a) {
+            a.second = a.second - yMin;
+            return a;
+        });
         yMin = 0;
     }
 
@@ -311,14 +305,14 @@ GetMobilityPatternNPeriods(uint32_t steps, BoundingBox box, uint16_t periods = 2
                    coordinates.end(),
                    coordinates.begin(),
                    [box, xMin, xMax](auto a) {
-                       a.first = box.xMin + a.first * (box.xMax-box.xMin)/(xMax - xMin);
+                       a.first = box.xMin + a.first * (box.xMax - box.xMin) / (xMax - xMin);
                        return a;
                    });
     std::transform(coordinates.begin(),
                    coordinates.end(),
                    coordinates.begin(),
                    [box, yMin, yMax](auto a) {
-                       a.second = box.yMin + a.second * (box.yMax-box.yMin)/(yMax - yMin);
+                       a.second = box.yMin + a.second * (box.yMax - box.yMin) / (yMax - yMin);
                        return a;
                    });
     return coordinates;
@@ -346,7 +340,7 @@ void
 MobilityPatterns::Test()
 {
     int steps = 120;
-    auto boundaries = BoundingBox(800, 2400, 800, 2400);//0, 100, 0, 100);
+    auto boundaries = BoundingBox(800, 2400, 800, 2400); // 0, 100, 0, 100);
     auto filename = "mobility_patterns.json";
     auto os = std::ofstream(filename);
     while (!os.is_open())

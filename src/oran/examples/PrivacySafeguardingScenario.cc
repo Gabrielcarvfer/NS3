@@ -56,7 +56,7 @@ good_seed()
 int
 main(int argc, char** argv)
 {
-    ns3::RngSeedManager::SetSeed(1);//good_seed());
+    ns3::RngSeedManager::SetSeed(1); // good_seed());
     std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
@@ -106,7 +106,8 @@ main(int argc, char** argv)
     lteHelper->SetEpcHelper(epcHelper);
     lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
 
-    // Our malicious xApp isn't going to handover, even though it could. So we leave the default HO algorithm.
+    // Our malicious xApp isn't going to handover, even though it could. So we leave the default HO
+    // algorithm.
     lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
     lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
     lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
@@ -181,23 +182,28 @@ main(int argc, char** argv)
 
     int steps = 120;
     int cycles = 5;
-    Time timePerStep = Seconds(simTime)/(steps*cycles);
-    Time timePerCycle = Seconds(simTime)/cycles;
+    Time timePerStep = Seconds(simTime) / (steps * cycles);
+    Time timePerCycle = Seconds(simTime) / cycles;
     auto boundaries = BoundingBox(750, 2300, 650, 2000);
-    for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
+    for (int i = 0;
+         i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS));
+         i++)
     {
-        auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,
-                                                                           boundaries,
-                                                                           static_cast<MobilityPatterns::PATTERN_ENUM>(i));
+        auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(
+            steps,
+            boundaries,
+            static_cast<MobilityPatterns::PATTERN_ENUM>(i));
         auto itCoordRev = coordinates.rbegin();
-        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(itCoordRev->first, itCoordRev->second, 0));
+        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(
+            Vector(itCoordRev->first, itCoordRev->second, 0));
 
-        for(auto k = 0; k < cycles; k++)
+        for (auto k = 0; k < cycles; k++)
         {
             auto itCoord = coordinates.begin();
-            for(int j = 0; j < steps; j++, itCoord++)
+            for (int j = 0; j < steps; j++, itCoord++)
             {
-                Waypoint wpt(timePerCycle*k+timePerStep*j, Vector(itCoord->first, itCoord->second, 0.0));
+                Waypoint wpt(timePerCycle * k + timePerStep * j,
+                             Vector(itCoord->first, itCoord->second, 0.0));
                 ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
             }
         }
@@ -317,13 +323,14 @@ main(int argc, char** argv)
         Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n3);
         Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
 
-        Ptr<xAppHandoverMaliciousPositioning> handoverxapp = CreateObject<xAppHandoverMaliciousPositioning>(
-            scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
+        Ptr<xAppHandoverMaliciousPositioning> handoverxapp =
+            CreateObject<xAppHandoverMaliciousPositioning>(
+                scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
         sgw->AddApplication(handoverxapp);
     }
 
     AnimationInterface anim("tracking.xml");
-    //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+    // anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(false);
 
     anim.UpdateNodeDescription(remoteHost->GetId(), "Remote Internet Host");
@@ -348,7 +355,6 @@ main(int argc, char** argv)
         anim.UpdateNodeDescription(nodeId, "eNB" + std::to_string(i));
         anim.UpdateNodeColor(nodeId, 255, 0, 0);
         anim.UpdateNodeSize(nodeId, 80, 80);
-
     }
     for (uint32_t i = 0; i < ueNodes.GetN(); i++)
     {
