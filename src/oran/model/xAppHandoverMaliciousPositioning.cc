@@ -69,7 +69,6 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
     NS_LOG_FUNCTION(this);
 
     E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
-    std::map<uint16_t, uint16_t> rntis;
     std::array<std::string, 4> kpmMetrics = {
         "/KPM/HO.SrcCellQual.RSRP",
         //"/KPM/HO.SrcCellQual.RSRQ",
@@ -82,7 +81,7 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
     // Collate data into an armadillo matrix for processing
     for (auto kpmMetric : kpmMetrics)
     {
-        auto metricMap = ric->QueryKpmMetric(kpmMetric);
+        auto metricMap = ric->QueryLatestKpmMetricForRnti(kpmMetric, rnti, Seconds(10));
 
         if (metricMap.size() == 0)
         {
@@ -91,23 +90,8 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti)
 
         for (auto& e2nodeMeasurements : metricMap)
         {
-            std::string mostRecentTimestamp("");
             for (auto& measurementDeque : e2nodeMeasurements.second)
             {
-                if (mostRecentTimestamp == "")
-                {
-                    mostRecentTimestamp = measurementDeque.timestamp;
-                }
-                if (mostRecentTimestamp != measurementDeque.timestamp)
-                {
-                    // Skip old measurements
-                    continue;
-                }
-                if (rnti != measurementDeque.measurements["RNTI"])
-                {
-                    // Skip rntis that do not match the requesting rnti
-                    continue;
-                }
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];

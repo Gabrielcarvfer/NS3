@@ -679,5 +679,61 @@ E2AP::QueryKpmMetric(std::string metric) const
     return it->second;
 }
 
+const std::map<std::string, std::vector<PeriodicMeasurementStruct>>
+E2AP::QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time gracePeriod) const
+{
+    // Retrieve all measurements
+    auto metrics = QueryKpmMetric(metric);
+
+    // If metric does not exist, return the empty response right away
+    if (metrics.empty())
+        return metrics;
+
+    std::map<std::string, std::vector<PeriodicMeasurementStruct>> filteredMetrics;
+
+    // Search for the latest collected metric
+    std::string latest_measurement = "";
+    for (auto e2NodeMetrics: metrics)
+    {
+        // Select the first measurement deque that contains the rnti being searched
+        for (auto measurementDeque: e2NodeMetrics.second)
+        {
+            if (latest_measurement.empty() || std::stoll(latest_measurement) < std::stoll(measurementDeque.timestamp))
+            {
+                latest_measurement = measurementDeque.timestamp;;
+            }
+        }
+    }
+
+    // For each E2Node, execute
+    for (auto e2NodeMetrics: metrics)
+    {
+        // Select the first measurement deque that contains the rnti being searched
+        for (auto measurementDeque: e2NodeMetrics.second)
+        {
+            // If the current measurement is outside the grace period, we interrupt the search for the E2Node
+            if (std::stoll(latest_measurement)-std::stoll(measurementDeque.timestamp) > gracePeriod.GetNanoSeconds())
+            {
+                break;
+            }
+
+            // Skip measurement if it doesn't contain the RNTI field
+            if (!measurementDeque.measurements.contains("RNTI"))
+            {
+                continue;
+            }
+            // Skip measurement if it doesn't match the RNTI
+            if (measurementDeque.measurements["RNTI"] != rnti)
+            {
+                continue;
+            }
+            // Create the structure for the measurement
+            if (filteredMetrics.find(e2NodeMetrics.first) == filteredMetrics.end())
+                filteredMetrics[e2NodeMetrics.first] = {measurementDeque};
+        }
+    }
+    return filteredMetrics;
+}
+
 #include "E2SM-KPM.cc"
 #include "E2SM-RC.cc"
