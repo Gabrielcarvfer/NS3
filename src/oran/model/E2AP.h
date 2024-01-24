@@ -136,7 +136,7 @@ class E2AP : public PubSubInfra
      * \param metric KPM metric to retrieve
      * \return map addressed by E2 Node endpoints with a measurements deque as value
      */
-    const std::map<std::string, std::deque<PeriodicMeasurementStruct>> QueryKpmMetric(
+    const std::map<std::string, std::vector<PeriodicMeasurementStruct>> QueryKpmMetric(
         std::string metric) const;
 
   private:
@@ -228,7 +228,7 @@ class E2AP : public PubSubInfra
      * \brief Long-term storage for KPMs (key of the first map) received
      *       of a given endpoint (key of the second map)
      */
-    std::map<std::string, std::map<std::string, std::deque<PeriodicMeasurementStruct>>>
+    std::map<std::string, std::map<std::string, std::vector<PeriodicMeasurementStruct>>>
         m_kpmToEndpointStorage;
     /**
      * \brief Short-term storage of pending requests per endpoint and rnti.

@@ -670,12 +670,12 @@ E2AP::HandleIndicationPayload(std::string& src_endpoint, std::string& dest_endpo
     }
 }
 
-const std::map<std::string, std::deque<PeriodicMeasurementStruct>>
+const std::map<std::string, std::vector<PeriodicMeasurementStruct>>
 E2AP::QueryKpmMetric(std::string metric) const
 {
     auto it = m_kpmToEndpointStorage.find(metric);
     if (it == m_kpmToEndpointStorage.end())
-        return std::map<std::string, std::deque<PeriodicMeasurementStruct>>();
+        return std::map<std::string, std::vector<PeriodicMeasurementStruct>>();
     return it->second;
 }
 

@@ -73,48 +73,24 @@ E2AP::HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
         {
             m_kpmToEndpointStorage.emplace(
                 kpm,
-                std::map<std::string, std::deque<PeriodicMeasurementStruct>>{});
+                std::map<std::string, std::vector<PeriodicMeasurementStruct>>{});
             kpmIt = m_kpmToEndpointStorage.find(kpm);
         }
         auto measuringE2NodeIt = kpmIt->second.find(src_endpoint);
         if (measuringE2NodeIt == kpmIt->second.end())
         {
-            kpmIt->second.emplace(src_endpoint, std::deque<PeriodicMeasurementStruct>{});
+            kpmIt->second.emplace(src_endpoint, std::vector<PeriodicMeasurementStruct>{});
             measuringE2NodeIt = kpmIt->second.find(src_endpoint);
         }
 
-        // Insert new measurements in age order (newest to oldest)
-        auto existingMeasurementsIt = measuringE2NodeIt->second.begin();
-        for (auto newMeasurementIt = measurements.begin(); newMeasurementIt != measurements.end();
-             newMeasurementIt++)
-        {
-            // If this is the end of the list of existing measurements,
-            // there is nothing for us to do in this loop
-            if (existingMeasurementsIt == measuringE2NodeIt->second.end())
-                break;
-
-            // If this isn't the end, we check if the new timestamp is bigger than
-            // the existing one, if it is, insert the new measurement and remove it
-            // from the list of the new measurements
-            std::cout << newMeasurementIt->timestamp << ' ' << existingMeasurementsIt->timestamp
-                      << std::endl;
-            if (newMeasurementIt->timestamp >= existingMeasurementsIt->timestamp)
-            {
-                measuringE2NodeIt->second.insert(existingMeasurementsIt, *newMeasurementIt);
-                measurements.erase(newMeasurementIt);
-                // Instead of jumping to the next existing measurement,
-                // we try again in case of duplicate timestamps
-                continue;
-            }
-            existingMeasurementsIt++;
-        }
-
-        // If there is still a measurement that hasn't been copied, copy them one in one move
+        // Copy all measurements
         std::move(begin(measurements), end(measurements), back_inserter(measuringE2NodeIt->second));
 
-        // for(auto& i: measuringE2NodeIt->second)
-        //   std::cout << i.timestamp << std::endl;
-        // std::cout << "=============" << std::endl;
+        // Then sort them from the newest to the oldest
+        // Super jank, but my O(n) wouldn't work, so let's go with nlog(n)
+        std::sort(measuringE2NodeIt->second.begin(), measuringE2NodeIt->second.end(), [](auto a, auto b)->bool{
+           return std::stoull(a.timestamp) > std::stoull(b.timestamp);
+        });
         //  todo: notify endpoint (e.g. xapps) that fresh data is available
     }
     break;
