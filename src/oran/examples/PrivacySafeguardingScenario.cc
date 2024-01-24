@@ -56,13 +56,13 @@ good_seed()
 int
 main(int argc, char** argv)
 {
-    ns3::RngSeedManager::SetSeed(1); // good_seed());
+    ns3::RngSeedManager::SetSeed(1);//good_seed());
     std::cout << "Seed " << ns3::RngSeedManager::GetSeed() << std::endl;
 
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
     uint16_t numberOfUes = 8;
-    uint16_t numberOfEnbs = 3;
+    uint16_t numberOfEnbs = 16;
     uint16_t numBearersPerUe = 1;
     double simTime = 2 * 60;
     double enbTxPowerDbm = 30.0;
@@ -106,8 +106,7 @@ main(int argc, char** argv)
     lteHelper->SetEpcHelper(epcHelper);
     lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
 
-    // Our malicious xApp isn't going to handover, even though it could. So we leave the default HO
-    // algorithm.
+    // Our malicious xApp isn't going to handover, even though it could. So we leave the default HO algorithm.
     lteHelper->SetHandoverAlgorithmType("ns3::A2A4RsrqHandoverAlgorithm");
     lteHelper->SetHandoverAlgorithmAttribute("ServingCellThreshold", UintegerValue(30));
     lteHelper->SetHandoverAlgorithmAttribute("NeighbourCellOffset", UintegerValue(1));
@@ -166,9 +165,26 @@ main(int argc, char** argv)
 
     // Install Mobility Model in eNB
     Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
-    enbPositionAlloc->Add(Vector(1000, 1000, 0));
-    enbPositionAlloc->Add(Vector(2000, 1000, 0));
-    enbPositionAlloc->Add(Vector(1500, 1866, 0));
+    enbPositionAlloc->Add(Vector(  600, 500, 0));
+    enbPositionAlloc->Add(Vector( 1100, 500, 0));
+    enbPositionAlloc->Add(Vector( 1600, 500, 0));
+    enbPositionAlloc->Add(Vector( 2100, 500, 0));
+
+    enbPositionAlloc->Add(Vector(  850, 1000, 0));
+    enbPositionAlloc->Add(Vector( 1350, 1000, 0));
+    enbPositionAlloc->Add(Vector( 1850, 1000, 0));
+    enbPositionAlloc->Add(Vector( 2350, 1000, 0));
+
+    enbPositionAlloc->Add(Vector(  600, 1500, 0));
+    enbPositionAlloc->Add(Vector( 1100, 1500, 0));
+    enbPositionAlloc->Add(Vector( 1600, 1500, 0));
+    enbPositionAlloc->Add(Vector( 2100, 1500, 0));
+
+    enbPositionAlloc->Add(Vector(  850, 2000, 0));
+    enbPositionAlloc->Add(Vector( 1350, 2000, 0));
+    enbPositionAlloc->Add(Vector( 1850, 2000, 0));
+    enbPositionAlloc->Add(Vector( 2350, 2000, 0));
+
 
     MobilityHelper enbMobility;
     enbMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
@@ -182,28 +198,23 @@ main(int argc, char** argv)
 
     int steps = 120;
     int cycles = 5;
-    Time timePerStep = Seconds(simTime) / (steps * cycles);
-    Time timePerCycle = Seconds(simTime) / cycles;
-    auto boundaries = BoundingBox(750, 2300, 650, 2000);
-    for (int i = 0;
-         i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS));
-         i++)
+    Time timePerStep = Seconds(simTime)/(steps*cycles);
+    Time timePerCycle = Seconds(simTime)/cycles;
+    auto boundaries = BoundingBox(750, 2300, 650, 1800);
+    for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
-        auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(
-            steps,
-            boundaries,
-            static_cast<MobilityPatterns::PATTERN_ENUM>(i));
+        auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,
+                                                                           boundaries,
+                                                                           static_cast<MobilityPatterns::PATTERN_ENUM>(i));
         auto itCoordRev = coordinates.rbegin();
-        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(
-            Vector(itCoordRev->first, itCoordRev->second, 0));
+        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(itCoordRev->first, itCoordRev->second, 0));
 
-        for (auto k = 0; k < cycles; k++)
+        for(auto k = 0; k < cycles; k++)
         {
             auto itCoord = coordinates.begin();
-            for (int j = 0; j < steps; j++, itCoord++)
+            for(int j = 0; j < steps; j++, itCoord++)
             {
-                Waypoint wpt(timePerCycle * k + timePerStep * j,
-                             Vector(itCoord->first, itCoord->second, 0.0));
+                Waypoint wpt(timePerCycle*k+timePerStep*j, Vector(itCoord->first, itCoord->second, 0.0));
                 ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
             }
         }
@@ -302,35 +313,25 @@ main(int argc, char** argv)
     {
         Ptr<E2AP> e2t = CreateObject<E2AP>();
         sgw->AddApplication(e2t);
+        Simulator::Schedule(Seconds(0.1), &E2AP::Connect, e2t);
 
         // Configurar eNodeBs/nós E2
-        Ptr<E2AP> e2n1 = CreateObject<E2AP>();
-        enbNodes.Get(0)->AddApplication(e2n1);
-        Simulator::Schedule(Seconds(0.1), &E2AP::Connect, e2t);
-        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n1);
-        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n1);
-        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n1);
+        for (uint32_t e2node = 0; e2node < enbNodes.GetN(); e2node++)
+        {
+            Ptr<E2AP> e2n = CreateObject<E2AP>();
+            enbNodes.Get(e2node)->AddApplication(e2n);
+            Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n);
+            Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n);
+            Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n);
+        }
 
-        Ptr<E2AP> e2n2 = CreateObject<E2AP>();
-        enbNodes.Get(1)->AddApplication(e2n2);
-        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n2);
-        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n2);
-        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n2);
-
-        Ptr<E2AP> e2n3 = CreateObject<E2AP>();
-        enbNodes.Get(2)->AddApplication(e2n3);
-        Simulator::Schedule(Seconds(0.2), &E2AP::Connect, e2n3);
-        Simulator::Schedule(Seconds(0.3), &E2AP::RegisterDefaultEndpoints, e2n3);
-        Simulator::Schedule(Seconds(0.4), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
-
-        Ptr<xAppHandoverMaliciousPositioning> handoverxapp =
-            CreateObject<xAppHandoverMaliciousPositioning>(
-                scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
+        Ptr<xAppHandoverMaliciousPositioning> handoverxapp = CreateObject<xAppHandoverMaliciousPositioning>(
+            scenario == SimulationScenarios::ORAN_MALICIOUS_XAPP_WITH_RNTI);
         sgw->AddApplication(handoverxapp);
     }
 
     AnimationInterface anim("tracking.xml");
-    // anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
+    //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(false);
 
     anim.UpdateNodeDescription(remoteHost->GetId(), "Remote Internet Host");
@@ -355,6 +356,7 @@ main(int argc, char** argv)
         anim.UpdateNodeDescription(nodeId, "eNB" + std::to_string(i));
         anim.UpdateNodeColor(nodeId, 255, 0, 0);
         anim.UpdateNodeSize(nodeId, 80, 80);
+
     }
     for (uint32_t i = 0; i < ueNodes.GetN(); i++)
     {
