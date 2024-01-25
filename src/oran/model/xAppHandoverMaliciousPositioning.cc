@@ -150,8 +150,18 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
         auto I = 2 * (-B.y + C.y);
         auto J = pow(dB, 2) - pow(dC, 2) - pow(B.x, 2) + pow(C.x, 2) - pow(B.y, 2) + pow(C.y, 2);
 
-        position.x = (G * I - J * F) / (I * E - F * H);
-        position.y = (G * H - E * J) / (F * H - E * I);
+        // Prevent zeros
+        E = (E == 0)   ? 0.00000001 : E;
+        I = (I == 0)   ? 0.0000001 : I;
+        auto DX = I * E - F * H;
+        DX = (DX == 0) ? 1 : DX;
+        auto DY = F * H - E * I;
+        DY = (DY == 0) ? 1 : DX;
+
+        // Calculate trilaterated coordinate
+        position.x = (G * I - J * F) / DX;
+        position.y = (G * H - E * J) / DY;
+        std::cout << position.x << " " << position.y << std::endl;
     }
     break;
     /*case 2:
