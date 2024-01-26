@@ -698,12 +698,16 @@ E2AP::QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time graceP
         // Select the first measurement deque that contains the rnti being searched
         for (auto measurementDeque: e2NodeMetrics.second)
         {
+            if (measurementDeque.measurements["RNTI"] != rnti)
+                continue;
             if (latest_measurement.empty() || std::stoll(latest_measurement) < std::stoll(measurementDeque.timestamp))
             {
                 latest_measurement = measurementDeque.timestamp;;
             }
         }
     }
+    if (latest_measurement.empty())
+        return filteredMetrics;
 
     // For each E2Node, execute
     for (auto e2NodeMetrics: metrics)
@@ -729,10 +733,70 @@ E2AP::QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time graceP
             }
             // Create the structure for the measurement
             if (filteredMetrics.find(e2NodeMetrics.first) == filteredMetrics.end())
+            {
                 filteredMetrics[e2NodeMetrics.first] = {measurementDeque};
+            }
+            else
+            {
+                // And collect older measurements too
+                filteredMetrics[e2NodeMetrics.first].push_back(measurementDeque);
+            }
         }
     }
     return filteredMetrics;
+}
+
+const std::set<uint8_t>
+E2AP::QueryLatestRntisForKpmMetric(std::string metric, Time gracePeriod) const
+{
+    // Retrieve all measurements
+    auto metrics = QueryKpmMetric(metric);
+
+    // If metric does not exist, return the empty response right away
+    if (metrics.empty())
+        return {};
+
+    std::set<uint8_t> rntis;
+
+    // Search for the latest collected metric
+    std::string latest_measurement = "";
+    for (auto e2NodeMetrics: metrics)
+    {
+        // Select the first measurement deque that contains the rnti being searched
+        for (auto measurementDeque: e2NodeMetrics.second)
+        {
+            if (!measurementDeque.measurements.contains("RNTI"))
+                continue;
+            if (latest_measurement.empty() || std::stoll(latest_measurement) < std::stoll(measurementDeque.timestamp))
+            {
+                latest_measurement = measurementDeque.timestamp;;
+            }
+        }
+    }
+    if (latest_measurement.empty())
+        return {};
+
+    // For each E2Node, execute
+    for (auto e2NodeMetrics: metrics)
+    {
+        // Select the first measurement deque that contains the rnti being searched
+        for (auto measurementDeque: e2NodeMetrics.second)
+        {
+            // If the current measurement is outside the grace period, we interrupt the search for the E2Node
+            if (std::stoll(latest_measurement)-std::stoll(measurementDeque.timestamp) > gracePeriod.GetNanoSeconds())
+            {
+                break;
+            }
+
+            // Skip measurement if it doesn't contain the RNTI field
+            if (!measurementDeque.measurements.contains("RNTI"))
+            {
+                continue;
+            }
+            rntis.emplace(measurementDeque.measurements["RNTI"]);
+        }
+    }
+    return rntis;
 }
 
 #include "E2SM-KPM.cc"

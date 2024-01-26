@@ -61,10 +61,10 @@ main(int argc, char** argv)
 
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
-    uint16_t numberOfUes = 8;
+    uint16_t numberOfUes = 8;//8
     uint16_t numberOfEnbs = 16;
     uint16_t numBearersPerUe = 1;
-    double simTime = 2 * 60;
+    double simTime = 10 * 60;
     double enbTxPowerDbm = 30.0;
 
     std::stringstream ss;
@@ -197,10 +197,10 @@ main(int argc, char** argv)
     ueMobility.Install(ueNodes);
 
     int steps = 120;
-    int cycles = 5;
+    int cycles = 1;
     Time timePerStep = Seconds(simTime)/(steps*cycles);
     Time timePerCycle = Seconds(simTime)/cycles;
-    auto boundaries = BoundingBox(750, 2300, 650, 1800);
+    auto boundaries = BoundingBox(650, 2300, 550, 1800);
     for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
         auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,

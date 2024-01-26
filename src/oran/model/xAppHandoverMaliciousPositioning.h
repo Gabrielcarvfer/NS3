@@ -44,12 +44,12 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
      */
     void PeriodicPositioning();
 
-    std::map<uint16_t, double> GetRntiRsrqMeasurements(uint16_t rnti);
-    Vector3D Multilateration(std::map<uint16_t, double>&);
-    Vector3D GradientDescent(std::map<uint16_t, double>& measurements);
-
+    std::map<uint16_t, double> GetRntiRsrqMeasurements(uint16_t rnti, Time gracePeriod = Seconds(10));
+    Vector3D Multilateration(std::map<uint16_t, double>& measurements);
+    Vector3D GradientDescent(std::map<uint16_t, double>& measurements, Ptr<Node> rntiNode);
+    Vector3D QuadrantSearch(std::map<uint16_t, double>& measurements, Ptr<Node> rntiNode);
   private:
-    std::vector<uint16_t> m_rntiList;
+    std::set<uint16_t> m_rntiSet;
     std::map<uint16_t, ns3::Vector3D> m_eNbPositions;
     bool m_useRnti = false;
     std::vector<std::tuple<Time, uint16_t, uint32_t, Vector3D>> m_rntiNodeTracking;

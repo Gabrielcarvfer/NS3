@@ -91,6 +91,9 @@ E2AP::HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
         std::sort(measuringE2NodeIt->second.begin(), measuringE2NodeIt->second.end(), [](auto a, auto b)->bool{
            return std::stoull(a.timestamp) > std::stoull(b.timestamp);
         });
+        //for(auto meas: measuringE2NodeIt->second)
+        //    std::cout << meas.timestamp << "\t" << meas.measurements << std::endl;
+        //std::cout << "================" << std::endl;
         //  todo: notify endpoint (e.g. xapps) that fresh data is available
     }
     break;

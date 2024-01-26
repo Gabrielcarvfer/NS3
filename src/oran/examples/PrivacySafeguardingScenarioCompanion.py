@@ -54,18 +54,20 @@ malicious_node_trajectories = get_malicious_tracking_trajectories()
 
 from matplotlib import pyplot as plt
 
-for key in malicious_node_trajectories:
+fig, axis = plt.subplots(3,3, sharex=True, sharey=True)
+for i, key in enumerate(malicious_node_trajectories):
     truth = ground_truth_node_trajectories[key]
     approx = malicious_node_trajectories[key]
     xt = list(map(lambda z: float(z[0]), truth))
     yt = list(map(lambda z: float(z[1]), truth))
     xa = list(map(lambda z: float(z[0]), approx))
     ya = list(map(lambda z: float(z[1]), approx))
-    plt.cla()
-    plt.scatter(xt, yt, label=f"truth for node{key}")
-    plt.scatter(xa, ya, label=f"approx for node{key}")
-    plt.xlim([600, 2500])
-    plt.ylim([600, 2500])
-    plt.show()
-
+    row = i // 3
+    col = i % 3
+    axis[row][col].scatter(xt, yt, label=f"truth for node{key}")
+    axis[row][col].scatter(xa, ya, label=f"approx for node{key}")
+    axis[row][col].set_xlim([0, 2600])
+    axis[row][col].set_ylim([0, 2600])
+plt.tight_layout()
+plt.show()
 print()

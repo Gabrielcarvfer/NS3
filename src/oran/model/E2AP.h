@@ -13,6 +13,7 @@
 #include "ns3/system-wall-clock-timestamp.h"
 
 #include <optional>
+#include <set>
 
 /**
  * \ingroup oran
@@ -144,7 +145,15 @@ class E2AP : public PubSubInfra
      * \return map addressed by E2 Node endpoints with a measurements deque as value
      */
     const std::map<std::string, std::vector<PeriodicMeasurementStruct>>
-    QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time gracePeriod) const;
+    QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time gracePeriod = Seconds(10)) const;
+
+    /**
+    * \brief Query KPM storage for rntis
+    * \param metric KPM metric to retrieve
+    * \return map addressed by E2 Node endpoints with a measurements deque as value
+    */
+    const std::set<uint8_t>
+    QueryLatestRntisForKpmMetric(std::string metric, Time gracePeriod = Seconds(10)) const;
   private:
     /**
      * \brief Send a Json payload.
