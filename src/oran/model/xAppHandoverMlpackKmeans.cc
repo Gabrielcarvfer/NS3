@@ -61,16 +61,7 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
         }
 
         for (auto& e2nodeMeasurements : metricMap)
-
         {
-            std::string cellIdStr(e2nodeMeasurements.first.begin() +
-                                      e2nodeMeasurements.first.find_last_of("/") + 1,
-                                  e2nodeMeasurements.first.end());
-            uint16_t cellId = std::atoi(cellIdStr.c_str());
-            if (cells.find(cellId) == cells.end())
-            {
-                cells[cellId] = i_cell++;
-            }
             std::string mostRecentTimestamp("");
             for (auto& measurementDeque : e2nodeMeasurements.second)
             {
@@ -87,6 +78,15 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
                 if (rntis.find(rnti) == rntis.end())
                 {
                     rntis[rnti] = i_rnti++;
+                }
+                uint16_t cellId;
+                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
+                    cellId = measurementDeque.measurements["CELLID"];
+                else
+                    cellId = measurementDeque.measurements["TARGET"];
+                if (cells.find(cellId) == cells.end())
+                {
+                    cells[cellId] = i_cell++;
                 }
             }
         }
@@ -132,7 +132,6 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    cellId++;
                     if (cells.find(cellId) == cells.end())
                         continue;
                     m_rntiToCurrentCellId[rnti] = cellId;
@@ -283,7 +282,6 @@ xAppHandoverMlpackKmeans::HandoverSucceeded(std::string context,
 {
     NS_LOG_FUNCTION(this);
     std::cout << "yay" << std::endl; // reward predictor
-    exit(0);
     for (auto [key, value] : m_imsiInHandover)
     {
         if (value == imsi)
