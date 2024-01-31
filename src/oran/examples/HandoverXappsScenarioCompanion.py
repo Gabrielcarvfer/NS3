@@ -118,24 +118,32 @@ def run_simulation(arguments, outputFile):
         if return_code != 0:
             exit(return_code)
         shutil.move(os.path.join(ns3_path, outputFile),
-                    os.path.join(curr_dir, outputFile))
+                    os.path.join(curr_dir, outputFile)
+                    )
         #shutil.move(os.path.join(ns3_path, "anim.xml"),
         #            os.path.join(curr_dir, outputFile.replace("output", "anim").replace(".csv", ".xml")) )
 
 from concurrent.futures import ThreadPoolExecutor
 
-for outputFile in output_and_args.keys():
-    # Run simulations
-    num_runs = 20
-    with ThreadPoolExecutor(max_workers=os.cpu_count()-1) as pool:
-        res = pool.map(run_simulation,
-                       [output_and_args[outputFile]]*num_runs,
-                       [f"{run}_{outputFile}" for run in range(num_runs)]
-                       )
-        for resp in res:
-            pass
-    del pool, res, resp
+args_list = []
+output_file_list = []
+num_runs = 20
 
+for outputFile in output_and_args.keys():
+    args_list.extend([output_and_args[outputFile]]*num_runs)
+    output_file_list.extend([f"{run}_{outputFile}" for run in range(num_runs)])
+
+# Run simulations
+with ThreadPoolExecutor(max_workers=os.cpu_count() - 1) as pool:
+    res = pool.map(run_simulation,
+                   args_list,
+                   output_file_list
+                   )
+    for resp in res:
+        pass
+del pool, res, resp
+
+for outputFile in output_and_args.keys():
     # Create containers to collect run results
     handoversLatency = []
     cancelledHandoversLatency = []
@@ -250,7 +258,7 @@ for outputFile in output_and_args.keys():
         del handoversTriggered, handoversInitiated, handoversOK, handoversError, handoversCancelled, meanHandovers
         del connectionEstablished, connectionReconfiguration, run
     def calcMeanPlusMargin(data):
-        lower_bound, upper_bound = st.t.interval(alpha=0.95, df=len(data)-1, loc=np.mean(data), scale=st.sem(data, nan_policy='omit'))
+        lower_bound, upper_bound = st.t.interval(confidence=0.95, df=len(data)-1, loc=np.mean(data), scale=st.sem(data, nan_policy='omit'))
         mean = np.mean(data)
         margin = (upper_bound-lower_bound)/2
         if np.isnan(margin):
