@@ -437,4 +437,4 @@ or use metrics to train machine learning algorithms that implement new policies.
 
 ## Acknowledgments
 
-This work was partially funded by ANATEL via OpenRAN workgroup scholarships.
+This work was partially funded by ANATEL via OpenRAN workgroup, and by RNP via the ORAN-QoS workgroup.
