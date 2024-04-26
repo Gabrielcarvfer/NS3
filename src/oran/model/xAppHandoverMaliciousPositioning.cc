@@ -92,37 +92,27 @@ xAppHandoverMaliciousPositioning::GetRntiRsrqMeasurements(uint16_t rnti, Time gr
         {
             for (auto& measurementDeque : e2nodeMeasurements.second)
             {
-                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
+                auto key = kpmMetric == "/KPM/HO.SrcCellQual.RSRP" ? "CELLID" : "TARGET";
+                uint16_t cellId = measurementDeque.measurements[key];
+                if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
                 {
-                    uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
-                    {
-                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
-                    }
-                    else
-                    {
-                        rsrq_measurements[cellId] *= 0.9;
-                        rsrq_measurements[cellId] += 0.1*(double)measurementDeque.measurements["VALUE"];
-                    }
+                    rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
                 }
                 else
                 {
-                    uint16_t cellId = measurementDeque.measurements["TARGET"];
-                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
-                    {
-                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
-                    }
-                    else
-                    {
-                        rsrq_measurements[cellId] *= 0.9;
-                        rsrq_measurements[cellId] += 0.1*(double)measurementDeque.measurements["VALUE"];
-                    }
+                    rsrq_measurements[cellId] *= 0.8;
+                    rsrq_measurements[cellId] += 0.2*(double)measurementDeque.measurements["VALUE"];
                 }
             }
         }
     }
 
     return rsrq_measurements;
+}
+
+double estimate_distance_from_power(double P)
+{
+    return (-500+14000*exp(-P/20));
 }
 
 Vector3D
@@ -158,9 +148,9 @@ xAppHandoverMaliciousPositioning::Multilateration(std::map<uint16_t, double>& me
     // Estimate distance based on RSRP<->distance measurements
     // Look at distance.xlsx file, which contains post-processed results
     // from logging added to lte-enb-rrc.cc in the same commit
-    auto dA = (-500+16000*exp(-Pa/20));
-    auto dB = (-500+16000*exp(-Pb/20));
-    auto dC = (-500+16000*exp(-Pc/20));
+    auto dA = estimate_distance_from_power(Pa);
+    auto dB = estimate_distance_from_power(Pb);
+    auto dC = estimate_distance_from_power(Pc);
 
     // Calculate intermediate steps
     auto E = 2 * (-A.x + B.x);
@@ -234,7 +224,7 @@ double calculate_error (Vector3D a, Vector3D b, double rsrp)
     // topology, sensitivity) and parameters of transmission (power, frequency)
     double distance = CalculateDistance(a, b);
     //std::cout << distance << "," << rsrp << std::endl;
-    double estimated_distance = -500+16000*exp(-rsrp/20);
+    double estimated_distance = estimate_distance_from_power(rsrp);
     // Squared error
     double error = pow(distance - estimated_distance, 2);
     return error;
@@ -352,7 +342,7 @@ auto recursiveSearch (double lx, double ly, double ux, double uy,
                 always_better(ans.second, temp.second))
             {
                 ans = temp;
-                std::cout << ans.first << std::endl;
+                //std::cout << ans.first << std::endl;
                 //std::cout << "taken " << temp.first << " error " << iteration_error(temp.first, measurements, enbPositions) << std::endl;
             }
         //}
@@ -559,9 +549,9 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
         if (measurements.empty())
             continue;
 
-        //auto estimated_position = Multilateration(measurements);
+        auto estimated_position = Multilateration(measurements);
         //auto estimated_position = QuadrantSearch(measurements, node);
-        auto estimated_position = GradientDescent(measurements, node);
+        //auto estimated_position = GradientDescent(measurements, node);
         // if (estimated_position.GetLength())
         //     continue;
         if (estimated_position != Vector3D())
@@ -573,7 +563,7 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
     }
 
     // Re-schedule this function
-    Simulator::Schedule(Seconds(1), &xAppHandoverMaliciousPositioning::PeriodicPositioning, this);
+    Simulator::Schedule(MilliSeconds(100), &xAppHandoverMaliciousPositioning::PeriodicPositioning, this);
 }
 
 void
