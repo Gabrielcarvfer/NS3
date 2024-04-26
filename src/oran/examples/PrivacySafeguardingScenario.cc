@@ -61,10 +61,10 @@ main(int argc, char** argv)
 
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
-    uint16_t numberOfUes = 8;//8
-    uint16_t numberOfEnbs = 16;
+    uint16_t numberOfUes = 3;
+    uint16_t numberOfEnbs = 4;
     uint16_t numBearersPerUe = 1;
-    double simTime = 10 * 60;
+    double simTime = 2 * 60;
     double enbTxPowerDbm = 30.0;
 
     std::stringstream ss;
@@ -163,14 +163,16 @@ main(int argc, char** argv)
     enbNodes.Create(numberOfEnbs);
     ueNodes.Create(numberOfUes);
 
-    // Install Mobility Model in eNB
+    // Install Mobility Model in eN
     Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
+    enbPositionAlloc->Add(Vector(  800, 700, 0));
     enbPositionAlloc->Add(Vector(  600, 500, 0));
     enbPositionAlloc->Add(Vector( 1100, 500, 0));
+    enbPositionAlloc->Add(Vector(  850, 1000, 0));
+
     enbPositionAlloc->Add(Vector( 1600, 500, 0));
     enbPositionAlloc->Add(Vector( 2100, 500, 0));
 
-    enbPositionAlloc->Add(Vector(  850, 1000, 0));
     enbPositionAlloc->Add(Vector( 1350, 1000, 0));
     enbPositionAlloc->Add(Vector( 1850, 1000, 0));
     enbPositionAlloc->Add(Vector( 2350, 1000, 0));
@@ -196,27 +198,24 @@ main(int argc, char** argv)
     ueMobility.SetMobilityModel("ns3::WaypointMobilityModel");
     ueMobility.Install(ueNodes);
 
-    int steps = 120;
-    int cycles = 1;
-    Time timePerStep = Seconds(simTime)/(steps*cycles);
-    Time timePerCycle = Seconds(simTime)/cycles;
-    auto boundaries = BoundingBox(650, 2300, 550, 1800);
+    int steps = 1200;
+    Time timePerStep = Seconds(simTime)/(steps);//*cycles);
+    //Time timePerCycle = Seconds(simTime)/cycles;
+    std::vector<int> box = {700, 900, 600, 800};
     for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
+        auto boundaries = BoundingBox(box[0], box[1], box[2], box[3]);
         auto coordinates = MobilityPatterns::GetMobilityPatternCoordinates(steps,
                                                                            boundaries,
                                                                            static_cast<MobilityPatterns::PATTERN_ENUM>(i));
         auto itCoordRev = coordinates.rbegin();
         ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(itCoordRev->first, itCoordRev->second, 0));
 
-        for(auto k = 0; k < cycles; k++)
+        auto itCoord = coordinates.begin();
+        for(int j = 0; j < steps; j++, itCoord++)
         {
-            auto itCoord = coordinates.begin();
-            for(int j = 0; j < steps; j++, itCoord++)
-            {
-                Waypoint wpt(timePerCycle*k+timePerStep*j, Vector(itCoord->first, itCoord->second, 0.0));
-                ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
-            }
+            Waypoint wpt(timePerStep*j, Vector(itCoord->first, itCoord->second, 0.0));
+            ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
         }
     }
 
