@@ -691,55 +691,41 @@ E2AP::QueryLatestKpmMetricForRnti(std::string metric, uint16_t rnti, Time graceP
 
     std::map<std::string, std::vector<PeriodicMeasurementStruct>> filteredMetrics;
 
-    // Search for the latest collected metric
-    std::string latest_measurement = "";
-    for (auto e2NodeMetrics: metrics)
-    {
-        // Select the first measurement deque that contains the rnti being searched
-        for (auto measurementDeque: e2NodeMetrics.second)
-        {
-            if (measurementDeque.measurements["RNTI"] != rnti)
-                continue;
-            if (latest_measurement.empty() || std::stoll(latest_measurement) < std::stoll(measurementDeque.timestamp))
-            {
-                latest_measurement = measurementDeque.timestamp;;
-            }
-        }
-    }
-    if (latest_measurement.empty())
-        return filteredMetrics;
-
     // For each E2Node, execute
     for (auto e2NodeMetrics: metrics)
     {
-        // Select the first measurement deque that contains the rnti being searched
-        for (auto measurementDeque: e2NodeMetrics.second)
-        {
-            // If the current measurement is outside the grace period, we interrupt the search for the E2Node
-            if (std::stoll(latest_measurement)-std::stoll(measurementDeque.timestamp) > gracePeriod.GetNanoSeconds())
-            {
-                break;
-            }
+        // Filter measurements with the RNTI matching the searched one
+        std::vector<PeriodicMeasurementStruct_t> rntiMeasurements;
+        std::copy_if(e2NodeMetrics.second.begin(), e2NodeMetrics.second.end(),
+                     std::back_inserter(rntiMeasurements),
+                     [&rnti](auto &measurement) {
+                         return measurement.measurements["RNTI"] == rnti;
+                        });
 
-            // Skip measurement if it doesn't contain the RNTI field
-            if (!measurementDeque.measurements.contains("RNTI"))
-            {
-                continue;
-            }
-            // Skip measurement if it doesn't match the RNTI
-            if (measurementDeque.measurements["RNTI"] != rnti)
-            {
-                continue;
-            }
+        // Filter latest measurements within grace period
+        std::vector<PeriodicMeasurementStruct_t> timedRntiMeasurements;
+        std::copy_if(rntiMeasurements.begin(), rntiMeasurements.end(),
+                     std::back_inserter(timedRntiMeasurements),
+                     [&latestMeasurement=rntiMeasurements.front(), &gracePeriod](auto &measurement) {
+                         return std::stoll(latestMeasurement.timestamp)-std::stoll(measurement.timestamp) <= gracePeriod.GetNanoSeconds();
+                     });
+
+        if (timedRntiMeasurements.empty())
+        {
+            continue;
+        }
+
+        for (auto& measurement: timedRntiMeasurements)
+        {
             // Create the structure for the measurement
             if (filteredMetrics.find(e2NodeMetrics.first) == filteredMetrics.end())
             {
-                filteredMetrics[e2NodeMetrics.first] = {measurementDeque};
+                filteredMetrics[e2NodeMetrics.first] = {measurement};
             }
             else
             {
                 // And collect older measurements too
-                filteredMetrics[e2NodeMetrics.first].push_back(measurementDeque);
+                filteredMetrics[e2NodeMetrics.first].push_back(measurement);
             }
         }
     }
