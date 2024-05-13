@@ -20,6 +20,10 @@ xAppHandoverMaliciousPositioning::xAppHandoverMaliciousPositioning(bool useRnti)
 {
     NS_LOG_FUNCTION(this);
 
+    Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/HandoverEndOk",
+                   MakeCallback(&xAppHandoverMaliciousPositioning::HandoverSucceeded, this));
+    Config::Connect("/NodeList/*/DeviceList/*/LteEnbRrc/ConnectionEstablished",
+                    MakeCallback(&xAppHandoverMaliciousPositioning::ConnectionEstablished, this));
     /* Retrieve position of eNBs/gNBs
      *
      * While someone will definitely complain that I only can do this in a simulation,
@@ -223,7 +227,7 @@ double calculate_error (Vector3D a, Vector3D b, double rsrp)
     // assuming the same radio configuration (antenna type, elevation,
     // topology, sensitivity) and parameters of transmission (power, frequency)
     double distance = CalculateDistance(a, b);
-    //std::cout << distance << "," << rsrp << std::endl;
+    std::cout << distance << "," << rsrp << std::endl;
     double estimated_distance = estimate_distance_from_power(rsrp);
     // Squared error
     double error = pow(distance - estimated_distance, 2);
@@ -549,9 +553,9 @@ xAppHandoverMaliciousPositioning::PeriodicPositioning()
         if (measurements.empty())
             continue;
 
-        auto estimated_position = Multilateration(measurements);
+        //auto estimated_position = Multilateration(measurements);
         //auto estimated_position = QuadrantSearch(measurements, node);
-        //auto estimated_position = GradientDescent(measurements, node);
+        auto estimated_position = GradientDescent(measurements, node);
         // if (estimated_position.GetLength())
         //     continue;
         if (estimated_position != Vector3D())
@@ -570,10 +574,31 @@ void
 xAppHandoverMaliciousPositioning::HandoverDecision(Json& payload)
 {
     NS_LOG_FUNCTION(this);
+    uint16_t rnti = payload["RNTI"];
     // only collect RNTI from request
-    if (m_rntiSet.find(payload["RNTI"]) == m_rntiSet.end())
+    if (m_rntiSet.find(rnti) == m_rntiSet.end())
     {
-        m_rntiSet.emplace(payload["RNTI"]);
+        m_rntiSet.emplace(rnti);
     }
     // does nothing on purpose
+    auto node = find_nodeid_with_rnti(rnti);
+    //std::cout << Simulator::Now().GetMilliSeconds() << " HOAuth node " <<  (node ? std::to_string(node->GetId()) : "??") << " rnti " << std::to_string(rnti) << std::endl;
+}
+
+void
+xAppHandoverMaliciousPositioning::HandoverSucceeded(std::string context,
+                                       uint64_t imsi,
+                                       uint16_t cellid,
+                                       uint16_t rnti)
+{
+    //std::cout << Simulator::Now().GetMilliSeconds() << " HOSuc node " <<  std::to_string(find_nodeid_with_rnti(rnti)->GetId()) << " rnti " << std::to_string(rnti) << std::endl;
+}
+
+void
+xAppHandoverMaliciousPositioning::ConnectionEstablished(std::string context,
+                                           uint64_t imsi,
+                                           uint16_t cellid,
+                                           uint16_t rnti)
+{
+    //std::cout << Simulator::Now().GetMilliSeconds() << " ConnEstab node " <<  std::to_string(find_nodeid_with_rnti(rnti)->GetId()) << " rnti " << std::to_string(rnti) << std::endl;
 }

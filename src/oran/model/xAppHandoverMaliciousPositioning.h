@@ -53,6 +53,9 @@ class xAppHandoverMaliciousPositioning : public xAppHandover
     std::map<uint16_t, ns3::Vector3D> m_eNbPositions;
     bool m_useRnti = false;
     std::vector<std::tuple<Time, uint16_t, uint32_t, Vector3D>> m_rntiNodeTracking;
+
+    void HandoverSucceeded(std::string context,uint64_t imsi,uint16_t cellid,uint16_t rnti);
+    void ConnectionEstablished(std::string context, uint64_t imsi,uint16_t cellid,uint16_t rnti);
 };
 } // namespace oran
 } // namespace ns3

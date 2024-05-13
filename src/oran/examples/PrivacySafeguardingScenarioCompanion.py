@@ -31,16 +31,16 @@ def get_ground_truth_trajectories():
             node_trajectory = list(filter(lambda x: "@x" in list(x.keys()), node_trajectory))
             # Replace dict with tuple
             node_trajectory = list(map(lambda x: (x["@x"], x["@y"]), node_trajectory))
-            trajectories[int(nodeId)] = node_trajectory
+            trajectories[float(nodeId)] = node_trajectory
         for key in list(trajectories.keys()):
             if not trajectories[key]:
                 del trajectories[key]
                 infraPosition[key] = None
         for key in infraPosition.keys():
-            initPos = list(filter(lambda x: int(x["@id"]) == key, ground_truth["anim"]["node"]))[0]
+            initPos = list(filter(lambda x: float(x["@id"]) == key, ground_truth["anim"]["node"]))[0]
             x,y = initPos["@locX"], initPos["@locY"]
-            x,y = int(x), int(y)
-            label = list(filter(lambda x: int(x["@id"]) == key, ground_truth["anim"]["nu"]))
+            x,y = float(x), float(y)
+            label = list(filter(lambda x: float(x["@id"]) == key, ground_truth["anim"]["nu"]))
             # Trim updates with no coordinates
             label = list(filter(lambda x: "@descr" in list(x.keys()), label))[0]["@descr"]
             infraPosition[key] = (x, y, label)
@@ -58,7 +58,7 @@ def get_malicious_tracking_trajectories():
             node_trajectory = list(filter(lambda x: x["nodeId"] == nodeId, malicious_tracking))
             # Replace dict with tuple
             node_trajectory = list(map(lambda x: (x["x"], x["y"]), node_trajectory))
-            trajectories[int(nodeId)] = node_trajectory
+            trajectories[float(nodeId)] = node_trajectory
     return trajectories
 
 ground_truth_node_trajectories = get_ground_truth_trajectories()
@@ -79,10 +79,14 @@ for i, key in enumerate(malicious_node_trajectories):
     col = i % 3
     axis[row][col].scatter(xt, yt, label=f"truth for node{key}", s=0.5)
     axis[row][col].scatter(xa, ya, label=f"approx for node{key}", s=0.5)
-    for (x,y,label) in infraPosition.values():
-        axis[row][col].scatter(x,y,label=label)
     axis[row][col].set_xlim([0, 2600])
     axis[row][col].set_ylim([0, 2600])
+
+for i in range(9):
+    row = i // 3
+    col = i % 3
+    for (x,y,label) in infraPosition.values():
+        axis[row][col].scatter(x,y,label=label)
 plt.tight_layout()
 plt.show()
 print()
