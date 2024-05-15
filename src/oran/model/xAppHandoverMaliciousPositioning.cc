@@ -227,7 +227,7 @@ double calculate_error (Vector3D a, Vector3D b, double rsrp)
     // assuming the same radio configuration (antenna type, elevation,
     // topology, sensitivity) and parameters of transmission (power, frequency)
     double distance = CalculateDistance(a, b);
-    std::cout << distance << "," << rsrp << std::endl;
+    //std::cout << distance << "," << rsrp << std::endl;
     double estimated_distance = estimate_distance_from_power(rsrp);
     // Squared error
     double error = pow(distance - estimated_distance, 2);
