@@ -62,7 +62,7 @@ main(int argc, char** argv)
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
     uint16_t numberOfUes = 1;
-    uint16_t numberOfEnbs = 1;
+    uint16_t numberOfEnbs = 12;
     uint16_t numBearersPerUe = 1;
     double simTime = 2 * 60;
     double enbTxPowerDbm = 30.0;
@@ -166,24 +166,24 @@ main(int argc, char** argv)
     // Install Mobility Model in eN
     Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
     enbPositionAlloc->Add(Vector(  600, 500, 0));
+    enbPositionAlloc->Add(Vector(  750, 500, 0));
     enbPositionAlloc->Add(Vector(  900, 500, 0));
-    enbPositionAlloc->Add(Vector( 1200, 500, 0));
-    enbPositionAlloc->Add(Vector( 1500, 500, 0));
+    enbPositionAlloc->Add(Vector( 1050, 500, 0));
 
-    enbPositionAlloc->Add(Vector(  800, 800, 0));
-    enbPositionAlloc->Add(Vector( 1100, 800, 0));
-    enbPositionAlloc->Add(Vector( 1400, 800, 0));
-    enbPositionAlloc->Add(Vector( 1700, 800, 0));
+    enbPositionAlloc->Add(Vector(  675, 650, 0));
+    enbPositionAlloc->Add(Vector(  825, 650, 0));
+    enbPositionAlloc->Add(Vector(  975, 650, 0));
+    enbPositionAlloc->Add(Vector( 1125, 650, 0));
 
-    enbPositionAlloc->Add(Vector(  600, 1100, 0));
-    enbPositionAlloc->Add(Vector(  900, 1100, 0));
-    enbPositionAlloc->Add(Vector( 1200, 1100, 0));
-    enbPositionAlloc->Add(Vector( 1500, 1100, 0));
+    enbPositionAlloc->Add(Vector(  600, 800, 0));
+    enbPositionAlloc->Add(Vector(  750, 800, 0));
+    enbPositionAlloc->Add(Vector(  900, 800, 0));
+    enbPositionAlloc->Add(Vector( 1050, 800, 0));
 
-    enbPositionAlloc->Add(Vector(  800, 1400, 0));
-    enbPositionAlloc->Add(Vector( 1100, 1400, 0));
-    enbPositionAlloc->Add(Vector( 1400, 1400, 0));
-    enbPositionAlloc->Add(Vector( 1700, 1400, 0));
+    enbPositionAlloc->Add(Vector(  675, 950, 0));
+    enbPositionAlloc->Add(Vector(  825, 950, 0));
+    enbPositionAlloc->Add(Vector(  975, 950, 0));
+    enbPositionAlloc->Add(Vector( 1125, 950, 0));
 
 
     MobilityHelper enbMobility;
@@ -192,19 +192,19 @@ main(int argc, char** argv)
     enbMobility.Install(enbNodes);
 
     // Install Mobility Model in UE
-    Ptr<ListPositionAllocator> uePositionAlloc = CreateObject<ListPositionAllocator>();
-    uePositionAlloc->Add(Vector( 610, 510, 0));
     MobilityHelper ueMobility;
-    //ueMobility.SetMobilityModel("ns3::WaypointMobilityModel");
-    ueMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    ueMobility.SetPositionAllocator(uePositionAlloc);
+    ueMobility.SetMobilityModel("ns3::WaypointMobilityModel");
+    //ueMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    //Ptr<ListPositionAllocator> uePositionAlloc = CreateObject<ListPositionAllocator>();
+    //uePositionAlloc->Add(Vector( 610, 510, 0));
+    //ueMobility.SetPositionAllocator(uePositionAlloc);
     ueMobility.Install(ueNodes);
 
     int steps = 1200;
     Time timePerStep = Seconds(simTime)/(steps);//*cycles);
     //Time timePerCycle = Seconds(simTime)/cycles;
-    std::vector<int> box = {590, 610, 490, 510};
-    /*
+    std::vector<int> box = {650, 1000, 550, 750}; //700-900 is very good
+
     for (int i = 0; i < std::min(numberOfUes, static_cast<uint16_t>(MobilityPatterns::NUM_PATTERNS)); i++)
     {
         auto boundaries = BoundingBox(box[0], box[1], box[2], box[3]);
@@ -221,7 +221,6 @@ main(int argc, char** argv)
             ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
         }
     }
-     */
 
     // Install LTE Devices in eNB and UEs
     Config::SetDefault("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue(2));
