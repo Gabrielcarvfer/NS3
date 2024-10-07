@@ -1,12 +1,20 @@
 #include "xAppHandoverReinforcedLearning.h"
 
+#include "ns3/matrix-array.h"
+#include "pybind11/numpy.h"
+#include "pybind11/pybind11.h"
+
 #include "ns3/E2AP.h"
 #include "ns3/core-module.h"
 
 #include <algorithm>
+#include <pybind11/embed.h>
 
+namespace py = pybind11;
 using namespace ns3;
 using namespace oran;
+
+py::scoped_interpreter* g_interpreter = nullptr;
 
 NS_LOG_COMPONENT_DEFINE("xAppHandoverReinforcedLearning");
 
@@ -35,7 +43,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     std::array<std::string, 4> kpmMetrics = {"/KPM/HO.SrcCellQual.RSRP",
                                              //"/KPM/HO.SrcCellQual.RSRQ",
                                              "/KPM/HO.TrgtCellQual.RSRP",
-                                             //"/KPM/HO.TrgtCellQual.RSRQ"};
+                                             //"/KPM/HO.TrgtCellQual.RSRQ"
+                                             };
 
     std::map<uint16_t, double> rsrq_measurements;
 
@@ -93,6 +102,37 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         return std::numeric_limits<uint16_t>::max();
     }
+
+    // Start the interpreter and keep it alive
+    if (!g_interpreter)
+    {
+        g_interpreter = new py::scoped_interpreter{};
+    }
+
+    MatrixArray<float> matrix(10, 10, 10);
+    // Create a non-owning py::array_t from the valarray data using the same shape
+    std::vector<size_t> shape = {matrix.GetNumPages(),
+                                 matrix.GetNumRows(),
+                                 matrix.GetNumCols()};
+    std::vector<size_t> strides = {sizeof(float) * matrix.GetNumRows() *
+                                       matrix.GetNumCols(),
+                                   sizeof(float),
+                                   sizeof(float) * matrix.GetNumCols()};
+    py::array matrix_python = py::array(py::buffer_info(
+        const_cast<float*>(&matrix.GetValues()[0]), // Pointer to data
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        3,                                          // Number of dimensions
+        shape,                                    // Buffer dimensions
+        strides                                   // Strides for each dimension
+        ));
+
+    py::module_ pyttb = py::module_::import("backup"); //todo : criar __init__.py, PYTHONPATH=$PYTHONPATH:/caminho/contendo/backup
+    py::object tensor = pyttb.attr("tensor")();
+    tensor = tensor.attr("from_data")(matrix_python);
+
+    auto hosvdResult = pyttb.attr("funcao")(matrix_python, 1e-3, -1);
+    auto resp_cellid = hosvdResult.attr("u"); // acessar atributo da resposta vinda do python
 
     // todo: montar observação
     // todo: chamar decisão do reforço
