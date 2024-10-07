@@ -1,12 +1,13 @@
 add_package(Armadillo)
 add_package(Mlpack)
+
 find_library(
   ARMADILLO
   armadillo
 )
 find_path(
   MLPACK_INCLUDE_DIRS
-  "mlpack/mlpack.hpp"
+  "mlpack.hpp"
 )
 
 if((${ARMADILLO}
@@ -23,7 +24,39 @@ endif()
 
 include_directories(${MLPACK_INCLUDE_DIRS})
 
-add_link_options(-fopenmp)
+check_deps(
+        reinforced_handover_xapp
+        PYTHON_PACKAGES
+        pybind11
+)
+
+set(source_files)
+set(header_files)
+set(libraries)
+if(${reinforced_handover_xapp})
+    message(
+            FATAL_ERROR
+            "Missing reinforced handover xapp"
+    )
+else()
+    find_package(
+            pybind11
+            REQUIRED
+    )
+    list(
+            APPEND
+            source_files
+            model/xAppHandoverReinforcedLearning.cc
+    )
+    list(
+            APPEND
+            header_files
+            model/xAppHandoverReinforcedLearning.h
+    )
+    list(APPEND link_libraries pybind11::headers
+            pybind11::embed
+            ${CMAKE_DL_LIBS})
+endif()
 
 build_lib(
   LIBNAME oran
@@ -38,6 +71,7 @@ build_lib(
     model/xAppHandoverMlpackKmeans.cc
     model/xAppHandoverMaxRsrq.cc
     model/xAppHandoverMaliciousPositioning.cc
+    ${source_files}
   HEADER_FILES
     model/json.hpp
     model/PubSubInfra.h
@@ -51,9 +85,11 @@ build_lib(
     model/xAppHandoverMlpackKmeans.h
     model/xAppHandoverMaxRsrq.h
     model/xAppHandoverMaliciousPositioning.h
+    ${header_files}
   LIBRARIES_TO_LINK
     ${libcore}
     ${libnetwork}
     ${libinternet}
     ${ARMADILLO}
+    ${link_libraries}
 )

@@ -2,6 +2,7 @@
 // Created by Gabriel Ferreira(@gabrielcarvfer) on 1/11/22.
 //
 
+#include "ns3/xAppHandoverReinforcedLearning.h"
 #include "ns3/E2AP.h"
 #include "ns3/applications-module.h"
 #include "ns3/core-module.h"
@@ -371,7 +372,7 @@ main(int argc, char** argv)
        << "\t 2: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the eNB.\n"
        << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n";
 
-    unsigned scenarioi = 0;
+    unsigned scenarioi = 4;
     std::string output_csv_filename = "output.csv";
     CommandLine cmd(__FILE__);
     cmd.AddValue("scenario", ss.str(), scenarioi);
@@ -713,8 +714,10 @@ main(int argc, char** argv)
         if (scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ ||
             scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
         {
-            Ptr<xAppHandoverMaxRsrq> handoverxapp = CreateObject<xAppHandoverMaxRsrq>(
-                scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
+            //Ptr<xAppHandoverMaxRsrq> handoverxapp = CreateObject<xAppHandoverMaxRsrq>(
+            //    scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
+            Ptr<xAppHandoverReinforcedLearning> handoverxapp = CreateObject<xAppHandoverReinforcedLearning>(
+            scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
             sgw->AddApplication(handoverxapp);
         }
 

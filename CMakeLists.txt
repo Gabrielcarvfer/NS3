@@ -10,7 +10,7 @@ project(NS3 CXX C)
 
 file(STRINGS VERSION NS3_VER)
 
-add_definitions(-fopenmp -Wno-error=unused-function)
+add_definitions(-Wno-error=unused-function)
 
 # minimum compiler versions
 set(AppleClang_MinVersion 11.0.0)
