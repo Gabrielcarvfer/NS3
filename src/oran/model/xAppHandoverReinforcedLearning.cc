@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <pybind11/embed.h>
 
+#include <deque>
+
 namespace py = pybind11;
 using namespace ns3;
 using namespace oran;
@@ -37,6 +39,11 @@ uint16_t
 xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 {
     NS_LOG_FUNCTION(this);
+    // por enquanto vai ser so com 2, ent e pra dar certo assim?
+    const int metric_buffer_len = 16;
+    static std::deque<float> tower_0;
+    static std::deque<float> tower_1;
+    uint16_t srcCellId = 0;
 
     E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
@@ -80,6 +87,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
+                    srcCellId = cellId;
                     cellId++;
                     if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
                     {
@@ -107,8 +115,42 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     if (!g_interpreter)
     {
         g_interpreter = new py::scoped_interpreter{};
+        static py::module_ pyttb = py::module_::import("HandoverML");
+        pyttb.attr("init_module")(metric_buffer_len, 2).cast<uint16_t>();
     }
+    // tamo trabalhando com a ideia q so tenha cellid 0 e 1
+    //  std::map<uint16_t, double> rsrq_measurements;
 
+
+    // add metrics to buffer
+    auto it = rsrq_measurements.find(0);
+    tower_0.push_front(static_cast<float>(it->second) ? it != rsrq_measurements.end() : 0);
+    it = rsrq_measurements.find(1);
+    tower_1.push_front(static_cast<float>(it->second) ? it != rsrq_measurements.end() : 0);
+    // check for buffer size before training
+    if(tower_0.size() < metric_buffer_len) { return std::numeric_limits<uint16_t>::max(); }
+
+    py::array t0_metrics = py::array(py::buffer_info(
+        &tower_0[0],                                // Pointer to data ( acho q assim funfa)
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        1,                                          // Number of dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(tower_0.size())}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
+        ));
+
+
+    py::array t1_metrics = py::array(py::buffer_info(
+        &tower_1[0],                                // Pointer to data ( acho q assim funfa)
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        1,                                          // Number of dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(tower_1.size())}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
+        ));
+
+
+    /*
     MatrixArray<float> matrix(10, 10, 10);
     // Create a non-owning py::array_t from the valarray data using the same shape
     std::vector<size_t> shape = {matrix.GetNumPages(),
@@ -125,14 +167,18 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         3,                                          // Number of dimensions
         shape,                                    // Buffer dimensions
         strides                                   // Strides for each dimension
-        ));
-
+        ));1
+    */
     py::module_ pyttb = py::module_::import("backup"); //todo : criar __init__.py, PYTHONPATH=$PYTHONPATH:/caminho/contendo/backup
-    py::object tensor = pyttb.attr("tensor")();
-    tensor = tensor.attr("from_data")(matrix_python);
 
-    auto hosvdResult = pyttb.attr("funcao")(matrix_python, 1e-3, -1);
-    auto resp_cellid = hosvdResult.attr("u"); // acessar atributo da resposta vinda do python
+    //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
+    //auto hosvdResult = pyttb.attr("funcao")(matrix_python, 1e-3, -1);
+    // TODO: falta saber o id do gnb conectado
+    auto hoResult = pyttb.attr("handover_decision")(t0_metrics,t1_metrics, srcCellId).cast<uint16_t>();
+    //auto resp_cellid = hoResult.attr("u"); // acessar atributo da resposta vinda do python
+
+
+    //return hoResult;
 
     // todo: montar observação
     // todo: chamar decisão do reforço
@@ -146,6 +192,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     std::cout << "rnti: " << rnti << ", max: " << pos_maxrsrp->second
               << ", cellId: " << pos_maxrsrp->first << std::endl;
     return pos_maxrsrp->first;
+
+
 }
 
 void
