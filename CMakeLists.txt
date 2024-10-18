@@ -125,7 +125,7 @@ endif()
 
 # Include macros used below
 include(build-support/macros-and-definitions.cmake)
-
+include_directories(/usr/include/python3.10)
 # Scan module libraries
 subdirlist(libs_to_build ${CMAKE_CURRENT_SOURCE_DIR}/src)
 

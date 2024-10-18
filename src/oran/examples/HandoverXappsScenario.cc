@@ -359,8 +359,8 @@ main(int argc, char** argv)
     // Testes de conexão de nós
     GlobalValue::Bind("ChecksumEnabled", BooleanValue(false));
 
-    uint16_t numberOfUes = 6;
-    uint16_t numberOfEnbs = 3;
+    uint16_t numberOfUes = 1;
+    uint16_t numberOfEnbs = 2;
     uint16_t numBearersPerUe = 1;
     double simTime = 10 * 60;
     double enbTxPowerDbm = 40.0;
@@ -504,7 +504,7 @@ main(int argc, char** argv)
     double sin60 = std::sin(3.1415 * 60 / 180);
     double cos60 = std::cos(3.1415 * 60 / 180);
 
-    std::vector<double> speedUes{0.2, 1, 5, 10, 5, 30};
+    std::vector<double> speedUes{10, 5, 30};
     for (int i = 0; i < numberOfUes; i++)
     {
         // UEs in the intersection of the 2/3 cells
@@ -517,12 +517,12 @@ main(int argc, char** argv)
          *     1500, 1683
          */
         double InitPosX = 1250;
-        double InitPosY = 1250;
+        double InitPosY = 750;
         double PosX = InitPosX;
         double PosY = InitPosY;
         double MidX = 1500;
         double LimX = 1750;               // walks 500 from the starting point
-        double LimY = 1250 + 500 * sin60; // initPosY+triangleSide*sin(angle) = 1683;
+        double LimY = 750 + 500 * sin60; // initPosY+triangleSide*sin(angle) = 1683;
 
         if (i >= 4)
         {
@@ -734,14 +734,14 @@ main(int argc, char** argv)
         Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n2);
         Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n2);
         Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n2);
-
+/*
         Ptr<E2AP> e2n3 = CreateObject<E2AP>();
         enbNodes.Get(2)->AddApplication(e2n3);
         Simulator::Schedule(Seconds(1.0), &E2AP::Connect, e2n3);
         Simulator::Schedule(Seconds(2.0), &E2AP::RegisterDefaultEndpoints, e2n3);
-        Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3);
+        Simulator::Schedule(Seconds(2.5), &E2AP::SubscribeToDefaultEndpoints, e2t, *e2n3); */
     }
-    /*
+
     AnimationInterface anim("anim.xml");
     //anim.SetMaxPktsPerTraceFile(0xFFFFFFFF);
     anim.EnablePacketMetadata(false);
@@ -777,7 +777,7 @@ main(int argc, char** argv)
         anim.UpdateNodeColor(nodeId, 0, 255, 0);
         anim.UpdateNodeSize(nodeId, 80, 80);
     }
-    */
+
     // Ptr<FlowMonitor> flowMonitor;
     // FlowMonitorHelper flowHelper;
     // flowMonitor = flowHelper.InstallAll();

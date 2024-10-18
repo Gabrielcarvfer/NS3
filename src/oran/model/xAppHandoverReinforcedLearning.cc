@@ -17,7 +17,7 @@ using namespace ns3;
 using namespace oran;
 
 py::scoped_interpreter* g_interpreter = nullptr;
-
+py::module_ pyhrl;
 NS_LOG_COMPONENT_DEFINE("xAppHandoverReinforcedLearning");
 
 xAppHandoverReinforcedLearning::xAppHandoverReinforcedLearning(bool initiateHandovers)
@@ -84,11 +84,11 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                     // Skip rntis that do not match the requesting rnti
                     continue;
                 }
-                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRQ")
+                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
                     srcCellId = cellId;
-                    cellId++;
+                    //cellId++;
                     if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
                     {
                         rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
@@ -96,6 +96,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                 }
                 else
                 {
+                    if(!measurementDeque.measurements.contains("TARGET")) continue;
                     uint16_t cellId = measurementDeque.measurements["TARGET"];
                     if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
                     {
@@ -111,22 +112,24 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         return std::numeric_limits<uint16_t>::max();
     }
 
+    //TODO: TA AQUI
+
     // Start the interpreter and keep it alive
     if (!g_interpreter)
     {
         g_interpreter = new py::scoped_interpreter{};
-        static py::module_ pyttb = py::module_::import("HandoverML");
-        pyttb.attr("init_module")(metric_buffer_len, 2).cast<uint16_t>();
+        pyhrl = py::module_::import("HandoverRL");
+        pyhrl.attr("init_module")(metric_buffer_len, 22, "./target.pth");
     }
     // tamo trabalhando com a ideia q so tenha cellid 0 e 1
     //  std::map<uint16_t, double> rsrq_measurements;
 
 
     // add metrics to buffer
-    auto it = rsrq_measurements.find(0);
-    tower_0.push_front(static_cast<float>(it->second) ? it != rsrq_measurements.end() : 0);
-    it = rsrq_measurements.find(1);
-    tower_1.push_front(static_cast<float>(it->second) ? it != rsrq_measurements.end() : 0);
+    auto it = rsrq_measurements.find(1);
+    tower_0.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0);
+    it = rsrq_measurements.find(2);
+    tower_1.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0);
     // check for buffer size before training
     if(tower_0.size() < metric_buffer_len) { return std::numeric_limits<uint16_t>::max(); }
 
@@ -169,13 +172,15 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         strides                                   // Strides for each dimension
         ));1
     */
-    py::module_ pyttb = py::module_::import("backup"); //todo : criar __init__.py, PYTHONPATH=$PYTHONPATH:/caminho/contendo/backup
+
 
     //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
-    //auto hosvdResult = pyttb.attr("funcao")(matrix_python, 1e-3, -1);
+
     // TODO: falta saber o id do gnb conectado
-    auto hoResult = pyttb.attr("handover_decision")(t0_metrics,t1_metrics, srcCellId).cast<uint16_t>();
-    //auto resp_cellid = hoResult.attr("u"); // acessar atributo da resposta vinda do python
+
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metrics,t1_metrics, srcCellId-1).cast<uint16_t>();
+
+    return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
 
 
     //return hoResult;
