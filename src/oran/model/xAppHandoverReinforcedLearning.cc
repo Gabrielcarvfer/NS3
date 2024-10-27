@@ -119,7 +119,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         g_interpreter = new py::scoped_interpreter{};
         pyhrl = py::module_::import("HandoverRL");
-        pyhrl.attr("init_module")(metric_buffer_len, 22, "./target.pth");
+
+        pyhrl.attr("init_module")(metric_buffer_len, 2, "/home/matheus/CLionProjects/ns3_oran/src/oran/model/target.pth");
     }
     // tamo trabalhando com a ideia q so tenha cellid 0 e 1
     //  std::map<uint16_t, double> rsrq_measurements;
@@ -131,7 +132,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     it = rsrq_measurements.find(2);
     tower_1.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0);
     // check for buffer size before training
-    if(tower_0.size() < metric_buffer_len) { return std::numeric_limits<uint16_t>::max(); }
+    if(tower_0.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
+
 
     py::array t0_metrics = py::array(py::buffer_info(
         &tower_0[0],                                // Pointer to data ( acho q assim funfa)
@@ -152,6 +154,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
         ));
 
+
+    tower_0.pop_back();
+    tower_1.pop_back();
 
     /*
     MatrixArray<float> matrix(10, 10, 10);
