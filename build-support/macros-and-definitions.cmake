@@ -363,35 +363,8 @@ endmacro()
 # Include CMake file with common find_program HINTS
 include(build-support/3rd-party/find-program-hints.cmake)
 
-# function used to search for package and program dependencies than store list
-# of missing dependencies in the list whose name is stored in missing_deps
-function(check_deps package_deps program_deps missing_deps)
-  set(local_missing_deps)
-  # Search for package dependencies
-  foreach(package ${package_deps})
-    find_package(${package})
-    if(NOT ${${package}_FOUND})
-      list(APPEND local_missing_deps ${package})
-    endif()
-  endforeach()
-
-  # And for program dependencies
-  foreach(program ${program_deps})
-    # CMake likes to cache find_* to speed things up, so we can't reuse names
-    # here or it won't check other dependencies
-    string(TOUPPER ${program} upper_${program})
-    mark_as_advanced(${upper_${program}})
-    find_program(
-      ${upper_${program}} ${program} HINTS ${3RD_PARTY_FIND_PROGRAM_HINTS}
-    )
-    if("${${upper_${program}}}" STREQUAL "${upper_${program}}-NOTFOUND")
-      list(APPEND local_missing_deps ${program})
-    endif()
-  endforeach()
-
-  # Store list of missing dependencies in the parent scope
-  set(${missing_deps} ${local_missing_deps} PARENT_SCOPE)
-endfunction()
+# Include check_deps
+include(build-support/custom-modules/ns3-check-dependencies.cmake)
 
 # process all options passed in main cmakeLists
 macro(process_options)
@@ -846,31 +819,14 @@ macro(process_options)
   set(Python3_EXECUTABLE)
   set(Python3_FOUND FALSE)
   set(Python3_INCLUDE_DIRS)
-  if(${NS3_PYTHON_BINDINGS})
-    if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
-      find_package(Python3 COMPONENTS Interpreter Development)
-    else()
-      # cmake-format: off
-      set(Python_ADDITIONAL_VERSIONS 3.6 3.7 3.8 3.9 3.10 3.11)
-      # cmake-format: on
-      find_package(PythonInterp)
-      find_package(PythonLibs)
+  find_package(Python3 COMPONENTS Interpreter Development)
 
-      # Move deprecated results into the FindPython3 resulting variables
-      set(Python3_Interpreter_FOUND ${PYTHONINTERP_FOUND})
-      set(Python3_Development_FOUND ${PYTHONLIBS_FOUND})
-      if(${PYTHONINTERP_FOUND})
-        set(Python3_EXECUTABLE ${PYTHON_EXECUTABLE})
-        set(Python3_FOUND TRUE)
-      endif()
-      if(${PYTHONLIBS_FOUND})
-        set(Python3_LIBRARIES ${PYTHON_LIBRARIES})
-        set(Python3_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS})
-      endif()
-    endif()
+  if(NOT(${NS3_PYTHON_BINDINGS} AND ${Python3_FOUND}))
+
   else()
     # If Python was not set yet, use the version found by check_deps
-    check_deps("" "python3" python3_deps)
+    check_deps(python3_deps
+            EXECUTABLES python3)
     if(python3_deps)
       message(FATAL_ERROR "Python3 was not found")
     else()
@@ -879,31 +835,25 @@ macro(process_options)
   endif()
 
   # Check if both Python interpreter and development libraries were found
-  if(${Python3_Interpreter_FOUND})
-    if(${Python3_Development_FOUND})
-      set(Python3_FOUND TRUE)
-      if(APPLE)
-        # Apple is very weird and there could be a lot of conflicting python
-        # versions which can generate conflicting rpaths preventing the python
-        # bindings from working
+  if(${Python3_FOUND})
+    set(Python3_FOUND TRUE)
+    if(APPLE)
+      # Apple is very weird and there could be a lot of conflicting python
+      # versions which can generate conflicting rpaths preventing the python
+      # bindings from working
 
-        # To work around, we extract the /path/to/Frameworks from the library
-        # path
-        list(GET Python3_LIBRARIES 0 pylib)
-        string(REGEX REPLACE "(.*Frameworks)/Python(3.|.)framework.*" "\\1"
-                             DEVELOPER_DIR ${pylib}
-        )
-        if("${DEVELOPER_DIR}" MATCHES "Frameworks")
-          set(CMAKE_BUILD_RPATH "${DEVELOPER_DIR}" CACHE STRING "")
-          set(CMAKE_INSTALL_RPATH "${DEVELOPER_DIR}" CACHE STRING "")
-        endif()
-      endif()
-      include_directories(${Python3_INCLUDE_DIRS})
-    else()
-      message(${HIGHLIGHTED_STATUS}
-              "Python: development libraries were not found"
+      # To work around, we extract the /path/to/Frameworks from the library
+      # path
+      list(GET Python3_LIBRARIES 0 pylib)
+      string(REGEX REPLACE "(.*Frameworks)/Python(3.|.)framework.*" "\\1"
+                           DEVELOPER_DIR ${pylib}
       )
+      if("${DEVELOPER_DIR}" MATCHES "Frameworks")
+        set(CMAKE_BUILD_RPATH "${DEVELOPER_DIR}" CACHE STRING "")
+        set(CMAKE_INSTALL_RPATH "${DEVELOPER_DIR}" CACHE STRING "")
+      endif()
     endif()
+    include_directories(${Python3_INCLUDE_DIRS})
   else()
     if(${NS3_PYTHON_BINDINGS})
       message(
@@ -1085,7 +1035,8 @@ macro(process_options)
 
   # First we check for doxygen dependencies
   mark_as_advanced(DOXYGEN)
-  check_deps("" "doxygen;dot;dia;python3" doxygen_docs_missing_deps)
+  check_deps(doxygen_docs_missing_deps
+          EXECUTABLES doxygen dot dia python3)
   if(doxygen_docs_missing_deps)
     message(
       ${HIGHLIGHTED_STATUS}
@@ -1201,8 +1152,9 @@ macro(process_options)
   # Check deps accepts a list of packages, list of programs and name of the
   # return variable
   check_deps(
-    "Sphinx" "epstopdf;pdflatex;latexmk;convert;dvipng"
-    sphinx_docs_missing_deps
+          sphinx_docs_missing_deps
+          CMAKE_PACKAGES Sphinx
+          EXECUTABLES epstopdf pdflatex latexmk convert dvipng
   )
   if(sphinx_docs_missing_deps)
     message(

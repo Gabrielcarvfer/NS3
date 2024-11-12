@@ -12,6 +12,10 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/xAppHandoverMaxRsrq.h"
 #include "ns3/xAppHandoverMlpackKmeans.h"
+#include "ns3/three-gpp-channel-model.h"
+#include "ns3/three-gpp-propagation-loss-model.h"
+#include "ns3/three-gpp-spectrum-propagation-loss-model.h"
+#include "ns3/uniform-planar-array.h"
 
 #include <map>
 #include <mlpack/core.hpp>
@@ -364,6 +368,7 @@ main(int argc, char** argv)
     uint16_t numBearersPerUe = 1;
     double simTime = 10 * 60;
     double enbTxPowerDbm = 40.0;
+    bool useThreeGppChannel = false;
 
     std::stringstream ss;
     ss << "\n\t\tChoose one:\n"
@@ -377,6 +382,7 @@ main(int argc, char** argv)
     CommandLine cmd(__FILE__);
     cmd.AddValue("scenario", ss.str(), scenarioi);
     cmd.AddValue("outputFile", "Output csv file name", output_csv_filename);
+    cmd.AddValue("useThreeGppChannel", "If true, use 3GPP spatial channel model", useThreeGppChannel);
     cmd.Parse(argc, argv);
 
     typedef enum handoverScenarios
@@ -409,6 +415,36 @@ main(int argc, char** argv)
     epcHelper->SetAttribute("S1uLinkEnablePcap", BooleanValue(false));
     lteHelper->SetEpcHelper(epcHelper);
     lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
+
+    if(useThreeGppChannel)
+    {
+        Config::SetDefault("ns3::ThreeGppChannelModel::UpdatePeriod",
+                           TimeValue(MilliSeconds(1))); // update the channel at each iteration
+        Config::SetDefault("ns3::ThreeGppChannelConditionModel::UpdatePeriod",
+                           TimeValue(MilliSeconds(0.0))); // do not update the channel condition
+
+        lteHelper->SetAttribute("PathlossModel", StringValue("ns3::ThreeGppUmaPropagationLossModel"));
+        lteHelper->SetPathlossModelAttribute("ShadowingEnabled", BooleanValue(true));
+        lteHelper->SetEnbAntennaModelType("ns3::IsotropicAntennaModel");
+        lteHelper->SetUeAntennaModelType("ns3::IsotropicAntennaModel");
+
+        lteHelper->Initialize();
+        auto dlSp = DynamicCast<ThreeGppPropagationLossModel>(
+                lteHelper->GetDownlinkSpectrumChannel()->GetPropagationLossModel());
+        auto ulSp = DynamicCast<ThreeGppPropagationLossModel>(
+                lteHelper->GetUplinkSpectrumChannel()->GetPropagationLossModel());
+
+        NS_ASSERT(dlSp != nullptr);
+        NS_ASSERT(ulSp != nullptr);
+
+        NS_ASSERT(dlSp->GetNext() == nullptr);
+        NS_ASSERT(ulSp->GetNext() == nullptr);
+
+        ObjectFactory f;
+        f.SetTypeId(TypeId::LookupByName("ns3::AlwaysLosChannelConditionModel"));
+        dlSp->SetChannelConditionModel(f.Create<ChannelConditionModel>());
+        ulSp->SetChannelConditionModel(f.Create<ChannelConditionModel>());
+    }
 
     switch (scenario)
     {

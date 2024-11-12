@@ -39,6 +39,7 @@ if(${reinforced_handover_xapp})
             "Missing reinforced handover xapp"
     )
 else()
+    cmake_policy(SET CMP0148 NEW)
     find_package(
             pybind11
             REQUIRED
