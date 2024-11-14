@@ -11,7 +11,7 @@
 #include "ns3/netanim-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/xAppHandoverMaxRsrq.h"
-#include "ns3/xAppHandoverMlpackKmeans.h"
+//#include "ns3/xAppHandoverMlpackKmeans.h"
 #include "ns3/three-gpp-channel-model.h"
 #include "ns3/three-gpp-propagation-loss-model.h"
 #include "ns3/three-gpp-spectrum-propagation-loss-model.h"
@@ -728,8 +728,8 @@ main(int argc, char** argv)
                     MakeCallback(&NotifyHandoverTriggeredEnb));
 
     if (scenario == HandoverScenarios::ORAN_BYPASS ||
-        scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS ||
-        scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED ||
+        //scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS ||
+        //scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED ||
         scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ ||
         scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
     {
@@ -737,6 +737,7 @@ main(int argc, char** argv)
         sgw->AddApplication(e2t);
 
         // Create the handover xApp
+        /*
         if (scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS ||
             scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED)
         {
@@ -746,7 +747,7 @@ main(int argc, char** argv)
                 scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED);
             sgw->AddApplication(handoverxapp);
         }
-
+        */
         if (scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ ||
             scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
         {

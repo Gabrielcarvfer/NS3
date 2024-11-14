@@ -152,7 +152,7 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
     arma::mat centroids;
     if (m_kmeansKeepEmptyPolicy)
     {
-        mlpack::KMeans<mlpack::EuclideanDistance,
+        mlpack::kmeans<mlpack::metric::EuclideanDistance ,
                        mlpack::SampleInitialization,
                        mlpack::AllowEmptyClusters,
                        mlpack::NaiveKMeans,
@@ -162,7 +162,7 @@ xAppHandoverMlpackKmeans::PeriodicClustering()
     }
     else
     {
-        mlpack::KMeans<> k;
+        mlpack::kmeans<> k;
         k.Cluster(dataset, cells.size(), assignments, centroids);
     }
 
