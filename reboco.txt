@@ -1,0 +1,72 @@
+[0/2] Re-checking globbed directories...
+[1/5] Building CXX object src/oran/CMakeFiles/liboran-obj.dir/model/xAppHandoverMlpackKmeans.cc.o
+FAILED: src/oran/CMakeFiles/liboran-obj.dir/model/xAppHandoverMlpackKmeans.cc.o 
+/usr/bin/ccache /usr/bin/c++ -DEIGEN_MPL2_ONLY -DHAVE_EIGEN3 -DHAVE_LIBXML2 -DHAVE_SQLITE3 -DNS3_ASSERT_ENABLE -DNS3_BUILD_PROFILE_DEBUG -DNS3_LOG_ENABLE -DPROJECT_SOURCE_PATH=\"/home/matheus/ns3_oran\" -D__LINUX__ -I/usr/include/python3.10 -I/usr -I/home/matheus/ns3_oran/build/include -I/usr/include/eigen3 -I/usr/include/libxml2 -O2 -g -DNDEBUG -fPIC   -Wno-error=unused-function -fno-semantic-interposition -fdiagnostics-color=always -std=c++17 -Winvalid-pch -include /home/matheus/ns3_oran/cmake-cache/CMakeFiles/stdlib_pch-default.dir/cmake_pch.hxx -MD -MT src/oran/CMakeFiles/liboran-obj.dir/model/xAppHandoverMlpackKmeans.cc.o -MF src/oran/CMakeFiles/liboran-obj.dir/model/xAppHandoverMlpackKmeans.cc.o.d -o src/oran/CMakeFiles/liboran-obj.dir/model/xAppHandoverMlpackKmeans.cc.o -c /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc
+In file included from /usr/include/mlpack/prereqs.hpp:125,
+                 from /usr/include/mlpack/core.hpp:67,
+                 from /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:6:
+/usr/include/mlpack/core/util/arma_config_check.hpp:50:21: note: ‘#pragma message: mlpack was compiled with OpenMP support, but you are compiling without OpenMP support.  This will almost certainly cause irreparable disaster.  Either enable OpenMP support in your application (e.g., add -fopenmp to your compiler command line), or, recompile mlpack *without* OpenMP support.’
+   50 |     #pragma message "mlpack was compiled with OpenMP support, but you are \
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   51 | compiling without OpenMP support.  This will almost certainly cause \
+      | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   52 | irreparable disaster.  Either enable OpenMP support in your application (e.g., \
+      | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   53 | add -fopenmp to your compiler command line), or, recompile mlpack *without* \
+      | ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   54 | OpenMP support."
+      | ~~~~~~~~~~~~~~~~     
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc: In member function ‘void ns3::oran::xAppHandoverMlpackKmeans::PeriodicClustering()’:
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:155:17: error: ‘KMeans’ is not a member of ‘mlpack’; did you mean ‘kmeans’?
+  155 |         mlpack::KMeans<mlpack::EuclideanDistance,
+      |                 ^~~~~~
+      |                 kmeans
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:155:32: error: ‘EuclideanDistance’ is not a member of ‘mlpack’; did you mean ‘mlpack::metric::EuclideanDistance’?
+  155 |         mlpack::KMeans<mlpack::EuclideanDistance,
+      |                                ^~~~~~~~~~~~~~~~~
+In file included from /usr/include/mlpack/core/kernels/gaussian_kernel.hpp:18,
+                 from /usr/include/mlpack/core.hpp:103,
+                 from /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:6:
+/usr/include/mlpack/core/metrics/lmetric.hpp:112:26: note: ‘mlpack::metric::EuclideanDistance’ declared here
+  112 | typedef LMetric<2, true> EuclideanDistance;
+      |                          ^~~~~~~~~~~~~~~~~
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:156:32: error: ‘SampleInitialization’ is not a member of ‘mlpack’; did you mean ‘mlpack::kmeans::SampleInitialization’?
+  156 |                        mlpack::SampleInitialization,
+      |                                ^~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/mlpack/methods/kmeans/kmeans.hpp:18,
+                 from /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:8:
+/usr/include/mlpack/methods/kmeans/sample_initialization.hpp:23:7: note: ‘mlpack::kmeans::SampleInitialization’ declared here
+   23 | class SampleInitialization
+      |       ^~~~~~~~~~~~~~~~~~~~
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:157:32: error: ‘AllowEmptyClusters’ is not a member of ‘mlpack’; did you mean ‘mlpack::kmeans::AllowEmptyClusters’?
+  157 |                        mlpack::AllowEmptyClusters,
+      |                                ^~~~~~~~~~~~~~~~~~
+In file included from /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:7:
+/usr/include/mlpack/methods/kmeans/allow_empty_clusters.hpp:25:7: note: ‘mlpack::kmeans::AllowEmptyClusters’ declared here
+   25 | class AllowEmptyClusters
+      |       ^~~~~~~~~~~~~~~~~~
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:158:32: error: ‘NaiveKMeans’ is not a member of ‘mlpack’; did you mean ‘mlpack::kmeans::NaiveKMeans’?
+  158 |                        mlpack::NaiveKMeans,
+      |                                ^~~~~~~~~~~
+In file included from /usr/include/mlpack/methods/kmeans/kmeans.hpp:20,
+                 from /home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:8:
+/usr/include/mlpack/methods/kmeans/naive_kmeans.hpp:32:7: note: ‘mlpack::kmeans::NaiveKMeans’ declared here
+   32 | class NaiveKMeans
+      |       ^~~~~~~~~~~
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:159:33: error: expected primary-expression before ‘>’ token
+  159 |                        arma::mat>
+      |                                 ^
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:160:13: error: ‘k’ was not declared in this scope
+  160 |             k;
+      |             ^
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:165:17: error: ‘KMeans’ is not a member of ‘mlpack’; did you mean ‘kmeans’?
+  165 |         mlpack::KMeans<> k;
+      |                 ^~~~~~
+      |                 kmeans
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:165:24: error: expected primary-expression before ‘>’ token
+  165 |         mlpack::KMeans<> k;
+      |                        ^
+/home/matheus/ns3_oran/src/oran/model/xAppHandoverMlpackKmeans.cc:165:26: error: ‘k’ was not declared in this scope
+  165 |         mlpack::KMeans<> k;
+      |                          ^
+ninja: build stopped: subcommand failed.

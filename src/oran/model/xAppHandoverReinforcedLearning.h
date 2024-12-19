@@ -78,6 +78,7 @@ class xAppHandoverReinforcedLearning : public xAppHandover
     std::map<uint16_t, std::pair<uint64_t, uint16_t>>
         m_rntiToImsiAndCellid; ///< Map of RNTIs to IMSIs and currently corrected cells
     std::map<uint16_t, uint64_t> m_rntiInHandover; ///< Map of RNTIs in handover and their IMSIs
+    std::set<uint16_t> m_rntiHandoverFailed;
 };
 } // namespace oran
 } // namespace ns3

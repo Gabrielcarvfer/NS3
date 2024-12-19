@@ -1,0 +1,6 @@
+,Handovers,,,,,,,,Conexão
+,Disparados,Cancelados pelo RIC,Latência para início do handover (ns),Iniciados,Bem sucedidos,Mal sucedidos,Duração do handover (ns),Média de handovers por UE,Conexões estabelecidas,Conexões Reestabelecidas
+Iniciado por eNB,0+-0,0+-0,0+-0,8+-0,8+-0,0+-0,4213124+-0,8+-0,1+-0,0+-0
+Iniciado por eNB e confirmado por O-RAN,8+-0,0+-0,10000161+-0,8+-0,8+-0,0+-0,4213124+-0,8+-0,1+-0,0+-0
+Iniciado por eNB e confirmado por O-RAN+xApp MaxRsrp,667+-0,663+-0,52203899+-5811835,4+-0,4+-0,0+-0,4213124+-0,4+-0,5+-0,0+-0
+Iniciado por O-RAN+xApp MaxRsrp,5+-0,4+-0,32+-27,1+-0,1+-0,0+-0,3809774+-390065,1+-0,8+-0,0+-0

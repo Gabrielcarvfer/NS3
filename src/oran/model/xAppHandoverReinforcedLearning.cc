@@ -41,8 +41,6 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     NS_LOG_FUNCTION(this);
     // por enquanto vai ser so com 2, ent e pra dar certo assim?
     const int metric_buffer_len = 16;
-    static std::deque<float> tower_0;
-    static std::deque<float> tower_1;
     uint16_t srcCellId = 0;
 
     E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
@@ -111,6 +109,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         return std::numeric_limits<uint16_t>::max();
     }
+    if(m_rntiInHandover.find(rnti) != m_rntiInHandover.end()) {	
+        return std::numeric_limits<uint16_t>::max();
+    }	    
 
     //TODO: TA AQUI
 
@@ -120,44 +121,64 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         g_interpreter = new py::scoped_interpreter{};
         pyhrl = py::module_::import("HandoverRL");
 
-        pyhrl.attr("init_module")(metric_buffer_len, 2, "/home/matheus/CLionProjects/ns3_oran/src/oran/model/target.pth");
+        pyhrl.attr("init_module")
+        (   metric_buffer_len, 2,
+            "/home/matheus/ns3_oran/src/oran/model/target1.pth", // load_path
+            "/home/matheus/ns3_oran/src/oran/model/target2.pth", // save_path
+            "/home/matheus/ns3_oran/src/oran/model/test.log"    // path of loging file
+            );
+    	std::cout<<"suco de uva com sabor de tamarindo"<<std::endl;
     }
     // tamo trabalhando com a ideia q so tenha cellid 0 e 1
     //  std::map<uint16_t, double> rsrq_measurements;
 
 
     // add metrics to buffer
+    
     auto it = rsrq_measurements.find(1);
-    tower_0.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0);
+    float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     it = rsrq_measurements.find(2);
-    tower_1.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0);
+    float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
+    
+    //std::cout<<"\n\nmetrics: "<<t0_metric<<" "<<t1_metric<<std::endl;
+    
+    /*
+    auto it = rsrq_measurements.find(1);
+    tower_0_deque.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0);
+    it = rsrq_measurements.find(2);
+    tower_1_deque.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0.0);
     // check for buffer size before training
-    if(tower_0.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
-
-
+    if(tower_0_deque.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
+    auto t0_iter = tower_0_deque.begin();
+    auto t1_iter = tower_1_deque.begin();
+    for(int i = 0; i< metric_buffer_len; i++){
+    	tower_0[i] = *t0_iter;
+	tower_1[i] = *t1_iter;
+	t0_iter++; t1_iter++;
+    }
     py::array t0_metrics = py::array(py::buffer_info(
-        &tower_0[0],                                // Pointer to data ( acho q assim funfa)
+        tower_0,                                // Pointer to data ( acho q assim funfa)
         sizeof(float),                              // Size of one scalar
         py::format_descriptor<float>::format(),     // Type format descriptor
         1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(tower_0.size())}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
         std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
         ));
 
 
     py::array t1_metrics = py::array(py::buffer_info(
-        &tower_1[0],                                // Pointer to data ( acho q assim funfa)
+        tower_1,                                // Pointer to data ( acho q assim funfa)
         sizeof(float),                              // Size of one scalar
         py::format_descriptor<float>::format(),     // Type format descriptor
         1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(tower_1.size())}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
         std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
         ));
 
 
-    tower_0.pop_back();
-    tower_1.pop_back();
-
+    tower_0_deque.pop_back();
+    tower_1_deque.pop_back();
+	*/
     /*
     MatrixArray<float> matrix(10, 10, 10);
     // Create a non-owning py::array_t from the valarray data using the same shape
@@ -182,8 +203,17 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
 
     // TODO: falta saber o id do gnb conectado
-
-    auto make_handover = pyhrl.attr("handover_decision")(t0_metrics,t1_metrics, srcCellId-1).cast<uint16_t>();
+    bool handover_failed = m_rntiHandoverFailed.find(rnti) != m_rntiHandoverFailed.end();
+    static int fail_count = 0;
+    if(handover_failed){
+	    fail_count+=1;
+	    std::cout<<"\n\n\n\n    FAIL COUNT: "<<fail_count<<"\n\n\n\n"<<std::endl;
+	    m_rntiHandoverFailed.erase(rnti);
+    }
+    //training 
+    //auto make_handover = pyhrl.attr("train_step_with_log")(t0_metric,t1_metric, srcCellId-1, handover_failed).cast<uint16_t>();
+    //testing
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metric,t1_metric, srcCellId-1).cast<uint16_t>();
 
     return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
 
@@ -258,18 +288,11 @@ xAppHandoverReinforcedLearning::HandoverDecision(Json& payload)
     decidedTargetCellId = ChooseTargetCellId(requestingRnti);
 
     // Check if cell is the one already connected
-    for (auto& [rnti, imsiAndCellId] : m_rntiToImsiAndCellid)
-    {
-        if (rnti == requestingRnti)
-        {
-            if (imsiAndCellId.second == decidedTargetCellId)
-            {
+    for (auto& [rnti, imsiAndCellId] : m_rntiToImsiAndCellid){
+        if (rnti == requestingRnti){
+            if (imsiAndCellId.second == decidedTargetCellId){
                 decidedTargetCellId = std::numeric_limits<uint16_t>::max();
             }
-        }
-        else
-        {
-            continue;
         }
     }
 
@@ -316,11 +339,14 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
                                            uint16_t rnti)
 {
     m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
+
     for (auto [key, value] : m_rntiInHandover)
     {
         if (value == imsi)
         {
-            m_rntiInHandover.erase(m_rntiInHandover.find(key));
+            // if it has in a handover and got reconnected = handover failed
+	    m_rntiHandoverFailed.insert(imsi);
+	    m_rntiInHandover.erase(m_rntiInHandover.find(key));
             break;
         }
     }

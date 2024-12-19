@@ -79,20 +79,22 @@ def run_program(program, args, python=False, cwd=ns3_path, env=None):
     return ret.returncode, ret.stdout.decode(sys.stdout.encoding), ret.stderr.decode(sys.stderr.encoding)
 
 
+#flags = "--useThreeGppChannel=1"
+flags = ""
 output_and_args = {
-    "output3GPPHandover.csv": "--scenario=0",
-    "outputDistributedHandover.csv": "--scenario=1",
-    "outputKMeansHandover.csv": "--scenario=2",
-    "outputKMeansHandoverRicInitiated.csv": "--scenario=3",
-    "outputMaxRsRp.csv": "--scenario=4",
-    "outputMaxRsRpRicInitiated.csv": "--scenario=5"
+    "output3GPPHandover.csv": f"--scenario=0 {flags}",
+    "outputDistributedHandover.csv": f"--scenario=1 {flags}",
+    #"outputKMeansHandover.csv": "--scenario=2",
+    #"outputKMeansHandoverRicInitiated.csv": "--scenario=3",
+    "outputMaxRsRp.csv": f"--scenario=4 {flags}",
+    "outputMaxRsRpRicInitiated.csv": f"--scenario=5 {flags}"
 }
 
 output_and_type = {
     "output3GPPHandover.csv": "Iniciado por eNB",
     "outputDistributedHandover.csv": "Iniciado por eNB e confirmado por O-RAN",
-    "outputKMeansHandover.csv": "Iniciado por eNB e confirmado por O-RAN+xApp K-Means",
-    "outputKMeansHandoverRicInitiated.csv": "Iniciado por O-RAN+xApp K-Means",
+    #"outputKMeansHandover.csv": "Iniciado por eNB e confirmado por O-RAN+xApp K-Means",
+    #"outputKMeansHandoverRicInitiated.csv": "Iniciado por O-RAN+xApp K-Means",
     "outputMaxRsRp.csv": "Iniciado por eNB e confirmado por O-RAN+xApp MaxRsrp",
     "outputMaxRsRpRicInitiated.csv": "Iniciado por O-RAN+xApp MaxRsrp",
 }
@@ -127,7 +129,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 args_list = []
 output_file_list = []
-num_runs = 20
+num_runs = 5
 
 for outputFile in output_and_args.keys():
     args_list.extend([output_and_args[outputFile]]*num_runs)
@@ -160,6 +162,7 @@ for outputFile in output_and_args.keys():
     for run in range(num_runs):
         with open(os.path.join(curr_dir, f"{run}_{outputFile}"), "r") as f:
             resultingCsv = DictReader(f.readlines())
+
         del f
 
         handoversTriggered = 0
@@ -179,51 +182,66 @@ for outputFile in output_and_args.keys():
             if imsi not in handoversPerUE:
                 handoversPerUE[imsi] = [[], []]  # start, ok/fail
                 handoversTriggeredPerUE[imsi] = [[], []]  # trigger, cancelled/startenb
+
             if imsi not in connectionEstablishedPerUE:
                 connectionEstablishedPerUE[imsi] = []
+
             if imsi not in connectionReconfigurationPerUE:
                 connectionReconfigurationPerUE[imsi] = []
+
             if line["Type"] == "HANDOVER_TRIGGERED_ENB":
                 handoversTriggered += 1
                 handoversTriggeredPerUE[imsi][0].append(line)
                 continue
+
             if line["Type"] == "HANDOVER_CANCELLED_RIC":
                 handoversCancelled += 1
                 handoversTriggeredPerUE[imsi][1].append(line)
                 continue
+
             if line["Type"] == "HANDOVER_START_ENB":
                 handoversInitiated += 1
                 handoversPerUE[imsi][0].append(line)
                 handoversTriggeredPerUE[imsi][1].append(line)
                 continue
+
             if line["Type"] == "HANDOVER_OK_ENB":
                 continue
+
             if line["Type"] == "HANDOVER_START_UE":
                 #handoversInitiated += 1
                 #handoversPerUE[imsi][0].append(line)
                 continue
+
             if line["Type"] == "HANDOVER_OK_UE":
                 handoversOK += 1
                 handoversPerUE[imsi][1].append(line)
                 continue
+
             if line["Type"] == "HANDOVER_ERROR_UE":
                 handoversError += 1
                 handoversPerUE[imsi][1].append(line)
                 continue
+
             if line["Type"] == "CONNECTION_RECONFIGURATION_ENB":
                 connectionReconfiguration += 1
                 connectionReconfigurationPerUE[imsi].append(line)
                 continue
+
             if line["Type"] == "CONNECTION_ESTABLISHED_ENB":
                 connectionEstablished += 1
                 connectionEstablishedPerUE[imsi].append(line)
                 continue
+
             if line["Type"] == "CONNECTION_ERROR_ENB":
                 continue
+
             if line["Type"] == "CONNECTION_START_UE":
                 continue
+
             if line["Type"] == "CONNECTION_ESTABLISHED_UE":
                 continue
+
             if line["Type"] == "CONNECTION_ERROR_UE":
                 continue
 
@@ -236,13 +254,18 @@ for outputFile in output_and_args.keys():
                 if filtered:
                     zipped_list.append((list1_item, filtered[0]))
             return zipped_list
+        handoverEnd, handoverStart = None, None
         for imsi in handoversPerUE:
+            #print(zip_to_nearest(*handoversPerUE[imsi]) )
             for (handoverStart, handoverEnd) in zip_to_nearest(*handoversPerUE[imsi]):
+
                 if handoverEnd["Type"] != "HANDOVER_CANCELLED_RIC":
                     handoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
             for (handoverStart, handoverEnd) in zip_to_nearest(*handoversTriggeredPerUE[imsi]):
                     cancelledHandoversLatency.append(int(handoverEnd["Time (ns)"]) - int(handoverStart["Time (ns)"]))
-        del imsi, handoverStart, handoverEnd
+
+        del imsi, handoverEnd, handoverStart
+
         if len(cancelledHandoversLatency) == 0:
             cancelledHandoversLatency.extend([0, 0])
         meanHandovers = handoversInitiated / len(handoversPerUE.keys())
@@ -258,7 +281,7 @@ for outputFile in output_and_args.keys():
         del handoversTriggered, handoversInitiated, handoversOK, handoversError, handoversCancelled, meanHandovers
         del connectionEstablished, connectionReconfiguration, run
     def calcMeanPlusMargin(data):
-        lower_bound, upper_bound = st.t.interval(confidence=0.95, df=len(data)-1, loc=np.mean(data), scale=st.sem(data, nan_policy='omit'))
+        lower_bound, upper_bound = st.t.interval(alpha=0.95,  df=len(data)-1, loc=np.mean(data), scale=st.sem(data, nan_policy='omit'))
         mean = np.mean(data)
         margin = (upper_bound-lower_bound)/2
         if np.isnan(margin):
