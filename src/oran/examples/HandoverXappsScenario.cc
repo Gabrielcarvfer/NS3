@@ -366,7 +366,7 @@ main(int argc, char** argv)
     uint16_t numberOfUes = 1;
     uint16_t numberOfEnbs = 2;
     uint16_t numBearersPerUe = 1;
-    double simTime = 10 * 60;
+    double simTime = 10* 60 ;
     double enbTxPowerDbm = 40.0;
     bool useThreeGppChannel = false;
 

@@ -52,17 +52,21 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                                              };
 
     std::map<uint16_t, double> rsrq_measurements;
-
+    //static int last_time_stamp = -1;
+    double src_rsrp = 0;
+    double dst_rsrp = 0;  
     // Collate data into an armadillo matrix for processing
     for (auto kpmMetric : kpmMetrics)
     {
+
+    	int most_recent_timestamp = 0;
         auto metricMap = ric->QueryKpmMetric(kpmMetric);
 
         if (metricMap.size() == 0)
         {
             continue;
         }
-
+	
         for (auto& e2nodeMeasurements : metricMap)
         {
             std::string mostRecentTimestamp("");
@@ -71,17 +75,37 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                 if (mostRecentTimestamp == "")
                 {
                     mostRecentTimestamp = measurementDeque.timestamp;
-                }
+		    int64_t current_time = stoll(mostRecentTimestamp);
+		    if(current_time > most_recent_timestamp){
+		    	most_recent_timestamp = current_time;
+		    	double metric = measurementDeque.measurements["VALUE"];
+			 
+                	if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP"){
+				src_rsrp = metric;
+			}
+			else{
+				dst_rsrp = metric;
+			}
+		    }
+		  
+		    std::cout<<"rnti: "<<measurementDeque.measurements["RNTI"]<<std::endl;    
+		    std::cout<<"metric: "<<kpmMetric<<" "<<measurementDeque.measurements["VALUE"]<<std::endl;
+		    std::cout<<"time: "<<mostRecentTimestamp<<" "<<std::endl;
+		    continue;    
+		    //last_time_stamp = stoi(mostRecentTimestamp.substr(0,4));
+		}
                 if (mostRecentTimestamp != measurementDeque.timestamp)
                 {
                     // Skip old measurements
                     continue;
                 }
+		/* testing with only 1 ue, so no need to check rnti		
                 if (rnti != measurementDeque.measurements["RNTI"])
                 {
                     // Skip rntis that do not match the requesting rnti
                     continue;
                 }
+		*/
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
@@ -104,7 +128,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
             }
         }
     }
-
+    std::cout<<"src newest: "<<src_rsrp<<std::endl;
+    std::cout<<"dst newest: "<<dst_rsrp<<std::endl;
+    std::cout<<std::endl;
     if (rsrq_measurements.size() == 0 || m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
     {
         return std::numeric_limits<uint16_t>::max();
@@ -123,8 +149,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-            "/home/matheus/ns3_oran/src/oran/model/target1.pth", // load_path
-            "/home/matheus/ns3_oran/src/oran/model/target2.pth", // save_path
+            "/home/matheus/ns3_oran/src/oran/model/target6.pth", // load_path
+            "/home/matheus/ns3_oran/src/oran/model/target5.pth", // save_path
             "/home/matheus/ns3_oran/src/oran/model/test.log"    // path of loging file
             );
     	std::cout<<"suco de uva com sabor de tamarindo"<<std::endl;
@@ -134,12 +160,12 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
 
     // add metrics to buffer
-    
+    /* 
     auto it = rsrq_measurements.find(1);
     float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     it = rsrq_measurements.find(2);
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    
+    */
     //std::cout<<"\n\nmetrics: "<<t0_metric<<" "<<t1_metric<<std::endl;
     
     /*
@@ -203,17 +229,20 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
 
     // TODO: falta saber o id do gnb conectado
-    bool handover_failed = m_rntiHandoverFailed.find(rnti) != m_rntiHandoverFailed.end();
+    static std::set<uint16_t> _rntis; 
+    static uint16_t connected_rnti = rnti;
     static int fail_count = 0;
-    if(handover_failed){
+    bool connection_lost = _rntis.find(rnti) == _rntis.end();
+    if(connection_lost){
 	    fail_count+=1;
-	    std::cout<<"\n\n\n\n    FAIL COUNT: "<<fail_count<<"\n\n\n\n"<<std::endl;
-	    m_rntiHandoverFailed.erase(rnti);
+	    std::cout<<"\n\nrntis:"<<connected_rnti<<" "<<rnti<<"\n\n    FAIL COUNT: "<<fail_count<<"\n\n\n\n"<<std::endl;
+    
+	    _rntis.insert(rnti);
     }
     //training 
-    //auto make_handover = pyhrl.attr("train_step_with_log")(t0_metric,t1_metric, srcCellId-1, handover_failed).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("train_step_with_log")(src_rsrp, dst_rsrp, srcCellId-1, connection_lost).cast<uint16_t>();
     //testing
-    auto make_handover = pyhrl.attr("handover_decision")(t0_metric,t1_metric, srcCellId-1).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("handover_decision")(src_rsrp,dst_rsrp, srcCellId-1).cast<uint16_t>();
 
     return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
 
@@ -313,6 +342,7 @@ xAppHandoverReinforcedLearning::HandoverStarted(std::string context,
                                      uint16_t targetCellId)
 {
     m_rntiInHandover.at(rnti) = imsi;
+    std::cout<<"\n\nHandover started for imsi: "<<imsi<<"\n\n";
 }
 
 void
@@ -339,13 +369,14 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
                                            uint16_t rnti)
 {
     m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
-
+    std::cout<<"\n\nConnectionEstablished\n"<<std::endl;
     for (auto [key, value] : m_rntiInHandover)
     {
         if (value == imsi)
         {
+	    std::cout<<"\n\nChegou no failed\n"<<std::endl;
             // if it has in a handover and got reconnected = handover failed
-	    m_rntiHandoverFailed.insert(imsi);
+	    m_rntiHandoverFailed.insert(rnti);
 	    m_rntiInHandover.erase(m_rntiInHandover.find(key));
             break;
         }
