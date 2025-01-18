@@ -36,6 +36,7 @@
 #include <cmath>
 
 // WILD HACK for the initialization of direct eNB-UE ctrl messaging
+#include <ns3/E2AP.h>
 #include <ns3/node-list.h>
 #include <ns3/node.h>
 #include <ns3/pointer.h>
@@ -672,6 +673,8 @@ LteEnbPhy::StartSubFrame()
     std::list<Ptr<LteControlMessage>> ctrlMsg = GetControlMessages();
     m_dlDataRbMap.clear();
     m_dlPowerAllocationMap.clear();
+
+    std::set<uint16_t> reportedRnti;
     if (!ctrlMsg.empty())
     {
         std::list<Ptr<LteControlMessage>>::iterator it;
@@ -682,6 +685,23 @@ LteEnbPhy::StartSubFrame()
             if (msg->GetMessageType() == LteControlMessage::DL_DCI)
             {
                 Ptr<DlDciLteControlMessage> dci = DynamicCast<DlDciLteControlMessage>(msg);
+
+                auto node = m_netDevice->GetNode();
+                if (node->GetNApplications() > 1)
+                {
+                    auto app = node->GetApplication(1);
+                    Ptr<oran::E2AP> e2ap = DynamicCast<oran::E2AP>(app);
+                    if (e2ap)
+                    {
+                        Json json;
+                        json["RNTI"] = dci->GetDci().m_rnti;
+                        json["CELLID"] = m_cellId;
+                        json["VALUE"] = std::__popcount(dci->GetDci().m_rbBitmap);
+                        e2ap->PublishToEndpointSubscribers("/KPM/RRU.PrbTotDl", json);
+                        reportedRnti.emplace(dci->GetDci().m_rnti);
+                    }
+                }
+
                 // get the tx power spectral density according to DL-DCI(s)
                 // translate the DCI to Spectrum framework
                 uint32_t mask = 0x1;
@@ -756,6 +776,26 @@ LteEnbPhy::StartSubFrame()
         }
     }
 
+    auto node = m_netDevice->GetNode();
+    if (node->GetNApplications() > 1)
+    {
+        auto app = node->GetApplication(1);
+        Ptr<oran::E2AP> e2ap = DynamicCast<oran::E2AP>(app);
+        if (e2ap)
+        {
+            for (auto rnti: m_ueAttached)
+            {
+                if (reportedRnti.find(rnti) == reportedRnti.end())
+                {
+                    Json json;
+                    json["RNTI"] = rnti;
+                    json["CELLID"] = m_cellId;
+                    json["VALUE"] = 0;
+                    e2ap->PublishToEndpointSubscribers("/KPM/RRU.PrbTotDl", json);
+                }
+            }
+        }
+    }
     SendControlChannels(ctrlMsg);
 
     // send data frame

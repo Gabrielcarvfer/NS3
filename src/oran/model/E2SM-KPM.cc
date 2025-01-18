@@ -100,6 +100,6 @@ E2AP::HandleE2SmKpmIndicationPayload(std::string& src_endpoint,
     case KPM_INDICATION_FORMAT_2:
     case KPM_INDICATION_FORMAT_3:
     default:
-        NS_ABORT_MSG("Unsupported KPM indication format");
+        NS_ABORT_MSG("Unsupported KPM indication format: " << payload);
     }
 }

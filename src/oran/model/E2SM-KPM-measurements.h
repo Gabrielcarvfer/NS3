@@ -302,7 +302,7 @@ const std::map<std::string, std::tuple<enum MeasurementType, std::string, enum F
         // 4.5 Radio Resource Utilization Related Measurements
         {"RRU.PrbDl.QCI", {INTEGER, "PRBs", NOTIMPLEMENTED}},
         {"RRU.PrbUl.QCI", {INTEGER, "PRBs", NOTIMPLEMENTED}},
-        {"RRU.PrbTotDl", {INTEGER, "PRBs", NOTIMPLEMENTED}},
+        {"RRU.PrbTotDl", {INTEGER, "PRBs", IMPLEMENTED}},
         {"RRU.PrbTotUl", {INTEGER, "PRBs", NOTIMPLEMENTED}},
         {"RRU.RachPreambleDedMean", {INTEGER, "", NOTIMPLEMENTED}},
         {"RRU.RachPreambleAMean", {INTEGER, "", NOTIMPLEMENTED}},
