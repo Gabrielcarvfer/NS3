@@ -369,6 +369,7 @@ main(int argc, char** argv)
     double simTime = 10* 60 ;
     double enbTxPowerDbm = 40.0;
     bool useThreeGppChannel = false;
+    std::string stride = "triangle";
 
     std::stringstream ss;
     ss << "\n\t\tChoose one:\n"
@@ -383,6 +384,7 @@ main(int argc, char** argv)
     cmd.AddValue("scenario", ss.str(), scenarioi);
     cmd.AddValue("outputFile", "Output csv file name", output_csv_filename);
     cmd.AddValue("useThreeGppChannel", "If true, use 3GPP spatial channel model", useThreeGppChannel);
+    cmd.AddValue("stride", "path of UEs [triangle, opposite_senoids, offset_senoids]", stride);
     cmd.Parse(argc, argv);
 
     typedef enum handoverScenarios
@@ -523,102 +525,154 @@ main(int argc, char** argv)
 
     // Install Mobility Model in eNB
     Ptr<ListPositionAllocator> enbPositionAlloc = CreateObject<ListPositionAllocator>();
-    enbPositionAlloc->Add(Vector(1000, 1000, 0));
-    enbPositionAlloc->Add(Vector(2000, 1000, 0));
-    enbPositionAlloc->Add(Vector(1500, 1866, 0));
-
-    MobilityHelper enbMobility;
-    enbMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-    enbMobility.SetPositionAllocator(enbPositionAlloc);
-    enbMobility.Install(enbNodes);
 
     // Install Mobility Model in UE
     MobilityHelper ueMobility;
     ueMobility.SetMobilityModel("ns3::WaypointMobilityModel");
     ueMobility.Install(ueNodes);
 
-    double sin60 = std::sin(3.1415 * 60 / 180);
-    double cos60 = std::cos(3.1415 * 60 / 180);
-
-    std::vector<double> speedUes{10, 5, 30};
-    for (int i = 0; i < numberOfUes; i++)
+    if (stride == "triangle")
     {
-        // UEs in the intersection of the 2/3 cells
-        /*
-         * 1000,1250 ► 1750,1250
-         *     UE ______
-         *        \    /
-         *    ▲    \  /   ▼
-         *          \/
-         *     1500, 1683
-         */
-        double InitPosX = 1250;
-        double InitPosY = 750;
-        double PosX = InitPosX;
-        double PosY = InitPosY;
-        double MidX = 1500;
-        double LimX = 1750;               // walks 500 from the starting point
-        double LimY = 750 + 500 * sin60; // initPosY+triangleSide*sin(angle) = 1683;
+        enbPositionAlloc->Add(Vector(1000, 1000, 0));
+        enbPositionAlloc->Add(Vector(2000, 1000, 0));
+        enbPositionAlloc->Add(Vector(1500, 1866, 0));
 
-        if (i >= 4)
-        {
-            // These UEs fly outside the cells
-            InitPosX = 500;
-            InitPosY = 750;
-            PosX = InitPosX;
-            PosY = InitPosY;
-            LimX = 2500;
-            LimY = 750 + 2000 * sin60;
-        }
+        double sin60 = std::sin(3.1415 * 60 / 180);
+        double cos60 = std::cos(3.1415 * 60 / 180);
 
-        enum direction
+        std::vector<double> speedUes{10, 5, 30};
+        for (int i = 0; i < numberOfUes; i++)
         {
-            TOP_RIGHT = 0,
-            BOTTOM_MID,
-            TOP_LEFT
-        };
-        enum direction initialDirection = TOP_RIGHT;
-        ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(PosX, PosY, 0));
-        double speedUe = speedUes.at(i);
-        double speedCos60 = speedUe * cos60;
-        double speedSin60 = speedUe * sin60;
-        for (int j = 0; j < int(simTime); j++)
-        {
-            if (initialDirection == TOP_RIGHT)
+            // UEs in the intersection of the 2/3 cells
+            /*
+                     * 1000,1250 ► 1750,1250
+                     *     UE ______
+                     *        \    /
+                     *    ▲    \  /   ▼
+                     *          \/
+                     *     1500, 1683
+             */
+            double InitPosX = 1250;
+            double InitPosY = 750;
+            double PosX = InitPosX;
+            double PosY = InitPosY;
+            double MidX = 1500;
+            double LimX = 1750;              // walks 500 from the starting point
+            double LimY = 750 + 500 * sin60; // initPosY+triangleSide*sin(angle) = 1683;
+
+            if (i >= 4)
             {
-                PosX += speedUe;
-                if (PosX > LimX)
-                {
-                    PosX = LimX;
-                    initialDirection = BOTTOM_MID;
-                }
+                // These UEs fly outside the cells
+                InitPosX = 500;
+                InitPosY = 750;
+                PosX = InitPosX;
+                PosY = InitPosY;
+                LimX = 2500;
+                LimY = 750 + 2000 * sin60;
             }
-            if (initialDirection == BOTTOM_MID)
+
+            enum direction
             {
-                PosX -= speedCos60;
-                PosY += speedSin60;
-                if (PosY > LimY)
-                {
-                    PosX = MidX;
-                    PosY = LimY;
-                    initialDirection = TOP_LEFT;
-                }
-            }
-            if (initialDirection == TOP_LEFT)
+                TOP_RIGHT = 0,
+                BOTTOM_MID,
+                TOP_LEFT
+            };
+            enum direction initialDirection = TOP_RIGHT;
+            ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(Vector(PosX, PosY, 0));
+            double speedUe = speedUes.at(i);
+            double speedCos60 = speedUe * cos60;
+            double speedSin60 = speedUe * sin60;
+            for (int j = 0; j < int(simTime); j++)
             {
-                PosX -= speedCos60;
-                PosY -= speedSin60;
-                if (PosX < InitPosX)
+                if (initialDirection == TOP_RIGHT)
                 {
-                    PosX = InitPosX;
-                    PosY = InitPosY;
-                    initialDirection = TOP_RIGHT;
+                    PosX += speedUe;
+                    if (PosX > LimX)
+                    {
+                        PosX = LimX;
+                        initialDirection = BOTTOM_MID;
+                    }
                 }
+                if (initialDirection == BOTTOM_MID)
+                {
+                    PosX -= speedCos60;
+                    PosY += speedSin60;
+                    if (PosY > LimY)
+                    {
+                        PosX = MidX;
+                        PosY = LimY;
+                        initialDirection = TOP_LEFT;
+                    }
+                }
+                if (initialDirection == TOP_LEFT)
+                {
+                    PosX -= speedCos60;
+                    PosY -= speedSin60;
+                    if (PosX < InitPosX)
+                    {
+                        PosX = InitPosX;
+                        PosY = InitPosY;
+                        initialDirection = TOP_RIGHT;
+                    }
+                }
+                Waypoint wpt(Seconds(j), Vector(PosX, PosY, 0.0));
+                ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
             }
-            Waypoint wpt(Seconds(j), Vector(PosX, PosY, 0.0));
-            ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
         }
     }
+    else if (stride == "opposite_senoids")
+    {
+        enbPositionAlloc->Add(Vector(1000, 1000, 0));
+        enbPositionAlloc->Add(Vector(2000, 1000, 0));
+        for (int i = 0; i < numberOfUes; i++)
+        {
+            auto currentPosition = Vector(1000, 1000, 0);
+            auto goingRight = false;
+            ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(currentPosition);
+            for (int j = 0; j < int(simTime); j++)
+            {
+                if (currentPosition.x == 1000 || currentPosition.x == 2000)
+                {
+                    goingRight = !goingRight;
+                }
+                currentPosition.x += goingRight ? 10 : -10;
+                Waypoint wpt(Seconds(j), currentPosition);
+                ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
+            }
+        }
+
+    }
+    else if (stride == "offset_senoids")
+    {
+        enbPositionAlloc->Add(Vector(1000, 1000, 0));
+        enbPositionAlloc->Add(Vector(1200, 1000, 0));
+        for (int i = 0; i < numberOfUes; i++)
+        {
+            auto currentPosition = Vector(500, 1000, 0);
+            auto goingRight = false;
+            ueNodes.Get(i)->GetObject<MobilityModel>()->SetPosition(currentPosition);
+            for (int j = 0; j < int(simTime); j++)
+            {
+                if (currentPosition.x == 500 || currentPosition.x == 1700)
+                {
+                    goingRight = !goingRight;
+                }
+                currentPosition.x += goingRight ? 10 : -10;
+                Waypoint wpt(Seconds(j), currentPosition);
+                ueNodes.Get(i)->GetObject<WaypointMobilityModel>()->AddWaypoint(wpt);
+            }
+        }
+    }
+    else
+    {
+        NS_ABORT_MSG("Invalid stride pattern");
+    }
+
+    MobilityHelper enbMobility;
+    enbMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    enbMobility.SetPositionAllocator(enbPositionAlloc);
+    enbMobility.Install(enbNodes);
+
 
     // Install LTE Devices in eNB and UEs
     Config::SetDefault("ns3::LteEnbRrc::DefaultTransmissionMode", UintegerValue(2));
