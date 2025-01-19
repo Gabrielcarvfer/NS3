@@ -12,6 +12,8 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/xAppHandoverMaxRsrq.h"
 //#include "ns3/xAppHandoverMlpackKmeans.h"
+#include "ns3/flow-monitor-module.h"
+
 #include "ns3/three-gpp-channel-model.h"
 #include "ns3/three-gpp-propagation-loss-model.h"
 #include "ns3/three-gpp-spectrum-propagation-loss-model.h"
@@ -700,8 +702,8 @@ main(int argc, char** argv)
     uint16_t dlPort = 10000;
     uint16_t ulPort = 20000;
 
-    Config::SetDefault("ns3::UdpClient::Interval", TimeValue(Seconds(1)));
-    Config::SetDefault("ns3::UdpClient::MaxPackets", UintegerValue(1000000));
+    Config::SetDefault("ns3::UdpClient::Interval", TimeValue(MilliSeconds(100)));
+    Config::SetDefault("ns3::UdpClient::MaxPackets", UintegerValue(10000));
 
     // randomize a bit start times to avoid simulation artifacts
     // (e.g., buffer overflows due to packet transmissions happening
@@ -869,14 +871,15 @@ main(int argc, char** argv)
         anim.UpdateNodeSize(nodeId, 80, 80);
     }
 
-    // Ptr<FlowMonitor> flowMonitor;
-    // FlowMonitorHelper flowHelper;
-    // flowMonitor = flowHelper.InstallAll();
+    Ptr<FlowMonitor> flowMonitor;
+    FlowMonitorHelper flowHelper;
+    flowMonitor = flowHelper.InstallAll();
 
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
 
-    // flowMonitor->SerializeToXmlFile("flow.xml", true, false);
+    flowMonitor->CheckForLostPackets();
+    flowMonitor->SerializeToXmlFile("flow.xml", true, false);
     std::ofstream csvOutput(output_csv_filename);
     csvOutput << "Time (ns),IMSI,SrcCellId,RNTI,TrgtCellId,Type," << std::endl;
     for (auto& entry : simulationRegistry)

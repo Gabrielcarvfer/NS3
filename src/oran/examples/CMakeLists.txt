@@ -100,6 +100,7 @@ if(NOT
       ${liboran}
       ${libapplications}
       ${libnetanim}
+      ${libflow-monitor}
     IGNORE_PCH
     TRUE
   )
