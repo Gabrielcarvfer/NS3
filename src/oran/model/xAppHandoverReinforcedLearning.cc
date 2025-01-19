@@ -240,9 +240,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 	    _rntis.insert(rnti);
     }
     //training 
-    //auto make_handover = pyhrl.attr("train_step_with_log")(src_rsrp, dst_rsrp, srcCellId-1, connection_lost).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("train_step")(src_rsrp, dst_rsrp, srcCellId-1, rnti).cast<uint16_t>();
     //testing
-    auto make_handover = pyhrl.attr("handover_decision")(src_rsrp,dst_rsrp, srcCellId-1).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("handover_decision")(src_rsrp,dst_rsrp, srcCellId-1, rnti).cast<uint16_t>();
 
     return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
 
