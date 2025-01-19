@@ -159,12 +159,12 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
 
     // add metrics to buffer
-    /* 
+    
     auto it = rsrq_measurements.find(1);
     float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     it = rsrq_measurements.find(2);
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    */
+    
     //std::cout<<"\n\nmetrics: "<<t0_metric<<" "<<t1_metric<<std::endl;
     
     /*
@@ -239,9 +239,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 	    _rntis.insert(rnti);
     }
     //training 
-    //auto make_handover = pyhrl.attr("train_step")(src_rsrp, dst_rsrp, srcCellId-1, rnti).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
     //testing
-    auto make_handover = pyhrl.attr("handover_decision")(src_rsrp,dst_rsrp, srcCellId-1, rnti).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
 
     return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
 
