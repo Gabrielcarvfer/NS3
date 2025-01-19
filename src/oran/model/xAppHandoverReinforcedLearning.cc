@@ -150,8 +150,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
             "/home/matheus/ns3_oran/src/oran/model/target6.pth", // load_path
-            "/home/matheus/ns3_oran/src/oran/model/target5.pth", // save_path
-            "/home/matheus/ns3_oran/src/oran/model/test.log"    // path of loging file
+            "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
             );
     	std::cout<<"suco de uva com sabor de tamarindo"<<std::endl;
     }
