@@ -67,7 +67,33 @@ class E2AP : public PubSubInfra
     E2AP()
         : PubSubInfra("E2Node"),
           m_rrc(nullptr){};
-    ~E2AP() override{};
+    ~E2AP() override
+    {
+        std::vector<Json> kpmEndpointMeasurements;
+        for (auto&& [kpm, endpoints] : m_kpmToEndpointStorage)
+        {
+            std::vector<Json> endpointsMeasurements;
+            for (auto&& [endpoint, measurements] : endpoints)
+            {
+                Json endpointMeasurements;
+                endpointMeasurements["ENDPOINT"] = endpoint;
+                endpointMeasurements["MEASUREMENTS"] = measurements;
+                endpointsMeasurements.push_back(endpointMeasurements);
+            }
+            Json kpmEntry;
+            kpmEntry["KPM"] = kpm;
+            kpmEntry["DATA"] = endpointsMeasurements;
+            kpmEndpointMeasurements.push_back(kpmEntry);
+        }
+        Json outputJson;
+        outputJson = kpmEndpointMeasurements;
+        if (!kpmEndpointMeasurements.empty())
+        {
+            std::ofstream kpms ("kpms.json");
+            kpms << outputJson << std::endl;
+            kpms.close();
+        }
+    };
     /**
      * \brief Handle an incoming json payload sent from src_endpoint to dest_endpoint.
      * \param [in] src_endpoint The source endpoint.
