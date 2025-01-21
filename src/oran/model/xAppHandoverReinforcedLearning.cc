@@ -34,12 +34,11 @@ xAppHandoverReinforcedLearning::xAppHandoverReinforcedLearning(bool initiateHand
         Simulator::Schedule(Seconds(1), &xAppHandoverReinforcedLearning::PeriodicHandoverCheck, this);
     }
 };
-
-uint16_t
-xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
+/*
+uint16_t static 
+xAppHandoverReinforcedLearning:: ChooseTargetCellIdOld(uint16_t rnti)
 {
     NS_LOG_FUNCTION(this);
-    // por enquanto vai ser so com 2, ent e pra dar certo assim?
     const int metric_buffer_len = 16;
     uint16_t srcCellId = 0;
 
@@ -87,11 +86,11 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 				dst_rsrp = metric;
 			}
 		    }
-		  
+		  	
 		    std::cout<<"rnti: "<<measurementDeque.measurements["RNTI"]<<std::endl;    
 		    std::cout<<"metric: "<<kpmMetric<<" "<<measurementDeque.measurements["VALUE"]<<std::endl;
 		    std::cout<<"time: "<<mostRecentTimestamp<<" "<<std::endl;
-		    continue;    
+		    
 		    //last_time_stamp = stoi(mostRecentTimestamp.substr(0,4));
 		}
                 if (mostRecentTimestamp != measurementDeque.timestamp)
@@ -106,6 +105,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                     continue;
                 }
 		*/
+	/*
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
@@ -128,16 +128,14 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
             }
         }
     }
-    std::cout<<"src newest: "<<src_rsrp<<std::endl;
-    std::cout<<"dst newest: "<<dst_rsrp<<std::endl;
-    std::cout<<std::endl;
+    //std::cout<<"src newest: "<<src_rsrp<<std::endl;
+    //std::cout<<"dst newest: "<<dst_rsrp<<std::endl;
+    //std::cout<<std::endl;
+
     if (rsrq_measurements.size() == 0 || m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
     {
         return std::numeric_limits<uint16_t>::max();
     }
-    if(m_rntiInHandover.find(rnti) != m_rntiInHandover.end()) {	
-        return std::numeric_limits<uint16_t>::max();
-    }	    
 
     //TODO: TA AQUI
 
@@ -149,7 +147,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-            "/home/matheus/ns3_oran/src/oran/model/target6.pth", // load_path
+            "/home/matheus/ns3_oran/target.pth", // load_path
             "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
             );
     	std::cout<<"suco de uva com sabor de tamarindo"<<std::endl;
@@ -167,63 +165,6 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     
     //std::cout<<"\n\nmetrics: "<<t0_metric<<" "<<t1_metric<<std::endl;
     
-    /*
-    auto it = rsrq_measurements.find(1);
-    tower_0_deque.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0);
-    it = rsrq_measurements.find(2);
-    tower_1_deque.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0.0);
-    // check for buffer size before training
-    if(tower_0_deque.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
-    auto t0_iter = tower_0_deque.begin();
-    auto t1_iter = tower_1_deque.begin();
-    for(int i = 0; i< metric_buffer_len; i++){
-    	tower_0[i] = *t0_iter;
-	tower_1[i] = *t1_iter;
-	t0_iter++; t1_iter++;
-    }
-    py::array t0_metrics = py::array(py::buffer_info(
-        tower_0,                                // Pointer to data ( acho q assim funfa)
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
-        ));
-
-
-    py::array t1_metrics = py::array(py::buffer_info(
-        tower_1,                                // Pointer to data ( acho q assim funfa)
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
-        ));
-
-
-    tower_0_deque.pop_back();
-    tower_1_deque.pop_back();
-	*/
-    /*
-    MatrixArray<float> matrix(10, 10, 10);
-    // Create a non-owning py::array_t from the valarray data using the same shape
-    std::vector<size_t> shape = {matrix.GetNumPages(),
-                                 matrix.GetNumRows(),
-                                 matrix.GetNumCols()};
-    std::vector<size_t> strides = {sizeof(float) * matrix.GetNumRows() *
-                                       matrix.GetNumCols(),
-                                   sizeof(float),
-                                   sizeof(float) * matrix.GetNumCols()};
-    py::array matrix_python = py::array(py::buffer_info(
-        const_cast<float*>(&matrix.GetValues()[0]), // Pointer to data
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        3,                                          // Number of dimensions
-        shape,                                    // Buffer dimensions
-        strides                                   // Strides for each dimension
-        ));1
-    */
-
 
     //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
 
@@ -238,6 +179,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     
 	    _rntis.insert(rnti);
     }
+    std::cout<<"\n\n\n SRCCELL: "<<srcCellId-1<<std::endl;
     //training 
     //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
     //testing
@@ -262,6 +204,119 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     return pos_maxrsrp->first;
 
 
+}
+*/
+uint16_t
+xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
+{
+    NS_LOG_FUNCTION(this);
+
+    const int metric_buffer_len = 16;
+    uint16_t srcCellId;
+    E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
+    std::map<uint16_t, uint16_t> rntis;
+    std::array<std::string, 4> kpmMetrics = {"/KPM/HO.SrcCellQual.RSRP",
+                                             //"/KPM/HO.SrcCellQual.RSRQ",
+                                             "/KPM/HO.TrgtCellQual.RSRP",
+                                             //"/KPM/HO.TrgtCellQual.RSRQ"
+					     };
+	
+    if (!g_interpreter)
+    {
+        g_interpreter = new py::scoped_interpreter{};
+        pyhrl = py::module_::import("HandoverRL");
+
+        pyhrl.attr("init_module")
+        (   metric_buffer_len, 2,
+            "/home/matheus/ns3_oran/target.pth", // load_path
+            "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
+            );
+    }
+
+    //rsrp mas n vou mudar em todos os lugares agr n
+    std::map<uint16_t, double> rsrq_measurements;
+
+    // Collate data into an armadillo matrix for processing
+    for (auto kpmMetric : kpmMetrics)
+    {
+        auto metricMap = ric->QueryKpmMetric(kpmMetric);
+
+        if (metricMap.size() == 0)
+        {
+            continue;
+        }
+
+        for (auto& e2nodeMeasurements : metricMap)
+        {
+            std::string mostRecentTimestamp("");
+            for (auto& measurementDeque : e2nodeMeasurements.second)
+            {
+                if (mostRecentTimestamp == "")
+                {
+                    mostRecentTimestamp = measurementDeque.timestamp;
+                }
+                if (mostRecentTimestamp != measurementDeque.timestamp)
+                {
+                    // Skip old measurements
+                    continue;
+                }
+                if (rnti != measurementDeque.measurements["RNTI"])
+                {
+                    // Skip rntis that do not match the requesting rnti
+                    continue;
+                }
+                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
+                {
+                    uint16_t cellId = measurementDeque.measurements["CELLID"];
+		    srcCellId = cellId;
+		    //cellId++;
+                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
+                    {
+                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
+                    }
+                }
+                else
+                {
+                    uint16_t cellId = measurementDeque.measurements["TARGET"];
+                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
+                    {
+                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
+                    }
+                }
+            }
+        }
+    }
+    std::cout<<"\n\n";
+    if (rsrq_measurements.size() == 0 || m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
+    {
+        return std::numeric_limits<uint16_t>::max();
+    }
+    
+    auto it = rsrq_measurements.find(1);
+    float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
+    it = rsrq_measurements.find(2);
+    float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
+    std::cout<<srcCellId<<std::endl;
+    std::cout<<"t0: "<<t0_metric<<" t1: "<<t1_metric<<std::endl;
+ 
+    //training 
+    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
+    //testing
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
+
+    return make_handover ? (srcCellId ^ 3) : srcCellId;
+    
+    // Search max rsrp
+    auto pos_maxrsrp = std::max_element(
+        rsrq_measurements.begin(),
+        rsrq_measurements.end(),
+        [](const std::pair<uint16_t, double>& p1, const std::pair<uint16_t, double>& p2) {
+            return p1.second < p2.second;
+        });
+
+    std::cout << "rnti: " << rnti << ", max: " << pos_maxrsrp->second
+              << ", cellId: " << pos_maxrsrp->first << std::endl;
+    return pos_maxrsrp->first;
 }
 
 void
@@ -381,3 +436,62 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
         }
     }
 }
+
+
+    /*
+    auto it = rsrq_measurements.find(1);
+    tower_0_deque.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0);
+    it = rsrq_measurements.find(2);
+    tower_1_deque.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0.0);
+    // check for buffer size before training
+    if(tower_0_deque.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
+    auto t0_iter = tower_0_deque.begin();
+    auto t1_iter = tower_1_deque.begin();
+    for(int i = 0; i< metric_buffer_len; i++){
+    	tower_0[i] = *t0_iter;
+	tower_1[i] = *t1_iter;
+	t0_iter++; t1_iter++;
+    }
+    py::array t0_metrics = py::array(py::buffer_info(
+        tower_0,                                // Pointer to data ( acho q assim funfa)
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        1,                                          // Number of dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
+        ));
+
+
+    py::array t1_metrics = py::array(py::buffer_info(
+        tower_1,                                // Pointer to data ( acho q assim funfa)
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        1,                                          // Number of dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
+        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
+        ));
+
+
+    tower_0_deque.pop_back();
+    tower_1_deque.pop_back();
+	*/
+    /*
+    MatrixArray<float> matrix(10, 10, 10);
+    // Create a non-owning py::array_t from the valarray data using the same shape
+    std::vector<size_t> shape = {matrix.GetNumPages(),
+                                 matrix.GetNumRows(),
+                                 matrix.GetNumCols()};
+    std::vector<size_t> strides = {sizeof(float) * matrix.GetNumRows() *
+                                       matrix.GetNumCols(),
+                                   sizeof(float),
+                                   sizeof(float) * matrix.GetNumCols()};
+    py::array matrix_python = py::array(py::buffer_info(
+        const_cast<float*>(&matrix.GetValues()[0]), // Pointer to data
+        sizeof(float),                              // Size of one scalar
+        py::format_descriptor<float>::format(),     // Type format descriptor
+        3,                                          // Number of dimensions
+        shape,                                    // Buffer dimensions
+        strides                                   // Strides for each dimension
+        ));1
+    */
+
