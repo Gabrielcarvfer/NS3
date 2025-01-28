@@ -729,14 +729,16 @@ main(int argc, char** argv)
             ApplicationContainer serverApps;
 
             NS_LOG_LOGIC("installing UDP DL app for UE " << u);
-            UdpClientHelper dlClientHelper(ueIpIfaces.GetAddress(u), dlPort);
+            OnOffHelper dlClientHelper("ns3::UdpSocketFactory", InetSocketAddress(ueIpIfaces.GetAddress(u), dlPort));
+            dlClientHelper.SetAttribute("DataRate", DataRateValue(DataRate("100Mbps")));
             clientApps.Add(dlClientHelper.Install(remoteHost));
             PacketSinkHelper dlPacketSinkHelper("ns3::UdpSocketFactory",
                                                 InetSocketAddress(Ipv4Address::GetAny(), dlPort));
             serverApps.Add(dlPacketSinkHelper.Install(ue));
 
             NS_LOG_LOGIC("installing UDP UL app for UE " << u);
-            UdpClientHelper ulClientHelper(remoteHostAddr, ulPort);
+            OnOffHelper ulClientHelper("ns3::UdpSocketFactory", InetSocketAddress(remoteHostAddr, ulPort));
+            ulClientHelper.SetAttribute("DataRate", DataRateValue(DataRate("20Mbps")));
             clientApps.Add(ulClientHelper.Install(ue));
             PacketSinkHelper ulPacketSinkHelper("ns3::UdpSocketFactory",
                                                 InetSocketAddress(Ipv4Address::GetAny(), ulPort));
