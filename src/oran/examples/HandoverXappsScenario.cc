@@ -356,6 +356,32 @@ good_seed()
     return random_seed;
 } // end good_seed()
 
+nlohmann::json outputJson;
+
+void
+LogThroughputUe0(Ptr<FlowMonitor> monitor)
+{
+    FlowMonitor::FlowStatsContainer stats = monitor->GetFlowStats();
+    for (auto statEntry: stats)
+    {
+        auto key = std::to_string(statEntry.first);
+        if (!outputJson.contains(key))
+        {
+            outputJson[key] = std::vector<nlohmann::json>();
+        }
+        double flowDuration = Simulator::Now().GetSeconds();
+        nlohmann::json entry;
+        entry["ts"] = flowDuration;
+        entry["thr"] = statEntry.second.rxBytes * 8.0 / flowDuration / 1000 / 1000;
+        outputJson[key].push_back(entry);
+    }
+
+
+    Simulator::Schedule(MilliSeconds(100),
+                        &LogThroughputUe0,
+                        monitor);
+}
+
 int
 main(int argc, char** argv)
 {
@@ -380,7 +406,7 @@ main(int argc, char** argv)
        << "\t 2: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the eNB.\n"
        << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n";
 
-    unsigned scenarioi = 4;
+    unsigned scenarioi = 1;
     std::string output_csv_filename = "output.csv";
     CommandLine cmd(__FILE__);
     cmd.AddValue("scenario", ss.str(), scenarioi);
@@ -877,8 +903,16 @@ main(int argc, char** argv)
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
+    Simulator::Schedule(MilliSeconds(100),
+                        &LogThroughputUe0,
+                        flowMonitor);
+
     Simulator::Stop(Seconds(simTime));
     Simulator::Run();
+
+    std::ofstream ueThrLog ("ueThrLog.json");
+    ueThrLog << outputJson << std::endl;
+    ueThrLog.close();
 
     flowMonitor->CheckForLostPackets();
     flowMonitor->SerializeToXmlFile("flow.xml", true, false);
