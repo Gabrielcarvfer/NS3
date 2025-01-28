@@ -445,6 +445,9 @@ main(int argc, char** argv)
     epcHelper->SetAttribute("S1uLinkEnablePcap", BooleanValue(false));
     lteHelper->SetEpcHelper(epcHelper);
     lteHelper->SetSchedulerType("ns3::RrFfMacScheduler");
+    Config::SetDefault("ns3::LteSpectrumPhy::CtrlErrorModelEnabled", BooleanValue(true));
+    Config::SetDefault("ns3::LteSpectrumPhy::DataErrorModelEnabled", BooleanValue(true));
+    Config::SetDefault("ns3::LteHelper::UseIdealRrc", BooleanValue(false));
 
     if(useThreeGppChannel)
     {
