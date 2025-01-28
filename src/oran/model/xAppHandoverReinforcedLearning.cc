@@ -34,178 +34,6 @@ xAppHandoverReinforcedLearning::xAppHandoverReinforcedLearning(bool initiateHand
         Simulator::Schedule(Seconds(1), &xAppHandoverReinforcedLearning::PeriodicHandoverCheck, this);
     }
 };
-/*
-uint16_t static 
-xAppHandoverReinforcedLearning:: ChooseTargetCellIdOld(uint16_t rnti)
-{
-    NS_LOG_FUNCTION(this);
-    const int metric_buffer_len = 16;
-    uint16_t srcCellId = 0;
-
-    E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
-    std::map<uint16_t, uint16_t> rntis;
-    std::array<std::string, 4> kpmMetrics = {"/KPM/HO.SrcCellQual.RSRP",
-                                             //"/KPM/HO.SrcCellQual.RSRQ",
-                                             "/KPM/HO.TrgtCellQual.RSRP",
-                                             //"/KPM/HO.TrgtCellQual.RSRQ"
-                                             };
-
-    std::map<uint16_t, double> rsrq_measurements;
-    //static int last_time_stamp = -1;
-    double src_rsrp = 0;
-    double dst_rsrp = 0;  
-    // Collate data into an armadillo matrix for processing
-    for (auto kpmMetric : kpmMetrics)
-    {
-
-    	int most_recent_timestamp = 0;
-        auto metricMap = ric->QueryKpmMetric(kpmMetric);
-
-        if (metricMap.size() == 0)
-        {
-            continue;
-        }
-	
-        for (auto& e2nodeMeasurements : metricMap)
-        {
-            std::string mostRecentTimestamp("");
-            for (auto& measurementDeque : e2nodeMeasurements.second)
-            {
-                if (mostRecentTimestamp == "")
-                {
-                    mostRecentTimestamp = measurementDeque.timestamp;
-		    int64_t current_time = stoll(mostRecentTimestamp);
-		    if(current_time > most_recent_timestamp){
-		    	most_recent_timestamp = current_time;
-		    	double metric = measurementDeque.measurements["VALUE"];
-			 
-                	if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP"){
-				src_rsrp = metric;
-			}
-			else{
-				dst_rsrp = metric;
-			}
-		    }
-		  	
-		    std::cout<<"rnti: "<<measurementDeque.measurements["RNTI"]<<std::endl;    
-		    std::cout<<"metric: "<<kpmMetric<<" "<<measurementDeque.measurements["VALUE"]<<std::endl;
-		    std::cout<<"time: "<<mostRecentTimestamp<<" "<<std::endl;
-		    
-		    //last_time_stamp = stoi(mostRecentTimestamp.substr(0,4));
-		}
-                if (mostRecentTimestamp != measurementDeque.timestamp)
-                {
-                    // Skip old measurements
-                    continue;
-                }
-		/* testing with only 1 ue, so no need to check rnti		
-                if (rnti != measurementDeque.measurements["RNTI"])
-                {
-                    // Skip rntis that do not match the requesting rnti
-                    continue;
-                }
-		*/
-	/*
-                if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
-                {
-                    uint16_t cellId = measurementDeque.measurements["CELLID"];
-                    srcCellId = cellId;
-                    //cellId++;
-                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
-                    {
-                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
-                    }
-                }
-                else
-                {
-                    if(!measurementDeque.measurements.contains("TARGET")) continue;
-                    uint16_t cellId = measurementDeque.measurements["TARGET"];
-                    if (rsrq_measurements.find(cellId) == rsrq_measurements.end())
-                    {
-                        rsrq_measurements[cellId] = measurementDeque.measurements["VALUE"];
-                    }
-                }
-            }
-        }
-    }
-    //std::cout<<"src newest: "<<src_rsrp<<std::endl;
-    //std::cout<<"dst newest: "<<dst_rsrp<<std::endl;
-    //std::cout<<std::endl;
-
-    if (rsrq_measurements.size() == 0 || m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
-    {
-        return std::numeric_limits<uint16_t>::max();
-    }
-
-    //TODO: TA AQUI
-
-    // Start the interpreter and keep it alive
-    if (!g_interpreter)
-    {
-        g_interpreter = new py::scoped_interpreter{};
-        pyhrl = py::module_::import("HandoverRL");
-
-        pyhrl.attr("init_module")
-        (   metric_buffer_len, 2,
-            "/home/matheus/ns3_oran/target.pth", // load_path
-            "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
-            );
-    	std::cout<<"suco de uva com sabor de tamarindo"<<std::endl;
-    }
-    // tamo trabalhando com a ideia q so tenha cellid 0 e 1
-    //  std::map<uint16_t, double> rsrq_measurements;
-
-
-    // add metrics to buffer
-    
-    auto it = rsrq_measurements.find(1);
-    float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    it = rsrq_measurements.find(2);
-    float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    
-    //std::cout<<"\n\nmetrics: "<<t0_metric<<" "<<t1_metric<<std::endl;
-    
-
-    //TODO: tem q chamar a funcao de init mas chuto q seja o init.py de cima ent ne
-
-    // TODO: falta saber o id do gnb conectado
-    static std::set<uint16_t> _rntis; 
-    static uint16_t connected_rnti = rnti;
-    static int fail_count = 0;
-    bool connection_lost = _rntis.find(rnti) == _rntis.end();
-    if(connection_lost){
-	    fail_count+=1;
-	    std::cout<<"\n\nrntis:"<<connected_rnti<<" "<<rnti<<"\n\n    FAIL COUNT: "<<fail_count<<"\n\n\n\n"<<std::endl;
-    
-	    _rntis.insert(rnti);
-    }
-    std::cout<<"\n\n\n SRCCELL: "<<srcCellId-1<<std::endl;
-    //training 
-    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
-    //testing
-    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
-
-    return make_handover ? (srcCellId == 1 ? 2 : 1) : srcCellId;
-
-
-    //return hoResult;
-
-    // todo: montar observação
-    // todo: chamar decisão do reforço
-    auto pos_maxrsrp = std::max_element(
-        rsrq_measurements.begin(),
-        rsrq_measurements.end(),
-        [](const std::pair<uint16_t, double>& p1, const std::pair<uint16_t, double>& p2) {
-            return p1.second < p2.second;
-        });
-
-    std::cout << "rnti: " << rnti << ", max: " << pos_maxrsrp->second
-              << ", cellId: " << pos_maxrsrp->first << std::endl;
-    return pos_maxrsrp->first;
-
-
-}
-*/
 uint16_t
 xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 {
@@ -213,6 +41,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
     const int metric_buffer_len = 16;
     uint16_t srcCellId;
+    uint64_t imsi; 
     E2AP* ric = (E2AP*)static_cast<const E2AP*>(E2AP::RetrieveInstanceWithEndpoint("/E2Node/0"));
     std::map<uint16_t, uint16_t> rntis;
     std::array<std::string, 4> kpmMetrics = {"/KPM/HO.SrcCellQual.RSRP",
@@ -228,7 +57,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-            "/home/matheus/ns3_oran/target.pth", // load_path
+//	    "/home/matheus/ns3_oran/target.pth",  load_path
             "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
             );
     }
@@ -265,6 +94,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
                     // Skip rntis that do not match the requesting rnti
                     continue;
                 }
+		imsi = measurementDeque.measurements["IMSI"];
+		
                 if (kpmMetric == "/KPM/HO.SrcCellQual.RSRP")
                 {
                     uint16_t cellId = measurementDeque.measurements["CELLID"];
@@ -286,7 +117,6 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
             }
         }
     }
-    std::cout<<"\n\n";
     if (rsrq_measurements.size() == 0 || m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
     {
         return std::numeric_limits<uint16_t>::max();
@@ -296,13 +126,11 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     it = rsrq_measurements.find(2);
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    std::cout<<srcCellId<<std::endl;
-    std::cout<<"t0: "<<t0_metric<<" t1: "<<t1_metric<<std::endl;
- 
+    static uint16_t last_rnti = 0;
     //training 
-    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
     //testing
-    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, rnti).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
 
     return make_handover ? (srcCellId ^ 3) : srcCellId;
     
@@ -332,7 +160,6 @@ xAppHandoverReinforcedLearning::PeriodicHandoverCheck()
         // Skip UEs in handover
         if (m_rntiInHandover.find(rnti) != m_rntiInHandover.end())
             continue;
-
         // Choose new target cell id
         uint16_t newCellId = ChooseTargetCellId(rnti);
 
@@ -422,7 +249,6 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
                                            uint16_t cellid,
                                            uint16_t rnti)
 {
-    m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
     std::cout<<"\n\nConnectionEstablished\n"<<std::endl;
     for (auto [key, value] : m_rntiInHandover)
     {
@@ -435,63 +261,15 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
             break;
         }
     }
+    for (auto [key, value] : m_rntiToImsiAndCellid)
+    {
+        if (value.first == imsi)
+        {
+	    m_rntiToImsiAndCellid.erase(m_rntiToImsiAndCellid.find(key));
+            break;
+        }
+    }
+    m_rntiToImsiAndCellid[rnti] = std::make_pair(imsi, cellid);
 }
 
-
-    /*
-    auto it = rsrq_measurements.find(1);
-    tower_0_deque.push_front(it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0);
-    it = rsrq_measurements.find(2);
-    tower_1_deque.push_front(  it != rsrq_measurements.end() ? static_cast<float>(it->second) : 0.0);
-    // check for buffer size before training
-    if(tower_0_deque.size() < metric_buffer_len ) { return std::numeric_limits<uint16_t>::max(); }
-    auto t0_iter = tower_0_deque.begin();
-    auto t1_iter = tower_1_deque.begin();
-    for(int i = 0; i< metric_buffer_len; i++){
-    	tower_0[i] = *t0_iter;
-	tower_1[i] = *t1_iter;
-	t0_iter++; t1_iter++;
-    }
-    py::array t0_metrics = py::array(py::buffer_info(
-        tower_0,                                // Pointer to data ( acho q assim funfa)
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
-        ));
-
-
-    py::array t1_metrics = py::array(py::buffer_info(
-        tower_1,                                // Pointer to data ( acho q assim funfa)
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        1,                                          // Number of dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(metric_buffer_len)}, // Buffer dimensions
-        std::vector<ssize_t>{static_cast<ssize_t>(sizeof(float))} // Strides
-        ));
-
-
-    tower_0_deque.pop_back();
-    tower_1_deque.pop_back();
-	*/
-    /*
-    MatrixArray<float> matrix(10, 10, 10);
-    // Create a non-owning py::array_t from the valarray data using the same shape
-    std::vector<size_t> shape = {matrix.GetNumPages(),
-                                 matrix.GetNumRows(),
-                                 matrix.GetNumCols()};
-    std::vector<size_t> strides = {sizeof(float) * matrix.GetNumRows() *
-                                       matrix.GetNumCols(),
-                                   sizeof(float),
-                                   sizeof(float) * matrix.GetNumCols()};
-    py::array matrix_python = py::array(py::buffer_info(
-        const_cast<float*>(&matrix.GetValues()[0]), // Pointer to data
-        sizeof(float),                              // Size of one scalar
-        py::format_descriptor<float>::format(),     // Type format descriptor
-        3,                                          // Number of dimensions
-        shape,                                    // Buffer dimensions
-        strides                                   // Strides for each dimension
-        ));1
-    */
 
