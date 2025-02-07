@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  jekyll:
+    image: gabrielcarvfer-jekyll:latest
+    build:
+      context: ./gabrielcarvfer-jekyll
+      dockerfile: Dockerfile
+    tty: true
+    container_name: jekyll
+    volumes:
+      - .:/www
+    command: >
+      /bin/bash -c "cd /www
+                    bundle update
+                    bundle install
+                    bundle exec jekyll serve --host 0.0.0.0 --incremental --verbose"
+    ports:
+      - "8080:4000" # expose docker port 4000 (right-side) at port 8080 of the host (left side)
