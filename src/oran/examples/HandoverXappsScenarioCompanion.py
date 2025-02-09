@@ -79,8 +79,8 @@ def run_program(program, args, python=False, cwd=ns3_path, env=None):
     return ret.returncode, ret.stdout.decode(sys.stdout.encoding), ret.stderr.decode(sys.stderr.encoding)
 
 
-#flags = "--useThreeGppChannel=1"
-flags = ""
+flags = "--useThreeGppChannel=1"
+#flags = ""
 output_and_args = {
     "output3GPPHandover.csv": f"--scenario=0 {flags}",
     "outputDistributedHandover.csv": f"--scenario=1 {flags}",

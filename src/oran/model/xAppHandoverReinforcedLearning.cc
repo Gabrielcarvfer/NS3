@@ -57,8 +57,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-//	    "/home/matheus/ns3_oran/target.pth",  load_path
-            "/home/matheus/ns3_oran/src/oran/model/target5.pth"  // save_path
+	    "/home/matheus/ns3_oran/src/oran/model/target5.pth",  //load_path
+            "/home/matheus/ns3_oran/src/oran/model/target.pth"  // save_path
             );
     }
 
@@ -128,9 +128,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     static uint16_t last_rnti = 0;
     //training 
-    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
     //testing
-    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
 
     return make_handover ? (srcCellId ^ 3) : srcCellId;
     
@@ -254,8 +254,6 @@ xAppHandoverReinforcedLearning::ConnectionEstablished(std::string context,
     {
         if (value == imsi)
         {
-	    std::cout<<"\n\nChegou no failed\n"<<std::endl;
-            // if it has in a handover and got reconnected = handover failed
 	    m_rntiHandoverFailed.insert(rnti);
 	    m_rntiInHandover.erase(m_rntiInHandover.find(key));
             break;
