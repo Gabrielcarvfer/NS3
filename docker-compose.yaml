@@ -1,0 +1,8 @@
+services:
+  ns3:
+    image: ns3-oran
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    tty: true
+    container_name: ns3-oran
