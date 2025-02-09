@@ -12,6 +12,8 @@
 
 #include <deque>
 
+#include <filesystem>
+
 namespace py = pybind11;
 using namespace ns3;
 using namespace oran;
@@ -54,11 +56,11 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         g_interpreter = new py::scoped_interpreter{};
         pyhrl = py::module_::import("HandoverRL");
-
+        std::filesystem::path cwd = std::filesystem::current_path()
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-	    "/home/matheus/ns3_oran/src/oran/model/target5.pth",  //load_path
-            "/home/matheus/ns3_oran/src/oran/model/target.pth"  // save_path
+	        cwd / "src/oran/model/target5.pth",  //load_path
+            cwd / "src/oran/model/target.pth"  // save_path
             );
     }
 
