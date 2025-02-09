@@ -372,7 +372,7 @@ LogThroughputUe0(Ptr<FlowMonitor> monitor)
         double flowDuration = Simulator::Now().GetSeconds();
         nlohmann::json entry;
         entry["ts"] = flowDuration;
-        entry["thr"] = statEntry.second.rxBytes * 8.0 / flowDuration / 1000 / 1000;
+        entry["bytes"] = statEntry.second.rxBytes;
         outputJson[key].push_back(entry);
     }
 
@@ -906,7 +906,7 @@ main(int argc, char** argv)
     FlowMonitorHelper flowHelper;
     flowMonitor = flowHelper.InstallAll();
 
-    Simulator::Schedule(MilliSeconds(100),
+    Simulator::Schedule(MilliSeconds(10),
                         &LogThroughputUe0,
                         flowMonitor);
 
