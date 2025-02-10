@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   jekyll:
     image: gabrielcarvfer-jekyll:latest

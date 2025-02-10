@@ -20,13 +20,42 @@ As in the installation instructions for the
 [Quick-Start section of the ns-3 documentation](https://www.nsnam.org/docs/release/3.40/tutorial/html/quick-start.html#prerequisites), 
 before proceeding, you will need at least g++, ninja, cmake.
 
+
+Install the dependencies
+```
+apt-get update && apt-get install -y \
+    g++ \
+    ninja-build \
+    python3 \
+    cmake \
+    libarmadillo-dev \
+    libmlpack-dev \
+    pybind11-dev \
+    python3-dev \
+    ca-certificates \
+    python3-pip \
+    git \
+```
+Clone the Model repo and change to the `multiple_ue` branch
+
+```
+
+git clone https://github.com/MatheusOCruz/Handover_ORAN.git
+cd Handover_ORAN
+git switch multiple_ue
+cd ../ns3_oran
+pip install ../Handover_ORAN/HandoverRL
+
+```
+
+
+
 After downloading and installing these tools, 
 configure ns-3 normally, then run the example
 
 ```
 
 ./ns3 configure --enable-examples -d release
-./ns3 build
 ./ns3 run "HandoverXappsScenario --scenario=5 --outputFile=0_outputRLRicInitiated.csv --useThreeGppChannel=1
 
 ```
@@ -81,6 +110,12 @@ wT2DnJLpb6fLmRSWEzMcYHpUP07rOIHh_oOwEcmIYYFaTB0clezkX9X6jNvMVCDMiD1I2fu7fgr
 oUPHrAWiTd73XauFovZMWhm4lQ5Yhv8B9lbrM27F5GTo93RKJE4nnAhprGR7jTAIomRC4GN9rk3
 85THYX__AGMR-Jo)
 
+## Dockerfile
+
+An easier way to run the model without worring about dependencies, is using
+the docker-compose in the repo, simply run `docker compose up --build`, 
+and `docker compose up` om subsequent runs
+
 ## How it works?
 
 PyTorch model is loaded by C++ via Pybind11, starts a new process that runs
@@ -88,14 +123,13 @@ the model and has its own memory keeping track of previous decisions, rewards, e
 
 ## What is the current model?
 
-Inputs:
-Neural network:
-Outputs:
-Reward:
+- Inputs: the RSRP metric of the 2 gNBs available, the ID of the connected gnb and the RNTI of the UE
+- Neural network: The network is a Deep Recurrent Q-Network, meaning we have a LSTM layer that leads to a 
+deep Q-learning network
+- Outputs: boolean representing the decision to do the handover
+- Reward: The reward is based on the the difference of RSRP on the connected gNB and the other available, in case of 
+handover, the reward is based on the cumulative gain of RSRP over the last time steps 
 
-## How to change the ML model?
-
-Configure paths, change model, change inputs on the simulation
 
 ## I’ve run the example, now what?
 
