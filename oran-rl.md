@@ -60,6 +60,9 @@ configure ns-3 normally, then run the example
 
 ```
 
+# Trying the model itself
+
+The repo with the model comes with synthetic data scenarios the enable initial training and ploting the results obtained, the explanation can be found in the README.md of the [repo](https://github.com/MatheusOCruz/Handover_ORAN/tree/multiple_ue)
 
 # How to use?
 
