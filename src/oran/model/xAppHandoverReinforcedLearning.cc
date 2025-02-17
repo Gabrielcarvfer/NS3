@@ -13,7 +13,9 @@
 #include <deque>
 
 #include <filesystem>
-#define PYBIND11_DETAILED_ERROR_MESSAGES
+
+
+namespace fs = std::filesystem;
 namespace py = pybind11;
 using namespace ns3;
 using namespace oran;
@@ -56,12 +58,16 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         g_interpreter = new py::scoped_interpreter{};
         pyhrl = py::module_::import("HandoverRL");
-        std::filesystem::path cwd = std::filesystem::current_path();
-        pyhrl.attr("init_module")
+
+	fs::path cwd = fs::current_path();
+        auto load_path =  cwd / "src/oran/model/target.pth";
+        auto save_path = cwd / "src/oran/model/target2.pth";
+
+	pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-            (cwd / "src/oran/model/target5.pth").string(),  //load_path
-            (cwd / "src/oran/model/target.pth").string()  // save_path
-            );
+            load_path.string(),
+            save_path.string());
+
     }
 
     //rsrp mas n vou mudar em todos os lugares agr n
