@@ -30,4 +30,4 @@ WORKDIR /ns3_oran
 
 RUN pip install ../Handover_ORAN/HandoverRL && ./ns3 configure --enable-examples --disable-warnings -d release
 
-CMD ["./ns3", "run", "HandoverXappsScenario --scenario=5 --outputFile=0_outputMaxRsRpRicInitiated.csv --useThreeGppChannel=1"]
+CMD ["./ns3", "run", "HandoverXappsScenario --scenario=5 --outputFile=0_outputRlRicInitiated.csv --useThreeGppChannel=1"]
