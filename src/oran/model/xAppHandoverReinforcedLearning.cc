@@ -56,11 +56,11 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     {
         g_interpreter = new py::scoped_interpreter{};
         pyhrl = py::module_::import("HandoverRL");
-        std::filesystem::path cwd = std::filesystem::current_path()
+        std::filesystem::path cwd = std::filesystem::current_path();
         pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
-	        cwd / "src/oran/model/target5.pth",  //load_path
-            cwd / "src/oran/model/target.pth"  // save_path
+            (cwd / "src/oran/model/target5.pth").string(),  //load_path
+            (cwd / "src/oran/model/target.pth").string()  // save_path
             );
     }
 
@@ -128,8 +128,7 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     float t0_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     it = rsrq_measurements.find(2);
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
-    static uint16_t last_rnti = 0;
-    //training 
+    //training
     auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
     //testing
     //auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
