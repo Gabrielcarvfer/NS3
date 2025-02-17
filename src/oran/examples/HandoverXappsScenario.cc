@@ -404,7 +404,9 @@ main(int argc, char** argv)
        << "\t 0: Standard 3GPP handover (HO)\n"
        << "\t 1: ORAN HO returns the decision taken by the eNB. HO initiated by the eNB.\n"
        << "\t 2: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the eNB.\n"
-       << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n";
+       << "\t 3: ORAN HO calls the Kmeans xApp to make a decision. HO initiated by the RIC/xApp.\n"
+       << "\t 4: ORAN HO calls the RL xApp to make a decision. HO initiated by the eNB.\n"
+       << "\t 5: ORAN HO calls the RL xApp to make a decision. HO initiated by the RIC/xApp.\n";
 
     unsigned scenarioi = 1;
     std::string output_csv_filename = "output.csv";
@@ -423,12 +425,12 @@ main(int argc, char** argv)
                               // or not
         ORAN_RIC_XAPP_KMEANS_INITIATED, // eNB stops triggering handovers and just follows RIC
                                         // handover commands
-        ORAN_RIC_XAPP_MAXRSRQ, // RIC calls the xAPP to decide whether to follow the eNB suggestion
+        ORAN_RIC_XAPP_RL, // RIC calls the xAPP to decide whether to follow the eNB suggestion
                                // or not
-        ORAN_RIC_XAPP_MAXRSRQ_INITIATED,
+        ORAN_RIC_XAPP_RL_INITIATED,
     } HandoverScenarios;
 
-    if (scenarioi > HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
+    if (scenarioi > HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED)
     {
         std::cerr << "Invalid handover scenario id: " << scenarioi << std::endl;
         return -1;
@@ -483,7 +485,7 @@ main(int argc, char** argv)
     {
     // all _INITIATED scenarios should be addded here
     case HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED:
-    case HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED:
+    case HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED:
         lteHelper->SetHandoverAlgorithmType(
             "ns3::NoOpHandoverAlgorithm"); // algorithm needs to manually trigger handovers
         break;
@@ -817,8 +819,8 @@ main(int argc, char** argv)
     if (scenario == HandoverScenarios::ORAN_BYPASS ||
         //scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS ||
         //scenario == HandoverScenarios::ORAN_RIC_XAPP_KMEANS_INITIATED ||
-        scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ ||
-        scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
+        scenario == HandoverScenarios::ORAN_RIC_XAPP_RL ||
+        scenario == HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED)
     {
         Ptr<E2AP> e2t = CreateObject<E2AP>();
         sgw->AddApplication(e2t);
@@ -835,13 +837,13 @@ main(int argc, char** argv)
             sgw->AddApplication(handoverxapp);
         }
         */
-        if (scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ ||
-            scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED)
+        if (scenario == HandoverScenarios::ORAN_RIC_XAPP_RL ||
+            scenario == HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED)
         {
             //Ptr<xAppHandoverMaxRsrq> handoverxapp = CreateObject<xAppHandoverMaxRsrq>(
-            //    scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
+            //    scenario == HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED);
             Ptr<xAppHandoverReinforcedLearning> handoverxapp = CreateObject<xAppHandoverReinforcedLearning>(
-            scenario == HandoverScenarios::ORAN_RIC_XAPP_MAXRSRQ_INITIATED);
+            scenario == HandoverScenarios::ORAN_RIC_XAPP_RL_INITIATED);
             sgw->AddApplication(handoverxapp);
         }
 

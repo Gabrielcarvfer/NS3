@@ -86,8 +86,8 @@ output_and_args = {
     "outputDistributedHandover.csv": f"--scenario=1 {flags}",
     #"outputKMeansHandover.csv": "--scenario=2",
     #"outputKMeansHandoverRicInitiated.csv": "--scenario=3",
-    "outputMaxRsRp.csv": f"--scenario=4 {flags}",
-    "outputMaxRsRpRicInitiated.csv": f"--scenario=5 {flags}"
+    "outputRl.csv": f"--scenario=4 {flags}",
+    "outputRlRicInitiated.csv": f"--scenario=5 {flags}"
 }
 
 output_and_type = {
@@ -95,8 +95,8 @@ output_and_type = {
     "outputDistributedHandover.csv": "Iniciado por eNB e confirmado por O-RAN",
     #"outputKMeansHandover.csv": "Iniciado por eNB e confirmado por O-RAN+xApp K-Means",
     #"outputKMeansHandoverRicInitiated.csv": "Iniciado por O-RAN+xApp K-Means",
-    "outputMaxRsRp.csv": "Iniciado por eNB e confirmado por O-RAN+xApp MaxRsrp",
-    "outputMaxRsRpRicInitiated.csv": "Iniciado por O-RAN+xApp MaxRsrp",
+    "outputRl.csv": "Iniciado por eNB e confirmado por O-RAN+xApp Rl",
+    "outputRlRicInitiated.csv": "Iniciado por O-RAN+xApp Rl",
 }
 
 resultingCsv = {}
