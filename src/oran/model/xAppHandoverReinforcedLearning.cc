@@ -13,7 +13,7 @@
 #include <deque>
 
 #include <filesystem>
-
+#define PYBIND11_DETAILED_ERROR_MESSAGES
 namespace py = pybind11;
 using namespace ns3;
 using namespace oran;
