@@ -141,17 +141,6 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
 
     return make_handover ? (srcCellId ^ 3) : srcCellId;
     
-    // Search max rsrp
-    auto pos_maxrsrp = std::max_element(
-        rsrq_measurements.begin(),
-        rsrq_measurements.end(),
-        [](const std::pair<uint16_t, double>& p1, const std::pair<uint16_t, double>& p2) {
-            return p1.second < p2.second;
-        });
-
-    std::cout << "rnti: " << rnti << ", max: " << pos_maxrsrp->second
-              << ", cellId: " << pos_maxrsrp->first << std::endl;
-    return pos_maxrsrp->first;
 }
 
 void
