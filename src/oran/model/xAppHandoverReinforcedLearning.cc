@@ -135,9 +135,9 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
     it = rsrq_measurements.find(2);
     float t1_metric = it != rsrq_measurements.end() ? static_cast<float>(it->second)  : 0.0;
     //training
-    auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
+    //auto make_handover = pyhrl.attr("train_step")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
     //testing
-    //auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
+    auto make_handover = pyhrl.attr("handover_decision")(t0_metric, t1_metric, srcCellId-1, imsi).cast<uint16_t>();
 
     return make_handover ? (srcCellId ^ 3) : srcCellId;
     
