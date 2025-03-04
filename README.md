@@ -1,174 +1,113 @@
-# The Network Simulator, Version 3
+# ns3-O-RL: Framework de Prototipagem Rápida de xApps com Aprendizagem por Reforço em redes O-RAN
 
+A Inteligência Artificial (IA) é um elemento essencial nos controla-
+dores inteligentes O-RAN (RICs), na pilha de redes 6G e futuras. Reduzir a
+barreira para a prototipagem de aplicações de Aprendizado por Reforço (RL)
+nos stacks 3GPP e O-RAN permitindo inovações no setor. Estes mesmos modelos podem
+ser portados posteriormente para um RIC real. Como prova de
+conceito, implementamos um xApp de controle de handover no O-RAN, integrando
+a ferramenta ns3-ORAN com um modelo de RL baseado em PyTorch,
+treinável offline ou online. O framework tem baixa sobrecarga de comunicação
+em comparação à ns3-ai e ns3-gym. Também é mais acessível que o desenvolvimento nativo de xApps, com a complicada configuração e operação de testbeds.
 
-[![codecov](https://codecov.io/gh/nsnam/ns-3-dev-git/branch/master/graph/badge.svg)](https://codecov.io/gh/nsnam/ns-3-dev-git/branch/master/)
-[![Gitlab CI](https://gitlab.com/nsnam/ns-3-dev/badges/master/pipeline.svg)](https://gitlab.com/nsnam/ns-3-dev/-/pipelines)
-[![Github CI](https://github.com/nsnam/ns-3-dev-git/actions/workflows/per_commit.yml/badge.svg)](https://github.com/nsnam/ns-3-dev-git/actions)
+# Selos Considerados
 
+Os selos considerados são: Disponíveis e Funcionais.
 
-## Table of Contents
+# Informações básicas
 
-1) [An overview](#an-open-source-project)
-2) [Building ns-3](#building-ns-3)
-3) [Running ns-3](#running-ns-3)
-4) [Getting access to the ns-3 documentation](#getting-access-to-the-ns-3-documentation)
-5) [Working with the development version of ns-3](#working-with-the-development-version-of-ns-3)
+O código-fonte da ferramenta está disponível no repositório https://github.com/Gabrielcarvfer/NS3/tree/NS3.40-ns3-o-rl, juntamente a outros artefatos, como: pesos do modelo treinado, scripts auxiliares para simulações, arquivos Dockerfile e docker-compose para configuração do ambiente de simulação.
 
-> **NOTE**: Much more substantial information about ns-3 can be found at
-<https://www.nsnam.org>
+O modelo de aprendizagem por reforço, junto a scripts de treinamento com dados sintéticos e plotagem de resultados estão disponíveis no repositório https://github.com/MatheusOCruz/Handover_ORAN. 
 
-## An Open Source project
+A documentação da ferramenta se encontra no seguinte link https://gabrielcarvfer.github.io/NS3/ns3_ORAN_RL/.
 
-ns-3 is a free open source project aiming to build a discrete-event
-network simulator targeted for simulation research and education.
-This is a collaborative project; we hope that
-the missing pieces of the models we have not yet implemented
-will be contributed by the community in an open collaboration
-process.
+Foram utilizadas plataformas Ampere ARM com Ubuntu 20.04, 128GB de RAM ECC DDR4 2600MTs, 160 cores. E Intel i7-13900HX, Ubuntu 22.04 e 24.04, 16GB de RAM DDR5 5600MTs. Em ambos os casos, foram utilizados SSDs NVMe.
 
-The process of contributing to the ns-3 project varies with
-the people involved, the amount of time they can invest
-and the type of model they want to work on, but the current
-process that the project tries to follow is described here:
-<https://www.nsnam.org/developers/contributing-code/>
+# Dependências
 
-This README excerpts some details from a more extensive
-tutorial that is maintained at:
-<https://www.nsnam.org/documentation/latest/>
+Foram utilizadas as últimas versões disponíveis de releases estáveis de longo suporte do Ubuntu. Os pacotes geridos pelo sistema necessários são:
 
-## Building ns-3
+- g++ 
+- ninja-build
+- python3
+- cmake
+- libarmadillo-dev
+- libmlpack-dev
+- pybind11-dev
+- python3-dev
+- ca-certificates
+- python3-pip
+- git
 
-The code for the framework and the default models provided
-by ns-3 is built as a set of libraries. User simulations
-are expected to be written as simple programs that make
-use of these ns-3 libraries.
+Para o modelo de aprendizagem por reforço, são necessários os seguintes pacotes e versões via gerenciador PIP para pacotes Python:
 
-To build the set of default libraries and the example
-programs included in this package, you need to use the
-tool 'ns3'. Detailed information on how to use ns3 is
-included in the file doc/build.txt
+- torch >= 2.6.0
+- numpy >= 2.2.2
+- matplotlib >= 3.10.0
 
-However, the real quick and dirty way to get started is to
-type the command
+# Preocupações com segurança
 
-```shell
-./ns3 configure --enable-examples
+Os artefatos em si não oferecem riscos de segurança aos examinadores, porém as dependências utilizadas podem oferecer algum risco, visto que são controladas por terceiros.
+
+# Instalação
+
+Existem dois meios de se configurar o ambiente necessário. Manualmente, ou através de docker-compose.
+
+Manualmente pode ser instalado e executado com 
+
+```
+apt-get update && apt-get install -y \
+    g++ \
+    ninja-build \
+    python3 \
+    cmake \
+    libarmadillo-dev \
+    libmlpack-dev \
+    pybind11-dev \
+    python3-dev \
+    ca-certificates \
+    python3-pip \
+    git
+git clone -b NS3.40-ns3-o-rl https://github.com/Gabrielcarvfer/NS3
+cd NS3
+git clone -b multiple_ue https://github.com/MatheusOCruz/Handover_ORAN.git
+pip install ./Handover_ORAN/HandoverRL
+./ns3 configure --enable-examples -d release
+./ns3 run "HandoverXappsScenario --scenario=5 --outputFile=0_outputRLRicInitiated.csv --useThreeGppChannel=1
 ```
 
-followed by
+Alternativamente, pode ser usado
 
-```shell
-./ns3
+```
+git clone -b NS3.40-ns3-o-rl https://github.com/Gabrielcarvfer/NS3
+cd NS3
+docker-compose build
+docker run “./ns3 run HandoverXappsScenario – --scenario=5 --outputFile=0_outputRLRicInitiated.csv --useThreeGppChannel=1”
 ```
 
-in the directory which contains this README file. The files
-built will be copied in the build/ directory.
+O processo de baixar e instalar a aplicação deve ser descrito nesta seção. Ao final deste processo já é esperado que a aplicação/benchmark/ferramenta consiga ser executada.
 
-The current codebase is expected to build and run on the
-set of platforms listed in the [release notes](RELEASE_NOTES.md)
-file.
+# Teste mínimo
 
-Other platforms may or may not work: we welcome patches to
-improve the portability of the code to these other platforms.
-
-## Running ns-3
-
-On recent Linux systems, once you have built ns-3 (with examples
-enabled), it should be easy to run the sample programs with the
-following command, such as:
-
-```shell
-./ns3 run simple-global-routing
+Para verificar que tudo está funcionando como esperado, é possível executar o script ``PlotAllScenarios.sh``. Utilizando a instalação via docker-compose:
+```
+git clone -b NS3.40-ns3-o-rl https://github.com/Gabrielcarvfer/NS3
+cd NS3
+docker-compose build
+docker run ns3-oran ./PlotAllScenarios.sh”
 ```
 
-That program should generate a `simple-global-routing.tr` text
-trace file and a set of `simple-global-routing-xx-xx.pcap` binary
-pcap trace files, which can be read by `tcpdump -tt -r filename.pcap`
-The program source can be found in the examples/routing directory.
+Este script deve gerar 6 figuras (dentro do container), duas para cada padrão de movimento, relativas às vazões dos UEs em cada um dos cenários (assim como medidos em sua camada de rede, e KPMs reportados pelos E2Nodes ao RIC).
 
+- triangle_kpms.png
+- triangle_ueThrLog.png
+- opp_senoids_kpms.png
+- opp_senoids_ueThrLog.png
+- offset_senoids_kpms.png
+- offset_senoids_ueThrLog.png
 
-## Running ns-3 from python
+# LICENSE
 
-If you do not plan to modify ns-3 upstream modules, you can get
-a pre-built version of the ns-3 python bindings.
+O projeto é distribuído sob a licença GPLv2. Veja o arquivo LICENSE para mais detalhes.
 
-```shell
-pip install --user ns3
-```
-
-If you do not have `pip`, check their documents
-on [how to install it](https://pip.pypa.io/en/stable/installation/).
-
-After installing the `ns3` package, you can then create your simulation python script.
-Below is a trivial demo script to get you started.
-
-```python
-from ns import ns
-
-ns.LogComponentEnable("Simulator", ns.LOG_LEVEL_ALL)
-
-ns.Simulator.Stop(ns.Seconds(10))
-ns.Simulator.Run()
-ns.Simulator.Destroy()
-```
-
-The simulation will take a while to start, while the bindings are loaded.
-The script above will print the logging messages for the called commands.
-
-Use `help(ns)` to check the prototypes for all functions defined in the
-ns3 namespace. To get more useful results, query specific classes of
-interest and their functions e.g. `help(ns.Simulator)`.
-
-Smart pointers `Ptr<>` can be differentiated from objects by checking if
-`__deref__` is listed in `dir(variable)`. To dereference the pointer,
-use `variable.__deref__()`.
-
-Most ns-3 simulations are written in C++ and the documentation is
-oriented towards C++ users. The ns-3 tutorial programs (first.cc,
-second.cc, etc.) have Python equivalents, if you are looking for
-some initial guidance on how to use the Python API. The Python
-API may not be as full-featured as the C++ API, and an API guide
-for what C++ APIs are supported or not from Python do not currently exist.
-The project is looking for additional Python maintainers to improve
-the support for future Python users.
-
-## Getting access to the ns-3 documentation
-
-Once you have verified that your build of ns-3 works by running
-the simple-point-to-point example as outlined in 3) above, it is
-quite likely that you will want to get started on reading
-some ns-3 documentation.
-
-All of that documentation should always be available from
-the ns-3 website: <https://www.nsnam.org/documentation/>.
-
-This documentation includes:
-
-- a tutorial
-- a reference manual
-- models in the ns-3 model library
-- a wiki for user-contributed tips: <https://www.nsnam.org/wiki/>
-- API documentation generated using doxygen: this is
-  a reference manual, most likely not very well suited
-  as introductory text:
-  <https://www.nsnam.org/doxygen/index.html>
-
-## Working with the development version of ns-3
-
-If you want to download and use the development version of ns-3, you
-need to use the tool `git`. A quick and dirty cheat sheet is included
-in the manual, but reading through the git
-tutorials found in the Internet is usually a good idea if you are not
-familiar with it.
-
-If you have successfully installed git, you can get
-a copy of the development version with the following command:
-
-```shell
-git clone https://gitlab.com/nsnam/ns-3-dev.git
-```
-
-However, we recommend to follow the Gitlab guidelines for starters,
-that includes creating a Gitlab account, forking the ns-3-dev project
-under the new account's name, and then cloning the forked repository.
-You can find more information in the [manual](https://www.nsnam.org/docs/manual/html/working-with-git.html).
