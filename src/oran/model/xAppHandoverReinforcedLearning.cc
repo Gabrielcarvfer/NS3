@@ -60,8 +60,8 @@ xAppHandoverReinforcedLearning::ChooseTargetCellId(uint16_t rnti)
         pyhrl = py::module_::import("HandoverRL");
 
 	fs::path cwd = fs::path(__FILE__).parent_path();
-    auto load_path = cwd / "target.pth";
-    auto save_path = cwd / "target2.pth";
+    auto load_path = cwd / "src/oran/model/model.pth";
+    auto save_path = cwd / "src/oran/model/target2.pth";
 
 	pyhrl.attr("init_module")
         (   metric_buffer_len, 2,
