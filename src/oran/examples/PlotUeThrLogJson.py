@@ -6,7 +6,7 @@ import json
 fig, axis = plt.subplots(figsize=(5, 3), nrows=1, ncols=1, squeeze=True)
 currDir = os.path.abspath(os.path.dirname(__file__))
 #with open(f"{currDir}/../ueThrLog.json", "r") as f:
-with open(f"{currDir}/../../../build/src/oran/examples/ueThrLog.json", "r") as f:
+with open(f"{currDir}/../../../ueThrLog.json", "r") as f:
     contents = json.load(f)
 
 maxValues = [max([x['bytes'] for x in contents[label]]) for label in contents]
@@ -39,4 +39,4 @@ axis.set_ylabel("Vazão [Mbps]")
 axis.set_xlabel("Tempo de simulação [s]")
 axis.legend(loc="lower right")
 fig.tight_layout()
-fig.savefig(f"{currDir}/../ueThrLog.png", dpi=300)
+fig.savefig(f"{currDir}/../../../ueThrLog.png", dpi=300)

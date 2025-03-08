@@ -17,17 +17,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # setup RL model
-RUN git clone https://github.com/MatheusOCruz/Handover_ORAN.git
-
-WORKDIR /Handover_ORAN
-
-RUN git switch multiple_ue
+RUN git clone -b multiple_ue https://github.com/MatheusOCruz/Handover_ORAN.git
 
 
-COPY . /ns3_oran
 
-WORKDIR /ns3_oran
+RUN pip install /Handover_ORAN/HandoverRL
 
-RUN pip install ../Handover_ORAN/HandoverRL && ./ns3 configure --enable-examples --disable-warnings -d release
-
-CMD ["./ns3", "run", "HandoverXappsScenario --scenario=5 --outputFile=0_outputRlRicInitiated.csv --useThreeGppChannel=1"]
+#CMD ["./ns3", "run", "HandoverXappsScenario --scenario=5 --outputFile=0_outputRlRicInitiated.csv --useThreeGppChannel=1"]

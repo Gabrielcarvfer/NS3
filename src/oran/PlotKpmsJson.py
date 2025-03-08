@@ -6,7 +6,7 @@ kpms_file = "kpms.json"
 currDir = os.path.abspath(os.path.dirname(__file__))
 
 #with open(f"{currDir}/{kpms_file}", "r") as f:
-with open(f"{currDir}/../../build/src/oran/examples/{kpms_file}", "r") as f:
+with open(f"{currDir}/../../{kpms_file}", "r") as f:
     kpms = json.load(f)
     kpms = list(sorted(kpms, key=lambda x: x["KPM"].split(".")[-1]))
 
@@ -35,5 +35,5 @@ for i, kpm in enumerate(kpms):
         axis[i][0].sharey(suffix_to_axis[kpm_suffix])
 axis[-1][0].set_xlabel("Tempo de simulação [s]")
 #fig.legend(bbox_to_anchor=(0.75, -0.8, 0, 0), ncol=2)
-fig.tight_layout()
+#fig.tight_layout()
 fig.savefig("kpms.png")

@@ -5,4 +5,9 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     tty: true
+    volumes:
+      - .:/ns3-oran
+    working_dir: /ns3-oran
+    command: ["sh","-c", "./configure.sh && ./PlotAllScenarios.sh"]
+
     container_name: ns3-oran
